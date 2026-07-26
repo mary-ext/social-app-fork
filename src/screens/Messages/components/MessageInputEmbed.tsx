@@ -10,7 +10,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';

@@ -4,7 +4,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';

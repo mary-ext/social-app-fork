@@ -1,9 +1,9 @@
 import { FeedTuner } from '#/lib/api/feed-manip';
 
-import type { FeedDescriptor } from '../queries/post-feed';
-import { usePreferencesQuery } from '../queries/preferences';
+import { useLanguagePrefs } from '../preferences/languages';
 import { useSession } from '../session';
-import { useLanguagePrefs } from './languages';
+import type { FeedDescriptor } from './post-feed';
+import { usePreferencesQuery } from './preferences';
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
 	const langPrefs = useLanguagePrefs();

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';

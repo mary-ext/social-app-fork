@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { isNetworkError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';
 import {
 	useListMembershipAddMutation,

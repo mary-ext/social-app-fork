@@ -9,7 +9,7 @@ import { clsx } from 'clsx';
 
 import { profileTarget } from '#/lib/routes/targets';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';

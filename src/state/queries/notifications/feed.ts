@@ -22,7 +22,7 @@ import {
 import { typedKeys } from '#/lib/functions';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';

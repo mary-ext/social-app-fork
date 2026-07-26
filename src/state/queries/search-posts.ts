@@ -12,7 +12,7 @@ import { liftSearchQuery } from '#/lib/bsky/search';
 import { typedKeys } from '#/lib/functions';
 
 import { registerShadowFinders } from '#/state/cache/registry';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { getClients, useSession } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';

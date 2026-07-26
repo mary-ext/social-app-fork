@@ -17,7 +17,7 @@ import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { getAllListMembers } from '#/state/queries/list-members';
 import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-link';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';

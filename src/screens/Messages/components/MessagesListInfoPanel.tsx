@@ -4,7 +4,7 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 import { profileTarget } from '#/lib/routes/targets';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import type { ConvoWithDetails } from '#/components/dms/util';

@@ -47,8 +47,8 @@ import { logger } from '#/logger';
 
 import { KnownError } from '#/components/PostFeed/PostFeedErrorMessage';
 
-import { useFeedTuners } from '../preferences/feed-tuners';
-import { useModerationOpts } from '../preferences/moderation-opts';
+import { useModerationOpts } from '../moderation/moderation-opts';
+import { useFeedTuners } from './feed-tuners';
 import { usePreferencesQuery } from './preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 

@@ -2,7 +2,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 

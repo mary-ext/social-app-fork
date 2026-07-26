@@ -6,7 +6,7 @@ import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
 import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useTick } from '#/state/tick';
 
 import { clock } from '#/locale/intl/datetime';

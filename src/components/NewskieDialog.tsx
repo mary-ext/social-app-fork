@@ -6,7 +6,7 @@ import { differenceInSeconds } from '@mary/date-fns';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';

@@ -8,7 +8,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { BlockLink } from '#/components/BlockLink';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
 import { logger } from '#/logger';

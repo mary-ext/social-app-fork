@@ -9,7 +9,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListQuery } from '#/state/queries/list';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { type UsePreferencesQueryResponse, usePreferencesQuery } from '#/state/queries/preferences';

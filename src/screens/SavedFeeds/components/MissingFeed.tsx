@@ -2,7 +2,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { getFeedTypeFromUri } from '#/state/queries/feed';
 import { useProfileQuery } from '#/state/queries/profile';
 

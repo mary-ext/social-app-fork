@@ -1,7 +1,7 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bluesky-moderation';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';

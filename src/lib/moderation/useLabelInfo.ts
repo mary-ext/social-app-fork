@@ -10,7 +10,7 @@ import {
 
 import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 
-import { useLabelDefinitions } from '#/state/preferences/label-defs';
+import { useLabelDefinitions } from '#/state/moderation/label-defs';
 
 import { matchesLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

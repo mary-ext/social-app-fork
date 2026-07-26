@@ -9,7 +9,7 @@ import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
 

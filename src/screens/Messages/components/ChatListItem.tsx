@@ -11,7 +11,7 @@ import {
 import { conversationTarget } from '#/lib/routes/targets';
 
 import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
 

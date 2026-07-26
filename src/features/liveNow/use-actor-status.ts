@@ -10,7 +10,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { isAfterDate } from '@mary/date-fns';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 import { useTick } from '#/state/tick';
 

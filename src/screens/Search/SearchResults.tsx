@@ -8,7 +8,7 @@ import { urls } from '#/lib/constants';
 import { cleanError, isNetworkError, shouldRetryError } from '#/lib/strings/errors';
 import { normalizeSearchQuery } from '#/lib/strings/helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';

@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import BroadcastChannel from '#/lib/broadcast';
 import { isDocumentVisible } from '#/lib/visibility';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
 

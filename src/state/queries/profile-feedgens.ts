@@ -12,7 +12,7 @@ import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/re
 
 import { getClients } from '#/state/session';
 
-import { useModerationOpts } from '../preferences/moderation-opts';
+import { useModerationOpts } from '../moderation/moderation-opts';
 
 const PAGE_SIZE = 50;
 type RQPageParam = string | undefined;

@@ -6,7 +6,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
 import { usePostQuotesQuery } from '#/state/queries/post-quotes';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';

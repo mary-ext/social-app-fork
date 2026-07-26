@@ -2,7 +2,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';

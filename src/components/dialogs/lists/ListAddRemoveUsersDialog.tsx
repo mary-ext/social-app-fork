@@ -9,7 +9,7 @@ import { useQueries } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import {
 	listsWithMembershipQueryOptions,

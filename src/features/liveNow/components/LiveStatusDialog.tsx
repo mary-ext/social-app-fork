@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import { profileTarget } from '#/lib/routes/targets';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';

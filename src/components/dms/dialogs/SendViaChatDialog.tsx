@@ -6,7 +6,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';

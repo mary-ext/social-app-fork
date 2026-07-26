@@ -11,7 +11,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 
 import { ConvoProvider, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useJoinRequestMutation } from '#/state/queries/messages/join-requests';
 import {
 	createListJoinRequestsQueryKey,

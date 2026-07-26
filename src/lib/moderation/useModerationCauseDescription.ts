@@ -3,7 +3,7 @@ import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moder
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import type { AppModerationCause } from '#/lib/moderation/types';
 
-import { useLabelDefinitions } from '#/state/preferences/label-defs';
+import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { useSession } from '#/state/session';
 
 import { LOCALE } from '#/locale/intl/locale';

@@ -8,7 +8,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { conversationTarget } from '#/lib/routes/targets';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
 import { useEditGroupChatName } from '#/state/queries/messages/edit-group-chat-name';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';

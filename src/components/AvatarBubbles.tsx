@@ -7,7 +7,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';

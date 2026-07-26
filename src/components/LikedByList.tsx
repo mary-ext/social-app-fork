@@ -1,6 +1,6 @@
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useLikedByQuery } from '#/state/queries/post-liked-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 

@@ -4,7 +4,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';

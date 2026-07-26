@@ -5,7 +5,7 @@ import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcut
 import { useInterestsDisplayNames } from '#/lib/interests';
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSuggestedFeedsQuery';

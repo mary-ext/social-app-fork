@@ -8,7 +8,7 @@ import { mapDefined } from '@mary/array-fns';
 import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';

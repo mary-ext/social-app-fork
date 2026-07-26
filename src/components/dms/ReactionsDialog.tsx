@@ -4,7 +4,7 @@ import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 import type { SessionAccount } from '#/state/session/types';
 

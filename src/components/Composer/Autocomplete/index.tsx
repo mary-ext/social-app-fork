@@ -2,7 +2,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import type {

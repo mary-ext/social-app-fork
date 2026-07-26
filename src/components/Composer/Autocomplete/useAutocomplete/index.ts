@@ -13,7 +13,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';

@@ -9,7 +9,7 @@ import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
 import { useMarkJoinRequestsRead } from '#/state/queries/messages/mark-join-request-read';
 import { useSession } from '#/state/session';

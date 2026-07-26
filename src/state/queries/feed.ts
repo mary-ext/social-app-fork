@@ -39,7 +39,7 @@ import { getClients, useSession } from '#/state/session';
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
 
-import { useModerationOpts } from '../preferences/moderation-opts';
+import { useModerationOpts } from '../moderation/moderation-opts';
 import type { FeedDescriptor } from './post-feed';
 import { precacheResolvedUri } from './resolve-uri';
 

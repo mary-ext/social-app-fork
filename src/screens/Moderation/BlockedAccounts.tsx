@@ -3,7 +3,7 @@ import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 
 import { logger } from '#/logger';

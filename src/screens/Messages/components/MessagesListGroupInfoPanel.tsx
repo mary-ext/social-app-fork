@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 import { useSession } from '#/state/session';
 

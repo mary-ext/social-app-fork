@@ -21,7 +21,7 @@ import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { softReset } from '#/state/events';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useLabelerInfoQuery } from '#/state/queries/labeler';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';

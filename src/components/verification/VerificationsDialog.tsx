@@ -2,7 +2,7 @@ import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 
 import { urls } from '#/lib/constants';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 

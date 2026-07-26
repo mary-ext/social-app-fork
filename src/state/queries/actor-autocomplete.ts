@@ -17,7 +17,7 @@ import { toModerationPreferences } from '#/lib/moderation/prefs';
 import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 
-import { useModerationOpts } from '../preferences/moderation-opts';
+import { useModerationOpts } from '../moderation/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
 
 const DEFAULT_MOD_OPTS = {

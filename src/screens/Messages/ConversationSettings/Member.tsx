@@ -4,7 +4,7 @@ import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useSession } from '#/state/session';
 

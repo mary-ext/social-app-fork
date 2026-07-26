@@ -13,7 +13,7 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 

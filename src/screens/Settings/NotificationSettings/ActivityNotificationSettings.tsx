@@ -5,7 +5,7 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActivitySubscriptionsQuery } from '#/state/queries/activity-subscriptions';
 import {
 	useNotificationSettingsQuery,

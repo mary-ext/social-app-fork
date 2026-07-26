@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
 import {
 	LINEAR_VIEW_BELOW,

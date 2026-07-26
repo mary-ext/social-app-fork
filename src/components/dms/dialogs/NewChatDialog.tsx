@@ -14,7 +14,7 @@ import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isNetworkError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useCreateGroupChat } from '#/state/queries/messages/create-group-chat';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';

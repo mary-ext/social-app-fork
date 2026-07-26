@@ -12,7 +12,7 @@ import { isOnlyEmoji } from '#/lib/strings/emoji';
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';
 import type { ConvoItem } from '#/state/messages/convo/types';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useSession } from '#/state/session';

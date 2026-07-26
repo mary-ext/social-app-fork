@@ -13,7 +13,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useProfileQuery } from '#/state/queries/profile';
 import {

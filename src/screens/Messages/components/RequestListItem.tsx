@@ -9,7 +9,7 @@ import {
 import { conversationTarget } from '#/lib/routes/targets';
 
 import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';

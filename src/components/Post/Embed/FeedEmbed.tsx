@@ -1,7 +1,7 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';

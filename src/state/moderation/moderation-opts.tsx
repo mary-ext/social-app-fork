@@ -5,7 +5,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { APP_LABELERS } from '#/lib/moderation/const';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
-import { useLabelDefinitions } from '#/state/preferences/label-defs';
+import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
 import { useSession } from '#/state/session';
 

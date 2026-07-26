@@ -7,7 +7,7 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { Trans } from '#/locale/Trans';
 

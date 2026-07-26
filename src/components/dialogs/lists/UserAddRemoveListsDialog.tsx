@@ -2,7 +2,7 @@ import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import {
 	type ListWithMembership,
 	useListMembershipAddMutation,
