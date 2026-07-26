@@ -29,8 +29,6 @@ import { m } from '#/paraglide/messages';
 import { router } from '#/routes';
 import { Splash } from '#/Splash';
 
-import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBottomBarBorder';
-
 function InnerApp() {
 	const { currentAccount, isSessionResuming, sessionResumeFailed } = useSession();
 
@@ -53,10 +51,8 @@ function InnerApp() {
 									<UnreadNotifsProvider>
 										<MutedThreadsProvider>
 											<ServiceConfigProvider>
-												<HideBottomBarBorderProvider>
-													<RouterView router={router} />
-													<ToastOutlet />
-												</HideBottomBarBorderProvider>
+												<RouterView router={router} />
+												<ToastOutlet />
 											</ServiceConfigProvider>
 										</MutedThreadsProvider>
 									</UnreadNotifsProvider>

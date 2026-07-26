@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
 
 import { clsx } from 'clsx';
 
-import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
+import { useIsBottomBarBorderHidden } from '#/lib/hooks/hide-bottom-bar-border';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
@@ -102,7 +102,7 @@ const useLongPress = (onLongPress?: () => void) => {
 export function BottomBar() {
 	const { hasSession, currentAccount } = useSession();
 	const { signinDialogHandle } = useGlobalDialogsHandleContext();
-	const hideBorder = useHideBottomBarBorder();
+	const hideBorder = useIsBottomBarBorderHidden();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const isLabeler = profile?.associated?.labeler;
 

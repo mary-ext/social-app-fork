@@ -1,5 +1,5 @@
+import { useHideBottomBar } from '#/lib/hooks/hide-bottom-bar-border';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBorder';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -16,7 +16,7 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const { gtMobile } = useBreakpoints();
 
-	useHideBottomBarBorderForScreen();
+	useHideBottomBar();
 
 	return (
 		<div className={css.outer({ isDesktop: gtMobile })}>
