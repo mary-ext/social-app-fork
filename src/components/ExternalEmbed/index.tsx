@@ -6,8 +6,6 @@ import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
-import { useExternalEmbedsPrefs } from '#/state/preferences';
-
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { ExternalGif } from '#/components/ExternalEmbed/ExternalGif';
 import { ExternalPlayer } from '#/components/ExternalEmbed/ExternalPlayer';
@@ -16,6 +14,7 @@ import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
+import { useExternalEmbedsPrefs } from '#/storage/hooks/external-embeds';
 
 import * as styles from './index.css';
 

@@ -11,7 +11,6 @@ import { QueryProvider } from '#/lib/react-query';
 
 import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { MessagesProvider } from '#/state/messages';
-import { Provider as PrefsStateProvider } from '#/state/preferences';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
@@ -66,13 +65,11 @@ function App() {
 	 */
 	return (
 		<SessionProvider>
-			<PrefsStateProvider>
-				<ShellStateProvider>
-					<DialogStateProvider>
-						<InnerApp />
-					</DialogStateProvider>
-				</ShellStateProvider>
-			</PrefsStateProvider>
+			<ShellStateProvider>
+				<DialogStateProvider>
+					<InnerApp />
+				</DialogStateProvider>
+			</ShellStateProvider>
 		</SessionProvider>
 	);
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
+import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE, setAppLanguage } from '#/locale/intl/locale';

@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import { useLanguagePrefs } from '#/state/preferences';
+import { useLanguagePrefs } from '#/state/preferences/languages';
 
 import { resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

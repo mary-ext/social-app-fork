@@ -17,7 +17,7 @@ import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
-import { useLabelDefinitions } from '#/state/preferences';
+import { useLabelDefinitions } from '#/state/preferences/label-defs';
 
 import { LOCALE } from '#/locale/intl/locale';
 
