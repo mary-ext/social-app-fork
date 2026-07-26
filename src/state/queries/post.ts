@@ -11,10 +11,9 @@ import { createRecord, deleteRecord } from '#/lib/api/records';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
+import { setThreadMute, useIsThreadMuted } from '#/state/cache/thread-mutes';
 import type { Shadow } from '#/state/cache/types';
 import { getClients, useSession } from '#/state/session';
-
-import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
@@ -326,7 +325,6 @@ export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView
 	const threadMuteMutation = useThreadMuteMutation();
 	const threadUnmuteMutation = useThreadUnmuteMutation();
 	const isThreadMuted = useIsThreadMuted(rootUri, post.viewer?.threadMuted);
-	const setThreadMute = useSetThreadMute();
 
 	const queueToggle = useToggleMutationQueue<boolean>({
 		initialState: isThreadMuted,
@@ -353,13 +351,13 @@ export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView
 		// optimistically update
 		setThreadMute(rootUri, true);
 		return queueToggle(true);
-	}, [setThreadMute, rootUri, queueToggle]);
+	}, [rootUri, queueToggle]);
 
 	const queueUnmuteThread = useCallback(() => {
 		// optimistically update
 		setThreadMute(rootUri, false);
 		return queueToggle(false);
-	}, [rootUri, setThreadMute, queueToggle]);
+	}, [rootUri, queueToggle]);
 
 	return [isThreadMuted, queueMuteThread, queueUnmuteThread] as const;
 }
