@@ -33,29 +33,29 @@ type ResolvedExternalLink = {
 
 type ResolvedPostRecord = {
 	type: 'record';
-	record: ComAtprotoRepoStrongRef.Main;
 	kind: 'post';
+	record: ComAtprotoRepoStrongRef.Main;
 	view: AppBskyFeedDefs.PostView;
 };
 
 type ResolvedFeedRecord = {
 	type: 'record';
-	record: ComAtprotoRepoStrongRef.Main;
 	kind: 'feed';
+	record: ComAtprotoRepoStrongRef.Main;
 	view: AppBskyFeedDefs.GeneratorView;
 };
 
 type ResolvedListRecord = {
 	type: 'record';
-	record: ComAtprotoRepoStrongRef.Main;
 	kind: 'list';
+	record: ComAtprotoRepoStrongRef.Main;
 	view: AppBskyGraphDefs.ListView;
 };
 
 type ResolvedStarterPackRecord = {
 	type: 'record';
-	record: ComAtprotoRepoStrongRef.Main;
 	kind: 'starter-pack';
+	record: ComAtprotoRepoStrongRef.Main;
 	view: AppBskyGraphDefs.StarterPackView;
 };
 
@@ -84,11 +84,11 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
 			return {
 				type: 'record',
+				kind: 'feed',
 				record: {
 					uri: res.view.uri,
 					cid: res.view.cid,
 				},
-				kind: 'feed',
 				view: res.view,
 			};
 		}
@@ -98,11 +98,11 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
 			return {
 				type: 'record',
+				kind: 'list',
 				record: {
 					uri: res.list.uri,
 					cid: res.list.cid,
 				},
-				kind: 'list',
 				view: res.list,
 			};
 		}
@@ -114,11 +114,11 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			}
 			return {
 				type: 'record',
+				kind: 'post',
 				record: {
 					cid: post.cid,
 					uri: post.uri,
 				},
-				kind: 'post',
 				view: post,
 			};
 		}
@@ -132,11 +132,11 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			);
 			return {
 				type: 'record',
+				kind: 'starter-pack',
 				record: {
 					uri: res.starterPack.uri,
 					cid: res.starterPack.cid,
 				},
-				kind: 'starter-pack',
 				view: res.starterPack,
 			};
 		}
