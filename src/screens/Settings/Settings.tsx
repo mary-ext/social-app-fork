@@ -22,8 +22,8 @@ import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
-import { useDevMode } from '#/storage/hooks/dev-mode';
+import { setDebugFeedContextEnabled, useDebugFeedContextEnabled } from '#/storage/hooks/debug';
+import { setDevMode, useDevMode } from '#/storage/hooks/dev-mode';
 
 import { AccountsSection } from './components/AccountsSection';
 import { ServiceWorkerSection } from './components/ServiceWorkerSection';
@@ -128,8 +128,8 @@ export function SettingsScreen() {
 }
 
 function DevOptionsRow({ className }: { className?: string }) {
-	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
-	const [devModeEnabled, setDevModeEnabled] = useDevMode();
+	const debugFeedContextEnabled = useDebugFeedContextEnabled();
+	const devModeEnabled = useDevMode();
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -143,7 +143,7 @@ function DevOptionsRow({ className }: { className?: string }) {
 		>
 			<Settings.SwitchRow
 				label={m['screens.settings.developer.mode']()}
-				onChange={setDevModeEnabled}
+				onChange={setDevMode}
 				value={devModeEnabled}
 			>
 				<Settings.Label titleText={m['screens.settings.developer.mode']()} />

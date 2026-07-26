@@ -1,9 +1,10 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether image embeds draw their alt-text badge at the larger size. */
 export function useLargeAltBadgeEnabled() {
-	const [largeAltBadgeEnabled = false, setLargeAltBadgeEnabled] = useStorage(device, [
-		'largeAltBadgeEnabled',
-	]);
+	return useStorageValue(device, ['largeAltBadgeEnabled']) ?? false;
+}
 
-	return [largeAltBadgeEnabled, setLargeAltBadgeEnabled] as const;
+export function setLargeAltBadgeEnabled(value: boolean) {
+	device.set(['largeAltBadgeEnabled'], value);
 }

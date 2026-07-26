@@ -1,9 +1,12 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether dev-only affordances are shown. */
 export function useDevMode() {
-	const [devMode = false, setDevMode] = useStorage(device, ['devMode']);
+	return useStorageValue(device, ['devMode']) ?? false;
+}
 
-	return [devMode, setDevMode] as const;
+export function setDevMode(value: boolean) {
+	device.set(['devMode'], value);
 }
 
 let cachedIsDevMode: boolean | undefined;

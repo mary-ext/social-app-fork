@@ -6,13 +6,13 @@ import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
-import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
+import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
+import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export function AccessibilitySettingsScreen() {
 	useTitle(m['navigation.settings.accessibility.title']());
-	const [requireAltTextEnabled, setRequireAltTextEnabled] = useRequireAltTextEnabled();
-	const [largeAltBadgeEnabled, setLargeAltBadgeEnabled] = useLargeAltBadgeEnabled();
+	const requireAltTextEnabled = useRequireAltTextEnabled();
+	const largeAltBadgeEnabled = useLargeAltBadgeEnabled();
 
 	return (
 		<Layout.Screen>

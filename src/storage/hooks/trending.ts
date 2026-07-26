@@ -1,7 +1,10 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether trending topics are surfaced across the app. */
 export function useIsTrendingEnabled() {
-	const [trendingEnabled = true] = useStorage(device, ['trendingEnabled']);
+	return useStorageValue(device, ['trendingEnabled']) ?? true;
+}
 
-	return trendingEnabled;
+export function setTrendingEnabled(value: boolean) {
+	device.set(['trendingEnabled'], value);
 }

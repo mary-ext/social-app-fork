@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
-import { useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
+import { addRecentEmoji, setEmojiSkinTone, useEmojiSkinTone, useRecentEmojis } from '#/storage/hooks/emoji';
 import type { SkinTone } from '#/storage/schema';
 
 import { CategoryNav } from './components/CategoryNav';
@@ -32,8 +32,8 @@ import { type EmojiCell, makeCell, toSelection } from './util';
 export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, shiftHeld: boolean) => void }) {
 	const { data } = useQuery(emojiDataQuery());
 	const [query, setQuery] = useState('');
-	const [skinTone, setSkinTone] = useEmojiSkinTone();
-	const [recents, addRecent] = useRecentEmojis();
+	const skinTone = useEmojiSkinTone();
+	const recents = useRecentEmojis();
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	const gridRef = useRef<EmojiGridHandle>(null);
 	const pendingJump = useRef<string | null>(null);
@@ -54,7 +54,7 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 	}
 
 	const handleSelect = (cell: EmojiCell, shiftHeld: boolean) => {
-		addRecent(cell.emoji.id);
+		addRecentEmoji(cell.emoji.id);
 		onEmojiSelect(toSelection(cell.emoji, skinTone), shiftHeld);
 		if (!shiftHeld) {
 			setQuery('');
@@ -102,7 +102,7 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 						/>
 						<SearchField.Slot>
 							<Autocomplete.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
-							<SkinToneButton onChange={setSkinTone} tone={skinTone} />
+							<SkinToneButton onChange={setEmojiSkinTone} tone={skinTone} />
 						</SearchField.Slot>
 					</SearchField.Root>
 				</div>

@@ -1,7 +1,7 @@
 import { setElementVars } from '@vanilla-extract/dynamic';
 import { getVarName } from '@vanilla-extract/private';
 
-import { type Device, device, useStorage } from '#/storage';
+import { type Device, device, useStorageValue } from '#/storage';
 import { colors } from '#/styles/colors';
 import {
 	fontFamilyVar,
@@ -85,19 +85,19 @@ export const initAppearance = () => {
 // #region preferences
 
 export const useColorMode = (): ColorMode => {
-	return useStorage(device, ['colorMode'])[0] ?? 'system';
+	return useStorageValue(device, ['colorMode']) ?? 'system';
 };
 
 export const useDarkTheme = (): DarkTheme => {
-	return useStorage(device, ['darkTheme'])[0] ?? 'dim';
+	return useStorageValue(device, ['darkTheme']) ?? 'dim';
 };
 
 export const useFontFamily = (): FontFamily => {
-	return useStorage(device, ['fontFamily'])[0] ?? 'theme';
+	return useStorageValue(device, ['fontFamily']) ?? 'theme';
 };
 
 export const useFontScale = (): FontScale => {
-	return useStorage(device, ['fontScale'])[0] ?? '0';
+	return useStorageValue(device, ['fontScale']) ?? '0';
 };
 
 export const useFontScaleMultiplier = (): number => {

@@ -1,9 +1,10 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether the composer blocks posting images that have no alt text. */
 export function useRequireAltTextEnabled() {
-	const [requireAltTextEnabled = false, setRequireAltTextEnabled] = useStorage(device, [
-		'requireAltTextEnabled',
-	]);
+	return useStorageValue(device, ['requireAltTextEnabled']) ?? false;
+}
 
-	return [requireAltTextEnabled, setRequireAltTextEnabled] as const;
+export function setRequireAltTextEnabled(value: boolean) {
+	device.set(['requireAltTextEnabled'], value);
 }

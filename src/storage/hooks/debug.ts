@@ -1,9 +1,10 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether feed posts expose the feed context that surfaced them. */
 export function useDebugFeedContextEnabled() {
-	const [debugFeedContextEnabled = false, setDebugFeedContextEnabled] = useStorage(device, [
-		'debugFeedContextEnabled',
-	]);
+	return useStorageValue(device, ['debugFeedContextEnabled']) ?? false;
+}
 
-	return [debugFeedContextEnabled, setDebugFeedContextEnabled] as const;
+export function setDebugFeedContextEnabled(value: boolean) {
+	device.set(['debugFeedContextEnabled'], value);
 }

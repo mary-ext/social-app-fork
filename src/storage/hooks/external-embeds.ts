@@ -1,11 +1,10 @@
 import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** the consent state recorded for each external embed source. */
 export function useExternalEmbedsPrefs() {
-	const [externalEmbeds = {}] = useStorage(device, ['externalEmbeds']);
-
-	return externalEmbeds;
+	return useStorageValue(device, ['externalEmbeds']) ?? {};
 }
 
 /**

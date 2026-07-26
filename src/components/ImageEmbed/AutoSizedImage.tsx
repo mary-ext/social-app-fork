@@ -30,7 +30,7 @@ export type AutoSizedImageProps = {
  */
 export function AutoSizedImage({ image, crop = 'constrained', payload, onPressIn }: AutoSizedImageProps) {
 	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
-	const [largeAlt] = useLargeAltBadgeEnabled();
+	const largeAlt = useLargeAltBadgeEnabled();
 
 	const measure = useCallback((node: HTMLImageElement | null) => {
 		if (node?.complete) {

@@ -69,7 +69,7 @@ function ProfileMenu({
 	const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy;
 	const isFollowingBlockedAccount = isFollowing && isBlocked;
 	const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked;
-	const [devModeEnabled] = useDevMode();
+	const devModeEnabled = useDevMode();
 	const { canGoLive } = useLiveNowConfig();
 	const status = useActorStatus(profile);
 

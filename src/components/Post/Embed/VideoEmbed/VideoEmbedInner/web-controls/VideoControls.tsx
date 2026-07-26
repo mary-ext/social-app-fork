@@ -23,7 +23,7 @@ import { Text } from '#/components/Text';
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
-import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
+import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
 import { GifPresentationControls } from '../../GifPresentationControls';
 import { TimeIndicator } from '../TimeIndicator';
@@ -75,7 +75,7 @@ export function Controls({
 		error,
 		canPlay,
 	} = useVideoElement(videoRef);
-	const [subtitlesEnabled, setSubtitlesEnabled] = useSubtitlesEnabled();
+	const subtitlesEnabled = useSubtitlesEnabled();
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
@@ -117,7 +117,7 @@ export function Controls({
 
 	// autoplay/pause based on visibility
 	const isWithinMessage = useIsWithinMessage();
-	const [autoplayDisabledPref] = useAutoplayDisabled();
+	const autoplayDisabledPref = useAutoplayDisabled();
 	const autoplayDisabled = autoplayDisabledPref || isWithinMessage;
 	useEffect(() => {
 		if (active) {

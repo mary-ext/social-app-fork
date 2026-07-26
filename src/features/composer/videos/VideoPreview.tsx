@@ -29,7 +29,7 @@ export function VideoPreview({
 }) {
 	// TODO: figure out how to pause a GIF for reduced motion
 	// it's not possible using an img tag -sfn
-	const [autoplayDisabled] = useAutoplayDisabled();
+	const autoplayDisabled = useAutoplayDisabled();
 	const [previewFailed, setPreviewFailed] = useState(false);
 	const url = useBlobUrl(video.blob);
 

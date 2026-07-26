@@ -1,11 +1,12 @@
 import { getReducedMotion } from '#/lib/reduced-motion';
 
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether videos and GIFs are held still, defaulting to the OS reduced-motion preference. */
 export function useAutoplayDisabled() {
-	const [autoplayDisabled = getReducedMotion(), setAutoplayDisabled] = useStorage(device, [
-		'disableAutoplay',
-	]);
+	return useStorageValue(device, ['disableAutoplay']) ?? getReducedMotion();
+}
 
-	return [autoplayDisabled, setAutoplayDisabled] as const;
+export function setAutoplayDisabled(value: boolean) {
+	device.set(['disableAutoplay'], value);
 }

@@ -2,7 +2,7 @@ import type { Account, Auth, Device } from '#/storage/schema';
 import { Storage } from '#/storage/storage';
 
 export * from '#/storage/schema';
-export { useStorage } from '#/storage/use-storage';
+export { useStorageValue } from '#/storage/use-storage';
 
 /** device data specific to the device that does not vary based on account. */
 export const device = new Storage<[], Device>({ id: 'bsky_device' });

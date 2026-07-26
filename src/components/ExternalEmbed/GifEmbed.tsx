@@ -27,7 +27,7 @@ export type GifEmbedProps = {
 
 /** Autoplaying GIF (tenor/klipy), rendered as a muted looping `<video>` with play/pause + GIF/ALT badges. */
 export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, className }: GifEmbedProps) {
-	const [autoplayDisabled] = useAutoplayDisabled();
+	const autoplayDisabled = useAutoplayDisabled();
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [isPlaying, setIsPlaying] = useState(!autoplayDisabled);
 	const [isLoaded, setIsLoaded] = useState(false);

@@ -36,7 +36,7 @@ export type GalleryProps = {
 };
 
 export function Gallery({ images, lightboxImages, onPressIn, viewContext }: GalleryProps) {
-	const [largeAltBadge] = useLargeAltBadgeEnabled();
+	const largeAltBadge = useLargeAltBadgeEnabled();
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
 

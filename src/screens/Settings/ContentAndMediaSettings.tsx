@@ -20,14 +20,13 @@ import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { device } from '#/storage';
-import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
-import { useIsTrendingEnabled } from '#/storage/hooks/trending';
+import { setAutoplayDisabled, useAutoplayDisabled } from '#/storage/hooks/autoplay';
+import { setTrendingEnabled, useIsTrendingEnabled } from '#/storage/hooks/trending';
 
 export function ContentAndMediaSettingsScreen() {
 	useTitle(m['navigation.settings.contentAndMedia.title']());
 
-	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
+	const autoplayDisabledPref = useAutoplayDisabled();
 	const trendingEnabled = useIsTrendingEnabled();
 
 	const { sort, setSort, view, setView } = useThreadPreferences({ save: true });
@@ -69,7 +68,7 @@ export function ContentAndMediaSettingsScreen() {
 						</Settings.LinkRow>
 						<Settings.SwitchRow
 							label={m['screens.settings.media.autoplay']()}
-							onChange={(value) => setAutoplayDisabledPref(!value)}
+							onChange={(value) => setAutoplayDisabled(!value)}
 							value={!autoplayDisabledPref}
 						>
 							<Settings.Icon icon={PlayIcon} />
@@ -77,7 +76,7 @@ export function ContentAndMediaSettingsScreen() {
 						</Settings.SwitchRow>
 						<Settings.SwitchRow
 							label={m['screens.settings.media.trending']()}
-							onChange={(value) => device.set(['trendingEnabled'], value)}
+							onChange={setTrendingEnabled}
 							value={trendingEnabled}
 						>
 							<Settings.Icon icon={Graph} />

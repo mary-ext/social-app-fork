@@ -1,7 +1,10 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 
+/** whether video playback starts with subtitles turned on. */
 export function useSubtitlesEnabled() {
-	const [subtitlesEnabled = true, setSubtitlesEnabled] = useStorage(device, ['subtitlesEnabled']);
+	return useStorageValue(device, ['subtitlesEnabled']) ?? true;
+}
 
-	return [subtitlesEnabled, setSubtitlesEnabled] as const;
+export function setSubtitlesEnabled(value: boolean) {
+	device.set(['subtitlesEnabled'], value);
 }

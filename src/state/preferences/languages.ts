@@ -2,7 +2,7 @@ import { definite } from '@mary/array-fns';
 
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 
-import { device, type LanguagePrefs, useStorage } from '#/storage';
+import { device, type LanguagePrefs, useStorageValue } from '#/storage';
 
 const defaults: LanguagePrefs = {
 	contentLanguages: deviceLanguageCodes,
@@ -14,9 +14,7 @@ const defaults: LanguagePrefs = {
 const read = (): LanguagePrefs => device.get(['languagePrefs']) ?? defaults;
 
 export function useLanguagePrefs() {
-	const [languagePrefs = defaults] = useStorage(device, ['languagePrefs']);
-
-	return languagePrefs;
+	return useStorageValue(device, ['languagePrefs']) ?? defaults;
 }
 
 export function useLanguagePrefsApi() {

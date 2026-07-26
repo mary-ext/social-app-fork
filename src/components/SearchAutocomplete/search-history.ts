@@ -1,6 +1,6 @@
 import { useSession } from '#/state/session';
 
-import { account, type SearchHistoryEntry, useStorage } from '#/storage';
+import { account, type SearchHistoryEntry, useStorageValue } from '#/storage';
 
 /** the most recent entries to retain; older ones drop off as new searches arrive. */
 const MAX_ENTRIES = 20;
@@ -17,16 +17,25 @@ const entryKey = (entry: SearchHistoryEntry): string =>
 export function useSearchHistory() {
 	const { currentAccount } = useSession();
 	// fall back to a shared 'pwi' (public web interface) bucket when signed out.
-	const [history = [], setHistory] = useStorage(account, [currentAccount?.did ?? 'pwi', 'searchHistory']);
+	const did = currentAccount?.did ?? 'pwi';
+	const history = useStorageValue(account, [did, 'searchHistory']) ?? [];
 
 	const record = (entry: SearchHistoryEntry) => {
 		const key = entryKey(entry);
-		setHistory([entry, ...history.filter((existing) => entryKey(existing) !== key)].slice(0, MAX_ENTRIES));
+		const current = account.get([did, 'searchHistory']) ?? [];
+		account.set(
+			[did, 'searchHistory'],
+			[entry, ...current.filter((existing) => entryKey(existing) !== key)].slice(0, MAX_ENTRIES),
+		);
 	};
 
 	const remove = (entry: SearchHistoryEntry) => {
 		const key = entryKey(entry);
-		setHistory(history.filter((existing) => entryKey(existing) !== key));
+		const current = account.get([did, 'searchHistory']) ?? [];
+		account.set(
+			[did, 'searchHistory'],
+			current.filter((existing) => entryKey(existing) !== key),
+		);
 	};
 
 	return { history, record, remove };

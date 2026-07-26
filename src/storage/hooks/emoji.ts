@@ -1,30 +1,32 @@
-import { device, useStorage } from '#/storage';
+import { device, useStorageValue } from '#/storage';
 import type { SkinTone } from '#/storage/schema';
 
 /** cap for the picker's recently-used list. */
 const RECENTS_LIMIT = 36;
 
-/**
- * reads and updates the persisted emoji skin tone.
- *
- * @returns the current tone (defaulting to 1) and a setter
- */
+/** the persisted emoji skin tone, defaulting to 1. */
 export function useEmojiSkinTone() {
-	const [tone = 1, setTone] = useStorage(device, ['emojiSkinTone']);
-	return [tone, (next: SkinTone) => setTone(next)] as const;
+	return useStorageValue(device, ['emojiSkinTone']) ?? 1;
+}
+
+export function setEmojiSkinTone(tone: SkinTone) {
+	device.set(['emojiSkinTone'], tone);
+}
+
+/** the persisted recently-used emoji ids, most recent first. */
+export function useRecentEmojis() {
+	return useStorageValue(device, ['recentEmojis']) ?? [];
 }
 
 /**
- * reads the persisted recently-used emoji and exposes an `add` that moves an id to the front, dedupes, and
- * caps the list.
+ * records an emoji as recently used, moving it to the front of the list, deduping, and capping the length.
  *
- * @returns the recent emoji ids (most recent first) and an `add` function
+ * @param id emoji id to record
  */
-export function useRecentEmojis() {
-	const [recents = [], setRecents] = useStorage(device, ['recentEmojis']);
-	const add = (id: string) => {
-		const current = device.get(['recentEmojis']) ?? [];
-		setRecents([id, ...current.filter((existing) => existing !== id)].slice(0, RECENTS_LIMIT));
-	};
-	return [recents, add] as const;
+export function addRecentEmoji(id: string) {
+	const current = device.get(['recentEmojis']) ?? [];
+	device.set(
+		['recentEmojis'],
+		[id, ...current.filter((existing) => existing !== id)].slice(0, RECENTS_LIMIT),
+	);
 }

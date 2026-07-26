@@ -31,7 +31,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 	const { hasSession } = useSession();
 	const router = useRouter();
 	const sendViaChatHandle = Dialog.useDialogHandle();
-	const [devModeEnabled] = useDevMode();
+	const devModeEnabled = useDevMode();
 	const bookmark = useBookmark(post);
 
 	const postUri = post.uri;

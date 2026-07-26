@@ -7,7 +7,7 @@ import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 import * as css from './DiscoverDebug.css';
 
 export function DiscoverDebug({ feedContext }: { feedContext: string | undefined }) {
-	const [debugFeedContextEnabled] = useDebugFeedContextEnabled();
+	const debugFeedContextEnabled = useDebugFeedContextEnabled();
 
 	if (!debugFeedContextEnabled || !feedContext) {
 		return null;
