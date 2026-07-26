@@ -103,7 +103,12 @@ function ConvoProviderInner({
 	useFocusEffect(() => {
 		if (isVisible) {
 			convo.resume();
-			markAsRead({ convoId });
+			// nothing to clear on a conversation we already have as read. the view can lag the server by
+			// the age of the list fetch, but the unconditional call on the way out covers that -- and
+			// covers anything that arrives while we're sitting here regardless.
+			if (convo.convo?.view.unreadCount) {
+				markAsRead({ convoId });
+			}
 
 			return () => {
 				convo.background();

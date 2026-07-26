@@ -126,9 +126,9 @@ export function useMarkAsReadMutation() {
 					},
 				);
 			}
-			return { prevListQueries, prevUnreadCountsQueries };
+			return { adjustedCounts: !!unreadStatus, prevListQueries, prevUnreadCountsQueries };
 		},
-		onSuccess(_, { convoId }) {
+		onSuccess(_, { convoId }, context) {
 			if (!convoId) {
 				return;
 			}
@@ -136,8 +136,12 @@ export function useMarkAsReadMutation() {
 			// the optimistic badge arithmetic can drift from the server (e.g. a convo
 			// whose status differs between caches, or a sentinel-capped count).
 			// invalidate so the 15s-stale count query self-corrects on next access
-			// rather than waiting for a log event
-			void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
+			// rather than waiting for a log event. only worth doing when we actually
+			// moved a counter - marking an already-read convo has nothing to correct,
+			// and this fires on entering *and* leaving every conversation
+			if (context?.adjustedCounts) {
+				void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
+			}
 
 			queryClient.setQueriesData({ queryKey: [LIST_CONVOS_KEY] }, (old?: ConvoListQueryData) => {
 				if (!old) {
