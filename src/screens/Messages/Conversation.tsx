@@ -62,9 +62,7 @@ function Inner() {
 
 	useViewportZoomLock({ enabled: isFocused });
 
-	// the agent is the screen's single source for the view: it starts from the same precached
-	// `ConvoView` a query would have read, then keeps it current itself.
-	const convo = convoState.convo ?? null;
+	const convo = convoState.convo;
 
 	if (convoState.status === ConvoStatus.Error) {
 		return (
@@ -97,7 +95,7 @@ function InnerReady({
 	isActive,
 	isDisabled,
 }: {
-	convo: ConvoWithDetails | null;
+	convo: ConvoWithDetails | undefined;
 	isActive: boolean;
 	isDisabled: boolean;
 }) {

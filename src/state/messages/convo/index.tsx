@@ -103,10 +103,9 @@ function ConvoProviderInner({
 	useFocusEffect(() => {
 		if (isVisible) {
 			convo.resume();
-			// nothing to clear on a conversation we already have as read. the view can lag the server by
-			// the age of the list fetch, but the unconditional call on the way out covers that -- and
-			// covers anything that arrives while we're sitting here regardless.
-			if (convo.convo?.view.unreadCount) {
+			// skipped only when we know there's nothing to clear; no view yet means we don't. read off the
+			// agent rather than `service`, whose snapshot is a new object on every commit
+			if (convo.convo === undefined || convo.convo.view.unreadCount > 0) {
 				markAsRead({ convoId });
 			}
 
@@ -163,6 +162,9 @@ function ConvoProviderInner({
 						data.kind.lockStatusModerationOverride !== convo.convo.details.lockStatusModerationOverride
 					) {
 						convo.updateLockStatus(data.kind.lockStatus, data.kind.lockStatusModerationOverride);
+					}
+					if (data.kind.unreadJoinRequestCount !== convo.convo.details.unreadJoinRequestCount) {
+						convo.updateUnreadJoinRequestCount(data.kind.unreadJoinRequestCount ?? 0);
 					}
 				}
 				if (

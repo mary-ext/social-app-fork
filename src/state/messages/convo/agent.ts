@@ -13,6 +13,7 @@ import type { $type, Did } from '@atcute/lexicons';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';
+import { replaceEqualDeep } from '#/lib/functions';
 import { errorMessage, isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
 
 import {
@@ -169,6 +170,7 @@ export class Convo {
 		this.updateGroupMembers = this.updateGroupMembers.bind(this);
 		this.updateJoinLink = this.updateJoinLink.bind(this);
 		this.updateLockStatus = this.updateLockStatus.bind(this);
+		this.updateUnreadJoinRequestCount = this.updateUnreadJoinRequestCount.bind(this);
 	}
 
 	private commit() {
@@ -353,12 +355,12 @@ export class Convo {
 				switch (action.event) {
 					case ConvoDispatchEvent.Init: {
 						this.status = ConvoStatus.Initializing;
-						void this.setup();
-						// history doesn't depend on the convo view, so don't make it wait on `setup()` --
-						// the two round trips overlap instead of stacking.
-						void this.fetchMessageHistory();
+						// `setup()` can reach `Ready` before its first await, so wire these up first
 						this.setupFirehose();
 						this.requestPollInterval(ACTIVE_POLL_INTERVAL);
+						void this.setup();
+						// history doesn't depend on the convo view, so let the round trips overlap
+						void this.fetchMessageHistory();
 						break;
 					}
 				}
@@ -538,8 +540,8 @@ export class Convo {
 	}
 
 	private reset() {
-		// the view is kept: it's the same data a freshly-constructed Convo would get as placeholder, and
-		// setup() refreshes it either way. dropping it would blank the conversation for a round trip.
+		// `this.convo` is deliberately kept: it's the placeholder a fresh Convo would start from, and
+		// dropping it would blank the conversation until setup() refetches
 		this.snapshot = undefined;
 
 		this.status = ConvoStatus.Uninitialized;
@@ -557,10 +559,7 @@ export class Convo {
 		// stale — drop it and trust the from-scratch refetch.
 		this.profileShadows = new Map();
 
-		// `relatedProfiles` was just cleared, so re-seed it from the view we kept.
-		if (this.convo) {
-			this.setConvo(this.convo.view);
-		}
+		this.indexConvoMembers();
 
 		this.pendingMessageFailure = null;
 		this.fetchMessageHistoryError = undefined;
@@ -585,23 +584,46 @@ export class Convo {
 		}
 	}
 
-	private setConvo(convo: ChatBskyConvoDefs.ConvoView) {
-		this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo;
-		if (this.convo) {
-			for (const member of this.convo.members) {
-				this.relatedProfiles.set(member.did, member);
+	// message rows take the map as a prop and compare it by identity, so it has to be replaced on a real
+	// change and left alone otherwise
+	private setRelatedProfiles(profiles: Iterable<ChatBskyActorDefs.ProfileViewBasic>) {
+		let changed = false;
+
+		for (const profile of profiles) {
+			const existing = this.relatedProfiles.get(profile.did);
+			const merged = existing ? replaceEqualDeep(existing, profile) : profile;
+			if (merged === existing) {
+				continue;
 			}
+			this.relatedProfiles.set(profile.did, merged);
+			changed = true;
+		}
+
+		if (changed) {
+			this.relatedProfiles = new Map(this.relatedProfiles);
+		}
+
+		return changed;
+	}
+
+	private indexConvoMembers() {
+		if (this.convo) {
+			this.setRelatedProfiles(this.convo.members);
 		}
 		this.applyProfileShadows();
+	}
+
+	private setConvo(convo: ChatBskyConvoDefs.ConvoView) {
+		const parsed = parseConvoView(convo, this.senderUserDid);
+		this.convo = parsed ?? this.convo;
+		this.indexConvoMembers();
+		return !!parsed;
 	}
 
 	private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
 		if (this.convo) {
 			this.convo = parseConvoView({ ...this.convo.view, ...convo }, this.senderUserDid) ?? this.convo;
-			for (const member of this.convo.members) {
-				this.relatedProfiles.set(member.did, member);
-			}
-			this.applyProfileShadows();
+			this.indexConvoMembers();
 		}
 	}
 
@@ -610,9 +632,28 @@ export class Convo {
 		this.setConvo(data.convo);
 	}
 
-	/** the viewer's own membership in the currently held view, if we hold one and they're in it. */
 	private getSelfMember() {
 		return this.convo?.members.find((m) => m.did === this.senderUserDid);
+	}
+
+	private failSetup(e: unknown) {
+		if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+			logger.error('setup failed', {
+				safeMessage: errorMessage(e),
+			});
+		}
+
+		this.dispatch({
+			event: ConvoDispatchEvent.Error,
+			payload: {
+				exception: e instanceof Error ? e : new Error(String(e)),
+				code: ConvoErrorCode.InitFailed,
+				retry: () => {
+					this.reset();
+				},
+			},
+		});
+		this.commit();
 	}
 
 	private async setup() {
@@ -626,65 +667,40 @@ export class Convo {
 			this.dispatch({ event: ConvoDispatchEvent.Ready });
 		}
 
+		let convo: ChatBskyConvoDefs.ConvoView;
 		try {
-			const { convo } = await this.fetchConvo();
-
-			this.setConvo(convo);
-
-			/*
-			 * Some validation prior to `Ready` status
-			 */
-			if (!this.convo) {
-				throw new Error('could not find convo');
-			}
-
-			const self = this.getSelfMember();
-
-			if (!self) {
-				throw new Error('could not find self in convo');
-			}
-
-			// only groups truncate `members` in the view, so only they need the paginated list to fill
-			// out `relatedProfiles`. it's deliberately off the critical path - the UI renders without it.
-			if (this.convo.kind === 'group') {
-				void this.fetchMemberList();
-			}
-
-			const userIsDisabled = !!self.chatDisabled;
-
-			/*
-			 * re-dispatched even when the placeholder already took us to `Ready`, so the server still gets
-			 * to move us to `Disabled`. a repeat `Ready` is a no-op in that status.
-			 */
-			if (userIsDisabled) {
-				this.dispatch({ event: ConvoDispatchEvent.Disable });
-			} else {
-				this.dispatch({ event: ConvoDispatchEvent.Ready });
-			}
+			({ convo } = await this.fetchConvo());
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error('setup failed', {
-					safeMessage: errorMessage(e),
-				});
-			}
-
-			// the placeholder already has the conversation on screen; a failed refresh of data we already
-			// hold shouldn't tear that down into an error state.
+			// only a refresh of data we already hold failed, so don't tear the placeholder down
 			if (startedFromPlaceholder) {
+				logger.debug('convo refresh failed, keeping placeholder', {});
 				return;
 			}
+			this.failSetup(e);
+			return;
+		}
 
-			this.dispatch({
-				event: ConvoDispatchEvent.Error,
-				payload: {
-					exception: e instanceof Error ? e : new Error(String(e)),
-					code: ConvoErrorCode.InitFailed,
-					retry: () => {
-						this.reset();
-					},
-				},
-			});
-			this.commit();
+		// unlike a failed fetch, the server contradicting the placeholder means the placeholder is wrong,
+		// and leaving it up would show a working conversation we can't send to
+		if (!this.setConvo(convo) || !this.convo) {
+			this.failSetup(new Error('could not find convo'));
+			return;
+		}
+
+		const self = this.getSelfMember();
+
+		if (!self) {
+			this.failSetup(new Error('could not find self in convo'));
+			return;
+		}
+
+		void this.fetchMemberList();
+
+		// dispatched even if the placeholder already reached `Ready`, so the server still gets to disable
+		if (self.chatDisabled) {
+			this.dispatch({ event: ConvoDispatchEvent.Disable });
+		} else {
+			this.dispatch({ event: ConvoDispatchEvent.Ready });
 		}
 	}
 
@@ -776,25 +792,38 @@ export class Convo {
 	// into the ConvoWithDetails. If you want to drive UI based on the member list,
 	// use `useListConvoMembersQuery`
 	// we shouldn't also block loading off of this - the UI should be resilient
-	// only groups need this: a direct convo's view already carries every member, and `setConvo` files
-	// them into `relatedProfiles` on its own
+	// only a group's view truncates its member list; a direct convo's already carries everyone
 	async fetchMemberList() {
-		let cursor: string | undefined;
-		do {
-			const data = await networkRetry(2, () => {
-				return ok(
-					this.chat.get('chat.bsky.convo.getConvoMembers', {
-						params: { convoId: this.convoId, limit: 50, cursor },
-					}),
-				);
-			});
-			cursor = data.cursor;
+		if (this.convo?.kind !== 'group') {
+			return;
+		}
 
-			for (const member of data.members) {
-				this.relatedProfiles.set(member.did, member);
+		const members: ChatBskyActorDefs.ProfileViewBasic[] = [];
+		let cursor: string | undefined;
+		try {
+			do {
+				const data = await networkRetry(2, () => {
+					return ok(
+						this.chat.get('chat.bsky.convo.getConvoMembers', {
+							params: { convoId: this.convoId, limit: 50, cursor },
+						}),
+					);
+				});
+				cursor = data.cursor;
+				members.push(...data.members);
+			} while (cursor);
+		} catch (e) {
+			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+				logger.error('failed to fetch member list', { safeMessage: errorMessage(e) });
 			}
-		} while (cursor);
-		this.applyProfileShadows();
+			return;
+		}
+
+		if (this.setRelatedProfiles(members)) {
+			this.applyProfileShadows();
+			// rows hold the profiles they rendered with, so a late member list only reaches them here
+			this.commit();
+		}
 	}
 
 	private fetchMessageHistoryError: { retry: () => void } | undefined;
@@ -846,10 +875,7 @@ export class Convo {
 			// messages. The tradeoff is one extra empty fetch at the true top.
 			this.oldestRev = cursor ?? null;
 
-			if (relatedProfiles) {
-				for (const profile of relatedProfiles) {
-					this.relatedProfiles.set(profile.did, profile);
-				}
+			if (relatedProfiles && this.setRelatedProfiles(relatedProfiles)) {
 				this.applyProfileShadows();
 			}
 
@@ -961,10 +987,11 @@ export class Convo {
 					 */
 					this.latestRev = ev.rev;
 
-					if ('relatedProfiles' in ev && Array.isArray(ev.relatedProfiles)) {
-						for (const profile of ev.relatedProfiles) {
-							this.relatedProfiles.set(profile.did, profile);
-						}
+					if (
+						'relatedProfiles' in ev &&
+						Array.isArray(ev.relatedProfiles) &&
+						this.setRelatedProfiles(ev.relatedProfiles)
+					) {
 						this.applyProfileShadows();
 					}
 
@@ -1005,7 +1032,7 @@ export class Convo {
 						 */
 						this.pastMessages.delete(ev.message.id);
 						this.newMessages.delete(ev.message.id);
-						this.setMessageDeleted(ev.message.id, true);
+						this.markMessageDeleted(ev.message.id);
 						needsCommit = true;
 					} else if (
 						(ev.$type === 'chat.bsky.convo.defs#logAddReaction' ||
@@ -1137,6 +1164,21 @@ export class Convo {
 			kind: {
 				...this.convo.details,
 				joinLink,
+			},
+		});
+
+		this.commit();
+	}
+
+	updateUnreadJoinRequestCount(unreadJoinRequestCount: number) {
+		if (this.convo?.kind !== 'group') {
+			throw new Error('updateUnreadJoinRequestCount can only be called on group convo');
+		}
+
+		this.updateConvo({
+			kind: {
+				...this.convo.details,
+				unreadJoinRequestCount,
 			},
 		});
 
@@ -1309,7 +1351,7 @@ export class Convo {
 	async deleteMessage(messageId: string) {
 		logger.debug('delete message', {});
 
-		this.setMessageDeleted(messageId, true);
+		this.markMessageDeleted(messageId);
 		this.commit();
 
 		try {
@@ -1326,7 +1368,7 @@ export class Convo {
 					safeMessage: errorMessage(e),
 				});
 			}
-			this.setMessageDeleted(messageId, false);
+			this.unmarkMessageDeleted(messageId);
 			this.commit();
 			throw e;
 		}
@@ -1340,17 +1382,33 @@ export class Convo {
 		};
 	}
 
-	/**
-	 * records (or un-records) a message as deleted. deletions go through here so the item cache is dropped
-	 * alongside: they change what {@link tombstoneDeletedReplyTo} produces for messages replying to them.
-	 */
-	private setMessageDeleted(messageId: string, deleted: boolean) {
-		if (deleted) {
-			this.deletedMessages.add(messageId);
-		} else {
-			this.deletedMessages.delete(messageId);
+	// guarded because our own deletes come back over the firehose
+	private markMessageDeleted(messageId: string) {
+		if (this.deletedMessages.has(messageId)) {
+			return;
 		}
-		this.itemCache.clear();
+		this.deletedMessages.add(messageId);
+		this.dropCachedRepliesTo(messageId);
+	}
+
+	private unmarkMessageDeleted(messageId: string) {
+		if (this.deletedMessages.delete(messageId)) {
+			this.dropCachedRepliesTo(messageId);
+		}
+	}
+
+	// a deletion only changes how `tombstoneDeletedReplyTo` renders the replies to it
+	private dropCachedRepliesTo(messageId: string) {
+		for (const [id, cached] of this.itemCache) {
+			const { source } = cached;
+			if (
+				source.$type === 'chat.bsky.convo.defs#messageView' &&
+				source.replyTo?.$type === 'chat.bsky.convo.defs#messageView' &&
+				source.replyTo.id === messageId
+			) {
+				this.itemCache.delete(id);
+			}
+		}
 	}
 
 	/**

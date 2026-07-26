@@ -82,6 +82,8 @@ export function useMarkAsReadMutation() {
 			// keep scanning past a stale unreadCount === 0 cache so another cache
 			// holding the true unread state still drives the decrement
 			let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined;
+			// distinct from `unreadStatus`: a convo in no list cache at all is unknown, not known-read
+			let knownRead = false;
 			for (const [, data] of prevListQueries) {
 				if (!data) {
 					continue;
@@ -90,6 +92,9 @@ export function useMarkAsReadMutation() {
 				if (convo?.unreadCount) {
 					unreadStatus = convo.status;
 					break;
+				}
+				if (convo) {
+					knownRead = true;
 				}
 			}
 
@@ -126,7 +131,7 @@ export function useMarkAsReadMutation() {
 					},
 				);
 			}
-			return { adjustedCounts: !!unreadStatus, prevListQueries, prevUnreadCountsQueries };
+			return { knownRead: knownRead && !unreadStatus, prevListQueries, prevUnreadCountsQueries };
 		},
 		onSuccess(_, { convoId }, context) {
 			if (!convoId) {
@@ -136,10 +141,9 @@ export function useMarkAsReadMutation() {
 			// the optimistic badge arithmetic can drift from the server (e.g. a convo
 			// whose status differs between caches, or a sentinel-capped count).
 			// invalidate so the 15s-stale count query self-corrects on next access
-			// rather than waiting for a log event. only worth doing when we actually
-			// moved a counter - marking an already-read convo has nothing to correct,
-			// and this fires on entering *and* leaving every conversation
-			if (context?.adjustedCounts) {
+			// rather than waiting for a log event. skipped when the caches said the convo
+			// was already read, since this fires on entering *and* leaving every one of them
+			if (!context?.knownRead) {
 				void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
 			}
 
