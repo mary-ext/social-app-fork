@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useSetDrawerOpen } from '#/state/shell/drawer-open';
+import { setDrawerOpen } from '#/state/shell/drawer-open';
 
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
@@ -130,14 +130,6 @@ export function BackButton({ label, onClick, variant = 'ghost' }: BackButtonProp
 /** Opens the drawer nav on narrow viewports; renders nothing once the side nav takes over. */
 export function MenuButton() {
 	const { gtMobile } = useBreakpoints();
-	const setDrawerOpen = useSetDrawerOpen();
-
-	const onClick = () => {
-		if (document.activeElement instanceof HTMLElement) {
-			document.activeElement.blur();
-		}
-		setDrawerOpen(true);
-	};
 
 	if (gtMobile) {
 		return null;
@@ -150,7 +142,12 @@ export function MenuButton() {
 				variant="ghost"
 				color="secondary"
 				shape="round"
-				onClick={onClick}
+				onClick={() => {
+					if (document.activeElement instanceof HTMLElement) {
+						document.activeElement.blur();
+					}
+					setDrawerOpen(true);
+				}}
 			>
 				<ButtonIcon icon={Menu} size="lg" />
 			</Button>

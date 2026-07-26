@@ -6,7 +6,7 @@ import { profileTarget } from '#/lib/routes/targets';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
-import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell/drawer-open';
+import { setDrawerOpen, useIsDrawerOpen } from '#/state/shell/drawer-open';
 
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
@@ -55,7 +55,6 @@ const ICON_WIDTH = 26;
 /** mobile-only left navigation drawer. */
 export function Drawer() {
 	const isOpen = useIsDrawerOpen();
-	const setDrawerOpen = useSetDrawerOpen();
 
 	return (
 		<BaseDrawer.Root onOpenChange={setDrawerOpen} open={isOpen} swipeDirection="left">
@@ -77,7 +76,6 @@ export function Drawer() {
 
 function DrawerContent() {
 	const router = useRouter();
-	const setDrawerOpen = useSetDrawerOpen();
 	const { currentAccount, hasSession } = useSession();
 	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
 		useNavigationTabState();
