@@ -438,7 +438,7 @@ function ActiveSearchAutocomplete({
 	};
 
 	const selectProfile = (profile: AnyProfileView) => {
-		record({ did: profile.did, kind: 'profile' });
+		record({ kind: 'profile', did: profile.did });
 		onNavigateToProfile(profile);
 		reset();
 	};

@@ -56,7 +56,7 @@ export type LanguagePrefs = {
  * One entry in the unified, recency-ordered search history. New entry kinds (feeds, starter packs, …) extend
  * this union without splitting the stored list.
  */
-export type SearchHistoryEntry = { did: Did; kind: 'profile' } | { kind: 'query'; query: string };
+export type SearchHistoryEntry = { kind: 'profile'; did: Did } | { kind: 'query'; query: string };
 
 export type Account = {
 	labelers?: Did[];

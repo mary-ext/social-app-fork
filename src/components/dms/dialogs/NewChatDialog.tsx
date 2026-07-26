@@ -305,26 +305,26 @@ function SelectChatStep({
 
 	let rows: ChatListRow[];
 	if (isError) {
-		rows = [{ key: 'error', kind: 'empty', message: m['components.dialogs.error.network']() }];
+		rows = [{ kind: 'empty', key: 'error', message: m['components.dialogs.error.network']() }];
 	} else if (searchText.length) {
 		rows = searchRows(results, currentAccountDid, isFetching, byMessageDeclaration);
 	} else {
 		// the entry point and "Suggested" header stay pinned above the follows (or the loading placeholder).
 		const suggested: LabelRow = {
-			key: 'suggested',
 			kind: 'label',
+			key: 'suggested',
 			message: m['components.dms.search.suggested'](),
 		};
 		rows = [{ key: 'newGroupChat', kind: 'newGroupChat' }];
 		if (!follows) {
-			rows.push(suggested, { key: 'placeholder', kind: 'placeholder' });
+			rows.push(suggested, { kind: 'placeholder', key: 'placeholder' });
 		} else {
 			// omit follows that can't be messaged, matching upstream (rather than listing them disabled).
 			const profiles = mapDefined(
 				follows.pages.flatMap((page) => page.follows),
 				(profile): ProfileRow | undefined => {
 					if (canBeMessaged(profile)) {
-						return { key: profile.did, kind: 'profile', profile };
+						return { kind: 'profile', key: profile.did, profile };
 					}
 				},
 			);

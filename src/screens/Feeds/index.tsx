@@ -176,13 +176,13 @@ export function FeedsScreen() {
 		const canShowDiscoverSection = !hasSession || (hasSession && hasActualSavedCount);
 
 		if (hasSession) {
-			items.push({ key: 'savedFeedsHeader', type: 'savedFeedsHeader' });
+			items.push({ type: 'savedFeedsHeader', key: 'savedFeedsHeader' });
 
 			if (savedFeedsError) {
 				items.push({
-					error: cleanError(savedFeedsError.toString()),
-					key: 'savedFeedsError',
 					type: 'error',
+					key: 'savedFeedsError',
+					error: cleanError(savedFeedsError.toString()),
 				});
 			} else if (isSavedFeedsPlaceholder && !savedFeeds?.feeds.length) {
 				/*
@@ -193,7 +193,7 @@ export function FeedsScreen() {
 				const min = 8;
 				const count = savedFeeds ? (savedFeeds.count === 0 ? min : savedFeeds.count) : min;
 				for (let i = 0; i < count; i++) {
-					items.push({ key: 'savedFeedPlaceholder' + i, type: 'savedFeedPlaceholder' });
+					items.push({ type: 'savedFeedPlaceholder', key: 'savedFeedPlaceholder' + i });
 				}
 			} else if (savedFeeds?.feeds?.length) {
 				const noFollowingFeed = savedFeeds.feeds.every((f) => f.type !== 'timeline');
@@ -202,54 +202,54 @@ export function FeedsScreen() {
 				const [pinned, unpinned] = partition(savedFeeds.feeds, (s) => s.config.pinned);
 				items = items.concat(
 					[...pinned, ...unpinned].map((s) => ({
+						type: 'savedFeed',
 						key: `savedFeed:${s.view?.uri}:${s.config.id}`,
 						savedFeed: s,
-						type: 'savedFeed',
 					})),
 				);
 
 				if (noFollowingFeed) {
-					items.push({ key: 'noFollowingFeed', type: 'noFollowingFeed' });
+					items.push({ type: 'noFollowingFeed', key: 'noFollowingFeed' });
 				}
 			} else {
-				items.push({ key: 'savedFeedNoResults', type: 'savedFeedNoResults' });
+				items.push({ type: 'savedFeedNoResults', key: 'savedFeedNoResults' });
 			}
 		}
 
 		if (canShowDiscoverSection) {
-			items.push({ key: 'popularFeedsHeader', type: 'popularFeedsHeader' });
+			items.push({ type: 'popularFeedsHeader', key: 'popularFeedsHeader' });
 
 			if (popularFeedsError || searchError) {
 				items.push({
-					error: cleanError(popularFeedsError?.toString() ?? searchError?.toString() ?? ''),
-					key: 'popularFeedsError',
 					type: 'error',
+					key: 'popularFeedsError',
+					error: cleanError(popularFeedsError?.toString() ?? searchError?.toString() ?? ''),
 				});
 			} else if (isUserSearching) {
 				if (isSearchPending || !searchResults) {
-					items.push({ key: 'popularFeedsLoading', type: 'popularFeedsLoading' });
+					items.push({ type: 'popularFeedsLoading', key: 'popularFeedsLoading' });
 				} else if (searchResults.length === 0) {
-					items.push({ key: 'popularFeedsNoResults', type: 'popularFeedsNoResults' });
+					items.push({ type: 'popularFeedsNoResults', key: 'popularFeedsNoResults' });
 				} else {
 					items = items.concat(
 						searchResults.map((feed) => ({
-							feed,
-							key: `popularFeed:${feed.uri}`,
 							type: 'popularFeed',
+							key: `popularFeed:${feed.uri}`,
+							feed,
 						})),
 					);
 				}
 			} else if (isPopularFeedsFetching && !popularFeeds?.pages) {
-				items.push({ key: 'popularFeedsLoading', type: 'popularFeedsLoading' });
+				items.push({ type: 'popularFeedsLoading', key: 'popularFeedsLoading' });
 			} else if (!popularFeeds?.pages) {
-				items.push({ key: 'popularFeedsNoResults', type: 'popularFeedsNoResults' });
+				items.push({ type: 'popularFeedsNoResults', key: 'popularFeedsNoResults' });
 			} else {
 				for (const page of popularFeeds.pages) {
 					items = items.concat(
 						page.feeds.map((feed) => ({
-							feed,
-							key: `popularFeed:${feed.uri}`,
 							type: 'popularFeed',
+							key: `popularFeed:${feed.uri}`,
+							feed,
 						})),
 					);
 				}

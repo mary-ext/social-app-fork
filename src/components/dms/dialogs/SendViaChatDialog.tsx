@@ -29,15 +29,15 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import { m } from '#/paraglide/messages';
 
 type ProfileItem = {
+	type: 'profile';
 	key: string;
 	profile: AnyProfileView;
-	type: 'profile';
 };
 
 type ExistingChatItem = {
-	convo: ConvoWithDetails;
-	key: string;
 	type: 'existingChat';
+	key: string;
+	convo: ConvoWithDetails;
 };
 
 type Item = ExistingChatItem | ProfileItem;

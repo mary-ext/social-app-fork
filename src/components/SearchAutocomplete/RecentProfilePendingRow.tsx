@@ -28,7 +28,7 @@ export function RecentProfilePendingRow({
 			</div>
 			<RecentRemoveButton
 				label={m['components.web.search.recent.remove']()}
-				onRemove={() => onRemoveRecent({ did: row.did, kind: 'profile' })}
+				onRemove={() => onRemoveRecent({ kind: 'profile', did: row.did })}
 			/>
 		</div>
 	);

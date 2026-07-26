@@ -64,7 +64,7 @@ export function buildEmojiLayout(sections: readonly EmojiSection[]): EmojiLayout
 		// would point past the end of `rows`.
 		const sectionStart = rows.length;
 		if (section.labeled) {
-			rows.push({ height: HEADER_HEIGHT, key: section.key, top, type: 'header' });
+			rows.push({ type: 'header', key: section.key, height: HEADER_HEIGHT, top });
 			top += HEADER_HEIGHT;
 		} else {
 			// an unlabeled section (search results) has no header to supply a top gap, so give it one.
@@ -76,7 +76,7 @@ export function buildEmojiLayout(sections: readonly EmojiSection[]): EmojiLayout
 			const firstIndex = flat + r * PER_LINE;
 			const count = Math.min(PER_LINE, section.count - r * PER_LINE);
 			const rowIndex = rows.length;
-			rows.push({ count, firstIndex, height: ROW_HEIGHT, key: `${section.key}:${r}`, top, type: 'emojis' });
+			rows.push({ type: 'emojis', key: `${section.key}:${r}`, count, firstIndex, height: ROW_HEIGHT, top });
 			for (let c = 0; c < count; c++) {
 				rowIndexForEmoji[firstIndex + c] = rowIndex;
 			}

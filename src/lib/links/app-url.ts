@@ -9,14 +9,14 @@ import { safeUrlParse } from '#/lib/strings/url-helpers';
  * `#/lib/routes/app-links` maps these onto this app's routes.
  */
 export type AppLink =
-	| { code: string; kind: 'chat-invite' }
-	| { actor: ActorIdentifier; kind: 'feed'; rkey: RecordKey }
-	| { author: ActorIdentifier | undefined; kind: 'hashtag'; tag: string }
-	| { actor: ActorIdentifier; kind: 'list'; rkey: RecordKey }
-	| { actor: ActorIdentifier; kind: 'post'; rkey: RecordKey }
-	| { actor: ActorIdentifier; kind: 'profile' }
+	| { kind: 'chat-invite'; code: string }
+	| { kind: 'feed'; actor: ActorIdentifier; rkey: RecordKey }
+	| { kind: 'hashtag'; author: ActorIdentifier | undefined; tag: string }
+	| { kind: 'list'; actor: ActorIdentifier; rkey: RecordKey }
+	| { kind: 'post'; actor: ActorIdentifier; rkey: RecordKey }
+	| { kind: 'profile'; actor: ActorIdentifier }
 	| { kind: 'search'; query: string }
-	| { actor: ActorIdentifier; kind: 'starter-pack'; rkey: RecordKey }
+	| { kind: 'starter-pack'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'topic'; topic: string };
 
 // #region scheme registry

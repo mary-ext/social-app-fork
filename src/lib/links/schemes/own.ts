@@ -12,28 +12,28 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 	const target = router.match(url.pathname + url.search);
 	switch (target?.name) {
 		case 'GroupChatJoin': {
-			return { code: target.code, kind: 'chat-invite' };
+			return { kind: 'chat-invite', code: target.code };
 		}
 		case 'Hashtag': {
-			return { author: target.author, kind: 'hashtag', tag: target.tag };
+			return { kind: 'hashtag', author: target.author, tag: target.tag };
 		}
 		case 'PostThread': {
-			return { actor: target.actor, kind: 'post', rkey: target.rkey };
+			return { kind: 'post', actor: target.actor, rkey: target.rkey };
 		}
 		case 'Profile': {
-			return { actor: target.actor, kind: 'profile' };
+			return { kind: 'profile', actor: target.actor };
 		}
 		case 'ProfileFeed': {
-			return { actor: target.actor, kind: 'feed', rkey: target.rkey };
+			return { kind: 'feed', actor: target.actor, rkey: target.rkey };
 		}
 		case 'ProfileList': {
-			return { actor: target.actor, kind: 'list', rkey: target.rkey };
+			return { kind: 'list', actor: target.actor, rkey: target.rkey };
 		}
 		case 'Search': {
 			return { kind: 'search', query: target.q };
 		}
 		case 'StarterPack': {
-			return { actor: target.actor, kind: 'starter-pack', rkey: target.rkey };
+			return { kind: 'starter-pack', actor: target.actor, rkey: target.rkey };
 		}
 		case 'Topic': {
 			return { kind: 'topic', topic: target.topic };

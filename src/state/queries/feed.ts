@@ -45,8 +45,8 @@ import { precacheResolvedUri } from './resolve-uri';
 
 export type FeedSourceFeedInfo = {
 	type: 'feed';
-	view?: AppBskyFeedDefs.GeneratorView;
 	uri: string;
+	view?: AppBskyFeedDefs.GeneratorView;
 	feedDescriptor: FeedDescriptor;
 	target: RouteTarget;
 	cid: string;
@@ -64,8 +64,8 @@ export type FeedSourceFeedInfo = {
 
 export type FeedSourceListInfo = {
 	type: 'list';
-	view?: AppBskyGraphDefs.ListView;
 	uri: string;
+	view?: AppBskyGraphDefs.ListView;
 	feedDescriptor: FeedDescriptor;
 	target: RouteTarget;
 	cid: string;
@@ -108,8 +108,8 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 
 	return {
 		type: 'feed',
-		view,
 		uri: view.uri,
+		view,
 		feedDescriptor: `feedgen|${view.uri}`,
 		cid: view.cid,
 		target: recordTarget(urip),
@@ -137,8 +137,8 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 
 	return {
 		type: 'list',
-		view,
 		uri: view.uri,
+		view,
 		feedDescriptor: `list|${view.uri}`,
 		target: recordTarget(urip),
 		cid: view.cid,

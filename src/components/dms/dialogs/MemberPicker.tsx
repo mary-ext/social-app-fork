@@ -26,10 +26,10 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-export type EmptyRow = { key: string; kind: 'empty'; message: string };
-export type LabelRow = { key: string; kind: 'label'; message: string };
-export type PlaceholderRow = { key: string; kind: 'placeholder' };
-export type ProfileRow = { key: string; kind: 'profile'; profile: AnyProfileView };
+export type EmptyRow = { kind: 'empty'; key: string; message: string };
+export type LabelRow = { kind: 'label'; key: string; message: string };
+export type PlaceholderRow = { kind: 'placeholder'; key: string };
+export type ProfileRow = { kind: 'profile'; key: string; profile: AnyProfileView };
 
 type MemberListRow = EmptyRow | LabelRow | PlaceholderRow | ProfileRow;
 
@@ -49,9 +49,9 @@ export const searchRows = (
 		.filter((profile) => profile.did !== currentAccountDid && !excludeDids?.has(profile.did))
 		// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
 		.sort(comparator)
-		.map((profile): ProfileRow => ({ key: profile.did, kind: 'profile', profile }));
+		.map((profile): ProfileRow => ({ kind: 'profile', key: profile.did, profile }));
 	if (!isFetching && profiles.length === 0) {
-		return [{ key: 'empty', kind: 'empty', message: m['common.search.empty']() }];
+		return [{ kind: 'empty', key: 'empty', message: m['common.search.empty']() }];
 	}
 	return profiles;
 };
@@ -86,23 +86,23 @@ export function SelectMembersStep({
 
 	let rows: MemberListRow[];
 	if (isError) {
-		rows = [{ key: 'error', kind: 'empty', message: m['components.dialogs.error.network']() }];
+		rows = [{ kind: 'empty', key: 'error', message: m['components.dialogs.error.network']() }];
 	} else if (searchText.length) {
 		rows = searchRows(results, currentAccountDid, isFetching, byGroupDeclaration, excludeDids);
 	} else {
 		const suggested: LabelRow = {
-			key: 'suggested',
 			kind: 'label',
+			key: 'suggested',
 			message: m['components.dms.search.suggested'](),
 		};
 		if (!follows) {
-			rows = [suggested, { key: 'placeholder', kind: 'placeholder' }];
+			rows = [suggested, { kind: 'placeholder', key: 'placeholder' }];
 		} else {
 			const profiles = mapDefined(
 				follows.pages.flatMap((page) => page.follows),
 				(profile): ProfileRow | undefined => {
 					if (canBeAddedToGroup(profile) && !excludeDids?.has(profile.did)) {
-						return { key: profile.did, kind: 'profile', profile };
+						return { kind: 'profile', key: profile.did, profile };
 					}
 				},
 			);

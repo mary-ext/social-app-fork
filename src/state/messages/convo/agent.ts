@@ -1337,8 +1337,8 @@ export class Convo {
 		if (this.fetchMessageHistoryError) {
 			items.unshift({
 				type: 'error',
-				code: ConvoItemError.HistoryFailed,
 				key: ConvoItemError.HistoryFailed,
+				code: ConvoItemError.HistoryFailed,
 				retry: () => {
 					this.maybeRecoverFromNetworkError();
 				},
@@ -1393,8 +1393,8 @@ export class Convo {
 		if (this.firehoseError) {
 			items.push({
 				type: 'error',
-				code: ConvoItemError.FirehoseFailed,
 				key: ConvoItemError.FirehoseFailed,
+				code: ConvoItemError.FirehoseFailed,
 				retry: () => {
 					this.firehoseError?.retry();
 				},

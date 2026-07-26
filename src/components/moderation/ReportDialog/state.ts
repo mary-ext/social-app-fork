@@ -22,11 +22,11 @@ export type ReportAction =
 	| { type: 'clearCategory' }
 	| { type: 'clearError' }
 	| { type: 'clearReason' }
-	| { category: ReportCategoryConfig; otherOption: ReportOption; type: 'selectCategory' }
-	| { labeler: AppBskyLabelerDefs.LabelerViewDetailed; type: 'selectLabeler' }
-	| { reason: ReportOption; type: 'selectReason' }
-	| { details: string; type: 'setDetails' }
-	| { error: string; type: 'setError' };
+	| { type: 'selectCategory'; category: ReportCategoryConfig; otherOption: ReportOption }
+	| { type: 'selectLabeler'; labeler: AppBskyLabelerDefs.LabelerViewDetailed }
+	| { type: 'selectReason'; reason: ReportOption }
+	| { type: 'setDetails'; details: string }
+	| { type: 'setError'; error: string };
 
 export const initialState: ReportState = {
 	details: '',

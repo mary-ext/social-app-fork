@@ -45,7 +45,7 @@ export function threadgateRecordToAllowUISetting(
 			case 'app.bsky.feed.threadgate#followingRule':
 				return { type: 'following' };
 			case 'app.bsky.feed.threadgate#listRule':
-				return { list: allow.list, type: 'list' };
+				return { type: 'list', list: allow.list };
 			case 'app.bsky.feed.threadgate#mentionRule':
 				return { type: 'mention' };
 		}

@@ -77,20 +77,20 @@ export const parseBlueskyPath = (url: URL): AppLink | undefined => {
 	const chatInviteMatch = CHAT_INVITE_RE.exec(path);
 	if (chatInviteMatch) {
 		const [, code] = chatInviteMatch;
-		return code ? { code, kind: 'chat-invite' } : undefined;
+		return code ? { kind: 'chat-invite', code } : undefined;
 	}
 
 	const hashtagMatch = HASHTAG_RE.exec(path);
 	if (hashtagMatch) {
 		const [, tag] = hashtagMatch;
-		return tag ? { author: parseHashtagAuthor(url), kind: 'hashtag', tag: decodeSegment(tag) } : undefined;
+		return tag ? { kind: 'hashtag', author: parseHashtagAuthor(url), tag: decodeSegment(tag) } : undefined;
 	}
 
 	const profileMatch = PROFILE_RE.exec(path);
 	if (profileMatch) {
 		const [, rawActor] = profileMatch;
 		const actor = rawActor && decodeSegment(rawActor);
-		return actor && isActorIdentifier(actor) ? { actor, kind: 'profile' } : undefined;
+		return actor && isActorIdentifier(actor) ? { kind: 'profile', actor } : undefined;
 	}
 
 	// a query-less `/search` is the explore screen rather than a search, and has no link to carry.

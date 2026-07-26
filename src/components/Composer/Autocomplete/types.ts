@@ -3,29 +3,29 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import type { Emoji } from '@emoji-mart/data';
 
 export type AutocompleteProfile = {
-	key: string;
 	type: 'profile';
+	key: string;
 	value: string;
 	profile: AnyProfileView;
 };
 
 export type AutocompleteTag = {
-	key: string;
 	type: 'tag';
+	key: string;
 	value: string;
 	tag: string;
 };
 
 export type AutocompleteEmoji = {
-	key: string;
 	type: 'emoji';
+	key: string;
 	value: string;
 	emoji: Emoji;
 };
 
 export type AutocompleteSearch = {
-	key: string;
 	type: 'search';
+	key: string;
 	value: string;
 };
 

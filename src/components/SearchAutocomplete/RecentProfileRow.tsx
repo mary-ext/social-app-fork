@@ -48,7 +48,7 @@ export function RecentProfileRow({
 			</Autocomplete.Item>
 			<RecentRemoveButton
 				label={m['components.web.search.recent.removeA11y']({ query: row.profile.handle })}
-				onRemove={() => onRemoveRecent({ did: row.profile.did, kind: 'profile' })}
+				onRemove={() => onRemoveRecent({ kind: 'profile', did: row.profile.did })}
 			/>
 		</div>
 	);

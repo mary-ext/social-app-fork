@@ -9,7 +9,7 @@ import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 import * as css from './EmbedSkeleton.css';
 
 /** A frozen media-embed shape for a loading placeholder: one image at some aspect, or a multi-image carousel. */
-export type Shape = { aspect: number; type: 'single' } | { tiles: number[]; type: 'carousel' };
+export type Shape = { type: 'single'; aspect: number } | { type: 'carousel'; tiles: number[] };
 
 // embed kind per post: none dominates, then a single image, then a multi-image carousel.
 const EMBED_KIND_WEIGHTS = [6, 3, 1];
@@ -33,14 +33,14 @@ const randomAspect = () => (weightedIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : 
 export function randomShape(): Shape | null {
 	switch (weightedIndex(EMBED_KIND_WEIGHTS)) {
 		case 1:
-			return { aspect: randomAspect(), type: 'single' };
+			return { type: 'single', aspect: randomAspect() };
 		case 2:
 			return {
+				type: 'carousel',
 				// draw raw aspects (the tiles clamp their own width): the first two drive the row height, and
 				// real landscape/portrait sets routinely sit past the clamp limits, so drawing within them would
 				// peg every placeholder to the tallest bucket.
 				tiles: Array.from({ length: 2 + weightedIndex(CAROUSEL_COUNT_WEIGHTS) }, randomAspect),
-				type: 'carousel',
 			};
 		default:
 			return null;
@@ -52,12 +52,12 @@ export function randomShape(): Shape | null {
 // pick keeps each row stable across re-renders where a random draw would reshuffle and flicker.
 const THREAD_SHAPES: (Shape | null)[] = [
 	null,
-	{ aspect: 1.6, type: 'single' },
+	{ type: 'single', aspect: 1.6 },
 	null,
 	null,
-	{ aspect: 0.75, type: 'single' },
+	{ type: 'single', aspect: 0.75 },
 	null,
-	{ tiles: [1.6, 1.5, 0.8, 1.2], type: 'carousel' },
+	{ type: 'carousel', tiles: [1.6, 1.5, 0.8, 1.2] },
 	null,
 ];
 

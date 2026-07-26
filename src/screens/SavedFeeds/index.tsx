@@ -115,58 +115,58 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 
 	const items: Slice[] = [];
 	if (noSavedFeedsOfAnyType) {
-		items.push({ key: 'noSavedFeeds', type: 'noSavedFeeds' });
+		items.push({ type: 'noSavedFeeds', key: 'noSavedFeeds' });
 	}
 
-	items.push({ key: 'pinnedHeader', title: m['screens.savedFeeds.pinned.title'](), type: 'header' });
+	items.push({ type: 'header', key: 'pinnedHeader', title: m['screens.savedFeeds.pinned.title']() });
 	if (!pinnedFeeds.length) {
 		items.push({
-			icon: PinIcon,
+			type: 'emptyDropZone',
 			key: 'pinnedEmpty',
+			icon: PinIcon,
 			message: m['screens.savedFeeds.pinned.empty'](),
 			section: 'pinned',
-			type: 'emptyDropZone',
 		});
 	} else {
 		pinnedFeeds.forEach((feed, index) => {
 			items.push({
+				type: 'feed',
+				key: `feed:${feed.id}`,
 				feed,
 				index,
 				isLast: index === pinnedFeeds.length - 1,
-				key: `feed:${feed.id}`,
 				section: 'pinned',
-				type: 'feed',
 			});
 		});
 	}
 
 	if (noFollowingFeed) {
-		items.push({ key: 'noFollowingFeed', type: 'noFollowingFeed' });
+		items.push({ type: 'noFollowingFeed', key: 'noFollowingFeed' });
 	}
 
-	items.push({ key: 'savedHeader', title: m['screens.savedFeeds.saved.title'](), type: 'header' });
+	items.push({ type: 'header', key: 'savedHeader', title: m['screens.savedFeeds.saved.title']() });
 	if (!unpinnedFeeds.length) {
 		items.push({
-			icon: ListSparkleIcon,
+			type: 'emptyDropZone',
 			key: 'savedEmpty',
+			icon: ListSparkleIcon,
 			message: m['screens.savedFeeds.saved.empty'](),
 			section: 'unpinned',
-			type: 'emptyDropZone',
 		});
 	} else {
 		unpinnedFeeds.forEach((feed, index) => {
 			items.push({
+				type: 'feed',
+				key: `feed:${feed.id}`,
 				feed,
 				index,
 				isLast: index === unpinnedFeeds.length - 1,
-				key: `feed:${feed.id}`,
 				section: 'unpinned',
-				type: 'feed',
 			});
 		});
 	}
 
-	items.push({ key: 'about', type: 'about' });
+	items.push({ type: 'about', key: 'about' });
 
 	const renderItem = ({ item }: ListRenderItemInfo<Slice>) => {
 		switch (item.type) {

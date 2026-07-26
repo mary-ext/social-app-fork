@@ -52,32 +52,32 @@ const resolveInAppUrl = (query: string): string | null => {
  */
 export type InteractiveItem =
 	| {
+			kind: 'date';
+			key: string;
 			date: Date;
 			disabled: boolean;
 			/** whether the day belongs to the visible month (vs. a leading/trailing spillover day). */
 			inMonth: boolean;
 			iso: string;
-			key: string;
-			kind: 'date';
 			op: OperatorName;
 			selected: boolean;
 			today: boolean;
 	  }
-	| { key: string; kind: 'goto'; name: string; target: RouteTarget }
-	| { key: string; kind: 'link'; path: string }
-	| { key: string; kind: 'operator'; operator: SearchOperator }
-	| { key: string; kind: 'operator-value'; op: OperatorName; value: string }
-	| { key: string; kind: 'profile'; op?: OperatorName; profile: AnyProfileView }
-	| { key: string; kind: 'recent-profile'; profile: AnyProfileView }
-	| { key: string; kind: 'recent-query'; query: string }
-	| { key: string; kind: 'search'; query: string };
+	| { kind: 'goto'; key: string; name: string; target: RouteTarget }
+	| { kind: 'link'; key: string; path: string }
+	| { kind: 'operator'; key: string; operator: SearchOperator }
+	| { kind: 'operator-value'; key: string; op: OperatorName; value: string }
+	| { kind: 'profile'; key: string; op?: OperatorName; profile: AnyProfileView }
+	| { kind: 'recent-profile'; key: string; profile: AnyProfileView }
+	| { kind: 'recent-query'; key: string; query: string }
+	| { kind: 'search'; key: string; query: string };
 
 /** a render-only row that structures the list — never navigated to or pressed. */
 export type ChromeRow =
-	| { key: string; kind: 'divider' }
-	| { key: string; kind: 'hero' }
-	| { did: Did; key: string; kind: 'recent-profile-pending' }
-	| { key: string; kind: 'section-label'; label: string };
+	| { kind: 'divider'; key: string }
+	| { kind: 'hero'; key: string }
+	| { kind: 'recent-profile-pending'; did: Did; key: string }
+	| { kind: 'section-label'; key: string; label: string };
 
 export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;
 // date items live only in the calendar grid, never in a list, so the list renderer never sees one.
@@ -86,7 +86,7 @@ export type ListRow = ChromeRow | Exclude<InteractiveItem, { kind: 'date' }>;
 /** popup contents for the active suggestion mode: a calendar grid in date mode, or an ordered list of rows. */
 export type AutocompleteResult =
 	| { kind: 'actor'; rows: ListRow[] }
-	| { days: DateItem[]; kind: 'date'; visibleMonth: Date }
+	| { kind: 'date'; days: DateItem[]; visibleMonth: Date }
 	| { kind: 'default'; rows: ListRow[] }
 	| { kind: 'enum'; rows: ListRow[] };
 
@@ -114,16 +114,16 @@ const buildRecentRows = (
 			break;
 		}
 		if (entry.kind === 'query') {
-			rows.push({ key: `recent-query-${entry.query}`, kind: 'recent-query', query: entry.query });
+			rows.push({ kind: 'recent-query', key: `recent-query-${entry.query}`, query: entry.query });
 		} else {
 			const profile = recentProfiles.get(entry.did);
 			if (profile) {
-				rows.push({ key: `recent-profile-${entry.did}`, kind: 'recent-profile', profile });
+				rows.push({ kind: 'recent-profile', key: `recent-profile-${entry.did}`, profile });
 			} else if (pending) {
 				rows.push({
+					kind: 'recent-profile-pending',
 					did: entry.did,
 					key: `recent-profile-pending-${entry.did}`,
-					kind: 'recent-profile-pending',
 				});
 			}
 		}
@@ -185,12 +185,12 @@ const buildCalendarDays = ({
 		const iso = toISODateString(date);
 
 		days.push({
+			kind: 'date',
+			key: `date-${iso}`,
 			date,
 			disabled: (min !== undefined && isBeforeDate(day, min)) || (max !== undefined && isAfterDate(day, max)),
 			inMonth: isSameCalendarMonth(date, month),
 			iso,
-			key: `date-${iso}`,
-			kind: 'date',
 			op,
 			selected: selectedIso === iso,
 			today: isSameCalendarDate(date, today),
@@ -246,20 +246,21 @@ export const buildResult = ({
 	switch (mode.kind) {
 		case 'actor': {
 			const rows: ListRow[] = [
-				{ key: 'section-label', kind: 'section-label', label: actorSectionLabel(mode.op) },
+				{ kind: 'section-label', key: 'section-label', label: actorSectionLabel(mode.op) },
 			];
 			// `from:following` belongs in the `from:` picker, not the options list; the prefix test drops it
 			// once the typed value diverges from `following` (e.g. an `@` handle).
 			if (mode.op === 'from' && !fromActive && 'following'.startsWith(mode.query)) {
-				rows.push({ key: 'from-following', kind: 'operator-value', op: 'from', value: 'following' });
+				rows.push({ kind: 'operator-value', key: 'from-following', op: 'from', value: 'following' });
 			}
 			for (const profile of profiles) {
-				rows.push({ key: `actor-${profile.did}`, kind: 'profile', op: mode.op, profile });
+				rows.push({ kind: 'profile', key: `actor-${profile.did}`, op: mode.op, profile });
 			}
 			return { kind: 'actor', rows };
 		}
 		case 'date': {
 			return {
+				kind: 'date',
 				days: buildCalendarDays({
 					constraints,
 					month: visibleMonth,
@@ -267,35 +268,34 @@ export const buildResult = ({
 					selectedIso: ISO_DATE_RE.test(mode.query) ? mode.query : undefined,
 					today,
 				}),
-				kind: 'date',
 				visibleMonth,
 			};
 		}
 		case 'default': {
 			const rows: ListRow[] = [];
 			if (query.trim()) {
-				rows.push({ key: 'search', kind: 'search', query });
+				rows.push({ kind: 'search', key: 'search', query });
 				const handle = matchHandle(query);
 				if (handle) {
-					rows.push({ key: 'goto-handle', kind: 'goto', name: handle, target: profileTarget(handle) });
+					rows.push({ kind: 'goto', key: 'goto-handle', name: handle, target: profileTarget(handle) });
 				}
 				const did = matchDid(query);
 				if (did) {
-					rows.push({ key: 'goto-did', kind: 'goto', name: did, target: profileTarget(did) });
+					rows.push({ kind: 'goto', key: 'goto-did', name: did, target: profileTarget(did) });
 				}
 				const path = resolveInAppUrl(query);
 				if (path) {
-					rows.push({ key: 'open-url', kind: 'link', path });
+					rows.push({ kind: 'link', key: 'open-url', path });
 				}
 				for (const profile of profiles) {
-					rows.push({ key: `profile-${profile.did}`, kind: 'profile', profile });
+					rows.push({ kind: 'profile', key: `profile-${profile.did}`, profile });
 				}
 			} else {
 				// an empty field shows recent history instead of typeahead matches.
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
 					rows.push(
-						{ key: 'recent-label', kind: 'section-label', label: m['components.web.search.recent.label']() },
+						{ kind: 'section-label', key: 'recent-label', label: m['components.web.search.recent.label']() },
 						...recent,
 					);
 				}
@@ -310,15 +310,15 @@ export const buildResult = ({
 						row.kind === 'search',
 				)
 			) {
-				rows.push({ key: 'hero', kind: 'hero' });
+				rows.push({ kind: 'hero', key: 'hero' });
 			}
 			if (operators.length > 0) {
 				rows.push(
-					{ key: 'divider', kind: 'divider' },
-					{ key: 'options-label', kind: 'section-label', label: m['components.web.search.filter.label']() },
+					{ kind: 'divider', key: 'divider' },
+					{ kind: 'section-label', key: 'options-label', label: m['components.web.search.filter.label']() },
 				);
 				for (const operator of operators) {
-					rows.push({ key: `operator-${operator.name}`, kind: 'operator', operator });
+					rows.push({ kind: 'operator', key: `operator-${operator.name}`, operator });
 				}
 			}
 			return { kind: 'default', rows };
@@ -327,7 +327,7 @@ export const buildResult = ({
 			const rows: ListRow[] = [];
 			for (const option of mode.options) {
 				if (option.startsWith(mode.query)) {
-					rows.push({ key: `enum-${mode.op}-${option}`, kind: 'operator-value', op: mode.op, value: option });
+					rows.push({ kind: 'operator-value', key: `enum-${mode.op}-${option}`, op: mode.op, value: option });
 				}
 			}
 			return { kind: 'enum', rows };

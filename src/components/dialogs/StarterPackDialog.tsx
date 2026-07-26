@@ -55,7 +55,7 @@ export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps)
 	);
 }
 
-type Item = { pack: StarterPackWithMembership; type: 'pack' } | { type: 'create' };
+type Item = { type: 'pack'; pack: StarterPackWithMembership } | { type: 'create' };
 
 function keyExtractor(item: Item): string {
 	return item.type === 'pack' ? item.pack.starterPack.uri : item.type;
@@ -73,7 +73,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 	const membershipItems = data?.pages.flatMap((page) => page.starterPacksWithMembership) ?? [];
 
 	// a "create new" row leads the list, sharing the same row chrome as the packs below it.
-	const items: Item[] = membershipItems.map((pack): Item => ({ pack, type: 'pack' }));
+	const items: Item[] = membershipItems.map((pack): Item => ({ type: 'pack', pack }));
 	if (membershipItems.length > 0) {
 		items.unshift({ type: 'create' });
 	}
