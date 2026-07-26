@@ -53,7 +53,7 @@ export function usePreferencesQuery() {
 
 	const query = useQuery({
 		queryKey: preferencesQueryKey,
-		staleTime: STALE.SECONDS.FIFTEEN,
+		staleTime: STALE.MINUTES.FIVE,
 		gcTime: GCTIME.INFINITY,
 		refetchOnWindowFocus: true,
 		queryFn: async () => {
