@@ -41,7 +41,11 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { focusSearch } from '#/state/events';
-import { useSearchHistory } from '#/state/preferences/search-history';
+import {
+	addSearchHistoryEntry,
+	removeSearchHistoryEntry,
+	useSearchHistory,
+} from '#/state/preferences/search-history';
 import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -185,7 +189,7 @@ function ActiveSearchAutocomplete({
 	const { currentAccount } = useSession();
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
 
-	const { history, record, remove } = useSearchHistory();
+	const history = useSearchHistory();
 	const recentProfileDids = mapDefined(history, (entry) =>
 		entry.kind === 'profile' ? entry.did : undefined,
 	);
@@ -438,7 +442,7 @@ function ActiveSearchAutocomplete({
 	};
 
 	const selectProfile = (profile: AnyProfileView) => {
-		record({ kind: 'profile', did: profile.did });
+		addSearchHistoryEntry({ kind: 'profile', did: profile.did });
 		onNavigateToProfile(profile);
 		reset();
 	};
@@ -448,7 +452,7 @@ function ActiveSearchAutocomplete({
 		if (!trimmed) {
 			return;
 		}
-		record({ kind: 'query', query: trimmed });
+		addSearchHistoryEntry({ kind: 'query', query: trimmed });
 		onSubmit(trimmed);
 		reset();
 	};
@@ -678,7 +682,9 @@ function ActiveSearchAutocomplete({
 							{result.kind === 'date' ? (
 								<CalendarBody days={result.days} onGoToMonth={goToMonth} visibleMonth={result.visibleMonth} />
 							) : (
-								result.rows.map((row) => <Row key={row.key} onRemoveRecent={remove} row={row} />)
+								result.rows.map((row) => (
+									<Row key={row.key} onRemoveRecent={removeSearchHistoryEntry} row={row} />
+								))
 							)}
 						</Autocomplete.List>
 					</Autocomplete.Popup>
