@@ -1,11 +1,10 @@
-import { lazy } from 'react';
-
 import {
 	boolean,
 	createRouterHooks,
 	defineRoutes,
 	enumOf,
 	layout,
+	lazy,
 	NavigationHistory,
 	nonEmpty,
 	optional,
