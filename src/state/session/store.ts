@@ -167,6 +167,10 @@ export function getClients() {
 	return snapshot.clients;
 }
 
+export function getCurrentDid() {
+	return snapshot.currentDid;
+}
+
 {
 	const persisted = auth.get(['session']);
 

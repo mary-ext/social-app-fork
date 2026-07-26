@@ -6,8 +6,8 @@ import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/f
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import { setSelectedFeed, useSelectedFeed } from '#/state/selected-feed';
 import { useSession } from '#/state/session';
-import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 
 import { CustomFeedEmptyState } from '#/screens/Home/components/CustomFeedEmptyState';
 import { FeedPage } from '#/screens/Home/components/FeedPage';
@@ -57,7 +57,6 @@ function HomeScreenReady({
 }) {
 	const { hasSession } = useSession();
 	const router = useRouter();
-	const setSelectedFeed = useSetSelectedFeed();
 
 	const allFeeds = pinnedFeedInfos.map((f) => f.feedDescriptor);
 	const selectedFeed = useSelectedFeed() ?? allFeeds[0];

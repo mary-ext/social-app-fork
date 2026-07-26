@@ -11,6 +11,7 @@ export type { SessionAccount } from '#/state/session/types';
 export {
 	completeOAuthCallback,
 	getClients,
+	getCurrentDid,
 	login,
 	logoutCurrentAccount,
 	logoutEveryAccount,

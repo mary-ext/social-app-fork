@@ -3,7 +3,7 @@ import { ToggleGroup } from '@base-ui/react/toggle-group';
 
 import { softReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
-import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
+import { setSelectedFeed, useSelectedFeed } from '#/state/selected-feed';
 
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
@@ -24,7 +24,6 @@ const MORE_FEEDS = 'more-feeds';
 export function DesktopFeeds() {
 	const { data: pinnedFeedInfos, error, isLoading } = usePinnedFeedsInfos();
 	const selectedFeed = useSelectedFeed();
-	const setSelectedFeed = useSetSelectedFeed();
 	const router = useRouter();
 	const target = useTarget();
 

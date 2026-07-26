@@ -17,7 +17,6 @@ import { Provider as ModerationOptsProvider } from '#/state/preferences/moderati
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
 import { Provider as SessionProvider, useSession } from '#/state/session';
 import { Provider as ShellStateProvider } from '#/state/shell';
-import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
@@ -43,12 +42,10 @@ function InnerApp() {
 					{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
 					<LabelDefsProvider>
 						<ModerationOptsProvider>
-							<SelectedFeedProvider>
-								<UnreadNotifsProvider>
-									<RouterView router={router} />
-									<ToastOutlet />
-								</UnreadNotifsProvider>
-							</SelectedFeedProvider>
+							<UnreadNotifsProvider>
+								<RouterView router={router} />
+								<ToastOutlet />
+							</UnreadNotifsProvider>
 						</ModerationOptsProvider>
 					</LabelDefsProvider>
 				</MessagesProvider>

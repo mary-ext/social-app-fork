@@ -8,7 +8,7 @@ import {
 	useRemoveFeedMutation,
 	useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences';
-import { useSetSelectedFeed } from '#/state/shell/selected-feed';
+import { setSelectedFeed } from '#/state/selected-feed';
 
 import { logger } from '#/logger';
 
@@ -28,7 +28,6 @@ const DISCOVER_URIP = parseCanonicalResourceUri(DISCOVER_FEED_URI);
 const DISCOVER_TARGET = feedTarget(DISCOVER_URIP.repo, DISCOVER_URIP.rkey);
 
 export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: string; topBorder?: boolean }) {
-	const setSelectedFeed = useSetSelectedFeed();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: removeFeed, isPending: isRemovePending } = useRemoveFeedMutation();
 	const { mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending } =
