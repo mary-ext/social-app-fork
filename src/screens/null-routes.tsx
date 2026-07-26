@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { useComposeIntent } from '#/lib/hooks/useComposeIntent';
+import { postTarget, profileTarget } from '#/lib/routes/targets';
 
 import { groupChatJoinHandle } from '#/components/dialogs/handles';
 
@@ -18,6 +19,28 @@ export function GroupChatJoinScreen() {
 		router.navigate({ replace: true, to: { name: 'Home' } });
 		groupChatJoinHandle.openWithPayload({ code });
 	}, [code, router]);
+
+	return null;
+}
+
+export function ProfileCompatScreen() {
+	const [{ actor }] = useParams('ProfileCompat');
+	const router = useRouter();
+
+	useEffect(() => {
+		router.navigate({ replace: true, to: profileTarget(actor) });
+	}, [actor, router]);
+
+	return null;
+}
+
+export function PostThreadCompatScreen() {
+	const [{ actor, rkey }] = useParams('PostThreadCompat');
+	const router = useRouter();
+
+	useEffect(() => {
+		router.navigate({ replace: true, to: postTarget(actor, rkey) });
+	}, [actor, rkey, router]);
 
 	return null;
 }

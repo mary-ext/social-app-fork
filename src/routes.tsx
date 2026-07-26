@@ -150,8 +150,14 @@ const PostQuotesScreen = lazy(() =>
 const PostRepostedByScreen = lazy(() =>
 	import('#/screens/Post/PostRepostedBy').then((mod) => ({ default: mod.PostRepostedByScreen })),
 );
+const PostThreadCompatScreen = lazy(() =>
+	import('#/screens/null-routes').then((mod) => ({ default: mod.PostThreadCompatScreen })),
+);
 const PostThreadScreen = lazy(() =>
 	import('#/screens/PostThread').then((mod) => ({ default: mod.PostThreadScreen })),
+);
+const ProfileCompatScreen = lazy(() =>
+	import('#/screens/null-routes').then((mod) => ({ default: mod.ProfileCompatScreen })),
 );
 const ProfileFeedLikedByScreen = lazy(() =>
 	import('#/screens/Profile/ProfileFeedLikedBy').then((mod) => ({ default: mod.ProfileFeedLikedByScreen })),
@@ -438,6 +444,17 @@ export const routes = defineRoutes({
 				component: PostRepostedByScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/:rkey/reposts',
+			}),
+
+			ProfileCompat: route({
+				component: ProfileCompatScreen,
+				params: { actor: actorIdentifier() },
+				path: '/profile/:actor',
+			}),
+			PostThreadCompat: route({
+				component: PostThreadCompatScreen,
+				params: { actor: actorIdentifier(), rkey: recordKey() },
+				path: '/profile/:actor/post/:rkey',
 			}),
 
 			Hashtag: route({
