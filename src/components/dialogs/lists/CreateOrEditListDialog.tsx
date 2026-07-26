@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
+import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 import { cleanNewlines, detectFacets, getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
-import type { ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';
 

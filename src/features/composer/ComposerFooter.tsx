@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
+import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import type { VideoAsset } from '#/lib/media/video/types';
-
-import { type ComposerImage, createComposerImage } from '#/state/gallery';
 
 import { logger } from '#/logger';
 

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 
-import type { ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';

@@ -2,8 +2,7 @@ import { useId, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
-
-import type { ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';

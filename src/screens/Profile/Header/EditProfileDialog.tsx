@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
+import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import type { ImageMeta } from '#/state/gallery';
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { logger } from '#/logger';

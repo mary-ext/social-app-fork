@@ -1,14 +1,13 @@
 import { useState } from 'react';
 
-import { openImagePicker } from '#/lib/media/picker';
-import { isCancelledError } from '#/lib/strings/errors';
-
 import {
 	type ComposerImage,
 	compressProfileImage,
 	createComposerImage,
 	type ImageMeta,
-} from '#/state/gallery';
+} from '#/lib/media/composer-image';
+import { openImagePicker } from '#/lib/media/picker';
+import { isCancelledError } from '#/lib/strings/errors';
 
 import { logger } from '#/logger';
 

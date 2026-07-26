@@ -7,11 +7,10 @@ import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
 import { resolveUrlToLink } from '#/lib/links/app-url';
+import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
 import { createStarterPackUri } from '#/lib/strings/starter-pack';
 import { isShortLink, makeRecordUri } from '#/lib/strings/url-helpers';
-
-import { type ComposerImage, createComposerImage } from '#/state/gallery';
 
 import type { Gif } from '#/features/gifPicker/types';
 

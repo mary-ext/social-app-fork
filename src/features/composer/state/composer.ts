@@ -3,6 +3,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import { resolveUrlToLink } from '#/lib/links/app-url';
+import type { ComposerImage } from '#/lib/media/composer-image';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
@@ -10,7 +11,6 @@ import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
-import type { ComposerImage } from '#/state/gallery';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 

@@ -31,13 +31,13 @@ import {
 	type ComposerOpts,
 	type OnPostSuccessData,
 } from '#/lib/hooks/useOpenComposer';
+import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { cleanError, errorMessage } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
-import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';

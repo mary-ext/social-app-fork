@@ -11,8 +11,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createRecord, deleteRecord, getRecord, listRecords, putRecord } from '#/lib/api/records';
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { until } from '#/lib/async/until';
+import type { ImageMeta } from '#/lib/media/composer-image';
 
-import type { ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
 import { getClients, useSession } from '#/state/session';
 

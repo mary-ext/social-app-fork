@@ -19,11 +19,11 @@ import { mapDefined } from '@mary/array-fns';
 import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import { compressImage } from '#/lib/media/composer-image';
 import { errorMessage, isNetworkError } from '#/lib/strings/errors';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
-import { compressImage } from '#/state/gallery';
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import {
 	createThreadgateRecord,

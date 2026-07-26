@@ -7,12 +7,12 @@ import { definite, mapDefined } from '@mary/array-fns';
 import { resolveLink } from '#/lib/api/resolve';
 import { getDeviceId } from '#/lib/device-id';
 import { getDeviceName } from '#/lib/deviceName';
+import type { ComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
-import type { ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { getClients } from '#/state/session';
 

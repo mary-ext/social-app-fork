@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import type { ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Toast from '#/components/Toast';
 

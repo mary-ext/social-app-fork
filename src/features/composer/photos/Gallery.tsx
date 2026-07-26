@@ -3,8 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
-
-import type { ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
