@@ -5,7 +5,6 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
-import { useTrendingConfig } from '#/state/service-config';
 import { useTickEveryMinute } from '#/state/shell';
 
 import { AvatarStack } from '#/components/AvatarStack';
@@ -18,16 +17,15 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useTrendingSettings } from '#/storage/hooks/trending';
+import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 
 import * as css from './ExploreTrendingTopics.css';
 
 const TOPIC_COUNT = 5;
 
 export function ExploreTrendingTopics() {
-	const { enabled } = useTrendingConfig();
-	const { trendingDisabled } = useTrendingSettings();
-	return enabled && !trendingDisabled ? <Inner /> : null;
+	const trendingEnabled = useIsTrendingEnabled();
+	return trendingEnabled ? <Inner /> : null;
 }
 
 function Inner() {

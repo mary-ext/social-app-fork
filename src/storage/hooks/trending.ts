@@ -1,13 +1,7 @@
 import { device, useStorage } from '#/storage';
 
-export function useTrendingSettings() {
-	const [trendingDisabled = false] = useStorage(device, ['trendingDisabled']);
+export function useIsTrendingEnabled() {
+	const [trendingEnabled = true] = useStorage(device, ['trendingEnabled']);
 
-	return { trendingDisabled };
-}
-
-export function useTrendingSettingsApi() {
-	const [, setTrendingDisabled] = useStorage(device, ['trendingDisabled']);
-
-	return { setTrendingDisabled };
+	return trendingEnabled;
 }

@@ -18,13 +18,13 @@ export type Device = {
 	colorMode?: 'dark' | 'light' | 'system';
 	darkTheme?: 'dark' | 'dim';
 	debugFeedContextEnabled?: boolean;
-	devMode: boolean;
-	disableAutoplay?: boolean;
 	/**
 	 * Formerly managed by StatSig, this is the migrated stable ID for the device, used with our logging and
 	 * metrics tracking.
 	 */
 	deviceId?: string;
+	devMode: boolean;
+	disableAutoplay?: boolean;
 	/** selected emoji skin tone. */
 	emojiSkinTone?: SkinTone;
 	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
@@ -37,8 +37,7 @@ export type Device = {
 	recentEmojis?: string[];
 	requireAltTextEnabled?: boolean;
 	subtitlesEnabled?: boolean;
-	trendingBetaEnabled: boolean;
-	trendingDisabled?: boolean;
+	trendingEnabled?: boolean;
 };
 
 export type LanguagePrefs = {

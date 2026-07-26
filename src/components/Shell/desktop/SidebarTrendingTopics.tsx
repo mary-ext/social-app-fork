@@ -1,7 +1,6 @@
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
-import { useTrendingConfig } from '#/state/service-config';
 
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
@@ -13,7 +12,8 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
+import { device } from '#/storage';
+import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
 import * as css from './SidebarTrendingTopics.css';
@@ -21,20 +21,14 @@ import * as css from './SidebarTrendingTopics.css';
 const TRENDING_LIMIT = 5;
 
 export function SidebarTrendingTopics() {
-	const { enabled } = useTrendingConfig();
-	const { trendingDisabled } = useTrendingSettings();
-	return !enabled ? null : trendingDisabled ? null : <Inner />;
+	const trendingEnabled = useIsTrendingEnabled();
+	return trendingEnabled ? <Inner /> : null;
 }
 
 function Inner() {
 	const trendingPrompt = Prompt.usePromptHandle();
-	const { setTrendingDisabled } = useTrendingSettingsApi();
 	const { data: trending, error, isLoading } = useGetTrendsQuery({ refetchOnWindowFocus: true });
 	const noTopics = !isLoading && !error && !trending?.trends?.length;
-
-	const onConfirmHide = () => {
-		setTrendingDisabled(true);
-	};
 
 	if (error || noTopics) {
 		return null;
@@ -81,7 +75,7 @@ function Inner() {
 				title={m['components.trendingTopics.hide.title']()}
 				description={m['components.trendingTopics.hide.message']()}
 				confirmButtonCta={m['common.action.hide']()}
-				onConfirm={onConfirmHide}
+				onConfirm={() => device.set(['trendingEnabled'], false)}
 			/>
 		</>
 	);

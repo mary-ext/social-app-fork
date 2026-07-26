@@ -16,7 +16,6 @@ import { Provider as PrefsStateProvider } from '#/state/preferences';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
-import { Provider as ServiceConfigProvider } from '#/state/service-config';
 import { Provider as SessionProvider, useSession } from '#/state/session';
 import { Provider as ShellStateProvider } from '#/state/shell';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
@@ -50,10 +49,8 @@ function InnerApp() {
 								<HiddenRepliesProvider>
 									<UnreadNotifsProvider>
 										<MutedThreadsProvider>
-											<ServiceConfigProvider>
-												<RouterView router={router} />
-												<ToastOutlet />
-											</ServiceConfigProvider>
+											<RouterView router={router} />
+											<ToastOutlet />
 										</MutedThreadsProvider>
 									</UnreadNotifsProvider>
 								</HiddenRepliesProvider>

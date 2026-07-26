@@ -3,7 +3,6 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
-import { useTrendingConfig } from '#/state/service-config';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
@@ -14,7 +13,8 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
+import { device } from '#/storage';
+import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 import { colors } from '#/styles/colors';
 
 import * as css from './TrendingInterstitial.css';
@@ -26,11 +26,10 @@ const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 const TRENDING_LIMIT = 14;
 
 export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): boolean {
-	const { enabled: trendingEnabled } = useTrendingConfig();
-	const { trendingDisabled } = useTrendingSettings();
+	const trendingEnabled = useIsTrendingEnabled();
 	const { rightNavVisible } = useLayoutBreakpoints();
 
-	const eligible = enabled && trendingEnabled && !trendingDisabled && !rightNavVisible;
+	const eligible = enabled && trendingEnabled && !rightNavVisible;
 
 	const {
 		data: trending,
@@ -44,15 +43,10 @@ export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): 
 
 export function TrendingInterstitial() {
 	const trendingPrompt = Prompt.usePromptHandle();
-	const { setTrendingDisabled } = useTrendingSettingsApi();
 	const { data: trending, isLoading } = useGetTrendsQuery({
 		limit: TRENDING_LIMIT,
 		refetchOnWindowFocus: true,
 	});
-
-	const onConfirmHide = () => {
-		setTrendingDisabled(true);
-	};
 
 	return (
 		<>
@@ -86,7 +80,7 @@ export function TrendingInterstitial() {
 				title={m['components.trendingTopics.hide.title']()}
 				description={m['components.trendingTopics.hide.message']()}
 				confirmButtonCta={m['common.action.hide']()}
-				onConfirm={onConfirmHide}
+				onConfirm={() => device.set(['trendingEnabled'], false)}
 			/>
 		</>
 	);

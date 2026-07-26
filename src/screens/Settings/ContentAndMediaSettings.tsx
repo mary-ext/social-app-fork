@@ -6,7 +6,6 @@ import {
 	normalizeView,
 	useThreadPreferences,
 } from '#/state/queries/preferences/useThreadPreferences';
-import { useTrendingConfig } from '#/state/service-config';
 
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
@@ -21,16 +20,15 @@ import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
+import { device } from '#/storage';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
-import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
+import { useIsTrendingEnabled } from '#/storage/hooks/trending';
 
 export function ContentAndMediaSettingsScreen() {
 	useTitle(m['navigation.settings.contentAndMedia.title']());
 
 	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
-	const { enabled: trendingEnabled } = useTrendingConfig();
-	const { trendingDisabled } = useTrendingSettings();
-	const { setTrendingDisabled } = useTrendingSettingsApi();
+	const trendingEnabled = useIsTrendingEnabled();
 
 	const { sort, setSort, view, setView } = useThreadPreferences({ save: true });
 
@@ -77,16 +75,14 @@ export function ContentAndMediaSettingsScreen() {
 							<Settings.Icon icon={PlayIcon} />
 							<Settings.Label titleText={m['screens.settings.media.autoplay']()} />
 						</Settings.SwitchRow>
-						{trendingEnabled && (
-							<Settings.SwitchRow
-								label={m['screens.settings.media.trending']()}
-								onChange={(value) => setTrendingDisabled(!value)}
-								value={!trendingDisabled}
-							>
-								<Settings.Icon icon={Graph} />
-								<Settings.Label titleText={m['screens.settings.media.trending']()} />
-							</Settings.SwitchRow>
-						)}
+						<Settings.SwitchRow
+							label={m['screens.settings.media.trending']()}
+							onChange={(value) => device.set(['trendingEnabled'], value)}
+							value={trendingEnabled}
+						>
+							<Settings.Icon icon={Graph} />
+							<Settings.Label titleText={m['screens.settings.media.trending']()} />
+						</Settings.SwitchRow>
 					</Settings.Section>
 
 					<Settings.Section titleText={m['screens.settings.thread.title']()}>
