@@ -323,7 +323,7 @@ export class Convo {
 				return {
 					status: ConvoStatus.Error,
 					items: [],
-					convo: undefined,
+					convo,
 					error: this.error!,
 					isFetchingHistory: false,
 					hasAllHistory: false,

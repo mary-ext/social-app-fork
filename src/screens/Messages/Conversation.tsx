@@ -10,16 +10,14 @@ import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useConvoQuery } from '#/state/queries/messages/conversation';
 import { useMarkJoinRequestsRead } from '#/state/queries/messages/mark-join-request-read';
-import { useSession } from '#/state/session';
 
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
 import { RequestStatus } from '#/screens/Messages/components/RequestStatus';
 
 import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter';
 import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
-import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import * as Layout from '#/components/web/Layout';
 
@@ -52,21 +50,21 @@ export function MessagesConversationScreenInner() {
 	return (
 		<Layout.Screen className={css.screen} noInsetTop={false}>
 			<ConvoProvider key={convoId} convoId={convoId}>
-				<Inner convoId={convoId} />
+				<Inner />
 			</ConvoProvider>
 		</Layout.Screen>
 	);
 }
 
-function Inner({ convoId }: { convoId: string }) {
+function Inner() {
 	const convoState = useConvo();
-	const { currentAccount } = useSession();
 	const isFocused = useIsFocused();
-	const { data: convoData } = useConvoQuery({ convoId });
 
 	useViewportZoomLock({ enabled: isFocused });
 
-	const convo = convoData ? parseConvoView(convoData, currentAccount?.did) : null;
+	// the agent is the screen's single source for the view: it starts from the same precached
+	// `ConvoView` a query would have read, then keeps it current itself.
+	const convo = convoState.convo ?? null;
 
 	if (convoState.status === ConvoStatus.Error) {
 		return (

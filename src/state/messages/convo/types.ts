@@ -187,7 +187,8 @@ export type ConvoStateSuspended = {
 export type ConvoStateError = {
 	status: ConvoStatus.Error;
 	items: [];
-	convo: undefined;
+	/** the last view held, if any, so the header can still render behind the error. */
+	convo: ConvoWithDetails | undefined;
 	error: ConvoError;
 	isFetchingHistory: false;
 	hasAllHistory: false;
