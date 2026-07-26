@@ -643,6 +643,12 @@ export class Convo {
 				throw new Error('could not find self in convo');
 			}
 
+			// only groups truncate `members` in the view, so only they need the paginated list to fill
+			// out `relatedProfiles`. it's deliberately off the critical path - the UI renders without it.
+			if (this.convo.kind === 'group') {
+				void this.fetchMemberList();
+			}
+
 			const userIsDisabled = !!self.chatDisabled;
 
 			/*
@@ -728,9 +734,6 @@ export class Convo {
 			return this.pendingFetchConvo;
 		}
 
-		// non-blocking
-		void this.fetchMemberList();
-
 		this.pendingFetchConvo = (async () => {
 			try {
 				const data = await networkRetry(2, () => {
@@ -756,7 +759,6 @@ export class Convo {
 
 	async refreshConvo() {
 		try {
-			void this.fetchMemberList();
 			const { convo } = await this.fetchConvo();
 			// throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
 			this.setConvo(convo);
@@ -773,6 +775,8 @@ export class Convo {
 	// into the ConvoWithDetails. If you want to drive UI based on the member list,
 	// use `useListConvoMembersQuery`
 	// we shouldn't also block loading off of this - the UI should be resilient
+	// only groups need this: a direct convo's view already carries every member, and `setConvo` files
+	// them into `relatedProfiles` on its own
 	async fetchMemberList() {
 		let cursor: string | undefined;
 		do {
