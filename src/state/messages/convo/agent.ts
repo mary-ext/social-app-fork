@@ -354,6 +354,9 @@ export class Convo {
 					case ConvoDispatchEvent.Init: {
 						this.status = ConvoStatus.Initializing;
 						void this.setup();
+						// history doesn't depend on the convo view, so don't make it wait on `setup()` --
+						// the two round trips overlap instead of stacking.
+						void this.fetchMessageHistory();
 						this.setupFirehose();
 						this.requestPollInterval(ACTIVE_POLL_INTERVAL);
 						break;
@@ -365,12 +368,10 @@ export class Convo {
 				switch (action.event) {
 					case ConvoDispatchEvent.Ready: {
 						this.status = ConvoStatus.Ready;
-						void this.fetchMessageHistory();
 						break;
 					}
 					case ConvoDispatchEvent.Background: {
 						this.status = ConvoStatus.Backgrounded;
-						void this.fetchMessageHistory();
 						this.requestPollInterval(BACKGROUND_POLL_INTERVAL);
 						break;
 					}
@@ -389,7 +390,6 @@ export class Convo {
 					}
 					case ConvoDispatchEvent.Disable: {
 						this.status = ConvoStatus.Disabled;
-						void this.fetchMessageHistory(); // finish init
 						this.cleanupFirehoseConnection?.();
 						this.withdrawRequestedPollInterval();
 						break;
@@ -538,7 +538,8 @@ export class Convo {
 	}
 
 	private reset() {
-		this.convo = undefined;
+		// the view is kept: it's the same data a freshly-constructed Convo would get as placeholder, and
+		// setup() refreshes it either way. dropping it would blank the conversation for a round trip.
 		this.snapshot = undefined;
 
 		this.status = ConvoStatus.Uninitialized;
@@ -554,6 +555,11 @@ export class Convo {
 		// Shadow updates fired while suspended are missed, so the overlay may be
 		// stale — drop it and trust the from-scratch refetch.
 		this.profileShadows = new Map();
+
+		// `relatedProfiles` was just cleared, so re-seed it from the view we kept.
+		if (this.convo) {
+			this.setConvo(this.convo.view);
+		}
 
 		this.pendingMessageFailure = null;
 		this.fetchMessageHistoryError = undefined;
@@ -603,7 +609,22 @@ export class Convo {
 		this.setConvo(data.convo);
 	}
 
+	/** the viewer's own membership in the currently held view, if we hold one and they're in it. */
+	private getSelfMember() {
+		return this.convo?.members.find((m) => m.did === this.senderUserDid);
+	}
+
 	private async setup() {
+		// a placeholder carries everything needed to go active, so don't blank the conversation for a round
+		// trip. the exception is one reporting chat as disabled: `Disabled` is terminal, so a stale
+		// placeholder would lock the conversation until remount
+		const placeholderSelf = this.getSelfMember();
+		const startedFromPlaceholder = !!placeholderSelf && !placeholderSelf.chatDisabled;
+
+		if (startedFromPlaceholder) {
+			this.dispatch({ event: ConvoDispatchEvent.Ready });
+		}
+
 		try {
 			const { convo } = await this.fetchConvo();
 
@@ -616,7 +637,7 @@ export class Convo {
 				throw new Error('could not find convo');
 			}
 
-			const self = this.convo.members.find((m) => m.did === this.senderUserDid);
+			const self = this.getSelfMember();
 
 			if (!self) {
 				throw new Error('could not find self in convo');
@@ -624,6 +645,10 @@ export class Convo {
 
 			const userIsDisabled = !!self.chatDisabled;
 
+			/*
+			 * re-dispatched even when the placeholder already took us to `Ready`, so the server still gets
+			 * to move us to `Disabled`. a repeat `Ready` is a no-op in that status.
+			 */
 			if (userIsDisabled) {
 				this.dispatch({ event: ConvoDispatchEvent.Disable });
 			} else {
@@ -634,6 +659,12 @@ export class Convo {
 				logger.error('setup failed', {
 					safeMessage: errorMessage(e),
 				});
+			}
+
+			// the placeholder already has the conversation on screen; a failed refresh of data we already
+			// hold shouldn't tear that down into an error state.
+			if (startedFromPlaceholder) {
+				return;
 			}
 
 			this.dispatch({
