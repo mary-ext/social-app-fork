@@ -60,25 +60,18 @@ export function useMarkAsReadMutation() {
 	const { chat } = getClients();
 
 	return useMutation({
-		mutationFn: async ({ convoId, messageId }: { convoId?: string; messageId?: string }) => {
-			if (!convoId) {
-				throw new Error('No convoId provided');
-			}
+		mutationFn: async ({ convoId }: { convoId: string }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
 
 			await ok(
 				chat.post('chat.bsky.convo.updateRead', {
-					input: { convoId, messageId },
+					input: { convoId },
 				}),
 			);
 		},
 		onMutate({ convoId }) {
-			if (!convoId) {
-				throw new Error('No convoId provided');
-			}
-
 			// snapshot the list caches before the optimistic update so onError can
 			// restore the convo rows alongside the badge count
 			const prevListQueries = queryClient.getQueriesData<ConvoListQueryData>({
@@ -105,6 +98,8 @@ export function useMarkAsReadMutation() {
 				}
 			}
 
+			// the only place the list rows are zeroed; repeating it once the round trip returns would
+			// discard a message that landed in between, which the server counts as unread
 			optimisticUpdate(convoId);
 
 			// the badge count query is a separate server query that the list caches
@@ -140,11 +135,7 @@ export function useMarkAsReadMutation() {
 			}
 			return { knownRead: knownRead && !unreadStatus, prevListQueries, prevUnreadCountsQueries };
 		},
-		onSuccess(_, { convoId }, context) {
-			if (!convoId) {
-				return;
-			}
-
+		onSuccess(_, __, context) {
 			// the optimistic badge arithmetic can drift from the server (e.g. a convo
 			// whose status differs between caches, or a sentinel-capped count).
 			// invalidate so the 15s-stale count query self-corrects on next access
@@ -153,37 +144,6 @@ export function useMarkAsReadMutation() {
 			if (!context?.knownRead) {
 				void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_PARTIAL_KEY });
 			}
-
-			queryClient.setQueriesData({ queryKey: [LIST_CONVOS_KEY] }, (old?: ConvoListQueryData) => {
-				if (!old) {
-					return old;
-				}
-
-				const existingConvo = getConvoFromQueryData(convoId, old);
-
-				if (existingConvo) {
-					return {
-						...old,
-						pages: old.pages.map((page) => {
-							return {
-								...page,
-								convos: page.convos.map((convo) => {
-									if (convo.id === convoId) {
-										return {
-											...convo,
-											unreadCount: 0,
-										};
-									}
-									return convo;
-								}),
-							};
-						}),
-					};
-				} else {
-					// If we somehow marked a convo as read that doesn't exist in the
-					// list, then we don't need to do anything.
-				}
-			});
 		},
 		onError(_, __, context) {
 			if (context?.prevListQueries) {
