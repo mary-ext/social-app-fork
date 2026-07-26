@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import type { JsonObject } from 'type-fest';
 
@@ -15,18 +15,14 @@ export function useStorage<Scopes extends unknown[], Schema extends JsonObject, 
 	storage: Storage<Scopes, Schema>,
 	scopes: [...Scopes, Key],
 ): [Schema[Key] | undefined, (data: Schema[Key]) => void] {
-	const [value, setValue] = useState<Schema[Key] | undefined>(() => storage.get(scopes));
-
-	useEffect(() => {
-		return storage.onScopeChange(scopes, () => {
-			setValue(storage.get(scopes));
-		});
-	}, [storage, scopes]);
+	const value = useSyncExternalStore(
+		(callback) => storage.onScopeChange(scopes, callback),
+		() => storage.get(scopes),
+	);
 
 	const setter = (data: Schema[Key]) => {
-		setValue(data);
 		storage.set(scopes, data);
 	};
 
-	return [value, setter] as const;
+	return [value, setter];
 }
