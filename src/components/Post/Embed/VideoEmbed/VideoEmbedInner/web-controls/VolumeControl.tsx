@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
-import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
+import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
@@ -25,12 +25,12 @@ export function VolumeControl({
 	onEndHover: () => void;
 	drawFocus: () => void;
 }) {
-	const [volume, setVolume] = useVideoVolumeState();
+	const volume = useVideoVolume();
 
 	const onVolumeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		drawFocus();
 		const vol = sliderVolumeToVideoVolume(Number(evt.target.value));
-		setVolume(vol);
+		setVideoVolume(vol);
 		changeMuted(vol === 0);
 	};
 
@@ -40,7 +40,7 @@ export function VolumeControl({
 	const onPressMute = () => {
 		drawFocus();
 		if (isZeroVolume) {
-			setVolume(1);
+			setVideoVolume(1);
 			changeMuted(false);
 		} else {
 			changeMuted((prevMuted) => !prevMuted);

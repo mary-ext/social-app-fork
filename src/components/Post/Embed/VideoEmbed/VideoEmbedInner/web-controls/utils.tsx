@@ -2,7 +2,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { logger } from '#/logger';
 
-import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
+import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 import { IS_WEB_SAFARI } from '#/env';
 
@@ -10,7 +10,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const [playing, setPlaying] = useState(false);
 	const [muted, setMuted] = useState(true);
 	const [currentTime, setCurrentTime] = useState(0);
-	const [volume, setVolume] = useVideoVolumeState();
 	const [duration, setDuration] = useState(0);
 	const [buffering, setBuffering] = useState(false);
 	const [error, setError] = useState(false);
@@ -18,12 +17,18 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const playWhenReadyRef = useRef(false);
 
 	useEffect(() => {
-		if (!ref.current) {
+		const element = ref.current;
+		if (!element) {
 			return;
 		}
-		// `ref` is a ref param; mutating the element it points at is intended
-		ref.current.volume = volume;
-	}, [ref, volume]);
+
+		const applyVolume = () => {
+			element.volume = getVideoVolume();
+		};
+
+		applyVolume();
+		return subscribeVideoVolume(applyVolume);
+	}, [ref]);
 
 	useEffect(() => {
 		if (!ref.current) {
@@ -41,7 +46,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		setDuration(round(ref.current.duration) || 0);
 		setMuted(ref.current.muted);
 		setPlaying(!ref.current.paused);
-		setVolume(ref.current.volume);
 
 		const handleTimeUpdate = () => {
 			if (!ref.current) {
@@ -192,7 +196,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 			abortController.abort();
 			clearTimeout(bufferingTimeout);
 		};
-	}, [ref, setVolume]);
+	}, [ref]);
 
 	const play = useCallback(() => {
 		if (!ref.current) {
