@@ -3,7 +3,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useFontScaleMultiplier } from '#/state/shell/appearance';
+import { useFontScaleMultiplier } from '#/state/preferences/appearance';
 
 import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
 import * as css from '#/components/ProfileBadges.css';

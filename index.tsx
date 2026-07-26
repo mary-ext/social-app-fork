@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 
 import { initServiceWorker } from '#/lib/service-worker';
 
-import { initAppearance } from '#/state/shell/appearance';
+import { initAppearance } from '#/state/preferences/appearance';
 
 import { LOCALE } from '#/locale/intl/locale';
 

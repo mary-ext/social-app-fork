@@ -4,7 +4,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getVideoMetadata } from '#/lib/media/metadata';
 
 import { useSession } from '#/state/session';
-import { closeAllActiveElements } from '#/state/util';
+import { closeAllActiveElements } from '#/state/shell/overlays';
 
 export function useComposeIntent() {
 	const { openComposer } = useOpenComposer();

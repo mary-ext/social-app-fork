@@ -9,7 +9,7 @@ import {
 	useDarkTheme,
 	useFontFamily,
 	useFontScale,
-} from '#/state/shell/appearance';
+} from '#/state/preferences/appearance';
 
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';

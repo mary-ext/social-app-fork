@@ -1,6 +1,6 @@
 import { closeAllDialogs } from '#/components/Dialog/registry';
 
-import { setDrawerOpen } from './shell/drawer-open';
+import { setDrawerOpen } from './drawer-open';
 
 /** used to clear out any modals, eg for a navigation */
 export function closeAllActiveElements() {

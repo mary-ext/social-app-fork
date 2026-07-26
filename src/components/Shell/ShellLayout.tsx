@@ -7,7 +7,7 @@ import { useKeybind } from '#/lib/keybinds';
 
 import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
-import { closeAllActiveElements } from '#/state/util';
+import { closeAllActiveElements } from '#/state/shell/overlays';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
