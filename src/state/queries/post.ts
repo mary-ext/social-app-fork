@@ -11,9 +11,9 @@ import { createRecord, deleteRecord } from '#/lib/api/records';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
-import { setThreadMute, useIsThreadMuted } from '#/state/cache/thread-mutes';
 import type { Shadow } from '#/state/cache/types';
 import { getClients, useSession } from '#/state/session';
+import { setThreadMute, useIsThreadMuted } from '#/state/thread-mutes';
 
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
