@@ -23,7 +23,6 @@ import { Provider as ShellStateProvider } from '#/state/shell';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
 
-import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
@@ -46,34 +45,32 @@ function InnerApp() {
 	return (
 		<Splash isReady={!isSessionResuming}>
 			<VideoVolumeProvider>
-				<ActiveVideoProvider>
-					{/* QueryProvider resets children on currentDid changes */}
-					<QueryProvider currentDid={currentAccount?.did}>
-						<MessagesProvider>
-							{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-							<LabelDefsProvider>
-								<ModerationOptsProvider>
-									<SelectedFeedProvider>
-										<HiddenRepliesProvider>
-											<UnreadNotifsProvider>
-												<MutedThreadsProvider>
-													<ServiceConfigProvider>
-														<HideBottomBarBorderProvider>
-															<HotkeysProvider>
-																<RouterView router={router} />
-																<ToastOutlet />
-															</HotkeysProvider>
-														</HideBottomBarBorderProvider>
-													</ServiceConfigProvider>
-												</MutedThreadsProvider>
-											</UnreadNotifsProvider>
-										</HiddenRepliesProvider>
-									</SelectedFeedProvider>
-								</ModerationOptsProvider>
-							</LabelDefsProvider>
-						</MessagesProvider>
-					</QueryProvider>
-				</ActiveVideoProvider>
+				{/* QueryProvider resets children on currentDid changes */}
+				<QueryProvider currentDid={currentAccount?.did}>
+					<MessagesProvider>
+						{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+						<LabelDefsProvider>
+							<ModerationOptsProvider>
+								<SelectedFeedProvider>
+									<HiddenRepliesProvider>
+										<UnreadNotifsProvider>
+											<MutedThreadsProvider>
+												<ServiceConfigProvider>
+													<HideBottomBarBorderProvider>
+														<HotkeysProvider>
+															<RouterView router={router} />
+															<ToastOutlet />
+														</HotkeysProvider>
+													</HideBottomBarBorderProvider>
+												</ServiceConfigProvider>
+											</MutedThreadsProvider>
+										</UnreadNotifsProvider>
+									</HiddenRepliesProvider>
+								</SelectedFeedProvider>
+							</ModerationOptsProvider>
+						</LabelDefsProvider>
+					</MessagesProvider>
+				</QueryProvider>
 			</VideoVolumeProvider>
 		</Splash>
 	);

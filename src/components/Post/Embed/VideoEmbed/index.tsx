@@ -19,7 +19,7 @@ import {
 import { IS_WEB_FIREFOX } from '#/env';
 import { m } from '#/paraglide/messages';
 
-import { useActiveVideoWeb } from './ActiveVideoWebContext';
+import { useActiveVideo } from './active-video';
 import * as styles from './index.css';
 import * as VideoFallback from './VideoEmbedInner/VideoFallback';
 
@@ -33,14 +33,14 @@ const MIN_CARD_WIDTH = 280;
 
 export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	const ref = useRef<HTMLDivElement>(null);
-	const { active: activeFromContext, setActive, sendPosition, currentActiveView } = useActiveVideoWeb();
+	const { sendPosition, setActive, status } = useActiveVideo();
 	const [onScreen, setOnScreen] = useState(false);
 	const [isFullscreen] = useFullscreen();
 	const lastKnownTime = useRef<number | undefined>(undefined);
 
 	const isGif = embed.presentation === 'gif';
 	// GIFs don't participate in the "one video at a time" system
-	const active = isGif || activeFromContext;
+	const active = isGif || status === 'active';
 
 	useEffect(() => {
 		if (!ref.current) {
@@ -103,10 +103,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 
 	return (
 		<div className={styles.root}>
-			<ViewportObserver
-				sendPosition={isGif ? noop : sendPosition}
-				isAnyViewActive={currentActiveView !== null}
-			>
+			<ViewportObserver sendPosition={isGif ? noop : sendPosition} isAnyViewActive={status !== 'unclaimed'}>
 				<div
 					className={styles.box}
 					style={assignInlineVars({
