@@ -17,8 +17,6 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 
 	return (
 		<div className={css.outer({ isDesktop: gtMobile })}>
-			{!gtMobile && <div className={css.gradient} />}
-
 			<button
 				aria-label={m['screens.postThread.reply.a11y.compose']()}
 				onClick={onPressCompose}

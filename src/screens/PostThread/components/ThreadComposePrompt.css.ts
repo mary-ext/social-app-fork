@@ -1,5 +1,3 @@
-import { style } from '@vanilla-extract/css';
-
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
@@ -10,7 +8,6 @@ export const outer = recipe(
 		base: {
 			boxSizing: 'border-box',
 			display: 'flex',
-			position: 'relative',
 			flexDirection: 'column',
 			paddingRight: space.sm,
 			paddingLeft: space.sm,
@@ -29,21 +26,14 @@ export const outer = recipe(
 					paddingBottom: space.xs,
 				},
 				false: {
-					paddingBottom: space._2xs,
+					backgroundImage: `linear-gradient(to bottom, transparent, ${colorMix(colors.bg, '80%')} 80%, ${colors.bg})`,
+					paddingBottom: `calc(${space.sm}px + env(safe-area-inset-bottom, 0px))`,
 				},
 			},
 		},
 	},
 	{ debugId: 'outer' },
 );
-
-export const gradient = style({
-	position: 'absolute',
-	inset: 0,
-	zIndex: -1,
-	backgroundImage: `linear-gradient(to bottom, ${colorMix(colors.bg, '0%')} 15%, ${colors.bg} 40%)`,
-	pointerEvents: 'none',
-});
 
 export const button = recipe(
 	{

@@ -1,6 +1,4 @@
-import { fallbackVar, style } from '@vanilla-extract/css';
-
-import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { zIndex } from '#/styles/tokens.css';
@@ -19,7 +17,7 @@ export const footerNoBorder = style({
 export const mobileComposePrompt = style({
 	position: 'fixed',
 	right: 0,
-	bottom: fallbackVar(bottomBarHeightVar, '0px'),
+	bottom: 0,
 	left: 0,
 	zIndex: zIndex.raised,
 });
