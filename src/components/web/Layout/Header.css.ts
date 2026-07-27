@@ -22,7 +22,7 @@ export const outer = style({
 });
 
 export const outerNoBorder = style({
-	borderBottom: 'none',
+	borderBottomColor: 'transparent',
 });
 
 export const outerStatic = style({
