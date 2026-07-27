@@ -4,11 +4,14 @@ import { clsx } from 'clsx';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
+import { useProfileQuery } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 import { setDrawerOpen } from '#/state/shell/drawer-open';
 
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
 import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
 
@@ -127,7 +130,9 @@ export function BackButton({ label, onClick, variant = 'ghost' }: BackButtonProp
 	);
 }
 
-/** Opens the drawer nav on narrow viewports; renders nothing once the side nav takes over. */
+const MENU_AVATAR_SIZE = 24;
+
+/** Opens the drawer nav on narrow viewports. */
 export function MenuButton() {
 	const { gtMobile } = useBreakpoints();
 
@@ -149,8 +154,25 @@ export function MenuButton() {
 					setDrawerOpen(true);
 				}}
 			>
-				<ButtonIcon icon={Menu} size="lg" />
+				<MenuButtonGlyph />
 			</Button>
 		</Slot>
+	);
+}
+
+function MenuButtonGlyph() {
+	const { currentAccount } = useSession();
+	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+
+	if (!currentAccount) {
+		return <ButtonIcon icon={Menu} size="lg" />;
+	}
+
+	return (
+		<UserAvatar
+			avatar={profile?.avatar}
+			size={MENU_AVATAR_SIZE}
+			type={profile?.associated?.labeler ? 'labeler' : 'user'}
+		/>
 	);
 }
