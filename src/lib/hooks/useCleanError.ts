@@ -37,13 +37,6 @@ export function useCleanError() {
 			};
 		}
 
-		if (raw.includes('Bad token scope') || raw.includes('Bad token method')) {
-			return {
-				raw,
-				clean: m['lib.appPassword.featureUnavailable'](),
-			};
-		}
-
 		if (raw.includes('Rate Limit Exceeded')) {
 			return {
 				raw,

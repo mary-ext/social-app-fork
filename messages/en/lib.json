@@ -2,7 +2,6 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"lib.account.error.deactivated": "Account is deactivated",
 	"lib.account.error.suspended": "Account has been suspended",
-	"lib.appPassword.featureUnavailable": "This feature is not available while using an app password. Please sign in with your main password.",
 	"lib.error.connectionFailed": "Unable to connect. Please check your internet connection and try again.",
 	"lib.error.handleResolveFailed": "Unable to resolve handle",
 	"lib.error.rateLimit": "You've reached the maximum number of requests allowed. Please try again later.",
