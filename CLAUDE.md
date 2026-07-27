@@ -12,7 +12,7 @@ this project uses React Compiler.
 - build with `pnpm build` (rsbuild)
 - format with `pnpm format` (oxfmt)
 - lint and typecheck with `pnpm lint` (oxlint)
-  - running `tsc` is not necessary
+  - avoid running `tsc`, it is NOT necessary
 - check `pnpm view <package>` before adding a new dependency
 
 ### browser automation
