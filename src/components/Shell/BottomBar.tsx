@@ -1,14 +1,12 @@
-import { type ComponentPropsWithoutRef, type MouseEvent, useRef } from 'react';
+import type { MouseEvent } from 'react';
 
 import { clsx } from 'clsx';
 
 import { useIsBottomBarBorderHidden } from '#/lib/hooks/hide-bottom-bar-border';
-import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
-import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
@@ -16,6 +14,7 @@ import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
 	Bell_Filled_Corner0_Rounded as BellFilled,
 } from '#/components/icons/Bell';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	HomeOpen_Stoke2_Corner0_Rounded as Home,
 	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
@@ -31,7 +30,6 @@ import {
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message';
 import { Text } from '#/components/Text';
-import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
 
@@ -43,67 +41,9 @@ import * as css from './BottomBar.css';
 
 const iconWidth = 24;
 
-const LONG_PRESS_MS = 500;
-
-type AnchorPressHandlers = Pick<
-	ComponentPropsWithoutRef<'a'>,
-	'onContextMenu' | 'onPointerCancel' | 'onPointerDown' | 'onPointerLeave' | 'onPointerUp'
->;
-
-/**
- * synthesize long press behavior for DOM elements. a primary press held past the threshold fires the callback
- * and flags the gesture, letting the subsequent click be swallowed.
- *
- * @param onLongPress callback invoked when a press is held past the threshold; omit to disable the gesture
- * @returns pointer handlers to spread onto the anchor, and `consumeLongPress` for the click handler to check
- */
-const useLongPress = (onLongPress?: () => void) => {
-	const firedRef = useRef(false);
-	const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-	const cancel = () => {
-		clearTimeout(timerRef.current);
-		timerRef.current = undefined;
-	};
-
-	const handlers: AnchorPressHandlers | undefined = !onLongPress
-		? undefined
-		: {
-				// the browser's own long-press / right-click menu would race our gesture, so suppress it
-				onContextMenu: (e) => e.preventDefault(),
-				onPointerCancel: cancel,
-				onPointerDown: (e) => {
-					if (e.button !== 0) {
-						return;
-					}
-					firedRef.current = false;
-					cancel();
-					timerRef.current = setTimeout(() => {
-						firedRef.current = true;
-						onLongPress();
-					}, LONG_PRESS_MS);
-				},
-				onPointerLeave: cancel,
-				onPointerUp: cancel,
-			};
-
-	// true at most once per gesture — lets the click handler swallow the click trailing a long press
-	const consumeLongPress = () => {
-		if (firedRef.current) {
-			firedRef.current = false;
-			return true;
-		}
-		return false;
-	};
-
-	return { consumeLongPress, handlers };
-};
-
 export function BottomBar() {
-	const { hasSession, currentAccount } = useSession();
+	const { hasSession } = useSession();
 	const hideBorder = useIsBottomBarBorderHidden();
-	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
-	const isLabeler = profile?.associated?.labeler;
 
 	const unreadMessageCount = useUnreadMessageCount();
 	const notificationCountStr = useUnreadNotifications();
@@ -112,47 +52,23 @@ export function BottomBar() {
 		<nav className={clsx(css.bottomBar, hideBorder && css.bottomBarHideBorder)}>
 			{hasSession ? (
 				<>
-					<NavItem to={{ name: 'Home' }}>
-						{({ isActive }) => {
-							const Icon = isActive ? HomeFilled : Home;
-							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
-						}}
-					</NavItem>
-					<NavItem to={{ name: 'Explore' }} activeRouteNames={['Explore', 'Search']}>
-						{({ isActive }) => {
-							const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass;
-							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
-						}}
-					</NavItem>
+					<NavItem to={{ name: 'Home' }} icons={{ active: HomeFilled, inactive: Home }} />
+					<NavItem
+						to={{ name: 'Explore' }}
+						activeRouteNames={['Explore', 'Search']}
+						icons={{ active: MagnifyingGlassFilled, inactive: MagnifyingGlass }}
+					/>
 					<NavItem
 						to={{ name: 'Messages' }}
-						notificationCount={unreadMessageCount.numUnread}
 						hasNew={unreadMessageCount.hasNew}
-					>
-						{({ isActive }) => {
-							const Icon = isActive ? MessageFilled : Message;
-							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
-						}}
-					</NavItem>
-					<NavItem to={{ name: 'Notifications' }} notificationCount={notificationCountStr}>
-						{({ isActive }) => {
-							const Icon = isActive ? BellFilled : Bell;
-							return <Icon aria-hidden={true} width={iconWidth} fill={colors.text} />;
-						}}
-					</NavItem>
+						icons={{ active: MessageFilled, inactive: Message }}
+						notificationCount={unreadMessageCount.numUnread}
+					/>
 					<NavItem
-						to={currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' }}
-						onLongPress={() => signinDialogHandle.openWithPayload({ intent: 'switch' })}
-					>
-						{({ isActive }) => (
-							<UserAvatar
-								avatar={profile?.avatar}
-								size={iconWidth}
-								type={isLabeler ? 'labeler' : 'user'}
-								className={clsx(css.avatarRing, isActive && css.avatarRingActive)}
-							/>
-						)}
-					</NavItem>
+						to={{ name: 'Notifications' }}
+						icons={{ active: BellFilled, inactive: Bell }}
+						notificationCount={notificationCountStr}
+					/>
 				</>
 			) : (
 				<div className={css.signInRow}>
@@ -177,57 +93,43 @@ export function BottomBar() {
 	);
 }
 
-const NavItem: React.FC<{
+interface NavItemProps {
 	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
-	activeRouteNames?: readonly string[];
-	children: (props: { isActive: boolean }) => React.ReactNode;
+	activeRouteNames?: readonly RouteTarget['name'][];
 	hasNew?: boolean;
+	icons: {
+		active: React.ComponentType<SVGIconProps>;
+		inactive: React.ComponentType<SVGIconProps>;
+	};
 	notificationCount?: string;
-	onLongPress?: () => void;
 	to: RouteTarget;
-}> = ({ activeRouteNames, children, hasNew, notificationCount, onLongPress, to }) => {
-	const { currentAccount } = useSession();
+}
+function NavItem({ activeRouteNames, hasNew, icons, notificationCount, to }: NavItemProps) {
 	const routeName = to.name;
 	const router = useRouter();
 	const target = useTarget();
-	const { consumeLongPress, handlers: longPressHandlers } = useLongPress(onLongPress);
 
-	// the Profile tab is "active" only on your own profile (matched on DID), so viewing someone else's
-	// profile leaves it inactive and makes a press push a fresh screen; every other tab is an exact name match.
-	const inTab = activeRouteNames ? activeRouteNames.includes(target.name) : target.name === routeName;
-	const onProfileTab = routeName === 'Profile' && target.name === 'Profile';
-	const isOnDifferentProfile = onProfileTab && target.actor !== currentAccount?.did;
-	const isActive = onProfileTab ? !isOnDifferentProfile : inTab;
-	const atRoot = inTab;
+	const isActive = activeRouteNames ? activeRouteNames.includes(target.name) : target.name === routeName;
 
-	// active tab at its root soft-resets the feed; a deeper stack pops back to it; a different profile pushes.
-	const action = isOnDifferentProfile ? 'push' : 'navigate';
 	const onPress = (e: MouseEvent<HTMLElement>) => {
-		// a long press already handled this interaction; don't also navigate on the trailing click
-		if (consumeLongPress()) {
-			return false;
-		}
-		if (action !== 'navigate' || isModifiedClick(e)) {
+		if (isModifiedClick(e)) {
 			return;
 		}
-		if (atRoot) {
+
+		if (isActive) {
 			softReset.emit();
 			return false;
 		}
+
 		router.popTo(to);
 		return false;
 	};
 
+	const Icon = isActive ? icons.active : icons.inactive;
+
 	return (
-		<Link
-			to={to}
-			action={action}
-			onPress={onPress}
-			label={routeName}
-			className={css.ctrl}
-			{...longPressHandlers}
-		>
-			{children({ isActive })}
+		<Link to={to} onPress={onPress} label={routeName} className={css.ctrl}>
+			<Icon aria-hidden={true} width={iconWidth} fill={colors.text} />
 			{notificationCount ? (
 				<Text
 					size="sm"
@@ -243,4 +145,4 @@ const NavItem: React.FC<{
 			) : null}
 		</Link>
 	);
-};
+}

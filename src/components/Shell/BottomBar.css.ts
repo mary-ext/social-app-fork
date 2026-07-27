@@ -43,14 +43,6 @@ export const badge = style([navBadge.badge, { top: 8, left: '52%', zIndex: 1 }])
 
 export const hasNewBadge = style([navBadge.hasNewDot, { top: 10, left: '54%', zIndex: 1, marginLeft: 4 }]);
 
-export const avatarRing = style({
-	border: `2px solid transparent`,
-});
-
-export const avatarRingActive = style({
-	borderColor: colors.text,
-});
-
 export const signInRow = style({
 	display: 'flex',
 	flexDirection: 'row',
