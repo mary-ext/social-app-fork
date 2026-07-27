@@ -8,6 +8,8 @@ import { space, zIndex } from '#/styles/tokens.css';
 
 const swipeEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
 
+export const PROFILE_AVATAR_SIZE = 52;
+
 export const portal = style(
 	layered(components, {
 		zIndex: zIndex.modal,
@@ -94,6 +96,8 @@ export const srOnly = style({
 	whiteSpace: 'nowrap',
 });
 
+export const profileCardWrap = style({ position: 'relative' });
+
 export const profileCard = style(
 	layered(components, {
 		appearance: 'none',
@@ -113,6 +117,15 @@ export const profileCard = style(
 
 export const profileNameRow = style({
 	display: 'flex',
+	gap: space.xs,
+	alignItems: 'center',
+});
+
+export const accountSwitcher = style({
+	display: 'flex',
+	position: 'absolute',
+	top: 0,
+	right: space.xl,
 	gap: space.xs,
 	alignItems: 'center',
 });

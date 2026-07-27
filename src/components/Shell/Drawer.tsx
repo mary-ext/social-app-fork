@@ -1,10 +1,11 @@
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 
+import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { setDrawerOpen, useIsDrawerOpen } from '#/state/shell/drawer-open';
 
@@ -13,6 +14,7 @@ import { Trans } from '#/locale/Trans';
 
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
+import { signinDialogHandle } from '#/components/dialogs/handles';
 import {
 	Bell_Filled_Corner0_Rounded as BellFilled,
 	Bell_Stroke2_Corner0_Rounded as Bell,
@@ -20,6 +22,7 @@ import {
 import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { BulletList_Stroke2_Corner0_Rounded as List } from '#/components/icons/BulletList';
 import type { Props as SVGIconProps } from '#/components/icons/common';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGrid } from '#/components/icons/DotGrid';
 import {
 	Hashtag_Filled_Corner0_Rounded as HashtagFilled,
 	Hashtag_Stroke2_Corner0_Rounded as Hashtag,
@@ -36,6 +39,7 @@ import {
 	Message_Stroke2_Corner0_Rounded as Message,
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message';
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { SettingsGear2_Stroke2_Corner0_Rounded as Settings } from '#/components/icons/SettingsGear2';
 import {
 	UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
@@ -46,11 +50,14 @@ import * as styles from '#/components/Shell/Drawer.css';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
 const ICON_WIDTH = 26;
+const SWITCHER_AVATAR_SIZE = 24;
+const SWITCHER_ACCOUNT_LIMIT = 2;
 
 /** mobile-only left navigation drawer. */
 export function Drawer() {
@@ -222,61 +229,119 @@ function DrawerProfileCard({
 	const { isActive: live } = useActorStatus(profile);
 
 	return (
-		<button
-			aria-label={m['common.nav.profile']()}
-			className={styles.profileCard}
-			onClick={onPressProfile}
-			type="button"
-		>
-			<UserAvatar
-				avatar={profile?.avatar}
-				live={live}
-				size={52}
-				type={profile?.associated?.labeler ? 'labeler' : 'user'}
-			/>
-			<div>
-				<div className={styles.profileNameRow}>
-					<Text numberOfLines={1} size="xl" weight="bold">
-						{profile?.displayName || account.handle}
-					</Text>
-					{profile && <ProfileBadges profile={profile} size="lg" />}
-				</div>
-				<Text color="textContrastMedium" numberOfLines={1} size="md">
-					{`@${account.handle}`}
-				</Text>
-			</div>
-			<Text color="textContrastMedium" size="md">
-				<Trans
-					inputs={{
-						count: profile?.followersCount || 0,
-						formatted: formatCount(profile?.followersCount ?? 0),
-					}}
-					markup={{
-						t0: ({ children }) => (
-							<Text size="md" weight="semiBold">
-								{children}
-							</Text>
-						),
-					}}
-					message={m['view.profile.followers.followersCount']}
-				/>{' '}
-				&middot;{' '}
-				<Trans
-					inputs={{
-						count: profile?.followsCount || 0,
-						formatted: formatCount(profile?.followsCount ?? 0),
-					}}
-					markup={{
-						t0: ({ children }) => (
-							<Text size="md" weight="semiBold">
-								{children}
-							</Text>
-						),
-					}}
-					message={m['view.profile.followers.followingCount']}
+		<div className={styles.profileCardWrap}>
+			<button
+				aria-label={m['common.nav.profile']()}
+				className={styles.profileCard}
+				onClick={onPressProfile}
+				type="button"
+			>
+				<UserAvatar
+					avatar={profile?.avatar}
+					live={live}
+					size={styles.PROFILE_AVATAR_SIZE}
+					type={profile?.associated?.labeler ? 'labeler' : 'user'}
 				/>
-			</Text>
-		</button>
+				<div>
+					<div className={styles.profileNameRow}>
+						<Text numberOfLines={1} size="xl" weight="bold">
+							{profile?.displayName || account.handle}
+						</Text>
+						{profile && <ProfileBadges profile={profile} size="lg" />}
+					</div>
+					<Text color="textContrastMedium" numberOfLines={1} size="md">
+						{`@${account.handle}`}
+					</Text>
+				</div>
+				<Text color="textContrastMedium" size="md">
+					<Trans
+						inputs={{
+							count: profile?.followersCount || 0,
+							formatted: formatCount(profile?.followersCount ?? 0),
+						}}
+						markup={{
+							t0: ({ children }) => (
+								<Text size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followersCount']}
+					/>{' '}
+					&middot;{' '}
+					<Trans
+						inputs={{
+							count: profile?.followsCount || 0,
+							formatted: formatCount(profile?.followsCount ?? 0),
+						}}
+						markup={{
+							t0: ({ children }) => (
+								<Text size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followingCount']}
+					/>
+				</Text>
+			</button>
+
+			<DrawerAccountSwitcher />
+		</div>
+	);
+}
+
+/** shortcuts to the other signed-in accounts. */
+function DrawerAccountSwitcher() {
+	const { accounts, currentAccount } = useSession();
+	const { onPressSwitchAccount, pendingDid } = useAccountSwitcher();
+
+	const otherAccounts = accounts
+		.filter((account) => account.did !== currentAccount?.did)
+		.slice(0, SWITCHER_ACCOUNT_LIMIT);
+	const { data: profiles } = useProfilesQuery({ dids: otherAccounts.map((account) => account.did) });
+	const hasOtherAccounts = otherAccounts.length > 0;
+
+	return (
+		<div className={styles.accountSwitcher}>
+			{otherAccounts.map((account) => {
+				const profile = profiles?.profiles.find((p) => p.did === account.did);
+				return (
+					<Button
+						key={account.did}
+						disabled={!!pendingDid}
+						label={m['common.account.action.switchTo']({ handle: `@${account.handle}` })}
+						color="secondary"
+						shape="round"
+						variant="ghost"
+						onClick={() => void onPressSwitchAccount(account)}
+					>
+						<UserAvatar
+							avatar={profile?.avatar}
+							size={SWITCHER_AVATAR_SIZE}
+							type={profile?.associated?.labeler ? 'labeler' : 'user'}
+						/>
+					</Button>
+				);
+			})}
+
+			<Button
+				label={
+					hasOtherAccounts ? m['common.account.action.switch']() : m['common.account.action.addAnother']()
+				}
+				color="secondary"
+				shape="round"
+				variant="ghost"
+				onClick={() => {
+					setDrawerOpen(false);
+					signinDialogHandle.openWithPayload(
+						hasOtherAccounts ? { intent: 'switch' } : { showStoredAccounts: false },
+					);
+				}}
+			>
+				<ButtonIcon icon={hasOtherAccounts ? DotGrid : Plus} />
+			</Button>
+		</div>
 	);
 }
 
