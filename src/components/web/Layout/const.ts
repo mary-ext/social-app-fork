@@ -2,6 +2,3 @@
 
 /** Width of the center column. */
 export const CENTER_COLUMN_WIDTH = 600;
-
-/** Width of a small square or round header button. */
-export const HEADER_SLOT_SIZE = 33;

@@ -16,15 +16,10 @@ import { HomeHeaderLayout } from '#/screens/Home/components/HomeHeaderLayout';
 import { NoFeedsPinned } from '#/screens/Home/components/NoFeedsPinned';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { type Section, Tabs } from '#/components/Tabs';
+import type { Section } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
-
-const FEEDS_DISCOVERY_TAB = '__feeds__';
-
-type HomeTabId = FeedDescriptor | typeof FEEDS_DISCOVERY_TAB;
 
 export function HomeScreen() {
 	const { data: preferences } = usePreferencesQuery();
@@ -56,16 +51,11 @@ function HomeScreenReady({
 	preferences: UsePreferencesQueryResponse;
 }) {
 	const { hasSession } = useSession();
-	const router = useRouter();
-
-	const allFeeds = pinnedFeedInfos.map((f) => f.feedDescriptor);
-	const selectedFeed = useSelectedFeed() ?? allFeeds[0];
-	const selectedIndex = Math.max(0, allFeeds.indexOf(selectedFeed!));
-	useTitle(pinnedFeedInfos[selectedIndex]?.displayName ?? m['common.nav.home']());
+	const selectedFeed = useSelectedFeed();
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
 
-	let sections: Section<HomeTabId>[];
+	let sections: Section<FeedDescriptor>[];
 	if (!hasSession) {
 		sections = [
 			{
@@ -79,10 +69,9 @@ function HomeScreenReady({
 					/>
 				),
 			},
-			{ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', children: null },
 		];
 	} else {
-		const feedSections: Section<HomeTabId>[] = pinnedFeedInfos.map((feedInfo) => {
+		sections = pinnedFeedInfos.map((feedInfo) => {
 			const feed = feedInfo.feedDescriptor;
 			return {
 				id: feed,
@@ -100,39 +89,33 @@ function HomeScreenReady({
 					),
 			};
 		});
-
-		// nudge feed discovery when the user has only the Following feed pinned
-		const hasPinnedCustom = pinnedFeedInfos.some((f) => f.feedDescriptor !== 'following');
-		if (!hasPinnedCustom) {
-			feedSections.push({ id: FEEDS_DISCOVERY_TAB, label: 'Feeds ✨', children: null });
-		}
-		sections = feedSections;
 	}
 
-	const onValueChange = (value: HomeTabId) => {
-		if (value === FEEDS_DISCOVERY_TAB) {
-			router.navigate({ to: { name: 'Feeds' } });
+	const activeIndex = Math.max(
+		0,
+		sections.findIndex(({ id }) => id === selectedFeed),
+	);
+	const active = sections[activeIndex];
+	const feeds = sections.map(({ id, label }) => ({ id, label }));
+	useTitle(active?.label ?? m['common.nav.home']());
+
+	const onSelectFeed = (feed: FeedDescriptor) => {
+		if (feed === active?.id) {
+			softReset.emit();
 			return;
 		}
-		setSelectedFeed(value);
+		setSelectedFeed(feed);
+		window.scrollTo(0, 0);
 	};
 
-	if (hasSession && pinnedFeedInfos.length === 0) {
-		return (
-			<>
-				<HomeHeaderLayout />
-				<NoFeedsPinned preferences={preferences} />
-			</>
-		);
-	}
-
 	return (
-		<Tabs
-			header={<HomeHeaderLayout />}
-			onTabReselect={() => softReset.emit()}
-			onValueChange={onValueChange}
-			sections={sections}
-			value={selectedFeed ?? sections[0]?.id ?? FEEDS_DISCOVERY_TAB}
-		/>
+		<>
+			<HomeHeaderLayout activeFeed={feeds[activeIndex]} feeds={feeds} onSelectFeed={onSelectFeed} />
+			{hasSession && pinnedFeedInfos.length === 0 ? (
+				<NoFeedsPinned preferences={preferences} />
+			) : (
+				active?.children
+			)}
+		</>
 	);
 }
