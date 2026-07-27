@@ -1,9 +1,5 @@
 import type { MouseEvent } from 'react';
 
-import { clsx } from 'clsx';
-
-import { useIsBottomBarBorderHidden } from '#/lib/hooks/hide-bottom-bar-border';
-
 import { softReset } from '#/state/events';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
@@ -43,19 +39,17 @@ const iconWidth = 24;
 
 export function BottomBar() {
 	const { hasSession } = useSession();
-	const hideBorder = useIsBottomBarBorderHidden();
 
 	const unreadMessageCount = useUnreadMessageCount();
 	const notificationCountStr = useUnreadNotifications();
 
 	return (
-		<nav className={clsx(css.bottomBar, hideBorder && css.bottomBarHideBorder)}>
+		<nav className={css.bottomBar}>
 			{hasSession ? (
 				<>
 					<NavItem to={{ name: 'Home' }} icons={{ active: HomeFilled, inactive: Home }} />
 					<NavItem
 						to={{ name: 'Explore' }}
-						activeRouteNames={['Explore', 'Search']}
 						icons={{ active: MagnifyingGlassFilled, inactive: MagnifyingGlass }}
 					/>
 					<NavItem
@@ -94,8 +88,6 @@ export function BottomBar() {
 }
 
 interface NavItemProps {
-	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
-	activeRouteNames?: readonly RouteTarget['name'][];
 	hasNew?: boolean;
 	icons: {
 		active: React.ComponentType<SVGIconProps>;
@@ -104,12 +96,12 @@ interface NavItemProps {
 	notificationCount?: string;
 	to: RouteTarget;
 }
-function NavItem({ activeRouteNames, hasNew, icons, notificationCount, to }: NavItemProps) {
+function NavItem({ hasNew, icons, notificationCount, to }: NavItemProps) {
 	const routeName = to.name;
 	const router = useRouter();
 	const target = useTarget();
 
-	const isActive = activeRouteNames ? activeRouteNames.includes(target.name) : target.name === routeName;
+	const isActive = target.name === routeName;
 
 	const onPress = (e: MouseEvent<HTMLElement>) => {
 		if (isModifiedClick(e)) {

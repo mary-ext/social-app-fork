@@ -20,26 +20,21 @@ const BottomBar = lazy(() => import('#/components/Shell/BottomBar').then((m) => 
 const Drawer = lazy(() => import('#/components/Shell/Drawer').then((m) => ({ default: m.Drawer })));
 
 export type ShellProps = {
+	/** whether the route asks for the bottom bar, from its `bottomBar` meta. */
+	bottomBar: boolean;
 	children: React.ReactNode;
 	routeName: string;
 };
 
-/**
- * app shell that renders a layout with nav rails and an in-flow sticky bottom bar.
- *
- * publishes the bottom bar's measured height as the {@link css.bottomBarHeightVar} CSS variable for
- * positioning screens and overlays.
- */
-export function Shell({ children, routeName }: ShellProps) {
+/** the app shell. */
+export function Shell({ bottomBar, children, routeName }: ShellProps) {
 	const { hasSession } = useSession();
 	const { gtMobile } = useBreakpoints();
 	const { leftNavMinimal, rightNavVisible } = useLayoutBreakpoints();
 
-	const showBottomBar = hasSession ? !gtMobile : leftNavMinimal;
+	const showLeftNav = hasSession ? gtMobile : !leftNavMinimal;
+	const showBottomBar = !showLeftNav && (!hasSession || bottomBar);
 
-	// chat is a fixed-viewport layout (inner columns scroll). The wide split view (messages screens past the
-	// right-nav breakpoint) also widens the center track to fit the chat-list + conversation columns; below it,
-	// only a single conversation needs the viewport bound.
 	const isSplitView = routeName.startsWith('Messages') && rightNavVisible;
 	const fixedViewport = isSplitView || (routeName === 'MessagesConversation' && !rightNavVisible);
 
@@ -47,14 +42,16 @@ export function Shell({ children, routeName }: ShellProps) {
 
 	const [barHeight, setBarHeight] = useState(0);
 
+	const bottomBarHeight = showBottomBar ? `${barHeight}px` : 'env(safe-area-inset-bottom, 0px)';
+
 	return (
 		<div
 			className={clsx(css.root, fixedViewport && css.rootFixed)}
-			style={assignInlineVars({ [css.bottomBarHeightVar]: showBottomBar ? `${barHeight}px` : '0px' })}
+			style={assignInlineVars({ [css.bottomBarHeightVar]: bottomBarHeight })}
 		>
 			<div className={clsx(css.body, fixedViewport && css.bodyFixed, isSplitView && css.bodyWide)}>
 				<div className={`${css.rail} ${css.railLeft}`}>
-					{!showBottomBar && (
+					{showLeftNav && (
 						<Suspense fallback={null}>
 							<DesktopLeftNav routeName={routeName} />
 						</Suspense>

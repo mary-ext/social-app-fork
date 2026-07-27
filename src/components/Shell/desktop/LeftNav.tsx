@@ -256,7 +256,7 @@ function SwitchMenuItem({
 
 interface NavItemProps {
 	/** route names a single tab spans (e.g. Explore + Search); when set, activeness matches any of them. */
-	activeRouteNames?: readonly string[];
+	activeRouteNames?: readonly RouteTarget['name'][];
 	count?: string;
 	hasNew?: boolean;
 	icons: {

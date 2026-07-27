@@ -66,6 +66,7 @@ export const footer = style({
 	left: 0,
 	right: 0,
 	bottom: 0,
+	paddingBlock: space.lg,
 	paddingInline: space.xl,
 	borderTop: `1px solid ${colors.borderContrastLow}`,
 	background: colors.bg,

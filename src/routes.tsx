@@ -28,6 +28,8 @@ import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 
 declare module '@oomfware/stacker' {
 	interface RouteMeta {
+		/** shows the mobile bottom bar */
+		readonly bottomBar?: boolean;
 		readonly requireAuth?: boolean;
 	}
 }
@@ -226,6 +228,7 @@ export const routes = defineRoutes({
 		children: {
 			Home: route({
 				component: HomeScreen,
+				meta: { bottomBar: true },
 				path: '/',
 				type: 'singleton',
 			}),
@@ -238,6 +241,7 @@ export const routes = defineRoutes({
 			}),
 			Explore: route({
 				component: ExploreScreen,
+				meta: { bottomBar: true },
 				path: '/search',
 			}),
 			Feeds: route({
@@ -246,7 +250,7 @@ export const routes = defineRoutes({
 			}),
 			Notifications: route({
 				component: NotificationsScreen,
-				meta: { requireAuth: true },
+				meta: { bottomBar: true, requireAuth: true },
 				path: '/notifications',
 				type: 'singleton',
 			}),
@@ -487,7 +491,7 @@ export const routes = defineRoutes({
 					Messages: route({
 						component: MessagesScreen,
 						fallback: <MessagesSplitViewColumnLoadingScreen />,
-						meta: { requireAuth: true },
+						meta: { bottomBar: true, requireAuth: true },
 						path: '/messages',
 						type: 'singleton',
 					}),

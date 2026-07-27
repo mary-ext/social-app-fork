@@ -17,10 +17,6 @@ export const bottomBar = style({
 	paddingLeft: 'env(safe-area-inset-left, 0px)',
 });
 
-export const bottomBarHideBorder = style({
-	borderTopColor: colors.bg,
-});
-
 export const ctrl = style({
 	display: 'flex',
 	position: 'relative',

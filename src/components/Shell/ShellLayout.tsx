@@ -69,7 +69,7 @@ export function ShellLayout() {
 	}
 
 	return (
-		<Shell routeName={match.name}>
+		<Shell bottomBar={resolveMeta(match, 'bottomBar') ?? false} routeName={match.name}>
 			<ErrorBoundary>
 				<Outlet />
 			</ErrorBoundary>

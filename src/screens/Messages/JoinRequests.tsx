@@ -5,7 +5,6 @@ import { ClientResponseError } from '@atcute/client';
 
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
-import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { isNetworkError } from '#/lib/hooks/useCleanError';
 import { useTitle } from '#/lib/hooks/useTitle';
 
@@ -109,7 +108,6 @@ function JoinRequestsInner() {
 
 function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const moderationOpts = useModerationOpts();
-	const bottomBarOffset = useBottomBarOffset();
 	const { currentAccount } = useSession();
 	const router = useRouter();
 	const queryClient = useQueryClient();
@@ -253,11 +251,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	};
 
 	const footer = (
-		<div
-			className={css.footer}
-			ref={footerRef}
-			style={{ paddingTop: 16, paddingBottom: 16 + bottomBarOffset }}
-		>
+		<div className={css.footer} ref={footerRef}>
 			<Dialog.Trigger
 				handle={inviteLinkHandle}
 				render={
