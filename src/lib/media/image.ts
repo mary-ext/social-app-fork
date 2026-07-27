@@ -2,7 +2,11 @@ import type { AppBskyEmbedDefs } from '@atcute/bluesky';
 
 import { remove as removeExif } from '@mary/exif-rm';
 
+import { limitConcurrency } from '#/lib/async/task';
+
 import { cover } from './crop';
+
+const MAX_CONCURRENT_COMPRESSIONS = 2;
 
 const POST_MAX_BYTES = 2_000_000;
 const DEFAULT_MAX_BYTES = 1_000_000;
@@ -111,7 +115,7 @@ export const compressProfileImage = (blob: Blob, maxW: number, maxH: number): Pr
  * @returns the encoded blob and its final aspect ratio
  * @throws if no attempt produces a blob within the byte budget
  */
-const compressImage = async (blob: Blob, opts: CompressOptions): Promise<CompressResult> => {
+const compressImageUncapped = async (blob: Blob, opts: CompressOptions): Promise<CompressResult> => {
 	// strip exif first — may bring an oversized source under budget
 	blob = await stripExif(blob);
 
@@ -160,6 +164,8 @@ const compressImage = async (blob: Blob, opts: CompressOptions): Promise<Compres
 
 	return result;
 };
+
+const compressImage = limitConcurrency(MAX_CONCURRENT_COMPRESSIONS, compressImageUncapped);
 
 /**
  * encodes the image at the highest-scoring cell that is predicted to fit the byte budget.

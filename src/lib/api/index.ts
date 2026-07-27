@@ -19,6 +19,7 @@ import { mapDefined } from '@mary/array-fns';
 import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import { task } from '#/lib/async/task';
 import { compressImage } from '#/lib/media/composer-image';
 import { errorMessage, isNetworkError } from '#/lib/strings/errors';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
@@ -52,14 +53,60 @@ interface PostOpts {
 	langs?: string[];
 }
 
+type Write = ComAtprotoRepoApplyWrites.$input['writes'][number];
+
+/** Assembles a post record once its rich text, embed, and reply ref have all resolved. */
+const buildRecord = task(
+	(
+		rt: Awaited<ReturnType<typeof resolveRT>>,
+		embed: AppBskyFeedPost.Main['embed'],
+		reply: AppBskyFeedPost.Main['reply'],
+		meta: {
+			createdAt: string;
+			labels: $type.enforce<ComAtprotoLabelDefs.SelfLabels> | undefined;
+			langs: string[] | undefined;
+		},
+	): AppBskyFeedPost.Main => {
+		return {
+			$type: 'app.bsky.feed.post',
+			createdAt: meta.createdAt,
+			text: rt.text,
+			facets: rt.facets,
+			reply,
+			embed,
+			langs: meta.langs,
+			labels: meta.labels,
+		};
+	},
+);
+
+/** Derives the reply ref for the post that follows `record` in a thread. */
+const chainReply = task(
+	async (
+		reply: AppBskyFeedPost.Main['reply'],
+		record: AppBskyFeedPost.Main,
+		uri: ResourceUri,
+	): Promise<AppBskyFeedPost.Main['reply']> => {
+		const { serializeRecordCid } = await import('./cid');
+		const ref: ComAtprotoRepoStrongRef.Main = {
+			cid: await serializeRecordCid(record),
+			uri: uri,
+		};
+
+		return {
+			root: reply?.root ?? ref,
+			parent: ref,
+		};
+	},
+);
+
 export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
 
-	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> | AppBskyFeedPost.Main['reply'] | undefined;
-	if (opts.replyTo) {
-		// Not awaited to avoid waterfalls.
-		replyPromise = resolveReply(appview, opts.replyTo);
-	}
+	// Not awaited to avoid waterfalls.
+	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> = opts.replyTo
+		? resolveReply(appview, opts.replyTo)
+		: Promise.resolve(undefined);
 
 	// add top 3 languages from user preferences if langs is provided
 	let langs = opts.langs;
@@ -67,7 +114,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 		langs = opts.langs.slice(0, 3);
 	}
 
-	const writes: ComAtprotoRepoApplyWrites.$input['writes'] = [];
+	const writePromises: Promise<Write>[] = [];
 	const uris: ResourceUri[] = [];
 
 	const now = new Date();
@@ -75,9 +122,6 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 	for (let i = 0; i < thread.posts.length; i++) {
 		const draft = thread.posts[i]!;
 
-		// Not awaited to avoid waterfalls.
-		const rtPromise = resolveRT(appview, draft.text);
-		const embedPromise = resolveEmbed(appview, pds, queryClient, draft);
 		let labels: $type.enforce<ComAtprotoLabelDefs.SelfLabels> | undefined;
 		if (draft.labels.length) {
 			labels = {
@@ -86,76 +130,68 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			};
 		}
 
+		const createdAt = now.toISOString();
+
 		// The sorting behavior for multiple posts sharing the same createdAt time is
 		// undefined, so what we'll do here is increment the time by 1 for every post
 		now.setMilliseconds(now.getMilliseconds() + 1);
-		// @atcute/tid's now() is monotonic — repeated calls in the same ms increment to avoid collision
+
 		const rkey = TID.now();
 		const uri: ResourceUri = `at://${did}/app.bsky.feed.post/${rkey}`;
 		uris.push(uri);
 
-		const rt = await rtPromise;
-		const embed = await embedPromise;
-		const reply = await replyPromise;
-		const record: AppBskyFeedPost.Main = {
-			// IMPORTANT: $type has to exist, CID is calculated with the `$type` field
-			// present and will produce the wrong CID if you omit it.
-			$type: 'app.bsky.feed.post',
-			createdAt: now.toISOString(),
-			text: rt.text,
-			facets: rt.facets,
-			reply,
-			embed,
-			langs,
-			labels,
-		};
-		writes.push({
-			$type: 'com.atproto.repo.applyWrites#create',
-			collection: 'app.bsky.feed.post',
-			rkey: rkey,
-			value: record,
-		});
+		const recordPromise = buildRecord(
+			resolveRT(appview, draft.text),
+			resolveEmbed(appview, pds, queryClient, draft),
+			replyPromise,
+			{ createdAt, labels, langs },
+		);
+		writePromises.push(
+			recordPromise.then((record) => ({
+				$type: 'com.atproto.repo.applyWrites#create',
+				collection: 'app.bsky.feed.post',
+				rkey: rkey,
+				value: record,
+			})),
+		);
 
 		if (i === 0 && thread.threadgate.some((tg) => tg.type !== 'everybody')) {
-			writes.push({
-				$type: 'com.atproto.repo.applyWrites#create',
-				collection: 'app.bsky.feed.threadgate',
-				rkey: rkey,
-				value: createThreadgateRecord({
-					allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
-					post: uri,
+			writePromises.push(
+				Promise.resolve({
+					$type: 'com.atproto.repo.applyWrites#create',
+					collection: 'app.bsky.feed.threadgate',
+					rkey: rkey,
+					value: createThreadgateRecord({
+						allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
+						post: uri,
+					}),
 				}),
-			});
+			);
 		}
 
 		if (thread.postgate.embeddingRules?.length || thread.postgate.detachedEmbeddingUris?.length) {
-			writes.push({
-				$type: 'com.atproto.repo.applyWrites#create',
-				collection: 'app.bsky.feed.postgate',
-				rkey: rkey,
-				value: {
-					...thread.postgate,
-					$type: 'app.bsky.feed.postgate',
-					createdAt: now.toISOString(),
-					post: uri,
-				},
-			});
+			writePromises.push(
+				Promise.resolve({
+					$type: 'com.atproto.repo.applyWrites#create',
+					collection: 'app.bsky.feed.postgate',
+					rkey: rkey,
+					value: {
+						...thread.postgate,
+						$type: 'app.bsky.feed.postgate',
+						createdAt: createdAt,
+						post: uri,
+					},
+				}),
+			);
 		}
 
-		// ref the current post so the next one can reply to it; skip the final post's unused ref. the
-		// lazy import keeps cid.ts and its cbor deps out of the composer chunk until a thread is posted.
+		// ref the current post so the next one can reply to it; skip the final post's unused ref.
 		if (i < thread.posts.length - 1) {
-			const { serializeRecordCid } = await import('./cid');
-			const ref: ComAtprotoRepoStrongRef.Main = {
-				cid: await serializeRecordCid(record),
-				uri: uri,
-			};
-			replyPromise = {
-				root: reply?.root ?? ref,
-				parent: ref,
-			};
+			replyPromise = chainReply(replyPromise, recordPromise, uri);
 		}
 	}
+
+	const writes = await Promise.all(writePromises);
 
 	try {
 		await ok(
@@ -190,8 +226,6 @@ async function resolveRT(appview: Client, text: string) {
 			.trimEnd(),
 	);
 
-	// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
-	// mentions left to strip.
 	const rt = await detectFacets(trimmedText, async (handle) => {
 		try {
 			const res = await ok(
