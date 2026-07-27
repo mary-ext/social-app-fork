@@ -12,8 +12,6 @@ import {
 	useNotificationSettingsUpdateMutation,
 } from '#/state/queries/notifications/settings';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
@@ -61,9 +59,7 @@ export function ActivityNotificationSettingsScreen() {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		fetchNextPage().catch((err) => {
-			logger.error('Failed to load more activity subscriptions', { message: err });
-		});
+		fetchNextPage().catch(() => {});
 	};
 
 	return (

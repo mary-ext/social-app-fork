@@ -7,8 +7,6 @@ import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 import { sessionDropped } from '#/state/events';
 import type { SessionAccount } from '#/state/session/types';
 
-import { logger } from '#/logger';
-
 import { auth } from '#/storage';
 
 import {
@@ -76,10 +74,6 @@ function persistSnapshot(patch: Partial<SessionSnapshot>): void {
 
 function prependAccount(accounts: readonly SessionAccount[], account: SessionAccount): SessionAccount[] {
 	return [account, ...accounts.filter((a) => a.did !== account.did)];
-}
-
-function errorMessage(e: unknown): string {
-	return e instanceof Error ? e.message : String(e);
 }
 
 function isFatalSessionError(e: unknown): boolean {
@@ -204,8 +198,9 @@ export function getCurrentDid() {
 			try {
 				resumed = await optimisticOAuthSession(account);
 			} catch (resumeError) {
+				// an expired refresh token is the ordinary way a stored session ends, not a fault
 				if (!(resumeError instanceof TokenRefreshError)) {
-					logger.error('session: boot resume failed', { message: errorMessage(resumeError) });
+					console.error('session: boot resume failed', resumeError);
 				}
 				failResume();
 				return;
@@ -223,9 +218,9 @@ export function getCurrentDid() {
 				if (isFatalSessionError(validationError)) {
 					failResume();
 				} else {
-					// A transient failure (e.g. network) — keep the optimistic session; live traffic will surface a
-					// genuine failure.
-					logger.error('session: boot validation failed', { message: errorMessage(validationError) });
+					// a transient failure (e.g. network) keeps the optimistic session; live traffic surfaces a
+					// genuine one via the dropped-session listener.
+					console.error('session: boot validation failed', validationError);
 				}
 			} finally {
 				unlistenDropped();

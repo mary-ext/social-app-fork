@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { RQKEY as CONVO_KEY } from './conversation';
 import { type ConvoListQueryData, RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './list-conversations';
 
@@ -66,8 +64,8 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
 
 			return { prevConvo, prevListEntries };
 		},
-		onError: (error, _, context) => {
-			logger.error('Failed to mark join requests as read', { safeMessage: error });
+		onError: (error, _variables, context) => {
+			console.error('Failed to mark join requests as read', error);
 			if (!convoId) {
 				return;
 			}

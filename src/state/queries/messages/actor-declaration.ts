@@ -6,8 +6,6 @@ import { putRecord } from '#/lib/api/records';
 
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { resolveAllowGroupInvites } from '#/components/dms/util';
 
 import { RQKEY as PROFILE_RKEY } from '../profile';
@@ -83,7 +81,6 @@ export function useUpdateActorDeclaration({
 		},
 		onSuccess,
 		onError: (error) => {
-			logger.error(error);
 			if (currentAccount) {
 				void queryClient.invalidateQueries({
 					queryKey: PROFILE_RKEY(currentAccount.did),

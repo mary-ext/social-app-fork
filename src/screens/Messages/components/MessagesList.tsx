@@ -17,8 +17,6 @@ import { useGetPost } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { MessageComposer } from '#/screens/Messages/components/MessageComposer';
 import { MessageListError } from '#/screens/Messages/components/MessageListError';
 
@@ -246,7 +244,7 @@ export function MessagesList({
 					}
 				}
 			} catch (error) {
-				logger.error('Failed to get post as quote for DM', { error });
+				console.error('Failed to get post as quote for DM', error);
 			}
 		} else if (messageEmbed?.type === 'invite') {
 			const code = messageEmbed.code;

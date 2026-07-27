@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useEditGroupChatName(
@@ -55,7 +53,6 @@ export function useEditGroupChatName(
 			onSuccess?.(data);
 		},
 		onError: (e, _variables, context) => {
-			logger.error(e);
 			if (convoId && context) {
 				rollbackConvoOptimistic(queryClient, convoId, context);
 			}

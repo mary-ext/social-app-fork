@@ -10,8 +10,6 @@ import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon } from '#/components/icons/PeopleRemove2';
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
@@ -92,15 +90,11 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || !!error) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more follows', { error: err });
-		}
+		void fetchNextPage();
 	};
 
 	if (!moderationOpts || ((isDidLoading || isFollowsLoading) && follows.length < 1 && !isError)) {
@@ -138,7 +132,7 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 			data={follows}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter

@@ -14,7 +14,7 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';
 import { replaceEqualDeep } from '#/lib/functions';
-import { errorMessage, isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/strings/errors';
 
 import {
 	isProfileShadowApplied,
@@ -43,11 +43,7 @@ import {
 import type { MessagesEventBus } from '#/state/messages/events/agent';
 import type { MessagesEventBusError } from '#/state/messages/events/types';
 
-import { Logger } from '#/logger';
-
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-
-const logger = Logger.create(Logger.Context.ConversationAgent);
 
 export function isConvoItemMessage(item: ConvoItem): item is ConvoItem & { type: 'message' } {
 	if (!item) {
@@ -100,8 +96,6 @@ type MessageLikeView =
 	| ChatBskyConvoDefs.SystemMessageView;
 
 export class Convo {
-	private id: string;
-
 	private chat: Client;
 	private events: MessagesEventBus;
 	private senderUserDid: Did;
@@ -144,7 +138,6 @@ export class Convo {
 	snapshot: ConvoState | undefined;
 
 	constructor(params: ConvoParams) {
-		this.id = crypto.randomUUID();
 		this.convoId = params.convoId;
 		this.chat = params.chat;
 		this.events = params.events;
@@ -206,7 +199,6 @@ export class Convo {
 		if (!this.snapshot) {
 			this.snapshot = this.generateSnapshot();
 		}
-		// logger.debug('snapshotted', {})
 		return this.snapshot;
 	}
 
@@ -348,8 +340,6 @@ export class Convo {
 	}
 
 	dispatch(action: ConvoDispatch) {
-		const prevStatus = this.status;
-
 		switch (this.status) {
 			case ConvoStatus.Uninitialized: {
 				switch (action.event) {
@@ -529,12 +519,6 @@ export class Convo {
 				break;
 		}
 
-		logger.debug(`dispatch '${action.event}'`, {
-			id: this.id,
-			prev: prevStatus,
-			next: this.status,
-		});
-
 		this.updateLastActiveTimestamp();
 		this.commit();
 	}
@@ -645,10 +629,8 @@ export class Convo {
 	}
 
 	private failSetup(e: unknown) {
-		if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-			logger.error('setup failed', {
-				safeMessage: errorMessage(e),
-			});
+		if (!isNetworkError(e)) {
+			console.error('setup failed', e);
 		}
 
 		this.dispatch({
@@ -681,7 +663,6 @@ export class Convo {
 		} catch (e) {
 			// only a refresh of data we already hold failed, so don't tear the placeholder down
 			if (startedFromPlaceholder) {
-				logger.debug('convo refresh failed, keeping placeholder', {});
 				return;
 			}
 			this.failSetup(e);
@@ -788,10 +769,8 @@ export class Convo {
 			// throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
 			this.applyFetchedConvo(convo);
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error(`failed to refresh convo`, {
-					safeMessage: errorMessage(e),
-				});
+			if (!isNetworkError(e)) {
+				console.error('failed to refresh convo', e);
 			}
 		}
 	}
@@ -821,8 +800,8 @@ export class Convo {
 				members.push(...data.members);
 			} while (cursor);
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error('failed to fetch member list', { safeMessage: errorMessage(e) });
+			if (!isNetworkError(e)) {
+				console.error('failed to fetch member list', e);
 			}
 			return;
 		}
@@ -836,8 +815,6 @@ export class Convo {
 
 	private fetchMessageHistoryError: { retry: () => void } | undefined;
 	async fetchMessageHistory() {
-		logger.debug('fetch message history', {});
-
 		/*
 		 * If oldestRev is null, we've fetched all history.
 		 * Needs to explicitly check for `null` since this is initially `undefined`.
@@ -905,10 +882,8 @@ export class Convo {
 				}
 			}
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error('failed to fetch message history', {
-					safeMessage: errorMessage(e),
-				});
+			if (!isNetworkError(e)) {
+				console.error('failed to fetch message history', e);
 			}
 
 			this.fetchMessageHistoryError = {
@@ -1091,8 +1066,6 @@ export class Convo {
 			return;
 		}
 
-		logger.debug('send message', {});
-
 		const tempId = crypto.randomUUID();
 
 		this.pendingMessageFailure = null;
@@ -1210,8 +1183,6 @@ export class Convo {
 	}
 
 	async processPendingMessages() {
-		logger.debug(`processing messages (${this.pendingMessages.size} remaining)`, {});
-
 		const pendingMessage = Array.from(this.pendingMessages.values()).shift();
 
 		/*
@@ -1279,12 +1250,6 @@ export class Convo {
 					case 'recipient has disabled incoming messages':
 						break;
 					default:
-						if (!isNetworkError(e)) {
-							logger.warn(`handleSendMessageFailure could not handle error`, {
-								status: e.status,
-								message: e.description,
-							});
-						}
 						break;
 				}
 			}
@@ -1294,12 +1259,7 @@ export class Convo {
 			this.pendingMessageFailure = 'recoverable';
 		} else {
 			this.pendingMessageFailure = 'unrecoverable';
-
-			if (!isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error(`handleSendMessageFailure received unknown error`, {
-					safeMessage: errorMessage(e),
-				});
-			}
+			console.error('handleSendMessageFailure received unknown error', e);
 		}
 
 		this.commit();
@@ -1317,8 +1277,6 @@ export class Convo {
 
 		this.pendingMessageFailure = null;
 		this.commit();
-
-		logger.debug(`batch retrying ${this.pendingMessages.size} pending messages`, {});
 
 		try {
 			const data = await ok(
@@ -1349,16 +1307,12 @@ export class Convo {
 			}
 
 			this.commit();
-
-			logger.debug(`sent ${this.pendingMessages.size} pending messages`, {});
 		} catch (e) {
 			this.handleSendMessageFailure(e);
 		}
 	}
 
 	async deleteMessage(messageId: string) {
-		logger.debug('delete message', {});
-
 		this.markMessageDeleted(messageId);
 		this.commit();
 
@@ -1371,10 +1325,8 @@ export class Convo {
 				);
 			});
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error(`failed to delete message`, {
-					safeMessage: errorMessage(e),
-				});
+			if (!isNetworkError(e)) {
+				console.error('failed to delete message', e);
 			}
 			this.unmarkMessageDeleted(messageId);
 			this.commit();
@@ -1601,7 +1553,6 @@ export class Convo {
 		}
 
 		try {
-			logger.debug(`Adding reaction ${emoji} to message ${messageId}`);
 			const data = await ok(
 				this.chat.post('chat.bsky.convo.addReaction', {
 					input: { messageId, value: emoji, convoId: this.convoId },
@@ -1665,7 +1616,6 @@ export class Convo {
 		}
 
 		try {
-			logger.debug(`Removing reaction ${emoji} from message ${messageId}`);
 			await ok(
 				this.chat.post('chat.bsky.convo.removeReaction', {
 					input: { messageId, value: emoji, convoId: this.convoId },

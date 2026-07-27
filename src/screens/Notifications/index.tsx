@@ -11,8 +11,6 @@ import { useNotificationSettingsQuery } from '#/state/queries/notifications/sett
 import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
 import { truncateAndInvalidate } from '#/state/queries/util';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { NotificationFeed } from '#/screens/Notifications/components/NotificationFeed';
@@ -61,9 +59,6 @@ export function NotificationsScreen() {
 		async ({ invalidate }: { invalidate: boolean }) => {
 			if (invalidate) {
 				return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'));
-			} else {
-				// Background polling is not implemented for the mentions tab.
-				// Just ignore it.
 			}
 		},
 		[queryClient],
@@ -178,7 +173,6 @@ function NotificationsTab({
 	// on-visible setup
 	// =
 	useFocusEffect(() => {
-		logger.debug('NotificationsScreen: Focus');
 		// on focus, check for latest, but only invalidate if the user
 		// isnt scrolled down to avoid moving content underneath them.
 		// On the web, this isn't always updated in time so

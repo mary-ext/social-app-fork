@@ -16,8 +16,6 @@ import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
 import { Spinner } from '#/components/Spinner';
@@ -162,7 +160,7 @@ function DialogInner({
 			}
 		},
 		onError: (err) => {
-			logger.error('Could not save activity subscription', { message: err });
+			console.error('Could not save activity subscription', err);
 		},
 	});
 

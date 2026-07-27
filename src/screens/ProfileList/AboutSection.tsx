@@ -8,8 +8,6 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
@@ -53,15 +51,11 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const items = data?.pages ? data.pages.flatMap((page) => page.items) : [];
 	const isEmpty = !isFetching && isFetched && items.length === 0;
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more list members', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onScrollToTop = () => {
@@ -134,7 +128,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 					/>
 				}
 				ListHeaderComponent={header}
-				onEndReached={() => void onEndReached()}
+				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={setIsScrolledDown}
 				ref={scrollElRef}

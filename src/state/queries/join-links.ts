@@ -6,8 +6,6 @@ import { type QueryClient, type QueryKey, useQuery, useQueryClient } from '@tans
 import { createQueryKey } from '#/state/queries/util';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { STALE } from '.';
 
 const joinLinkPreviewQueryKeyRoot = 'join-link-preview';
@@ -101,12 +99,7 @@ export function useJoinLinkPreviewsQuery({
 			if (!codes) {
 				throw new Error('No invite code');
 			}
-			try {
-				return await fetchJoinLinkPreviews({ chat, codes });
-			} catch (error) {
-				logger.error('Failed to fetch join link preview', { safeMessage: error });
-				throw error;
-			}
+			return fetchJoinLinkPreviews({ chat, codes });
 		},
 		initialData,
 	});
@@ -137,7 +130,7 @@ export function useGetJoinLinkPreview() {
 			});
 			return data.joinLinkPreviews[0];
 		} catch (error) {
-			logger.error('Failed to fetch join link preview', { safeMessage: error });
+			console.error('Failed to fetch join link preview', error);
 			return undefined;
 		}
 	};

@@ -12,8 +12,6 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
@@ -73,7 +71,6 @@ function PostThreadFollowBtnLoaded({
 					await queueFollow();
 				} catch (e) {
 					if (!isAbortError(e)) {
-						logger.error('Failed to follow', { message: String(e) });
 						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',
 						});
@@ -86,7 +83,6 @@ function PostThreadFollowBtnLoaded({
 					await queueUnfollow();
 				} catch (e) {
 					if (!isAbortError(e)) {
-						logger.error('Failed to unfollow', { message: String(e) });
 						Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 							type: 'error',
 						});

@@ -1,8 +1,6 @@
 import type { AppBskyFeedDefs, AppBskyFeedGetPosts } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
-import { logger } from '#/logger';
-
 import type { FeedAPI, FeedAPIResponse } from './types';
 
 export class PostListFeedAPI implements FeedAPI {
@@ -12,9 +10,6 @@ export class PostListFeedAPI implements FeedAPI {
 
 	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetPosts.$params }) {
 		this.appview = appview;
-		if (feedParams.uris.length > 25) {
-			logger.warn(`Too many URIs provided - expected 25, got ${feedParams.uris.length}`);
-		}
 		this.params = {
 			uris: feedParams.uris.slice(0, 25),
 		};

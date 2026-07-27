@@ -14,7 +14,6 @@ import { logoutEveryAccount } from '#/state/session';
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import { Bell_Stroke2_Corner0_Rounded as NotificationIcon } from '#/components/icons/Bell';
 import { CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon } from '#/components/icons/CodeBrackets';
-import { CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon } from '#/components/icons/CodeLines';
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/components/icons/PaintRoller';
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
@@ -108,10 +107,6 @@ export function SettingsScreen() {
 					</Settings.Section>
 
 					<Settings.Section>
-						<Settings.LinkRow label={m['common.developer.systemLog']()} to={{ name: 'Log' }}>
-							<Settings.Icon icon={CodeLinesIcon} />
-							<Settings.Label titleText={m['common.developer.systemLog']()} />
-						</Settings.LinkRow>
 						<DevOptionsRow />
 					</Settings.Section>
 				</Settings.List>

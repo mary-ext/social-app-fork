@@ -22,8 +22,6 @@ import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import {
 	Empty,
@@ -117,7 +115,7 @@ function DialogInner({
 			onNewChat(data.convo.id);
 		},
 		onError: (error) => {
-			logger.error('Failed to create chat', { safeMessage: error });
+			console.error('Failed to create chat', error);
 			let errorMessage = m['components.dms.chat.error.start']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
@@ -154,7 +152,7 @@ function DialogInner({
 			onNewChat(data.convo.id);
 		},
 		onError: (error) => {
-			logger.error('Failed to create groupchat', { safeMessage: error });
+			console.error('Failed to create groupchat', error);
 			let errorMessage = m['components.dms.group.error.create']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();

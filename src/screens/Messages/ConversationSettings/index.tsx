@@ -18,8 +18,6 @@ import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
@@ -299,7 +297,7 @@ function SettingsHeader({
 		},
 		onError: (e) => {
 			setNewGroupName(groupName);
-			logger.error('Failed to edit group chat name', { message: e });
+			console.error('Failed to edit group chat name', e);
 			Toast.show(m['screens.messages.groupName.edit.error'](), { type: 'error' });
 		},
 	});
@@ -313,7 +311,7 @@ function SettingsHeader({
 			}
 		},
 		onError: (e) => {
-			logger.error('Failed to mute group chat', { message: e });
+			console.error('Failed to mute group chat', e);
 			Toast.show(m['screens.messages.mute.error'](), { type: 'error' });
 		},
 	});
@@ -323,7 +321,7 @@ function SettingsHeader({
 			router.navigate({ replace: true, to: { name: 'Messages' } });
 		},
 		onError: (e) => {
-			logger.error('Failed to leave group chat', { message: e });
+			console.error('Failed to leave group chat', e);
 			Toast.show(m['screens.messages.leave.error'](), { type: 'error' });
 		},
 	});
@@ -348,12 +346,12 @@ function SettingsHeader({
 		},
 		onError: (e, { lock }) => {
 			if (lock) {
-				logger.error('Failed to lock group chat', { message: e });
+				console.error('Failed to lock group chat', e);
 				Toast.show(m['screens.messages.lock.error.lock'](), { type: 'error' });
 			} else if (e instanceof ClientResponseError && e.error === 'ConvoLockedByModeration') {
 				Toast.show(m['screens.messages.lock.chatLockedMod'](), { type: 'error' });
 			} else {
-				logger.error('Failed to unlock group chat', { message: e });
+				console.error('Failed to unlock group chat', e);
 				Toast.show(m['screens.messages.lock.error.unlock'](), { type: 'error' });
 			}
 		},

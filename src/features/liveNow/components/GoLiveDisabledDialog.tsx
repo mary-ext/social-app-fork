@@ -9,8 +9,6 @@ import { OzoneReason } from '#/lib/moderation/report-reasons';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
@@ -57,11 +55,8 @@ function DialogInner({
 				throw new Error('Status is missing uri or cid');
 			}
 
-			if (import.meta.env.DEV) {
-				logger.info('Submitting go live appeal', {
-					details,
-				});
-			} else {
+			// dev builds stop short of the write: appeals reach real moderators
+			if (!import.meta.env.DEV) {
 				// appeals to the default Bluesky labeler funnel through the atproto-proxy header
 				await ok(
 					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {

@@ -8,8 +8,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { m } from '#/paraglide/messages';
 
 import { NEW_TO_OLD_REASONS_MAP } from './const';
@@ -109,14 +107,8 @@ export function useSubmitReportMutation() {
 				}
 			}
 
-			if (import.meta.env.DEV) {
-				logger.info('Submitting report (dry run)', {
-					labeler: {
-						handle: labeler.creator.handle,
-					},
-					report,
-				});
-			} else {
+			// dev builds stop short of the write: reports reach real moderators
+			if (!import.meta.env.DEV) {
 				// the report is funnelled to the selected labeler via the atproto-proxy header
 				const reportClient = pds.clone({
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't

@@ -130,7 +130,6 @@
 	"common.compose.placeholder": "What's up?",
 	"common.compose.replyPlaceholder": "Write your reply",
 	"common.compose.sayHello": "Say hello!",
-	"common.developer.systemLog": "System log",
 	"common.discardChanges.message": "Are you sure you want to discard your changes?",
 	"common.discardChanges.title": "Discard changes?",
 	"common.embed.content": "(contains embedded content)",

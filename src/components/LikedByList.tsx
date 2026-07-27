@@ -4,8 +4,6 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useLikedByQuery } from '#/state/queries/post-liked-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
-import { logger } from '#/logger';
-
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -31,15 +29,11 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 
 	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more likes', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	if (!moderationOpts || ((isLoadingUri || isLoadingLikes) && likes.length < 1 && !isError)) {
@@ -65,7 +59,7 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 			data={likes}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.actor.did}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter

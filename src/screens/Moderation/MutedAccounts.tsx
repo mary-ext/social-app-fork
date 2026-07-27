@@ -6,8 +6,6 @@ import { cleanError } from '#/lib/strings/errors';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyMutedAccountsQuery } from '#/state/queries/my-muted-accounts';
 
-import { logger } from '#/logger';
-
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -30,16 +28,12 @@ export function ModerationMutedAccounts() {
 	const isEmpty = !isFetching && !data?.pages[0]?.mutes.length;
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.mutes) : [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more of my muted accounts', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	return (
@@ -64,7 +58,7 @@ export function ModerationMutedAccounts() {
 					data={profiles}
 					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item) => item.did}
-					onEndReached={() => void onEndReached()}
+					onEndReached={onEndReached}
 					renderItem={({ item, index }) => <MutedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={

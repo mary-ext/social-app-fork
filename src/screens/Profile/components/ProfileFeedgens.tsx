@@ -7,8 +7,6 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
@@ -74,16 +72,12 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 	// events
 	// =
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more feeds', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onPressRetryLoadMore = () => {
@@ -148,7 +142,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 					/>
 				)
 			}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 		/>
 	);

@@ -11,8 +11,6 @@ import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-me
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { canBeMessaged, type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
@@ -54,7 +52,7 @@ export function MemberMenu({
 	const convoId = convo.view.id;
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convoId, {
 		onError: (e) => {
-			logger.error('Failed to remove group chat member', { message: e });
+			console.error('Failed to remove group chat member', e);
 			Toast.show(m['screens.messages.members.remove.error'](), { type: 'error' });
 		},
 	});
@@ -67,7 +65,6 @@ export function MemberMenu({
 				Toast.show(m['common.block.unblockedToast']());
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to unblock account', { message: err });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
@@ -79,7 +76,6 @@ export function MemberMenu({
 				Toast.show(m['common.block.blockedToast']());
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to block account', { message: err });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});

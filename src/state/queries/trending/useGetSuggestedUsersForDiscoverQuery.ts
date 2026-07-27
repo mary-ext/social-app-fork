@@ -11,8 +11,6 @@ import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 export type QueryProps = {
 	limit?: number;
 };
@@ -43,9 +41,6 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 					params: { limit: props.limit || 10 },
 				}),
 			);
-			if (!data.recIdStr) {
-				logger.debug('getSuggestedUsersForDiscover response missing recIdStr');
-			}
 			return { ...data, recId: data.recIdStr };
 		},
 	});

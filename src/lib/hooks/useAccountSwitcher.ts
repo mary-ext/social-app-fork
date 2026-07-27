@@ -2,8 +2,6 @@ import { useCallback, useState } from 'react';
 
 import { switchAccount, type SessionAccount } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as Toast from '#/components/Toast';
 
@@ -22,9 +20,7 @@ export function useAccountSwitcher() {
 				setPendingDid(account.did);
 				await switchAccount(account);
 			} catch (e) {
-				logger.error(`switch account: selectAccount failed`, {
-					message: e instanceof Error ? e.message : String(e),
-				});
+				console.error('switch account: selectAccount failed', e);
 				signinDialogHandle.openWithPayload({ requestedAccount: account });
 				Toast.show(m['lib.error.signInAs']({ handle: account.handle }), {
 					type: 'warning',

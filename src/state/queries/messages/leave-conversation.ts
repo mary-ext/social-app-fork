@@ -6,8 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import {
 	type ConvoRequestListQueryData,
 	optimisticDelete as optimisticDeleteRequest,
@@ -91,7 +89,6 @@ export function useLeaveConvo(
 			onSuccess?.(data);
 		},
 		onError: (error, _, context) => {
-			logger.error(error);
 			if (context?.prevConvoListQueries) {
 				for (const [queryKey, prevData] of context.prevConvoListQueries) {
 					queryClient.setQueryData(queryKey, prevData);

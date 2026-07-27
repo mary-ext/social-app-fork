@@ -5,8 +5,6 @@ import { useCallOnce } from '#/lib/once';
 import { completeOAuthCallback } from '#/state/session';
 import { InactiveAccountError } from '#/state/session/agent';
 
-import { logger } from '#/logger';
-
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -31,9 +29,7 @@ export function OAuthCallback() {
 					window.location.reload();
 				})
 				.catch((e) => {
-					logger.error('OAuth callback failed', {
-						message: e instanceof Error ? e.message : String(e),
-					});
+					console.error('OAuth callback failed', e);
 					if (e instanceof InactiveAccountError) {
 						Toast.show(m['view.auth.signIn.accountInactiveError'](), { type: 'warning' });
 					} else {

@@ -4,7 +4,7 @@ import { type Client, ok } from '@atcute/client';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';
-import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/strings/errors';
 
 import { BACKGROUND_POLL_INTERVAL, DEFAULT_POLL_INTERVAL } from '#/state/messages/events/const';
 import {
@@ -16,13 +16,7 @@ import {
 	MessagesEventBusStatus,
 } from '#/state/messages/events/types';
 
-import { Logger } from '#/logger';
-
-const logger = Logger.create(Logger.Context.DMsAgent);
-
 export class MessagesEventBus {
-	private id: string;
-
 	private chat: Client;
 	private emitter = new SimpleEventEmitter<[MessagesEventBusEvent]>();
 
@@ -38,7 +32,6 @@ export class MessagesEventBus {
 	private requestedPollIntervals: Map<string, number> = new Map();
 
 	constructor(params: MessagesEventBusParams) {
-		this.id = crypto.randomUUID();
 		this.chat = params.chat;
 
 		// init() is deferred to the first resume() rather than fired here: a constructor that
@@ -98,7 +91,6 @@ export class MessagesEventBus {
 	}
 
 	background() {
-		logger.debug(`background`, {});
 		this.intendedStatus = MessagesEventBusStatus.Backgrounded;
 		// while still seeding the cursor, only record intent; init()'s completion applies it. acting
 		// now would poll with an undefined cursor.
@@ -109,7 +101,6 @@ export class MessagesEventBus {
 	}
 
 	suspend() {
-		logger.debug(`suspend`, {});
 		this.intendedStatus = MessagesEventBusStatus.Suspended;
 		// a genuine unmount mid-init lands here; recording intent means init()'s completion won't
 		// start a poller for a consumer that's already gone.
@@ -120,7 +111,6 @@ export class MessagesEventBus {
 	}
 
 	resume() {
-		logger.debug(`resume`, {});
 		this.intendedStatus = MessagesEventBusStatus.Ready;
 		if (this.status === MessagesEventBusStatus.Initializing) {
 			// first activation kicks off the one-time cursor seed; its completion reconciles to
@@ -135,8 +125,6 @@ export class MessagesEventBus {
 	}
 
 	private dispatch(action: MessagesEventBusDispatch) {
-		const prevStatus = this.status;
-
 		switch (this.status) {
 			case MessagesEventBusStatus.Initializing: {
 				switch (action.event) {
@@ -239,12 +227,6 @@ export class MessagesEventBus {
 			default:
 				break;
 		}
-
-		logger.debug(`dispatch '${action.event}'`, {
-			id: this.id,
-			prev: prevStatus,
-			next: this.status,
-		});
 	}
 
 	/**
@@ -277,8 +259,6 @@ export class MessagesEventBus {
 	}
 
 	private recoverFromError() {
-		logger.debug(`recoverFromError`, { hasRev: !!this.latestRev });
-
 		if (this.latestRev === undefined) {
 			/*
 			 * init() never succeeded, so we have no cursor to resume from. Re-run init() to seed latestRev. Its
@@ -300,8 +280,6 @@ export class MessagesEventBus {
 	}
 
 	private async init() {
-		logger.debug(`init`, {});
-
 		try {
 			const data = await networkRetry(2, () => {
 				return ok(this.chat.get('chat.bsky.convo.getLog', { params: {} }));
@@ -321,10 +299,8 @@ export class MessagesEventBus {
 
 			this.dispatch({ event: MessagesEventBusDispatchEvent.Ready });
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error(`init failed`, {
-					safeMessage: e instanceof Error ? e.message : String(e),
-				});
+			if (!isNetworkError(e)) {
+				console.error('init failed', e);
 			}
 
 			this.dispatch({
@@ -394,15 +370,6 @@ export class MessagesEventBus {
 
 		this.isPolling = true;
 
-		// logger.debug(
-		//   `poll`,
-		//   {
-		//     requestedPollIntervals: Array.from(
-		//       this.requestedPollIntervals.values(),
-		//     ),
-		//   },
-		// )
-
 		let needsEmit = false;
 		const batch: ChatBskyConvoGetLog.$output['logs'] = [];
 
@@ -439,10 +406,8 @@ export class MessagesEventBus {
 				}
 			}
 		} catch (e) {
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-				logger.error(`poll events failed`, {
-					safeMessage: e instanceof Error ? e.message : String(e),
-				});
+			if (!isNetworkError(e)) {
+				console.error('poll events failed', e);
 			}
 
 			this.dispatch({
@@ -469,9 +434,7 @@ export class MessagesEventBus {
 			try {
 				this.emitter.emit({ type: 'logs', logs: batch });
 			} catch (e) {
-				logger.error(`subscriber error handling chat events`, {
-					safeMessage: e instanceof Error ? e.message : String(e),
-				});
+				console.error('subscriber error handling chat events', e);
 			}
 		}
 	}

@@ -4,8 +4,6 @@
  */
 import { createStore, del, get, keys, set } from 'idb-keyval';
 
-import { logger } from './logger';
-
 const DB_NAME = 'bsky-draft-media';
 const STORE_NAME = 'media';
 
@@ -18,20 +16,15 @@ const store = createStore(DB_NAME, STORE_NAME);
 
 /** Save a media blob to IndexedDB by localRefPath key. */
 export async function saveMediaToLocal(localRefPath: string, blob: Blob): Promise<void> {
-	try {
-		await set(
-			localRefPath,
-			{
-				blob,
-				createdAt: new Date().toISOString(),
-			},
-			store,
-		);
-		mediaExistsCache.set(localRefPath, true);
-	} catch (error) {
-		logger.error('Failed to save media to IndexedDB', { error, localRefPath });
-		throw error;
-	}
+	await set(
+		localRefPath,
+		{
+			blob,
+			createdAt: new Date().toISOString(),
+		},
+		store,
+	);
+	mediaExistsCache.set(localRefPath, true);
 }
 
 /**
@@ -81,9 +74,7 @@ async function populateCacheInternal(): Promise<void> {
 			mediaExistsCache.set(key, true);
 		}
 		cachePopulated = true;
-	} catch (e) {
-		logger.warn('Failed to populate media cache', { error: e });
-	}
+	} catch {}
 }
 
 /** Ensure the media cache is populated. Call this before checking mediaExists. */

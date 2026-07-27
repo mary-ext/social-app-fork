@@ -35,8 +35,6 @@ import { createQueryKey } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
 import { saveSubscribedLabelers } from '#/state/session/labelers';
 
-import { logger } from '#/logger';
-
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -244,10 +242,7 @@ export function useToggleSavedFeed({
 			}
 			Toast.show(m['common.feeds.updatedToast']());
 		} catch (err) {
-			logger.error(err instanceof Error ? err : String(err), {
-				message: 'failed to update saved feeds',
-				pin,
-			});
+			console.error('failed to update saved feeds', pin, err);
 			Toast.show(m['state.feeds.error.update'](), { type: 'error' });
 		}
 	};

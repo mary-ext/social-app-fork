@@ -5,8 +5,6 @@ import { cleanError } from '#/lib/strings/errors';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
@@ -70,16 +68,12 @@ export function NotificationFeed({
 		items.push(LOADING_ITEM);
 	}
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more notifications', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onPressRetryLoadMore = () => fetchNextPage();
@@ -123,7 +117,7 @@ export function NotificationFeed({
 				renderItem={renderItem}
 				ListHeaderComponent={ListHeaderComponent}
 				ListFooterComponent={feedFooter}
-				onEndReached={() => void onEndReached()}
+				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={onScrolledDownChange}
 			/>

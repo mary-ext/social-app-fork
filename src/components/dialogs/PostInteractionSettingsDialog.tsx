@@ -6,8 +6,6 @@ import { isResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/synta
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { errorMessage } from '#/lib/strings/errors';
-
 import { STALE } from '#/state/queries';
 import { useMyListsQuery } from '#/state/queries/my-lists';
 import { useGetPost } from '#/state/queries/post';
@@ -26,8 +24,6 @@ import {
 	useThreadgateViewQuery,
 } from '#/state/queries/threadgate';
 import { getClients, useSession } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import { Trans } from '#/locale/Trans';
 
@@ -191,10 +187,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 
 			handle.close();
 		} catch (e) {
-			logger.error(`Failed to save post interaction settings`, {
-				source: 'PostInteractionSettingsDialogInner',
-				safeMessage: errorMessage(e),
-			});
+			console.error('Failed to save post interaction settings', e);
 			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
 			});
@@ -541,9 +534,7 @@ export function usePrefetchPostInteractionSettings({
 				}),
 			]);
 		} catch (e) {
-			logger.error(`Failed to prefetch post interaction settings`, {
-				safeMessage: errorMessage(e),
-			});
+			console.error('Failed to prefetch post interaction settings', e);
 		}
 	};
 }

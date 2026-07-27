@@ -8,8 +8,6 @@ import {
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
@@ -72,10 +70,10 @@ export function Header({
 				Toast.show(m['common.feeds.savedToast']());
 			}
 		} catch (e) {
+			console.error('Failed to toggle pinned feed', e);
 			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
-			logger.error('Failed to toggle pinned feed', { message: e });
 		}
 	};
 

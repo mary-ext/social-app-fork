@@ -5,14 +5,11 @@ import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
-import { useConstant } from '#/lib/hooks/use-constant';
 import { useThrottledCallback } from '#/lib/hooks/use-debounced-callback';
 import { onVisibilityChange } from '#/lib/visibility';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-feed';
-
-import { Logger } from '#/logger';
 
 import * as PostFeed from '#/components/PostFeed/PostFeed';
 
@@ -50,9 +47,6 @@ const stateContext = createContext<StateContext>({
 stateContext.displayName = 'FeedFeedbackContext';
 
 export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasSession: boolean) {
-	// create once per mount: Logger.create returns a fresh instance each call, so a render-time call would
-	// both allocate per render and make any callback depending on it change identity every render.
-	const logger = useConstant(() => Logger.create(Logger.Context.FeedFeedback));
 	const { appview } = getClients();
 
 	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
@@ -137,16 +131,13 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 			if (!enabled) {
 				return;
 			}
-			logger.debug('sendInteraction', {
-				...interaction,
-			});
 			if (!history.current.has(interaction)) {
 				history.current.add(interaction);
 				queue.current.add(toString(interaction));
 				sendToFeed();
 			}
 		},
-		[enabled, logger, sendToFeed],
+		[enabled, sendToFeed],
 	);
 
 	return useMemo(() => {

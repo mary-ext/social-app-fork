@@ -11,7 +11,6 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { profileTarget } from '#/lib/routes/targets';
-import { errorMessage } from '#/lib/strings/errors';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -21,8 +20,6 @@ import {
 	usePreferencesSetAdultContentMutation,
 	usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences';
-
-import { logger } from '#/logger';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
@@ -102,9 +99,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 		try {
 			await setAdultContentPref({ enabled: selected });
 		} catch (e) {
-			logger.error(`Failed to set adult content pref`, {
-				message: errorMessage(e),
-			});
+			console.error('Failed to set adult content pref', e);
 		}
 	};
 
@@ -113,9 +108,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 			await removeLabelers({ dids: unavailableDids });
 			Toast.show(m['screens.moderation.labeler.removeUnavailable.toast'](), { type: 'success' });
 		} catch (e) {
-			logger.error('Failed to remove unavailable labelers', {
-				safeMessage: errorMessage(e),
-			});
+			console.error('Failed to remove unavailable labelers', e);
 		}
 	};
 

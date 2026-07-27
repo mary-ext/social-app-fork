@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY } from './get-unread-counts';
 import {
 	type ConvoRequestListQueryData,
@@ -126,7 +124,6 @@ export function useUpdateAllRead(
 			onSuccess?.();
 		},
 		onError: (error, _, context) => {
-			logger.error(error);
 			if (context?.prevConvoListQueries) {
 				for (const [queryKey, prevData] of context.prevConvoListQueries) {
 					queryClient.setQueryData(queryKey, prevData);

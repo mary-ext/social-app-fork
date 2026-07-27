@@ -13,8 +13,6 @@ import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { EmptyState } from '#/components/EmptyState';
@@ -166,15 +164,11 @@ export function ChatList({
 				}))
 		: [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more conversations', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	useFocusEffect(() => {
@@ -184,9 +178,7 @@ export function ChatList({
 				offset: 0,
 			});
 
-			refetch().catch((err) => {
-				logger.error('Failed to refresh conversations', { message: err });
-			});
+			refetch().catch(() => {});
 		});
 	});
 
@@ -256,7 +248,7 @@ export function ChatList({
 			estimateHeight={CHAT_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={0}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListHeaderComponent={

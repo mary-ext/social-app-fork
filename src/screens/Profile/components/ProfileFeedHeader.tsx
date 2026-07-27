@@ -16,8 +16,6 @@ import {
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
@@ -110,10 +108,10 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 				Toast.show(m['common.feeds.savedToast']());
 			}
 		} catch (err) {
+			console.error('Failed to update feeds', err);
 			Toast.show(m['common.feeds.updateError'](), {
 				type: 'error',
 			});
-			logger.error('Failed to update feeds', { message: err });
 		}
 	};
 
@@ -144,10 +142,10 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 				Toast.show(m['screens.profile.feed.pinnedToast']({ name: info.displayName }));
 			}
 		} catch (e) {
+			console.error('Failed to toggle pinned feed', e);
 			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
-			logger.error('Failed to toggle pinned feed', { message: e });
 		}
 	};
 
@@ -322,10 +320,10 @@ function DialogInner({
 				setLikeUri(res.uri);
 			}
 		} catch (err) {
+			console.error('Failed to toggle like', err);
 			Toast.show(m['screens.profile.error.server'](), {
 				type: 'error',
 			});
-			logger.error('Failed to toggle like', { message: err });
 		}
 	};
 

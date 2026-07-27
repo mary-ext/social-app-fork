@@ -13,8 +13,6 @@ import { shortenLinks } from '#/lib/strings/rich-text-manip';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
@@ -255,7 +253,7 @@ function DialogInner({
 				onSave?.(uri);
 			}
 		} catch (e) {
-			logger.error('Failed to create/edit list', { message: String(e) });
+			console.error('Failed to create/edit list', e);
 		}
 	};
 

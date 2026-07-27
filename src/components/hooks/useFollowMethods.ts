@@ -6,8 +6,6 @@ import type { Shadow } from '#/state/cache/types';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -21,8 +19,8 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 			try {
 				await queueFollow();
 			} catch (e) {
-				logger.error(`useFollowMethods: failed to follow`, { message: String(e) });
 				if (!isAbortError(e)) {
+					console.error('useFollowMethods: failed to follow', e);
 					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});
@@ -36,10 +34,8 @@ export function useFollowMethods({ profile }: { profile: Shadow<AnyProfileView> 
 			try {
 				await queueUnfollow();
 			} catch (e) {
-				logger.error(`useFollowMethods: failed to unfollow`, {
-					message: String(e),
-				});
 				if (!isAbortError(e)) {
+					console.error('useFollowMethods: failed to unfollow', e);
 					Toast.show(m['common.error.generic'](), {
 						type: 'error',
 					});

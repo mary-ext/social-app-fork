@@ -29,8 +29,6 @@ import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { niceDate } from '#/locale/intl/datetime';
 import { Trans } from '#/locale/Trans';
 
@@ -746,7 +744,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			);
 			router.navigate({ to: { name: 'MessagesConversation', conversation: data.convo.id } });
 		} catch (e) {
-			logger.error('Failed to get conversation', { safeMessage: e });
+			console.error('Failed to get conversation', e);
 		} finally {
 			setIsLoading(false);
 		}

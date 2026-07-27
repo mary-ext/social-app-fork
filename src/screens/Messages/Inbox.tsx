@@ -11,8 +11,6 @@ import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts
 import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
@@ -104,15 +102,11 @@ function RequestList({
 
 	useRefreshOnFocus(refetch);
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more conversations', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	if (conversations.length < 1) {
@@ -179,7 +173,7 @@ function RequestList({
 			estimateHeight={REQUEST_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={0}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListFooterComponent={

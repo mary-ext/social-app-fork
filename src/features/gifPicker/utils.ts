@@ -1,5 +1,3 @@
-import { logger } from '#/logger';
-
 /**
  * Rewrites a provider's CDN URL (Tenor or Klipy) to the corresponding bsky proxy hostname. Leaves
  * unrecognized hosts untouched.
@@ -17,7 +15,6 @@ export function gifPreviewUrl(gifUrl: string) {
 		}
 		return gifUrl;
 	} catch {
-		logger.debug('invalid url passed to gifPreviewUrl()');
 		return '';
 	}
 }

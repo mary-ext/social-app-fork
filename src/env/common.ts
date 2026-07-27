@@ -1,14 +1,3 @@
-import { LogLevel } from '#/logger/types';
-
-/** The env the app is running in e.g. development, production */
-export const ENV: string = import.meta.env.PUBLIC_ENV;
-
-/** The log level for the app. */
-export const LOG_LEVEL: LogLevel = import.meta.env.PUBLIC_LOG_LEVEL || LogLevel.Info;
-
-/** Enable debug logs for specific logger instances */
-export const LOG_DEBUG: string = import.meta.env.PUBLIC_LOG_DEBUG || '';
-
 /** AT Protocol OAuth client id. In production this should be the URL of the OAuth client metadata document. */
 export const OAUTH_CLIENT_ID: string = import.meta.env.PUBLIC_OAUTH_CLIENT_ID || '';
 

@@ -7,8 +7,6 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileListsQuery } from '#/state/queries/profile-lists';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
@@ -74,16 +72,12 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): React.React
 	// events
 	// =
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more lists', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onPressRetryLoadMore = () => {
@@ -148,7 +142,7 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): React.React
 					/>
 				)
 			}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 		/>
 	);

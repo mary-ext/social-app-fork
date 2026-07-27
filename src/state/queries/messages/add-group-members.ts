@@ -13,8 +13,6 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 import { useProfileQuery } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { RQKEY as CONVO_KEY } from './conversation';
 import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 import { listConvoMembersQueryKey } from './list-convo-members';
@@ -162,7 +160,6 @@ export function useAddGroupMembers(
 			onSuccess?.(data);
 		},
 		onError: (e, _variables, context) => {
-			logger.error(e);
 			if (context?.prevConvo && convoId) {
 				queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo);
 			}

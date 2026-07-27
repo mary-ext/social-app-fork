@@ -77,7 +77,6 @@ const LanguageSettingsScreen = lazy(() =>
 	import('#/screens/Settings/LanguageSettings').then((mod) => ({ default: mod.LanguageSettingsScreen })),
 );
 const ListsScreen = lazy(() => import('#/screens/Lists').then((mod) => ({ default: mod.ListsScreen })));
-const LogScreen = lazy(() => import('#/screens/Log').then((mod) => ({ default: mod.LogScreen })));
 const MessagesConversationScreen = lazy(() =>
 	import('#/screens/Messages/Conversation').then((mod) => ({ default: mod.MessagesConversationScreen })),
 );
@@ -537,12 +536,6 @@ export const routes = defineRoutes({
 				meta: { requireAuth: true },
 				path: '/saved',
 			}),
-			Log: route({
-				component: LogScreen,
-				meta: { requireAuth: true },
-				path: '/sys/log',
-			}),
-
 			NotFound: route({
 				component: NotFoundScreen,
 				params: { rest: string() },

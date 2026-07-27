@@ -8,8 +8,6 @@ import { listTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -46,7 +44,7 @@ export function CreateListFromStarterPackDialog({
 			try {
 				void queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
 			} catch (e) {
-				logger.error('Failed to add members to list', { safeMessage: e });
+				console.error('Failed to add members to list', e);
 				Toast.show(m['components.dialogs.list.error.createdPartial'](), {
 					type: 'error',
 				});

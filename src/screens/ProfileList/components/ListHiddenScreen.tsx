@@ -10,8 +10,6 @@ import { RQKEY_ROOT as listQueryRoot, useListBlockMutation, useListMuteMutation 
 import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
@@ -57,7 +55,7 @@ export function ListHiddenScreen({
 				await listMuteMutation.mutateAsync({ uri: list.uri, mute: false });
 			} catch (e) {
 				setIsProcessing(false);
-				logger.error('Failed to unmute list', { message: e });
+				console.error('Failed to unmute list', e);
 				Toast.show(m['common.error.issueConnection']());
 				return;
 			}
@@ -67,7 +65,7 @@ export function ListHiddenScreen({
 				await listBlockMutation.mutateAsync({ uri: list.uri, block: false });
 			} catch (e) {
 				setIsProcessing(false);
-				logger.error('Failed to unblock list', { message: e });
+				console.error('Failed to unblock list', e);
 				Toast.show(m['common.error.issueConnection']());
 				return;
 			}
@@ -87,7 +85,7 @@ export function ListHiddenScreen({
 			await removeSavedFeed(savedFeedConfig);
 			Toast.show(m['screens.list.savedFeeds.removedToast']());
 		} catch (e) {
-			logger.error('Failed to remove list from saved feeds', { message: e });
+			console.error('Failed to remove list from saved feeds', e);
 			Toast.show(m['common.error.issueConnection']());
 		} finally {
 			setIsProcessing(false);

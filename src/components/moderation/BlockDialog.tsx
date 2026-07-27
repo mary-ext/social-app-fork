@@ -17,8 +17,6 @@ import {
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
@@ -98,9 +96,7 @@ function BlockDialogInner({
 		if (isFetchingNextPage || !hasNextPage) {
 			return;
 		}
-		fetchNextPage().catch((err) => {
-			logger.error('Failed to load more mutual group chats', { message: err });
-		});
+		fetchNextPage().catch(() => {});
 	};
 
 	const isBlocking = !!profile.viewer?.blocking;
@@ -212,7 +208,7 @@ function MutualGroupChat({
 		},
 		onError: (error) => {
 			onRestoreConvo(view.id);
-			logger.error('Error leaving group chat', { message: error });
+			console.error('Error leaving group chat', error);
 			let errorMessage = m['components.dms.leave.error.leave']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();
@@ -234,7 +230,7 @@ function MutualGroupChat({
 		},
 		onError: (error) => {
 			onRestoreConvo(view.id);
-			logger.error('Error removing group chat member', { message: error });
+			console.error('Error removing group chat member', error);
 			let errorMessage = m['components.moderation.chat.error.removeMember']();
 			if (isNetworkError(error)) {
 				errorMessage = m['common.error.network']();

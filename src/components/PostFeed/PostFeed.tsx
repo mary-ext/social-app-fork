@@ -24,8 +24,6 @@ import {
 } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -202,8 +200,9 @@ function PostFeed({
 				}
 			}
 		} catch (e) {
+			// this runs on a poll, so a dropped connection is expected and would only be noise
 			if (!isNetworkError(e)) {
-				logger.error('Poll latest failed', { feed, message: String(e) });
+				console.error('Poll latest failed', feed, e);
 			}
 		}
 	});
@@ -424,16 +423,12 @@ function PostFeed({
 	// events
 	// =
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more posts', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onPressTryAgain = () => {
@@ -536,7 +531,7 @@ function PostFeed({
 				/>
 			}
 			onScrolledDownChange={handleScrolledDownChange}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 			onItemSeen={onItemSeen}
 		/>

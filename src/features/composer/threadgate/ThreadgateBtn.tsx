@@ -4,8 +4,6 @@ import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 
 import { dequal } from 'dequal/lite';
 
-import { isNetworkError } from '#/lib/strings/errors';
-
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import {
@@ -13,8 +11,6 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate';
-
-import { logger } from '#/logger';
 
 import * as Dialog from '#/components/Dialog';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
@@ -54,11 +50,7 @@ export function ThreadgateBtn({
 
 	const { mutate: persistChanges, isPending: isSaving } = usePostInteractionSettingsMutation({
 		onError: (err) => {
-			if (!isNetworkError(err)) {
-				logger.error('Failed to persist threadgate settings', {
-					safeMessage: err,
-				});
-			}
+			console.error('Failed to persist threadgate settings', err);
 		},
 		onSettled: () => {
 			handle.close();

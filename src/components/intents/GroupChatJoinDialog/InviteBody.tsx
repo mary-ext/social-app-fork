@@ -14,8 +14,6 @@ import { useRequestJoinGroupChat } from '#/state/queries/messages/request-join-g
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
@@ -80,11 +78,6 @@ export function InviteBody({
 						handle.close();
 						Toast.show(m['components.intents.join.success']());
 						router.navigate({ to: { name: 'MessagesConversation', conversation: result.convo.id } });
-					} else {
-						logger.warn('Request to join group chat returned no convo ID', {
-							status: result.status,
-							convoId: result.convo?.id,
-						});
 					}
 					break;
 				}

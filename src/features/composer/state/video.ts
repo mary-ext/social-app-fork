@@ -12,8 +12,6 @@ import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
-import { logger } from '#/logger';
-
 import { m } from '#/paraglide/messages';
 
 type CaptionsTrack = { lang: string; file: File };
@@ -337,7 +335,7 @@ export async function processVideo(
 				}
 			}
 
-			logger.error('Error processing video', { safeMessage: e });
+			console.error('Error processing video', e);
 			dispatch({
 				type: 'to_error',
 				error: m['view.composer.video.error.processFailed'](),
@@ -388,7 +386,7 @@ function getCompressErrorMessage(e: unknown): string | null {
 	if (e instanceof VideoTooLargeError) {
 		return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
 	}
-	logger.error('Error compressing video', { safeMessage: e });
+	console.error('Error compressing video', e);
 	return m['view.composer.video.error.compress']();
 }
 
@@ -421,8 +419,8 @@ function getUploadErrorMessage(e: unknown): string | null {
 	if (isNetworkError(e)) {
 		return m['view.composer.video.error.uploadConnection']();
 	} else {
-		// only log errors if they are unknown (and not network errors)
-		logger.error('Error uploading video', { safeMessage: e });
+		// only report errors that are unknown (and not network errors)
+		console.error('Error uploading video', e);
 	}
 
 	const message = e instanceof Error ? e.message : '';

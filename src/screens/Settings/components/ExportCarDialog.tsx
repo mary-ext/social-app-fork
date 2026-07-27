@@ -6,8 +6,6 @@ import { saveBytesToDisk } from '#/lib/media/manip';
 
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
@@ -51,7 +49,7 @@ function DialogInner() {
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
-			logger.error('Error occurred while downloading CAR file', { message: e });
+			console.error('Error occurred while downloading CAR file', e);
 			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
 		} finally {
 			setLoading(false);
@@ -70,7 +68,7 @@ function DialogInner() {
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
-			logger.error('Error occurred while downloading chat data', { message: e });
+			console.error('Error occurred while downloading chat data', e);
 			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
 		} finally {
 			setLoading(false);

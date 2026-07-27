@@ -8,8 +8,6 @@ import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
-import { logger } from '#/logger';
-
 import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { Trans } from '#/locale/Trans';
@@ -112,7 +110,7 @@ export function SuggestedLanguage({
 				}
 			}
 		} catch (e) {
-			logger.error('Error detecting language', { safeMessage: e });
+			console.error('Error detecting language', e);
 		}
 	});
 

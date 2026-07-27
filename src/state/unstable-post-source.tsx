@@ -8,11 +8,6 @@ import { useConstant } from '#/lib/hooks/use-constant';
 
 import type { FeedSourceInfo } from '#/state/queries/feed';
 
-import { Logger } from '#/logger';
-
-/** Separate logger for better debugging */
-const logger = Logger.create(Logger.Context.PostSource);
-
 export type PostSource = {
 	post: AppBskyFeedDefs.FeedViewPost;
 	feedSourceInfo?: FeedSourceInfo;
@@ -37,7 +32,6 @@ export function setUnstablePostSource(key: string, source: PostSource) {
 		key,
 		`setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
 	);
-	logger.debug('set', { key, source });
 	transientSources.set(key, source);
 }
 
@@ -48,14 +42,8 @@ export function setUnstablePostSource(key: string, source: PostSource) {
 export function useUnstablePostSource(key: string) {
 	const id = useId();
 	const source = useConstant(() => {
-		assertValidDevOnly(
-			key,
-			`consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,
-			true,
-		);
 		const existing = consumedSources.get(id) || transientSources.get(key);
 		if (existing) {
-			logger.debug('consume', { id, key, source: existing });
 			transientSources.delete(key);
 			consumedSources.set(id, existing);
 		}
@@ -65,7 +53,6 @@ export function useUnstablePostSource(key: string) {
 	useEffect(() => {
 		return () => {
 			consumedSources.delete(id);
-			logger.debug('cleanup', { id });
 		};
 	}, [id]);
 
@@ -79,15 +66,11 @@ export function buildPostSourceKey(key: string, handle: Handle) {
 }
 
 /** Just a lil dev helper */
-function assertValidDevOnly(key: string, message: string, beChill = false) {
+function assertValidDevOnly(key: string, message: string) {
 	if (import.meta.env.DEV) {
 		const urip = parseResourceUri(key);
 		if (urip.repo.startsWith('did:')) {
-			if (beChill) {
-				logger.warn(message);
-			} else {
-				throw new Error(message);
-			}
+			throw new Error(message);
 		}
 	}
 }

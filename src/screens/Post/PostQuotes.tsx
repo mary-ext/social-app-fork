@@ -11,8 +11,6 @@ import { usePostQuery } from '#/state/queries/post';
 import { usePostQuotesQuery } from '#/state/queries/post-quotes';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
-import { logger } from '#/logger';
-
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
@@ -90,15 +88,11 @@ function PostQuotes({ uri }: { uri: string }) {
 			) ?? [])
 		: [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more quotes', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	if (quotes.length < 1) {
@@ -122,7 +116,7 @@ function PostQuotes({ uri }: { uri: string }) {
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={4}
 			ListFooterComponent={
 				<ListFooter

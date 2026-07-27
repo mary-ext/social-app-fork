@@ -8,8 +8,6 @@ import { useCallOnce } from '#/lib/once';
 import { usePreferencesQuery, useSetThreadViewPreferencesMutation } from '#/state/queries/preferences';
 import type { ThreadViewPreferences } from '#/state/queries/preferences/types';
 
-import { logger } from '#/logger';
-
 import { useFocusEffect } from '#/routes';
 import type { Literal } from '#/types/utils';
 
@@ -64,9 +62,7 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 	const { mutate, isPending: isSaving } = useSetThreadViewPreferencesMutation({
 		onSuccess: (_data, _prefs) => {},
 		onError: (err) => {
-			logger.error('useThreadPreferences failed to save', {
-				safeMessage: err,
-			});
+			console.error('useThreadPreferences failed to save', err);
 		},
 	});
 	const savePrefs = useDebouncedCallback(

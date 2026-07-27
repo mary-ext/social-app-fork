@@ -18,8 +18,6 @@ import type { Shadow } from '#/state/cache/types';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import * as Toast from '#/components/Toast';
@@ -132,7 +130,6 @@ export function ProfileHeaderProvider({
 				);
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to follow', { message: String(err) });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 				}
 			}
@@ -155,7 +152,6 @@ export function ProfileHeaderProvider({
 				);
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to unfollow', { message: String(err) });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 				}
 			}
@@ -168,7 +164,6 @@ export function ProfileHeaderProvider({
 			Toast.show(m['common.block.unblockedToast']());
 		} catch (err) {
 			if (!isAbortError(err)) {
-				logger.error('Failed to unblock account', { message: err });
 				Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), { type: 'error' });
 			}
 		}

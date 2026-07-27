@@ -20,7 +20,6 @@ import type { ComposerState, EmbedDraft, PostDraft } from '#/features/composer/s
 import type { VideoState } from '#/features/composer/state/video';
 import type { Gif } from '#/features/gifPicker/types';
 
-import { logger } from './logger';
 import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';
 
@@ -176,18 +175,7 @@ async function restoreDraftImages(
 			const dims = await getImageDimensions(blob);
 			width = dims.width;
 			height = dims.height;
-		} catch (e) {
-			logger.warn('Failed to get image dimensions', {
-				localRefPath: img.localRef.path,
-				error: e,
-			});
-		}
-
-		logger.debug('restoring image with localRefPath', {
-			localRefPath: img.localRef.path,
-			width,
-			height,
-		});
+		} catch {}
 
 		return {
 			alt: img.alt || '',
@@ -212,14 +200,8 @@ function serializeImages(
 	return images.map((image) => {
 		const sourceBlob = (image.transformed ?? image.source).blob;
 		// Reuse existing localRefPath if present (editing draft), otherwise generate new
-		const isReusing = !!image.localRefPath;
 		const localRefPath = image.localRefPath || `image:${crypto.randomUUID()}`;
 		localRefPaths.set(localRefPath, sourceBlob);
-
-		logger.debug('serializing image', {
-			localRefPath,
-			isReusing,
-		});
 
 		return {
 			$type: 'app.bsky.draft.defs#draftEmbedImage' as const,
@@ -391,10 +373,6 @@ export function draftViewToSummary({ view }: { view: AppBskyDraftDefs.DraftView 
 		};
 	});
 
-	if (meta.isOriginatingDevice && meta.hasMissingMedia) {
-		logger.warn(`Draft is missing media on originating device`, {});
-	}
-
 	return {
 		id: view.id,
 		createdAt: view.createdAt,
@@ -520,12 +498,6 @@ export async function draftToComposerPosts(
 				const videoBlob = loadedMedia.get(vid.localRef.path);
 				if (videoBlob) {
 					const mimeType = parseVideoMimeType(vid.localRef.path);
-					logger.debug('found video to restore', {
-						localRefPath: vid.localRef.path,
-						altText: vid.alt,
-						mimeType,
-						captionCount: vid.captions?.length ?? 0,
-					});
 					restoredVideos.set(index, {
 						blob: videoBlob,
 						altText: vid.alt || '',
@@ -598,9 +570,5 @@ export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
 			}
 		}
 	}
-	logger.debug('extracted localRefs from draft', {
-		count: refs.size,
-		refs: Array.from(refs),
-	});
 	return refs;
 }

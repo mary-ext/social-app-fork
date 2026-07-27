@@ -8,8 +8,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 /** fetches a fresh verification state from the app view and updates the profile cache. */
 export function useUpdateProfileVerificationCache() {
 	const qc = useQueryClient();
@@ -27,9 +25,7 @@ export function useUpdateProfileVerificationCache() {
 					verification: updated.verification,
 				});
 			} catch (e) {
-				logger.error(`useUpdateProfileVerificationCache failed`, {
-					safeMessage: e,
-				});
+				console.error('useUpdateProfileVerificationCache failed', e);
 			}
 		},
 		[appview, qc],

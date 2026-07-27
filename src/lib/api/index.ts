@@ -21,7 +21,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { getPostRecord } from '#/lib/api/record-views';
 import { task } from '#/lib/async/task';
 import { compressImage } from '#/lib/media/composer-image';
-import { errorMessage, isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/strings/errors';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
@@ -30,8 +30,6 @@ import {
 	createThreadgateRecord,
 	threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate';
-
-import { logger } from '#/logger';
 
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
 
@@ -204,9 +202,6 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 			}),
 		);
 	} catch (e) {
-		logger.error(`Failed to create post`, {
-			safeMessage: errorMessage(e),
-		});
 		if (isNetworkError(e)) {
 			throw new Error(m['lib.upload.postFailed'](), { cause: e });
 		} else {
@@ -332,14 +327,9 @@ async function resolveMedia(
 > {
 	if (embedDraft.media?.type === 'images') {
 		const imagesDraft = embedDraft.media.images;
-		logger.debug(`Uploading images`, {
-			count: imagesDraft.length,
-		});
 		const images: AppBskyEmbedImages.Image[] = await Promise.all(
-			imagesDraft.map(async (image, i) => {
-				logger.debug(`Compressing image #${i}`);
+			imagesDraft.map(async (image) => {
 				const { blob, width, height } = await compressImage(image);
-				logger.debug(`Uploading image #${i}`);
 				return {
 					alt: image.alt,
 					aspectRatio: { height, width },
@@ -354,14 +344,9 @@ async function resolveMedia(
 	}
 	if (embedDraft.media?.type === 'gallery') {
 		const imagesDraft = embedDraft.media.images;
-		logger.debug(`Uploading images`, {
-			count: imagesDraft.length,
-		});
 		const items: $type.enforce<AppBskyEmbedGallery.Image>[] = await Promise.all(
-			imagesDraft.map(async (image, i) => {
-				logger.debug(`Compressing image #${i}`);
+			imagesDraft.map(async (image) => {
 				const { blob, width, height } = await compressImage(image);
-				logger.debug(`Uploading image #${i}`);
 				return {
 					$type: 'app.bsky.embed.gallery#image',
 					alt: image.alt,
@@ -394,12 +379,6 @@ async function resolveMedia(
 		// aspect ratio values must be >0 - better to leave as unset otherwise
 		// posting will fail if aspect ratio is set to 0
 		const aspectRatio = width > 0 && height > 0 ? { height, width } : undefined;
-
-		if (!aspectRatio) {
-			logger.error(
-				`Invalid aspect ratio - got { width: ${videoDraft.asset.width}, height: ${videoDraft.asset.height} }`,
-			);
-		}
 
 		return {
 			$type: 'app.bsky.embed.video',

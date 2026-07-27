@@ -13,8 +13,6 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
@@ -106,10 +104,10 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 				router.navigate({ to: { name: 'Feeds' } });
 			}
 		} catch (e) {
+			console.error('Failed to save feeds', e);
 			Toast.show(m['common.error.serverContact'](), {
 				type: 'error',
 			});
-			logger.error('Failed to save feeds', { message: e });
 		}
 	};
 

@@ -6,8 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { invalidateJoinLinkPreviewsForCode } from '#/state/queries/join-links';
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useDisableJoinLink(
@@ -71,7 +69,6 @@ export function useDisableJoinLink(
 			onSuccess?.(data);
 		},
 		onError: (e, _variables, context) => {
-			logger.error(e);
 			if (convoId && context) {
 				rollbackConvoOptimistic(queryClient, convoId, context);
 			}

@@ -17,8 +17,6 @@ import {
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/liveNow/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/liveNow/components/GoLiveDisabledDialog';
@@ -109,7 +107,6 @@ function ProfileMenu({
 				Toast.show(m['common.mute.unmutedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
-					logger.error('Failed to unmute account', { message: e });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 						type: 'error',
 					});
@@ -121,7 +118,6 @@ function ProfileMenu({
 				Toast.show(m['common.mute.mutedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
-					logger.error('Failed to mute account', { message: e });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 						type: 'error',
 					});
@@ -137,7 +133,6 @@ function ProfileMenu({
 				Toast.show(m['common.block.unblockedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
-					logger.error('Failed to unblock account', { message: e });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 						type: 'error',
 					});
@@ -149,7 +144,6 @@ function ProfileMenu({
 				Toast.show(m['common.block.blockedToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
-					logger.error('Failed to block account', { message: e });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 						type: 'error',
 					});
@@ -164,7 +158,6 @@ function ProfileMenu({
 			Toast.show(m['view.profile.follow.followedToast']());
 		} catch (e) {
 			if (!isAbortError(e)) {
-				logger.error('Failed to follow account', { message: e });
 				Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 					type: 'error',
 				});
@@ -178,7 +171,6 @@ function ProfileMenu({
 			Toast.show(m['view.profile.follow.unfollowedToast']());
 		} catch (e) {
 			if (!isAbortError(e)) {
-				logger.error('Failed to unfollow account', { message: e });
 				Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
 					type: 'error',
 				});

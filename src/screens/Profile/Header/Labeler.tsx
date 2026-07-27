@@ -14,8 +14,6 @@ import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useRequireAuth } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
@@ -89,9 +87,7 @@ function SubscribeLabelerButton() {
 					cantSubscribePrompt.open(null);
 					return;
 				}
-				logger.error(`Failed to subscribe to labeler`, {
-					message: e instanceof Error ? e.message : String(e),
-				});
+				console.error('Failed to subscribe to labeler', e);
 			}
 		});
 
@@ -154,10 +150,8 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				setLikeUri(res.uri);
 			}
 		} catch (e) {
+			console.error('Failed to toggle labeler like', e);
 			Toast.show(m['screens.profile.error.server'](), { type: 'error' });
-			logger.error(`Failed to toggle labeler like`, {
-				message: e instanceof Error ? e.message : String(e),
-			});
 		}
 	};
 

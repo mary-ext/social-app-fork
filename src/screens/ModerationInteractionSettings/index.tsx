@@ -5,7 +5,6 @@ import type { ResourceUri } from '@atcute/lexicons';
 import { dequal } from 'dequal/lite';
 
 import { useTitle } from '#/lib/hooks/useTitle';
-import { errorMessage } from '#/lib/strings/errors';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
@@ -14,8 +13,6 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate';
-
-import { logger } from '#/logger';
 
 import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { Spinner } from '#/components/Spinner';
@@ -85,10 +82,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			});
 			Toast.show(m['screens.moderation.interaction.savedToast']());
 		} catch (e) {
-			logger.error(`Failed to save post interaction settings`, {
-				safeMessage: errorMessage(e),
-				source: 'ModerationInteractionSettingsScreen',
-			});
+			console.error('Failed to save post interaction settings', e);
 			setError(m['screens.moderation.interaction.saveError']());
 		}
 	};

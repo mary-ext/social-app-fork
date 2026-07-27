@@ -10,8 +10,6 @@ import {
 	useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { Spinner } from '#/components/Spinner';
@@ -48,10 +46,10 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 				setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
 			}
 		} catch (err) {
+			console.error('Failed to update feeds', err);
 			Toast.show(m['common.feeds.updateError'](), {
 				type: 'warning',
 			});
-			logger.error('Failed to update feeds', { message: err });
 		}
 	};
 
@@ -64,10 +62,10 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 			setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
 			Toast.show(m['view.posts.feed.replace.toast']());
 		} catch (err) {
+			console.error('Failed to update feeds', err);
 			Toast.show(m['common.feeds.updateError'](), {
 				type: 'warning',
 			});
-			logger.error('Failed to update feeds', { message: err });
 		}
 	};
 

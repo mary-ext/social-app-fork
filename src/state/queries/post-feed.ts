@@ -43,8 +43,6 @@ import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { KnownError } from '#/components/PostFeed/PostFeedErrorMessage';
 
 import { useModerationOpts } from '../moderation/moderation-opts';
@@ -154,7 +152,6 @@ export function usePostFeedQuery(
 		enabled,
 		staleTime: STALE.INFINITY,
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			logger.debug('usePostFeedQuery', { feedDesc, cursor: pageParam?.cursor });
 			const { api, cursor } = pageParam
 				? pageParam
 				: {
@@ -362,7 +359,6 @@ export async function pollLatest(page: FeedPage | undefined) {
 		return false;
 	}
 
-	logger.debug('usePostFeedQuery: pollLatest');
 	const post = await page.api.peekLatest();
 	if (post) {
 		const slices = page.tuner.tune([post], {

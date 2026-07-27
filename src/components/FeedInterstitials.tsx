@@ -15,8 +15,6 @@ import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { BlockLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/FeedInterstitials.css';
@@ -214,7 +212,6 @@ export function ProfileGrid({
 	}, [error, isLoading, onRequestHide, profileCountForMinCheck, minLength]);
 
 	if (error || (!isLoading && profileCountForMinCheck < minLength)) {
-		logger.debug(`Not enough profiles to show suggested follows`);
 		return null;
 	}
 

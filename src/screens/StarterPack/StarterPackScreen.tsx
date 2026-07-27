@@ -24,8 +24,6 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ListMaybePlaceholder } from '#/components/Lists';
@@ -218,11 +216,9 @@ function Header({
 			listItems = await getAllListMembers(appview, starterPack.list.uri);
 		} catch (e) {
 			setIsProcessing(false);
+			console.error('Failed to get list members for starter pack', e);
 			Toast.show(m['screens.starterPack.follow.error'](), {
 				type: 'error',
-			});
-			logger.error('Failed to get list members for starter pack', {
-				safeMessage: e,
 			});
 			return;
 		}
@@ -248,10 +244,10 @@ function Header({
 			});
 		} catch (e) {
 			setIsProcessing(false);
+			console.error('Failed to follow all accounts', e);
 			Toast.show(m['screens.starterPack.follow.error'](), {
 				type: 'error',
 			});
-			logger.error('Failed to follow all accounts', { safeMessage: e });
 			return;
 		}
 
@@ -339,7 +335,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 		},
 		onError: (e) => {
 			setIsProcessing(false);
-			logger.error('Failed to delete invalid starter pack', { safeMessage: e });
+			console.error('Failed to delete invalid starter pack', e);
 			Toast.show(m['screens.starterPack.delete.error.failed'](), {
 				type: 'error',
 			});

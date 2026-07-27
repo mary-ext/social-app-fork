@@ -1,17 +1,14 @@
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
-import { ClientResponseError, ok } from '@atcute/client';
+import { ok } from '@atcute/client';
 
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { isNetworkError } from '#/lib/strings/errors';
 
 import { getDeviceId } from '#/state/preferences/device-id';
 import { getClients } from '#/state/session';
 
 import type { ComposerState } from '#/features/composer/state/composer';
 
-import { composerStateToDraft, draftViewToSummary } from './api';
-import { logger } from './logger';
+import { composerStateToDraft, draftViewToSummary, extractLocalRefs } from './api';
 import * as storage from './storage';
 
 const DRAFTS_QUERY_KEY = ['drafts'];
@@ -55,28 +52,12 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 		return { loadedMedia };
 	}
 
-	const targets: { errorMessage: string; path: string }[] = [];
-	for (const post of draft.posts) {
-		for (const img of post.embedImages ?? []) {
-			targets.push({ errorMessage: 'Failed to load draft image', path: img.localRef.path });
-		}
-		for (const item of post.embedGallery?.items ?? []) {
-			targets.push({ errorMessage: 'Failed to load draft gallery image', path: item.localRef.path });
-		}
-		for (const vid of post.embedVideos ?? []) {
-			targets.push({ errorMessage: 'Failed to load draft video', path: vid.localRef.path });
-		}
-	}
-
 	await Promise.all(
-		targets.map(async ({ errorMessage, path }) => {
+		[...extractLocalRefs(draft)].map(async (path) => {
 			try {
 				loadedMedia.set(path, await storage.loadMediaFromLocal(path));
 			} catch (e) {
-				logger.error(errorMessage, {
-					path,
-					safeMessage: e instanceof Error ? e.message : String(e),
-				});
+				console.error('Failed to load draft media', path, e);
 			}
 		}),
 	);
@@ -104,19 +85,9 @@ export function useSaveDraftMutation() {
 			// Convert composer state to server draft format
 			const { draft, localRefPaths } = await composerStateToDraft(composerState);
 
-			logger.debug('saving draft', {
-				existingDraftId,
-				localRefPathCount: localRefPaths.size,
-				originalLocalRefCount: composerState.originalLocalRefs?.size ?? 0,
-			});
-
 			// 1. NETWORK FIRST - Update/create server draft
 			let draftId: string;
 			if (existingDraftId) {
-				// Update existing draft
-				logger.debug('updating existing draft on server', {
-					draftId: existingDraftId,
-				});
 				await ok(
 					appview.post('app.bsky.draft.updateDraft', {
 						as: null,
@@ -130,11 +101,8 @@ export function useSaveDraftMutation() {
 				);
 				draftId = existingDraftId;
 			} else {
-				// Create new draft
-				logger.debug('creating new draft on server');
 				const res = await ok(appview.post('app.bsky.draft.createDraft', { input: { draft } }));
 				draftId = res.id;
-				logger.debug('created new draft', { draftId });
 			}
 
 			// Return data needed for onSuccess
@@ -144,21 +112,14 @@ export function useSaveDraftMutation() {
 				originalLocalRefs: composerState.originalLocalRefs,
 			};
 		},
-		onSuccess: async ({ draftId, localRefPaths, originalLocalRefs }) => {
-			// 2. LOCAL STORAGE ONLY AFTER NETWORK SUCCEEDS
-			logger.debug('network save succeeded, processing local storage', {
-				draftId,
-			});
-
+		onSuccess: async ({ localRefPaths, originalLocalRefs }) => {
 			// Save new/changed media files
 			await Promise.all(
 				[...localRefPaths].map(async ([localRefPath, blob]) => {
 					// Only save if this media doesn't already exist (reusing localRefPath)
 					if (storage.mediaExists(localRefPath)) {
-						logger.debug('skipping existing media file', { localRefPath });
 						return;
 					}
-					logger.debug('saving new media file', { localRefPath });
 					await storage.saveMediaToLocal(localRefPath, blob);
 				}),
 			);
@@ -170,26 +131,12 @@ export function useSaveDraftMutation() {
 					[...originalLocalRefs]
 						.filter((oldRef) => !newLocalRefs.has(oldRef))
 						.map((oldRef) => {
-							logger.debug('deleting orphaned media file', {
-								localRefPath: oldRef,
-							});
 							return storage.deleteMediaFromLocal(oldRef);
 						}),
 				);
 			}
 
 			await queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
-		},
-		onError: (error) => {
-			// Check for draft limit error
-			if (error instanceof ClientResponseError && error.error === 'DraftLimitReached') {
-				logger.error('Draft limit reached', { safeMessage: error.message });
-				// Error will be handled by caller
-			} else if (!isNetworkError(error)) {
-				logger.error('Could not create draft (reason unknown)', {
-					safeMessage: error.message,
-				});
-			}
 		},
 	});
 }
@@ -230,39 +177,18 @@ export function useCleanupPublishedDraftMutation() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async ({
-			draftId,
-			originalLocalRefs,
-		}: {
-			draftId: string;
-			originalLocalRefs: Set<string>;
-		}) => {
-			logger.debug('cleaning up published draft', {
-				draftId,
-				mediaFileCount: originalLocalRefs.size,
-			});
+		mutationFn: async ({ draftId }: { draftId: string; originalLocalRefs: Set<string> }) => {
 			// Delete from server first
 			await ok(appview.post('app.bsky.draft.deleteDraft', { as: null, input: { id: draftId } }));
-			logger.debug('deleted draft from server', { draftId });
 		},
 		onSuccess: async (_, { originalLocalRefs }) => {
 			// Delete all local media files for this draft
 			await Promise.all(
 				[...originalLocalRefs].map((localRef) => {
-					logger.debug('deleting media file after publish', {
-						localRefPath: localRef,
-					});
 					return storage.deleteMediaFromLocal(localRef);
 				}),
 			);
 			void queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
-			logger.debug('cleanup after publish complete');
-		},
-		onError: (error) => {
-			// Log but don't throw - the post was already published successfully
-			logger.warn('Failed to clean up published draft', {
-				safeMessage: error instanceof Error ? error.message : String(error),
-			});
 		},
 	});
 }

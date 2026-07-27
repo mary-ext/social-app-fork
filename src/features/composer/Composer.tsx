@@ -35,7 +35,7 @@ import { type ComposerImage, createComposerImage } from '#/lib/media/composer-im
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
-import { cleanError, errorMessage } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
@@ -43,8 +43,6 @@ import { savePostLanguageToHistory, toPostLanguages, usePostLanguage } from '#/s
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
@@ -259,12 +257,6 @@ export const ComposePost = ({
 	const restoreVideo = useCallback(
 		async (postId: string, videoInfo: RestoredVideo) => {
 			try {
-				logger.debug('restoring video from draft', {
-					postId,
-					altText: videoInfo.altText,
-					captionCount: videoInfo.captions.length,
-				});
-
 				const meta = await getVideoMetadata(videoInfo.blob);
 				const asset: VideoAsset = {
 					blob: videoInfo.blob,
@@ -346,10 +338,7 @@ export const ComposePost = ({
 					abortController.signal,
 				);
 			} catch (e) {
-				logger.error('Failed to restore video from draft', {
-					postId,
-					error: e,
-				});
+				console.error('Failed to restore video from draft', postId, e);
 			}
 		},
 		[pds, pdsUrl, currentDid, composerDispatch],
@@ -357,21 +346,11 @@ export const ComposePost = ({
 
 	const handleSelectDraft = useCallback(
 		async (draftSummary: DraftSummary) => {
-			logger.debug('loading draft for editing', {
-				draftId: draftSummary.id,
-			});
-
 			// Load local media files for the draft
 			const { loadedMedia } = await loadDraftMedia(draftSummary.draft);
 
 			// Extract original localRefs for orphan detection on save
 			const originalLocalRefs = extractLocalRefs(draftSummary.draft);
-
-			logger.debug('draft loaded', {
-				draftId: draftSummary.id,
-				loadedMediaCount: loadedMedia.size,
-				originalLocalRefCount: originalLocalRefs.size,
-			});
 
 			// Convert server draft to composer posts (videos returned separately)
 			const { posts, restoredVideos } = await draftToComposerPosts(draftSummary.draft, loadedMedia);
@@ -436,7 +415,7 @@ export const ComposePost = ({
 
 			closeComposer();
 		} catch (e) {
-			logger.error('Failed to save draft', { error: e });
+			console.error('Failed to save draft', e);
 			setError(getDraftSaveError(e));
 		}
 	}, [saveDraft, composerState, composerDispatch, validateDraftTextOrError, getDraftSaveError]);
@@ -631,7 +610,6 @@ export const ComposePost = ({
 		let postUri: ResourceUri | undefined;
 		let postSuccessData: OnPostSuccessData;
 		try {
-			logger.info(`composer: posting...`);
 			postUri = (
 				await apilib.post({ appview, did: currentDid, pds: pds! }, queryClient, {
 					thread: filteredThread,
@@ -646,8 +624,6 @@ export const ComposePost = ({
 			 */
 			try {
 				if (postUri) {
-					logger.info(`composer: waiting for app view`);
-
 					const posts = await retry(
 						5,
 						(_e) => true,
@@ -677,21 +653,10 @@ export const ComposePost = ({
 						posts,
 					};
 				}
-			} catch (waitErr: unknown) {
-				logger.info(`composer: waiting for app view failed`, {
-					safeMessage: waitErr,
-				});
-			}
+			} catch {}
 		} catch (e: unknown) {
-			const caught = e instanceof Error ? e : new Error(String(e));
-			logger.error(caught, {
-				message: `Composer: create post failed`,
-				hasImages: filteredThread.posts.some(
-					(p) => p.embed.media?.type === 'images' || p.embed.media?.type === 'gallery',
-				),
-			});
-
-			let err = cleanError(caught.message);
+			console.error('Composer: create post failed', e);
+			let err = cleanError(e);
 			if (e instanceof apilib.ReplyDeletedError || err.includes('not locate record')) {
 				err = m['view.composer.reply.deleted']();
 			} else if (e instanceof EmbeddingDisabledError) {
@@ -706,10 +671,6 @@ export const ComposePost = ({
 		}
 		// Clean up draft and its media after successful publish
 		if (composerState.draftId && composerState.originalLocalRefs) {
-			logger.debug('post published, cleaning up draft', {
-				draftId: composerState.draftId,
-				mediaFileCount: composerState.originalLocalRefs.size,
-			});
 			cleanupPublishedDraft({
 				draftId: composerState.draftId,
 				originalLocalRefs: composerState.originalLocalRefs,
@@ -1141,11 +1102,7 @@ const ComposerPost = memo(function ComposerPost({
 				try {
 					image = await createComposerImage(blob);
 				} catch (e) {
-					logger.error(`createComposerImage failed`, {
-						safeMessage: errorMessage(e),
-						mimeType: blob.type,
-						size: blob.size,
-					});
+					console.error('createComposerImage failed', blob.type, blob.size, e);
 					onError(m['view.composer.gallery.error.paste']());
 					return;
 				}

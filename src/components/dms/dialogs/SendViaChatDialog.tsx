@@ -13,8 +13,6 @@ import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dms/dialogs/SendViaChatDialog.css';
@@ -88,7 +86,7 @@ function DialogInner({
 			onSelectChat(data.convo.id);
 		},
 		onError: (error) => {
-			logger.error('Failed to share post to chat', { message: error });
+			console.error('Failed to share post to chat', error);
 			Toast.show(m['components.dms.chat.error.open'](), {
 				type: 'error',
 			});

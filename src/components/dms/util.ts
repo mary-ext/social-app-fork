@@ -15,8 +15,6 @@ import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import type { Shadow } from '#/state/cache/profile-shadow';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 
-import { logger } from '#/logger';
-
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000;
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000;
 
@@ -208,7 +206,6 @@ export function parseConvoView(
 	// `Tid` is a plain string alias, so this only pays off at runtime: it applies the same validation the
 	// conversation routes' `tid` codec does, so a convo that can't be linked to never reaches the UI.
 	if (!isTid(rawConvoView.id)) {
-		logger.warn('Convo id is not a TID', { id: rawConvoView.id });
 		return null;
 	}
 	// narrowing `rawConvoView.id` doesn't re-type the view around it, and respreading it would allocate for nothing
@@ -226,7 +223,6 @@ export function parseConvoView(
 					owner = member as GroupConvoMember;
 				}
 			} else {
-				logger.warn('Expected a GroupConvoMember, got an unknown kind of member');
 				return null;
 			}
 		}
@@ -243,7 +239,6 @@ export function parseConvoView(
 		const otherUser = convoView.members.find((m) => m.did !== ownDid);
 
 		if (!otherUser) {
-			logger.warn('No other user found in direct convo');
 			return null;
 		}
 
@@ -257,7 +252,6 @@ export function parseConvoView(
 			members: convoView.members as Array<DirectConvoMember>,
 		};
 	} else {
-		logger.warn('Unknown convo kind: ' + JSON.stringify(convoView.kind));
 		return null;
 	}
 }

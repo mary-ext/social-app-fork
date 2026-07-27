@@ -7,8 +7,6 @@ import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 
-import { logger } from '#/logger';
-
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
@@ -71,12 +69,7 @@ export function VideoPreview({
 							// a preview render failure must not clear the video: the upload is already in
 							// flight, and clearing here would abort it even though the compressed file may be
 							// perfectly valid.
-							const mediaError = e.currentTarget.error;
-							logger.error('Video preview failed to render', {
-								safeMessage: mediaError
-									? `code ${mediaError.code}: ${mediaError.message}`
-									: 'unknown media error',
-							});
+							console.error('Video preview failed to render', e.currentTarget.error);
 							setPreviewFailed(true);
 						}}
 					/>

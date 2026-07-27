@@ -9,8 +9,6 @@ import { usePostQuery } from '#/state/queries/post';
 import { usePostRepostedByQuery } from '#/state/queries/post-reposted-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
-import { logger } from '#/logger';
-
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import * as Layout from '#/components/web/Layout';
@@ -73,15 +71,11 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more reposts', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	if (!moderationOpts || ((isLoadingUri || isLoadingRepostedBy) && repostedBy.length < 1 && !isError)) {
@@ -106,7 +100,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 			data={repostedBy}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 			ListFooterComponent={
 				<ListFooter

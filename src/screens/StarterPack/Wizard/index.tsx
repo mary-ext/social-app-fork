@@ -23,8 +23,6 @@ import {
 } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import { useWizardState, type WizardStep } from '#/screens/StarterPack/Wizard/State';
@@ -207,7 +205,7 @@ function WizardInner({
 	const { mutate: createStarterPack } = useCreateStarterPackMutation({
 		onSuccess: onSuccessCreate,
 		onError: (e) => {
-			logger.error('Failed to create starter pack', { safeMessage: e });
+			console.error('Failed to create starter pack', e);
 			dispatch({ type: 'SetProcessing', processing: false });
 			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',
@@ -217,7 +215,7 @@ function WizardInner({
 	const { mutate: editStarterPack } = useEditStarterPackMutation({
 		onSuccess: onSuccessEdit,
 		onError: (e) => {
-			logger.error('Failed to edit starter pack', { safeMessage: e });
+			console.error('Failed to edit starter pack', e);
 			dispatch({ type: 'SetProcessing', processing: false });
 			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',

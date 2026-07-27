@@ -18,8 +18,6 @@ import {
 } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
@@ -263,24 +261,18 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		</div>
 	);
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more join requests', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onRefresh = async () => {
 		setIsPTRing(true);
 		try {
 			await refetch();
-		} catch (err) {
-			logger.error('Failed to refresh group chat requests', { message: err });
-		}
+		} catch {}
 		setIsPTRing(false);
 	};
 
@@ -329,7 +321,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				) : null
 			}
 			ListFooterComponent={showFooter ? <div style={{ height: footerHeight }} /> : undefined}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 		/>
 	);

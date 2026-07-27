@@ -13,8 +13,6 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
@@ -78,9 +76,9 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 			if (err instanceof ClientResponseError && err.error === 'AlreadyAppealed') {
 				setError(m['components.moderation.appeal.alreadyAppealed']());
 			} else {
+				console.error('Failed to submit label appeal', err);
 				setError(m['common.appeal.submitError']());
 			}
-			logger.error('Failed to submit label appeal', { message: err });
 		},
 	});
 

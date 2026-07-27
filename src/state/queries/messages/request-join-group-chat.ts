@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 
 export function useRequestJoinGroupChat({
@@ -35,7 +33,6 @@ export function useRequestJoinGroupChat({
 			onSuccess?.(data);
 		},
 		onError: (error) => {
-			logger.error('Failed to join group chat', { safeMessage: error });
 			onError?.(error);
 		},
 	});

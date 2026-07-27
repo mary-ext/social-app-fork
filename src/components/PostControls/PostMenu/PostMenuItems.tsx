@@ -8,7 +8,7 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { errorMessage, isAbortError } from '#/lib/strings/errors';
+import { isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
@@ -28,8 +28,6 @@ import {
 } from '#/state/queries/threadgate';
 import { useRequireAuth, useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
-
-import { logger } from '#/logger';
 
 import * as Dialog from '#/components/Dialog';
 import {
@@ -152,7 +150,7 @@ function PostMenuItems({
 				}
 			},
 			(e) => {
-				logger.error('Failed to delete post', { message: e });
+				console.error('Failed to delete post', e);
 				Toast.show(m['components.postControls.delete.error'](), {
 					type: 'error',
 				});
@@ -171,7 +169,7 @@ function PostMenuItems({
 			}
 		} catch (err) {
 			if (!isAbortError(err)) {
-				logger.error('Failed to toggle thread mute', { message: err });
+				console.error('Failed to toggle thread mute', err);
 				Toast.show(m['components.postControls.thread.muteError'](), {
 					type: 'error',
 				});
@@ -237,10 +235,8 @@ function PostMenuItems({
 					: m['components.postControls.quote.reattach.toast'](),
 			);
 		} catch (err) {
+			console.error(`Failed to ${action} quote`, err);
 			Toast.show(m['components.postControls.quote.updateError']());
-			logger.error(`Failed to ${action} quote`, {
-				safeMessage: errorMessage(err),
-			});
 		}
 	};
 
@@ -263,10 +259,6 @@ function PostMenuItems({
 				action,
 			});
 
-			// Log metric only when hiding (not when showing)
-			if (isHide) {
-			}
-
 			Toast.show(
 				isHide
 					? m['components.postControls.replyVisibility.hide.toast']()
@@ -278,10 +270,8 @@ function PostMenuItems({
 			} else if (err instanceof InvalidInteractionSettingsError) {
 				Toast.show(m['components.postControls.interaction.error']());
 			} else {
+				console.error(`Failed to ${action} reply`, err);
 				Toast.show(m['components.postControls.replyVisibility.updateError']());
-				logger.error(`Failed to ${action} reply`, {
-					safeMessage: errorMessage(err),
-				});
 			}
 		}
 	};
@@ -300,7 +290,6 @@ function PostMenuItems({
 			Toast.show(m['common.block.blockedToast']());
 		} catch (err) {
 			if (!isAbortError(err)) {
-				logger.error('Failed to block account', { message: err });
 				Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 					type: 'error',
 				});
@@ -316,7 +305,6 @@ function PostMenuItems({
 				Toast.show(m['common.mute.unmutedToast']());
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to unmute account', { message: err });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});
@@ -329,7 +317,6 @@ function PostMenuItems({
 				Toast.show(m['common.mute.mutedToast']());
 			} catch (err) {
 				if (!isAbortError(err)) {
-					logger.error('Failed to mute account', { message: err });
 					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
 						type: 'error',
 					});

@@ -2,11 +2,7 @@ import { type KeyboardEvent, useCallback, useState } from 'react';
 
 import { isActorIdentifier } from '@atcute/lexicons/syntax';
 
-import { errorMessage } from '#/lib/strings/errors';
-
 import { login, type SessionAccount, switchAccount, useSession } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import { AccountList } from '#/components/AccountList';
 import * as Dialog from '#/components/Dialog';
@@ -93,9 +89,7 @@ function ChooseAccountScreen({
 				setPendingDid(account.did);
 				await switchAccount(account);
 			} catch (e) {
-				logger.error('sign in dialog: resume account failed', {
-					message: errorMessage(e),
-				});
+				console.error('sign in dialog: resume account failed', e);
 				await login({ identifier: account.did });
 			} finally {
 				setPendingDid(null);
@@ -147,9 +141,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 		try {
 			await login({ identifier: trimmed });
 		} catch (e) {
-			logger.error('sign in dialog: OAuth start failed', {
-				message: errorMessage(e),
-			});
+			console.error('sign in dialog: OAuth start failed', e);
 			setError(m['components.dialogs.signin.startError']());
 			setIsSubmitting(false);
 		}

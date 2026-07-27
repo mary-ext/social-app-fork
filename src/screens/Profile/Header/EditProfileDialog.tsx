@@ -9,8 +9,6 @@ import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
-import { logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
@@ -162,7 +160,7 @@ function DialogInner({
 			});
 			handle.close();
 		} catch (e) {
-			logger.error('Failed to update user profile', { message: String(e) });
+			console.error('Failed to update user profile', e);
 		}
 	};
 

@@ -7,8 +7,6 @@ import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 
-import { Logger } from '#/logger';
-
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
@@ -88,7 +86,6 @@ function Inner({
 	onAfterSubmit?: () => void;
 	subject: ParsedReportSubject;
 }) {
-	const logger = useMemo(() => Logger.create(Logger.Context.ReportDialog), []);
 	const {
 		data: allLabelers,
 		error: labelersError,
@@ -171,7 +168,6 @@ function Inner({
 			return;
 		}
 		dispatch({ type: 'clearError' });
-		logger.info('submitting');
 		try {
 			setIsPending(true);
 			await submitReport({
@@ -184,7 +180,7 @@ function Inner({
 			onAfterSubmit?.();
 			close();
 		} catch (e) {
-			logger.error(e instanceof Error ? e : String(e), { source: 'ReportDialog' });
+			console.error('Failed to submit report', e);
 			dispatch({ type: 'setError', error: m['common.error.generic']() });
 		} finally {
 			setIsPending(false);

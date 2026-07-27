@@ -282,7 +282,7 @@ export function useDeleteStarterPackMutation({
 	onError,
 }: {
 	onSuccess: () => void;
-	onError: (error: Error) => void;
+	onError?: (error: Error) => void;
 }) {
 	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
@@ -334,7 +334,7 @@ export function useDeleteStarterPackMutation({
 			onSuccess();
 		},
 		onError: (error) => {
-			onError(error);
+			onError?.(error);
 		},
 	});
 }

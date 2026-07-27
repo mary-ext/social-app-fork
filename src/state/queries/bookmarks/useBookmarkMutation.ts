@@ -4,16 +4,12 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { isNetworkError } from '#/lib/strings/errors';
-
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import {
 	optimisticallyDeleteBookmark,
 	optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery';
 import { getClients } from '#/state/session';
-
-import { logger } from '#/logger';
 
 type MutationArgs =
 	| { action: 'create'; post: AppBskyFeedDefs.PostView }
@@ -61,12 +57,7 @@ export function useBookmarkMutation() {
 				updatePostShadow(qc, args.uri, { bookmarked: true });
 			}
 
-			if (!isNetworkError(e)) {
-				logger.error('bookmark mutation failed', {
-					bookmarkAction: args.action,
-					safeMessage: e,
-				});
-			}
+			console.error('bookmark mutation failed', args.action, e);
 		},
 	});
 }

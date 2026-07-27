@@ -5,8 +5,6 @@ import { cleanError } from '#/lib/strings/errors';
 import { useDeleteStarterPackMutation } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
@@ -56,7 +54,7 @@ export function OverflowMenu({
 			router.popTo({ name: 'Home' });
 		},
 		onError: (e) => {
-			logger.error('Failed to delete starter pack', { safeMessage: e });
+			console.error('Failed to delete starter pack', e);
 		},
 	});
 
@@ -64,7 +62,7 @@ export function OverflowMenu({
 
 	const onDeleteStarterPack = () => {
 		if (!starterPack.list) {
-			logger.error(`Unable to delete starterpack because list is missing`);
+			console.error('Unable to delete starterpack because list is missing');
 			return;
 		}
 

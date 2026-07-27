@@ -6,8 +6,6 @@ import { errorMessage } from '#/lib/strings/errors';
 import { useUpsertMutedWordsMutation } from '#/state/queries/preferences';
 import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
@@ -82,7 +80,6 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			handle.close();
 		} catch (e) {
 			const message = errorMessage(e);
-			logger.error(`Failed to save muted word`, { message });
 			setError(message);
 		}
 	};

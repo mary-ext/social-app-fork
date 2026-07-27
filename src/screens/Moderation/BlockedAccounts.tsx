@@ -6,8 +6,6 @@ import { cleanError } from '#/lib/strings/errors';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 
-import { logger } from '#/logger';
-
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -29,16 +27,12 @@ export function ModerationBlockedAccounts() {
 	const isEmpty = !isFetching && !data?.pages[0]?.blocks.length;
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.blocks) : [];
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more of my blocked accounts', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	return (
@@ -63,7 +57,7 @@ export function ModerationBlockedAccounts() {
 					data={profiles}
 					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-					onEndReached={() => void onEndReached()}
+					onEndReached={onEndReached}
 					renderItem={({ item, index }) => <BlockedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={

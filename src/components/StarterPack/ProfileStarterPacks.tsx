@@ -5,8 +5,6 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
-import { logger } from '#/logger';
-
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import { PlusSmall_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
@@ -87,16 +85,12 @@ export function ProfileStarterPacks({
 	// events
 	// =
 
-	const onEndReached = async () => {
+	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage || isError) {
 			return;
 		}
 
-		try {
-			await fetchNextPage();
-		} catch (err) {
-			logger.error('Failed to load more starter packs', { message: err });
-		}
+		void fetchNextPage();
 	};
 
 	const onPressRetryLoadMore = () => {
@@ -151,7 +145,7 @@ export function ProfileStarterPacks({
 					<CreateAnother />
 				) : undefined
 			}
-			onEndReached={() => void onEndReached()}
+			onEndReached={onEndReached}
 			onEndReachedThreshold={2}
 		/>
 	);

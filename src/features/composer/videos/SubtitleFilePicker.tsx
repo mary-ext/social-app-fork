@@ -1,7 +1,5 @@
 import { useRef } from 'react';
 
-import { logger } from '#/logger';
-
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -34,9 +32,6 @@ export function SubtitleFilePicker({
 			) {
 				onSelectFile(selectedFile);
 			} else {
-				logger.error('Invalid subtitle file type', {
-					safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
-				});
 				Toast.show(m['view.composer.captions.error.vttOnly']());
 			}
 		}

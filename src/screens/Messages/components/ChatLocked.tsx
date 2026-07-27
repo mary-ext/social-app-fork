@@ -4,8 +4,6 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Prompt from '#/components/Prompt';
@@ -39,7 +37,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 				Toast.show(m['screens.messages.lock.chatLockedMod'](), { type: 'error' });
 				return;
 			}
-			logger.error('Failed to unlock group chat', { message: e });
+			console.error('Failed to unlock group chat', e);
 			Toast.show(m['screens.messages.lock.error.unlock'](), { type: 'error' });
 		},
 	});
@@ -49,7 +47,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 			router.navigate({ replace: true, to: { name: 'Messages' } });
 		},
 		onError: (e) => {
-			logger.error('Failed to leave group chat', { message: e });
+			console.error('Failed to leave group chat', e);
 			Toast.show(m['screens.messages.leave.error'](), {
 				type: 'error',
 			});

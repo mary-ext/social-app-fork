@@ -6,12 +6,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
-import { errorMessage, isNetworkError } from '#/lib/strings/errors';
+import { errorMessage } from '#/lib/strings/errors';
 
 import { RQKEY } from '#/state/queries/profile';
 import { getClients } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
@@ -81,11 +79,6 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 					Toast.show(m['screens.profile.germDm.error.reconnect']({ message }), {
 						type: 'error',
 					});
-					if (!isNetworkError(e)) {
-						logger.error('Failed to reconnect Germ DM link', {
-							safeMessage: e,
-						});
-					}
 				}
 			}
 
@@ -99,11 +92,6 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 			Toast.show(m['screens.profile.germDm.error.disconnect']({ message: error?.message }), {
 				type: 'error',
 			});
-			if (!isNetworkError(error)) {
-				logger.error('Failed to disconnect Germ DM link', {
-					safeMessage: error,
-				});
-			}
 		},
 	});
 

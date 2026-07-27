@@ -1,7 +1,5 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
-import { logger } from '#/logger';
-
 import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 import { IS_WEB_SAFARI } from '#/env';
@@ -212,16 +210,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		} else {
 			const promise = ref.current.play();
 			if (promise !== undefined) {
-				promise.catch((err: unknown) => {
-					const message = err instanceof Error ? err.message : String(err);
-
-					if (
-						// ignore this common error. it's fine
-						!message.includes(`The play() request was interrupted by a call to pause()`)
-					) {
-						logger.error('Error playing video:', { message: err });
-					}
-				});
+				promise.catch(() => {});
 			}
 		}
 	}, [ref]);

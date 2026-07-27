@@ -9,8 +9,6 @@ import { OzoneReason } from '#/lib/moderation/report-reasons';
 
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Spinner } from '#/components/Spinner';
@@ -108,7 +106,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			Toast.show(m['common.appeal.submittedToast']());
 		},
 		onError: (err) => {
-			logger.error('Failed to submit chat appeal', { message: err });
+			console.error('Failed to submit chat appeal', err);
 			Toast.show(m['common.appeal.submitError'](), {
 				type: 'error',
 			});

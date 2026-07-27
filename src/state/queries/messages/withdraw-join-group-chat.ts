@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import {
 	type ConvoRequestListQueryData,
 	optimisticDeleteJoinRequest,
@@ -47,7 +45,6 @@ export function useWithdrawJoinGroupChatRequest({
 			onSuccess?.(data);
 		},
 		onError: (error, _variables, context) => {
-			logger.error('Failed to withdraw join request', { safeMessage: error });
 			if (context?.prev) {
 				for (const [key, data] of context.prev) {
 					queryClient.setQueryData(key, data);

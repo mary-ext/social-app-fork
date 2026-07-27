@@ -5,8 +5,6 @@ import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tansta
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -100,7 +98,7 @@ export function useNotificationSettingsUpdateMutation() {
 			optimisticUpdateNotificationSettings(queryClient, update);
 		},
 		onError: (e) => {
-			logger.error('Could not update notification settings', { message: e });
+			console.error('Could not update notification settings', e);
 			void queryClient.invalidateQueries({ queryKey: RQKEY_APP });
 			void queryClient.invalidateQueries({ queryKey: RQKEY_CHAT });
 			Toast.show(m['state.notifications.error.settingsUpdate'](), {

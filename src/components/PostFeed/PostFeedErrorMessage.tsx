@@ -9,8 +9,6 @@ import { cleanError, errorToString } from '#/lib/strings/errors';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
-import { logger } from '#/logger';
-
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
@@ -128,8 +126,8 @@ function FeedgenErrorMessage({
 			}
 			await removeFeed(savedFeedConfig);
 		} catch (err) {
+			console.error('Failed to remove feed', err);
 			Toast.show(m['view.posts.feed.remove.error'](), { type: 'warning' });
-			logger.error('Failed to remove feed', { message: err });
 		}
 	};
 

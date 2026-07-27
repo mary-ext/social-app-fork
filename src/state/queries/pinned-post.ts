@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
-import { logger } from '#/logger';
-
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -72,8 +70,8 @@ export function usePinnedPostMutation() {
 					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
 				});
 			} catch (e) {
+				console.error('Failed to pin post', e);
 				Toast.show(m['state.pin.error']());
-				logger.error('Failed to pin post', { message: String(e) });
 				// revert optimistic update
 				updatePostShadow(queryClient, postUri, {
 					pinned: !pinCurrentPost,

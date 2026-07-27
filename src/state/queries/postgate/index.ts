@@ -9,7 +9,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
 import { networkRetry, retry } from '#/lib/async/retry';
-import { errorMessage } from '#/lib/strings/errors';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { STALE } from '#/state/queries';
@@ -21,8 +20,6 @@ import {
 	POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util';
 import { getClients, useSession } from '#/state/session';
-
-import { logger } from '#/logger';
 
 export async function getPostgateRecord({
 	appview,
@@ -244,9 +241,7 @@ export function useToggleQuoteDetachmentMutation() {
 					});
 				} catch (e) {
 					// ok if this fails, it's just optimistic UI
-					logger.error(`Postgate: failed to get quote post for re-attachment`, {
-						safeMessage: errorMessage(e),
-					});
+					console.error('Postgate: failed to get quote post for re-attachment', e);
 				}
 			}
 		},

@@ -6,8 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { precacheConvoQuery } from './conversation';
 
 export function useGetConvoForMembers({
@@ -38,7 +36,6 @@ export function useGetConvoForMembers({
 			onSuccess?.(data);
 		},
 		onError: (error) => {
-			logger.error(error);
 			onError?.(error);
 		},
 	});

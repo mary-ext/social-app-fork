@@ -8,8 +8,6 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import * as Prompt from '#/components/Prompt';
@@ -44,7 +42,7 @@ export function Member({
 	const removeMemberPrompt = Prompt.usePromptHandle();
 	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
 		onError: (e) => {
-			logger.error('Failed to remove group chat member', { message: e });
+			console.error('Failed to remove group chat member', e);
 			Toast.show(m['screens.messages.members.remove.error'](), { type: 'error' });
 		},
 	});

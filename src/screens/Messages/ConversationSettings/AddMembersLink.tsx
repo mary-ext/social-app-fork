@@ -2,8 +2,6 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
@@ -50,7 +48,7 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 			}
 		},
 		onError: (e) => {
-			logger.error('Failed to add group chat members', { message: e });
+			console.error('Failed to add group chat members', e);
 			Toast.show(m['screens.messages.members.add.error'](), { type: 'error' });
 		},
 	});

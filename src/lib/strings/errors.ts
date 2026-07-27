@@ -113,14 +113,6 @@ export function shouldRetryError(e: unknown) {
 	return e instanceof ClientResponseError && RETRYABLE_STATUSES.has(e.status);
 }
 
-export function isErrorMaybeAppPasswordPermissions(e: unknown) {
-	if (e instanceof ClientResponseError && e.error === 'TokenInvalid') {
-		return true;
-	}
-	const str = String(e);
-	return str.includes('Bad token scope') || str.includes('Bad token method');
-}
-
 /**
  * checks if an error was raised by aborting an in-flight action.
  *

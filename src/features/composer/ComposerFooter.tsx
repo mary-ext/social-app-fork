@@ -4,8 +4,6 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import type { VideoAsset } from '#/lib/media/video/types';
 
-import { logger } from '#/logger';
-
 import { CharProgress } from '#/features/composer/char-progress/CharProgress';
 import type { Gif } from '#/features/gifPicker/types';
 
@@ -108,11 +106,7 @@ export function ComposerFooter({
 					} else {
 						failed++;
 						const file = assetImages[index]!;
-						logger.error(`createComposerImage failed`, {
-							safeMessage: result.reason instanceof Error ? result.reason.message : String(result.reason),
-							mimeType: file.type,
-							size: file.size,
-						});
+						console.error('createComposerImage failed', file.type, file.size, result.reason);
 					}
 				}
 

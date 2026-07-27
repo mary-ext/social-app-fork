@@ -11,8 +11,6 @@ import {
 import { openImagePicker } from '#/lib/media/picker';
 import { isCancelledError } from '#/lib/strings/errors';
 
-import { logger } from '#/logger';
-
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableUserAvatar.css';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
@@ -51,9 +49,9 @@ export function EditableUserAvatar({
 			setRawImage(await createComposerImage(file));
 			editImageDialogHandle.open(null);
 		} catch (e) {
-			// Don't log errors for user-cancelled selection.
+			// a user-cancelled selection is not a failure worth reporting
 			if (!isCancelledError(e)) {
-				logger.error('Failed to crop avatar', { error: e });
+				console.error('Failed to crop avatar', e);
 			}
 		}
 	};

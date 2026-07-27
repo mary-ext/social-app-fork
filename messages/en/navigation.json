@@ -2,7 +2,6 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"navigation.chat.requests.title": "Chat request inbox",
 	"navigation.chat.title": "Messages",
-	"navigation.developer.log.title": "Log",
 	"navigation.drawer.title": "Menu",
 	"navigation.feed.title": "Feed",
 	"navigation.followers.title": "Followers",

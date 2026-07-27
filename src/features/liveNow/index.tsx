@@ -13,8 +13,6 @@ import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { getClients, useSession } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { useLiveNowConfig } from '#/features/liveNow/use-actor-status';
 import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 
@@ -71,11 +69,7 @@ export function useUpsertLiveStatusMutation(
 							thumb = await uploadBlob(pds!, img.source.blob);
 						}
 					} catch (e) {
-						logger.error(`Failed to upload thumbnail for live status`, {
-							url: linkMeta.url,
-							image: linkMeta.image,
-							safeMessage: e,
-						});
+						console.error('Failed to upload thumbnail for live status', linkMeta.image, e);
 					}
 				}
 
@@ -158,11 +152,7 @@ export function useUpsertLiveStatusMutation(
 			});
 		},
 		onError: (e) => {
-			logger.error(`Failed to upsert live status`, {
-				url: linkMeta?.url,
-				image: linkMeta?.image,
-				safeMessage: e,
-			});
+			console.error('Failed to upsert live status', linkMeta?.url, e);
 		},
 	});
 }
@@ -196,9 +186,7 @@ export function useRemoveLiveStatusMutation(handle: DialogHandle) {
 			});
 		},
 		onError: (e) => {
-			logger.error(`Failed to remove live status`, {
-				safeMessage: e,
-			});
+			console.error('Failed to remove live status', e);
 		},
 	});
 }

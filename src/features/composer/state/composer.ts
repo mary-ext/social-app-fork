@@ -14,8 +14,6 @@ import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
-import { logger } from '#/logger';
-
 import type { Gif } from '#/features/gifPicker/types';
 
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
@@ -330,18 +328,8 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			}
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
-			const prevCount =
-				prevMedia?.type === 'images' || prevMedia?.type === 'gallery' ? prevMedia.images.length : 0;
-			const incomingCount = prevCount + action.images.length;
-			if (incomingCount > MAX_GALLERY_IMAGES) {
-				// Defense in depth: callers (applyGalleryCap in Composer) should have already trimmed and
-				// surfaced a toast. The hard slice in imagesToMediaVariant still drops the excess so the cap holds.
-				logger.warn('composer: image add exceeds MAX_GALLERY_IMAGES', {
-					prevCount,
-					incomingCount,
-					dropped: incomingCount - MAX_GALLERY_IMAGES,
-				});
-			}
+			// callers (applyGalleryCap in Composer) trim to the cap and surface a toast; the hard slice in
+			// imagesToMediaVariant still drops any excess, so the cap holds either way.
 			if (!prevMedia) {
 				nextMedia = imagesToMediaVariant(action.images);
 			} else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {

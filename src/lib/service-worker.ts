@@ -2,8 +2,6 @@ import { useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { logger } from '#/logger';
-
 /**
  * lifecycle status of the service worker from the page's point of view:
  *
@@ -91,9 +89,7 @@ export const initServiceWorker = () => {
 			}
 		},
 		(err) => {
-			logger.error('service worker lookup failed', {
-				safeMessage: err instanceof Error ? err.message : String(err),
-			});
+			console.error('service worker lookup failed', err);
 		},
 	);
 };
@@ -108,9 +104,7 @@ export const registerServiceWorker = () => {
 		return;
 	}
 	navigator.serviceWorker.register('/sw.js').then(attach, (err) => {
-		logger.error('service worker registration failed', {
-			safeMessage: err instanceof Error ? err.message : String(err),
-		});
+		console.error('service worker registration failed', err);
 	});
 };
 

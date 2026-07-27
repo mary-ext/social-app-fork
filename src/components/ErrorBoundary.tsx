@@ -1,6 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
-
-import { logger } from '#/logger';
+import { Component, type ReactNode } from 'react';
 
 import { m } from '#/paraglide/messages';
 
@@ -25,10 +23,6 @@ export class ErrorBoundary extends Component<Props, State> {
 
 	public static getDerivedStateFromError(error: unknown): State {
 		return { hasError: true, error };
-	}
-
-	public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-		logger.error(error, { errorInfo });
 	}
 
 	public render() {

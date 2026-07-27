@@ -12,8 +12,6 @@ import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSugges
 import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStarterPacksQuery';
 
-import { logger } from '#/logger';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
@@ -183,9 +181,7 @@ export function Explore({
 		}
 		try {
 			await fetchNextPageFeedPreviews();
-		} catch (err) {
-			logger.error('Failed to load more feed previews', { message: err });
-		}
+		} catch {}
 	};
 
 	const trendingTopicsModule = {

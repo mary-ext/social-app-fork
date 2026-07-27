@@ -2,7 +2,6 @@ import type { AnyProfileView, AppBskyGraphGetStarterPacksWithMembership } from '
 import type { Did } from '@atcute/lexicons';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
-import { isNetworkError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';
@@ -12,8 +11,6 @@ import {
 } from '#/state/queries/list-memberships';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
@@ -206,9 +203,7 @@ function StarterPackItem({
 			Toast.show(m['components.dialogs.starterPack.addedToast']());
 		},
 		onError: (err) => {
-			if (!isNetworkError(err)) {
-				logger.error('Failed to add to starter pack', { safeMessage: err });
-			}
+			console.error('Failed to add to starter pack', err);
 			Toast.show(m['components.dialogs.starterPack.error.add'](), { type: 'error' });
 		},
 	});
@@ -218,9 +213,7 @@ function StarterPackItem({
 			Toast.show(m['components.dialogs.starterPack.removedToast']());
 		},
 		onError: (err) => {
-			if (!isNetworkError(err)) {
-				logger.error('Failed to remove from starter pack', { safeMessage: err });
-			}
+			console.error('Failed to remove from starter pack', err);
 			Toast.show(m['components.dialogs.starterPack.error.remove'](), { type: 'error' });
 		},
 	});
@@ -238,7 +231,7 @@ function StarterPackItem({
 			addMembership({ actorDid: targetDid, listUri, subject });
 		} else {
 			if (!starterPackWithMembership.listItem?.uri) {
-				logger.error('Cannot remove from starter pack: missing membership URI');
+				console.error('Cannot remove from starter pack: missing membership URI');
 				return;
 			}
 			removeMembership({

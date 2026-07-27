@@ -11,8 +11,6 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 
 import { getClients } from '#/state/session';
 
-import { logger } from '#/logger';
-
 import { listConvoMembersQueryKey } from './list-convo-members';
 import { createListJoinRequestsQueryKey } from './list-join-requests';
 
@@ -107,7 +105,6 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
 			onSuccess?.(data);
 		},
 		onError: (error, _variables, context) => {
-			logger.error(error);
 			if (convoId && context?.prevRequests) {
 				queryClient.setQueryData(createListJoinRequestsQueryKey({ convoId }), context.prevRequests);
 			}
