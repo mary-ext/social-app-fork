@@ -447,61 +447,70 @@ function PostFeed({
 	// =
 
 	const renderItem = ({ item: row, index: rowIndex }: ListRenderItemInfo<FeedRow>) => {
-		if (row.type === 'empty') {
-			return renderEmptyState();
-		} else if (row.type === 'error') {
-			return (
-				<PostFeedErrorMessage
-					feedDesc={feed}
-					error={error ?? undefined}
-					onPressTryAgain={onPressTryAgain}
-					savedFeedConfig={savedFeedConfig}
-					topBorder={rowIndex !== 0}
-				/>
-			);
-		} else if (row.type === 'loading') {
-			return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;
-		} else if (row.type === 'feedShutdownMsg') {
-			return <FeedShutdownMsg feedUri={feedUriOrActorDid} topBorder={rowIndex !== 0} />;
-		} else if (row.type === 'interstitialFollows') {
-			return <SuggestedFollows feed={feed} />;
-		} else if (row.type === 'interstitialTrending') {
-			return <TrendingInterstitial />;
-		} else if (row.type === 'description') {
-			return (
-				<div className={css.description}>
-					<RichText color="textContrastHigh" size="md" value={row.value} />
-				</div>
-			);
-		} else if (row.type === 'sliceItem') {
-			const slice = row.slice;
-			const indexInSlice = row.indexInSlice;
-			const item = slice.items[indexInSlice]!;
-			return (
-				<PostFeedItem
-					post={item.post}
-					record={item.record}
-					reason={indexInSlice === 0 ? slice.reason : undefined}
-					feedContext={slice.feedContext}
-					reqId={slice.reqId}
-					moderation={item.moderation}
-					parentAuthor={item.parentAuthor}
-					showReplyTo={row.showReplyTo}
-					isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-					isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-					isParentBlocked={item.isParentBlocked}
-					isParentNotFound={item.isParentNotFound}
-					hideTopBorder={rowIndex === 0 && indexInSlice === 0}
-					rootPost={slice.items[0]!.post}
-					onShowLess={onPressShowLess}
-				/>
-			);
-		} else if (row.type === 'sliceViewFullThread') {
-			return <ViewFullThread uri={row.uri} />;
-		} else if (row.type === 'showLessFollowup') {
-			return <ShowLessFollowup topBorder={rowIndex !== 0} />;
-		} else {
-			return null;
+		switch (row.type) {
+			case 'empty': {
+				return renderEmptyState();
+			}
+			case 'error': {
+				return (
+					<PostFeedErrorMessage
+						feedDesc={feed}
+						error={error ?? undefined}
+						onPressTryAgain={onPressTryAgain}
+						savedFeedConfig={savedFeedConfig}
+						topBorder={rowIndex !== 0}
+					/>
+				);
+			}
+			case 'loading': {
+				return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;
+			}
+			case 'feedShutdownMsg': {
+				return <FeedShutdownMsg feedUri={feedUriOrActorDid} topBorder={rowIndex !== 0} />;
+			}
+			case 'interstitialFollows': {
+				return <SuggestedFollows feed={feed} />;
+			}
+			case 'interstitialTrending': {
+				return <TrendingInterstitial />;
+			}
+			case 'description': {
+				return (
+					<div className={css.description}>
+						<RichText color="textContrastHigh" size="md" value={row.value} />
+					</div>
+				);
+			}
+			case 'sliceItem': {
+				const slice = row.slice;
+				const indexInSlice = row.indexInSlice;
+				const item = slice.items[indexInSlice]!;
+				return (
+					<PostFeedItem
+						post={item.post}
+						record={item.record}
+						reason={indexInSlice === 0 ? slice.reason : undefined}
+						feedContext={slice.feedContext}
+						reqId={slice.reqId}
+						moderation={item.moderation}
+						parentAuthor={item.parentAuthor}
+						showReplyTo={row.showReplyTo}
+						isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+						isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+						isParentBlocked={item.isParentBlocked}
+						isParentNotFound={item.isParentNotFound}
+						hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+						rootPost={slice.items[0]!.post}
+						onShowLess={onPressShowLess}
+					/>
+				);
+			}
+			case 'sliceViewFullThread': {
+				return <ViewFullThread uri={row.uri} />;
+			}
+			case 'showLessFollowup': {
+				return <ShowLessFollowup topBorder={rowIndex !== 0} />;
+			}
 		}
 	};
 
