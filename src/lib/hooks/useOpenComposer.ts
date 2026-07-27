@@ -40,7 +40,6 @@ export interface ComposerOpts {
 	mention?: string; // handle of user to mention
 	text?: string;
 	videoUri?: VideoAsset;
-	openGallery?: boolean;
 }
 
 /**

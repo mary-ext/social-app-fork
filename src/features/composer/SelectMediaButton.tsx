@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
@@ -33,8 +33,6 @@ export type SelectMediaButtonProps = {
 	allowedAssetTypes: AssetType | undefined;
 	selectedAssetsCount: number;
 	onSelectAssets: (assets: SelectedAssets) => void | Promise<void>;
-	/** If true, automatically open the media picker when the component mounts. */
-	autoOpen?: boolean;
 };
 
 /** Codes for known validation states */
@@ -221,10 +219,7 @@ export function SelectMediaButton({
 	allowedAssetTypes,
 	selectedAssetsCount,
 	onSelectAssets,
-	autoOpen,
 }: SelectMediaButtonProps) {
-	const hasAutoOpened = useRef(false);
-
 	const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount;
 
 	const onPressSelectMedia = useCallback(async () => {
@@ -256,13 +251,6 @@ export function SelectMediaButton({
 
 		void onSelectAssets({ type, images, video, errors });
 	}, [onSelectAssets, selectionCountRemaining, allowedAssetTypes]);
-
-	useEffect(() => {
-		if (autoOpen && !hasAutoOpened.current && !disabled) {
-			hasAutoOpened.current = true;
-			void onPressSelectMedia();
-		}
-	}, [autoOpen, disabled, onPressSelectMedia]);
 
 	return (
 		<ComposerToolbarButton

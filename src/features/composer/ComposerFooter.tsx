@@ -36,7 +36,6 @@ export function ComposerFooter({
 	currentLanguages,
 	onSelectLanguage,
 	languageNudgeAt,
-	openGallery,
 	textInputRef,
 }: {
 	post: PostDraft;
@@ -48,7 +47,6 @@ export function ComposerFooter({
 	currentLanguages: string[];
 	onSelectLanguage?: (language: string) => void;
 	languageNudgeAt: number;
-	openGallery?: boolean;
 	textInputRef: React.RefObject<TextInputRef | null>;
 }) {
 	const { gtPhone } = useBreakpoints();
@@ -148,7 +146,6 @@ export function ComposerFooter({
 						allowedAssetTypes={selectedAssetsType}
 						selectedAssetsCount={selectedAssetsCount}
 						onSelectAssets={onSelectAssets}
-						autoOpen={openGallery}
 					/>
 					<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
 					{gtPhone ? (

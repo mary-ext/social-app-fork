@@ -35,7 +35,6 @@ import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/
 
 import { useFocusEffect, useIsFocused } from '#/routes';
 
-import { ComposerPrompt } from './ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
 import * as css from './PostFeed.css';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
@@ -82,10 +81,6 @@ export type FeedRow =
 	  }
 	| {
 			type: 'showLessFollowup';
-			key: string;
-	  }
-	| {
-			type: 'composerPrompt';
 			key: string;
 	  }
 	| {
@@ -285,10 +280,8 @@ function PostFeed({
 			}
 		};
 
-		let feedKind: 'following' | 'discover' | 'profile' | undefined;
-		if (feedType === 'following') {
-			feedKind = 'following';
-		} else if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+		let feedKind: 'discover' | 'profile' | undefined;
+		if (feedUriOrActorDid === DISCOVER_FEED_URI) {
 			feedKind = 'discover';
 		} else if (
 			feedType === 'author' &&
@@ -323,39 +316,30 @@ function PostFeed({
 						sliceIndex++;
 
 						if (hasSession) {
-							if (feedKind === 'discover') {
-								if (sliceIndex === 0) {
+							switch (feedKind) {
+								case 'discover': {
 									// only reserve a row (and its border) for trending when it will actually render
-									if (showTrendingInterstitial) {
+									if (sliceIndex === 0 && showTrendingInterstitial) {
 										arr.push({
 											type: 'interstitialTrending',
 											key: 'interstitialTrending-' + sliceIndex,
 										});
+									} else if (sliceIndex === 30) {
+										arr.push({
+											type: 'interstitialFollows',
+											key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+										});
 									}
-
-									arr.push({
-										type: 'composerPrompt',
-										key: 'composerPrompt-' + sliceIndex,
-									});
-								} else if (sliceIndex === 30) {
-									arr.push({
-										type: 'interstitialFollows',
-										key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-									});
+									break;
 								}
-							} else if (feedKind === 'following') {
-								if (sliceIndex === 0) {
-									arr.push({
-										type: 'composerPrompt',
-										key: 'composerPrompt-' + sliceIndex,
-									});
-								}
-							} else if (feedKind === 'profile') {
-								if (sliceIndex === 5) {
-									arr.push({
-										type: 'interstitialFollows',
-										key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-									});
+								case 'profile': {
+									if (sliceIndex === 5) {
+										arr.push({
+											type: 'interstitialFollows',
+											key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+										});
+									}
+									break;
 								}
 							}
 						}
@@ -483,8 +467,6 @@ function PostFeed({
 			return <SuggestedFollows feed={feed} />;
 		} else if (row.type === 'interstitialTrending') {
 			return <TrendingInterstitial />;
-		} else if (row.type === 'composerPrompt') {
-			return <ComposerPrompt topBorder={rowIndex !== 0} />;
 		} else if (row.type === 'description') {
 			return (
 				<div className={css.description}>

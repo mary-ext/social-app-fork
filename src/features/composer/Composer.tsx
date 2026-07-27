@@ -108,7 +108,6 @@ export const ComposePost = ({
 	mention: initMention,
 	text: initText,
 	videoUri: initVideoUri,
-	openGallery,
 	cancelRef,
 }: Props & {
 	cancelRef?: React.RefObject<CancelRef | null>;
@@ -928,7 +927,6 @@ export const ComposePost = ({
 				currentLanguages={currentLanguages}
 				onSelectLanguage={onSelectLanguage}
 				languageNudgeAt={languageNudgeAt}
-				openGallery={openGallery}
 				textInputRef={textInputRef}
 			/>
 		</>
