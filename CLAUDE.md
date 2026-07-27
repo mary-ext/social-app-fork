@@ -46,12 +46,9 @@ do not run `agent-browser close --all`.
   error messages)
 - add trailing commas
 - order list-like constructs (arrays, object keys, union/intersection members, enum variants,
-  imports, etc.) alphabetically where nothing else claims the order. a discriminant leads the object
-  it tags, an external spec or an established call signature keeps its own order, and semantic
-  precedence outranks the alphabet; judge each list on whether its order already carries meaning
-  rather than looking for a listed exemption. if you encounter an unordered list with no such reason
-  while editing nearby code, reorder it as part of the change.
-  - CSS properties go in outside-in concentric order instead.
+  imports, etc.) by whatever meaning the list carries — a discriminant leads the object it tags, an
+  external spec or call signature keeps its own sequence — and alphabetically when nothing does.
+  - CSS properties go in outside-in concentric order.
 
 #### control flow and structure
 
