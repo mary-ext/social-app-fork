@@ -7,7 +7,6 @@ import { partition } from '@mary/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
 import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -25,12 +24,10 @@ import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorMessage } from '#/components/ErrorMessage';
-import { FAB } from '#/components/FAB';
 import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import type { Props as SVGIconProps } from '#/components/icons/common';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlassIcon } from '#/components/icons/ListMagnifyingGlass';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';
@@ -100,7 +97,6 @@ type FlatlistSlice =
 
 export function FeedsScreen() {
 	useTitle(m['common.nav.feeds']());
-	const { openComposer } = useOpenComposer();
 	const { hasSession } = useSession();
 	const [query, setQuery] = useState('');
 	const {
@@ -360,13 +356,6 @@ export function FeedsScreen() {
 				onEndReachedThreshold={2}
 				renderItem={renderItem}
 			/>
-			{hasSession && (
-				<FAB
-					icon={<EditBigIcon size="xl" fill={colors.white} />}
-					label={m['common.compose.action.new']()}
-					onClick={() => openComposer({})}
-				/>
-			)}
 		</Layout.Screen>
 	);
 }
