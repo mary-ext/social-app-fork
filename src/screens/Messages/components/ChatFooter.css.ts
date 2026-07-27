@@ -5,6 +5,7 @@ import { borderRadius, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	padding: space.lg,
+	paddingBottom: `calc(${space.lg}px + env(safe-area-inset-bottom, 0px))`,
 });
 
 export const pill = style({

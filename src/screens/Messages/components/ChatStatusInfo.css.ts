@@ -9,6 +9,7 @@ export const root = style({
 	flexDirection: 'column',
 	gap: space.md,
 	padding: space._2xl,
+	paddingBottom: `calc(${space._2xl}px + env(safe-area-inset-bottom, 0px))`,
 	background: colors.bg,
 });
 

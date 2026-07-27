@@ -9,7 +9,7 @@ const MIN_HEIGHT = 40;
 
 export const container = style({
 	paddingInline: space.lg,
-	paddingBottom: space.lg,
+	paddingBottom: `calc(${space.lg}px + env(safe-area-inset-bottom, 0px))`,
 	backgroundImage: `linear-gradient(to bottom, transparent, color-mix(in srgb, ${colors.bg} 80%, transparent) 80%, ${colors.bg})`,
 });
 

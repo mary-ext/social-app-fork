@@ -5,7 +5,6 @@ import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type } from '@atcute/lexicons';
 
-import { useSafeAreaInsets } from '#/lib/hooks/use-safe-area';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
@@ -201,9 +200,6 @@ export function MessagesList({
 		}
 	};
 
-	// -- Keyboard animation handling
-	const { bottom: bottomInset } = useSafeAreaInsets();
-
 	// -- Message sending
 	const onSendMessage = async (text: string, reply?: $type.enforce<ChatBskyConvoDefs.MessageView>) => {
 		let trimmedText = cleanNewlines(text.trimEnd());
@@ -382,10 +378,7 @@ export function MessagesList({
 					<div className={css.root}>
 						<div className={css.scroller} onScroll={onScroll} ref={scrollContainerRef}>
 							{/* first child sits at the visual bottom of the column-reverse scroller, where it sticks */}
-							<div
-								className={css.inputWrap}
-								style={bottomInset > 0 ? { transform: `translateY(${-bottomInset}px)` } : undefined}
-							>
+							<div className={css.inputWrap}>
 								{showPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
 								{footer ?? (
 									<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>

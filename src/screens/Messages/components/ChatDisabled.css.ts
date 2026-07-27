@@ -4,7 +4,10 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const outer = style({ padding: space.md });
+export const outer = style({
+	padding: space.md,
+	paddingBottom: `calc(${space.md}px + env(safe-area-inset-bottom, 0px))`,
+});
 
 export const card = recipe(
 	{
