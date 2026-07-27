@@ -59,15 +59,15 @@ export function BottomBar() {
 						icons={{ active: MagnifyingGlassFilled, inactive: MagnifyingGlass }}
 					/>
 					<NavItem
+						to={{ name: 'Notifications' }}
+						icons={{ active: BellFilled, inactive: Bell }}
+						notificationCount={notificationCountStr}
+					/>
+					<NavItem
 						to={{ name: 'Messages' }}
 						hasNew={unreadMessageCount.hasNew}
 						icons={{ active: MessageFilled, inactive: Message }}
 						notificationCount={unreadMessageCount.numUnread}
-					/>
-					<NavItem
-						to={{ name: 'Notifications' }}
-						icons={{ active: BellFilled, inactive: Bell }}
-						notificationCount={notificationCountStr}
 					/>
 				</>
 			) : (
