@@ -128,7 +128,6 @@ export const ComposePost = ({
 	const router = useRouter();
 
 	const [isPublishing, setIsPublishing] = useState(false);
-	const [publishingStage, setPublishingStage] = useState('');
 	const [error, setError] = useState('');
 
 	/**
@@ -637,7 +636,6 @@ export const ComposePost = ({
 				await apilib.post({ appview, did: currentDid, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
-					onStateChange: setPublishingStage,
 					langs: currentLanguages,
 				})
 			).uris[0];
@@ -942,7 +940,6 @@ export const ComposePost = ({
 				isPublishQueued={publishOnUpload}
 				isPublishing={isPublishing}
 				isThread={thread.posts.length > 1}
-				publishingStage={publishingStage}
 				onCancel={onRequestClose}
 				onPublish={() => void onPressPublish()}
 				onSelectDraft={(draftSummary) => void handleSelectDraft(draftSummary)}

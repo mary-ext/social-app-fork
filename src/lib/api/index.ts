@@ -49,13 +49,11 @@ export interface PostClients {
 interface PostOpts {
 	thread: ThreadDraft;
 	replyTo?: ResourceUri;
-	onStateChange?: (state: string) => void;
 	langs?: string[];
 }
 
 export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
-	opts.onStateChange?.(m['lib.upload.processing']());
 
 	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> | AppBskyFeedPost.Main['reply'] | undefined;
 	if (opts.replyTo) {
@@ -79,7 +77,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 
 		// Not awaited to avoid waterfalls.
 		const rtPromise = resolveRT(appview, draft.text);
-		const embedPromise = resolveEmbed(appview, pds, queryClient, draft, opts.onStateChange);
+		const embedPromise = resolveEmbed(appview, pds, queryClient, draft);
 		let labels: $type.enforce<ComAtprotoLabelDefs.SelfLabels> | undefined;
 		if (draft.labels.length) {
 			labels = {
@@ -249,11 +247,10 @@ async function resolveEmbed(
 	pds: Client,
 	queryClient: QueryClient,
 	draft: PostDraft,
-	onStateChange: ((state: string) => void) | undefined,
 ): Promise<AppBskyFeedPost.Main['embed']> {
 	if (draft.embed.quote) {
 		const [resolvedMedia, resolvedQuote] = await Promise.all([
-			resolveMedia(appview, pds, queryClient, draft.embed, onStateChange),
+			resolveMedia(appview, pds, queryClient, draft.embed),
 			resolveRecord(appview, queryClient, draft.embed.quote.uri),
 		]);
 		if (resolvedMedia) {
@@ -271,7 +268,7 @@ async function resolveEmbed(
 			record: resolvedQuote,
 		};
 	}
-	const resolvedMedia = await resolveMedia(appview, pds, queryClient, draft.embed, onStateChange);
+	const resolvedMedia = await resolveMedia(appview, pds, queryClient, draft.embed);
 	if (resolvedMedia) {
 		return resolvedMedia;
 	}
@@ -292,7 +289,6 @@ async function resolveMedia(
 	pds: Client,
 	queryClient: QueryClient,
 	embedDraft: EmbedDraft,
-	onStateChange: ((state: string) => void) | undefined,
 ): Promise<
 	| $type.enforce<AppBskyEmbedExternal.Main>
 	| $type.enforce<AppBskyEmbedGallery.Main>
@@ -305,7 +301,6 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(m['lib.upload.images']());
 		const images: AppBskyEmbedImages.Image[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -328,7 +323,6 @@ async function resolveMedia(
 		logger.debug(`Uploading images`, {
 			count: imagesDraft.length,
 		});
-		onStateChange?.(m['lib.upload.images']());
 		const items: $type.enforce<AppBskyEmbedGallery.Image>[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
@@ -387,7 +381,6 @@ async function resolveMedia(
 		const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif);
 		let blob: AtpBlob | undefined;
 		if (resolvedGif.thumb) {
-			onStateChange?.(m['lib.upload.thumb']());
 			blob = await uploadBlob(pds, resolvedGif.thumb.source.blob);
 		}
 		return {
@@ -406,7 +399,6 @@ async function resolveMedia(
 		if (resolvedLink.type === 'external') {
 			let blob: AtpBlob | undefined;
 			if (resolvedLink.thumb) {
-				onStateChange?.(m['lib.upload.thumb']());
 				blob = await uploadBlob(pds, resolvedLink.thumb.source.blob);
 			}
 			return {

@@ -13,8 +13,6 @@ export const headerScrolled = style({
 
 export const publishingRow = style({
 	display: 'flex',
-	flexDirection: 'row',
-	gap: 12,
 	alignItems: 'center',
 	paddingRight: 14,
 });

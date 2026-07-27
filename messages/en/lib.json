@@ -46,10 +46,7 @@
 	"lib.profile.notFound": "Profile not found",
 	"lib.time.dateTime": "{time} · {date}",
 	"lib.time.now": "now",
-	"lib.upload.images": "Uploading images...",
 	"lib.upload.postFailed": "Post failed to upload. Please check your internet connection and try again.",
-	"lib.upload.processing": "Processing...",
-	"lib.upload.thumb": "Uploading link thumbnail...",
 	"lib.video.uploadFailed": "Failed to upload video",
 	"lib.video.uploadLimit": "You have temporarily reached the limit for video uploads. Please try again later."
 }

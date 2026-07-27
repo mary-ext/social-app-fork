@@ -4,7 +4,6 @@ import { DraftsButton } from '#/features/composer/drafts/DraftsButton';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Text';
 import * as Button from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
@@ -19,7 +18,6 @@ export function ComposerTopBar({
 	isPublishQueued,
 	isPublishing,
 	isThread,
-	publishingStage,
 	onCancel,
 	onPublish,
 	onSelectDraft,
@@ -32,7 +30,6 @@ export function ComposerTopBar({
 }: {
 	border?: boolean;
 	isPublishing: boolean;
-	publishingStage: string;
 	canPost: boolean;
 	isReply: boolean;
 	isPublishQueued: boolean;
@@ -63,9 +60,6 @@ export function ComposerTopBar({
 			<Dialog.Header.Slot>
 				{isPublishing ? (
 					<div className={styles.publishingRow}>
-						<Text color="textContrastMedium" size="md_sub">
-							{publishingStage}
-						</Text>
 						<Spinner color="default" label={m['view.composer.publish.publishing']()} size="lg" />
 					</div>
 				) : (
