@@ -111,27 +111,24 @@ export function Icon({ className }: IconProps) {
 	);
 }
 
-export type ContentProps<T, Value = string> = {
+export type ContentProps<Value = string> = {
 	/** How the popup aligns to the trigger along its width. Defaults to Base UI's `center`. */
 	align?: 'center' | 'end' | 'start';
-	/** The options to render. Recommended shape `{ label, value }`; otherwise pass `valueExtractor`. */
-	items: T[];
+	/** The options to render. */
+	items: SelectItem<Value>[];
 	/** stretch the popup to at least the trigger's width. pass `false` to size it to its content instead. */
 	matchTriggerWidth?: boolean;
 	/** Renders one option; receives the current selection so an item can style itself against it. */
-	renderItem: (item: T, index: number, selectedValue: Value) => ReactElement;
-	/** Extracts an item's value, which also keys the option list. Defaults to `item => item.value`. */
-	valueExtractor?: (item: T) => unknown;
+	renderItem: (item: SelectItem<Value>, selectedValue: Value) => ReactElement;
 };
 
 /** The portalled, positioned popup that holds the option list. */
-export function Content<T, Value = string>({
+export function Content<Value = string>({
 	align,
 	items,
 	matchTriggerWidth = true,
 	renderItem,
-	valueExtractor = defaultValueExtractor,
-}: ContentProps<T, Value>) {
+}: ContentProps<Value>) {
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- context can't carry `Root`'s generic
 	const selectedValue = useContext(SelectedValueContext) as Value;
 	return (
@@ -147,8 +144,8 @@ export function Content<T, Value = string>({
 						<ChevronUpIcon size="xs" fill="currentColor" />
 					</BaseSelect.ScrollUpArrow>
 					<BaseSelect.List className={styles.list}>
-						{items.map((item, index) => (
-							<Fragment key={String(valueExtractor(item))}>{renderItem(item, index, selectedValue)}</Fragment>
+						{items.map((item) => (
+							<Fragment key={String(item.value)}>{renderItem(item, selectedValue)}</Fragment>
 						))}
 					</BaseSelect.List>
 					<BaseSelect.ScrollDownArrow className={styles.scrollDownArrow}>
@@ -158,11 +155,6 @@ export function Content<T, Value = string>({
 			</BaseSelect.Positioner>
 		</BaseSelect.Portal>
 	);
-}
-
-function defaultValueExtractor(item: unknown): unknown {
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- other item shapes must supply `valueExtractor`
-	return (item as { value: unknown }).value;
 }
 
 export type ItemProps<Value = string> = {

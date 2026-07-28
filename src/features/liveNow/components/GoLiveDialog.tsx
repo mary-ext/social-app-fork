@@ -45,9 +45,6 @@ export function GoLiveDialog({ handle, profile }: { handle: Dialog.DialogHandle;
 	);
 }
 
-// Possible durations: max 4 hours, 5 minute intervals
-const DURATIONS = Array.from({ length: (4 * 60) / 5 }).map((_, i) => (i + 1) * 5);
-
 function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
 	const status = useActorStatus(profile);
 	const [liveLink, setLiveLink] = useState(() => getLiveLinkFromStatusRecord(status.record));
@@ -67,6 +64,12 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const onChangeDuration = useCallback((newDuration: string) => {
 		setDuration(Number(newDuration));
 	}, []);
+
+	// Possible durations: max 4 hours, 5 minute intervals
+	const durationItems = Array.from({ length: (4 * 60) / 5 }, (_, i) => {
+		const minutes = (i + 1) * 5;
+		return { label: displayDuration(minutes), value: String(minutes) };
+	});
 
 	const liveLinkUrl = parseLooseUrl(liveLink);
 	const debouncedUrl = useDebouncedValue(liveLinkUrl, 500);
@@ -158,27 +161,23 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 							<Select.Icon />
 						</Select.Trigger>
 						<Select.Content
-							items={DURATIONS}
-							renderItem={(item, _i, selectedValue) => {
-								const label = displayDuration(item);
-								return (
-									<Select.Item label={label} value={String(item)}>
-										<Select.ItemIndicator />
-										<Select.ItemText>
-											{label}
-											{'  '}
-											<Text
-												className={styles.timeGap}
-												color={selectedValue === String(item) ? 'textContrastMedium' : 'textContrastLow'}
-												weight="normal"
-											>
-												{time(item)}
-											</Text>
-										</Select.ItemText>
-									</Select.Item>
-								);
-							}}
-							valueExtractor={(d) => String(d)}
+							items={durationItems}
+							renderItem={({ label, value }, selectedValue) => (
+								<Select.Item label={label} value={value}>
+									<Select.ItemIndicator />
+									<Select.ItemText>
+										{label}
+										{'  '}
+										<Text
+											className={styles.timeGap}
+											color={selectedValue === value ? 'textContrastMedium' : 'textContrastLow'}
+											weight="normal"
+										>
+											{time(Number(value))}
+										</Text>
+									</Select.ItemText>
+								</Select.Item>
+							)}
 						/>
 					</Select.Root>
 				</div>
