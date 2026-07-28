@@ -333,7 +333,7 @@ export function SwitchRow({
 }
 
 /** row that opens a dropdown on press, where the whole row acts as the trigger showing the current value. */
-export function SelectRow<T extends string>({
+export function SelectRow<T = string>({
 	children,
 	className,
 	items,
@@ -343,7 +343,7 @@ export function SelectRow<T extends string>({
 }: {
 	children: ReactNode;
 	className?: string;
-	items: Select.SelectItem[];
+	items: Select.SelectItem<T>[];
 	label: string;
 	onValueChange: (value: T) => void;
 	value: T;

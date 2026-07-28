@@ -9,6 +9,7 @@ import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
+import type * as Select from '#/components/Select';
 import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
@@ -39,13 +40,13 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const [excludeFollowing, setExcludeFollowing] = useState(false);
 	const [error, setError] = useState('');
 
-	const durationItems = [
+	const durationItems: Select.SelectItem<typeof duration>[] = [
 		{ label: m['common.time.forever'](), value: 'forever' },
 		{ label: m['common.time.hours24'](), value: '24_hours' },
 		{ label: m['common.time.days7'](), value: '7_days' },
 		{ label: m['common.time.days30'](), value: '30_days' },
 	];
-	const targetItems = [
+	const targetItems: Select.SelectItem<typeof target>[] = [
 		{ label: m['components.dialogs.mutedWord.textAndTags'](), value: 'content' },
 		{ label: m['components.dialogs.mutedWord.tagsOnly'](), value: 'tag' },
 	];

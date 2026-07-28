@@ -404,6 +404,11 @@ export async function setAdultContentEnabled(pds: Client, enabled: boolean): Pro
 	});
 }
 
+const isContentLabelPrefFor =
+	(label: string, labelerDid: Did | undefined) =>
+	(pref: Pref): boolean =>
+		isContentLabelPref(pref) && pref.label === label && pref.labelerDid === labelerDid;
+
 /**
  * sets a content-label visibility preference, optionally scoped to a labeler.
  *
@@ -425,12 +430,24 @@ export async function setContentLabelPref(
 			labelerDid,
 			visibility: value,
 		};
+		return upsertPref(prefs, isContentLabelPrefFor(key, labelerDid), labelPref);
+	});
+}
 
-		return upsertPref(
-			prefs,
-			(pref) => isContentLabelPref(pref) && pref.label === key && pref.labelerDid === labelerDid,
-			labelPref,
-		);
+/**
+ * drops a content-label visibility preference, letting the label fall back to its default. No-ops when no
+ * such preference is stored.
+ *
+ * @param pds the PDS client
+ * @param key the label identifier
+ * @param labelerDid the labeler the preference applies to, or undefined for a global preference
+ */
+export async function removeContentLabelPref(pds: Client, key: string, labelerDid?: Did): Promise<void> {
+	await updatePreferences(pds, (prefs) => {
+		const matches = isContentLabelPrefFor(key, labelerDid);
+		const next = prefs.filter((pref) => !matches(pref));
+		// re-picking the selected option lands here; skip the round-trip
+		return next.length === prefs.length ? false : next;
 	});
 }
 

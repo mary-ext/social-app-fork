@@ -13,6 +13,7 @@ import {
 	addSavedFeeds,
 	getPreferences,
 	overwriteSavedFeeds,
+	removeContentLabelPref,
 	removeMutedWord,
 	removeMutedWords,
 	removeSavedFeeds,
@@ -94,10 +95,15 @@ export function usePreferencesSetContentLabelMutation() {
 	return useMutation<
 		void,
 		unknown,
-		{ label: string; visibility: LabelPreference; labelerDid: Did | undefined }
+		// `visibility: undefined` clears the preference
+		{ label: string; visibility: LabelPreference | undefined; labelerDid: Did | undefined }
 	>({
 		mutationFn: async ({ label, visibility, labelerDid }) => {
-			await setContentLabelPref(pds!, label, visibility, labelerDid);
+			if (visibility === undefined) {
+				await removeContentLabelPref(pds!, label, labelerDid);
+			} else {
+				await setContentLabelPref(pds!, label, visibility, labelerDid);
+			}
 			// triggers a refetch
 			await queryClient.invalidateQueries({
 				queryKey: preferencesQueryKey,

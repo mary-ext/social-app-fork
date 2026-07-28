@@ -9,6 +9,7 @@ import { clsx } from 'clsx';
 
 import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
+import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { labelsTarget } from '#/lib/routes/targets';
 
@@ -211,22 +212,20 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 	);
 }
 
-function AdultContentLabelRow({
-	className,
-	labelDefinition,
-}: {
-	className?: string;
-	labelDefinition: InterpretedLabelDefinition;
-}) {
+function AdultContentLabelRow({ labelDefinition }: { labelDefinition: InterpretedLabelDefinition }) {
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
-	const { mutate, variables } = usePreferencesSetContentLabelMutation();
+	const { isPending, mutate, variables } = usePreferencesSetContentLabelMutation();
 	const labelStrings = useGlobalLabelStrings()[identifier] ?? { description: '', name: identifier };
-	const pref = variables?.visibility ?? preferences?.moderationPrefs.labels[identifier] ?? 'warn';
+
+	const saved = preferences
+		? resolveGlobalLabelPreference(preferences.moderationPrefs, labelDefinition)
+		: labelDefinition.defaultPref;
+	// the mutation awaits its own refetch, so `saved` is authoritative again once it settles
+	const pref = isPending ? (variables?.visibility ?? saved) : saved;
 
 	return (
 		<Settings.SelectRow<LabelPreference>
-			className={className}
 			items={[
 				{ label: m['common.action.show'](), value: 'ignore' },
 				{ label: m['common.moderation.warn'](), value: 'warn' },

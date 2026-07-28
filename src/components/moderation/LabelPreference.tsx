@@ -1,76 +1,49 @@
 import {
-	BUILTIN_LABELS,
 	type InterpretedLabelDefinition,
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { clsx } from 'clsx';
-
+import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
 
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
 
 import { LOCALE } from '#/locale/intl/locale';
-import { Trans } from '#/locale/Trans';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
+import type * as Select from '#/components/Select';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
-import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelPreference.css';
 
 /**
- * single labeler-published label rendered as a settings row. falls back to a static value if globally set or
- * unavailable, and to a non-interactive preview if the viewer is unsubscribed.
+ * single labeler-published label rendered as a settings row. falls back to a non-interactive preview if the
+ * label can't be configured (adult content off) or the viewer is unsubscribed.
  */
 export function LabelerLabelRow({
-	className,
 	disabled,
 	labelDefinition,
 	labelerDid,
 }: {
-	className?: string;
-	disabled?: boolean;
+	disabled: boolean;
 	labelDefinition: InterpretedLabelDefinition;
-	labelerDid?: Did;
+	labelerDid: Did;
 }) {
 	const { identifier } = labelDefinition;
-	// a global label is one backed by a built-in definition (porn, sexual, …); those are configured once in
-	// moderation settings, not per labeler. (`isCustomLabelValue` is a format check — it's true for these
-	// identifiers too — so it can't distinguish global from custom.)
-	const isGlobalLabel = identifier in BUILTIN_LABELS;
 	const { data: preferences } = usePreferencesQuery();
-	const { mutate, variables } = usePreferencesSetContentLabelMutation();
+	const { isPending, mutate, variables } = usePreferencesSetContentLabelMutation();
 	const globalLabelStrings = useGlobalLabelStrings();
 	const labelStrings = getLabelStrings(LOCALE, globalLabelStrings, labelDefinition);
 
-	const savedPref =
-		labelerDid && !isGlobalLabel
-			? preferences?.moderationPrefs.labelers.find((labeler) => labeler.did === labelerDid)?.labels[
-					identifier
-				]
-			: preferences?.moderationPrefs.labels[identifier];
-	const pref = variables?.visibility ?? savedPref ?? labelDefinition.defaultPref ?? 'warn';
-
-	// does the 'warn' setting make sense for this label?
-	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
 	const adultOnly = !!(labelDefinition.flags & LabelFlags.AdultOnly);
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
-	const cantConfigure = isGlobalLabel || adultDisabled;
-
-	let prefAdjusted = pref;
-	if (adultDisabled) {
-		prefAdjusted = 'hide';
-	} else if (!canWarn && pref === 'warn') {
-		prefAdjusted = 'ignore';
-	}
 
 	const labelOptions: Record<LabelPreference, string> = {
 		hide: m['common.action.hide'](),
@@ -78,12 +51,11 @@ export function LabelerLabelRow({
 		warn: m['common.moderation.warn'](),
 	};
 
-	// A label that is configured elsewhere (a global label, set in moderation settings) or unavailable (adult
-	// content disabled), or one the viewer isn't subscribed to, can't be changed here — render it as a static
-	// row: the description, an explanatory note for non-configurable labels, and the current value when known.
-	if (disabled || cantConfigure) {
+	// nothing to configure: adult-only labels are forced to hide while adult content is off, and an
+	// unsubscribed labeler's labels don't apply at all
+	if (disabled || adultDisabled) {
 		return (
-			<div className={clsx(cardStyles.row, className)}>
+			<div className={cardStyles.row}>
 				<Text className={cardStyles.title} color="text" size="md" weight="medium">
 					{labelStrings.name}
 				</Text>
@@ -91,32 +63,16 @@ export function LabelerLabelRow({
 					<Text color="textContrastMedium" size="md_sub">
 						{labelStrings.description}
 					</Text>
-					{cantConfigure && (
+					{adultDisabled && (
 						<span className={styles.note}>
 							<CircleInfo fill="currentColor" size="sm" />
 							<Text color="textContrastMedium" size="sm" weight="medium">
-								{adultDisabled ? (
-									m['components.moderation.adultContent.disabled']()
-								) : (
-									<Trans
-										message={m['components.moderation.moderationSettings.configuredIn']}
-										markup={{
-											t0: ({ children }) => (
-												<InlineLinkText
-													label={m['components.moderation.moderationSettings.label']()}
-													to={{ name: 'Moderation' }}
-												>
-													{children}
-												</InlineLinkText>
-											),
-										}}
-									/>
-								)}
+								{m['components.moderation.adultContent.disabled']()}
 							</Text>
 						</span>
 					)}
 				</div>
-				{!disabled && cantConfigure && (
+				{!disabled && (
 					<span className={cardStyles.trailing}>
 						<Text
 							align="right"
@@ -125,7 +81,7 @@ export function LabelerLabelRow({
 							numberOfLines={1}
 							size="sm"
 						>
-							{labelOptions[prefAdjusted]}
+							{labelOptions.hide}
 						</Text>
 					</span>
 				)}
@@ -133,19 +89,41 @@ export function LabelerLabelRow({
 		);
 	}
 
-	const items = [
+	// does the 'warn' setting make sense for this label?
+	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
+	// display-only: a stored 'warn' renders nothing here, and 'warn' is absent from `items`
+	const adjust = (pref: LabelPreference): LabelPreference => (!canWarn && pref === 'warn' ? 'ignore' : pref);
+
+	const saved = preferences?.moderationPrefs.labelers.find((labeler) => labeler.did === labelerDid)?.labels[
+		identifier
+	];
+	// `undefined` is a meaningful pending value (a clear), so this can't be `??`-ed
+	const pref = isPending ? variables?.visibility : saved;
+	const inherited = adjust(
+		preferences
+			? resolveGlobalLabelPreference(preferences.moderationPrefs, labelDefinition)
+			: labelDefinition.defaultPref,
+	);
+
+	// `null` stands in for "no labeler-scoped preference"; the select has to name every option, but what
+	// actually stores it is the absence of a `contentLabelPref` entry
+	const allItems: Select.SelectItem<LabelPreference | null>[] = [
+		{
+			label: m['components.moderation.labelPreference.inherited']({ value: labelOptions[inherited] }),
+			value: null,
+		},
 		{ label: labelOptions.ignore, value: 'ignore' },
-		...(canWarn ? [{ label: labelOptions.warn, value: 'warn' }] : []),
+		{ label: labelOptions.warn, value: 'warn' },
 		{ label: labelOptions.hide, value: 'hide' },
 	];
+	const items = canWarn ? allItems : allItems.filter((item) => item.value !== 'warn');
 
 	return (
-		<Settings.SelectRow<LabelPreference>
-			className={className}
+		<Settings.SelectRow<LabelPreference | null>
 			items={items}
 			label={m['common.search.filteringFor']({ name: labelStrings.name })}
-			onValueChange={(visibility) => mutate({ label: identifier, labelerDid, visibility })}
-			value={prefAdjusted}
+			onValueChange={(value) => mutate({ label: identifier, labelerDid, visibility: value ?? undefined })}
+			value={pref ? adjust(pref) : null}
 		>
 			<Settings.Label subtitleText={labelStrings.description} titleText={labelStrings.name} />
 		</Settings.SelectRow>

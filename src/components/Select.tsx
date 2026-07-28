@@ -10,33 +10,27 @@ import {
 } from '#/components/icons/Chevron';
 import * as styles from '#/components/Select.css';
 
-export type SelectItem = {
+export type SelectItem<Value = string> = {
 	label: string;
-	value: string;
+	value: Value;
 };
 
 // feeds the current value to `Content`'s `renderItem` so consumers can style an item against the
 // selection (Base UI only exposes per-item `data-selected`, not the value, inside the render closure).
-const SelectedValueContext = createContext<string | null>(null);
+const SelectedValueContext = createContext<unknown>(null);
 SelectedValueContext.displayName = 'SelectSelectedValueContext';
 
-export type RootProps<Value extends string = string> = {
+export type RootProps<Value = string> = {
 	children: ReactNode;
 	value: Value;
 	onValueChange: (value: Value) => void;
 	disabled?: boolean;
 	/** The option list. Required for `Value` to auto-render the selected item's label. */
-	items?: SelectItem[];
+	items?: SelectItem<Value>[];
 };
 
 /** Groups the parts of a single-select dropdown built on Base UI's Select. */
-export function Root<Value extends string = string>({
-	children,
-	disabled,
-	items,
-	onValueChange,
-	value,
-}: RootProps<Value>) {
+export function Root<Value = string>({ children, disabled, items, onValueChange, value }: RootProps<Value>) {
 	return (
 		<SelectedValueContext.Provider value={value}>
 			<BaseSelect.Root
@@ -44,9 +38,15 @@ export function Root<Value extends string = string>({
 				value={value}
 				disabled={disabled}
 				onValueChange={(next) => {
-					// Base UI reports `null` when the selection is cleared; this wrapper is always controlled by `value`
 					if (next !== null) {
 						onValueChange(next);
+						return;
+					}
+					// Base UI reports `null` both for a cleared selection and for an option carrying `null`.
+					// reading the value back off the option is what keeps it typed as `Value`.
+					const nullItem = items?.find((item) => item.value === null);
+					if (nullItem) {
+						onValueChange(nullItem.value);
 					}
 				}}
 			>
@@ -111,7 +111,7 @@ export function Icon({ className }: IconProps) {
 	);
 }
 
-export type ContentProps<T> = {
+export type ContentProps<T, Value = string> = {
 	/** How the popup aligns to the trigger along its width. Defaults to Base UI's `center`. */
 	align?: 'center' | 'end' | 'start';
 	/** The options to render. Recommended shape `{ label, value }`; otherwise pass `valueExtractor`. */
@@ -119,20 +119,21 @@ export type ContentProps<T> = {
 	/** stretch the popup to at least the trigger's width. pass `false` to size it to its content instead. */
 	matchTriggerWidth?: boolean;
 	/** Renders one option; receives the current selection so an item can style itself against it. */
-	renderItem: (item: T, index: number, selectedValue: string | null) => ReactElement;
-	/** Extracts an item's value. Defaults to `item => item.value`. */
-	valueExtractor?: (item: T) => string;
+	renderItem: (item: T, index: number, selectedValue: Value) => ReactElement;
+	/** Extracts an item's value, which also keys the option list. Defaults to `item => item.value`. */
+	valueExtractor?: (item: T) => unknown;
 };
 
 /** The portalled, positioned popup that holds the option list. */
-export function Content<T>({
+export function Content<T, Value = string>({
 	align,
 	items,
 	matchTriggerWidth = true,
 	renderItem,
 	valueExtractor = defaultValueExtractor,
-}: ContentProps<T>) {
-	const selectedValue = useContext(SelectedValueContext);
+}: ContentProps<T, Value>) {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- context can't carry `Root`'s generic
+	const selectedValue = useContext(SelectedValueContext) as Value;
 	return (
 		<BaseSelect.Portal>
 			<BaseSelect.Positioner
@@ -147,7 +148,7 @@ export function Content<T>({
 					</BaseSelect.ScrollUpArrow>
 					<BaseSelect.List className={styles.list}>
 						{items.map((item, index) => (
-							<Fragment key={valueExtractor(item)}>{renderItem(item, index, selectedValue)}</Fragment>
+							<Fragment key={String(valueExtractor(item))}>{renderItem(item, index, selectedValue)}</Fragment>
 						))}
 					</BaseSelect.List>
 					<BaseSelect.ScrollDownArrow className={styles.scrollDownArrow}>
@@ -159,21 +160,21 @@ export function Content<T>({
 	);
 }
 
-function defaultValueExtractor(item: unknown) {
+function defaultValueExtractor(item: unknown): unknown {
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- other item shapes must supply `valueExtractor`
-	return (item as { value: string }).value;
+	return (item as { value: unknown }).value;
 }
 
-export type ItemProps = {
+export type ItemProps<Value = string> = {
 	children: ReactNode;
-	value: string;
+	value: Value;
 	/** Text used for keyboard typeahead; defaults to the item's text content. */
 	label: string;
 	className?: string;
 };
 
 /** A single option within `Content`. */
-export function Item({ children, className, label, value }: ItemProps) {
+export function Item<Value = string>({ children, className, label, value }: ItemProps<Value>) {
 	return (
 		<BaseSelect.Item value={value} label={label} className={clsx(styles.item, className)}>
 			{children}
