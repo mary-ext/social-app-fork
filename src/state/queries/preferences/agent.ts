@@ -141,27 +141,6 @@ function adjustLegacyContentLabelPref(
 	return { ...pref, visibility: pref.visibility === 'show' ? 'ignore' : pref.visibility };
 }
 
-/** Re-maps legacy label names to their modern equivalents on read. Does not persist. */
-function remapLegacyLabels(
-	labels: BskyPreferences['moderationPrefs']['labels'],
-): BskyPreferences['moderationPrefs']['labels'] {
-	const remapped = { ...labels };
-	const legacyToNewMap: Record<string, string | undefined> = {
-		gore: 'graphic-media',
-		nsfw: 'porn',
-		suggestive: 'sexual',
-	};
-
-	for (const labelName in remapped) {
-		const newLabelName = legacyToNewMap[labelName];
-		if (newLabelName) {
-			remapped[newLabelName] = remapped[labelName]!;
-		}
-	}
-
-	return remapped;
-}
-
 // #endregion
 
 // #region read + write core
@@ -296,8 +275,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly Did[]): 
 			prefs.moderationPrefs.labels[pref.label] = pref.visibility as LabelVisibility;
 		}
 	}
-
-	prefs.moderationPrefs.labels = remapLegacyLabels(prefs.moderationPrefs.labels);
 
 	return prefs;
 }
@@ -449,42 +426,11 @@ export async function setContentLabelPref(
 			visibility: value,
 		};
 
-		let legacyLabelPref: PrefOf<'app.bsky.actor.defs#contentLabelPref'> | undefined;
-		// global (non-labeler) prefs for labels with a legacy alias get double-written. a Map keeps
-		// prototype keys (toString, hasOwnProperty, ...) from ever matching as a label.
-		if (!labelerDid) {
-			const legacyLabelValue = new Map([
-				['graphic-media', 'gore'],
-				['porn', 'nsfw'],
-				['sexual', 'suggestive'],
-			]).get(key);
-
-			if (legacyLabelValue) {
-				legacyLabelPref = {
-					$type: 'app.bsky.actor.defs#contentLabelPref',
-					label: legacyLabelValue,
-					labelerDid: undefined,
-					visibility: value,
-				};
-			}
-		}
-
-		let next = upsertPref(
+		return upsertPref(
 			prefs,
 			(pref) => isContentLabelPref(pref) && pref.label === key && pref.labelerDid === labelerDid,
 			labelPref,
 		);
-
-		if (legacyLabelPref) {
-			const legacyLabel = legacyLabelPref.label;
-			next = upsertPref(
-				next,
-				(pref) => isContentLabelPref(pref) && pref.label === legacyLabel && pref.labelerDid === undefined,
-				legacyLabelPref,
-			);
-		}
-
-		return next;
 	});
 }
 
