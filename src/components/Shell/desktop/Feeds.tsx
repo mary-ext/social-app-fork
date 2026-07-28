@@ -61,8 +61,12 @@ export function DesktopFeeds() {
 			return;
 		}
 		const reselectedActive = next.length === 0;
+
+		window.scrollTo(0, 0);
+
 		setSelectedFeed(feed);
 		router.navigate({ to: { name: 'Home' } });
+
 		if (reselectedActive && feed === selectedFeed) {
 			softReset.emit();
 		}

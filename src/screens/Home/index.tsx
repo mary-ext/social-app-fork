@@ -78,9 +78,15 @@ function HomeScreenReady({
 				label: feedInfo.displayName,
 				children:
 					feed === 'following' ? (
-						<FeedPage feed={feed} feedInfo={feedInfo} renderEmptyState={renderFollowingEmptyState} />
+						<FeedPage
+							key={feed}
+							feed={feed}
+							feedInfo={feedInfo}
+							renderEmptyState={renderFollowingEmptyState}
+						/>
 					) : (
 						<FeedPage
+							key={feed}
 							feed={feed}
 							feedInfo={feedInfo}
 							renderEmptyState={renderCustomFeedEmptyState}
@@ -100,12 +106,14 @@ function HomeScreenReady({
 	useTitle(active?.label ?? m['common.nav.home']());
 
 	const onSelectFeed = (feed: FeedDescriptor) => {
+		window.scrollTo(0, 0);
+
 		if (feed === active?.id) {
 			softReset.emit();
 			return;
 		}
+
 		setSelectedFeed(feed);
-		window.scrollTo(0, 0);
 	};
 
 	return (
