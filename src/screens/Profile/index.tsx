@@ -22,7 +22,6 @@ import { isInvalidHandle } from '#/lib/strings/handles';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { softReset } from '#/state/events';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useLabelerInfoQuery } from '#/state/queries/labeler';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
@@ -30,9 +29,9 @@ import { useSession } from '#/state/session';
 
 import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
 import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
-import { ProfileHeader, ProfileHeaderSkeleton } from '#/screens/Profile/Header';
+import { ProfileHeader } from '#/screens/Profile/Header';
+import { ProfileHeaderSkeleton } from '#/screens/Profile/Header/Skeleton';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
-import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
 
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
@@ -155,19 +154,14 @@ function ProfileScreenLoaded({
 	moderationOpts: ModerationOptions;
 	isPlaceholderProfile: boolean;
 }) {
-	const profile = useProfileShadow(profileUnshadowed);
-	const { hasSession, currentAccount } = useSession();
-	const { openComposer } = useOpenComposer();
 	const router = useRouter();
-	const {
-		data: labelerInfo,
-		error: labelerError,
-		isLoading: isLabelerLoading,
-	} = useLabelerInfoQuery({
-		did: profile.did,
-		enabled: !!profile.associated?.labeler,
-	});
+	const { hasSession, currentAccount } = useSession();
+
+	const profile = useProfileShadow(profileUnshadowed);
+	const { openComposer } = useOpenComposer();
+
 	const [selectedTab, setSelectedTab] = useState<string | null>(null);
+
 	useTitle(combinedDisplayName(profile));
 
 	const description = profile.description ?? '';
@@ -178,23 +172,16 @@ function ProfileScreenLoaded({
 	const moderation = moderateProfile(profile, moderationOpts);
 
 	const isMe = profile.did === currentAccount?.did;
-	const hasLabeler = !!profile.associated?.labeler;
-	const showFiltersTab = hasLabeler;
-	const showPostsTab = true;
-	const showRepliesTab = hasSession;
-	const showMediaTab = !hasLabeler;
-	const showVideosTab = !hasLabeler;
 	const showLikesTab = isMe;
-	const feedGenCount = profile.associated?.feedgens || 0;
-	const showFeedsTab = isMe || feedGenCount > 0;
+
+	const feedCount = profile.associated?.feedgens || 0;
+	const showFeedsTab = isMe || feedCount > 0;
+
 	const starterPackCount = profile.associated?.starterPacks || 0;
 	const showStarterPacksTab = isMe || starterPackCount > 0;
-	// subtract starterpack count from list count, since starterpacks are a type of list
-	const listCount = (profile.associated?.lists || 0) - starterPackCount;
-	const showListsTab = hasSession && (isMe || listCount > 0);
 
-	// events
-	// =
+	const listCount = (profile.associated?.lists || 0) - starterPackCount;
+	const showListsTab = isMe || listCount > 0;
 
 	const onPressCompose = () => {
 		const mention =
@@ -208,32 +195,8 @@ function ProfileScreenLoaded({
 		router.navigate({ to: { name: 'StarterPackWizard' } });
 	};
 
-	// rendering
-	// =
-
-	// the tab sections in display order, keyed by a stable `id` — a single source of truth driving the
-	// tab bar and the panels. keying by id (not index) keeps the selection and React reconciliation
-	// pinned to the right section when the tab set changes (e.g. login toggles Replies/Likes/Lists).
 	const sections = definite<Section<string>>([
-		showFiltersTab && {
-			id: 'labels',
-			label: m['common.moderation.labels'](),
-			children: (
-				<ProfileLabelsSection
-					labelerInfo={labelerInfo}
-					labelerError={labelerError}
-					isLabelerLoading={isLabelerLoading}
-					moderationOpts={moderationOpts}
-				/>
-			),
-		},
-		showListsTab &&
-			hasLabeler && {
-				id: 'lists',
-				label: m['common.list.label'](),
-				children: <ProfileLists did={profile.did} listCount={listCount} />,
-			},
-		showPostsTab && {
+		{
 			id: 'posts',
 			label: m['common.post.label'](),
 			children: (
@@ -255,7 +218,7 @@ function ProfileScreenLoaded({
 				/>
 			),
 		},
-		showRepliesTab && {
+		{
 			id: 'replies',
 			label: m['common.reply.label'](),
 			children: (
@@ -267,7 +230,7 @@ function ProfileScreenLoaded({
 				/>
 			),
 		},
-		showMediaTab && {
+		{
 			id: 'media',
 			label: m['common.media.label'](),
 			children: (
@@ -290,7 +253,7 @@ function ProfileScreenLoaded({
 				/>
 			),
 		},
-		showVideosTab && {
+		{
 			id: 'videos',
 			label: m['common.video.label'](),
 			children: (
@@ -328,7 +291,7 @@ function ProfileScreenLoaded({
 		showFeedsTab && {
 			id: 'feeds',
 			label: m['common.nav.feeds'](),
-			children: <ProfileFeedgens did={profile.did} feedCount={feedGenCount} />,
+			children: <ProfileFeedgens did={profile.did} feedCount={feedCount} />,
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',
@@ -356,12 +319,11 @@ function ProfileScreenLoaded({
 				/>
 			),
 		},
-		showListsTab &&
-			!hasLabeler && {
-				id: 'lists',
-				label: m['common.list.label'](),
-				children: <ProfileLists did={profile.did} listCount={listCount} />,
-			},
+		showListsTab && {
+			id: 'lists',
+			label: m['common.list.label'](),
+			children: <ProfileLists did={profile.did} listCount={listCount} />,
+		},
 	]);
 
 	// the selected tab, falling back to the first section until the user picks one (`showPostsTab` is
@@ -383,7 +345,6 @@ function ProfileScreenLoaded({
 				header={
 					<ProfileHeader
 						profile={profile}
-						labeler={labelerInfo}
 						descriptionRT={hasDescription ? descriptionRT : null}
 						moderationOpts={moderationOpts}
 						isPlaceholderProfile={showPlaceholder}

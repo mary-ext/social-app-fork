@@ -38,7 +38,6 @@ import {
 	PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
 	PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Menu from '#/components/Menu';
@@ -66,14 +65,13 @@ function ProfileMenu({
 	const isFollowing = profile.viewer?.following;
 	const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy;
 	const isFollowingBlockedAccount = isFollowing && isBlocked;
-	const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked;
 	const devModeEnabled = useDevMode();
 	const { canGoLive } = useLiveNowConfig();
 	const status = useActorStatus(profile);
 
 	const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile);
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
-	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
+	const [, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
@@ -152,19 +150,6 @@ function ProfileMenu({
 		}
 	};
 
-	const onPressFollowAccount = async () => {
-		try {
-			await queueFollow();
-			Toast.show(m['view.profile.follow.followedToast']());
-		} catch (e) {
-			if (!isAbortError(e)) {
-				Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
-					type: 'error',
-				});
-			}
-		}
-	};
-
 	const onPressUnfollowAccount = async () => {
 		try {
 			await queueUnfollow();
@@ -236,26 +221,14 @@ function ProfileMenu({
 						<>
 							<Menu.Separator />
 							<Menu.Group>
-								{!isSelf && (
-									<>
-										{(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
-											<Menu.Item
-												label={
-													isFollowing
-														? m['view.profile.follow.action.unfollow']()
-														: m['view.profile.follow.action.follow']()
-												}
-												onClick={() => void (isFollowing ? onPressUnfollowAccount() : onPressFollowAccount())}
-											>
-												<Menu.ItemText>
-													{isFollowing
-														? m['view.profile.follow.action.unfollow']()
-														: m['view.profile.follow.action.follow']()}
-												</Menu.ItemText>
-												<Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
-											</Menu.Item>
-										)}
-									</>
+								{!isSelf && isFollowingBlockedAccount && (
+									<Menu.Item
+										label={m['view.profile.follow.action.unfollow']()}
+										onClick={() => void onPressUnfollowAccount()}
+									>
+										<Menu.ItemText>{m['view.profile.follow.action.unfollow']()}</Menu.ItemText>
+										<Menu.ItemIcon icon={UserMinus} />
+									</Menu.Item>
 								)}
 								<Menu.Item label={m['common.starterPack.action.add']()} onClick={onPressAddToStarterPacks}>
 									<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>

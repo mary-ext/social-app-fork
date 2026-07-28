@@ -6,7 +6,6 @@ import {
 	type InterpretedLabelDefinition,
 	type ModerationCause,
 	ModerationCauseType,
-	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import type { Did, Handle } from '@atcute/lexicons';
 
@@ -86,17 +85,6 @@ export function isAppLabeler(
 ): boolean {
 	const did = typeof labeler === 'string' ? labeler : labeler.creator.did;
 	return did === BSKY_LABELER_DID;
-}
-
-export function isLabelerSubscribed(
-	labeler: AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed | Did,
-	modOpts: ModerationOptions,
-) {
-	const did = typeof labeler === 'string' ? labeler : labeler.creator.did;
-	if (isAppLabeler(did)) {
-		return true;
-	}
-	return !!modOpts.prefs.prefsByLabelers?.[did];
 }
 
 export type Subject =

@@ -42,16 +42,21 @@ export function Section({
 	const rows = Children.toArray(children).filter(isValidElement<{ className?: string }>);
 	return (
 		<div className={styles.section}>
-			{titleText != null && (
-				<Text className={styles.sectionHeader} size="md" weight="semiBold" color="textContrastHigh">
-					{titleText}
-				</Text>
+			{(titleText != null || bodyText != null) && (
+				<div className={styles.sectionHeading}>
+					{titleText != null && (
+						<Text weight="semiBold" color="textContrastHigh">
+							{titleText}
+						</Text>
+					)}
+					{bodyText != null && (
+						<Text size="md_sub" color="textContrastMedium">
+							{bodyText}
+						</Text>
+					)}
+				</div>
 			)}
-			{bodyText != null && (
-				<Text className={styles.sectionBody} size="md_sub" color="textContrastMedium">
-					{bodyText}
-				</Text>
-			)}
+
 			<div className={styles.card}>
 				{rows.map((row, i) => (
 					<Fragment key={row.key ?? i}>

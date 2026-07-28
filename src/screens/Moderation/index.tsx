@@ -10,7 +10,7 @@ import { clsx } from 'clsx';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { profileTarget } from '#/lib/routes/targets';
+import { labelsTarget } from '#/lib/routes/targets';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -255,7 +255,7 @@ function LabelerRow({
 		<Settings.LinkRowRaw
 			className={clsx(cardStyles.rowPlain, className)}
 			label={m['screens.moderation.labeler.viewA11y']({ handle: creator.handle })}
-			to={profileTarget(creator.did)}
+			to={labelsTarget(creator.did)}
 		>
 			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
 			<div className={styles.identity}>

@@ -22,11 +22,10 @@ export const section = style({
 	width: '100%',
 });
 
-export const sectionHeader = style({
-	paddingBottom: space.md,
-});
-
-export const sectionBody = style({
+export const sectionHeading = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.xs,
 	paddingBottom: space.md,
 });
 

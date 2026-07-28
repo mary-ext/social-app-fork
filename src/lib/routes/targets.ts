@@ -32,6 +32,16 @@ export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget
 };
 
 /**
+ * the destination for the labels a labeler account publishes.
+ *
+ * @param actor the labeler's did or handle
+ * @returns the labels route target
+ */
+export const labelsTarget = (actor: ActorIdentifier): RouteTarget => {
+	return { name: 'ProfileLabels', actor };
+};
+
+/**
  * the destination for a list.
  *
  * @param actor the list owner's did or handle

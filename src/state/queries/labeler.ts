@@ -13,24 +13,34 @@ import { createQueryKey } from '#/state/queries/util';
 import { getClients } from '#/state/session';
 
 const labelerInfoQueryKeyRoot = 'labeler-info';
-export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
+const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
 
 const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 
-export function useLabelerInfoQuery({ did, enabled }: { did?: Did; enabled?: boolean }) {
+/**
+ * queries the labeler service record published by an account.
+ *
+ * @param did the account's did; the query idles until it is known
+ * @returns a query whose data is the detailed service view, or null if the account publishes no labeler
+ *   service
+ */
+export function useLabelerInfoQuery({ did }: { did?: Did }) {
 	const { appview } = getClients();
 	return useQuery({
 		queryKey: labelerInfoQueryKey(did ?? ''),
-		enabled: !!did && enabled !== false,
+		enabled: !!did,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: async () => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
 					params: { detailed: true, dids: [did!] },
 				}),
 			);
+
+			// the appview omits dids that don't publish a service, so an empty result isn't an error
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `detailed: true` makes the service views detailed
-			return data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
+			return (data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed | undefined) ?? null;
 		},
 	});
 }

@@ -44,7 +44,7 @@ export function FollowButton() {
 }
 
 /** Opens the edit-profile dialog (shown on your own profile). */
-export function EditProfileButton() {
+function EditProfileButton() {
 	const {
 		state: { profile },
 	} = useProfileHeader();
@@ -95,10 +95,10 @@ export function UnblockButton() {
 }
 
 /**
- * The standard-profile action row, selected by the viewer's relationship to the profile. The profile menu is
+ * The profile header action row, selected by the viewer's relationship to the profile. The profile menu is
  * always present; the relationship discriminant decides what precedes it.
  */
-export function StandardActions() {
+export function ProfileHeaderActions() {
 	const {
 		meta: { hasSession, moderationOpts, relationship },
 		state: { profile },

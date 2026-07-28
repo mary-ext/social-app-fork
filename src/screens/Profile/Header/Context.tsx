@@ -36,7 +36,7 @@ interface ProfileHeaderState {
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 }
 
-interface ProfileHeaderActions {
+interface ProfileRelationshipActions {
 	/** Follow the profile (auth-gated), then surface a toast and notify `onFollowChange`. */
 	follow: () => void;
 	/** Unblock the profile and surface a toast. */
@@ -55,7 +55,7 @@ interface ProfileHeaderMeta {
 }
 
 interface ProfileHeaderContextValue {
-	actions: ProfileHeaderActions;
+	actions: ProfileRelationshipActions;
 	meta: ProfileHeaderMeta;
 	state: ProfileHeaderState;
 }

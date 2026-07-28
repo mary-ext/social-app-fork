@@ -103,10 +103,13 @@
 	"screens.profile.germDm.linkLabel": "Germ DM link",
 	"screens.profile.germDm.reconnectedToast": "Germ DM reconnected",
 	"screens.profile.labeler.action.like": "Like this labeler",
-	"screens.profile.labeler.action.subscribe": "Subscribe to labeler",
+	"screens.profile.labeler.action.subscribe": "Subscribe",
 	"screens.profile.labeler.action.subscribeThis": "Subscribe to this labeler",
 	"screens.profile.labeler.action.unsubscribe": "Unsubscribe",
 	"screens.profile.labeler.action.unsubscribeThis": "Unsubscribe from this labeler",
+	"screens.profile.labeler.action.viewLabels": "View the labels this service publishes",
+	"screens.profile.labeler.action.viewProfile": "View profile",
+	"screens.profile.labeler.availableLabels": "Available labels",
 	"screens.profile.labeler.blockHint": "Blocking does not prevent this labeler from placing labels on your account.",
 	"screens.profile.labeler.error.serviceLoad": "Hmmmm, we couldn't load that moderation service.",
 	"screens.profile.labeler.error.subscribeLimit": [
@@ -118,10 +121,15 @@
 			}
 		}
 	],
+	"screens.profile.labeler.error.subscribeLimitTitle": "Unable to subscribe",
 	"screens.profile.labeler.error.unavailable": "This moderation service is unavailable. See below for more details. If this issue persists, contact us.",
-	"screens.profile.labeler.labelsHint": "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network.",
+	"screens.profile.labeler.lastUpdated": "Last updated: {date}",
 	"screens.profile.labeler.noLabelsDeclared": "This labeler hasn't declared what labels it publishes, and may not be active.",
+	"screens.profile.labeler.subscribe.confirm.message": "Labels published by this service will start applying to accounts and posts, and some content may be hidden as a result.",
+	"screens.profile.labeler.subscribe.confirm.title": "Subscribe to this labeler?",
 	"screens.profile.labeler.subscribePrompt": "Subscribe to {handle} to use these labels:",
+	"screens.profile.labeler.unsubscribe.confirm.message": "Labels published by this service will stop applying, and anything it currently hides becomes visible again.",
+	"screens.profile.labeler.unsubscribe.confirm.title": "Unsubscribe from this labeler?",
 	"screens.profile.posts.count": [
 		{
 			"declarations": ["input count", "input formatted", "local cp = count: plural"],

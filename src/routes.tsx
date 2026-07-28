@@ -179,6 +179,9 @@ const ProfileLabelerLikedByScreen = lazy(() =>
 		default: mod.ProfileLabelerLikedByScreen,
 	})),
 );
+const ProfileLabelsScreen = lazy(() =>
+	import('#/screens/Profile/ProfileLabels').then((mod) => ({ default: mod.ProfileLabelsScreen })),
+);
 const ProfileListScreen = lazy(() =>
 	import('#/screens/ProfileList').then((mod) => ({ default: mod.ProfileListScreen })),
 );
@@ -393,6 +396,11 @@ export const routes = defineRoutes({
 				component: ProfileLabelerLikedByScreen,
 				params: { actor: actorIdentifier() },
 				path: '/:actor/likes',
+			}),
+			ProfileLabels: route({
+				component: ProfileLabelsScreen,
+				params: { actor: actorIdentifier() },
+				path: '/:actor/labels',
 			}),
 			ProfileSearch: route({
 				component: ProfileSearchScreen,
