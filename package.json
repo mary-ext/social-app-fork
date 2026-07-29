@@ -19,7 +19,7 @@
 	},
 	"dependencies": {
 		"@atcute/atproto": "^4.0.3",
-		"@atcute/bluesky": "^4.0.15",
+		"@atcute/bluesky": "^4.0.16",
 		"@atcute/bluesky-moderation": "^4.2.2",
 		"@atcute/bluesky-richtext-builder": "^4.0.1",
 		"@atcute/bluesky-richtext-parser": "^2.1.2",
@@ -57,7 +57,7 @@
 		"@tanstack/query-async-storage-persister": "^5.101.4",
 		"@tanstack/react-query": "^5.101.4",
 		"@tanstack/react-query-persist-client": "^5.101.4",
-		"@vanilla-extract/css": "^1.21.1",
+		"@vanilla-extract/css": "^1.21.2",
 		"@vanilla-extract/dynamic": "^2.1.5",
 		"clsx": "^2.1.1",
 		"dequal": "^2.0.3",
@@ -71,10 +71,10 @@
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "2.22.0",
-		"@rsbuild/core": "^2.1.7",
+		"@rsbuild/core": "^2.1.8",
 		"@rsbuild/plugin-react": "^2.1.0",
 		"@rsdoctor/rspack-plugin": "^1.6.1",
-		"@types/node": "^26.1.1",
+		"@types/node": "^26.1.2",
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@typescript/native": "npm:typescript@^7.0.2",
@@ -82,11 +82,11 @@
 		"@vanilla-extract/webpack-plugin": "^2.3.27",
 		"eslint-plugin-bsky-internal": "link:eslint",
 		"oxfmt": "^0.60.0",
-		"oxlint": "^1.75.0",
+		"oxlint": "^1.76.0",
 		"oxlint-tsgolint": "^7.0.2001",
 		"type-fest": "^5.8.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"wrangler": "^4.113.0"
+		"wrangler": "^4.114.0"
 	},
 	"browserslist": {
 		"production": [
