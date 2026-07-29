@@ -5,6 +5,7 @@ import {
 	type FocusEventHandler,
 	type KeyboardEventHandler,
 	type ReactNode,
+	type Ref,
 	useContext,
 	useId,
 } from 'react';
@@ -59,11 +60,11 @@ export function LabelText({
 	const { id } = useContext(FieldContext);
 	const label = (
 		<BaseLabelText
-			className={accessory === undefined ? styles.label : undefined}
-			color="textContrastMedium"
 			htmlFor={id}
+			className={accessory === undefined ? styles.label : undefined}
 			size="md_sub"
 			weight="medium"
+			color="textContrastMedium"
 		>
 			{children}
 		</BaseLabelText>
@@ -84,56 +85,62 @@ export function LabelText({
 }
 
 export type InputProps = {
+	/** The rendered element: a `<textarea>` when `multiline`, an `<input>` otherwise. */
+	ref?: Ref<HTMLInputElement & HTMLTextAreaElement>;
+	className?: string;
 	/** Accessible name. */
 	label: string;
 	/** Id of an element describing the field, wired to `aria-describedby` (e.g. a character counter or hint). */
 	describedBy?: string;
-	autoFocus?: boolean;
 	value?: string;
 	defaultValue?: string;
-	disabled?: boolean;
-	readOnly?: boolean;
-	onChangeText?: (value: string) => void;
 	placeholder?: string;
-	isInvalid?: boolean;
 	multiline?: boolean;
-	/** Caps the autosizing height of a `multiline` input; further lines scroll within it. */
-	maxRows?: number;
 	/** Initial (and minimum) row count for a `multiline` input; it grows from here. */
 	minRows?: number;
+	/** Caps the autosizing height of a `multiline` input; further lines scroll within it. */
+	maxRows?: number;
 	/** Caps the number of characters accepted. */
 	maxLength?: number;
-	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
-	onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-	onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+	autoFocus?: boolean;
+	disabled?: boolean;
+	readOnly?: boolean;
+	isInvalid?: boolean;
 	/** Autofill hint for the single-line `<input>` (e.g. `url`). */
 	autoComplete?: ComponentPropsWithoutRef<'input'>['autoComplete'];
 	/** Auto-capitalization behaviour for the single-line `<input>`. */
 	autoCapitalize?: ComponentPropsWithoutRef<'input'>['autoCapitalize'];
-	className?: string;
+	/** Input type for the single-line `<input>`; `password` masks what's typed. Ignored when `multiline`. */
+	type?: 'password' | 'text';
+	onChangeText?: (value: string) => void;
+	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+	onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+	onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
 export function Input({
+	ref,
+	className,
 	label,
 	describedBy,
-	autoFocus,
 	value,
 	defaultValue,
+	placeholder,
+	multiline = false,
+	minRows,
+	maxRows,
+	maxLength,
+	autoFocus,
 	disabled,
 	readOnly,
-	onChangeText,
-	placeholder,
 	isInvalid,
-	multiline = false,
-	maxRows,
-	minRows,
-	maxLength,
-	onKeyDown,
-	onBlur,
-	onFocus,
 	autoComplete,
 	autoCapitalize,
-	className,
+	type = 'text',
+	onChangeText,
+	onKeyDown,
+	onFocus,
+	onBlur,
 }: InputProps) {
 	const { id: ctxId, isInvalid: ctxInvalid } = useContext(FieldContext);
 	const invalid = isInvalid ?? ctxInvalid;
@@ -145,48 +152,50 @@ export function Input({
 	if (multiline) {
 		return (
 			<textarea
+				ref={ref}
+				id={inputId}
+				className={cls}
+				style={maxRows ? assignInlineVars({ [styles.maxRowsVar]: String(maxRows) }) : undefined}
+				aria-label={label}
 				aria-describedby={describedBy}
 				aria-invalid={invalid || undefined}
-				aria-label={label}
-				autoFocus={autoFocus}
-				className={cls}
+				value={value}
 				defaultValue={defaultValue}
-				disabled={disabled}
-				id={inputId}
+				placeholder={placeholder}
+				rows={minRows}
 				maxLength={maxLength}
-				onBlur={onBlur}
+				autoFocus={autoFocus}
+				disabled={disabled}
+				readOnly={readOnly}
 				onChange={onChange}
 				onFocus={onFocus}
-				placeholder={placeholder}
-				readOnly={readOnly}
-				rows={minRows}
-				style={maxRows ? assignInlineVars({ [styles.maxRowsVar]: String(maxRows) }) : undefined}
-				value={value}
+				onBlur={onBlur}
 			/>
 		);
 	}
 
 	return (
 		<input
+			ref={ref}
+			id={inputId}
+			type={type}
+			className={cls}
+			aria-label={label}
 			aria-describedby={describedBy}
 			aria-invalid={invalid || undefined}
-			aria-label={label}
-			autoCapitalize={autoCapitalize}
-			autoComplete={autoComplete}
-			autoFocus={autoFocus}
-			className={cls}
-			defaultValue={defaultValue}
-			disabled={disabled}
-			id={inputId}
-			maxLength={maxLength}
-			onBlur={onBlur}
-			onChange={onChange}
-			onFocus={onFocus}
-			onKeyDown={onKeyDown}
-			placeholder={placeholder}
-			readOnly={readOnly}
-			type="text"
 			value={value}
+			defaultValue={defaultValue}
+			placeholder={placeholder}
+			maxLength={maxLength}
+			autoFocus={autoFocus}
+			disabled={disabled}
+			readOnly={readOnly}
+			autoComplete={autoComplete}
+			autoCapitalize={autoCapitalize}
+			onChange={onChange}
+			onKeyDown={onKeyDown}
+			onFocus={onFocus}
+			onBlur={onBlur}
 		/>
 	);
 }

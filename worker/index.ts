@@ -1,46 +1,64 @@
-import { type FetchMiddleware, ForbiddenError, InvalidRequestError, XRPCRouter } from '@atcute/xrpc-server';
+import { env } from 'cloudflare:workers';
 
-import { extractLinkMeta, getClientAssertion, getLinkImage } from '../src/lib/lexicons/internal-app';
+import { ForbiddenError, InvalidRequestError, json, XRPCRouter } from '@atcute/xrpc-server';
+
+import {
+	extractLinkMeta,
+	generateAltText,
+	getClientAssertion,
+	getLinkImage,
+} from '../src/lib/lexicons/internal-app';
+import { generateAltTextDraft } from './alt-text';
 import { issueClientAssertion, serveClientMetadata } from './client-assertion';
 import { resolveLinkMeta } from './resolve';
+import { authorizeServiceCall, serveDidDocument } from './service-auth';
 
-/** path of the OAuth client metadata document, served outside the xrpc router and ahead of the COP guard. */
+/** path of the OAuth client metadata document. */
 const CLIENT_METADATA_PATH = '/oauth-client-metadata.json';
 
-/**
- * seconds a resolved-metadata response is reused; kept below the thumbnail ttl so a cache hit still has its
- * image.
- */
+/** path of our DID document. */
+const DID_DOCUMENT_PATH = '/.well-known/did.json';
+
+/** seconds a resolved-metadata response is reused */
 const EXTRACT_CACHE_TTL = 60 * 60;
 
 /**
- * Rejects anything that isn't a same-origin browser request. `Sec-Fetch-Site` is a forbidden header — page
- * scripts can't forge it — so this blocks other origins (and non-browser callers, which omit it) from driving
- * the client-assertion endpoint or abusing the link unfurler. The client metadata document is served before
- * this runs, since the authorization server fetches it server-side without the header.
+ * rejects anything that isn't a same-origin browser request.
+ *
+ * @param request the inbound request.
+ * @throws {ForbiddenError} if the request didn't come from our own page.
  */
-const requireSameOrigin: FetchMiddleware = (request, next) => {
+const requireSameOrigin = (request: Request): void => {
 	if (request.headers.get('sec-fetch-site') !== 'same-origin') {
-		return Promise.resolve(new ForbiddenError({ message: 'cross-origin request rejected' }).toResponse());
+		throw new ForbiddenError({ message: 'cross-origin request rejected' });
 	}
-	return next(request);
 };
 
 const router = new XRPCRouter({
-	middlewares: [requireSameOrigin],
 	onError({ error, request }) {
 		console.error(`xrpc handler error at ${request.url}:`, error);
 	},
 });
 
+router.addProcedure(generateAltText, {
+	async handler({ input, request }) {
+		await authorizeServiceCall(request, { limiter: env.ALT_TEXT_LIMITER, lxm: generateAltText.nsid });
+
+		return json(await generateAltTextDraft(input));
+	},
+});
+
 router.addProcedure(getClientAssertion, {
 	handler({ input, request }) {
+		requireSameOrigin(request);
 		return issueClientAssertion({ aud: input.aud, dpopProof: request.headers.get('dpop') });
 	},
 });
 
 router.addQuery(extractLinkMeta, {
 	async handler({ params, request, signal }) {
+		requireSameOrigin(request);
+
 		// repeated resolutions of the same url are served from cache, bounding outbound fetches and billed
 		// invocations under abuse. only successful results reach the cache (errors throw before the put).
 		const cached = await caches.default.match(request);
@@ -59,6 +77,8 @@ router.addQuery(extractLinkMeta, {
 
 router.addQuery(getLinkImage, {
 	async handler({ request }) {
+		requireSameOrigin(request);
+
 		// the cache was populated by extractLinkMeta under this exact url; this endpoint never fetches.
 		const cached = await caches.default.match(request);
 		if (!cached) {
@@ -74,12 +94,16 @@ router.addQuery(getLinkImage, {
 
 export default {
 	async fetch(request: Request): Promise<Response> {
-		// the metadata document is fetched by the authorization server (server-side, no `Sec-Fetch-Site`), so
-		// it's served here, ahead of the router's same-origin guard. everything else goes through the router.
 		const { pathname } = new URL(request.url);
-		if (pathname === CLIENT_METADATA_PATH) {
-			return serveClientMetadata();
+		switch (pathname) {
+			case CLIENT_METADATA_PATH: {
+				return serveClientMetadata();
+			}
+			case DID_DOCUMENT_PATH: {
+				return serveDidDocument();
+			}
 		}
+
 		return router.fetch(request);
 	},
 };

@@ -44,6 +44,9 @@ const AccessibilitySettingsScreen = lazy(() =>
 const AccountSettingsScreen = lazy(() =>
 	import('#/screens/Settings/AccountSettings').then((mod) => ({ default: mod.AccountSettingsScreen })),
 );
+const AiSettingsScreen = lazy(() =>
+	import('#/screens/Settings/AiSettings').then((mod) => ({ default: mod.AiSettingsScreen })),
+);
 const AppearanceSettingsScreen = lazy(() =>
 	import('#/screens/Settings/AppearanceSettings').then((mod) => ({ default: mod.AppearanceSettingsScreen })),
 );
@@ -293,6 +296,11 @@ export const routes = defineRoutes({
 				component: AccessibilitySettingsScreen,
 				meta: { requireAuth: true },
 				path: '/settings/accessibility',
+			}),
+			AiSettings: route({
+				component: AiSettingsScreen,
+				meta: { requireAuth: true },
+				path: '/settings/ai',
 			}),
 			AppearanceSettings: route({
 				component: AppearanceSettingsScreen,

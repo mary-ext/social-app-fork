@@ -19,7 +19,7 @@ const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagatio
 
 type CardProps = {
 	children: ReactNode;
-	size?: 'default' | 'medium' | 'narrow' | 'wide';
+	size?: 'default' | 'medium' | 'narrow' | 'wide' | 'xwide';
 	/** `none` drops the card's own padding, for full-bleed content that reapplies padding per-section. */
 	padding?: 'default' | 'none';
 	/**

@@ -90,6 +90,7 @@ export const popup = recipe(
 				medium: { maxWidth: 460 },
 				narrow: { maxWidth: 400 },
 				wide: { maxWidth: 520 },
+				xwide: { maxWidth: 920 },
 			},
 		},
 	},

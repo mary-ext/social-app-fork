@@ -20,6 +20,12 @@ export const APPVIEW_PROXY_AUDIENCE = import.meta.env.PUBLIC_APPVIEW_PROXY_AUDIE
 /** The full proxy audience (`did#service`) of the Bluesky chat service, for the chat `@atcute/client` client. */
 export const CHAT_PROXY_AUDIENCE = import.meta.env.PUBLIC_CHAT_PROXY_AUDIENCE;
 
+/**
+ * The full proxy audience (`did#service`) of our own worker, for the `internal.app.*` endpoints that
+ * authenticate their caller. Must match the did document the worker serves at `/.well-known/did.json`.
+ */
+export const INTERNAL_PROXY_AUDIENCE = import.meta.env.PUBLIC_INTERNAL_PROXY_AUDIENCE;
+
 /** The full proxy audience (`did#service`) of the default Bluesky moderation service (labeler). */
 export const BSKY_LABELER_PROXY_AUDIENCE = import.meta.env.PUBLIC_BSKY_LABELER_PROXY_AUDIENCE;
 

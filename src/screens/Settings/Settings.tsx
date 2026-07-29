@@ -18,6 +18,7 @@ import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/G
 import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/components/icons/PaintRoller';
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
+import { Sparkle_Filled_Corner0_Rounded as SparkleIcon } from '#/components/icons/Sparkle';
 import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
@@ -87,6 +88,10 @@ export function SettingsScreen() {
 						>
 							<Settings.Icon icon={EarthIcon} />
 							<Settings.Label titleText={m['screens.settings.language.title']()} />
+						</Settings.LinkRow>
+						<Settings.LinkRow label={m['screens.settings.ai.title']()} to={{ name: 'AiSettings' }}>
+							<Settings.Icon icon={SparkleIcon} />
+							<Settings.Label titleText={m['screens.settings.ai.title']()} />
 						</Settings.LinkRow>
 					</Settings.Section>
 

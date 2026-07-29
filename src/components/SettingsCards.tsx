@@ -4,6 +4,7 @@ import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
+import * as Combobox from '#/components/Combobox';
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
@@ -128,6 +129,8 @@ export function Label({
  * a row button that fires an action on press and displays a trailing chevron.
  *
  * @param color the row color variant. defaults to `secondary`.
+ * @param valueText the row's current value, shown beside the chevron. prefer this over a {@link Label}
+ *   subtitle for a short value that reads as an answer to the row's title.
  */
 export function ButtonRow({
 	children,
@@ -135,12 +138,14 @@ export function ButtonRow({
 	color = 'secondary',
 	label,
 	onPress,
+	valueText,
 }: {
 	children: ReactNode;
 	className?: string;
 	color?: 'primary_subtle' | 'secondary';
 	label: string;
 	onPress: () => void;
+	valueText?: string;
 }) {
 	return (
 		<button
@@ -155,9 +160,7 @@ export function ButtonRow({
 			)}
 		>
 			{children}
-			<span className={styles.trailing}>
-				<ChevronRightIcon className={styles.chevron} size="sm" fill="currentColor" />
-			</span>
+			<RowTrailing chevron={ChevronRightIcon} text={valueText} />
 		</button>
 	);
 }
@@ -205,9 +208,7 @@ export function LinkRow({
 	return (
 		<LinkRowRaw className={clsx(styles.row, className)} label={label} to={to}>
 			{children}
-			<span className={styles.trailing}>
-				<ChevronRightIcon className={styles.chevron} size="sm" fill="currentColor" />
-			</span>
+			<RowTrailing chevron={ChevronRightIcon} />
 		</LinkRowRaw>
 	);
 }
@@ -361,18 +362,7 @@ export function SelectRow<T = string>({
 				}
 			>
 				{children}
-				<span className={styles.trailing}>
-					<Text
-						className={styles.value}
-						size="md_sub"
-						color="textContrastMedium"
-						align="right"
-						numberOfLines={1}
-					>
-						{selected?.label}
-					</Text>
-					<ChevronDownIcon className={styles.chevron} size="sm" fill="currentColor" />
-				</span>
+				<RowTrailing chevron={ChevronDownIcon} text={selected?.label} />
 			</Select.Trigger>
 			<Select.Content
 				align="end"
@@ -386,5 +376,92 @@ export function SelectRow<T = string>({
 				)}
 			/>
 		</Select.Root>
+	);
+}
+
+/** a row's trailing slot: an optional current value, right-aligned against the row's own chevron. */
+function RowTrailing({ chevron: ChevronCmp, text }: { chevron: ComponentType<IconProps>; text?: string }) {
+	return (
+		<span className={styles.trailing}>
+			{text != null && (
+				<Text
+					align="right"
+					className={styles.value}
+					color="textContrastMedium"
+					numberOfLines={1}
+					size="md_sub"
+				>
+					{text}
+				</Text>
+			)}
+			<ChevronCmp className={styles.chevron} fill="currentColor" size="sm" />
+		</span>
+	);
+}
+
+/**
+ * {@link SelectRow} for lists too long to scan: the popup carries a search field. Reach for this only when the
+ * option count earns it — the plain select is one press fewer.
+ *
+ * @param emptyText shown in the popup when no option is left to render, so the caller can say whether the
+ *   list is still loading, failed, or simply doesn't match
+ * @param placeholder trailing text shown before anything is picked
+ * @param renderItem renders one option; defaults to its label on a single line
+ */
+export function ComboboxRow<T = string>({
+	children,
+	className,
+	emptyText,
+	filter,
+	items,
+	label,
+	onValueChange,
+	placeholder,
+	renderItem,
+	searchPlaceholder,
+	value,
+}: {
+	children: ReactNode;
+	className?: string;
+	emptyText: string;
+	filter?: (item: Combobox.ComboboxItem<T>, query: string) => boolean;
+	items: Combobox.ComboboxItem<T>[];
+	label: string;
+	onValueChange: (value: T) => void;
+	placeholder: string;
+	renderItem?: (item: Combobox.ComboboxItem<T>) => ReactNode;
+	searchPlaceholder: string;
+	value: T | undefined;
+}) {
+	return (
+		<Combobox.Root filter={filter} items={items} onValueChange={onValueChange} value={value}>
+			<Combobox.Trigger
+				render={
+					<button
+						aria-label={label}
+						className={clsx(styles.row, styles.rowInteractive, className)}
+						type="button"
+					/>
+				}
+			>
+				{children}
+				<RowTrailing
+					chevron={ChevronDownIcon}
+					text={Combobox.resolveItem(items, value)?.label ?? placeholder}
+				/>
+			</Combobox.Trigger>
+			{/* explicit: with the option list held by `Root`, nothing else here pins `Content`'s value type */}
+			<Combobox.Content<T>
+				align="end"
+				emptyText={emptyText}
+				renderItem={(item) => (
+					<Combobox.Item value={item}>
+						<Combobox.ItemIndicator />
+						{renderItem ? renderItem(item) : item.label}
+					</Combobox.Item>
+				)}
+				searchPlaceholder={searchPlaceholder}
+			/>
+		</Combobox.Root>
 	);
 }

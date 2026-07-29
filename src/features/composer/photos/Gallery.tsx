@@ -27,15 +27,18 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import type { PostAction } from '../state/composer';
+import type { AltTextContext } from './alt-text-generator/types';
 import * as styles from './Gallery.css';
 import { ImageAltTextDialog } from './ImageAltTextDialog';
 
 type GalleryProps = {
 	dispatch: (action: PostAction) => void;
 	images: ComposerImage[];
+	/** The post text, which reaches the description assistant as context for what it can't see. */
+	text: string;
 };
 
-export function Gallery({ dispatch, images }: GalleryProps) {
+export function Gallery({ dispatch, images, text }: GalleryProps) {
 	if (images.length === 0) {
 		return null;
 	}
@@ -45,9 +48,9 @@ export function Gallery({ dispatch, images }: GalleryProps) {
 	return (
 		<>
 			{images.length === 1 ? (
-				<SingleImage dispatch={dispatch} image={images[0]!} />
+				<SingleImage dispatch={dispatch} image={images[0]!} text={text} />
 			) : (
-				<Carousel dispatch={dispatch} images={images} />
+				<Carousel dispatch={dispatch} images={images} text={text} />
 			)}
 
 			{showReminder && (
@@ -66,15 +69,18 @@ export function Gallery({ dispatch, images }: GalleryProps) {
 const SingleImage = ({
 	dispatch,
 	image,
+	text,
 }: {
 	dispatch: (action: PostAction) => void;
 	image: ComposerImage;
+	text: string;
 }) => {
 	const aspectRatio = getAspectRatio(image.transformed ?? image.source);
 
 	return (
 		<div className={styles.single} style={assignInlineVars({ [styles.ratioVar]: String(aspectRatio ?? 1) })}>
 			<ItemChrome
+				context={toAltTextContext([image], 0, text)}
 				image={image}
 				onChange={(next) => {
 					dispatch({ type: 'embed_update_image', image: next });
@@ -94,7 +100,7 @@ const onFocus = (evt: React.FocusEvent<HTMLDivElement>) => {
 	tile?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 };
 
-const Carousel = ({ dispatch, images }: GalleryProps) => {
+const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
 
 	// every tile sits `insetLeft` in from the strip's left edge; reserve the gap plus a sliver of the next so it
@@ -150,6 +156,7 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 					<GalleryItem
 						key={image.source.id}
 						contentHeight={contentHeight}
+						context={toAltTextContext(images, index, text)}
 						image={image}
 						index={index}
 						onChange={(next) => {
@@ -166,8 +173,15 @@ const Carousel = ({ dispatch, images }: GalleryProps) => {
 	);
 };
 
+/** what the description assistant is told about the image beyond the pixels: the post, and its siblings. */
+const toAltTextContext = (images: ComposerImage[], index: number, text: string): AltTextContext => ({
+	siblingAlts: images.filter((_, idx) => idx !== index).map((sibling) => sibling.alt),
+	text: text,
+});
+
 type GalleryItemProps = {
 	contentHeight: number;
+	context: AltTextContext;
 	image: ComposerImage;
 	index: number;
 	onChange: (next: ComposerImage) => void;
@@ -177,6 +191,7 @@ type GalleryItemProps = {
 
 const GalleryItem = ({
 	contentHeight,
+	context,
 	image,
 	index,
 	onChange,
@@ -192,19 +207,20 @@ const GalleryItem = ({
 
 	return (
 		<div className={styles.item} data-composer-image style={{ height: dims.height, width: dims.width }}>
-			<ItemChrome image={image} onChange={onChange} onRemove={onRemove} />
+			<ItemChrome context={context} image={image} onChange={onChange} onRemove={onRemove} />
 		</div>
 	);
 };
 
 type ItemChromeProps = {
+	context: AltTextContext;
 	image: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 	onRemove: () => void;
 };
 
 /** The image plus its editing overlay (ALT badge, edit/remove controls) and the dialogs those open. */
-const ItemChrome = ({ image, onChange, onRemove }: ItemChromeProps) => {
+const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => {
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
 	const altTextHandle = Dialog.useDialogHandle();
@@ -243,7 +259,7 @@ const ItemChrome = ({ image, onChange, onRemove }: ItemChromeProps) => {
 				</button>
 			</div>
 
-			<ImageAltTextDialog handle={altTextHandle} image={image} onChange={onChange} />
+			<ImageAltTextDialog context={context} handle={altTextHandle} image={image} onChange={onChange} />
 			<EditImageDialog handle={editHandle} image={image} onChange={onChange} />
 		</>
 	);

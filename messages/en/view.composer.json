@@ -33,6 +33,36 @@
 			}
 		}
 	],
+	"view.composer.altText.generate.a11y.answerLabel": "Your answer",
+	"view.composer.altText.generate.action.dismiss": "Dismiss",
+	"view.composer.altText.generate.action.generate": "Generate alt text",
+	"view.composer.altText.generate.action.rewrite": "Rewrite",
+	"view.composer.altText.generate.action.stop": "Stop",
+	"view.composer.altText.generate.action.withAnswers": [
+		{
+			"declarations": ["input answered", "local ap = answered: plural", "local n = answered: number"],
+			"selectors": ["ap"],
+			"match": {
+				"ap=one": "Rewrite with 1 answer",
+				"ap=other": "Rewrite with {n} answers"
+			}
+		}
+	],
+	"view.composer.altText.generate.applied": "Written into the field above — edit it however you like.",
+	"view.composer.altText.generate.caution": "Generated descriptions get things wrong. Read it over before you post.",
+	"view.composer.altText.generate.editsKept": "You've changed the description. A rewrite will keep your wording and build on it.",
+	"view.composer.altText.generate.error.openRouterCredits": "Your OpenRouter account is out of credits.",
+	"view.composer.altText.generate.error.openRouterKey": "OpenRouter rejected your API key. Check it in settings.",
+	"view.composer.altText.generate.error.openRouterRateLimited": "OpenRouter is rate limiting your account. Wait a moment and try again.",
+	"view.composer.altText.generate.error.openRouterUnavailable": "OpenRouter couldn't run your model right now.",
+	"view.composer.altText.generate.error.rateLimited": "You've generated a lot of descriptions. Wait a minute and try again.",
+	"view.composer.altText.generate.error.title": "Couldn't generate a description",
+	"view.composer.altText.generate.error.unavailable": "The description service is unavailable right now.",
+	"view.composer.altText.generate.intro": "Have a model draft a description from the image, then sharpen it by answering what it can't see.",
+	"view.composer.altText.generate.questions.anythingElse": "Anything else?",
+	"view.composer.altText.generate.status.refining": "Working your answers in…",
+	"view.composer.altText.generate.status.starting": "Looking at your image…",
+	"view.composer.altText.generate.title": "AI-generated description",
 	"view.composer.altText.hint": "Alt text describes media for low-vision users and adds context for everyone.",
 	"view.composer.captions.action.remove": "Remove caption file",
 	"view.composer.captions.action.select": "Select caption file (.vtt)",

@@ -1,6 +1,7 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import type { ComposerImage } from '#/lib/media/composer-image';
 
@@ -11,40 +12,69 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
+import { CompactLayout } from './alt-text-dialog/CompactLayout';
+import { WideLayout } from './alt-text-dialog/WideLayout';
+import { AltTextAssistant } from './alt-text-generator/AltTextAssistant';
+import type { AltTextContext } from './alt-text-generator/types';
+import { useAltTextGenerator } from './alt-text-generator/use-generator';
 import * as styles from './ImageAltTextDialog.css';
 
 type Props = {
+	/** The post this image is attached to, for the description assistant to anchor what it can't see to. */
+	context: AltTextContext;
 	handle: Dialog.DialogHandle;
 	image: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 };
 
-export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.ReactNode => {
+export const ImageAltTextDialog = ({ context, handle, image, onChange }: Props): React.ReactNode => {
+	const { gtMobile } = useBreakpoints();
+
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body">
-				<DialogInner handle={handle} image={image} onChange={onChange} />
+			<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'}>
+				<DialogInner context={context} handle={handle} image={image} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 };
 
-const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
-	const [altText, setAltText] = useState(image.alt);
-	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
+const DialogInner = ({ context, handle, image, onChange }: Props): React.ReactNode => {
+	const { gtMobile } = useBreakpoints();
+	const [alt, setAlt] = useState(image.alt);
+	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+	const source = image.transformed ?? image.source;
+	const imageUrl = useBlobUrl(source.blob);
 	const counterId = useId();
 
-	const isOverLimit = altText.length > MAX_ALT_TEXT;
-	const canSave = altText !== image.alt && !isOverLimit;
+	const generator = useAltTextGenerator({
+		blob: source.blob,
+		context: context,
+		text: alt,
+		onGenerated(draft) {
+			const el = inputRef.current;
+			if (!el) {
+				return;
+			}
+			el.focus();
+			el.setSelectionRange(0, el.value.length);
+			document.execCommand('insertText', false, draft);
+		},
+	});
+
+	const isOverLimit = alt.length > MAX_ALT_TEXT;
+	const canSave = alt !== image.alt && !isOverLimit;
 
 	const counterLabel = isOverLimit
-		? m['view.composer.altText.charCountOverLimit']({ length: altText.length, max: MAX_ALT_TEXT })
-		: m['view.composer.altText.charCount']({ length: altText.length, max: MAX_ALT_TEXT });
+		? m['view.composer.altText.charCountOverLimit']({ length: alt.length, max: MAX_ALT_TEXT })
+		: m['view.composer.altText.charCount']({ length: alt.length, max: MAX_ALT_TEXT });
 
 	const onSave = () => {
-		onChange({ ...image, alt: altText });
+		onChange({ ...image, alt });
 		handle.close();
 	};
+
+	const Layout = gtMobile ? WideLayout : CompactLayout;
 
 	return (
 		<>
@@ -78,47 +108,43 @@ const DialogInner = ({ handle, image, onChange }: Props): React.ReactNode => {
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>
 
-			<Dialog.Body>
-				<div className={styles.imageBox}>
-					<img alt="" className={styles.image} src={imageUrl} />
+			<Layout imageUrl={imageUrl}>
+				<TextField.Root>
+					<TextField.LabelText
+						accessory={
+							<Text
+								aria-label={counterLabel}
+								className={styles.counter}
+								color={isOverLimit ? 'negative_500' : 'textContrastMedium'}
+								id={counterId}
+								size="sm"
+							>
+								{alt.length} / {MAX_ALT_TEXT}
+							</Text>
+						}
+					>
+						{m['view.composer.altText.descriptive']()}
+					</TextField.LabelText>
+					<TextField.Input
+						autoFocus
+						describedBy={counterId}
+						isInvalid={isOverLimit}
+						label={m['common.altText.label']()}
+						multiline
+						onChangeText={setAlt}
+						placeholder={m['common.altText.label']()}
+						ref={inputRef}
+						value={alt}
+					/>
+				</TextField.Root>
+
+				{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
+				<div className={styles.srOnly} role="status">
+					{isOverLimit ? m['view.composer.altText.error.overLimit']() : ''}
 				</div>
 
-				<div className={styles.form}>
-					<TextField.Root>
-						<TextField.LabelText
-							accessory={
-								<Text
-									aria-label={counterLabel}
-									className={styles.counter}
-									color={isOverLimit ? 'negative_500' : 'textContrastMedium'}
-									id={counterId}
-									size="sm"
-								>
-									{altText.length} / {MAX_ALT_TEXT}
-								</Text>
-							}
-						>
-							{m['view.composer.altText.descriptive']()}
-						</TextField.LabelText>
-						<TextField.Input
-							autoFocus
-							defaultValue={altText}
-							describedBy={counterId}
-							isInvalid={isOverLimit}
-							label={m['common.altText.label']()}
-							maxRows={8}
-							multiline
-							onChangeText={setAltText}
-							placeholder={m['common.altText.label']()}
-						/>
-					</TextField.Root>
-
-					{/* announce only the crossing into over-limit while typing; a stable message avoids per-keystroke spam */}
-					<div className={styles.srOnly} role="status">
-						{isOverLimit ? m['view.composer.altText.error.overLimit']() : ''}
-					</div>
-				</div>
-			</Dialog.Body>
+				<AltTextAssistant generator={generator} />
+			</Layout>
 		</>
 	);
 };

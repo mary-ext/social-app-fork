@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
 	PUBLIC_CHAT_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
 	PUBLIC_GIT_COMMIT_HASH?: string;
+	PUBLIC_INTERNAL_PROXY_AUDIENCE: import('@atcute/lexicons/syntax').AtprotoAudience;
 	PUBLIC_OAUTH_CLIENT_ID?: string;
 	PUBLIC_OAUTH_REDIRECT_URI?: string;
 	PUBLIC_OAUTH_SCOPE?: string;

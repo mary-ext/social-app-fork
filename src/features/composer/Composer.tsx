@@ -1198,6 +1198,7 @@ const ComposerPost = memo(function ComposerPost({
 						dispatch={dispatchPost}
 						clearVideo={() => onClearVideo(post.id)}
 						isActivePost={isActive}
+						text={post.text}
 					/>
 				</div>
 			</div>
@@ -1211,18 +1212,20 @@ function ComposerEmbeds({
 	clearVideo,
 	canRemoveQuote,
 	isActivePost,
+	text,
 }: {
 	embed: EmbedDraft;
 	dispatch: (action: PostAction) => void;
 	clearVideo: () => void;
 	canRemoveQuote: boolean;
 	isActivePost: boolean;
+	text: string;
 }) {
 	const video = embed.media?.type === 'video' ? embed.media.video : null;
 	return (
 		<>
 			{(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
-				<Gallery images={embed.media.images} dispatch={dispatch} />
+				<Gallery images={embed.media.images} dispatch={dispatch} text={text} />
 			)}
 			{embed.media?.type === 'gif' && (
 				<div className={styles.gifContainer} key={embed.media.gif.url}>
