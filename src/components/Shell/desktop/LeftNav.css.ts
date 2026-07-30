@@ -117,6 +117,7 @@ export const avatarWrap = style({
 export const identity = style({
 	display: 'flex',
 	flex: 1,
+	minWidth: 0,
 	flexDirection: 'column',
 	alignItems: 'start',
 	transitionDelay: '50ms',
