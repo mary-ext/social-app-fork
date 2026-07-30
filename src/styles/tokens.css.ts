@@ -29,6 +29,19 @@ export const borderRadius = {
 	full: 999,
 } as const;
 
+export const iconSize = {
+	_2xs: 8,
+	xs: 12,
+	sm: 16,
+	md: 18,
+	lg: 20,
+	xl: 24,
+	_2xl: 28,
+	_3xl: 32,
+	_4xl: 48,
+	_5xl: 64,
+} as const;
+
 export const fontWeight = {
 	normal: '400',
 	medium: '500',

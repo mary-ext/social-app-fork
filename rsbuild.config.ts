@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import { SvgSpritesPlugin } from '@oomfware/rspack-plugin-svg-sprites';
+
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
@@ -81,6 +83,14 @@ export default defineConfig(({ envMode }) => {
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
+
+				config.plugins.push(
+					new SvgSpritesPlugin({
+						target: 'react19-jsx',
+						splitting: 'chunk',
+						spriteFilename: 'static/svg/svg-sprite.[contenthash].svg',
+					}),
+				);
 
 				// hoist CSS shared by two or more chunks.
 				config.optimization ??= {};
