@@ -18,6 +18,8 @@ if [ -z "$session" ]; then
 	esac
 fi
 
+session="${session//[![:alnum:]._-]/__}"
+
 export AGENT_BROWSER_NAMESPACE="social-app-fork"
 export AGENT_BROWSER_PROFILE="$main_root/.claude/agent-browser/profile"
 export AGENT_BROWSER_SESSION="$session"
