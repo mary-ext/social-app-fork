@@ -13,6 +13,7 @@
 	"screens.settings.ai.model.loadError": "Couldn't reach OpenRouter for the model list. Your saved choice still applies.",
 	"screens.settings.ai.model.loading": "Loading models…",
 	"screens.settings.ai.model.noMatches": "No matching models.",
+	"screens.settings.ai.model.none": "None",
 	"screens.settings.ai.model.placeholder": "Choose a model",
 	"screens.settings.ai.model.search": "Search models",
 	"screens.settings.ai.openRouter.body": "Use your own OpenRouter account for the app's AI features. With a key set, requests go from this browser straight to OpenRouter, on the model you choose.",

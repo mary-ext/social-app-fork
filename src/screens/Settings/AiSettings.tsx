@@ -22,15 +22,25 @@ import { OpenRouterKeyDialog } from './components/OpenRouterKeyDialog';
 export function AiSettingsScreen() {
 	useTitle(m['navigation.settings.ai.title']());
 
-	const keyDialogHandle = Dialog.useDialogHandle();
-	const apiKey = useOpenRouterApiKey();
-	const model = useImageDescriptionModel();
-
 	const { data: models, error, isPending } = useOpenRouterModelsQuery({ inputModalities: ['image'] });
 
-	const options: ComboboxItem[] = (models ?? []).map((entry) => {
-		return { label: entry.name, value: entry.id };
-	});
+	const keyDialogHandle = Dialog.useDialogHandle();
+
+	const apiKey = useOpenRouterApiKey();
+	const selectedDescriptionModel = useImageDescriptionModel();
+
+	const descriptionModels: ComboboxItem<string | undefined>[] = [
+		{
+			value: undefined,
+			label: m['screens.settings.ai.model.none'](),
+		},
+		...(models ?? []).map((entry) => {
+			return {
+				value: entry.id,
+				label: entry.name,
+			};
+		}),
+	];
 
 	let emptyText = m['screens.settings.ai.model.noMatches']();
 	if (isPending) {
@@ -63,11 +73,13 @@ export function AiSettingsScreen() {
 						</Settings.ButtonRow>
 					</Settings.Section>
 
-					<Settings.Section>
+					<Settings.Section
+						footnoteText={error !== null ? m['screens.settings.ai.model.loadError']() : undefined}
+					>
 						<Settings.ComboboxRow
 							emptyText={emptyText}
 							filter={matchesModel}
-							items={options}
+							items={descriptionModels}
 							label={m['screens.settings.ai.model.label']()}
 							onValueChange={setImageDescriptionModel}
 							placeholder={m['screens.settings.ai.model.placeholder']()}
@@ -76,13 +88,15 @@ export function AiSettingsScreen() {
 									<Text numberOfLines={1} size="md_sub">
 										{item.label}
 									</Text>
-									<Text color="contrast_500" numberOfLines={1} size="sm">
-										{item.value}
-									</Text>
+									{item.value !== undefined && (
+										<Text color="contrast_500" numberOfLines={1} size="sm">
+											{item.value}
+										</Text>
+									)}
 								</>
 							)}
 							searchPlaceholder={m['screens.settings.ai.model.search']()}
-							value={model}
+							value={selectedDescriptionModel}
 						>
 							<Settings.Icon icon={ImageIcon} />
 							<Settings.Label titleText={m['screens.settings.ai.model.label']()} />
@@ -96,12 +110,12 @@ export function AiSettingsScreen() {
 	);
 }
 
-const matchesModel = (item: ComboboxItem, query: string): boolean => {
+const matchesModel = (item: ComboboxItem<string | undefined>, query: string): boolean => {
 	const needle = query.trim().toLowerCase();
 	if (needle === '') {
 		return true;
 	}
-	return item.label.toLowerCase().includes(needle) || item.value.toLowerCase().includes(needle);
+	return item.label.toLowerCase().includes(needle) || (item.value?.toLowerCase().includes(needle) ?? false);
 };
 
 const maskKey = (key: string): string => `••••${key.slice(-4)}`;

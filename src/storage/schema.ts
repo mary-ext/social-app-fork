@@ -33,10 +33,7 @@ export type Device = {
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	largeAltBadgeEnabled?: boolean;
-	/**
-	 * The user's own OpenRouter API key. Its presence is what switches the LLM features over to OpenRouter, so
-	 * an empty string is never stored — the key is removed instead.
-	 */
+	/** The user's own OpenRouter API key. */
 	openrouterApiKey?: string;
 	/** OpenRouter model slug used to draft image descriptions, e.g. `google/gemini-2.5-flash`. */
 	openrouterImageDescriptionModel?: string;

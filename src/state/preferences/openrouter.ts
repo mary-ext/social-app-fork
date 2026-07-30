@@ -19,8 +19,12 @@ export function useImageDescriptionModel(): string | undefined {
 	return useStorageValue(device, ['openrouterImageDescriptionModel']);
 }
 
-export function setImageDescriptionModel(value: string): void {
-	device.set(['openrouterImageDescriptionModel'], value);
+export function setImageDescriptionModel(value: string | undefined): void {
+	if (value === undefined) {
+		device.remove(['openrouterImageDescriptionModel']);
+	} else {
+		device.set(['openrouterImageDescriptionModel'], value);
+	}
 }
 
 export function getImageDescriptionConfig(): OpenRouterConfig | null {
