@@ -60,7 +60,7 @@ export function ContentHider({
 	const blur = modui?.blurs[0];
 	if (!modui || !blur || (ignoreMute && isJustAMute(modui))) {
 		return (
-			<div className={clsx(styles.passthrough, className)}>
+			<div className={clsx(styles.outer, className)}>
 				{typeof children === 'function' ? children({ active: false }) : children}
 			</div>
 		);
@@ -170,7 +170,7 @@ function ContentHiderActive({
 		<Collapsible.Root
 			open={override}
 			onOpenChange={(open) => setOverride(open)}
-			className={clsx(styles.activeOuter, className, activeClassName)}
+			className={clsx(styles.outer, className, activeClassName)}
 		>
 			<ModerationDetailsDialog handle={handle} modcause={blur} />
 			{modui.noOverride ? (

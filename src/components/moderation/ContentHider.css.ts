@@ -8,12 +8,7 @@ const viewBase = {
 	flexDirection: 'column',
 } as const;
 
-export const passthrough = style(viewBase);
-
-export const activeOuter = style({
-	...viewBase,
-	overflow: 'hidden',
-});
+export const outer = style(viewBase);
 
 export const panel = style(viewBase);
 
