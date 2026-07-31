@@ -3,33 +3,41 @@ import { InvalidRequestError, UpstreamFailureError, UpstreamTimeoutError } from 
 const USER_AGENT = 'Mozilla/5.0 (compatible; social-app-fork link-card generator)';
 
 /**
- * parses a url and rejects anything that isn't a plain http(s) request.
+ * parses a URL, keeping only plain HTTP(S) requests.
  *
- * host-level ssrf filtering deliberately lives in the platform rather than here: the workers runtime mediates
- * every outbound fetch through a proxy that only reaches public internet services — never private ips,
+ * @param raw the URL to parse, absolute or relative to `base`
+ * @param base the URL `raw` resolves against when it is relative
+ * @returns the parsed URL, or undefined when it is malformed or uses an unsupported scheme
+ */
+export const parseHttpUrl = (raw: string, base?: URL): URL | undefined => {
+	const url = URL.parse(raw, base?.href);
+	return url?.protocol === 'http:' || url?.protocol === 'https:' ? url : undefined;
+};
+
+/**
+ * parses a URL and rejects anything that isn't a plain HTTP(S) request.
+ *
+ * host-level SSRF filtering deliberately lives in the platform rather than here: the Workers runtime mediates
+ * every outbound fetch through a proxy that only reaches public internet services — never private IPs,
  * loopback, or internal hosts. the `global_fetch_strictly_public` flag (see wrangler.jsonc) extends that to
  * own-zone requests by routing them back out through the public front door.
  *
- * @param raw the url to validate
- * @returns the parsed url
- * @throws {InvalidRequestError} when the url is malformed or uses an unsupported scheme
+ * @param raw the URL to validate
+ * @returns the parsed URL
+ * @throws {InvalidRequestError} when the URL is malformed or uses an unsupported scheme
  */
 export const assertHttpUrl = (raw: string): URL => {
-	let url: URL;
-	try {
-		url = new URL(raw);
-	} catch {
-		throw new InvalidRequestError({ message: 'invalid url' });
+	const url = parseHttpUrl(raw);
+	if (!url) {
+		// re-parsing costs nothing on a path that already failed, and keeps the two messages distinct
+		throw new InvalidRequestError({
+			message: URL.parse(raw) ? 'unsupported url scheme' : 'invalid url',
+		});
 	}
-
-	if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-		throw new InvalidRequestError({ message: 'unsupported url scheme' });
-	}
-
 	return url;
 };
 
-/** extracts the bare mime type from a response's `content-type`, lowercased and without parameters. */
+/** extracts the bare MIME type from a response's `content-type`, lowercased and without parameters. */
 export const contentTypeOf = (response: Response): string => {
 	const header = response.headers.get('content-type') ?? '';
 	const semi = header.indexOf(';');
@@ -38,47 +46,75 @@ export const contentTypeOf = (response: Response): string => {
 
 export interface SafeFetchOptions {
 	accept: string;
+	/** how many redirects to follow. defaults to {@link MAX_REDIRECTS}; pass 0 to take the first response. */
+	maxRedirects?: number;
 	signal: AbortSignal;
 	timeoutMs: number;
 }
 
+/** how many redirects {@link safeFetch} follows before it stops and returns the last hop it reached. */
+const MAX_REDIRECTS = 5;
+
 export interface SafeFetchResult {
+	/** every URL visited, starting with the requested one and ending with {@link url}. */
+	chain: URL[];
 	response: Response;
-	/** the final url after following redirects. */
+	/** the final URL after following redirects. */
 	url: URL;
 }
 
 /**
- * fetches a url as a public client under a timeout, following redirects. the workers proxy keeps every hop —
- * original and redirected — pointed at the public internet (see {@link assertHttpUrl}), so no per-hop host
- * vetting is needed here.
+ * fetches a URL as a public client under a timeout, following redirects. the Workers proxy keeps every hop —
+ * original and redirected — pointed at the public internet (see {@link assertHttpUrl}), and each hop is a
+ * fresh `fetch` through that same proxy, so no per-hop host vetting is needed here.
  *
  * @throws {UpstreamTimeoutError} when the request exceeds `timeoutMs`
  * @throws {UpstreamFailureError} when the upstream is unreachable
  */
 export const safeFetch = async (url: URL, options: SafeFetchOptions): Promise<SafeFetchResult> => {
 	const signal = AbortSignal.any([options.signal, AbortSignal.timeout(options.timeoutMs)]);
+	const maxRedirects = options.maxRedirects ?? MAX_REDIRECTS;
+	let current = url;
+	const chain: URL[] = [current];
 
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			headers: {
-				accept: options.accept,
-				'accept-language': 'en;q=0.9',
-				'user-agent': USER_AGENT,
-			},
-			method: 'GET',
-			redirect: 'follow',
-			signal,
-		});
-	} catch {
-		if (signal.aborted) {
-			throw new UpstreamTimeoutError({ message: 'upstream timed out' });
+	// followed by hand rather than by the runtime so intermediate hops survive: a short link that lands on a
+	// bot interstitial hides the real content URL in the middle of the chain.
+	for (;;) {
+		let response: Response;
+		try {
+			response = await fetch(current, {
+				headers: {
+					accept: options.accept,
+					'accept-language': 'en;q=0.9',
+					'user-agent': USER_AGENT,
+				},
+				method: 'GET',
+				redirect: 'manual',
+				signal,
+			});
+		} catch {
+			if (signal.aborted) {
+				throw new UpstreamTimeoutError({ message: 'upstream timed out' });
+			}
+			throw new UpstreamFailureError({ message: 'failed to reach upstream' });
 		}
-		throw new UpstreamFailureError({ message: 'failed to reach upstream' });
-	}
 
-	return { response, url: new URL(response.url || url.href) };
+		const location =
+			response.status >= 300 && response.status < 400 ? response.headers.get('location') : null;
+		if (!location || chain.length > maxRedirects) {
+			return { chain, response, url: current };
+		}
+
+		const next = parseHttpUrl(location, current);
+		if (!next) {
+			// a redirect we can't follow; hand back the response as-is rather than failing the whole fetch.
+			return { chain, response, url: current };
+		}
+
+		await response.body?.cancel().catch(() => {});
+		current = next;
+		chain.push(current);
+	}
 };
 
 export interface ReadCappedOptions {

@@ -4,10 +4,11 @@ import type {} from '@atcute/bluesky/types/app/embed/getEmbedExternalView';
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import type { GenericUri, ResourceUri } from '@atcute/lexicons';
 
-import { parseHtmlMeta } from './extract-meta';
-import { assertHttpUrl, contentTypeOf, readCapped, safeFetch } from './net';
+import { type LinkMetaResult, parseHtmlMeta } from './extract-meta';
+import { assertHttpUrl, contentTypeOf, parseHttpUrl, readCapped, safeFetch } from './net';
+import { resolveOEmbed } from './oembed';
 
-/** cap on the html we buffer; meta tags live in `<head>`, near the top. */
+/** cap on the HTML we buffer; meta tags live in `<head>`, near the top. */
 const HTML_MAX_BYTES = 768 * 1024;
 /** getEmbedExternalView resolves at most this many records; the rest of a page's discovery tags are ignored. */
 const MAX_ASSOCIATED_URIS = 4;
@@ -47,6 +48,10 @@ const clean = (value: string | undefined, max: number): string | undefined => {
 	return points.length > max ? points.slice(0, max).join('') : normalized;
 };
 
+/** a title that is only a URL duplicates what the card already shows beneath it, so it is worth nothing. */
+const isBareUrl = (value: string | undefined): boolean =>
+	value !== undefined && parseHttpUrl(value) !== undefined;
+
 interface StrongRef {
 	cid: string;
 	uri: string;
@@ -64,7 +69,7 @@ export interface LinkMetaResponse {
 }
 
 interface ResolveLinkMetaOptions {
-	/** the url of the incoming request, used to derive the same-origin cache key for thumbnails. */
+	/** the URL of the incoming request, used to derive the same-origin cache key for thumbnails. */
 	requestUrl: string;
 	signal: AbortSignal;
 	url: string;
@@ -91,7 +96,7 @@ const hashKey = async (input: string): Promise<string> => {
 
 /**
  * fetches a thumbnail, validates it, and stores the bytes in the edge cache keyed by the same-origin
- * {@link getLinkImage} url that will later serve them. failures are swallowed — a missing thumbnail just
+ * {@link getLinkImage} URL that will later serve them. failures are swallowed — a missing thumbnail just
  * yields a plain link card.
  *
  * @returns the origin-relative path to the cached thumbnail, or undefined on any failure
@@ -128,11 +133,11 @@ const cacheThumbnail = async ({
 };
 
 /**
- * hands the standard.site at-uris a page advertised to the appview's `getEmbedExternalView`, which resolves
- * them into strong refs (uri+cid) and a hydrated enhanced-card view. failures degrade to a plain link card.
+ * hands the standard.site AT-URIs a page advertised to the appview's `getEmbedExternalView`, which resolves
+ * them into strong refs (URI+CID) and a hydrated enhanced-card view. failures degrade to a plain link card.
  *
- * @param uris the at-uris discovered in the page's `<link rel>` tags
- * @param url the resolved web url the embed represents, used as the view's `uri`
+ * @param uris the AT-URIs discovered in the page's `<link rel>` tags
+ * @param url the resolved web URL the embed represents, used as the view's `uri`
  * @returns the appview's refs and view, or an empty object when nothing resolved
  */
 const hydrateStandardSite = async (
@@ -158,10 +163,10 @@ const hydrateStandardSite = async (
 };
 
 /**
- * resolves opengraph/twitter metadata for an external url. fetches the page, scrapes its meta tags, and — if
- * it advertises a thumbnail — caches that image behind {@link getLinkImage}.
+ * resolves metadata for an external URL. fetches the page and scrapes its OpenGraph/Twitter meta tags,
+ * falling back to oEmbed when they yield nothing, and caches any thumbnail behind {@link getLinkImage}.
  *
- * @throws {InvalidRequestError} when the url is malformed or uses an unsupported scheme
+ * @throws {InvalidRequestError} when the URL is malformed or uses an unsupported scheme
  * @throws {UpstreamFailureError | UpstreamTimeoutError} when the page can't be fetched
  */
 export const resolveLinkMeta = async ({
@@ -170,40 +175,71 @@ export const resolveLinkMeta = async ({
 	url,
 }: ResolveLinkMetaOptions): Promise<LinkMetaResponse> => {
 	const target = assertHttpUrl(url);
-	const { response, url: resolvedUrl } = await safeFetch(target, {
+	const {
+		chain,
+		response,
+		url: resolvedUrl,
+	} = await safeFetch(target, {
 		accept: 'text/html,application/xhtml+xml',
 		signal,
 		timeoutMs: 8_000,
 	});
 
 	const contentType = contentTypeOf(response);
-	if (contentType && !contentType.includes('html') && !contentType.includes('xml')) {
-		// not a document we can scrape; hand back just the resolved url.
-		return { url: resolvedUrl.href };
+	const isDocument = !contentType || contentType.includes('html') || contentType.includes('xml');
+
+	// a non-2xx body is an error page or a bot interstitial, so neither it nor its URL describes the link.
+	let meta: LinkMetaResult | undefined;
+	if (response.ok && isDocument) {
+		meta = await parseHtmlMeta(await readCapped(response, { maxBytes: HTML_MAX_BYTES, truncate: true }));
+	} else {
+		await response.body?.cancel().catch(() => {});
 	}
 
-	const meta = await parseHtmlMeta(await readCapped(response, { maxBytes: HTML_MAX_BYTES, truncate: true }));
+	let title = clean(meta?.title, TITLE_MAX);
+	let description = clean(meta?.description, DESCRIPTION_MAX);
+	let imageSource = meta?.image;
+	let pageUrl = response.ok ? resolvedUrl : target;
 
-	let image: string | undefined;
-	if (meta.image) {
-		try {
-			const imageUrl = assertHttpUrl(new URL(meta.image, resolvedUrl).href);
-			image = await cacheThumbnail({ imageUrl, requestUrl, signal });
-		} catch {
-			image = undefined;
+	if (isBareUrl(title)) {
+		title = undefined;
+	}
+
+	// a genuine non-document, a PDF or an image, has no endpoint to advertise or to guess at.
+	if (!title && !imageSource && (!response.ok || isDocument)) {
+		const discovered = meta?.oembedUrl ? parseHttpUrl(meta.oembedUrl, resolvedUrl) : undefined;
+		const oembed = await resolveOEmbed({
+			advertised: discovered && { endpoint: discovered, page: resolvedUrl },
+			chain,
+			signal,
+		});
+		if (oembed) {
+			title = clean(oembed.meta.title, TITLE_MAX);
+			description = clean(oembed.meta.description, DESCRIPTION_MAX);
+			imageSource = oembed.meta.image;
+			// report the hop the metadata describes, not wherever the chain happened to end up.
+			pageUrl = oembed.page;
 		}
 	}
 
-	const standardSite = meta.associatedUris?.length
+	let image: string | undefined;
+	if (imageSource) {
+		const imageUrl = parseHttpUrl(imageSource, pageUrl);
+		if (imageUrl) {
+			image = await cacheThumbnail({ imageUrl, requestUrl, signal });
+		}
+	}
+
+	const standardSite = meta?.associatedUris?.length
 		? await hydrateStandardSite(meta.associatedUris, resolvedUrl.href, signal)
 		: undefined;
 
 	return {
 		associatedRefs: standardSite?.associatedRefs,
-		description: clean(meta.description, DESCRIPTION_MAX),
+		description,
 		image,
-		title: clean(meta.title, TITLE_MAX),
-		url: resolvedUrl.href,
+		title,
+		url: pageUrl.href,
 		view: standardSite?.view,
 	};
 };

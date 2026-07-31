@@ -4,14 +4,16 @@ import { isResourceUri } from '@atcute/lexicons/syntax';
 import { decodeHtmlEntities } from './html-entities';
 
 export interface LinkMetaResult {
-	/** at-uris of the standard.site atmosphere records the page advertises via `<link rel>` discovery tags. */
+	/** AT-URIs of the standard.site Atmosphere records the page advertises via `<link rel>` discovery tags. */
 	associatedUris?: ResourceUri[];
 	description?: string;
 	image?: string;
+	/** the oEmbed endpoint the page advertises via its `<link rel="alternate">` discovery tag. */
+	oembedUrl?: string;
 	title?: string;
 }
 
-/** opengraph/twitter meta keys we extract, lowercased. */
+/** OpenGraph/Twitter meta keys we extract, lowercased. */
 const WANTED_META = new Set([
 	'description',
 	'og:description',
@@ -28,9 +30,12 @@ const WANTED_META = new Set([
 /** `<link rel>` values pointing at the standard.site records that back a page. */
 const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.publication']);
 
+/** the `type` an oEmbed discovery tag carries; the spec also defines an XML variant we don't consume. */
+const OEMBED_LINK_TYPE = 'application/json+oembed';
+
 /**
- * streams an html document through {@link HTMLRewriter} and pulls out the title, description, and a thumbnail
- * url from its opengraph/twitter meta tags and `<title>`.
+ * streams an HTML document through {@link HTMLRewriter} and pulls out the title, description, and a thumbnail
+ * URL from its OpenGraph/Twitter meta tags and `<title>`.
  *
  * @param html the document bytes (typically truncated to the `<head>` region)
  * @returns the first matching value found for each field
@@ -38,6 +43,7 @@ const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.pub
 export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> => {
 	const meta: Record<string, string> = {};
 	const associatedUris: ResourceUri[] = [];
+	let oembedUrl: string | undefined;
 	let titleText = '';
 
 	const rewriter = new HTMLRewriter()
@@ -50,17 +56,27 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 			element(element) {
 				const rel = element.getAttribute('rel');
 				const href = element.getAttribute('href');
-				// a malformed at-uri would only make the appview reject the whole hydration batch, so drop it here
-				if (!rel || !href || !isResourceUri(href) || associatedUris.includes(href)) {
+				if (!rel || !href) {
 					return;
 				}
 				// rel may carry several space-separated tokens, e.g. `site.standard.document external`.
+				const tokens = rel.toLowerCase().split(/\s+/);
+
 				if (
-					rel
-						.toLowerCase()
-						.split(/\s+/)
-						.some((token) => STANDARD_SITE_RELS.has(token))
+					oembedUrl === undefined &&
+					tokens.includes('alternate') &&
+					element.getAttribute('type')?.trim().toLowerCase() === OEMBED_LINK_TYPE
 				) {
+					// unlike the AT-URIs below, this href carries a query string, so its `&` arrives encoded.
+					oembedUrl = decodeHtmlEntities(href);
+					return;
+				}
+
+				// a malformed AT-URI would only make the appview reject the whole hydration batch, so drop it here
+				if (!isResourceUri(href) || associatedUris.includes(href)) {
+					return;
+				}
+				if (tokens.some((token) => STANDARD_SITE_RELS.has(token))) {
 					associatedUris.push(href);
 				}
 			},
@@ -111,6 +127,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 		associatedUris: associatedUris.length ? associatedUris : undefined,
 		description,
 		image: pick('og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src'),
+		oembedUrl,
 		title,
 	};
 };
