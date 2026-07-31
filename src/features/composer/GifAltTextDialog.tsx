@@ -63,7 +63,7 @@ type GifAltTextFormProps = {
 	initialAlt: string;
 	onSubmit: (alt: string) => void;
 	params: EmbedPlayerParams;
-	thumb: string | undefined;
+	thumb: string | null;
 	vendorAltText: string;
 };
 

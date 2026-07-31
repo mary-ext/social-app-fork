@@ -19,7 +19,7 @@ import * as styles from './GifEmbed.css';
 
 export type GifEmbedProps = {
 	params: EmbedPlayerParams;
-	thumb: string | undefined;
+	thumb: string | null;
 	altText: string;
 	isPreferredAltText: boolean;
 	hideAlt?: boolean;
@@ -93,7 +93,7 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 						ref={videoRef}
 						className={styles.video}
 						src={useSources ? undefined : params.playerUri}
-						poster={thumb}
+						poster={thumb ?? undefined}
 						autoPlay={!autoplayDisabled ? true : undefined}
 						preload={!autoplayDisabled ? 'auto' : undefined}
 						playsInline
