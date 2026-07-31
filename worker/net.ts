@@ -1,6 +1,7 @@
 import { InvalidRequestError, UpstreamFailureError, UpstreamTimeoutError } from '@atcute/xrpc-server';
 
-const USER_AGENT = 'Mozilla/5.0 (compatible; social-app-fork link-card generator)';
+const USER_AGENT =
+	'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; social-app-fork link-card generator; +https://bsky.kelinci.net) Chrome/140.0.0.0 Safari/537.36';
 
 /**
  * parses a URL, keeping only plain HTTP(S) requests.
