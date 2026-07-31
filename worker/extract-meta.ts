@@ -33,6 +33,9 @@ const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.pub
 /** the `type` an oEmbed discovery tag carries; the spec also defines an XML variant we don't consume. */
 const OEMBED_LINK_TYPE = 'application/json+oembed';
 
+/** folds case and whitespace so two tags that render identically compare equal. */
+const flatten = (value: string): string => value.replace(/\s+/g, ' ').trim().toLowerCase();
+
 /**
  * streams an HTML document through {@link HTMLRewriter} and pulls out the title, description, and a thumbnail
  * URL from its OpenGraph/Twitter meta tags and `<title>`.
@@ -97,18 +100,26 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 	// draining the transformed body is what actually runs the handlers above.
 	await rewriter.transform(new Response(html)).arrayBuffer();
 
-	const pick = (...keys: string[]): string | undefined => {
+	const pick = (keys: string[], reject?: (value: string) => boolean): string | undefined => {
 		for (const key of keys) {
 			const value = meta[key]?.trim();
-			if (value) {
+			if (value && !reject?.(value)) {
 				return value;
 			}
 		}
 		return undefined;
 	};
 
-	const title = pick('og:title', 'twitter:title') ?? (decodeHtmlEntities(titleText).trim() || undefined);
-	let description = pick('og:description', 'twitter:description', 'description');
+	const title = pick(['og:title', 'twitter:title']) ?? (decodeHtmlEntities(titleText).trim() || undefined);
+
+	// a description that only restates the title renders the card's second line as an echo of its first. some
+	// CMSes do exactly that, filling `og:description` with the headline while the real summary sits in
+	// `<meta name="description">`, so a duplicate falls through to the next tag instead of ending the search.
+	const flattened = title && flatten(title);
+	let description = pick(
+		['og:description', 'twitter:description', 'description'],
+		(value) => flatten(value) === flattened,
+	);
 
 	if (title && description) {
 		// some CMSes prepend the title verbatim to the description; strip the redundant prefix so the
@@ -126,7 +137,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 	return {
 		associatedUris: associatedUris.length ? associatedUris : undefined,
 		description,
-		image: pick('og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src'),
+		image: pick(['og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src']),
 		oembedUrl,
 		title,
 	};
