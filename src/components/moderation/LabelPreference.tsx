@@ -5,6 +5,8 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
+import { clsx } from 'clsx';
+
 import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
@@ -59,7 +61,7 @@ export function LabelerLabelRow({
 				<Text className={cardStyles.title} color="text" size="md" weight="medium">
 					{labelStrings.name}
 				</Text>
-				<div className={styles.details}>
+				<div className={clsx(cardStyles.subtitle, styles.details)}>
 					<Text color="textContrastMedium" size="md_sub">
 						{labelStrings.description}
 					</Text>
