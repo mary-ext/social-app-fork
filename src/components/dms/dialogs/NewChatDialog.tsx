@@ -106,10 +106,14 @@ function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGr
 			rows.push(suggested, { kind: 'placeholder', key: 'placeholder' });
 		} else {
 			// omit follows that can't be messaged, matching upstream (rather than listing them disabled).
+			// dedupe as we go: the cursor can hand the same profile back on two pages if the follow list
+			// shifts mid-pagination, and a repeated did would mean a duplicate key and item value.
+			const seen = new Set<string>();
 			const profiles = mapDefined(
 				follows.pages.flatMap((page) => page.follows),
 				(profile): ProfileRow | undefined => {
-					if (canBeMessaged(profile)) {
+					if (canBeMessaged(profile) && !seen.has(profile.did)) {
+						seen.add(profile.did);
 						return { kind: 'profile', key: profile.did, profile };
 					}
 				},
