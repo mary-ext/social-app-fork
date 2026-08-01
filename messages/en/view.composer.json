@@ -281,7 +281,10 @@
 	"view.composer.video.error.oneOnly": "You can only select one video at a time.",
 	"view.composer.video.error.permCheckFailed": "We were unable to determine if you are allowed to upload videos. Please try again.",
 	"view.composer.video.error.process": "Could not process your video",
+	"view.composer.video.error.processAspectRatio": "The selected video has an unsupported aspect ratio.",
+	"view.composer.video.error.processCodec": "The selected video uses an unsupported format.",
 	"view.composer.video.error.processFailed": "Video failed to process",
+	"view.composer.video.error.processTooLong": "The selected video is too long.",
 	"view.composer.video.error.tooLarge": [
 		{
 			"declarations": ["input max", "local n = max: number"],

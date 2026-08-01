@@ -338,7 +338,7 @@ export async function processVideo(
 			console.error('Error processing video', e);
 			dispatch({
 				type: 'to_error',
-				error: m['view.composer.video.error.processFailed'](),
+				error: getProcessingErrorMessage(status?.error),
 				signal,
 			});
 			return; // Exit async loop
@@ -377,6 +377,19 @@ async function uploadVideoBlobDirectly(
 	}
 
 	return uploadBlob(pds, video.blob, video.mimeType);
+}
+
+function getProcessingErrorMessage(error: string | undefined): string {
+	switch (error) {
+		case 'bad_aspect_ratio':
+			return m['view.composer.video.error.processAspectRatio']();
+		case 'unsupported_codec':
+			return m['view.composer.video.error.processCodec']();
+		case 'video_too_long':
+			return m['view.composer.video.error.processTooLong']();
+		default:
+			return m['view.composer.video.error.processFailed']();
+	}
 }
 
 function getCompressErrorMessage(e: unknown): string | null {
