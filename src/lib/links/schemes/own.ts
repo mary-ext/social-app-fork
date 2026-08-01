@@ -35,6 +35,9 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 		case 'StarterPack': {
 			return { kind: 'starter-pack', actor: target.actor, rkey: target.rkey };
 		}
+		case 'StarterPackShort': {
+			return { kind: 'bsky-starter-pack-code', code: target.code };
+		}
 		case 'Topic': {
 			return { kind: 'topic', topic: target.topic };
 		}

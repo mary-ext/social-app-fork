@@ -1,6 +1,7 @@
 import type { ActorIdentifier, RecordKey } from '@atcute/lexicons/syntax';
 
 import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
+import { parseBlueskyShortPath } from '#/lib/links/schemes/bluesky-short';
 import { parseOwnPath } from '#/lib/links/schemes/own';
 import { safeUrlParse } from '#/lib/strings/url-helpers';
 
@@ -9,6 +10,7 @@ import { safeUrlParse } from '#/lib/strings/url-helpers';
  * `#/lib/routes/app-links` maps these onto this app's routes.
  */
 export type AppLink =
+	| { kind: 'bsky-starter-pack-code'; code: string }
 	| { kind: 'chat-invite'; code: string }
 	| { kind: 'feed'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'hashtag'; author: ActorIdentifier | undefined; tag: string }
@@ -33,6 +35,10 @@ const SCHEMES: readonly LinkScheme[] = [
 	{
 		hosts: new Set(['bsky.app', 'deer.social', 'main.bsky.dev', 'witchsky.app', 'zeppelin.social']),
 		parse: parseBlueskyPath,
+	},
+	{
+		hosts: new Set(['go.bsky.app']),
+		parse: parseBlueskyShortPath,
 	},
 ];
 

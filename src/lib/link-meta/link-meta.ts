@@ -17,9 +17,12 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta> {
-	// client URLs do not need metadata, except starter packs.
-	if (isClientUrl(url) && resolveUrlToLink(url)?.kind !== 'starter-pack') {
-		return { url };
+	// starter pack links need metadata, including short links.
+	if (isClientUrl(url)) {
+		const kind = resolveUrlToLink(url)?.kind;
+		if (kind !== 'bsky-starter-pack-code' && kind !== 'starter-pack') {
+			return { url };
+		}
 	}
 
 	let urlp;

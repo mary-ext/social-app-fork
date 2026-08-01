@@ -18,6 +18,8 @@ import { type RouteTarget, router } from '#/routes';
  */
 export const appLinkToTarget = (link: AppLink): RouteTarget => {
 	switch (link.kind) {
+		case 'bsky-starter-pack-code':
+			return { name: 'StarterPackShort', code: link.code };
 		// a chat invite has a route so the link keeps anchor semantics (opening in a new tab lands on the join
 		// screen), but a plain click is intercepted into the join dialog instead.
 		case 'chat-invite':
