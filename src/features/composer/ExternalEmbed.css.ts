@@ -41,11 +41,3 @@ export const errorContainer = style([
 export const textNegative = style({
 	color: vars.palette.negative_400,
 });
-
-export const pointerEventsNone = style({
-	pointerEvents: 'none',
-});
-
-export const pointerEventsAuto = style({
-	pointerEvents: 'auto',
-});

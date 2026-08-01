@@ -5,6 +5,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 
 import * as css from './FeedEmbed.css';
 import type { CommonProps } from './types';
@@ -15,8 +16,9 @@ export function FeedEmbed({
 	embed: AppBskyFeedDefs.GeneratorView;
 }) {
 	const view = embed;
+	const navigationDisabled = useNavigationDisabled();
 	return (
-		<FeedCard.Link className={css.card} view={view}>
+		<FeedCard.Link className={css.card({ interactive: !navigationDisabled })} view={view}>
 			<FeedCard.Outer>
 				<FeedCard.Header>
 					<FeedCard.Avatar src={view.avatar} size={40} />

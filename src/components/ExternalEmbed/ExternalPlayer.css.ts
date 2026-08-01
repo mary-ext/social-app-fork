@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 
 export const container = style({
 	position: 'relative',
@@ -26,23 +27,32 @@ export const dim = style({
 	},
 });
 
-export const overlay = style({
-	appearance: 'none',
-	display: 'flex',
-	position: 'absolute',
-	top: 0,
-	right: 0,
-	bottom: 0,
-	left: 0,
-	alignItems: 'center',
-	justifyContent: 'center',
-	zIndex: 2,
-	margin: 0,
-	border: 0,
-	background: 'transparent',
-	padding: 0,
-	cursor: 'pointer',
-});
+export const overlay = recipe(
+	{
+		base: {
+			appearance: 'none',
+			display: 'flex',
+			position: 'absolute',
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: 0,
+			alignItems: 'center',
+			justifyContent: 'center',
+			zIndex: 2,
+			margin: 0,
+			border: 0,
+			background: 'transparent',
+			padding: 0,
+		},
+		variants: {
+			interactive: {
+				true: { cursor: 'pointer' },
+			},
+		},
+	},
+	{ debugId: 'overlay' },
+);
 
 export const iframeWrap = style({
 	position: 'absolute',

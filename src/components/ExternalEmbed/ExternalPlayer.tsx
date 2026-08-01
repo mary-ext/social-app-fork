@@ -10,6 +10,7 @@ import { noRowLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
 import { EmbedThumb } from '#/components/EmbedThumb';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 
@@ -27,6 +28,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
 	const consentDialogHandle = Dialog.useDialogHandle();
 	const containerRef = useRef<HTMLDivElement>(null);
+	const navigationDisabled = useNavigationDisabled();
 
 	const [isActive, setIsActive] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -69,11 +71,13 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 
 	return (
 		<>
-			<EmbedConsentDialog
-				handle={consentDialogHandle}
-				source={params.source}
-				onAccept={() => setIsActive(true)}
-			/>
+			{!navigationDisabled ? (
+				<EmbedConsentDialog
+					handle={consentDialogHandle}
+					source={params.source}
+					onAccept={() => setIsActive(true)}
+				/>
+			) : null}
 			<div
 				ref={containerRef}
 				className={styles.container}
@@ -83,10 +87,14 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 			>
 				{showThumb ? <EmbedThumb frameClassName={styles.thumb} src={link.thumb} /> : null}
 				{!isActive || isLoading ? <div aria-hidden className={styles.dim} /> : null}
-				{!isActive || isLoading ? (
+				{navigationDisabled ? (
+					<div aria-hidden className={styles.overlay({ interactive: false })}>
+						<PlayButtonIcon />
+					</div>
+				) : !isActive || isLoading ? (
 					<button
 						type="button"
-						className={styles.overlay}
+						className={styles.overlay({ interactive: true })}
 						aria-label={m['components.post.video.a11y.play']()}
 						onClick={onPlayPress}
 					>

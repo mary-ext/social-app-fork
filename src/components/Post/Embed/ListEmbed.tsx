@@ -5,6 +5,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 
 import * as css from './ListEmbed.css';
 import type { CommonProps } from './types';
@@ -15,10 +16,11 @@ export function ListEmbed({
 	embed: AppBskyGraphDefs.ListView;
 }) {
 	const view = embed;
+	const navigationDisabled = useNavigationDisabled();
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts ? moderateList(view, moderationOpts) : undefined;
 	return (
-		<ListCard.Link className={css.card} view={view}>
+		<ListCard.Link className={css.card({ interactive: !navigationDisabled })} view={view}>
 			<ListCard.Outer>
 				<ListCard.Header>
 					<ListCard.Avatar src={view.avatar} size={40} />

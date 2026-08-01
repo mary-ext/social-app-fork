@@ -14,6 +14,7 @@ import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
 
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { isModifiedClick, navigateTo } from '#/components/web/Link';
 
 import { type RouteTarget, useRouter } from '#/routes';
@@ -83,6 +84,7 @@ export function BlockLink({
 	onPointerLeave,
 }: BlockLinkProps) {
 	const router = useRouter();
+	const disabled = useNavigationDisabled();
 	// where the pointer last went down within the row; read back on click to gate navigation on the press
 	// origin rather than the release target
 	const pressOriginRef = useRef<Element | null>(null);
@@ -146,20 +148,26 @@ export function BlockLink({
 
 	const node = children;
 
+	const pressProps = disabled
+		? undefined
+		: {
+				'aria-label': label,
+				onClick,
+				onKeyDown: label ? onKeyDown : undefined,
+				onMouseDown,
+				onAuxClick,
+				onPointerDownCapture,
+				role: label ? 'link' : undefined,
+				tabIndex: label ? 0 : undefined,
+			};
+
 	// oxlint-disable-next-line react/react-compiler -- RC doesn't know this is meant to be a `ref` prop
 	return cloneElement(node, {
-		'aria-label': label,
+		...pressProps,
 		className: clsx(node.props.className, className),
-		onClick,
-		onKeyDown: label ? onKeyDown : undefined,
-		onMouseDown,
-		onAuxClick,
-		onPointerDownCapture,
 		onPointerEnter,
 		onPointerLeave,
 		// oxlint-disable-next-line react/react-compiler
 		ref: mergeRefs([ref, node.props.ref]),
-		role: label ? 'link' : undefined,
-		tabIndex: label ? 0 : undefined,
 	});
 }

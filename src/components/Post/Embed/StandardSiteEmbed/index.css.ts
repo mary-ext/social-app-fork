@@ -3,6 +3,7 @@ import { createVar, style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
+import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 const insetFocusRing = style({
@@ -16,6 +17,9 @@ const insetFocusRing = style({
 
 const gtPhone = 'screen and (min-width: 500px)';
 
+// marks navigable cards for descendant hover styles
+const isInteractive = style({});
+
 export const bodyLink = style({
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -24,35 +28,49 @@ export const bodyLink = style({
 	width: '100%',
 	textDecoration: 'none',
 	color: 'inherit',
-	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: colors.contrast_25 },
+		[`${isInteractive} &`]: { cursor: 'pointer' },
+		[`${isInteractive} &:hover`]: { backgroundColor: colors.contrast_25 },
 		'&:focus-visible': { outline: 'none' },
 	},
 });
 
-export const card = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	position: 'relative',
-	flexDirection: 'column',
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderRadius: borderRadius.lg,
-	borderColor: colors.borderContrastLow,
-	backgroundColor: colors.bg,
-	width: '100%',
-	overflow: 'hidden',
-	selectors: {
-		[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
-		[`&:has(${bodyLink}:focus-visible)`]: {
-			outline: `2px solid ${vars.palette.primary_500}`,
-			outlineOffset: 2,
+export const articleCard = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			display: 'flex',
+			position: 'relative',
+			flexDirection: 'column',
+			borderWidth: 1,
+			borderStyle: 'solid',
+			borderRadius: borderRadius.lg,
+			borderColor: colors.borderContrastLow,
+			backgroundColor: colors.bg,
+			width: '100%',
+			overflow: 'hidden',
+			selectors: {
+				[`&:has(${bodyLink}:focus-visible)`]: {
+					outline: `2px solid ${vars.palette.primary_500}`,
+					outlineOffset: 2,
+				},
+			},
+		},
+		variants: {
+			interactive: {
+				true: [
+					isInteractive,
+					{
+						selectors: {
+							[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
+						},
+					},
+				],
+			},
 		},
 	},
-});
-
-export const previewLock = style({ pointerEvents: 'none' });
+	{ debugId: 'articleCard' },
+);
 
 export const body = style({
 	boxSizing: 'border-box',
@@ -67,7 +85,7 @@ export const bodyMedia = style({
 	borderTopStyle: 'solid',
 	borderTopColor: colors.borderContrastLow,
 	selectors: {
-		[`${bodyLink}:hover &`]: { borderTopColor: colors.borderContrastHigh },
+		[`${isInteractive} ${bodyLink}:hover &`]: { borderTopColor: colors.borderContrastHigh },
 	},
 });
 
@@ -212,7 +230,7 @@ export const footer = style({
 	justifyContent: 'space-between',
 	padding: space.md,
 	selectors: {
-		[`${bodyLink}:hover ~ &`]: { backgroundColor: colors.contrast_25 },
+		[`${isInteractive} ${bodyLink}:hover ~ &`]: { backgroundColor: colors.contrast_25 },
 	},
 	'@media': {
 		[gtPhone]: { flexDirection: 'row', gap: space.sm },
@@ -245,25 +263,7 @@ export const footerIdentity = style({
 
 export const footerTitle = style({
 	selectors: {
-		[`${footerFill}:hover ~ ${footerIdentity} &`]: { textDecoration: 'underline' },
-	},
-});
-
-export const pubCard = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	position: 'relative',
-	flexDirection: 'column',
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderRadius: borderRadius.lg,
-	borderColor: colors.borderContrastLow,
-	backgroundColor: colors.bg,
-	padding: space.md,
-	width: '100%',
-	overflow: 'hidden',
-	selectors: {
-		'&:hover': { borderColor: colors.borderContrastHigh, backgroundColor: colors.contrast_25 },
+		[`${isInteractive} ${footerFill}:hover ~ ${footerIdentity} &`]: { textDecoration: 'underline' },
 	},
 });
 
@@ -278,6 +278,41 @@ export const pubFill = style([
 		zIndex: 0,
 	},
 ]);
+
+export const publicationCard = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			display: 'flex',
+			position: 'relative',
+			flexDirection: 'column',
+			borderWidth: 1,
+			borderStyle: 'solid',
+			borderRadius: borderRadius.lg,
+			borderColor: colors.borderContrastLow,
+			backgroundColor: colors.bg,
+			padding: space.md,
+			width: '100%',
+			overflow: 'hidden',
+		},
+		variants: {
+			interactive: {
+				true: [
+					isInteractive,
+					{
+						selectors: {
+							[`&:has(${pubFill}:hover)`]: {
+								borderColor: colors.borderContrastHigh,
+								backgroundColor: colors.contrast_25,
+							},
+						},
+					},
+				],
+			},
+		},
+	},
+	{ debugId: 'publicationCard' },
+);
 
 export const pubTopRow = style({
 	display: 'flex',

@@ -115,6 +115,8 @@
 	"view.composer.drafts.saveChanges.message": "You have unsaved changes to this draft, would you like to save them?",
 	"view.composer.drafts.saveChanges.title": "Save changes?",
 	"view.composer.drafts.title": "Drafts",
+	"view.composer.embed.a11y.gifPreview": "GIF preview",
+	"view.composer.embed.a11y.linkPreview": "Link preview for {niceUrl}",
 	"view.composer.gallery.action.edit": "Edit image",
 	"view.composer.gallery.action.remove": "Remove image",
 	"view.composer.gallery.dropToAdd": "Drop to add images",

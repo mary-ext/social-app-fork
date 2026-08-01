@@ -18,6 +18,7 @@ import { useSession } from '#/state/session';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 import { Link as WebLink } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
@@ -162,6 +163,7 @@ export function Link({
 	onPress?: () => void;
 }) {
 	const queryClient = useQueryClient();
+	const navigationDisabled = useNavigationDisabled();
 	const record = getStarterPackRecord(starterPack);
 	const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 	const did = starterPack.creator.did;
@@ -170,7 +172,7 @@ export function Link({
 		<WebLink
 			to={starterPackTarget(did, rkey)}
 			label={m['components.starterPack.card.navigate']({ name: record.name })}
-			className={clsx(css.link, className)}
+			className={clsx(css.link({ interactive: !navigationDisabled }), className)}
 			onPress={() => {
 				precacheResolvedUri(queryClient, starterPack.creator.handle, starterPack.creator.did);
 				precacheStarterPack(queryClient, starterPack);
@@ -184,10 +186,11 @@ export function Link({
 
 /** A starter pack embedded in a post: OG card image on top and the card body below. */
 export function Embed({ starterPack }: { starterPack: AnyStarterPackView }) {
+	const navigationDisabled = useNavigationDisabled();
 	const imageUri = getStarterPackOgCard(starterPack);
 
 	return (
-		<Link starterPack={starterPack} className={css.embedCard}>
+		<Link starterPack={starterPack} className={css.embedCard({ interactive: !navigationDisabled })}>
 			<EmbedThumb src={imageUri} />
 			<div className={css.embedBody}>
 				<Card starterPack={starterPack} />

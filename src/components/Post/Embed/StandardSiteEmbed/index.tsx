@@ -22,6 +22,7 @@ import { EmbedThumb } from '#/components/EmbedThumb';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { StandardSite } from '#/components/icons/community/StandardSite';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -39,7 +40,7 @@ import { isStandardSitePublicationEmbed } from './utils';
 type StandardSiteEmbedProps = {
 	className?: string;
 	onOpen?: () => void;
-	/** Renders the card non-interactive for the composer preview. */
+	/** hides actions in composer previews. */
 	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
 };
@@ -135,11 +136,12 @@ export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
 }
 
 function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
+	const interactive = !useNavigationDisabled();
 	const niceUrl = toNiceDomain(view.uri);
 	const open = () => onOpen?.();
 
 	return (
-		<div className={clsx(styles.card, preview && styles.previewLock, className)}>
+		<div className={clsx(styles.articleCard({ interactive }), className)}>
 			<ExternalLink
 				className={styles.bodyLink}
 				href={view.uri}
@@ -193,7 +195,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 			{view.source ? (
 				<>
 					<div className={styles.divider} />
-					<PublicationFooter onOpen={onOpen} view={view} />
+					<PublicationFooter onOpen={onOpen} preview={preview} view={view} />
 				</>
 			) : null}
 		</div>
@@ -201,14 +203,16 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 }
 
 function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
+	const interactive = !useNavigationDisabled();
 	if (!view.source) {
 		return null;
 	}
+
 	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
 
 	return (
-		<div className={clsx(styles.pubCard, preview && styles.previewLock, className)}>
+		<div className={clsx(styles.publicationCard({ interactive }), className)}>
 			<ExternalLink
 				className={styles.pubFill}
 				href={view.source.uri}
@@ -233,7 +237,7 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 					</div>
 				</div>
 
-				<SubscribeButton className={styles.hideOnPhone} onOpen={onOpen} view={view} />
+				{!preview ? <SubscribeButton className={styles.hideOnPhone} onOpen={onOpen} view={view} /> : null}
 			</div>
 
 			{view.description ? (
@@ -244,20 +248,24 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 				</div>
 			) : null}
 
-			<SubscribeButton
-				className={clsx(styles.pubSubscribeStacked, styles.hideOnGtPhone)}
-				onOpen={onOpen}
-				view={view}
-			/>
+			{!preview ? (
+				<SubscribeButton
+					className={clsx(styles.pubSubscribeStacked, styles.hideOnGtPhone)}
+					onOpen={onOpen}
+					view={view}
+				/>
+			) : null}
 		</div>
 	);
 }
 
 function PublicationFooter({
 	onOpen,
+	preview,
 	view,
 }: {
 	onOpen?: () => void;
+	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
 	if (!view.source) {
@@ -292,7 +300,7 @@ function PublicationFooter({
 				</div>
 			</div>
 
-			<SubscribeButton onOpen={onOpen} view={view} />
+			{!preview ? <SubscribeButton onOpen={onOpen} view={view} /> : null}
 		</div>
 	);
 }

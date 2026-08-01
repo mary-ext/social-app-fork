@@ -7,6 +7,7 @@ import { resolveUrl } from '#/lib/routes/app-links';
 import { isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { groupChatJoinHandle, linkWarningDialogHandle } from '#/components/dialogs/handles';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
@@ -200,6 +201,18 @@ type BlockAnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'onClick' |
 	ref?: Ref<HTMLAnchorElement>;
 };
 
+const useAnchorProps = (bindings: LinkBindings) => {
+	if (useNavigationDisabled()) {
+		return undefined;
+	}
+	return {
+		href: bindings.href,
+		onClick: bindings.onClick,
+		rel: bindings.rel,
+		target: bindings.target,
+	};
+};
+
 // a block `<a>` wrapping arbitrary children with no styling of its own — pass `className` for layout.
 const BlockAnchor = ({
 	bindings,
@@ -207,14 +220,7 @@ const BlockAnchor = ({
 	label,
 	...rest
 }: { bindings: LinkBindings } & BlockAnchorProps) => (
-	<a
-		{...rest}
-		aria-label={label}
-		href={bindings.href}
-		onClick={bindings.onClick}
-		rel={bindings.rel}
-		target={bindings.target}
-	>
+	<a {...rest} {...useAnchorProps(bindings)} aria-label={label}>
 		{children}
 	</a>
 );
@@ -310,13 +316,10 @@ const InlineAnchor = ({
 	return (
 		<a
 			{...rest}
+			{...useAnchorProps(bindings)}
 			aria-label={label}
 			className={styled.className}
-			href={bindings.href}
-			onClick={bindings.onClick}
-			rel={bindings.rel}
 			style={styled.style}
-			target={bindings.target}
 		>
 			{children}
 		</a>
@@ -327,16 +330,18 @@ type ButtonAnchorProps = Omit<ButtonProps, 'nativeButton' | 'onClick' | 'render'
 
 // a {@link Button} that renders an `<a>`, so it keeps real anchor semantics (middle/cmd-click, copy link
 // address) while looking and laying out like a button.
-const ButtonAnchor = ({ bindings, children, ...rest }: { bindings: LinkBindings } & ButtonAnchorProps) => (
-	<Button
-		{...rest}
-		nativeButton={false}
-		onClick={bindings.onClick}
-		render={<a href={bindings.href} rel={bindings.rel} target={bindings.target} />}
-	>
-		{children}
-	</Button>
-);
+const ButtonAnchor = ({ bindings, children, ...rest }: { bindings: LinkBindings } & ButtonAnchorProps) => {
+	return (
+		<Button
+			{...rest}
+			nativeButton={false}
+			onClick={bindings.onClick}
+			render={<a href={bindings.href} rel={bindings.rel} target={bindings.target} />}
+		>
+			{children}
+		</Button>
+	);
+};
 
 // #endregion
 

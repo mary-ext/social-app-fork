@@ -4,14 +4,23 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-export const link = style({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'flex-start',
-	textDecoration: 'none',
-	color: 'inherit',
-	cursor: 'pointer',
-});
+export const link = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			alignItems: 'flex-start',
+			textDecoration: 'none',
+			color: 'inherit',
+		},
+		variants: {
+			interactive: {
+				true: { cursor: 'pointer' },
+			},
+		},
+	},
+	{ debugId: 'link' },
+);
 
 export const outer = style({
 	display: 'flex',
@@ -35,24 +44,37 @@ export const titleColumn = style({
 	minWidth: 0,
 });
 
-export const embedCard = style({
-	boxSizing: 'border-box',
-	transitionProperty: 'border-color',
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderRadius: borderRadius.sm,
-	borderColor: colors.borderContrastLow,
-	backgroundColor: colors.bg,
-	width: '100%',
-	overflow: 'hidden',
-	selectors: {
-		'&:focus-visible': {
-			outline: `2px solid ${colors.primary_500}`,
-			outlineOffset: -2,
+export const embedCard = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			transitionProperty: 'border-color',
+			borderWidth: 1,
+			borderStyle: 'solid',
+			borderRadius: borderRadius.sm,
+			borderColor: colors.borderContrastLow,
+			backgroundColor: colors.bg,
+			width: '100%',
+			overflow: 'hidden',
+			selectors: {
+				'&:focus-visible': {
+					outline: `2px solid ${colors.primary_500}`,
+					outlineOffset: -2,
+				},
+			},
 		},
-		'&:hover': { borderColor: colors.borderContrastHigh },
+		variants: {
+			interactive: {
+				true: {
+					selectors: {
+						'&:hover': { borderColor: colors.borderContrastHigh },
+					},
+				},
+			},
+		},
 	},
-});
+	{ debugId: 'embedCard' },
+);
 
 export const embedBody = style({
 	boxSizing: 'border-box',

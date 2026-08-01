@@ -8,6 +8,7 @@ import { useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
 
 import * as Dialog from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 
@@ -24,6 +25,7 @@ export type ExternalGifProps = {
 export function ExternalGif({ link, params }: ExternalGifProps) {
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
 	const consentDialogHandle = Dialog.useDialogHandle();
+	const navigationDisabled = useNavigationDisabled();
 
 	const [isPlayerActive, setIsPlayerActive] = useState(false);
 	const [isPrefetched, setIsPrefetched] = useState(false);
@@ -52,26 +54,36 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 	const showOverlay = !isPrefetched || !isAnimating;
 	const src = showOverlay ? link.thumb : params.playerUri;
 
+	const body = (
+		<>
+			<img className={styles.image} src={src} alt={link.title} />
+			{showOverlay ? (
+				<span className={styles.overlay}>
+					<span aria-hidden className={styles.dim} />
+					{!isAnimating || !isPlayerActive ? (
+						<PlayButtonIcon />
+					) : (
+						<Spinner label={m['common.gif.loading']()} />
+					)}
+				</span>
+			) : null}
+		</>
+	);
+
+	if (navigationDisabled) {
+		return <span className={styles.frame({ interactive: false })}>{body}</span>;
+	}
+
 	return (
 		<>
 			<EmbedConsentDialog handle={consentDialogHandle} source={params.source} onAccept={load} />
 			<button
 				type="button"
-				className={styles.button}
+				className={styles.frame({ interactive: true })}
 				aria-label={m['components.post.external.a11y.play']({ title: link.title })}
 				onClick={onPlayPress}
 			>
-				<img className={styles.image} src={src} alt={link.title} />
-				{showOverlay ? (
-					<span className={styles.overlay}>
-						<span aria-hidden className={styles.dim} />
-						{!isAnimating || !isPlayerActive ? (
-							<PlayButtonIcon />
-						) : (
-							<Spinner label={m['common.gif.loading']()} />
-						)}
-					</span>
-				) : null}
+				{body}
 			</button>
 		</>
 	);

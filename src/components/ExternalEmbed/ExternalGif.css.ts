@@ -1,22 +1,32 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 
-export const button = style({
-	appearance: 'none',
-	display: 'block',
-	position: 'relative',
-	margin: 0,
-	border: 0,
-	borderBottomLeftRadius: 0,
-	borderBottomRightRadius: 0,
-	background: 'transparent',
-	padding: 0,
-	width: '100%',
-	height: 300,
-	overflow: 'hidden',
-	cursor: 'pointer',
-});
+export const frame = recipe(
+	{
+		base: {
+			appearance: 'none',
+			display: 'block',
+			position: 'relative',
+			margin: 0,
+			border: 0,
+			borderBottomLeftRadius: 0,
+			borderBottomRightRadius: 0,
+			background: 'transparent',
+			padding: 0,
+			width: '100%',
+			height: 300,
+			overflow: 'hidden',
+		},
+		variants: {
+			interactive: {
+				true: { cursor: 'pointer' },
+			},
+		},
+	},
+	{ debugId: 'frame' },
+);
 
 export const image = style({
 	display: 'block',

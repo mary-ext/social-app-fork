@@ -22,6 +22,7 @@ import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';
 import * as Hider from '#/components/moderation/Hider';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -79,6 +80,7 @@ export function Link({
 	view: AppBskyGraphDefs.ListView;
 }) {
 	const queryClient = useQueryClient();
+	const navigationDisabled = useNavigationDisabled();
 
 	const target = createProfileListTarget({ list: view });
 
@@ -87,7 +89,12 @@ export function Link({
 	}, [queryClient, view]);
 
 	return (
-		<BlockLink className={clsx(css.link, className)} label={view.name} onBeforePress={onPress} to={target}>
+		<BlockLink
+			className={clsx(css.link({ interactive: !navigationDisabled }), className)}
+			label={view.name}
+			onBeforePress={onPress}
+			to={target}
+		>
 			<div>{children}</div>
 		</BlockLink>
 	);

@@ -17,6 +17,7 @@ import { useSession } from '#/state/session';
 import { BlockLink } from '#/components/BlockLink';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { MissingFeed } from '#/components/MissingFeed';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
@@ -109,6 +110,7 @@ export function Link({
 	className?: string;
 }) {
 	const queryClient = useQueryClient();
+	const navigationDisabled = useNavigationDisabled();
 
 	const target = createProfileFeedTarget({ feed: view });
 
@@ -118,7 +120,7 @@ export function Link({
 
 	return (
 		<BlockLink
-			className={clsx(css.link, className)}
+			className={clsx(css.link({ interactive: !navigationDisabled }), className)}
 			label={view.displayName}
 			onBeforePress={onPress}
 			to={target}

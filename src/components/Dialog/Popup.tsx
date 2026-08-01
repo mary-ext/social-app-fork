@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 
 import * as styles from '#/components/Dialog/Popup.css';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
+import { NavigationEnabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -45,7 +46,7 @@ export function Viewport({ children }: { children: ReactNode }) {
 		<BaseDialog.Portal className={styles.portal}>
 			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
 			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
-				{children}
+				<NavigationEnabled>{children}</NavigationEnabled>
 			</BaseDialog.Viewport>
 		</BaseDialog.Portal>
 	);

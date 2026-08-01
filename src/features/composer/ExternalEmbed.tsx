@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
+import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
 
@@ -11,6 +12,7 @@ import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveB
 import type { Gif } from '#/features/gifPicker/types';
 
 import { ExternalEmbed } from '#/components/ExternalEmbed';
+import { NavigationDisabled } from '#/components/NavigationDisabled';
 import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
@@ -49,11 +51,11 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	};
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} role="group" aria-label={m['view.composer.embed.a11y.gifPreview']()}>
 			{linkInfo ? (
-				<div className={styles.pointerEventsAuto}>
+				<NavigationDisabled>
 					<ExternalEmbed link={linkInfo} hideAlt />
-				</div>
+				</NavigationDisabled>
 			) : error ? (
 				<Container className={styles.errorContainer}>
 					<Text numberOfLines={1} color="textContrastHigh">
@@ -150,9 +152,13 @@ export const ExternalEmbedLink = ({
 	}
 
 	return (
-		<div className={styles.linkContainer}>
+		<div
+			className={styles.linkContainer}
+			role="group"
+			aria-label={m['view.composer.embed.a11y.linkPreview']({ niceUrl: toNiceDomain(uri) })}
+		>
 			{linkComponent ? (
-				<div className={styles.pointerEventsNone}>{linkComponent}</div>
+				<NavigationDisabled>{linkComponent}</NavigationDisabled>
 			) : error ? (
 				<Container className={styles.errorContainer}>
 					<Text numberOfLines={1} color="textContrastHigh">

@@ -4,13 +4,22 @@ import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const link = style({
-	display: 'flex',
-	flexDirection: 'column',
-	textDecoration: 'none',
-	color: 'inherit',
-	cursor: 'pointer',
-});
+export const link = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			textDecoration: 'none',
+			color: 'inherit',
+		},
+		variants: {
+			interactive: {
+				true: { cursor: 'pointer' },
+			},
+		},
+	},
+	{ debugId: 'link' },
+);
 
 export const defaultRow = recipe(
 	{
