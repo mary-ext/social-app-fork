@@ -110,7 +110,8 @@ export function Composer({
 	const [dismissedCompletion, setDismissedCompletion] = useState<string | null>(null);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const overlayRef = useRef<HTMLDivElement>(null);
+	// store the overlay in state so the anchor is created after mount.
+	const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
 
 	const spans = buildSpans(text);
 	const completion = selection.start === selection.end ? findCompletion(text, selection.end) : null;
@@ -132,6 +133,16 @@ export function Composer({
 	// the popup is only navigable when it actually holds rows; a spinner-only popup has nothing for
 	// the arrow keys to move through, so they should still drive the textarea caret.
 	const hasNavigableAutocomplete = autocompleteOpen && items.length > 0;
+
+	// recompute the range because the overlay text nodes change on edit.
+	const anchor = completion &&
+		overlay && {
+			contextElement: overlay,
+			getBoundingClientRect: () => {
+				const range = rangeFromOffsets(overlay, completion.range.start, completion.range.end);
+				return (range ?? overlay).getBoundingClientRect();
+			},
+		};
 
 	const syncSelection = (el: HTMLInputElement | HTMLTextAreaElement) => {
 		setSelection({ start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 });
@@ -245,7 +256,7 @@ export function Composer({
 				className={clsx(styles.root({ fontSize }), maxRows !== undefined && styles.capped, className)}
 				style={layoutVars}
 			>
-				<div className={styles.overlay} ref={overlayRef} aria-hidden inert>
+				<div className={styles.overlay} ref={setOverlay} aria-hidden inert>
 					{spans.map((span, i) => (
 						// oxlint-disable-next-line react/no-array-index-key -- inert highlight overlay, positional
 						<span key={i} className={span.facet ? styles.facet : undefined}>
@@ -321,19 +332,7 @@ export function Composer({
 				/>
 			</div>
 			{autocompleteOpen && (
-				<Autocomplete
-					items={items}
-					getAnchor={() => {
-						const root = overlayRef.current;
-						if (!root || !completion) {
-							return null;
-						}
-						const range = rangeFromOffsets(root, completion.range.start, completion.range.end);
-						return range && { getBoundingClientRect: () => range.getBoundingClientRect() };
-					}}
-					placement={autocompletePlacement}
-					onSelect={selectItem}
-				/>
+				<Autocomplete anchor={anchor} items={items} placement={autocompletePlacement} onSelect={selectItem} />
 			)}
 		</BaseAutocomplete.Root>
 	);

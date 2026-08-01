@@ -18,18 +18,23 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './Autocomplete.css';
 
+type AutocompleteAnchor = {
+	contextElement: Element;
+	getBoundingClientRect: () => DOMRect;
+};
+
 /**
  * inline-autocomplete suggestion popup for mentions and emoji. must be rendered inside the composer's
  * `BaseAutocomplete.Root`.
  */
 export function Autocomplete({
+	anchor,
 	items,
-	getAnchor,
 	placement = 'bottom',
 	onSelect,
 }: {
+	anchor: AutocompleteAnchor | null;
 	items: AutocompleteItem[];
-	getAnchor: () => Element | { getBoundingClientRect: () => DOMRect } | null;
 	placement?: Placement;
 	onSelect: (item: AutocompleteItem) => void;
 }) {
@@ -39,8 +44,8 @@ export function Autocomplete({
 	return (
 		<BaseAutocomplete.Portal>
 			<BaseAutocomplete.Positioner
-				anchor={getAnchor}
 				align={align}
+				anchor={anchor}
 				className={styles.positioner}
 				positionMethod="fixed"
 				side={side}
