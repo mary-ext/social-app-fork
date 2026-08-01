@@ -14,23 +14,14 @@ import { m } from '#/paraglide/messages';
 import { ImageDescriptionModelDialog } from './components/ImageDescriptionModelDialog';
 import { OpenRouterKeyDialog } from './components/OpenRouterKeyDialog';
 
+const maskKey = (key: string): string => `••••${key.slice(-4)}`;
+
 export function AiSettingsScreen() {
 	useTitle(m['navigation.settings.ai.title']());
 
-	const { data: models, error, isPending } = useOpenRouterModelsQuery({ inputModalities: ['image'] });
-
 	const keyDialogHandle = Dialog.useDialogHandle();
-	const modelDialogHandle = Dialog.useDialogHandle();
 
 	const apiKey = useOpenRouterApiKey();
-	const selectedDescriptionModel = useImageDescriptionModel();
-
-	let modelSubtitleText: string = m['screens.settings.ai.model.placeholder']();
-	if (selectedDescriptionModel !== undefined) {
-		// fall back to the bare id while the list is loading or failed to load
-		modelSubtitleText =
-			models?.find((model) => model.id === selectedDescriptionModel)?.name ?? selectedDescriptionModel;
-	}
 
 	return (
 		<Layout.Screen>
@@ -56,33 +47,48 @@ export function AiSettingsScreen() {
 						</Settings.ButtonRow>
 					</Settings.Section>
 
-					<Settings.Section
-						footnoteText={error !== null ? m['screens.settings.ai.model.loadError']() : undefined}
-					>
-						<Settings.ButtonRow
-							label={m['screens.settings.ai.model.label']()}
-							onPress={() => modelDialogHandle.open(null)}
-						>
-							<Settings.Icon icon={ImageIcon} />
-							<Settings.Label
-								titleText={m['screens.settings.ai.model.label']()}
-								subtitleText={modelSubtitleText}
-							/>
-						</Settings.ButtonRow>
+					<Settings.Section>
+						<ImageDescriptionModelRow />
 					</Settings.Section>
 				</Settings.List>
 			</Layout.Content>
 
 			<OpenRouterKeyDialog apiKey={apiKey} handle={keyDialogHandle} />
-			<ImageDescriptionModelDialog
-				error={error}
-				handle={modelDialogHandle}
-				isPending={isPending}
-				model={selectedDescriptionModel}
-				models={models}
-			/>
 		</Layout.Screen>
 	);
 }
 
-const maskKey = (key: string): string => `••••${key.slice(-4)}`;
+function ImageDescriptionModelRow({ className }: { className?: string }) {
+	const { data: models, error, isPending } = useOpenRouterModelsQuery({ inputModalities: ['image'] });
+
+	const dialogHandle = Dialog.useDialogHandle();
+
+	const selectedModel = useImageDescriptionModel();
+
+	let subtitleText: string = m['screens.settings.ai.model.placeholder']();
+	if (selectedModel !== undefined) {
+		// fall back to the bare id while the list is loading or failed to load
+		subtitleText = models?.find((model) => model.id === selectedModel)?.name ?? selectedModel;
+	}
+
+	return (
+		<>
+			<Settings.ButtonRow
+				className={className}
+				label={m['screens.settings.ai.model.label']()}
+				onPress={() => dialogHandle.open(null)}
+			>
+				<Settings.Icon icon={ImageIcon} />
+				<Settings.Label titleText={m['screens.settings.ai.model.label']()} subtitleText={subtitleText} />
+			</Settings.ButtonRow>
+
+			<ImageDescriptionModelDialog
+				error={error}
+				handle={dialogHandle}
+				isPending={isPending}
+				model={selectedModel}
+				models={models}
+			/>
+		</>
+	);
+}
