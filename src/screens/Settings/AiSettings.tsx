@@ -59,7 +59,10 @@ export function AiSettingsScreen() {
 }
 
 function ImageDescriptionModelRow({ className }: { className?: string }) {
-	const { data: models, error, isPending } = useOpenRouterModelsQuery({ inputModalities: ['image'] });
+	const { data: models } = useOpenRouterModelsQuery({
+		inputModalities: ['image', 'text'],
+		outputModalities: ['text'],
+	});
 
 	const dialogHandle = Dialog.useDialogHandle();
 
@@ -82,13 +85,7 @@ function ImageDescriptionModelRow({ className }: { className?: string }) {
 				<Settings.Label titleText={m['screens.settings.ai.model.label']()} subtitleText={subtitleText} />
 			</Settings.ButtonRow>
 
-			<ImageDescriptionModelDialog
-				error={error}
-				handle={dialogHandle}
-				isPending={isPending}
-				model={selectedModel}
-				models={models}
-			/>
+			<ImageDescriptionModelDialog handle={dialogHandle} model={selectedModel} />
 		</>
 	);
 }

@@ -10,6 +10,7 @@ const openrouterModel = v.object({
 	name: v.string(),
 	architecture: v.object({
 		input_modalities: v.array(v.string()),
+		output_modalities: v.array(v.string()),
 	}),
 });
 
@@ -19,15 +20,19 @@ const responseSchema = v.object({
 	data: v.array(openrouterModel),
 });
 
+type Modality = 'audio' | 'image' | 'text' | 'video';
+
 type Options = {
 	/** A model is listed only when it accepts every one of these input modalities, e.g. `image`. */
-	inputModalities: string[];
+	inputModalities: Modality[];
+	/** A model is listed only when it emits every one of these output modalities, e.g. `text`. */
+	outputModalities: Modality[];
 };
 
 const RQKEY_ROOT = 'openrouter-models';
 export const RQKEY = () => [RQKEY_ROOT];
 
-export function useOpenRouterModelsQuery({ inputModalities }: Options) {
+export function useOpenRouterModelsQuery({ inputModalities, outputModalities }: Options) {
 	return useQuery({
 		queryKey: RQKEY(),
 		staleTime: STALE.HOURS.ONE,
@@ -43,7 +48,10 @@ export function useOpenRouterModelsQuery({ inputModalities }: Options) {
 		},
 		select(models) {
 			return models.filter((model) => {
-				return inputModalities.every((modality) => model.architecture.input_modalities.includes(modality));
+				return (
+					inputModalities.every((modality) => model.architecture.input_modalities.includes(modality)) &&
+					outputModalities.every((modality) => model.architecture.output_modalities.includes(modality))
+				);
 			});
 		},
 	});

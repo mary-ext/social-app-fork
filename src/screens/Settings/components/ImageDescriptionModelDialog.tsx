@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { clsx } from 'clsx';
 
 import { setImageDescriptionModel } from '#/state/preferences/openrouter';
-import type { OpenRouterModel } from '#/state/queries/openrouter-models';
+import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
 
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
@@ -24,25 +24,31 @@ type Entry = {
 };
 
 type Props = {
-	error: Error | null;
 	handle: Dialog.DialogHandle;
-	isPending: boolean;
 	/** The currently saved model id, or undefined when image description is off. */
 	model: string | undefined;
-	models: OpenRouterModel[] | undefined;
 };
 
-export function ImageDescriptionModelDialog({ error, handle, isPending, model, models }: Props) {
+export function ImageDescriptionModelDialog({ handle, model }: Props) {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={styles.popup} scroll="body" label={m['screens.settings.ai.model.label']()}>
-				<DialogInner error={error} handle={handle} isPending={isPending} model={model} models={models} />
+				<DialogInner handle={handle} model={model} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-function DialogInner({ error, handle, isPending, model, models }: Props) {
+function DialogInner({ handle, model }: Props) {
+	const {
+		data: models,
+		error,
+		isPending,
+	} = useOpenRouterModelsQuery({
+		inputModalities: ['image', 'text'],
+		outputModalities: ['text'],
+	});
+
 	const [selected, setSelected] = useState(model ?? NONE);
 	const [search, setSearch] = useState('');
 
