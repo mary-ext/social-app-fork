@@ -22,6 +22,48 @@ const responseSchema = v.object({
 
 type Modality = 'audio' | 'image' | 'text' | 'video';
 
+type ParsedModelId = {
+	author: string;
+	alias: boolean;
+	rest: string;
+};
+
+const parseModelId = (id: string): ParsedModelId => {
+	const alias = id.startsWith('~');
+	const slash = id.indexOf('/');
+	if (slash === -1) {
+		return { author: id.slice(alias ? 1 : 0), alias, rest: '' };
+	}
+
+	return { author: id.slice(alias ? 1 : 0, slash), alias, rest: id.slice(slash + 1) };
+};
+
+const compareStrings = (a: string, b: string) => {
+	return a < b ? -1 : a > b ? 1 : 0;
+};
+
+const compareModelIds = (a: string, b: string) => {
+	const left = parseModelId(a);
+	const right = parseModelId(b);
+
+	if (left.author !== right.author) {
+		if (left.author === 'openrouter') {
+			return -1;
+		}
+		if (right.author === 'openrouter') {
+			return 1;
+		}
+
+		return compareStrings(left.author, right.author);
+	}
+
+	if (left.alias !== right.alias) {
+		return left.alias ? -1 : 1;
+	}
+
+	return compareStrings(left.rest, right.rest);
+};
+
 type Options = {
 	/** A model is listed only when it accepts every one of these input modalities, e.g. `image`. */
 	inputModalities: Modality[];
@@ -44,7 +86,8 @@ export function useOpenRouterModelsQuery({ inputModalities, outputModalities }: 
 
 			const parsed = v.parse(responseSchema, await response.json());
 
-			return parsed.data;
+			// oxlint-disable-next-line unicorn/no-array-sort
+			return parsed.data.sort((a, b) => compareModelIds(a.id, b.id));
 		},
 		select(models) {
 			return models.filter((model) => {
