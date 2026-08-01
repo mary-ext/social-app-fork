@@ -163,6 +163,9 @@ export function groupNotifications(
 					Math.abs(ts2 - ts) < MS_2DAY &&
 					notif.reason === groupedNotif.notification.reason &&
 					notif.reasonSubject === groupedNotif.notification.reasonSubject &&
+					// a follow's starter pack is shown on the group, so mixing sources would mislabel the others
+					(notif.reason !== 'follow' ||
+						notif.starterPack?.uri === groupedNotif.notification.starterPack?.uri) &&
 					(notif.author.did !== groupedNotif.notification.author.did || notif.reason === 'subscribed-post')
 				) {
 					const nextIsFollowBack = notif.reason === 'follow' && notif.author.viewer?.following;
