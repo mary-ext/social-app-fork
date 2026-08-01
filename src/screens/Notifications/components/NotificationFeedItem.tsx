@@ -1,6 +1,12 @@
 import { memo, useState } from 'react';
 
-import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphFollow } from '@atcute/bluesky';
+import type {
+	AnyProfileView,
+	AnyStarterPackView,
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
+	AppBskyGraphFollow,
+} from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -17,7 +23,7 @@ import { uniqueBy } from '@mary/array-fns';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-views';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -52,7 +58,10 @@ import { Post } from '#/components/Post/Post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
+import {
+	Notification as StarterPackCard,
+	useStarterPackLink,
+} from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 import * as Toast from '#/components/Toast';
@@ -228,6 +237,15 @@ let NotificationFeedItem = ({
 	);
 	const additionalAuthorsCount = authors.length - 1;
 	const hasMultipleAuthors = additionalAuthorsCount > 0;
+
+	// grouping already splits follows by starter pack, so the `every` only guards against a stale group
+	const starterPack = item.notification.starterPack;
+	const starterPackName =
+		item.type === 'follow' &&
+		starterPack !== undefined &&
+		(item.additional ?? []).every((notif) => notif.starterPack?.uri === starterPack.uri)
+			? getStarterPackRecord(starterPack).name
+			: undefined;
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
@@ -469,6 +487,9 @@ let NotificationFeedItem = ({
 	} else {
 		return null;
 	}
+	if (starterPackName !== undefined) {
+		a11yLabel += ` ${m['view.notifications.follow.viaStarterPack.a11y']({ name: starterPackName })}`;
+	}
 	a11yLabel += ` · ${niceTimestamp}`;
 
 	const card = (
@@ -498,6 +519,10 @@ let NotificationFeedItem = ({
 						)}
 					</TimeElapsed>
 				</Text>
+
+				{starterPack !== undefined && starterPackName !== undefined ? (
+					<FollowedViaStarterPack name={starterPackName} starterPack={starterPack} />
+				) : null}
 
 				{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
 				(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
@@ -540,6 +565,35 @@ let NotificationFeedItem = ({
 };
 NotificationFeedItem = memo(NotificationFeedItem);
 export { NotificationFeedItem };
+
+function FollowedViaStarterPack({ name, starterPack }: { name: string; starterPack: AnyStarterPackView }) {
+	const link = useStarterPackLink({ view: starterPack });
+
+	return (
+		<Text className={css.viaStarterPack} size="sm" color="textContrastMedium">
+			<Trans
+				message={m['view.notifications.follow.viaStarterPack.link']}
+				inputs={{ name }}
+				markup={{
+					packLink: ({ children }) => (
+						<InlineLinkText
+							to={link.to}
+							label={link.label}
+							onPress={link.precache}
+							onPointerEnter={link.precache}
+							color="text"
+							weight="semiBold"
+							size="sm"
+						>
+							<StarterPack className={css.viaStarterPackIcon} size="sm" fill={colors.primary_500} />
+							{children}
+						</InlineLinkText>
+					),
+				}}
+			/>
+		</Text>
+	);
+}
 
 function AuthorsList({
 	authors,

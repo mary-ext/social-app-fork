@@ -32,6 +32,8 @@
 	],
 	"view.notifications.follow.singleLink": "{#authorLink}{name}{/authorLink} followed you",
 	"view.notifications.follow.singleName": "{name} followed you",
+	"view.notifications.follow.viaStarterPack.a11y": "via starter pack {name}",
+	"view.notifications.follow.viaStarterPack.link": "via starter pack {#packLink}{name}{/packLink}",
 	"view.notifications.like.feed.multiLink": [
 		{
 			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],

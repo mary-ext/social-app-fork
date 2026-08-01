@@ -163,6 +163,18 @@ export const feedCardWrap = style({
 	paddingTop: 6,
 });
 
+export const viaStarterPack = style({
+	display: 'block',
+	paddingTop: 4,
+});
+
+export const viaStarterPackIcon = style({
+	display: 'inline-block',
+	position: 'relative',
+	top: 2,
+	marginRight: 3,
+});
+
 export const starterPackBox = style({
 	marginTop: 8,
 	borderWidth: 1,
