@@ -10,7 +10,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
 import { createStarterPackUri } from '#/lib/strings/starter-pack';
-import { isShortLink, makeRecordUri } from '#/lib/strings/url-helpers';
+import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import type { Gif } from '#/features/gifPicker/types';
 
@@ -72,10 +72,18 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(appview: Client, uri: string): Promise<ResolvedLink> {
-	if (isShortLink(uri)) {
-		uri = await resolveShortLink(uri);
+	let link = resolveUrlToLink(uri);
+	if (link?.kind === 'bsky-starter-pack-code') {
+		const expanded = await resolveShortLink(link.code);
+
+		if (expanded) {
+			uri = expanded;
+			link = resolveUrlToLink(expanded);
+		} else {
+			link = undefined;
+		}
 	}
-	const link = resolveUrlToLink(uri);
+
 	switch (link?.kind) {
 		case 'feed': {
 			const did = await fetchDid(link.actor);

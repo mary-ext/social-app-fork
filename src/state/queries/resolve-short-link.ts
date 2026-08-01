@@ -5,8 +5,6 @@ import { parseStarterPackUri } from '#/lib/strings/starter-pack';
 
 import { STALE } from '#/state/queries/index';
 
-const ROOT_URI = 'https://go.bsky.app/';
-
 const RQKEY_ROOT = 'resolved-short-link';
 export const RQKEY = (code: string) => [RQKEY_ROOT, code];
 
@@ -17,8 +15,7 @@ export function useResolvedStarterPackShortLink({ code }: { code: string }) {
 		staleTime: STALE.HOURS.ONE,
 		retry: 1,
 		queryFn: async () => {
-			const uri = `${ROOT_URI}${code}`;
-			const res = await resolveShortLink(uri);
+			const res = await resolveShortLink(code);
 			return parseStarterPackUri(res);
 		},
 	});

@@ -127,10 +127,6 @@ export async function splitApexDomain(hostname: string): Promise<[string, string
 	return [parsed.subdomain ? `${parsed.subdomain}.` : '', parsed.domain];
 }
 
-export function isShortLink(url: string): boolean {
-	return url.startsWith('https://go.bsky.app/');
-}
-
 function getHostnameFromUrl(url: string | URL): string | null {
 	let urlp;
 	try {
