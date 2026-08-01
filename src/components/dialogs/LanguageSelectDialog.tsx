@@ -159,6 +159,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 
 			<div className={styles.search}>
 				<SearchInput
+					autoFocus
 					label={m['components.dialogs.language.search']()}
 					maxLength={50}
 					onChangeText={setSearch}

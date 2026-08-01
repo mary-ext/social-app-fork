@@ -106,6 +106,7 @@ function DialogInner({ handle, model }: Props) {
 
 			<div className={styles.search}>
 				<SearchInput
+					autoFocus
 					label={m['screens.settings.ai.model.search']()}
 					maxLength={50}
 					onChangeText={setSearch}
