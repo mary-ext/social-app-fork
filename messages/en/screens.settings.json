@@ -83,7 +83,6 @@
 	"screens.settings.language.app.select": "Select app language",
 	"screens.settings.language.content.label": "Content languages",
 	"screens.settings.language.content.select": "Select content languages",
-	"screens.settings.language.noneSelectedHint": "If none are selected, all languages will be shown in your feeds.",
 	"screens.settings.language.primary.label": "Primary language",
 	"screens.settings.language.primary.select": "Select primary language",
 	"screens.settings.language.title": "Languages",

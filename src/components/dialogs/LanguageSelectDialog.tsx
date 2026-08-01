@@ -4,7 +4,7 @@ import { mapDefined, unique } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { usePostLanguageHistory, usePrimaryLanguage } from '#/state/preferences/languages';
+import { usePostLanguageHistory } from '#/state/preferences/languages';
 
 import { languageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -32,37 +32,25 @@ type ListEntry =
 			lang: Language;
 	  };
 
-export function LanguageSelectDialog({
-	titleText,
-	subtitleText,
-	/** Optionally can be passed to show different values than the persisted language preferences. */
-	currentLanguages,
-	onSelectLanguages,
-	maxLanguages,
-	handle,
-}: {
+type Props = {
 	handle: Dialog.DialogHandle;
-	titleText?: React.ReactNode;
-	subtitleText?: React.ReactNode;
-	/** Defaults to the primary language */
-	currentLanguages?: string[];
+	titleText: string;
+	/** Languages checked when the dialog opens. */
+	currentLanguages: string[];
 	onSelectLanguages: (languages: string[]) => void;
 	maxLanguages?: number;
-}) {
+};
+
+export function LanguageSelectDialog(props: Props) {
+	const { handle, titleText } = props;
+
 	const renderErrorBoundary = (error: unknown) => <DialogError handle={handle} details={String(error)} />;
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" label={m['components.dialogs.language.chooseTitle']()}>
+			<Dialog.Popup className={styles.popup} label={titleText} scroll="body">
 				<ErrorBoundary renderError={renderErrorBoundary}>
-					<DialogInner
-						handle={handle}
-						titleText={titleText}
-						subtitleText={subtitleText}
-						currentLanguages={currentLanguages}
-						onSelectLanguages={onSelectLanguages}
-						maxLanguages={maxLanguages}
-					/>
+					<DialogInner {...props} />
 				</ErrorBoundary>
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -78,29 +66,14 @@ function mapCodeList(codeList: string[]) {
 // drop languages this engine's CLDR data can't name — they'd render as bare codes
 const isNameable = (lang: Language) => resolveLanguageName(lang, LOCALE) !== undefined;
 
-function DialogInner({
-	titleText,
-	subtitleText,
-	currentLanguages,
-	onSelectLanguages,
-	maxLanguages,
-	handle,
-}: {
-	handle: Dialog.DialogHandle;
-	titleText?: React.ReactNode;
-	subtitleText?: React.ReactNode;
-	currentLanguages?: string[];
-	onSelectLanguages?: (languages: string[]) => void;
-	maxLanguages?: number;
-}) {
+function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, maxLanguages }: Props) {
 	const postLanguageHistory = usePostLanguageHistory();
-	const primaryLanguage = usePrimaryLanguage();
 
-	const [checkedCodes, setCheckedCodes] = useState<string[]>(currentLanguages || [primaryLanguage]);
+	const [checkedCodes, setCheckedCodes] = useState(currentLanguages);
 	const [search, setSearch] = useState('');
 
-	const handleClose = () => {
-		onSelectLanguages?.(checkedCodes);
+	const onClose = () => {
+		onSelectLanguages(checkedCodes);
 		handle.close();
 	};
 
@@ -157,8 +130,6 @@ function DialogInner({
 		...displayedLanguages.all.map((lang) => ({ type: 'item' as const, lang })),
 	];
 
-	const numItems = listData.length;
-
 	return (
 		<Toggle.Group
 			className={styles.group}
@@ -169,28 +140,24 @@ function DialogInner({
 			values={checkedCodes}
 		>
 			<div className={styles.header}>
-				<div className={styles.headerRow}>
-					<div className={styles.titleBlock}>
-						<Text size="xl" weight="semiBold">
-							{titleText ?? m['components.dialogs.language.chooseTitle']()}
-						</Text>
-						{subtitleText && (
-							<Text color="textContrastMedium" size="md">
-								{subtitleText}
-							</Text>
-						)}
-					</div>
-					<Button
-						color="secondary"
-						label={m['common.a11y.closeDialog']()}
-						onClick={handleClose}
-						shape="round"
-						size="small"
-						variant="ghost"
-					>
-						<ButtonIcon icon={XIcon} />
-					</Button>
-				</div>
+				<Text className={styles.title} numberOfLines={1} size="lg" weight="semiBold">
+					{titleText}
+				</Text>
+
+				<Button
+					className={styles.closeButton}
+					color="secondary"
+					label={m['common.a11y.closeDialog']()}
+					onClick={onClose}
+					shape="round"
+					size="small"
+					variant="ghost"
+				>
+					<ButtonIcon icon={XIcon} />
+				</Button>
+			</div>
+
+			<div className={styles.search}>
 				<SearchInput
 					label={m['components.dialogs.language.search']()}
 					maxLength={50}
@@ -200,29 +167,30 @@ function DialogInner({
 					value={search}
 				/>
 			</div>
+
 			<Dialog.List
 				className={styles.list}
 				data={listData}
-				keyExtractor={(item) => (item.type === 'header' ? `header-${item.label}` : langCode(item.lang))}
-				renderItem={(item, index) => {
-					if (item.type === 'header') {
+				keyExtractor={(entry) => (entry.type === 'header' ? `header-${entry.label}` : langCode(entry.lang))}
+				ListEmptyComponent={<Empty message={m['common.list.noResults']()} />}
+				renderItem={(entry, index) => {
+					if (entry.type === 'header') {
 						return (
-							<Text className={styles.sectionHeader} color="textContrastLow" size="xs" weight="semiBold">
-								{item.label}
+							<Text className={styles.sectionHeader} color="textContrastLow" size="md_sub" weight="semiBold">
+								{entry.label}
 							</Text>
 						);
 					}
-					const lang = item.lang;
-					const name = languageName(lang, LOCALE);
-					const isLastItem = index === numItems - 1;
+
+					const name = languageName(entry.lang, LOCALE);
 
 					return (
 						<Toggle.Item
-							className={clsx(styles.row, !isLastItem && styles.rowBorder)}
+							className={clsx(styles.item, index !== listData.length - 1 && styles.itemBorder)}
 							label={name}
-							name={langCode(lang)}
+							name={langCode(entry.lang)}
 						>
-							<Text className={styles.rowLabel} color="textContrastHigh" size="sm" weight="semiBold">
+							<Text className={styles.itemLabel} color="textContrastHigh" numberOfLines={1} weight="semiBold">
 								{name}
 							</Text>
 							<Toggle.CheckboxIndicator />
@@ -230,18 +198,32 @@ function DialogInner({
 					);
 				}}
 			/>
+
 			<Dialog.Footer>
 				<Button
 					className={styles.doneButton}
 					color="primary"
 					label={m['common.a11y.closeDialog']()}
-					onClick={handleClose}
+					onClick={onClose}
 					size="large"
 				>
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</Dialog.Footer>
 		</Toggle.Group>
+	);
+}
+
+function Empty({ message }: { message: string }) {
+	return (
+		<div className={styles.empty}>
+			<Text className={styles.emptyMessage} color="textContrastHigh" size="sm">
+				{message}
+			</Text>
+			<Text color="textContrastLow" size="xs">
+				(╯°□°)╯︵ ┻━┻
+			</Text>
+		</div>
 	);
 }
 

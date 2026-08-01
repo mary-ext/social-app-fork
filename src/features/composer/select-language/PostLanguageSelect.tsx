@@ -56,7 +56,6 @@ export function PostLanguageSelect({
 	const dialog = (
 		<LanguageSelectDialog
 			titleText={m['view.composer.language.chooseTitle']()}
-			subtitleText={m['view.composer.language.selectHint']({ max: MAX_POST_LANGUAGES })}
 			handle={languageDialogHandle}
 			currentLanguages={currentLanguages}
 			onSelectLanguages={onSelectLanguages}

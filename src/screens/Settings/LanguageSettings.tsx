@@ -121,7 +121,6 @@ export function LanguageSettingsScreen() {
 				<LanguageSelectDialog
 					handle={contentLanguagePrefsHandle}
 					titleText={m['screens.settings.language.content.select']()}
-					subtitleText={m['screens.settings.language.noneSelectedHint']()}
 					currentLanguages={contentLanguages}
 					onSelectLanguages={onChangeContentLanguages}
 				/>

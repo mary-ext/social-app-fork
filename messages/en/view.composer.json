@@ -197,15 +197,6 @@
 	"view.composer.language.prompt": "Are you writing in {#t0}{language}{/t0}?",
 	"view.composer.language.replyPrompt": "The post you're replying to was marked as being written in {language} by its author. Would you like to reply in {#t0}{language}{/t0}?",
 	"view.composer.language.select": "Select language...",
-	"view.composer.language.selectHint": [
-		{
-			"declarations": ["input max", "local n = max: number"],
-			"selectors": [],
-			"match": {
-				"": "Select up to {n} languages used in this post"
-			}
-		}
-	],
 	"view.composer.language.selectPost": "Select post language",
 	"view.composer.media.a11y.add": "Add media to post",
 	"view.composer.media.a11y.addHint": [
