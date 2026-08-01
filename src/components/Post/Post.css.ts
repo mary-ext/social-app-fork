@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { space } from '#/styles/tokens.css';
 
 export const outer = style({
 	boxSizing: 'border-box',
@@ -29,6 +30,7 @@ export const metaSpacing = style({
 	display: 'flex',
 	flexDirection: 'row',
 	alignItems: 'center',
+	gap: space.lg,
 	paddingBottom: 4,
 });
 
