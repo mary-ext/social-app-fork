@@ -139,7 +139,7 @@ function DialogInner({ handle, model }: Props) {
 								{entry.name}
 							</Text>
 							{entry.id !== NONE && (
-								<Text color="textContrastLow" numberOfLines={1} size="md_sub">
+								<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 									{entry.id}
 								</Text>
 							)}
