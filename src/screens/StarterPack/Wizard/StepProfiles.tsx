@@ -80,11 +80,12 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 					<div className={css.empty}>
 						{isLoading ? (
 							<CenteredSpinner label={m['common.status.loading']()} size="xl" />
-						) : (
+						) : query ? (
+							// with no query the list is the suggested-follows feed, which has nothing to search again for
 							<Text weight="semiBold" size="lg" align="center" className={css.emptyText}>
 								{m['screens.starterPack.people.noResults']()}
 							</Text>
-						)}
+						) : null}
 					</div>
 				}
 			/>
