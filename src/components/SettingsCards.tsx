@@ -213,10 +213,10 @@ export function LinkRow({
 }
 
 /**
- * an expandable row that reveals its `children` rows in a height-animated panel with a flipping chevron.
- * renders as a single Section child, providing automatic dividers for inner rows.
+ * an expandable row with a height-animated panel and flipping chevron.
  *
- * @param children the content to reveal when expanded
+ * @param children content shown when expanded
+ * @param panel whether to divide children into rows or render them as one block
  * @param trailing content shown beside the chevron while collapsed
  */
 export function CollapsibleRow({
@@ -226,6 +226,7 @@ export function CollapsibleRow({
 	label,
 	onOpenChange,
 	open,
+	panel = 'rows',
 	titleText,
 	trailing,
 }: {
@@ -235,10 +236,10 @@ export function CollapsibleRow({
 	label: string;
 	onOpenChange: (open: boolean) => void;
 	open: boolean;
+	panel?: 'body' | 'rows';
 	titleText: ReactNode;
 	trailing?: ReactNode;
 }) {
-	const rows = Children.toArray(children).filter(isValidElement<{ className?: string }>);
 	// Section rounds this disclosure's card corners by injecting rowFirst/rowLast into our className. We push
 	// that rounding onto the actual corner rows (trigger, last panel row) instead of clipping with
 	// `overflow: hidden`, so their focus rings follow the corner rather than being clipped square.
@@ -274,21 +275,30 @@ export function CollapsibleRow({
 				</span>
 			</Collapsible.Trigger>
 			<Collapsible.Panel className={styles.panel}>
-				{rows.map((row, i) => {
-					const roundedRow =
-						i === rows.length - 1 && roundBottom
-							? cloneElement(row, { className: clsx(row.props.className, styles.rowLast) })
-							: row;
-					return (
-						<Fragment key={row.key ?? i}>
-							<div className={styles.divider} />
-							{roundedRow}
-						</Fragment>
-					);
-				})}
+				{panel === 'rows' ? (
+					<PanelRows roundBottom={roundBottom}>{children}</PanelRows>
+				) : (
+					<div className={styles.panelBody}>{children}</div>
+				)}
 			</Collapsible.Panel>
 		</Collapsible.Root>
 	);
+}
+
+function PanelRows({ children, roundBottom }: { children: ReactNode; roundBottom: boolean }) {
+	const rows = Children.toArray(children).filter(isValidElement<{ className?: string }>);
+	return rows.map((row, i) => {
+		const roundedRow =
+			i === rows.length - 1 && roundBottom
+				? cloneElement(row, { className: clsx(row.props.className, styles.rowLast) })
+				: row;
+		return (
+			<Fragment key={row.key ?? i}>
+				<div className={styles.divider} />
+				{roundedRow}
+			</Fragment>
+		);
+	});
 }
 
 /**
@@ -378,21 +388,24 @@ export function SelectRow<T = string>({
 	);
 }
 
+/**
+ * value shown beside a settings row's chevron.
+ *
+ * @param text value to display
+ */
+export function Value({ text }: { text: string }) {
+	return (
+		<Text align="right" className={styles.value} color="textContrastMedium" numberOfLines={1} size="md_sub">
+			{text}
+		</Text>
+	);
+}
+
 /** a row's trailing slot: an optional current value, right-aligned against the row's own chevron. */
 function RowTrailing({ chevron: ChevronCmp, text }: { chevron: ComponentType<IconProps>; text?: string }) {
 	return (
 		<span className={styles.trailing}>
-			{text != null && (
-				<Text
-					align="right"
-					className={styles.value}
-					color="textContrastMedium"
-					numberOfLines={1}
-					size="md_sub"
-				>
-					{text}
-				</Text>
-			)}
+			{text != null && <Value text={text} />}
 			<ChevronCmp className={styles.chevron} fill="currentColor" size="sm" />
 		</span>
 	);

@@ -5,8 +5,6 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { clsx } from 'clsx';
-
 import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
@@ -15,28 +13,49 @@ import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/st
 
 import { LOCALE } from '#/locale/intl/locale';
 
+import * as Toggle from '#/components/forms/Toggle';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import type * as Select from '#/components/Select';
 import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelPreference.css';
 
+// the API uses an absent preference for inheritance
+const INHERIT_VALUE = 'inherit';
+
+type LabelOption = {
+	label: string;
+	value?: LabelPreference;
+};
+
+const toggleValue = (pref: LabelPreference | undefined) => pref ?? INHERIT_VALUE;
+
 /**
- * single labeler-published label rendered as a settings row. falls back to a non-interactive preview if the
- * label can't be configured (adult content off) or the viewer is unsubscribed.
+ * an expandable row for a labeler's label preference.
+ *
+ * @param className additional row class
+ * @param disabled whether the preference can be changed
+ * @param labelDefinition label definition
+ * @param labelerDid labeler DID
+ * @param onOpenChange called when the row opens or closes
+ * @param open whether the row is open
  */
 export function LabelerLabelRow({
+	className,
 	disabled,
 	labelDefinition,
 	labelerDid,
+	onOpenChange,
+	open,
 }: {
+	className?: string;
 	disabled: boolean;
 	labelDefinition: InterpretedLabelDefinition;
 	labelerDid: Did;
+	onOpenChange: (open: boolean) => void;
+	open: boolean;
 }) {
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
@@ -46,6 +65,8 @@ export function LabelerLabelRow({
 
 	const adultOnly = !!(labelDefinition.flags & LabelFlags.AdultOnly);
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
+	// adult-only labels are hidden while adult content is off
+	const configurable = !disabled && !adultDisabled;
 
 	const labelOptions: Record<LabelPreference, string> = {
 		hide: m['common.action.hide'](),
@@ -53,81 +74,84 @@ export function LabelerLabelRow({
 		warn: m['common.moderation.warn'](),
 	};
 
-	// nothing to configure: adult-only labels are forced to hide while adult content is off, and an
-	// unsubscribed labeler's labels don't apply at all
-	if (disabled || adultDisabled) {
-		return (
-			<div className={cardStyles.row}>
-				<Text className={cardStyles.title} color="text" size="md" weight="medium">
-					{labelStrings.name}
-				</Text>
-				<div className={clsx(cardStyles.subtitle, styles.details)}>
-					<Text color="textContrastMedium" size="md_sub">
-						{labelStrings.description}
-					</Text>
-					{adultDisabled && (
-						<span className={styles.note}>
-							<CircleInfo fill="currentColor" size="sm" />
-							<Text color="textContrastMedium" size="sm" weight="medium">
-								{m['components.moderation.adultContent.disabled']()}
-							</Text>
-						</span>
-					)}
-				</div>
-				{!disabled && (
-					<span className={cardStyles.trailing}>
-						<Text
-							align="right"
-							className={cardStyles.value}
-							color="textContrastMedium"
-							numberOfLines={1}
-							size="sm"
-						>
-							{labelOptions.hide}
-						</Text>
-					</span>
-				)}
-			</div>
-		);
-	}
-
-	// does the 'warn' setting make sense for this label?
+	// labels without blur or severity cannot warn
 	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
-	// display-only: a stored 'warn' renders nothing here, and 'warn' is absent from `items`
+	// map stored warn to ignore when warn is unavailable
 	const adjust = (pref: LabelPreference): LabelPreference => (!canWarn && pref === 'warn' ? 'ignore' : pref);
 
 	const saved = preferences?.moderationPrefs.labelers.find((labeler) => labeler.did === labelerDid)?.labels[
 		identifier
 	];
-	// `undefined` is a meaningful pending value (a clear), so this can't be `??`-ed
-	const pref = isPending ? variables?.visibility : saved;
+	// pending clears must not fall back to the saved value
+	const current = isPending ? variables?.visibility : saved;
+	const pref = current ? adjust(current) : undefined;
 	const inherited = adjust(
 		preferences
 			? resolveGlobalLabelPreference(preferences.moderationPrefs, labelDefinition)
 			: labelDefinition.defaultPref,
 	);
+	const effective = adultDisabled ? 'hide' : (pref ?? inherited);
 
-	// `null` stands in for "no labeler-scoped preference"; the select has to name every option, but what
-	// actually stores it is the absence of a `contentLabelPref` entry
-	const allItems: Select.SelectItem<LabelPreference | null>[] = [
-		{
-			label: m['components.moderation.labelPreference.inherited']({ value: labelOptions[inherited] }),
-			value: null,
-		},
+	const allOptions: LabelOption[] = [
+		{ label: m['components.moderation.labelPreference.inherited']({ value: labelOptions[inherited] }) },
 		{ label: labelOptions.ignore, value: 'ignore' },
 		{ label: labelOptions.warn, value: 'warn' },
 		{ label: labelOptions.hide, value: 'hide' },
 	];
-	const items = canWarn ? allItems : allItems.filter((item) => item.value !== 'warn');
+	const options = canWarn ? allOptions : allOptions.filter((option) => option.value !== 'warn');
+
+	const onChangeVisibility = ([selected]: string[]) => {
+		const option = options.find((candidate) => toggleValue(candidate.value) === selected);
+		if (option) {
+			mutate({ label: identifier, labelerDid, visibility: option.value });
+		}
+	};
 
 	return (
-		<Settings.SelectRow<LabelPreference | null>
-			items={items}
-			label={m['common.search.filteringFor']({ name: labelStrings.name })}
-			onValueChange={(value) => mutate({ label: identifier, labelerDid, visibility: value ?? undefined })}
-			value={pref ? adjust(pref) : null}
+		<Settings.CollapsibleRow
+			className={className}
+			label={labelStrings.name}
+			onOpenChange={onOpenChange}
+			open={open}
+			panel="body"
+			titleText={labelStrings.name}
+			trailing={!disabled && <Settings.Value text={labelOptions[effective]} />}
 		>
-			<Settings.Label subtitleText={labelStrings.description} titleText={labelStrings.name} />
-		</Settings.SelectRow>
+			<Text color="textContrastMedium" size="md_sub">
+				{labelStrings.description}
+			</Text>
+
+			{adultDisabled && (
+				<span className={styles.note}>
+					<CircleInfo fill="currentColor" size="sm" />
+					<Text color="textContrastMedium" size="sm" weight="medium">
+						{m['components.moderation.adultContent.disabled']()}
+					</Text>
+				</span>
+			)}
+
+			{configurable && (
+				<Toggle.Group
+					className={styles.radioList}
+					label={m['common.search.filteringFor']({ name: labelStrings.name })}
+					onChange={onChangeVisibility}
+					type="radio"
+					values={[toggleValue(pref)]}
+				>
+					{options.map((option) => (
+						<Toggle.RadioItem
+							key={toggleValue(option.value)}
+							label={option.label}
+							value={toggleValue(option.value)}
+						>
+							<Toggle.Panel>
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>{option.label}</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+					))}
+				</Toggle.Group>
+			)}
+		</Settings.CollapsibleRow>
 	);
 }

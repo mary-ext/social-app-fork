@@ -2,10 +2,10 @@ import { style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
-export const details = style({
+export const radioList = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: space.xs,
+	gap: space.sm,
 });
 
 export const note = style({

@@ -208,6 +208,7 @@ function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 	const { creator } = labeler;
 	const [descriptionRT] = useRichText(creator.description ?? '');
 	const isSubscribed = useIsSubscribed(creator.did);
+	const [openLabel, setOpenLabel] = useState<string | null>(null);
 
 	const customDefs = Object.values(interpretLabelerDefinition(labeler));
 	const labelValues = mapDefined(unique(labeler.policies.labelValues), (val) => {
@@ -275,6 +276,8 @@ function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 								key={labelDefinition.identifier}
 								labelDefinition={labelDefinition}
 								labelerDid={creator.did}
+								onOpenChange={(open) => setOpenLabel(open ? labelDefinition.identifier : null)}
+								open={openLabel === labelDefinition.identifier}
 							/>
 						))}
 					</Settings.Section>

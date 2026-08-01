@@ -64,13 +64,15 @@ export const panel = style({
 	},
 });
 
+const rowPaddingBlock = 14;
+
 export const row = style({
 	boxSizing: 'border-box',
 	display: 'grid',
 	gridTemplateColumns: 'auto minmax(0, 1fr) auto',
 	rowGap: space.xs,
 	alignItems: 'start',
-	paddingBlock: 14,
+	paddingBlock: rowPaddingBlock,
 	paddingInline: space.lg,
 	width: '100%',
 	textAlign: 'left',
@@ -81,10 +83,20 @@ export const rowPlain = style({
 	display: 'flex',
 	gap: space.md,
 	alignItems: 'center',
-	paddingBlock: 14,
+	paddingBlock: rowPaddingBlock,
 	paddingInline: space.lg,
 	width: '100%',
 	textAlign: 'left',
+});
+
+export const panelBody = style({
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.md,
+	paddingBottom: rowPaddingBlock,
+	paddingInline: space.lg,
+	width: '100%',
 });
 
 export const rowInteractive = style({
