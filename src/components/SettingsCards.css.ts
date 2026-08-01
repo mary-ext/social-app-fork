@@ -1,4 +1,4 @@
-import { createContainer, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
@@ -36,13 +36,7 @@ export const sectionFootnote = style({
 
 const cardRadius = 12;
 
-const cardContainer = createContainer();
-
-const narrowCard = `${cardContainer} (width < 420px)`;
-
 export const card = style({
-	containerName: cardContainer,
-	containerType: 'inline-size',
 	display: 'flex',
 	flexDirection: 'column',
 	borderRadius: cardRadius,
@@ -80,16 +74,6 @@ export const row = style({
 	paddingInline: space.lg,
 	width: '100%',
 	textAlign: 'left',
-	'@container': {
-		// a narrow card cannot always seat the title and the trailing value side by side. flex wrapping breaks
-		// the line off content rather than off a threshold, so a short value still shares the title's line and
-		// only one too long for what is left drops beneath it
-		[narrowCard]: {
-			display: 'flex',
-			flexWrap: 'wrap',
-			columnGap: space.md,
-		},
-	},
 });
 
 export const rowPlain = style({
@@ -147,22 +131,16 @@ export const rowLast = style({
 	borderBottomRightRadius: cardRadius,
 });
 
-const iconSize = 18;
-
 export const icon = style({
 	display: 'flex',
 	flexShrink: 0,
 	gridRow: 1,
 	gridColumn: 1,
 	marginRight: space.md,
-	marginBlock: (20 - iconSize) / 2,
+	marginBlock: (20 - 18) / 2,
 	color: vars.palette.contrast_500,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
-	},
-	'@container': {
-		// the wrapped row spaces its items with `column-gap`
-		[narrowCard]: { marginRight: 0 },
 	},
 });
 
@@ -173,33 +151,12 @@ export const title = style({
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
 	},
-	'@container': {
-		// swallowing the wrapped row's slack is what holds the trailing slot against the end edge. an auto
-		// margin on the slot itself would do the same on the shared line, but would also push it away from the
-		// start edge on a line of its own
-		[narrowCard]: { flexGrow: 1 },
-	},
 });
 
 export const subtitle = style({
 	gridRow: 2,
 	gridColumn: '2 / 4',
 	minWidth: 0,
-	'@container': {
-		// take a line of its own, below the trailing slot as the grid rows have it, and stay indented past the
-		// icon that precedes it
-		[narrowCard]: {
-			order: 1,
-			flexBasis: '100%',
-		},
-	},
-	selectors: {
-		[`.${icon} ~ &`]: {
-			'@container': {
-				[narrowCard]: { marginInlineStart: iconSize + space.md },
-			},
-		},
-	},
 });
 
 export const trailing = style({
@@ -211,40 +168,10 @@ export const trailing = style({
 	alignItems: 'center',
 	marginInlineStart: space.md,
 	minHeight: titleLineHeight,
-	'@container': {
-		// shrinking lets an overlong value reflow instead of pushing past the card
-		[narrowCard]: {
-			flexShrink: 1,
-			marginInlineStart: 0,
-			minWidth: 0,
-		},
-	},
-	selectors: {
-		// the title absorbs this on the line they share, so it only reads as an indent once the slot wraps
-		[`.${icon} ~ &`]: {
-			'@container': {
-				[narrowCard]: { marginInlineStart: iconSize + space.md },
-			},
-		},
-	},
 });
 
 export const value = style({
-	maxWidth: 'min(220px, 45cqw)',
-	'@container': {
-		// uncapped, so a value that cannot share the title's line claims the width of its own line instead of
-		// being squeezed into a column; two lines is the ceiling before it truncates
-		[narrowCard]: {
-			display: '-webkit-box',
-			maxWidth: 'none',
-			minWidth: 0,
-			overflow: 'hidden',
-			WebkitBoxOrient: 'vertical',
-			WebkitLineClamp: 2,
-			whiteSpace: 'normal',
-			textAlign: 'left',
-		},
-	},
+	maxWidth: 'min(220px, 45vw)',
 });
 
 export const chevron = style({
