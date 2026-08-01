@@ -130,9 +130,19 @@ export function Action({
 }
 
 /** A single radio toggle; `value` is the entry it contributes to the radio {@link Group}'s selection. */
-export function RadioItem({ value, label, children }: { value: string; label: string; children: ReactNode }) {
+export function RadioItem({
+	value,
+	className,
+	label,
+	children,
+}: {
+	value: string;
+	className?: string;
+	label: string;
+	children: ReactNode;
+}) {
 	return (
-		<Radio.Root aria-label={label} className={styles.radioItem} value={value}>
+		<Radio.Root aria-label={label} className={clsx(styles.radioItem, className)} value={value}>
 			{children}
 		</Radio.Root>
 	);

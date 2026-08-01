@@ -1,22 +1,17 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
-import {
-	setImageDescriptionModel,
-	useImageDescriptionModel,
-	useOpenRouterApiKey,
-} from '#/state/preferences/openrouter';
+import { useImageDescriptionModel, useOpenRouterApiKey } from '#/state/preferences/openrouter';
 import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
 
-import type { ComboboxItem } from '#/components/Combobox';
 import * as Dialog from '#/components/Dialog';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Settings from '#/components/SettingsCards';
-import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
+import { ImageDescriptionModelDialog } from './components/ImageDescriptionModelDialog';
 import { OpenRouterKeyDialog } from './components/OpenRouterKeyDialog';
 
 export function AiSettingsScreen() {
@@ -25,28 +20,16 @@ export function AiSettingsScreen() {
 	const { data: models, error, isPending } = useOpenRouterModelsQuery({ inputModalities: ['image'] });
 
 	const keyDialogHandle = Dialog.useDialogHandle();
+	const modelDialogHandle = Dialog.useDialogHandle();
 
 	const apiKey = useOpenRouterApiKey();
 	const selectedDescriptionModel = useImageDescriptionModel();
 
-	const descriptionModels: ComboboxItem<string | undefined>[] = [
-		{
-			value: undefined,
-			label: m['screens.settings.ai.model.none'](),
-		},
-		...(models ?? []).map((entry) => {
-			return {
-				value: entry.id,
-				label: entry.name,
-			};
-		}),
-	];
-
-	let emptyText = m['screens.settings.ai.model.noMatches']();
-	if (isPending) {
-		emptyText = m['screens.settings.ai.model.loading']();
-	} else if (error !== null) {
-		emptyText = m['screens.settings.ai.model.loadError']();
+	let modelSubtitleText: string = m['screens.settings.ai.model.placeholder']();
+	if (selectedDescriptionModel !== undefined) {
+		// fall back to the bare id while the list is loading or failed to load
+		modelSubtitleText =
+			models?.find((model) => model.id === selectedDescriptionModel)?.name ?? selectedDescriptionModel;
 	}
 
 	return (
@@ -76,46 +59,30 @@ export function AiSettingsScreen() {
 					<Settings.Section
 						footnoteText={error !== null ? m['screens.settings.ai.model.loadError']() : undefined}
 					>
-						<Settings.ComboboxRow
-							emptyText={emptyText}
-							filter={matchesModel}
-							items={descriptionModels}
+						<Settings.ButtonRow
 							label={m['screens.settings.ai.model.label']()}
-							onValueChange={setImageDescriptionModel}
-							placeholder={m['screens.settings.ai.model.placeholder']()}
-							renderItem={(item) => (
-								<>
-									<Text numberOfLines={1} size="md_sub">
-										{item.label}
-									</Text>
-									{item.value !== undefined && (
-										<Text color="contrast_500" numberOfLines={1} size="sm">
-											{item.value}
-										</Text>
-									)}
-								</>
-							)}
-							searchPlaceholder={m['screens.settings.ai.model.search']()}
-							value={selectedDescriptionModel}
+							onPress={() => modelDialogHandle.open(null)}
 						>
 							<Settings.Icon icon={ImageIcon} />
-							<Settings.Label titleText={m['screens.settings.ai.model.label']()} />
-						</Settings.ComboboxRow>
+							<Settings.Label
+								titleText={m['screens.settings.ai.model.label']()}
+								subtitleText={modelSubtitleText}
+							/>
+						</Settings.ButtonRow>
 					</Settings.Section>
 				</Settings.List>
 			</Layout.Content>
 
 			<OpenRouterKeyDialog apiKey={apiKey} handle={keyDialogHandle} />
+			<ImageDescriptionModelDialog
+				error={error}
+				handle={modelDialogHandle}
+				isPending={isPending}
+				model={selectedDescriptionModel}
+				models={models}
+			/>
 		</Layout.Screen>
 	);
 }
-
-const matchesModel = (item: ComboboxItem<string | undefined>, query: string): boolean => {
-	const needle = query.trim().toLowerCase();
-	if (needle === '') {
-		return true;
-	}
-	return item.label.toLowerCase().includes(needle) || (item.value?.toLowerCase().includes(needle) ?? false);
-};
 
 const maskKey = (key: string): string => `••••${key.slice(-4)}`;
