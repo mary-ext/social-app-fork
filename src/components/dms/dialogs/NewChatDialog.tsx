@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
@@ -23,6 +22,7 @@ import {
 	type PickStepProps,
 } from '#/components/dms/dialogs/ChatCreationFlow';
 import {
+	byMessageDeclaration,
 	Empty,
 	type EmptyRow,
 	type LabelRow,
@@ -48,11 +48,6 @@ type ChatListItem = NewGroupChatRowModel | ProfileRow;
 
 const isChatListItem = (row: ChatListRow): row is ChatListItem =>
 	row.kind === 'newGroupChat' || row.kind === 'profile';
-
-// orders profiles that accept the interaction ahead of those that don't, preserving each group's relative
-// order.
-const byMessageDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
-	Number(canBeMessaged(b)) - Number(canBeMessaged(a));
 
 // accessible label / stringified value for an autocomplete item. objects need this so Base UI can represent
 // them; the input itself stays controlled by our search text (item presses are ignored in onValueChange).

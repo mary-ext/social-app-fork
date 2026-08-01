@@ -15,7 +15,7 @@ import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
-import { canBeAddedToGroup } from '#/components/dms/util';
+import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
 import * as SearchField from '#/components/forms/SearchField';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
@@ -37,6 +37,13 @@ const isProfileRow = (row: MemberListRow): row is ProfileRow => row.kind === 'pr
 
 const byGroupDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeAddedToGroup(b)) - Number(canBeAddedToGroup(a));
+
+/**
+ * Comparator for {@link searchRows}: orders profiles that accept messages ahead of those that don't, leaving
+ * each group's relative order alone.
+ */
+export const byMessageDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
+	Number(canBeMessaged(b)) - Number(canBeMessaged(a));
 
 export const searchRows = (
 	results: AnyProfileView[] | undefined,
