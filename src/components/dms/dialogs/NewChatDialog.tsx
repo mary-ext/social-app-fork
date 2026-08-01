@@ -5,9 +5,6 @@ import type { Did } from '@atcute/lexicons';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-import { clsx } from 'clsx';
-
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
@@ -26,31 +23,25 @@ import {
 	Empty,
 	type EmptyRow,
 	type LabelRow,
+	PickStepShell,
 	type PlaceholderRow,
-	ProfileRowContent,
+	ProfilePickerRow,
 	type ProfileRow,
-	SearchSlot,
 	searchRows,
 	SectionLabel,
-	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { canBeMessaged } from '#/components/dms/util';
-import * as SearchField from '#/components/forms/SearchField';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-/** rows for the direct-chat picker (an `Autocomplete`): a group-creation entry point plus profile rows. */
 type ChatListRow = EmptyRow | LabelRow | NewGroupChatRowModel | PlaceholderRow | ProfileRow;
-/** the navigable subset of {@link ChatListRow}. */
 type ChatListItem = NewGroupChatRowModel | ProfileRow;
 
 const isChatListItem = (row: ChatListRow): row is ChatListItem =>
 	row.kind === 'newGroupChat' || row.kind === 'profile';
 
-// accessible label / stringified value for an autocomplete item. objects need this so Base UI can represent
-// them; the input itself stays controlled by our search text (item presses are ignored in onValueChange).
 const chatItemToStringValue = (item: ChatListItem): string =>
 	item.kind === 'newGroupChat' ? m['components.dms.group.title']() : item.profile.handle;
 
@@ -64,17 +55,13 @@ export function NewChatDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={css.popup} label={m['common.chat.action.new']()} scroll="body">
-				<ChatCreationFlow
-					handle={handle}
-					onChatReady={onNewChat}
-					renderPickStep={(props) => <SelectChatStep {...props} />}
-				/>
+				<ChatCreationFlow handle={handle} onChatReady={onNewChat} pickStep={SelectChatStep} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-// #region newChat step
+// #region new chat step
 
 function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGroup }: PickStepProps) {
 	const moderationOpts = useModerationOpts();
@@ -90,7 +77,7 @@ function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGr
 	} else if (searchText.length) {
 		rows = searchRows(results, currentAccountDid, isFetching, byMessageDeclaration);
 	} else {
-		// the entry point and "Suggested" header stay pinned above the follows (or the loading placeholder).
+		// keep the group action and heading above follows.
 		const suggested: LabelRow = {
 			kind: 'label',
 			key: 'suggested',
@@ -100,15 +87,11 @@ function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGr
 		if (!follows) {
 			rows.push(suggested, { kind: 'placeholder', key: 'placeholder' });
 		} else {
-			// omit follows that can't be messaged, matching upstream (rather than listing them disabled).
-			// dedupe as we go: the cursor can hand the same profile back on two pages if the follow list
-			// shifts mid-pagination, and a repeated did would mean a duplicate key and item value.
-			const seen = new Set<string>();
+			// hide profiles that cannot be messaged.
 			const profiles = mapDefined(
 				follows.pages.flatMap((page) => page.follows),
 				(profile): ProfileRow | undefined => {
-					if (canBeMessaged(profile) && !seen.has(profile.did)) {
-						seen.add(profile.did);
+					if (canBeMessaged(profile)) {
 						return { kind: 'profile', key: profile.did, profile };
 					}
 				},
@@ -118,57 +101,28 @@ function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGr
 			}
 		}
 	}
-	const items = rows.filter(isChatListItem);
 
 	return (
-		<Autocomplete.Root
-			filter={null}
-			inline
-			items={items}
+		<PickStepShell
+			items={rows.filter(isChatListItem)}
 			itemToStringValue={chatItemToStringValue}
-			onValueChange={(value, details) => {
-				// an item press asks Base UI to fill the input with the picked item's label; ignore it so our
-				// search text is untouched as the dialog closes. every row's action runs from its own onClick.
-				if (details.reason === 'item-press') {
-					return;
-				}
-				setSearchText(value);
-			}}
-			open
-			value={searchText}
+			onClose={onClose}
+			onSearchTextChange={setSearchText}
+			placeholder={m['components.dms.search.placeholder']()}
+			searchText={searchText}
+			title={m['common.chat.action.new']()}
 		>
-			<StepHeader onClose={onClose} title={m['common.chat.action.new']()} />
-
-			<SearchSlot onClear={() => setSearchText('')} overlap searchText={searchText}>
-				<Autocomplete.Input
-					render={
-						<SearchField.Input
-							aria-label={m['common.search.action.profiles']()}
-							autoFocus
-							maxLength={50}
-							placeholder={m['components.dms.search.placeholder']()}
-						/>
-					}
+			{rows.map((row) => (
+				<ChatRow
+					canCreateGroups={canCreateGroups}
+					key={row.key}
+					moderationOpts={moderationOpts}
+					onSelectRecipient={onSelectRecipient}
+					onStartGroup={onStartGroup}
+					row={row}
 				/>
-			</SearchSlot>
-
-			{/* the list is navigable via the input's arrow keys, so opt its scroller out of Chrome's
-			    keyboard-focusable-scrollers tab stop — Tab lands on the footer/next control instead. */}
-			<Dialog.Body className={clsx(css.list, css.listOverlap)} tabIndex={-1}>
-				<Autocomplete.List>
-					{rows.map((row) => (
-						<ChatRow
-							canCreateGroups={canCreateGroups}
-							key={row.key}
-							moderationOpts={moderationOpts}
-							onSelectRecipient={onSelectRecipient}
-							onStartGroup={onStartGroup}
-							row={row}
-						/>
-					))}
-				</Autocomplete.List>
-			</Dialog.Body>
-		</Autocomplete.Root>
+			))}
+		</PickStepShell>
 	);
 }
 
@@ -194,29 +148,8 @@ function ChatRow({
 			return <NewGroupChatRow dimmed={!canCreateGroups} onClick={onStartGroup} />;
 		case 'placeholder':
 			return <ProfileCard.LoadingPlaceholder count={10} />;
-		case 'profile': {
-			if (!moderationOpts) {
-				return null;
-			}
-			const { profile } = row;
-			const enabled = canBeMessaged(profile);
-			return (
-				<Autocomplete.Item
-					aria-label={m['common.chat.action.start']({ handle: profile.handle })}
-					className={css.row}
-					disabled={!enabled}
-					onClick={() => onSelectRecipient(profile.did)}
-					value={row}
-				>
-					<ProfileRowContent
-						disabledMessage={m['components.dialogs.chat.cannotMessage']()}
-						enabled={enabled}
-						moderationOpts={moderationOpts}
-						profile={profile}
-					/>
-				</Autocomplete.Item>
-			);
-		}
+		case 'profile':
+			return <ProfilePickerRow moderationOpts={moderationOpts} onSelect={onSelectRecipient} row={row} />;
 	}
 }
 

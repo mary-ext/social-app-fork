@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import { clsx } from 'clsx';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -25,36 +27,28 @@ import {
 	byMessageDeclaration,
 	Empty,
 	type EmptyRow,
+	PickStepShell,
 	type PlaceholderRow,
+	ProfilePickerRow,
 	ProfileRowContent,
 	type ProfileRow,
-	SearchSlot,
 	searchRows,
-	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
-import { canBeMessaged, type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-import * as SearchField from '#/components/forms/SearchField';
+import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-type ExistingChatRow = { kind: 'existingChat'; key: string; convo: ConvoWithDetails };
+type ExistingChatRowModel = { kind: 'existingChat'; key: string; convo: ConvoWithDetails };
 
-/**
- * rows for the share-target picker (an `Autocomplete`): the group-creation entry point, then the
- * conversations already open, then whichever follows none of them stands in for.
- */
-type ShareTargetRow = EmptyRow | ExistingChatRow | NewGroupChatRowModel | PlaceholderRow | ProfileRow;
-/** the navigable subset of {@link ShareTargetRow}. */
-type ShareTargetItem = ExistingChatRow | NewGroupChatRowModel | ProfileRow;
+type ShareTargetRow = EmptyRow | ExistingChatRowModel | NewGroupChatRowModel | PlaceholderRow | ProfileRow;
+type ShareTargetItem = ExistingChatRowModel | NewGroupChatRowModel | ProfileRow;
 
 const isShareTargetItem = (row: ShareTargetRow): row is ShareTargetItem =>
 	row.kind === 'existingChat' || row.kind === 'newGroupChat' || row.kind === 'profile';
 
-// accessible label / stringified value for an autocomplete item. objects need this so Base UI can represent
-// them; the input itself stays controlled by our search text (item presses are ignored in onValueChange).
 const shareItemToStringValue = (item: ShareTargetItem): string => {
 	switch (item.kind) {
 		case 'existingChat': {
@@ -78,11 +72,7 @@ export function SendViaChatDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={css.popup} label={m['components.dms.share.title']()} scroll="body">
-				<ChatCreationFlow
-					handle={handle}
-					onChatReady={onSelectChat}
-					renderPickStep={(props) => <SelectShareTargetStep {...props} />}
-				/>
+				<ChatCreationFlow handle={handle} onChatReady={onSelectChat} pickStep={SelectShareTargetStep} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -118,108 +108,96 @@ function SelectShareTargetStep({
 		if (!convos || !follows) {
 			rows.push({ kind: 'placeholder', key: 'placeholder' });
 		} else {
-			// the conversations already open lead the list, and a follow only earns its own row once none of
-			// them stands in for it. one `seen` set covers both passes: it also absorbs the duplicate a
-			// cursor can hand back when either list shifts mid-pagination.
-			const seen = new Set<string>();
+			const conversations = conversationRows(
+				convos.pages.flatMap((page) => page.convos),
+				currentAccountDid,
+			);
+			// skip direct-chat rows already shown above.
+			const covered = new Set(
+				mapDefined(conversations, (row) =>
+					row.convo.kind === 'direct' ? row.convo.primaryMember.did : undefined,
+				),
+			);
 
-			for (const page of convos.pages) {
-				for (const convoView of page.convos) {
-					const convo = parseConvoView(convoView, currentAccountDid);
-
-					if (!convo) {
-						continue;
-					}
-
-					if (convo.kind === 'group') {
-						rows.push({ kind: 'existingChat', key: convo.view.id, convo });
-						continue;
-					}
-
-					if (convo.primaryMember.handle === 'missing.invalid' || seen.has(convo.primaryMember.did)) {
-						continue;
-					}
-
-					seen.add(convo.primaryMember.did);
-					rows.push({ kind: 'existingChat', key: convo.view.id, convo });
-				}
-			}
-
-			const followRows: ProfileRow[] = [];
-			for (const page of follows.pages) {
-				for (const profile of page.follows) {
-					if (seen.has(profile.did)) {
-						continue;
-					}
-
-					seen.add(profile.did);
-					followRows.push({ kind: 'profile', key: profile.did, profile });
-				}
-			}
-
-			// unlike NewChatDialog this keeps the follows that can't be messaged, listing them disabled rather
-			// than dropping them; sinking them to the bottom is what keeps that affordable. only the follows
-			// are reordered — the conversations above them stay in recency order.
-			// oxlint-disable-next-line unicorn/no-array-sort -- sorting an array this function just built
-			followRows.sort((a, b) => byMessageDeclaration(a.profile, b.profile));
-
-			rows.push(...followRows);
+			rows.push(
+				...conversations,
+				...remainingFollowRows(
+					follows.pages.flatMap((page) => page.follows),
+					covered,
+				),
+			);
 		}
 	}
-	const items = rows.filter(isShareTargetItem);
 
 	return (
-		<Autocomplete.Root
-			filter={null}
-			inline
-			items={items}
+		<PickStepShell
+			items={rows.filter(isShareTargetItem)}
 			itemToStringValue={shareItemToStringValue}
-			onValueChange={(value, details) => {
-				// an item press asks Base UI to fill the input with the picked item's label; ignore it so our
-				// search text is untouched as the dialog closes. every row's action runs from its own onClick.
-				if (details.reason === 'item-press') {
-					return;
-				}
-				setSearchText(value);
-			}}
-			open
-			value={searchText}
+			onClose={onClose}
+			onSearchTextChange={setSearchText}
+			placeholder={m['common.action.search']()}
+			searchText={searchText}
+			title={m['components.dms.share.title']()}
 		>
-			<StepHeader onClose={onClose} title={m['components.dms.share.title']()} />
-
-			<SearchSlot onClear={() => setSearchText('')} overlap searchText={searchText}>
-				<Autocomplete.Input
-					render={
-						<SearchField.Input
-							aria-label={m['common.search.action.profiles']()}
-							autoFocus
-							maxLength={50}
-							placeholder={m['common.action.search']()}
-						/>
-					}
+			{rows.map((row) => (
+				<ShareRow
+					canCreateGroups={canCreateGroups}
+					key={row.key}
+					moderationOpts={moderationOpts}
+					onSelectConversation={onSelectConversation}
+					onSelectRecipient={onSelectRecipient}
+					onStartGroup={onStartGroup}
+					row={row}
 				/>
-			</SearchSlot>
-
-			{/* the list is navigable via the input's arrow keys, so opt its scroller out of Chrome's
-			    keyboard-focusable-scrollers tab stop. */}
-			<Dialog.Body className={clsx(css.list, css.listOverlap)} tabIndex={-1}>
-				<Autocomplete.List>
-					{rows.map((row) => (
-						<ShareRow
-							canCreateGroups={canCreateGroups}
-							key={row.key}
-							moderationOpts={moderationOpts}
-							onSelectConversation={onSelectConversation}
-							onSelectRecipient={onSelectRecipient}
-							onStartGroup={onStartGroup}
-							row={row}
-						/>
-					))}
-				</Autocomplete.List>
-			</Dialog.Body>
-		</Autocomplete.Root>
+			))}
+		</PickStepShell>
 	);
 }
+
+/** returns existing chats, keeping one direct chat per counterpart. */
+const conversationRows = (
+	convoViews: ChatBskyConvoDefs.ConvoView[],
+	currentAccountDid: Did | undefined,
+): ExistingChatRowModel[] => {
+	const rows: ExistingChatRowModel[] = [];
+	const seenDids = new Set<string>();
+
+	for (const convoView of convoViews) {
+		const convo = parseConvoView(convoView, currentAccountDid);
+
+		if (!convo) {
+			continue;
+		}
+
+		if (convo.kind === 'group') {
+			rows.push({ kind: 'existingChat', key: convo.view.id, convo });
+			continue;
+		}
+
+		// keep the first conversation for each counterpart.
+		if (convo.primaryMember.handle === 'missing.invalid' || seenDids.has(convo.primaryMember.did)) {
+			continue;
+		}
+
+		seenDids.add(convo.primaryMember.did);
+		rows.push({ kind: 'existingChat', key: convo.view.id, convo });
+	}
+
+	return rows;
+};
+
+/** returns follows not covered by an existing chat, with messageable profiles first. */
+const remainingFollowRows = (profiles: AnyProfileView[], covered: ReadonlySet<string>): ProfileRow[] => {
+	const rows = mapDefined(profiles, (profile): ProfileRow | undefined => {
+		if (!covered.has(profile.did)) {
+			return { kind: 'profile', key: profile.did, profile };
+		}
+	});
+
+	// oxlint-disable-next-line unicorn/no-array-sort -- rows is local
+	rows.sort((a, b) => byMessageDeclaration(a.profile, b.profile));
+	return rows;
+};
 
 function ShareRow({
 	canCreateGroups,
@@ -239,52 +217,27 @@ function ShareRow({
 	switch (row.kind) {
 		case 'empty':
 			return <Empty message={row.message} />;
-		case 'existingChat': {
-			if (!moderationOpts) {
-				return null;
-			}
-			return (
-				<ExistingChatRowContent moderationOpts={moderationOpts} onSelect={onSelectConversation} row={row} />
-			);
-		}
+		case 'existingChat':
+			return moderationOpts ? (
+				<ExistingChatRow moderationOpts={moderationOpts} onSelect={onSelectConversation} row={row} />
+			) : null;
 		case 'newGroupChat':
 			return <NewGroupChatRow dimmed={!canCreateGroups} onClick={onStartGroup} />;
 		case 'placeholder':
 			return <ProfileCard.LoadingPlaceholder count={10} />;
-		case 'profile': {
-			if (!moderationOpts) {
-				return null;
-			}
-			const { profile } = row;
-			const enabled = canBeMessaged(profile);
-			return (
-				<Autocomplete.Item
-					aria-label={m['common.chat.action.start']({ handle: profile.handle })}
-					className={css.row}
-					disabled={!enabled}
-					onClick={() => onSelectRecipient(profile.did)}
-					value={row}
-				>
-					<ProfileRowContent
-						disabledMessage={m['components.dialogs.chat.cannotMessage']()}
-						enabled={enabled}
-						moderationOpts={moderationOpts}
-						profile={profile}
-					/>
-				</Autocomplete.Item>
-			);
-		}
+		case 'profile':
+			return <ProfilePickerRow moderationOpts={moderationOpts} onSelect={onSelectRecipient} row={row} />;
 	}
 }
 
-function ExistingChatRowContent({
+function ExistingChatRow({
 	moderationOpts,
 	onSelect,
 	row,
 }: {
 	moderationOpts: ModerationOptions;
 	onSelect: (convoId: string) => void;
-	row: ExistingChatRow;
+	row: ExistingChatRowModel;
 }) {
 	const { convo } = row;
 
@@ -321,18 +274,15 @@ function ExistingChatRowContent({
 		);
 	}
 
-	const { primaryMember } = convo;
-
-	// an open conversation stays reachable regardless of the recipient's current message declaration — it is
-	// already there to be posted into.
+	// existing direct chats remain available even if messaging is now disabled.
 	return (
 		<Autocomplete.Item
-			aria-label={m['common.chat.action.start']({ handle: primaryMember.handle })}
+			aria-label={m['common.chat.action.start']({ handle: convo.primaryMember.handle })}
 			className={css.row}
 			onClick={() => onSelect(convo.view.id)}
 			value={row}
 		>
-			<ProfileRowContent enabled moderationOpts={moderationOpts} profile={primaryMember} />
+			<ProfileRowContent enabled moderationOpts={moderationOpts} profile={convo.primaryMember} />
 		</Autocomplete.Item>
 	);
 }

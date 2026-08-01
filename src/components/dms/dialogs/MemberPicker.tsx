@@ -2,9 +2,11 @@ import { type ReactNode, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { mapDefined } from '@mary/array-fns';
 
+import { Autocomplete } from '@base-ui/react/autocomplete';
 import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
@@ -38,10 +40,7 @@ const isProfileRow = (row: MemberListRow): row is ProfileRow => row.kind === 'pr
 const byGroupDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeAddedToGroup(b)) - Number(canBeAddedToGroup(a));
 
-/**
- * Comparator for {@link searchRows}: orders profiles that accept messages ahead of those that don't, leaving
- * each group's relative order alone.
- */
+/** sorts profiles that accept messages first, preserving their order. */
 export const byMessageDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeMessaged(b)) - Number(canBeMessaged(a));
 
@@ -265,6 +264,107 @@ function MemberChips({
 				);
 			})}
 		</div>
+	);
+}
+
+/**
+ * renders the shell for a single-select picker. put all rows in `children` and only navigable rows in
+ * `items`.
+ *
+ * @param items rows navigable by keyboard
+ * @param itemToStringValue converts an item to its accessible label
+ * @param searchText controlled search text
+ */
+export function PickStepShell<Item>({
+	children,
+	items,
+	itemToStringValue,
+	onClose,
+	onSearchTextChange,
+	placeholder,
+	searchText,
+	title,
+}: {
+	children: ReactNode;
+	items: Item[];
+	itemToStringValue: (item: Item) => string;
+	onClose: () => void;
+	onSearchTextChange: (value: string) => void;
+	placeholder: string;
+	searchText: string;
+	title: string;
+}) {
+	return (
+		<Autocomplete.Root
+			filter={null}
+			inline
+			items={items}
+			itemToStringValue={itemToStringValue}
+			onValueChange={(value, details) => {
+				// do not replace the query with the selected label while the dialog closes.
+				if (details.reason === 'item-press') {
+					return;
+				}
+				onSearchTextChange(value);
+			}}
+			open
+			value={searchText}
+		>
+			<StepHeader onClose={onClose} title={title} />
+
+			<SearchSlot onClear={() => onSearchTextChange('')} overlap searchText={searchText}>
+				<Autocomplete.Input
+					render={
+						<SearchField.Input
+							aria-label={m['common.search.action.profiles']()}
+							autoFocus
+							maxLength={50}
+							placeholder={placeholder}
+						/>
+					}
+				/>
+			</SearchSlot>
+
+			{/* the input handles list navigation, so keep the scroller out of the tab order. */}
+			<Dialog.Body className={clsx(css.list, css.listOverlap)} tabIndex={-1}>
+				<Autocomplete.List>{children}</Autocomplete.List>
+			</Dialog.Body>
+		</Autocomplete.Root>
+	);
+}
+
+/** renders a direct-chat profile row. */
+export function ProfilePickerRow({
+	moderationOpts,
+	onSelect,
+	row,
+}: {
+	moderationOpts: ModerationOptions | undefined;
+	onSelect: (did: Did) => void;
+	row: ProfileRow;
+}) {
+	if (!moderationOpts) {
+		return null;
+	}
+
+	const { profile } = row;
+	const enabled = canBeMessaged(profile);
+
+	return (
+		<Autocomplete.Item
+			aria-label={m['common.chat.action.start']({ handle: profile.handle })}
+			className={css.row}
+			disabled={!enabled}
+			onClick={() => onSelect(profile.did)}
+			value={row}
+		>
+			<ProfileRowContent
+				disabledMessage={m['components.dialogs.chat.cannotMessage']()}
+				enabled={enabled}
+				moderationOpts={moderationOpts}
+				profile={profile}
+			/>
+		</Autocomplete.Item>
 	);
 }
 

@@ -29,7 +29,6 @@
 	"components.dms.chat.action.markAsRead": "Mark as read",
 	"components.dms.chat.action.message": "Message {handle}",
 	"components.dms.chat.action.start": "Start chat",
-	"components.dms.chat.error.open": "An issue occurred while trying to open the chat",
 	"components.dms.chat.error.recipientNotFollowed": "Chat recipient is not followed by the sender.",
 	"components.dms.chat.error.start": "An issue occurred starting the chat, please try again.",
 	"components.dms.chat.error.suspended": "Suspended accounts cannot participate in chat.",

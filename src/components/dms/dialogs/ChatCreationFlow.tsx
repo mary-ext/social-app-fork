@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ComponentType, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
@@ -37,20 +37,19 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-/** row model for the group-creation entry point; mix {@link NEW_GROUP_CHAT_ROW} into a pick step's rows. */
+/** row for the new group-chat action. */
 export type NewGroupChatRowModel = { kind: 'newGroupChat'; key: 'newGroupChat' };
 
-/** the sole instance of {@link NewGroupChatRowModel}; a constant so its identity is stable across renders. */
 export const NEW_GROUP_CHAT_ROW: NewGroupChatRowModel = { kind: 'newGroupChat', key: 'newGroupChat' };
 
-/** what {@link ChatCreationFlow} hands to the pick step it renders. */
+/** props passed to a picker step. */
 export type PickStepProps = {
-	/** false once the account is too new; {@link onStartGroup} then explains rather than advancing. */
+	/** whether the account can create groups. */
 	canCreateGroups: boolean;
 	onClose: () => void;
-	/** hand back a conversation that already exists, skipping creation entirely. */
+	/** selects an existing conversation. */
 	onSelectConversation: (convoId: string) => void;
-	/** open (or create) the direct conversation with this account. */
+	/** starts a direct conversation. */
 	onSelectRecipient: (did: Did) => void;
 	onStartGroup: () => void;
 };
@@ -58,33 +57,30 @@ export type PickStepProps = {
 type Step = 'groupName' | 'pick' | 'selectMembers';
 
 /**
- * The shared "end up in a conversation" workflow: a caller-supplied pick step, then — if the user asks for a
- * group — member selection and naming. Owns both creation mutations and reports their outcome, so callers
- * only have to say what to do with the resulting conversation.
+ * runs the shared chat-creation flow after a caller-specific picker.
  *
- * @param handle the dialog to close once a conversation has been settled on
- * @param onChatReady receives the conversation id, whether it was picked or freshly created
- * @param renderPickStep renders the first step; see {@link PickStepProps}
+ * @param handle dialog to close after a conversation is selected or created
+ * @param onChatReady called with the conversation id
+ * @param pickStep picker for the first step
  */
 export function ChatCreationFlow({
 	handle,
 	onChatReady,
-	renderPickStep,
+	pickStep: PickStep,
 }: {
 	handle: Dialog.DialogHandle;
 	onChatReady: (convoId: string) => void;
-	renderPickStep: (props: PickStepProps) => ReactNode;
+	pickStep: ComponentType<PickStepProps>;
 }) {
 	const accountTooNewHandle = Prompt.usePromptHandle();
 
-	// only the selected members must survive a step change; each step owns its own search text / group name, so
-	// unmounting the inactive step resets them for free.
+	// keep only members across steps; each step owns its transient fields.
 	const [step, setStep] = useState<Step>('pick');
 	const [members, setMembers] = useState<AnyProfileView[]>([]);
 
 	const { data: chatStatus } = useChatActorStatusQuery();
 	const canCreateGroups = chatStatus?.canCreateGroups ?? true;
-	// groupMemberLimit counts the creator, who is added implicitly, so reserve one slot for them.
+	// the creator counts toward the limit.
 	const memberLimit =
 		chatStatus?.groupMemberLimit != null ? Math.max(0, chatStatus.groupMemberLimit - 1) : undefined;
 
@@ -183,7 +179,6 @@ export function ChatCreationFlow({
 			accountTooNewHandle.open(null);
 			return;
 		}
-		setMembers([]);
 		setStep('selectMembers');
 	};
 
@@ -210,8 +205,15 @@ export function ChatCreationFlow({
 
 	return (
 		<>
-			{step === 'pick' &&
-				renderPickStep({ canCreateGroups, onClose, onSelectConversation, onSelectRecipient, onStartGroup })}
+			{step === 'pick' && (
+				<PickStep
+					canCreateGroups={canCreateGroups}
+					onClose={onClose}
+					onSelectConversation={onSelectConversation}
+					onSelectRecipient={onSelectRecipient}
+					onStartGroup={onStartGroup}
+				/>
+			)}
 
 			{step === 'selectMembers' && (
 				<SelectMembersStep
@@ -259,8 +261,10 @@ export function ChatCreationFlow({
 }
 
 /**
- * The group-creation entry point row. Stays selectable while `dimmed` so pressing it can explain why the
- * account cannot create groups yet, rather than going inert.
+ * renders the group-chat entry.
+ *
+ * @param dimmed whether to dim the row while keeping it selectable
+ * @param onClick handles row selection
  */
 export function NewGroupChatRow({ dimmed, onClick }: { dimmed: boolean; onClick: () => void }) {
 	return (
@@ -282,7 +286,7 @@ export function NewGroupChatRow({ dimmed, onClick }: { dimmed: boolean; onClick:
 	);
 }
 
-// #region groupName step
+// #region group name step
 
 function NameGroupStep({
 	members,

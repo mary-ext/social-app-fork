@@ -17,6 +17,26 @@ const RQKEY_ROOT = 'profile-follows';
 // the sort is part of the key: the two orderings are different lists and must not share pages.
 export const RQKEY = (did: string, sort: 'latest' | 'top' = DEFAULT_SORT) => [RQKEY_ROOT, did, sort];
 
+// a moving follow list can repeat a profile across pages; dedupe before consumers flatten the data.
+const dedupeFollows = (
+	data: InfiniteData<AppBskyGraphGetFollows.$output>,
+): InfiniteData<AppBskyGraphGetFollows.$output> => {
+	const seen = new Set<string>();
+	return {
+		...data,
+		pages: data.pages.map((page) => ({
+			...page,
+			follows: page.follows.filter((profile) => {
+				if (seen.has(profile.did)) {
+					return false;
+				}
+				seen.add(profile.did);
+				return true;
+			}),
+		})),
+	};
+};
+
 export function useProfileFollowsQuery(
 	did: Did | undefined,
 	{
@@ -52,6 +72,7 @@ export function useProfileFollowsQuery(
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
+		select: dedupeFollows,
 	});
 }
 
