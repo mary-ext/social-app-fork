@@ -83,10 +83,7 @@ export function useProfileQuery({
 	return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
 		queryKey: RQKEY(did ?? ''),
 		enabled: !!did,
-		// WARNING
-		// this staleTime is load-bearing
-		// if you remove it, the UI infinite-loops
-		// -prf
+		// this stale time prevents a refetch loop.
 		staleTime,
 		refetchOnWindowFocus: true,
 		queryFn: ({ signal }) =>

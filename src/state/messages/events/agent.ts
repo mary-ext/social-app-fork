@@ -22,7 +22,7 @@ export class MessagesEventBus {
 
 	private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing;
 	private hasInitialized = false;
-	/** desired activity state of the consumer, used to reconcile lifecycle changes during initialization */
+	/** consumer activity requested during initialization. */
 	private intendedStatus:
 		| MessagesEventBusStatus.Backgrounded
 		| MessagesEventBusStatus.Ready
@@ -33,10 +33,6 @@ export class MessagesEventBus {
 
 	constructor(params: MessagesEventBusParams) {
 		this.chat = params.chat;
-
-		// init() is deferred to the first resume() rather than fired here: a constructor that
-		// performs network work outlives the React instance that owns it, so a StrictMode/concurrent
-		// render that constructs and discards a bus would still leak a getLog and a zombie poller.
 	}
 
 	requestPollInterval(interval: number) {
@@ -92,8 +88,7 @@ export class MessagesEventBus {
 
 	background() {
 		this.intendedStatus = MessagesEventBusStatus.Backgrounded;
-		// while still seeding the cursor, only record intent; init()'s completion applies it. acting
-		// now would poll with an undefined cursor.
+		// wait for cursor initialization before polling.
 		if (this.status === MessagesEventBusStatus.Initializing) {
 			return;
 		}
@@ -102,8 +97,7 @@ export class MessagesEventBus {
 
 	suspend() {
 		this.intendedStatus = MessagesEventBusStatus.Suspended;
-		// a genuine unmount mid-init lands here; recording intent means init()'s completion won't
-		// start a poller for a consumer that's already gone.
+		// do not start polling for a consumer that unmounted during init.
 		if (this.status === MessagesEventBusStatus.Initializing) {
 			return;
 		}
@@ -113,8 +107,7 @@ export class MessagesEventBus {
 	resume() {
 		this.intendedStatus = MessagesEventBusStatus.Ready;
 		if (this.status === MessagesEventBusStatus.Initializing) {
-			// first activation kicks off the one-time cursor seed; its completion reconciles to
-			// intendedStatus. repeat resumes while still initializing (StrictMode) are no-ops.
+			// seed the cursor once; completion applies intendedStatus.
 			if (!this.hasInitialized) {
 				this.hasInitialized = true;
 				void this.init();
@@ -128,9 +121,6 @@ export class MessagesEventBus {
 		switch (this.status) {
 			case MessagesEventBusStatus.Initializing: {
 				switch (action.event) {
-					// Suspend/Background never reach here: those lifecycle calls only record intent
-					// while Initializing (the cursor isn't seeded yet) and let this Ready completion
-					// apply it.
 					case MessagesEventBusDispatchEvent.Ready: {
 						this.activateAfterInit();
 						break;
@@ -229,15 +219,11 @@ export class MessagesEventBus {
 		}
 	}
 
-	/**
-	 * applies the consumer's current {@link intendedStatus} once init() has seeded the cursor. runs during the
-	 * Initializing -> Ready transition to honor any suspend or background actions that occurred while init()
-	 * was in flight.
-	 */
+	/** applies the requested status after cursor initialization. */
 	private activateAfterInit() {
 		switch (this.intendedStatus) {
 			case MessagesEventBusStatus.Suspended: {
-				// consumer went away mid-init; stay idle rather than start a poller with no listeners.
+				// do not start a poller without listeners.
 				this.status = MessagesEventBusStatus.Suspended;
 				return;
 			}
@@ -251,28 +237,18 @@ export class MessagesEventBus {
 			}
 		}
 
-		// init() already fetched the latest cursor, so an immediate poll from the same rev would just
-		// return empty. arm the interval without it; consumers needing fresher data lower the interval
-		// via requestPollInterval(), which polls immediately.
+		// init already fetched the latest cursor.
 		this.resetPoll({ immediate: false });
 		this.emitter.emit({ type: 'connect' });
 	}
 
 	private recoverFromError() {
 		if (this.latestRev === undefined) {
-			/*
-			 * init() never succeeded, so we have no cursor to resume from. Re-run init() to seed latestRev. Its
-			 * success path dispatches Ready, which reconciles to intendedStatus (Ready here, since recovery is
-			 * only reached via a Resume/UpdatePoll dispatch from an active consumer).
-			 */
+			// reinitialize when no cursor exists.
 			this.status = MessagesEventBusStatus.Initializing;
 			void this.init();
 		} else {
-			/*
-			 * A poll failed mid-session but we still have a valid cursor. Resume polling from it directly. We
-			 * must NOT route through init() here: its seeding logic takes the max of the existing rev and the
-			 * server's current cursor, which would skip any events that arrived while we were offline.
-			 */
+			// resume from the stored cursor; reinitializing could skip events.
 			this.status = MessagesEventBusStatus.Ready;
 			this.resetPoll();
 			this.emitter.emit({ type: 'connect' });
@@ -284,11 +260,8 @@ export class MessagesEventBus {
 			const data = await networkRetry(2, () => {
 				return ok(this.chat.get('chat.bsky.convo.getLog', { params: {} }));
 			});
-			// throw new Error('UNCOMMENT TO TEST INIT FAILURE')
-
 			const { cursor } = data;
 
-			// should always be defined
 			if (cursor) {
 				if (!this.latestRev) {
 					this.latestRev = cursor;
@@ -316,9 +289,7 @@ export class MessagesEventBus {
 		}
 	}
 
-	/*
-	 * Polling
-	 */
+	// #region polling
 
 	private isPolling = false;
 	private pollIntervalRef: ReturnType<typeof setInterval> | undefined;
@@ -382,23 +353,11 @@ export class MessagesEventBus {
 				);
 			});
 
-			// throw new Error('UNCOMMENT TO TEST POLL FAILURE')
-
 			const { logs: events } = data;
 
 			for (const ev of events) {
-				/*
-				 * If there's a rev, we should handle it. If there's not a rev, we don't
-				 * know what it is.
-				 */
 				if ('rev' in ev && typeof ev.rev === 'string') {
-					/*
-					 * We only care about new events
-					 */
 					if (ev.rev > (this.latestRev = this.latestRev || ev.rev)) {
-						/*
-						 * Update rev regardless of if it's a ev type we care about or not
-						 */
 						this.latestRev = ev.rev;
 						needsEmit = true;
 						batch.push(ev);
@@ -424,12 +383,7 @@ export class MessagesEventBus {
 			this.isPolling = false;
 		}
 
-		/*
-		 * Emit outside the try/catch above so a throwing subscriber is not misreported as a poll failure (which
-		 * would show a network-error banner and drop the batch, since the revs have already been consumed).
-		 * poll() runs from setInterval, so we must not let the exception escape — log it and move on without
-		 * dispatching Error.
-		 */
+		// keep subscriber errors separate from polling errors.
 		if (needsEmit) {
 			try {
 				this.emitter.emit({ type: 'logs', logs: batch });
@@ -438,4 +392,6 @@ export class MessagesEventBus {
 			}
 		}
 	}
+
+	// #endregion
 }

@@ -237,8 +237,7 @@ export const routes = defineRoutes({
 				path: '/',
 				type: 'singleton',
 			}),
-			// Explore and Search share the /search path, and a non-empty `q` is what tells them apart. Search
-			// is declared first so the matcher tries the narrower one before falling through to the landing.
+			// search must precede explore because both routes share `/search`.
 			Search: route({
 				component: SearchScreen,
 				path: '/search',

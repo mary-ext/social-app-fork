@@ -85,11 +85,6 @@ setInterval(() => {
 
 focusManager.setEventListener((onFocus) => {
 	if (typeof window !== 'undefined' && window.addEventListener) {
-		// these handlers are a bit redundant but focus catches when the browser window
-		// is blurred/focused while visibilitychange seems to only handle when the
-		// window minimizes (both of them catch tab changes)
-		// there's no harm to redundant fires because refetchOnWindowFocus is only
-		// used with queries that employ stale data times
 		const handler = () => onFocus();
 		window.addEventListener('focus', handler, false);
 		window.addEventListener('visibilitychange', handler, false);
@@ -104,19 +99,11 @@ const createQueryClient = () =>
 	new QueryClient({
 		defaultOptions: {
 			queries: {
-				// NOTE
-				// refetchOnWindowFocus breaks some UIs (like feeds)
-				// so we only selectively want to enable this
-				// -prf
+				// feeds opt in to refetching on focus when needed.
 				refetchOnWindowFocus: false,
-				// Structural sharing between responses makes it impossible to rely on
-				// "first seen" timestamps on objects to determine if they're fresh.
-				// Disable this optimization so that we can rely on "first seen" timestamps.
+				// preserve object identity changes used by first-seen timestamps.
 				structuralSharing: false,
-				// We don't want to retry queries by default, because in most cases we
-				// want to fail early and show a response to the user. There are
-				// exceptions, and those can be made on a per-query basis. For others, we
-				// should give users controls to retry.
+				// queries opt in to retries when they can recover automatically.
 				retry: false,
 			},
 		},
@@ -138,8 +125,7 @@ export function QueryProvider({
 }) {
 	return (
 		<QueryProviderInner
-			// Enforce we never reuse cache between users.
-			// These two props MUST stay in sync.
+			// key the provider by account so caches are not shared.
 			key={currentDid}
 			currentDid={currentDid}
 		>
@@ -155,14 +141,12 @@ function QueryProviderInner({
 	children: React.ReactNode;
 	currentDid: string | undefined;
 }) {
-	// initialDid is a mount-time snapshot used only for the invariant check below. useConstant (not useRef)
-	// so the read during render isn't a ref access.
+	// keep a mount-time snapshot for the account invariant.
 	const initialDid = useConstant(() => currentDid);
 	if (currentDid !== initialDid) {
 		throw Error('Something is very wrong. Expected did to be stable due to key above.');
 	}
-	// We create the query client here so that it's scoped to a specific DID.
-	// Do not move the query client creation outside of this component.
+	// create the client inside the account-keyed subtree.
 	const queryClient = useConstant(() => createQueryClient());
 	const persistOptions = useConstant(() => {
 		const storage = createPersistedQueryStorage(currentDid ?? 'logged-out');

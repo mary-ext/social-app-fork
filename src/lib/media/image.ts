@@ -19,18 +19,10 @@ const LINK_THUMB_MAX_DIM = 2_000;
 
 // #region vision budget
 
-/**
- * gemma 4's vision encoder splits an image into 16px patches and pools them 3×3, so it only ever sees whole
- * 48px blocks. sizing to a multiple of this means its own aspect-preserving resize lands back on the
- * dimensions we sent, leaving our downscale as the only resample the pixels go through.
- */
+/** block size produced by Gemma 4's vision encoder. */
 const VISION_BLOCK = 48;
 
-/**
- * the encoder caps a single image at 1120 pooled tokens, one per 48px block, so pixels past this are
- * discarded before the model ever sees them. sized to the largest budget on offer because alt text leans on
- * transcribing text in the image, which is where resolution actually pays.
- */
+/** maximum pixels represented by the encoder's 1120-token budget. */
 const VISION_MAX_PIXELS = 1120 * VISION_BLOCK * VISION_BLOCK;
 
 /** how far snapping to whole blocks may bend the aspect ratio before it stops being worth the alignment. */
@@ -43,17 +35,12 @@ const MAX_QUALITY = QUALITY_STEPS[0];
 
 // #region prediction table
 
-// leave 8% room for per-image deviation from the population median; baseline R² of
-// `anchorBytes × ratio` vs actual is 0.94–0.99 across cells, so this covers the p95
-// error at every reasonable cell.
+// leave room for prediction error.
 const PREDICTION_HEADROOM = 0.92;
 
 const PREDICTION_SCALES = [1.0, 0.9, 0.8, 0.7, 0.6] as const;
 
-/**
- * median encoded-bytes ratios vs the anchor (scale=1.0, q=92), measured via chromium's WebP encoder on 64
- * test images. rows correspond to {@link PREDICTION_SCALES}, columns to {@link QUALITY_STEPS}.
- */
+/** estimated encoded-size ratios by scale and quality. */
 const PREDICTION_RATIOS: readonly (readonly number[])[] = [
 	[1.0, 0.8, 0.656, 0.558],
 	[0.809, 0.618, 0.501, 0.421],
@@ -67,11 +54,11 @@ const PREDICTION_RATIOS: readonly (readonly number[])[] = [
 // #region iterative fallback
 
 const MAX_ATTEMPTS = 8;
-// once dimensions have already dropped somewhat, start trading off quality too
+// trade off quality after dimensions have dropped.
 const SOFT_MIN_SCALE = 0.8;
-// don't shrink below roughly three-fifths of the fitted dimensions unless we have no other choice
+// keep at least 60% of the fitted dimensions when possible.
 const HARD_MIN_SCALE = 0.6;
-// aim slightly under the byte budget so a small prediction error doesn't bounce us back over
+// aim below the byte budget to allow for prediction error.
 const TARGET_HEADROOM = 0.95;
 
 // #endregion
@@ -81,17 +68,11 @@ const enum Crop {
 	COVER,
 }
 
-/**
- * how the output dimensions are chosen. `maxPixels` rides on the CONTAIN variant because it only means
- * anything when the aspect ratio is being preserved — a COVER caller is dictating exact dimensions.
- */
+/** output dimension policy. */
 type CropMode =
 	| {
 			type: Crop.CONTAIN;
-			/**
-			 * if set, an additional cap on total output pixels, snapped down to whole {@link VISION_BLOCK} blocks.
-			 * a bounding box wastes most of the budget on a panorama; an area cap spends all of it.
-			 */
+			/** optional pixel cap, aligned to {@link VISION_BLOCK}. */
 			maxPixels?: number;
 	  }
 	| { type: Crop.COVER };
@@ -102,10 +83,7 @@ interface CompressOptions {
 	maxHeight: number;
 	type: 'image/webp' | 'image/jpeg';
 	crop: CropMode;
-	/**
-	 * if set, source blobs whose mime type is in this list may skip re-encoding when already under the byte
-	 * budget
-	 */
+	/** source MIME types allowed to bypass re-encoding. */
 	acceptedSourceTypes?: readonly string[];
 }
 
@@ -135,9 +113,7 @@ export const compressLinkThumbImage = (blob: Blob): Promise<CompressResult> => {
 };
 
 /**
- * re-encode an image for the alt text description endpoint, sized to what the model's vision encoder can
- * actually resolve. deliberately not the post encode: that one is sized for display and is several times
- * larger than anything the encoder keeps.
+ * re-encodes an image for the alt-text model's vision budget.
  *
  * @param blob source image
  * @returns the encoded blob and its final aspect ratio
@@ -147,12 +123,10 @@ export const compressAltTextImage = (blob: Blob): Promise<CompressResult> => {
 	return compressImage(blob, {
 		type: 'image/webp',
 		maxBytes: ALT_TEXT_MAX_BYTES,
-		// no bounding box: the pixel budget is the real cap, and a box binding first would leave most of that
-		// budget unspent on anything far from square
+		// use the pixel budget instead of a bounding box so wide images keep their available area.
 		maxHeight: Infinity,
 		maxWidth: Infinity,
-		// a source that already fits is passed through untouched, so only encodings the endpoint accepts may
-		// skip the re-encode — otherwise the caller would be handed, say, an avif to label as webp
+		// only accepted formats may bypass re-encoding.
 		acceptedSourceTypes: ALT_TEXT_MIME_TYPES,
 		crop: { type: Crop.CONTAIN, maxPixels: VISION_MAX_PIXELS },
 	});
@@ -169,21 +143,14 @@ export const compressProfileImage = (blob: Blob, maxW: number, maxH: number): Pr
 	});
 };
 
-/**
- * compress an image to fit a byte budget.
- *
- * @param blob source image
- * @param opts size, format, and crop policy
- * @returns the encoded blob and its final aspect ratio
- * @throws if no attempt produces a blob within the byte budget
- */
+/** compresses an image to fit a byte budget. */
 const compressImageUncapped = async (blob: Blob, opts: CompressOptions): Promise<CompressResult> => {
-	// strip exif first — may bring an oversized source under budget
+	// stripping metadata may bring the source under budget.
 	blob = await stripExif(blob);
 
 	const image = await getImageFromBlob(blob);
 
-	// fast path: source already fits — keep the original encoding rather than re-encoding losslessly to a worse format
+	// preserve an acceptable source without re-encoding.
 	if (
 		blob.size <= opts.maxBytes &&
 		!exceedsSizeBudget(image, opts) &&
@@ -203,8 +170,7 @@ const compressImageUncapped = async (blob: Blob, opts: CompressOptions): Promise
 		opts.crop,
 	);
 
-	// anchor encode: full fitted dims at max quality. often fits directly, and supplies the
-	// per-image byte count used by the predictor and iterative fallback.
+	// encode the full-size anchor used by the fallback strategies.
 	const anchorBlob = await encodeAt(image, fittedW, fittedH, MAX_QUALITY, opts);
 	if (anchorBlob.size <= opts.maxBytes) {
 		return { blob: anchorBlob, aspectRatio: { width: fittedW, height: fittedH } };
@@ -212,7 +178,7 @@ const compressImageUncapped = async (blob: Blob, opts: CompressOptions): Promise
 
 	let result: CompressResult | undefined;
 
-	// table-based prediction is only validated for webp CONTAIN
+	// the prediction table applies only to WebP contain mode.
 	if (opts.type === 'image/webp' && opts.crop.type === Crop.CONTAIN) {
 		result = await compressByPrediction(image, fittedW, fittedH, anchorBlob.size, opts);
 	}
@@ -231,7 +197,7 @@ const compressImageUncapped = async (blob: Blob, opts: CompressOptions): Promise
 const compressImage = limitConcurrency(MAX_CONCURRENT_COMPRESSIONS, compressImageUncapped);
 
 /**
- * encodes the image at the highest-scoring cell that is predicted to fit the byte budget.
+ * encodes the highest-scoring predicted cell within the byte budget.
  *
  * @param image decoded source image
  * @param fittedW width at scale=1.0
@@ -263,7 +229,7 @@ const compressByPrediction = async (
 			}
 
 			const quality = QUALITY_STEPS[qi]!;
-			// weight pixels and quality equally — a 0.1 scale step trades against a ~9-point quality step
+			// weight scale and quality equally.
 			const score = scale * quality;
 			if (score > bestScore) {
 				bestScore = score;
@@ -287,7 +253,7 @@ const compressByPrediction = async (
 };
 
 /**
- * search for an encode within budget by iteratively shrinking scale and reducing quality.
+ * finds an encode within budget by shrinking scale and quality.
  *
  * @param image decoded source image
  * @param fittedW width at scale 1.0
@@ -313,14 +279,12 @@ const compressByIteration = async (
 	let qualityIndex = 0;
 	let encoded: Blob = anchorEncoded;
 
-	// attempt 0 is the anchor; the loop runs up to MAX_ATTEMPTS - 1 additional encodes.
 	for (let attempt = 1; attempt < MAX_ATTEMPTS; attempt++) {
 		if (encoded.size <= opts.maxBytes) {
 			return { blob: encoded, aspectRatio: { width, height } };
 		}
 
-		// overshoot: encoded byte count scales roughly with pixel count, so derive the next
-		// linear scale from sqrt(target / actual). converges quickly for well-behaved images.
+		// estimate the next scale from the encoded-size ratio.
 		const ratio = Math.sqrt((opts.maxBytes * TARGET_HEADROOM) / encoded.size);
 		const canLowerQuality = qualityIndex < QUALITY_STEPS.length - 1;
 		const hitSoftMin = width <= softMinW || height <= softMinH;
@@ -329,7 +293,7 @@ const compressByIteration = async (
 		if (canLowerQuality && hitSoftMin) {
 			qualityIndex += 1;
 		} else if (hitHardMin) {
-			// at hard min with no quality headroom left — we've exhausted the search space
+			// no dimensions or quality remain to try.
 			return undefined;
 		} else {
 			const [nextW, nextH] = computeNextDims(width, height, ratio, hardMinW, hardMinH);
@@ -362,8 +326,7 @@ const encodeAt = (
 };
 
 /**
- * remove EXIF metadata from a supported image blob. returns the original blob unchanged if the format isn't
- * recognized by the exif stripper.
+ * removes EXIF metadata from a supported image blob.
  *
  * @param blob source image
  * @returns a blob with EXIF removed, or the original blob if no stripping was applied
@@ -410,12 +373,7 @@ export const getImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {
 	});
 };
 
-/**
- * whether the source is larger than the output budget allows, by either measure. the byte-budget fast path
- * hands the source back untouched, so without this a cheap-to-encode image sails through at whatever
- * dimensions it arrived with — which defeats a bounding box as surely as it defeats a pixel budget. cover
- * callers dictate exact dimensions, so there is no budget of their own to exceed.
- */
+/** returns whether a contain-mode source exceeds its dimension or pixel budget. */
 const exceedsSizeBudget = (image: HTMLImageElement, opts: CompressOptions): boolean => {
 	if (opts.crop.type === Crop.COVER) {
 		return false;
@@ -449,17 +407,14 @@ const computeFittedDims = (
 		scale = Math.min(scale, Math.sqrt(crop.maxPixels / (srcW * srcH)));
 	}
 
-	// only snap while shrinking: on a source already under budget the blocks would cost resolution and buy
-	// nothing, since the encoder scales it up to meet its budget either way
+	// only snap while shrinking; snapping an already-small source loses resolution.
 	if (crop.maxPixels !== undefined && scale < 1) {
 		const idealW = srcW * scale;
 		const idealH = srcH * scale;
 		const width = Math.floor(idealW / VISION_BLOCK) * VISION_BLOCK;
 		const height = Math.floor(idealH / VISION_BLOCK) * VISION_BLOCK;
 
-		// flooring costs each side under one block, which on a normal photo is a rounding detail — but on a
-		// side only a few blocks long it squashes the image outright, and a squashed image describes worse
-		// than a resampled one
+		// reject snapping when it would distort a small image.
 		const drift = Math.abs(width / height / (idealW / idealH) - 1);
 		if (width > 0 && height > 0 && drift <= MAX_ASPECT_DRIFT) {
 			return [width, height];

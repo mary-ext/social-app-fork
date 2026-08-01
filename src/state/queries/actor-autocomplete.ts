@@ -34,7 +34,7 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 
 	let normalizedPrefix = prefix.toLowerCase().trim();
 	if (normalizedPrefix.endsWith('.')) {
-		// Going from "foo" to "foo." should not clear matches.
+		// preserve matches while the user types a trailing dot.
 		normalizedPrefix = normalizedPrefix.slice(0, -1);
 	}
 
@@ -88,7 +88,7 @@ export function useSearchActorAutocompleteQuery({
 
 	let normalizedPrefix = query.toLowerCase().trim();
 	if (normalizedPrefix.endsWith('.')) {
-		// Going from "foo" to "foo." should not clear matches.
+		// preserve matches while the user types a trailing dot.
 		normalizedPrefix = normalizedPrefix.slice(0, -1);
 	}
 

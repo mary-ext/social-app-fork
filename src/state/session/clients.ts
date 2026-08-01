@@ -8,22 +8,9 @@ import { acceptLabelersHeaderValue } from './labelers';
 import { createOAuthFetchHandler, type FetchHandler, withNetworkEvents } from './network';
 import type { OAuthUserAgent } from './oauth';
 
-/**
- * xrpc clients backing every network call.
- *
- * @param appview reaches the Bluesky AppView
- * @param pds reaches the signed-in user's PDS, or null if logged out
- * @param chat reaches the Bluesky chat service via the PDS, or null if logged out
- * @param pdsUrl PDS service URL needed for the video pipeline, or null if logged out
- */
+/** XRPC clients used by the app. */
 export type Clients = { appview: Client; chat: Client | null; pds: Client | null; pdsUrl: string | null };
 
-/**
- * wraps a fetch handler so client requests carry the `atproto-accept-labelers` header.
- *
- * @param handler the handler to wrap
- * @returns a handler that injects the labelers header if not already present
- */
 function withLabelersHeader(handler: FetchHandler): FetchHandler {
 	return (url, init) => {
 		const headers = new Headers(init.headers);
@@ -34,27 +21,16 @@ function withLabelersHeader(handler: FetchHandler): FetchHandler {
 	};
 }
 
-/**
- * Builds the logged-out client set. `public.api.bsky.app` is itself the AppView, so `appview` needs no proxy;
- * there is no session, so `pds` and `chat` are `null`.
- *
- * @returns clients with a working `appview` and `null` `pds` / `chat`.
- */
+/** builds clients for a logged-out session. */
 export function createPublicClients(): Clients {
 	const handler = withLabelersHeader(withNetworkEvents(simpleFetchHandler({ service: PUBLIC_BSKY_SERVICE })));
 	return { appview: new Client({ handler }), chat: null, pds: null, pdsUrl: null };
 }
 
-/**
- * builds the logged-in client set where all three clients share the OAuth handler targeting the user's PDS.
- *
- * @param oauthAgent the session's atcute user-agent.
- * @returns clients with a working `appview`, `pds`, and `chat`.
- */
+/** builds clients for an OAuth session. */
 export function createOAuthClients(oauthAgent: OAuthUserAgent): Clients {
 	const handler = createOAuthFetchHandler(oauthAgent);
-	// appview and chat both hydrate labeler-filtered views, so both advertise the user's labelers; the
-	// pds talks to the repo directly and needs no labeler header.
+	// only appview and chat return labeler-filtered views.
 	const labeled = withLabelersHeader(handler);
 	return {
 		appview: new Client({ handler: labeled, proxy: APPVIEW_PROXY_AUDIENCE }),

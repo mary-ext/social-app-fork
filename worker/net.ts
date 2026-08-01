@@ -16,12 +16,7 @@ export const parseHttpUrl = (raw: string, base?: URL): URL | undefined => {
 };
 
 /**
- * parses a URL and rejects anything that isn't a plain HTTP(S) request.
- *
- * host-level SSRF filtering deliberately lives in the platform rather than here: the Workers runtime mediates
- * every outbound fetch through a proxy that only reaches public internet services — never private IPs,
- * loopback, or internal hosts. the `global_fetch_strictly_public` flag (see wrangler.jsonc) extends that to
- * own-zone requests by routing them back out through the public front door.
+ * validates an HTTP(S) URL. Cloudflare's public-fetch proxy handles host-level SSRF filtering.
  *
  * @param raw the URL to validate
  * @returns the parsed URL
@@ -65,9 +60,7 @@ export interface SafeFetchResult {
 }
 
 /**
- * fetches a URL as a public client under a timeout, following redirects. the Workers proxy keeps every hop —
- * original and redirected — pointed at the public internet (see {@link assertHttpUrl}), and each hop is a
- * fresh `fetch` through that same proxy, so no per-hop host vetting is needed here.
+ * fetches a public URL with a timeout and tracks redirects manually.
  *
  * @throws {UpstreamTimeoutError} when the request exceeds `timeoutMs`
  * @throws {UpstreamFailureError} when the upstream is unreachable
@@ -78,8 +71,7 @@ export const safeFetch = async (url: URL, options: SafeFetchOptions): Promise<Sa
 	let current = url;
 	const chain: URL[] = [current];
 
-	// followed by hand rather than by the runtime so intermediate hops survive: a short link that lands on a
-	// bot interstitial hides the real content URL in the middle of the chain.
+	// retain intermediate hops for short links that pass through bot interstitials.
 	for (;;) {
 		let response: Response;
 		try {
@@ -108,7 +100,7 @@ export const safeFetch = async (url: URL, options: SafeFetchOptions): Promise<Sa
 
 		const next = parseHttpUrl(location, current);
 		if (!next) {
-			// a redirect we can't follow; hand back the response as-is rather than failing the whole fetch.
+			// return an unresolvable redirect rather than failing the whole fetch.
 			return { chain, response, url: current };
 		}
 
@@ -137,7 +129,7 @@ export const readCapped = async (response: Response, options: ReadCappedOptions)
 		throw new InvalidRequestError({ message: 'upstream resource too large' });
 	}
 
-	// `Response.body` is `ReadableStream<any>`; pin the element type so the reader yields `Uint8Array`
+	// pin the stream element type for the reader.
 	const body: ReadableStream<Uint8Array> | null = response.body;
 	if (!body) {
 		return new Uint8Array(0);

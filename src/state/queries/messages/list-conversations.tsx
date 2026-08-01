@@ -167,8 +167,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 		void queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] });
 	}, 500);
 
-	// The unread badge count is derived from chat.bsky.convo.getUnreadCounts.
-	// Any chat log can change it, so refresh it (throttled) on every batch.
+	// any chat log can change unread counts, so refresh them after each batch.
 	const debouncedInvalidateUnreadCounts = useThrottledCallback(() => {
 		void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
 	}, 500);
@@ -180,8 +179,6 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 					return;
 				}
 
-				// Any log batch may change unread state (new message, read, accept,
-				// join request, etc.), so refresh the badge count for all of them.
 				debouncedInvalidateUnreadCounts();
 
 				function mutateMembers(
@@ -193,7 +190,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						(old) => {
 							if (!old) {
 								return;
-							} // query doesn't exist yet, skip
+							} // query does not exist yet.
 							return fn(old);
 						},
 					);
@@ -221,7 +218,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 					if (!newMember) {
 						return;
 					}
-					// if the optimistic add already added them, skip the memberCount bump to avoid double-counting
+					// avoid counting an optimistic member change twice.
 					const alreadyKnownMember =
 						queryClient
 							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
@@ -234,7 +231,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 				}
 
 				function handleMemberRemoved(convoId: string, did: string, rev: string) {
-					// if the optimistic remove already dropped them, skip the memberCount decrement to avoid double-counting
+					// avoid counting an optimistic member change twice.
 					const alreadyRemovedMember =
 						queryClient
 							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
@@ -256,9 +253,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
 								optimisticDelete(log.convoId, old),
 							);
-							// The viewer is no longer in this convo (they left on another device, or were
-							// removed — removed members receive a logLeaveConvo, not a logRemoveMember). Refetch
-							// any cached join link preview so its viewer state reflects the lost membership.
+							// leaving removes membership, so refresh cached join-link previews.
 							void invalidateJoinLinkPreviewsForConvo(queryClient, log.convoId);
 							break;
 						}
@@ -293,15 +288,13 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							break;
 						}
 						case 'chat.bsky.convo.defs#logCreateMessage': {
-							// Store in a new var to avoid TS errors due to closures.
+							// preserve the log type through closure narrowing.
 							const logRef: ChatBskyConvoDefs.LogCreateMessage = log;
 
-							// Get all matching queries
 							const queries = queryClient.getQueriesData<ConvoListQueryData>({
 								queryKey: [RQKEY_ROOT],
 							});
 
-							// Check if convo exists in any query
 							let foundConvo: ChatBskyConvoDefs.ConvoView | null = null;
 							for (const [_key, query] of queries) {
 								if (!query) {
@@ -315,15 +308,12 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							}
 
 							if (!foundConvo) {
-								// Convo not found, trigger refetch. Use continue (not return) so
-								// the remaining logs in this batch still apply - the bus advances
-								// its cursor past this batch, so a dropped log is never
-								// redelivered.
+								// refetch, but continue because the bus will not redeliver this batch.
 								debouncedRefetch();
 								continue;
 							}
 
-							// Drop stale out-of-order events whose rev isn't newer than what we already have.
+							// ignore out-of-order revisions.
 							if (logRef.rev <= foundConvo.rev) {
 								break;
 							}
@@ -332,12 +322,11 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								logRef.message.$type === 'chat.bsky.convo.defs#messageView' ||
 								logRef.message.$type === 'chat.bsky.convo.defs#deletedMessageView';
 
-							// add relatedProfiles to members list, but making sure to dedupe
+							// add related profiles without duplicates.
 							const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
 								(profile) => !foundConvo.members.some((member) => member.did === profile.did),
 							);
 
-							// Update the convo
 							const updatedConvo = {
 								...foundConvo,
 								members: [...foundConvo.members, ...relatedProfilesSansMembers],
@@ -357,7 +346,6 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								return convo.filter((c) => c.id !== logRef.convoId);
 							}
 
-							// Update all matching queries
 							function updateFn(old?: ConvoListQueryData) {
 								if (!old) {
 									return old;
@@ -378,7 +366,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 									}),
 								};
 							}
-							// always update the unread ones, where the convo qualifies
+							// keep unread results in sync.
 							queryClient.setQueriesData(
 								{
 									queryKey: RQKEY_PARTIAL('all', 'unread'),
@@ -392,7 +380,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 												pages: [{ convos: [updatedConvo], cursor: undefined }],
 											} satisfies ConvoListQueryData),
 							);
-							// update the other ones based on status of the incoming message
+							// update status-specific caches.
 							if (updatedConvo.status === 'accepted') {
 								queryClient.setQueriesData(
 									{
@@ -458,14 +446,11 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								}
 							}
 							if (!foundConvo) {
-								// Convo not found, trigger refetch. Use continue (not return) so
-								// the remaining logs in this batch still apply - the bus advances
-								// its cursor past this batch, so a dropped log is never
-								// redelivered.
+								// refetch, but continue because the bus will not redeliver this batch.
 								debouncedRefetch();
 								continue;
 							}
-							// Drop stale out-of-order accepts whose rev isn't newer than what we already have.
+							// ignore out-of-order revisions.
 							if (logRef.rev <= foundConvo.rev) {
 								continue;
 							}
@@ -544,8 +529,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 										: { ...convo, rev: logRef.rev },
 								),
 							);
-							// the log event doesn't say whether the lock is forced by a
-							// moderation override, so refetch to pick up the flag.
+							// lock events omit moderation overrides; refetch the full view.
 							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(logRef.convoId) });
 							break;
 						}
@@ -587,7 +571,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							break;
 						}
 						case 'chat.bsky.convo.defs#logEditGroup': {
-							// group details changed but aren't included in the log event, refetch to get them
+							// the event omits group details, so refetch.
 							debouncedRefetch();
 							break;
 						}
@@ -595,15 +579,14 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						case 'chat.bsky.convo.defs#logEditJoinLink':
 						case 'chat.bsky.convo.defs#logEnableJoinLink':
 						case 'chat.bsky.convo.defs#logDisableJoinLink': {
-							// join link data is not included in the log event, refetch to get it
+							// the event omits join-link data, so refetch.
 							debouncedRefetch();
 							break;
 						}
 						case 'chat.bsky.convo.defs#logApproveJoinRequest':
 						case 'chat.bsky.convo.defs#logRejectJoinRequest':
 						case 'chat.bsky.convo.defs#logWithdrawIncomingJoinRequest': {
-							// Route through mutateConvoView (not just the list caches) so the single-convo
-							// cache updates too, keeping the in-convo join-requests banner in sync.
+							// update the single-conversation cache so join-request banners stay in sync.
 							mutateConvoView(
 								log.convoId,
 								withRevGuard(log.rev, (convo) => applyJoinRequestCountDelta(convo, -1, log.rev)),
@@ -625,12 +608,10 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							break;
 						}
 						case 'chat.bsky.convo.defs#logOutgoingJoinRequest': {
-							// viewer isn't in the chat yet, no need to do anything
 							break;
 						}
 						case 'chat.bsky.convo.defs#logWithdrawOutgoingJoinRequest': {
-							// the viewer rescinded their own outgoing join request (possibly on another
-							// device); drop it from the requests inbox cache
+							// remove a request withdrawn on another device.
 							queryClient.setQueriesData<ConvoRequestListQueryData>(
 								{ queryKey: [REQUESTS_RQKEY_ROOT] },
 								(old) => optimisticDeleteJoinRequest(log.convoId, old),
@@ -648,7 +629,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 									logRef.convoId,
 									old,
 									withRevGuard(logRef.rev, (convo) => {
-										// add relatedProfiles to members list, but making sure to dedupe
+										// add related profiles without duplicates.
 										const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
 											(profile) => !convo.members.some((member) => member.did === profile.did),
 										);
@@ -672,7 +653,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataAddMember') {
 								handleMemberAdded(log.convoId, data.member.did, log.relatedProfiles, log.rev);
 							}
-							// refetch so the server can refresh the curated members list
+							// refetch to refresh the curated members list.
 							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
 							debouncedRefetch();
 							break;
@@ -682,7 +663,7 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataRemoveMember') {
 								handleMemberRemoved(log.convoId, data.member.did, log.rev);
 							}
-							// refetch so the server can refill the curated members list
+							// refetch to refresh the curated members list.
 							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
 							debouncedRefetch();
 							break;
@@ -713,19 +694,15 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 									old,
 									withRevGuard(logRef.rev, (convo) => {
 										if (
-											// if the convo is the same
 											logRef.convoId === convo.id &&
 											convo.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView' &&
 											logRef.message.$type === 'chat.bsky.convo.defs#messageView' &&
-											// ...and the message is the same
 											convo.lastReaction.message.id === logRef.message.id &&
-											// ...and the reaction is the same
 											convo.lastReaction.reaction.sender.did === logRef.reaction.sender.did &&
 											convo.lastReaction.reaction.value === logRef.reaction.value
 										) {
 											return {
 												...convo,
-												// ...remove the reaction. hopefully they didn't react twice in a row!
 												lastReaction: undefined,
 												rev: logRef.rev,
 											};
@@ -741,7 +718,6 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 				}
 			},
 			{
-				// get events for all chats
 				convoId: undefined,
 			},
 		);
@@ -771,15 +747,11 @@ export function useUnreadMessageCount(): {
 	if (accepted > 0) {
 		return {
 			count: accepted,
-			// accepted is sentinel-capped at UNREAD_ACCEPTED_CAP (meaning "more than
-			// cap - 1"). show the "+" overflow label only when accepted is actually
-			// capped, otherwise clamp the number to cap - 1 so we never surface the
-			// sentinel value (100) itself
+			// render the API's overflow sentinel as a plus count.
 			numUnread:
 				accepted >= UNREAD_ACCEPTED_CAP
 					? String(UNREAD_ACCEPTED_CAP - 1) + '+'
 					: String(Math.min(accepted, UNREAD_ACCEPTED_CAP - 1)),
-			// only needed when numUnread is undefined
 			hasNew: false,
 		};
 	} else if (request > 0) {
@@ -818,10 +790,7 @@ export function useOnMarkAsRead() {
 	};
 }
 
-/**
- * wraps a conversation view update to skip it if the incoming event's `rev` is not newer than the
- * conversation's current `rev`. prevents out-of-order events from overwriting newer state.
- */
+/** skips conversation updates from stale revisions. */
 function withRevGuard(
 	rev: string,
 	fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
@@ -856,8 +825,7 @@ function applyJoinRequestCountDelta(
 	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
 		return { ...convo, rev };
 	}
-	// an incoming request is unread, and resolving one (approve/reject/withdraw) clears an
-	// unread, so the total and unread counts move together.
+	// total and unread counts move together as requests arrive or resolve.
 	const bump = (n: number | undefined) => {
 		const next = Math.max(0, (n ?? 0) + delta);
 		return next === 0 ? undefined : next;

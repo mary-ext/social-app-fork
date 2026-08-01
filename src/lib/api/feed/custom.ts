@@ -49,10 +49,7 @@ export class CustomFeedAPI implements FeedAPI {
 			}),
 		);
 		let feed = data.feed;
-		// NOTE
-		// some custom feeds fail to enforce the pagination limit
-		// so we manually truncate here
-		// -prf
+		// some custom feeds ignore the pagination limit.
 		if (feed.length > limit) {
 			feed = feed.slice(0, limit);
 		}

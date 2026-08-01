@@ -1,8 +1,4 @@
-// It should roll when:
-// - We're going from 1 to 0 (roll backwards)
-// - The count is anywhere between 1 and 999
-// - The count is going up and is a multiple of 100
-// - The count is going down and is 1 less than a multiple of 100
+// roll at direction changes, count boundaries, and while the count is below 1000.
 export function decideShouldRoll(isSet: boolean, count: number) {
 	let shouldRoll = false;
 	if (!isSet && count === 1) {

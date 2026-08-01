@@ -66,8 +66,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 
 	const onPressOpen = () => {
 		if (isThreadAuthor) {
-			// wait on prefetch if it manages to resolve in under 200ms
-			// otherwise, proceed immediately and show the spinner -sfn
+			// wait briefly for prefetch, then open while showing the spinner.
 			void Promise.race([prefetchPromise.current, new Promise((res) => setTimeout(res, 200))]).finally(() => {
 				editDialogHandle.open(null);
 			});

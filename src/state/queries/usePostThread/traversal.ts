@@ -28,10 +28,7 @@ export function sortAndAnnotateThreadItems(
 		threadgateHiddenReplies: ReadonlySet<ResourceUri>;
 		moderationOpts: ModerationOptions;
 		view: PostThreadParams['view'];
-		/**
-		 * set to `true` to skip sorting or truncation based on moderation state. all replies will be included in
-		 * the resulting `threadItems` array.
-		 */
+		/** include all replies without moderation sorting or truncation. */
 		skipModerationHandling?: boolean;
 	},
 ) {
@@ -56,10 +53,6 @@ export function sortAndAnnotateThreadItems(
 		}
 
 		if (item.depth < 0) {
-			/*
-			 * Parents are ignored until we find the anchor post, then we walk
-			 * _up_ from there.
-			 */
 		} else if (item.depth === 0) {
 			if (item.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
 				threadItems.push(
@@ -94,12 +87,9 @@ export function sortAndAnnotateThreadItems(
 						});
 						parentPost.ui = getThreadPostNoUnauthenticatedUI({
 							depth: parent.depth,
-							// ignore for now
-							// prevItemDepth: thread[pi - 1]?.depth,
 							nextItemDepth: thread[pi + 1]?.depth,
 						});
 						threadItems.unshift(parentPost);
-						// for now, break parent traversal at first no-unauthed
 						break parentTraversal;
 					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {
 						threadItems.unshift(
@@ -125,11 +115,6 @@ export function sortAndAnnotateThreadItems(
 				}
 			}
 		} else if (item.depth > 0) {
-			/*
-			 * The API does not send down any unavailable replies, so this will
-			 * always be false (for now). If we ever wanted to tombstone them here,
-			 * we could.
-			 */
 			const shouldBreak =
 				item.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated' ||
 				item.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound' ||
@@ -137,16 +122,11 @@ export function sortAndAnnotateThreadItems(
 
 			if (shouldBreak) {
 				const branch = getBranch(thread, i, item.depth);
-				// could insert tombstone
 				i = branch.end;
 				continue traversal;
 			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 				if (parentMetadata) {
-					/*
-					 * Set this value before incrementing the `repliesSeenCounter` later
-					 * on, since `repliesSeenCounter` is 1-indexed and `replyIndex` is
-					 * 0-indexed.
-					 */
+					// assign before incrementing the 1-based counter.
 					metadata!.replyIndex = parentMetadata.repliesSeenCounter;
 				}
 
@@ -159,30 +139,18 @@ export function sortAndAnnotateThreadItems(
 				});
 
 				if (!post.isBlurred || skipModerationHandling) {
-					/*
-					 * Not moderated, need to insert it
-					 */
 					threadItems.push(post);
 
-					/*
-					 * Update seen reply count of parent
-					 */
 					if (parentMetadata) {
 						parentMetadata.repliesSeenCounter += 1;
 					}
 				} else {
-					/*
-					 * Moderated in some way, we're going to walk children
-					 */
 					const parent = post;
 					const parentIsTopLevelReply = parent.depth === 1;
-					// get sub tree
 					const branch = getBranch(thread, i, item.depth);
 
 					if (parentIsTopLevelReply) {
-						// push branch anchor into sorted array
 						otherThreadItems.push(parent);
-						// skip branch anchor in branch traversal
 						const startIndex = branch.start + 1;
 
 						for (let ci = startIndex; ci <= branch.end; ci++) {
@@ -200,11 +168,7 @@ export function sortAndAnnotateThreadItems(
 								});
 								storeTraversalMetadata(metadatas, childMetadata);
 								if (childParentMetadata) {
-									/*
-									 * Set this value before incrementing the
-									 * `repliesSeenCounter` later on, since `repliesSeenCounter`
-									 * is 1-indexed and `replyIndex` is 0-indexed.
-									 */
+									// assign before incrementing the 1-based counter.
 									childMetadata.replyIndex = childParentMetadata.repliesSeenCounter;
 								}
 
@@ -216,11 +180,6 @@ export function sortAndAnnotateThreadItems(
 									threadgateHiddenReplies,
 								});
 
-								/*
-								 * If a child is moderated in any way, drop it an its sub-branch
-								 * entirely. To reveal these, the user must navigate to the
-								 * parent post directly.
-								 */
 								if (childPost.isBlurred) {
 									ci = getBranch(thread, ci, child.depth).end;
 								} else {
@@ -231,17 +190,11 @@ export function sortAndAnnotateThreadItems(
 									}
 								}
 							} else {
-								/*
-								 * Drop the rest of the branch if we hit anything unexpected
-								 */
 								break;
 							}
 						}
 					}
 
-					/*
-					 * Skip to next branch
-					 */
 					i = branch.end;
 					continue traversal;
 				}
@@ -249,10 +202,7 @@ export function sortAndAnnotateThreadItems(
 		}
 	}
 
-	/*
-	 * Both `threadItems` and `otherThreadItems` now need to be traversed again to fully compute
-	 * UI state based on collected metadata. These arrays will be muted in situ.
-	 */
+	// compute final UI metadata after moderation removes branches.
 	for (const subset of [threadItems, otherThreadItems]) {
 		for (let i = 0; i < subset.length; i++) {
 			const item = subset[i]!;
@@ -263,10 +213,7 @@ export function sortAndAnnotateThreadItems(
 				const metadata = metadatas.get(item.uri);
 
 				if (metadata) {
-					/*
-					 * Track what's before/after now that we've applied moderation. These feed
-					 * both `isLastChild` and the sibling calculations below.
-					 */
+					// record neighboring depths after filtering.
 					if (prevItem?.type === 'threadPost') {
 						metadata.prevItemDepth = prevItem?.depth;
 					}
@@ -274,104 +221,50 @@ export function sortAndAnnotateThreadItems(
 						metadata.nextItemDepth = nextItem?.depth;
 					}
 
-					/*
-					 * Item is the last "child" in a branch if there is no next item, or if the
-					 * next item's depth is less than this item's depth (a sibling of the parent)
-					 * or equal to this item's depth (a sibling of this item). This is purely
-					 * positional, so unlike the sibling state below it does not require
-					 * `parentMetadata`: top-level replies loaded via the "other replies" query
-					 * (`getPostThreadOtherV2`) arrive without their anchor parent in scope, and
-					 * must still resolve last-child correctly to get the loose bottom padding.
-					 */
+					// a child ends before an item at the same or shallower depth.
 					metadata.isLastChild =
 						metadata.nextItemDepth === undefined || metadata.nextItemDepth <= metadata.depth;
 
 					if (metadata.parentMetadata) {
-						/**
-						 * Item is also the last "sibling" if its index matches the total number of replies we're actually
-						 * able to render to the page.
-						 */
 						const isLastSiblingDueToMissingReplies =
 							metadata.replyIndex === metadata.parentMetadata.repliesSeenCounter - 1;
 
-						/*
-						 * Item can also be the last "sibling" if we know we don't have a
-						 * next item, OR if that next item's depth is less than this item's
-						 * depth (meaning it's a sibling of the parent, not a child of this
-						 * item).
-						 */
+						// a shallower next item ends this sibling.
 						const isImplicitlyLastSibling =
 							metadata.nextItemDepth === undefined || metadata.nextItemDepth < metadata.depth;
 
-						/*
-						 * Ok now we can set the last sibling state.
-						 */
 						metadata.isLastSibling = isImplicitlyLastSibling || isLastSiblingDueToMissingReplies;
 
-						/*
-						 * If this is the last sibling, it's implicitly part of the last
-						 * branch of this sub-tree.
-						 */
 						if (metadata.isLastSibling) {
 							metadata.isPartOfLastBranchFromDepth = metadata.depth;
 
-							/** updates the depth from which the current node is part of the last branch of the sub-tree */
 							if (!metadata.isLastSibling && metadata.parentMetadata.isPartOfLastBranchFromDepth) {
 								metadata.isPartOfLastBranchFromDepth = metadata.parentMetadata.isPartOfLastBranchFromDepth;
 							}
 						}
 
-						/*
-						 * If this is the last sibling, and the parent has unhydrated replies,
-						 * at some point down the line we will need to show a "read more".
-						 */
 						if (metadata.parentMetadata.repliesUnhydrated > 0 && metadata.isLastSibling) {
 							metadata.upcomingParentReadMore = metadata.parentMetadata;
 						}
 
-						/*
-						 * Copy in the parent's upcoming read more, if it exists. Once we
-						 * reach the bottom, we'll insert a "read more"
-						 */
 						if (metadata.parentMetadata.upcomingParentReadMore) {
 							metadata.upcomingParentReadMore = metadata.parentMetadata.upcomingParentReadMore;
 						}
 
-						/*
-						 * Copy in the parent's skipped indents
-						 */
 						metadata.skippedIndentIndices = new Set(metadata.parentMetadata.skippedIndentIndices);
 
-						/**
-						 * If this is the last sibling, and the parent has no unhydrated replies, then we know we can skip
-						 * an indent line.
-						 */
 						if (metadata.parentMetadata.repliesUnhydrated <= 0 && metadata.isLastSibling) {
-							/** adjusts the rendering depth back to a 0-indexed value. */
 							metadata.skippedIndentIndices.add(item.depth - 2);
 						}
 					}
 
-					/*
-					 * If this post has unhydrated replies, and it is the last child, then
-					 * it itself needs a "read more"
-					 */
 					if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
 						metadata.precedesChildReadMore = true;
 						subset.splice(i + 1, 0, views.readMore(metadata));
-						i++; // skip next iteration
+						i++;
 					}
 
-					/*
-					 * Tree-view only.
-					 *
-					 * If there's an upcoming parent read more, this branch is part of a
-					 * branch of the sub-tree that is deeper than the
-					 * `upcomingParentReadMore`, and the item following the current item
-					 * is either undefined or less-or-equal-to the depth of the
-					 * `upcomingParentReadMore`, then we know it's time to drop in the
-					 * parent read more.
-					 */
+					// add the parent's read-more marker at the end of its branch.
 					if (
 						view === 'tree' &&
 						metadata.upcomingParentReadMore &&
@@ -384,19 +277,12 @@ export function sortAndAnnotateThreadItems(
 						i++;
 					}
 
-					/**
-					 * Only occurs for the first item in the thread, which may have additional parents not included in
-					 * this request.
-					 */
 					if (item.value.moreParents) {
 						metadata.followsReadMoreUp = true;
 						subset.splice(i, 0, views.readMoreUp(metadata));
 						i++;
 					}
 
-					/*
-					 * Calculate the final UI state for the thread item.
-					 */
 					item.ui = getThreadPostUI(metadata);
 				}
 			}
@@ -428,7 +314,7 @@ export function buildThread({
 	hasOtherThreadItems: boolean;
 	showOtherItems: () => void;
 }) {
-	/** `threadItems` is memoized here, so don't mutate it directly. */
+	// copy memoized items before adding rows.
 	const items = [...threadItems];
 
 	if (isLoading) {
@@ -446,7 +332,6 @@ export function buildThread({
 		}
 
 		if (hasSession) {
-			// we might have this from cache
 			const replyDisabled = hasAnchorFromCache && anchorPost.value.post.viewer?.replyDisabled === true;
 
 			if (hasAnchorFromCache) {
@@ -509,25 +394,11 @@ export function buildThread({
 }
 
 /**
- * get the start and end index of a thread branch (a parent and its descendants). returned indices are
- * inclusive of the parent and its last descendant.
+ * returns the inclusive range of a thread branch.
  *
- * @example
- * 	// items[] (index, depth)
- * 	// └─┬ anchor ──────── (0, 0)
- * 	//   ├─── branch ───── (1, 1)
- * 	//   ├──┬ branch ───── (2, 1) (start)
- * 	//   │  ├──┬ leaf ──── (3, 2)
- * 	//   │  │  └── leaf ── (4, 3)
- * 	//   │  └─── leaf ──── (5, 2) (end)
- * 	//   ├─── branch ───── (6, 1)
- * 	//   └─── branch ───── (7, 1)
- *
- * 	const { start: 2, end: 5, length: 3 } = getBranch(items, 2, 1)
- *
- * @param items the list of items in the thread
- * @param startIndex the index of the parent item
- * @param depth the depth of the parent item
+ * @param thread the list of items in the thread
+ * @param branchStartIndex the index of the parent item
+ * @param branchStartDepth the depth of the parent item
  * @returns the start and end index, and the length of the branch
  */
 export function getBranch(thread: ApiThreadItem[], branchStartIndex: number, branchStartDepth: number) {

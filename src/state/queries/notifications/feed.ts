@@ -71,18 +71,13 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			let page;
 			if (filter === 'all' && !pageParam) {
-				// for the first page, we check the cached page held by the unread-checker first
+				// prefer the unread checker's cached first page.
 				page = unreads.getCachedUnreadPage();
 			}
 			if (!page) {
 				let reasons: string[] = [];
 				if (filter === 'mentions') {
-					reasons = [
-						// Anything that's a post
-						'mention',
-						'reply',
-						'quote',
-					];
+					reasons = ['mention', 'reply', 'quote'];
 				}
 				const { page: fetchedPage } = await fetchPage({
 					appview,
@@ -110,15 +105,13 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { moderationOpts, hiddenReplyUris } = selectArgs;
 
-				// Keep track of the last run and whether we can reuse
-				// some already selected pages from there.
 				const reusedPages: FeedPage[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
 					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
-							// Can't do reuse anything if any input has changed.
+							// reuse is only safe when every selector input is unchanged.
 							canReuse = false;
 							break;
 						}
@@ -129,15 +122,12 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 								reusedPages.push(lastResult.pages[i]!);
 								continue;
 							}
-							// Stop as soon as pages stop matching up.
 							break;
 						}
 					}
 				}
 
-				// override 'isRead' using the first page's returned seenAt
-				// we do this because the `markAllRead()` call above will
-				// mark subsequent pages as read prematurely
+				// the first page's seenAt prevents markAllRead from affecting later pages.
 				const seenAt = data.pages[0]?.seenAt || new Date();
 				for (const page of data.pages) {
 					for (const item of page.items) {
@@ -191,22 +181,17 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		),
 	});
 
-	// The server may end up returning an empty page, a page with too few items,
-	// or a page with items that end up getting filtered out. When we fetch pages,
-	// we'll keep track of how many items we actually hope to see. If the server
-	// doesn't return enough items, we're going to continue asking for more items.
+	// fetch more pages when filtering leaves fewer items than requested.
 	const lastItemCount = useRef(0);
 	const wantedItemCount = useRef(0);
 	const autoPaginationAttemptCount = useRef(0);
 	useEffect(() => {
 		const { data, isLoading, isRefetching, isFetchingNextPage, hasNextPage } = query;
-		// Count the items that we already have.
 		let itemCount = 0;
 		for (const page of data?.pages || []) {
 			itemCount += page.items.length;
 		}
 
-		// If items got truncated, reset the state we're tracking below.
 		if (itemCount !== lastItemCount.current) {
 			if (itemCount < lastItemCount.current) {
 				wantedItemCount.current = itemCount;
@@ -214,23 +199,17 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 			lastItemCount.current = itemCount;
 		}
 
-		// Now track how many items we really want, and fetch more if needed.
 		if (isLoading || isRefetching) {
-			// During the initial fetch, we want to get an entire page's worth of items.
 			wantedItemCount.current = PAGE_SIZE;
 		} else if (isFetchingNextPage) {
 			if (itemCount > wantedItemCount.current) {
-				// We have more items than wantedItemCount, so wantedItemCount must be out of date.
-				// Some other code must have called fetchNextPage(), for example, from onEndReached.
-				// Adjust the wantedItemCount to reflect that we want one more full page of items.
+				// account for pages requested by another caller.
 				wantedItemCount.current = itemCount + PAGE_SIZE;
 			}
 		} else if (hasNextPage) {
-			// At this point we're not fetching anymore, so it's time to make a decision.
-			// If we didn't receive enough items from the server, paginate again until we do.
 			if (itemCount < wantedItemCount.current) {
 				autoPaginationAttemptCount.current++;
-				if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+				if (autoPaginationAttemptCount.current < 50 /* fail-safe */) {
 					void query.fetchNextPage();
 				}
 			} else {

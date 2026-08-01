@@ -1,8 +1,7 @@
 import { convertCdnPreset } from './util';
 
 /**
- * saves an image to the user's device. on native, this saves to the media library; on web, it triggers a
- * browser download.
+ * saves an image to the user's device.
  *
  * @returns a promise that resolves when the download is initiated and rejects if the setup fails.
  */
@@ -16,14 +15,13 @@ export function saveImageToMediaLibrary({ uri }: { uri: string }): Promise<void>
 }
 
 export function saveBytesToDisk(filename: string, bytes: Uint8Array, type: string) {
-	// `Blob` only accepts `ArrayBuffer`-backed views; re-view rather than `slice()` so exporting a repo
-	// CAR doesn't double its memory
+	// reuse the backing buffer when possible to avoid copying large exports.
 	const { buffer, byteLength, byteOffset } = bytes;
 	const part = buffer instanceof ArrayBuffer ? new Uint8Array(buffer, byteOffset, byteLength) : bytes.slice();
 	const blob = new Blob([part], { type });
 	const url = URL.createObjectURL(blob);
 	downloadUrl(url, filename);
-	// Firefox requires a small delay
+	// let Firefox finish the download before revoking the URL.
 	setTimeout(() => URL.revokeObjectURL(url), 100);
 	return true;
 }

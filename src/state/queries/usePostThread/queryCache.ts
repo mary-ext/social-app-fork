@@ -44,9 +44,6 @@ export function createCacheMutator({
 }) {
 	return {
 		insertReplies: (parentUri: string, replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]) => {
-			/*
-			 * Main thread query mutator.
-			 */
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(postThreadQueryKey, (data) => {
 				if (!data) {
 					return;
@@ -57,9 +54,6 @@ export function createCacheMutator({
 				};
 			});
 
-			/*
-			 * Additional replies query mutator.
-			 */
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadOtherV2.$output>(
 				postThreadOtherQueryKey,
 				(data) => {
@@ -84,22 +78,15 @@ export function createCacheMutator({
 						continue;
 					}
 
-					/*
-					 * Update parent data
-					 */
 					const shadow = dangerousGetPostShadow(parent.value.post);
 					const prevOptimisticCount = shadow?.optimisticReplyCount;
 					const prevReplyCount = parent.value.post.replyCount;
-					// prefer optimistic count, if we already have some
+					// preserve an optimistic count when present.
 					const currentReplyCount = (prevOptimisticCount ?? prevReplyCount ?? 0) + 1;
 
-					/*
-					 * We must update the value in the query cache in order for thread
-					 * traversal to properly compute required metadata.
-					 */
+					// traversal reads the count from the query cache.
 					parent.value.post.replyCount = currentReplyCount;
 
-					/** update the post shadow to keep track of new values and trigger re-renders */
 					updatePostShadow(queryClient, parent.value.post.uri, {
 						optimisticReplyCount: currentReplyCount,
 					});
@@ -115,25 +102,14 @@ export function createCacheMutator({
 							? opDid === optimisticReply.value.post.author.did
 							: false;
 
-					/*
-					 * Always insert replies if the following conditions are met. Max
-					 * depth checks are handled below.
-					 */
 					const canAlwaysInsertReplies =
 						isParentRoot ||
 						(params.view === 'tree' && isParentBelowRoot) ||
 						(params.view === 'linear' && isEndOfReplyChain);
-					/*
-					 * Maybe insert replies if we're in linear view, the replier is the
-					 * OP, and certain conditions are met
-					 */
 					const shouldReplaceWithOPReplies = params.view === 'linear' && opIsReplier && isParentBelowRoot;
 
 					if (canAlwaysInsertReplies || shouldReplaceWithOPReplies) {
 						const branch = getBranch(thread, i, parent.depth);
-						/*
-						 * OP insertions replace other replies _in linear view_.
-						 */
 						const itemsToRemove = shouldReplaceWithOPReplies ? branch.length : 0;
 						const itemsToInsert = replies
 							.map((r, ri) => {
@@ -141,7 +117,7 @@ export function createCacheMutator({
 								return r;
 							})
 							.filter((r) => {
-								// Filter out replies that are too deep for our UI
+								// omit replies outside the visible depth.
 								return r.depth <= params.below;
 							});
 
@@ -153,7 +129,6 @@ export function createCacheMutator({
 				return thread as T[];
 			}
 		},
-		/** Unused atm, post shadow does the trick, but it would be nice to clean up the whole sub-tree on deletes. */
 		deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
 			queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(postThreadQueryKey, (queryData) => {
 				if (!queryData) {
@@ -190,19 +165,11 @@ export function getThreadPlaceholder(
 ): $type.enforce<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
 	let partial;
 	for (const item of getThreadPlaceholderCandidates(queryClient, uri)) {
-		/*
-		 * Currently, the backend doesn't send full post info in some cases (for
-		 * example, for quoted posts). We use missing `likeCount` as a way to
-		 * detect that. In the future, we should fix this on the backend, which
-		 * will let us always stop on the first result.
-		 *
-		 * TODO can we send in feeds and quotes?
-		 */
+		// quoted posts may lack metrics; keep searching for a complete view.
 		const hasAllInfo = item.value.post.likeCount != null;
 		if (hasAllInfo) {
 			return item;
 		} else {
-			// Keep searching, we might still find a full post in the cache.
 			partial = item;
 		}
 	}
@@ -220,19 +187,11 @@ export function* getThreadPlaceholderCandidates(
 	>,
 	void
 > {
-	/*
-	 * Check post thread queries first
-	 */
 	for (const post of findAllPostsInQueryData(queryClient, uri)) {
 		yield postViewToThreadPlaceholder(post);
 	}
 
-	/*
-	 * Check notifications first. If you have a post in notifications, it's
-	 * often due to a like or a repost, and we want to prioritize a post object
-	 * with >0 likes/reposts over a stale version with no metrics in order to
-	 * avoid a notification->post scroll jump.
-	 */
+	// notification views often have fresh engagement counts.
 	for (const post of findAllPostsInNotifsQueryData(queryClient, uri)) {
 		yield postViewToThreadPlaceholder(post);
 	}

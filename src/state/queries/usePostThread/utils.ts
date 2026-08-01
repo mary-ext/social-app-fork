@@ -19,7 +19,6 @@ export function getThreadgateRecord(
 
 export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
 	const record = getPostRecord(post);
-	/** If the record has no `reply` field, it is a root post. */
 	if (!record.reply) {
 		return parseCanonicalResourceUri(post.uri);
 	}
@@ -46,30 +45,13 @@ export function getTraversalMetadata({
 	const repliesUnhydrated = item.value.moreReplies || 0;
 	const metadata = {
 		depth: item.depth,
-		/*
-		 * Unknown until after traversal
-		 */
 		isLastChild: false,
-		/*
-		 * Unknown until after traversal
-		 */
 		isLastSibling: false,
-		/*
-		 * If it's a top level reply, bc we render each top-level branch as a
-		 * separate tree, it's implicitly part of the last branch. For subsequent
-		 * replies, we'll override this after traversal.
-		 */
 		isPartOfLastBranchFromDepth: item.depth === 1 ? 1 : undefined,
 		nextItemDepth: nextItem?.depth,
 		parentMetadata,
 		prevItemDepth: prevItem?.depth,
-		/*
-		 * Unknown until after traversal
-		 */
 		precedesChildReadMore: false,
-		/*
-		 * Unknown until after traversal
-		 */
 		followsReadMoreUp: false,
 		postData: {
 			uri: item.uri,
@@ -125,12 +107,6 @@ export function getThreadPostUI({
 			followsReadMoreUp || (!!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth),
 		showChildReplyLine: depth < 0 || isReplyAndHasReplies,
 		indent: depth,
-		/*
-		 * If there are no slices below this one, or the next slice has a depth <=
-		 * than the depth of this post, it's the last child of the reply tree. It
-		 * is not necessarily the last leaf in the parent branch, since it could
-		 * have another sibling.
-		 */
 		isLastChild,
 		skippedIndentIndices,
 		precedesChildReadMore: precedesChildReadMore ?? false,

@@ -76,8 +76,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 			const result = {
 				thread: data.thread || [],
 				threadgate: data.threadgate,
-				// this used to accumulate onto a `meta` scratch object, but nothing ever seeded one, so the
-				// flag only ever reflected the response being handled right here.
 				hasOtherReplies: data.hasOtherReplies,
 			};
 
@@ -94,11 +92,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 				return;
 			}
 			const placeholder = getThreadPlaceholder(qc, anchor);
-			/*
-			 * Always return something here, even empty data, so that
-			 * `isPlaceholderData` is always true, which we'll use to insert
-			 * skeletons.
-			 */
 			const thread = placeholder ? [placeholder] : [];
 			return { thread, threadgate: undefined, hasOtherReplies: false };
 		},
@@ -117,10 +110,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const hasOtherThreadItems = !!query.data?.hasOtherReplies;
 	const [otherItemsVisible, setOtherItemsVisible] = useState(false);
 
-	/**
-	 * Creates a mutator for the post thread cache. This is used to insert replies into the thread cache after
-	 * posting.
-	 */
 	const mutator = useMemo(
 		() =>
 			createCacheMutator({
@@ -132,10 +121,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 		[qc, view, below, postThreadQueryKey, postThreadOtherQueryKey],
 	);
 
-	/**
-	 * If we have additional items available from the server and the user has chosen to view them, start loading
-	 * data
-	 */
 	const additionalQueryEnabled = hasOtherThreadItems && otherItemsVisible;
 	const additionalItemsQuery = useQuery({
 		queryKey: postThreadOtherQueryKey,
@@ -161,11 +146,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 				}),
 			);
 		} else if (additionalItemsQuery.isError) {
-			/*
-			 * We could insert an special error component in here, but since these
-			 * are optional additional replies, it's not critical that they're shown
-			 * atm.
-			 */
 			return [];
 		} else if (additionalItemsQuery.data?.thread) {
 			const { threadItems } = sortAndAnnotateThreadItems(additionalItemsQuery.data.thread, {
@@ -180,22 +160,16 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 		}
 	}, [view, additionalQueryEnabled, additionalItemsQuery, threadgateHiddenReplies, moderationOpts]);
 
-	/** Sets the sort order for the thread and resets the additional thread items */
 	const setSort: typeof baseSetSort = (nextSort) => {
 		setOtherItemsVisible(false);
 		baseSetSort(nextSort);
 	};
 
-	/** Sets the view variant for the thread and resets the additional thread items */
 	const setView: typeof baseSetView = (nextView) => {
 		setOtherItemsVisible(false);
 		baseSetView(nextView);
 	};
 
-	/*
-	 * This is the main thread response, sorted into separate buckets based on
-	 * moderation, and annotated with all UI state needed for rendering.
-	 */
 	const { threadItems, otherThreadItems } = useMemo(() => {
 		return sortAndAnnotateThreadItems(thread, {
 			view: view,
@@ -204,11 +178,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 		});
 	}, [thread, threadgateHiddenReplies, moderationOpts, view]);
 
-	/*
-	 * Take all three sets of thread items and combine them into a single thread,
-	 * along with any other thread items required for rendering e.g. "Show more
-	 * replies" or the reply composer.
-	 */
 	const items = useMemo(() => {
 		return buildThread({
 			threadItems,
@@ -238,15 +207,9 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	return {
 		context,
 		state: {
-			/*
-			 * Copy in any query state that is useful
-			 */
 			isFetching: query.isFetching,
 			isPlaceholderData: query.isPlaceholderData,
 			error: query.error,
-			/*
-			 * Other state
-			 */
 			sort,
 			view,
 			otherItemsVisible,
@@ -256,14 +219,8 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 			threadgate,
 		},
 		actions: {
-			/*
-			 * Copy in any query actions that are useful
-			 */
 			insertReplies: mutator.insertReplies,
 			refetch: query.refetch,
-			/*
-			 * Other actions
-			 */
 			setSort,
 			setView,
 		},

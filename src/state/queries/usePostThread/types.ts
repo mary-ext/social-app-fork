@@ -96,9 +96,6 @@ export type ThreadItem =
 			onPress: () => void;
 	  }
 	| {
-			/*
-			 * Read more replies, downwards in the thread.
-			 */
 			type: 'readMore';
 			key: string;
 			depth: number;
@@ -107,9 +104,6 @@ export type ThreadItem =
 			skippedIndentIndices: Set<number>;
 	  }
 	| {
-			/*
-			 * Read more parents, upwards in the thread.
-			 */
 			type: 'readMoreUp';
 			key: string;
 			target: RouteTarget;
@@ -122,54 +116,39 @@ export type ThreadItem =
 
 /** metadata collected while traversing the raw data from the thread response. */
 export type TraversalMetadata = {
-	/** The depth of the post in the reply tree, where 0 is the root post. This is calculated on the server. */
+	/** post depth; 0 is the root. */
 	depth: number;
-	/** Indicates if this item is a "read more" link preceding this post that continues the thread upwards. */
+	/** true when an upward read-more link precedes this post. */
 	followsReadMoreUp: boolean;
-	/** Indicates if the post is the last reply beneath its parent post. */
+	/** true when this is the last reply beneath its parent. */
 	isLastSibling: boolean;
-	/** Indicates the post is the end-of-the-line for a given branch of replies. */
+	/** true when this is the last child in its branch. */
 	isLastChild: boolean;
-	/**
-	 * Indicates if the post is the left-most AND lower-most branch of the reply tree. Value corresponds to the
-	 * depth at which this branch started.
-	 */
+	/** starting depth when this is the last branch. */
 	isPartOfLastBranchFromDepth?: number;
-	/** The depth of the slice immediately following this one, if it exists. */
+	/** depth of the next slice. */
 	nextItemDepth?: number;
-	/**
-	 * This is a live reference to the parent metadata object. Mutations to this are available for later use in
-	 * children.
-	 */
+	/** live parent metadata reference. */
 	parentMetadata?: TraversalMetadata;
-	/**
-	 * Populated during the final traversal of the thread. Denotes whether there is a "Read more" link for this
-	 * item immediately following this item.
-	 */
+	/** true when a child read-more link follows this item. */
 	precedesChildReadMore: boolean;
-	/** The depth of the slice immediately preceding this one, if it exists. */
+	/** depth of the previous slice. */
 	prevItemDepth?: number;
-	/** Any data needed to be passed along to the "read more" items. Keep this trim for better memory usage. */
+	/** data passed to read-more items. */
 	postData: {
 		uri: string;
 		authorHandle: string;
 	};
-	/** The total number of replies to this post, including those not hydrated and returned by the response. */
+	/** total replies, including unhydrated replies. */
 	repliesCount: number;
-	/** The number of replies to this post not hydrated and returned by the response. */
+	/** replies not hydrated in the response. */
 	repliesUnhydrated: number;
-	/**
-	 * number of rendered replies encountered during traversal, excluding moderated or unhydrated replies.
-	 * 1-based counter.
-	 */
+	/** 1-based count of rendered replies. */
 	repliesSeenCounter: number;
-	/** 0-based index of this reply in the parent post's replies. */
+	/** 0-based index in the parent post's replies. */
 	replyIndex: number;
-	/** line indices to skip when rendering reply lines for the slice, based on its depth */
+	/** reply-line indices to skip. */
 	skippedIndentIndices: Set<number>;
-	/**
-	 * stores parent data if that parent has additional unhydrated replies to pass down to children along the
-	 * left/lower-most branch of the tree for rendering a "read more" link at the end
-	 */
+	/** parent data for a later read-more link. */
 	upcomingParentReadMore?: TraversalMetadata;
 };

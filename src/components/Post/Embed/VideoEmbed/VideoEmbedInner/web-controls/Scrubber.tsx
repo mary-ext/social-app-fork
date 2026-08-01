@@ -84,10 +84,7 @@ export function Scrubber({
 	};
 
 	useEffect(() => {
-		// HACK: there's divergent browser behaviour about what to do when
-		// a pointerUp event is fired outside the element that captured the
-		// pointer. Firefox clicks on the element the mouse is over, so we have
-		// to make everything unclickable while seeking -sfn
+		// Firefox can click under a captured pointer after pointerup; disable clicks while seeking.
 		if (IS_WEB_FIREFOX && scrubberActive) {
 			document.body.classList.add(styles.forceNoClicks);
 

@@ -125,7 +125,7 @@ export async function completeOAuthCallback(params: URLSearchParams) {
 }
 
 export async function switchAccount(account: SessionAccount) {
-	// Validate the stored session resolves before committing the switch.
+	// validate the session before committing the switch.
 	await resumeOAuthSession(account);
 	persistSnapshot({
 		accounts: prependAccount(snapshot.accounts, account),
@@ -148,7 +148,7 @@ export function removeAccount(account: SessionAccount) {
 	void clearPersistedQueryStorage(account.did);
 	const nextAccounts = snapshot.accounts.filter((a) => a.did !== account.did);
 	if (account.did === snapshot.currentDid) {
-		// Removing the signed-in account is a sign-out — reload.
+		// removing the current account signs out and reloads.
 		signOut({ accounts: nextAccounts });
 	} else {
 		persistSnapshot({ accounts: nextAccounts });
@@ -184,7 +184,7 @@ export function getCurrentDid() {
 		const account = bootAccount;
 		let settled = false;
 
-		// The stored session is unusable: drop back to a logged-out guest session so the next boot doesn't retry it.
+		// prevent the next boot from retrying an unusable session.
 		const failResume = (): void => {
 			if (settled) {
 				return;
@@ -198,19 +198,17 @@ export function getCurrentDid() {
 			try {
 				resumed = await optimisticOAuthSession(account);
 			} catch (resumeError) {
-				// an expired refresh token is the ordinary way a stored session ends, not a fault
+				// an expired refresh token is an expected sign-out path.
 				if (!(resumeError instanceof TokenRefreshError)) {
 					console.error('session: boot resume failed', resumeError);
 				}
 				failResume();
 				return;
 			}
-			// The agent is usable from the stored token — render now and validate the session against the server
-			// in the background.
+			// render from the stored token, then validate in the background.
 			setSnapshot({ status: 'validating', clients: resumed.clients, currentDid: account.did });
 
-			// A session dropped by live traffic during validation fails the resume; the global dropped-session
-			// listener stays off until this settles.
+			// handle live drops locally until validation settles.
 			const unlistenDropped = sessionDropped.subscribe(failResume);
 			try {
 				await resumed.validate();
@@ -218,8 +216,7 @@ export function getCurrentDid() {
 				if (isFatalSessionError(validationError)) {
 					failResume();
 				} else {
-					// a transient failure (e.g. network) keeps the optimistic session; live traffic surfaces a
-					// genuine one via the dropped-session listener.
+					// keep the optimistic session on transient failures.
 					console.error('session: boot validation failed', validationError);
 				}
 			} finally {

@@ -1,6 +1,3 @@
-// registers `app.bsky.embed.getEmbedExternalView` on the ambient XRPC interface so `.get()` is typed.
-// oxlint-disable-next-line import/no-empty-named-blocks, unicorn/require-module-specifiers -- the empty specifier list is the point
-import type {} from '@atcute/bluesky/types/app/embed/getEmbedExternalView';
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import type { GenericUri, ResourceUri } from '@atcute/lexicons';
 
@@ -8,36 +5,33 @@ import { type LinkMetaResult, parseHtmlMeta } from './extract-meta';
 import { assertHttpUrl, contentTypeOf, parseHttpUrl, readCapped, safeFetch } from './net';
 import { resolveOEmbed } from './oembed';
 
-/** cap on the HTML we buffer; meta tags live in `<head>`, near the top. */
+/** maximum HTML buffered for metadata extraction. */
 const HTML_MAX_BYTES = 768 * 1024;
-/** getEmbedExternalView resolves at most this many records; the rest of a page's discovery tags are ignored. */
+/** maximum standard.site records resolved per page. */
 const MAX_ASSOCIATED_URIS = 4;
-/** public, unauthenticated Bluesky appview that hydrates standard.site embeds; mirrors `PUBLIC_BSKY_SERVICE`. */
+/** public appview used to hydrate standard.site embeds. */
 const appview = new Client({ handler: simpleFetchHandler({ service: 'https://public.api.bsky.app' }) });
-/** cap on thumbnail size we'll fetch and cache. */
+/** maximum cached thumbnail size. */
 const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
-/** seconds a cached thumbnail stays warm; covers a compose session and a draft reopen. */
+/** thumbnail cache lifetime in seconds. */
 const IMAGE_CACHE_TTL = 60 * 60 * 6;
 const IMAGE_ENDPOINT = '/xrpc/internal.app.getLinkImage';
 const ALLOWED_IMAGE_TYPES = new Set(['image/avif', 'image/gif', 'image/jpeg', 'image/png', 'image/webp']);
-/** code-point caps so a hostile page can't push a huge title/description into a downstream embed record. */
+/** maximum title and description lengths. */
 const TITLE_MAX = 1000;
 const DESCRIPTION_MAX = 2000;
 
-/**
- * collapses horizontal whitespace, strips control characters, and truncates by code point. line breaks
- * survive (normalized to `\n`, blank-line runs collapsed to one) so multi-line descriptions stay faithful.
- */
+/** normalizes whitespace and control characters, then truncates by code point. */
 const clean = (value: string | undefined, max: number): string | undefined => {
 	if (!value) {
 		return undefined;
 	}
 	const normalized = value
 		.replace(/\r\n?/g, '\n')
-		// strip control characters, but keep `\n` as a line separator.
+		// keep line breaks while removing other control characters.
 		// oxlint-disable-next-line no-control-regex
 		.replace(/[\u0000-\u0009\u000b-\u001f\u007f]+/g, ' ')
-		// collapse horizontal whitespace, then blank-line runs (with surrounding spaces) to a single `\n`.
+		// collapse horizontal whitespace and blank-line runs.
 		.replace(/[^\S\n]+/g, ' ')
 		.replace(/ ?\n[\n ]*/g, '\n')
 		.trim();
@@ -48,7 +42,7 @@ const clean = (value: string | undefined, max: number): string | undefined => {
 	return points.length > max ? points.slice(0, max).join('') : normalized;
 };
 
-/** a title that is only a URL duplicates what the card already shows beneath it, so it is worth nothing. */
+/** returns true when the title is only an HTTP(S) URL. */
 const isBareUrl = (value: string | undefined): boolean =>
 	value !== undefined && parseHttpUrl(value) !== undefined;
 
@@ -58,18 +52,18 @@ interface StrongRef {
 }
 
 export interface LinkMetaResponse {
-	/** strong refs of the standard.site records backing this link, as resolved by the appview. */
+	/** resolved standard.site record refs. */
 	associatedRefs?: StrongRef[];
 	description?: string;
 	image?: string;
 	title?: string;
 	url?: string;
-	/** appview-hydrated enhanced card (`app.bsky.embed.external#view`) for a standard.site link. */
+	/** appview-hydrated standard.site card view. */
 	view?: unknown;
 }
 
 interface ResolveLinkMetaOptions {
-	/** the URL of the incoming request, used to derive the same-origin cache key for thumbnails. */
+	/** incoming URL used to build the same-origin thumbnail key. */
 	requestUrl: string;
 	signal: AbortSignal;
 	url: string;
@@ -95,9 +89,7 @@ const hashKey = async (input: string): Promise<string> => {
 };
 
 /**
- * fetches a thumbnail, validates it, and stores the bytes in the edge cache keyed by the same-origin
- * {@link getLinkImage} URL that will later serve them. failures are swallowed — a missing thumbnail just
- * yields a plain link card.
+ * fetches and caches a validated thumbnail. failures yield no thumbnail.
  *
  * @returns the origin-relative path to the cached thumbnail, or undefined on any failure
  */
@@ -133,8 +125,7 @@ const cacheThumbnail = async ({
 };
 
 /**
- * hands the standard.site AT-URIs a page advertised to the appview's `getEmbedExternalView`, which resolves
- * them into strong refs (URI+CID) and a hydrated enhanced-card view. failures degrade to a plain link card.
+ * resolves the page's standard.site URIs through the appview. failures yield no enhanced card.
  *
  * @param uris the AT-URIs discovered in the page's `<link rel>` tags
  * @param url the resolved web URL the embed represents, used as the view's `uri`
@@ -150,7 +141,7 @@ const hydrateStandardSite = async (
 			appview.get('app.bsky.embed.getEmbedExternalView', {
 				params: {
 					uris: uris.slice(0, MAX_ASSOCIATED_URIS),
-					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `url` is a `URL.href`, which always carries a scheme
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the URL has an HTTP(S) scheme
 					url: url as GenericUri,
 				},
 				signal,
@@ -188,7 +179,7 @@ export const resolveLinkMeta = async ({
 	const contentType = contentTypeOf(response);
 	const isDocument = !contentType || contentType.includes('html') || contentType.includes('xml');
 
-	// a non-2xx body is an error page or a bot interstitial, so neither it nor its URL describes the link.
+	// do not use error pages or bot interstitials as link metadata.
 	let meta: LinkMetaResult | undefined;
 	if (response.ok && isDocument) {
 		meta = await parseHtmlMeta(await readCapped(response, { maxBytes: HTML_MAX_BYTES, truncate: true }));
@@ -205,7 +196,7 @@ export const resolveLinkMeta = async ({
 		title = undefined;
 	}
 
-	// a genuine non-document, a PDF or an image, has no endpoint to advertise or to guess at.
+	// non-documents have no metadata endpoint to discover.
 	if (!title && !imageSource && (!response.ok || isDocument)) {
 		const discovered = meta?.oembedUrl ? parseHttpUrl(meta.oembedUrl, resolvedUrl) : undefined;
 		const oembed = await resolveOEmbed({
@@ -217,7 +208,7 @@ export const resolveLinkMeta = async ({
 			title = clean(oembed.meta.title, TITLE_MAX);
 			description = clean(oembed.meta.description, DESCRIPTION_MAX);
 			imageSource = oembed.meta.image;
-			// report the hop the metadata describes, not wherever the chain happened to end up.
+			// report the page described by the metadata.
 			pageUrl = oembed.page;
 		}
 	}

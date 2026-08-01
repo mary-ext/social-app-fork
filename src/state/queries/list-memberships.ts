@@ -90,22 +90,16 @@ export function useListMembershipAddMutation({
 					subject: actorDid,
 				},
 			});
-			// TODO
-			// we need to wait for appview to update, but there's not an efficient
-			// query for that, so we use a timeout below
-			// -prf
+			// delay invalidation until the appview observes the write.
 			return res;
 		},
 		onSuccess: (data, variables) => {
-			// invalidate the members queries (used for rendering the listings)
-			// use a timeout to wait for the appview (see above)
+			// wait before invalidating because the appview may lag.
 			setTimeout(() => {
 				void queryClient.invalidateQueries({
 					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
 				});
 			}, 1e3);
-
-			// update WITH_MEMBERSHIPS queries
 
 			if (variables.subject) {
 				queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
@@ -203,14 +197,10 @@ export function useListMembershipRemoveMutation({
 				collection: 'app.bsky.graph.listitem',
 				rkey: membershipUrip.rkey,
 			});
-			// TODO
-			// we need to wait for appview to update, but there's not an efficient
-			// query for that, so we use a timeout below
-			// -prf
+			// delay invalidation until the appview observes the write.
 		},
 		onSuccess: (data, variables) => {
-			// invalidate the members queries (used for rendering the listings)
-			// use a timeout to wait for the appview (see above)
+			// wait before invalidating because the appview may lag.
 			setTimeout(() => {
 				void queryClient.invalidateQueries({
 					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),

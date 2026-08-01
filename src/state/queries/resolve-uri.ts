@@ -26,7 +26,7 @@ const resolvedDidQueryOptions = (
 			if (!didOrHandle) {
 				throw new Error('resolved-did: query ran without an identifier');
 			}
-			// Just return the did if it's already one
+			// return the DID unchanged when already resolved.
 			if (isDid(didOrHandle)) {
 				return didOrHandle;
 			}
@@ -40,7 +40,7 @@ const resolvedDidQueryOptions = (
 			return res.did;
 		},
 		initialData: () => {
-			// Return undefined if no did or handle
+			// return no initial data without an identifier.
 			if (!didOrHandle) {
 				return;
 			}

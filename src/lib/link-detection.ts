@@ -2,7 +2,7 @@ import { tokenize } from '@atcute/bluesky-richtext-parser';
 
 export type LinkFacetMatch = {
 	uri: string;
-	/** The source text that follows the link, used to decide when the user has finished typing it. */
+	/** text after the link, used to detect when typing is complete. */
 	textAfter: string;
 };
 
@@ -33,51 +33,33 @@ export function suggestLinkCardUri(
 	const suggestedUris = new Set<string>();
 	for (const [uri, nextMatch] of nextDetectedUris) {
 		if (pastSuggestedUris.has(uri)) {
-			// Don't suggest already added or already dismissed link cards.
 			continue;
 		}
 		if (suggestLinkImmediately) {
-			// Immediately add the pasted or intent-prefilled link without waiting to type more.
 			suggestedUris.add(uri);
 			continue;
 		}
 		const prevMatch = prevDetectedUris.get(uri);
 		if (!prevMatch) {
-			// If the same exact link wasn't already detected during the last keystroke,
-			// it means you're probably still typing it. Disregard until it stabilizes.
 			continue;
 		}
 		const prevTextAfterUri = prevMatch.textAfter;
 		const nextTextAfterUri = nextMatch.textAfter;
 		if (prevTextAfterUri === nextTextAfterUri) {
-			// The text you're editing is before the link, e.g.
-			// "abc google.com" -> "abcd google.com".
-			// This is a good time to add the link.
 			suggestedUris.add(uri);
 			continue;
 		}
 		if (/^\s/m.test(nextTextAfterUri)) {
-			// The link is followed by a space, e.g.
-			// "google.com" -> "google.com " or
-			// "google.com." -> "google.com ".
-			// This is a clear indicator we can linkify it.
 			suggestedUris.add(uri);
 			continue;
 		}
 		if (/^[)]?[.,:;!?)](\s|$)/m.test(prevTextAfterUri) && /^[)]?[.,:;!?)]\s/m.test(nextTextAfterUri)) {
-			// The link was *already* being followed by punctuation,
-			// and now it's followed both by punctuation and a space.
-			// This means you're typing after punctuation, e.g.
-			// "google.com." -> "google.com. " or
-			// "google.com.foo" -> "google.com. foo".
-			// This means you're not typing the link anymore, so we can linkify it.
 			suggestedUris.add(uri);
 			continue;
 		}
 	}
 	for (const uri of pastSuggestedUris) {
 		if (!nextDetectedUris.has(uri)) {
-			// If a link is no longer detected, it's eligible for suggestions next time.
 			pastSuggestedUris.delete(uri);
 		}
 	}

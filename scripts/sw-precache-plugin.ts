@@ -3,14 +3,10 @@ import { readFileSync } from 'node:fs';
 
 import type { Compiler } from '@rspack/core';
 
-// every content-hashed asset (all js incl. async route chunks, css, fonts, images) so the whole app
-// — not just the routes already visited — is available offline once installed
+// precache every content-hashed asset so the whole app is available offline.
 const PRECACHE_FILE = /\.(?:css|gif|ico|jpe?g|js|png|svg|webp|woff2?)$/;
 
-/**
- * emits a precaching service worker (`sw.js`) at the build root by injecting the full content-hashed asset
- * manifest into a template.
- */
+/** emits `sw.js` with the content-hashed asset manifest. */
 export class ServiceWorkerPrecachePlugin {
 	readonly #templatePath: string;
 
@@ -28,24 +24,21 @@ export class ServiceWorkerPrecachePlugin {
 			compilation.hooks.processAssets.tap(
 				{
 					name: 'ServiceWorkerPrecachePlugin',
-					// run once filenames are finalized so the manifest reflects the emitted assets
+					// wait for finalized filenames.
 					stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
 				},
 				() => {
 					const files = new Set<string>();
 					for (const asset of compilation.getAssets()) {
-						// only assets under static/ carry a content hash; root files (favicon, oauth
-						// metadata) are mutable and stay network-driven
+						// root files are mutable and stay network-driven.
 						if (asset.name.startsWith('static/') && PRECACHE_FILE.test(asset.name)) {
 							files.add(asset.name);
 						}
 					}
-					// precache the SPA shell under the canonical `/`, not `/index.html`: a host may
-					// 307-redirect `/index.html` to `/`, and a redirected response can't satisfy a navigation
+					// cache the SPA shell under `/`; redirected responses cannot satisfy navigations.
 					// oxlint-disable-next-line unicorn/no-array-sort -- sorting our own copy of `files`
 					const manifest = ['/', ...[...files].sort().map((file) => `/${file}`)];
-					// the shell is cached under the mutable `/` (not a content-hashed name), so fold the emitted
-					// index.html bytes into the version: a shell-only change must still bump CACHE and the worker
+					// include shell bytes in the version because `/` is not content-hashed.
 					const indexHtml = compilation.getAsset('index.html')?.source.source() ?? '';
 					const version = createHash('sha256')
 						.update(manifest.join('\n'))

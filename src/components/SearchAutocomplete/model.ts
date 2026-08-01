@@ -46,7 +46,7 @@ const resolveInAppUrl = (query: string): string | null => {
 };
 
 /**
- * a selectable row in the autocomplete list that can be navigated and activated.
+ * a selectable autocomplete row.
  *
  * @param item the item data representing the row
  */
@@ -72,7 +72,7 @@ export type InteractiveItem =
 	| { kind: 'recent-query'; key: string; query: string }
 	| { kind: 'search'; key: string; query: string };
 
-/** a render-only row that structures the list — never navigated to or pressed. */
+/** a render-only list row. */
 export type ChromeRow =
 	| { kind: 'divider'; key: string }
 	| { kind: 'hero'; key: string }
@@ -80,10 +80,10 @@ export type ChromeRow =
 	| { kind: 'section-label'; key: string; label: string };
 
 export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;
-// date items live only in the calendar grid, never in a list, so the list renderer never sees one.
+// date items only appear in the calendar.
 export type ListRow = ChromeRow | Exclude<InteractiveItem, { kind: 'date' }>;
 
-/** popup contents for the active suggestion mode: a calendar grid in date mode, or an ordered list of rows. */
+/** popup contents for one suggestion mode. */
 export type AutocompleteResult =
 	| { kind: 'actor'; rows: ListRow[] }
 	| { kind: 'date'; days: DateItem[]; visibleMonth: Date }
@@ -99,7 +99,7 @@ export const CALENDAR_DAY_COUNT = 42;
 const MAX_RECENT_SHOWN = 8;
 
 /**
- * builds the recent-history rows in stored recency order, interleaving queries and resolved profiles.
+ * builds recent-history rows in stored recency order.
  *
  * @param pending whether the profile hydration is currently loading
  */
@@ -138,8 +138,7 @@ const isInteractive = (row: ListRow): row is Exclude<InteractiveItem, { kind: 'd
 	row.kind !== 'section-label';
 
 /**
- * the navigable items for a result, in highlight order, as handed to `Autocomplete.Root` — the calendar's
- * days, or the list's rows with chrome stripped.
+ * returns result items in highlight order, excluding list chrome.
  *
  * @param result the built suggestion result
  * @returns the selectable items only
@@ -156,10 +155,7 @@ const actorSectionLabel = (op: OperatorName): string => {
 	}
 };
 
-/**
- * builds the day grid for a visible month: six weeks starting on Sunday, with spillover days from
- * neighbouring months, flagging today, selection, and out-of-range days.
- */
+/** builds a six-week day grid for a visible month. */
 const buildCalendarDays = ({
 	constraints,
 	month,
@@ -174,7 +170,7 @@ const buildCalendarDays = ({
 	today: Date;
 }): DateItem[] => {
 	const start = startOfWeek(startOfMonth(month));
-	// compare by calendar day so an inclusive bound (e.g. `since` == `until` on the same day) stays selectable.
+	// compare bounds by calendar day.
 	const min = constraints.min !== undefined ? startOfDay(constraints.min) : undefined;
 	const max = constraints.max !== undefined ? startOfDay(constraints.max) : undefined;
 
@@ -201,9 +197,7 @@ const buildCalendarDays = ({
 };
 
 /**
- * assembles the popup contents for the active mode: the calendar grid for `since`/`until`, a labelled profile
- * list for `from`/`mentions`, the value picker for `has`/`replies`, or the default mix of search/navigation
- * shortcuts, profile typeahead, and operator options.
+ * assembles popup contents for the active suggestion mode.
  *
  * @param constraints selectable date range derived from the sibling operator
  * @param fromActive whether any `from:` filter is already set
@@ -248,8 +242,7 @@ export const buildResult = ({
 			const rows: ListRow[] = [
 				{ kind: 'section-label', key: 'section-label', label: actorSectionLabel(mode.op) },
 			];
-			// `from:following` belongs in the `from:` picker, not the options list; the prefix test drops it
-			// once the typed value diverges from `following` (e.g. an `@` handle).
+			// offer `from:following` only in the `from:` picker.
 			if (mode.op === 'from' && !fromActive && 'following'.startsWith(mode.query)) {
 				rows.push({ kind: 'operator-value', key: 'from-following', op: 'from', value: 'following' });
 			}
@@ -291,7 +284,7 @@ export const buildResult = ({
 					rows.push({ kind: 'profile', key: `profile-${profile.did}`, profile });
 				}
 			} else {
-				// an empty field shows recent history instead of typeahead matches.
+				// an empty field shows recent history.
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
 					rows.push(

@@ -207,10 +207,7 @@ export function AcceptChatButton({
 			}
 		},
 		onError: () => {
-			// Should we show a toast here? They'll be on the convo screen, and it'll make
-			// no difference if the request failed - when they send a message, the convo will be accepted
-			// automatically. The only difference is that when they back out of the convo (without sending a message), the conversation will be rejected.
-			// the list will still have this chat in it -sfn
+			// the conversation accepts when the user sends a message, so only the no-send path differs.
 			Toast.show(m['screens.messages.requests.accept.error'](), {
 				type: 'error',
 			});

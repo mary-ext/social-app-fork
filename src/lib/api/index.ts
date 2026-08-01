@@ -101,12 +101,11 @@ const chainReply = task(
 export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
 
-	// Not awaited to avoid waterfalls.
+	// resolve the reply while the post record is built.
 	let replyPromise: Promise<AppBskyFeedPost.Main['reply']> = opts.replyTo
 		? resolveReply(appview, opts.replyTo)
 		: Promise.resolve(undefined);
 
-	// add top 3 languages from user preferences if langs is provided
 	let langs = opts.langs;
 	if (opts.langs) {
 		langs = opts.langs.slice(0, 3);
@@ -130,8 +129,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 
 		const createdAt = now.toISOString();
 
-		// The sorting behavior for multiple posts sharing the same createdAt time is
-		// undefined, so what we'll do here is increment the time by 1 for every post
+		// give posts with the same timestamp a stable order.
 		now.setMilliseconds(now.getMilliseconds() + 1);
 
 		const rkey = TID.now();
@@ -215,9 +213,8 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 async function resolveRT(appview: Client, text: string) {
 	const trimmedText = cleanNewlines(
 		text
-			// Trim leading whitespace-only lines (but don't break ASCII art).
+			// keep leading ASCII art while removing empty lines.
 			.replace(/^(\s*\n)+/, '')
-			// Trim any trailing whitespace.
 			.trimEnd(),
 	);
 

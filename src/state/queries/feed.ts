@@ -196,11 +196,8 @@ export function useFeedSourceInfoQuery({ uri }: { uri: string | undefined }) {
 	});
 }
 
-// HACK
-// the protocol doesn't yet tell us which feeds are personalized
-// this list is used to filter out feed recommendations from logged out users
-// for the ones we know need it
-// -prf
+// the protocol does not identify personalized feeds, so exclude known
+// authenticated-only recommendations for logged-out users.
 export const KNOWN_AUTHED_ONLY_FEEDS = [
 	'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
 	'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
@@ -226,7 +223,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 
-	// Make sure this doesn't invalidate unless really needed.
+	// keep the selector stable unless one of its inputs changes.
 	const selectArgs = useMemo(
 		() => ({
 			hasSession,
@@ -247,7 +244,6 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 				}),
 			);
 
-			// precache feeds
 			for (const feed of data.feeds) {
 				const hydratedFeed = hydrateFeedGenerator(feed);
 				precacheFeed(queryClient, hydratedFeed);
@@ -283,7 +279,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 					}),
 				};
 			},
-			[selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+			[selectArgs],
 		),
 	});
 
@@ -426,7 +422,7 @@ export function usePinnedFeedsInfos() {
 
 			const resolved = new Map<string, FeedSourceInfo>();
 
-			// Get all feeds. We can do this in a batch.
+			// feeds support a batch request.
 			const pinnedFeeds = pinnedItems.filter((feed) => feed.type === 'feed');
 			let feedsPromise = Promise.resolve();
 			if (pinnedFeeds.length > 0) {
@@ -443,7 +439,7 @@ export function usePinnedFeedsInfos() {
 				});
 			}
 
-			// Get all lists. This currently has to be done individually.
+			// lists require individual requests.
 			const pinnedLists = pinnedItems.filter((feed) => feed.type === 'list');
 			const listsPromises = pinnedLists.map((list) =>
 				ok(
@@ -457,10 +453,9 @@ export function usePinnedFeedsInfos() {
 				}),
 			);
 
-			await feedsPromise; // Fail the whole query if it fails.
-			await Promise.allSettled(listsPromises); // Ignore individual failing ones.
+			await feedsPromise; // fail the whole query if the batch fails.
+			await Promise.allSettled(listsPromises); // ignore individual list failures.
 
-			// order the feeds/lists in the order they were pinned
 			const result: SavedFeedSourceInfo[] = [];
 			for (const pinnedItem of pinnedItems) {
 				const feedInfo = resolved.get(pinnedItem.value);
@@ -597,7 +592,6 @@ export function useSavedFeeds() {
 			}
 
 			return {
-				// By this point we know the real count.
 				count: result.length,
 				feeds: result,
 			};
@@ -605,7 +599,6 @@ export function useSavedFeeds() {
 		placeholderData: (previousData) => {
 			return (
 				previousData || {
-					// The likely count before we try to resolve them.
 					count: savedItems.length,
 					feeds: [],
 				}

@@ -3,27 +3,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="theme-color" />
-		<!--
-      This viewport works for phones with notches.
-      It's optimized for gestures by disabling global zoom.
-     -->
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover"
 		/>
 		<link rel="manifest" href="/manifest.webmanifest" />
-		<!-- iOS ignores the manifest icons for the home screen -->
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-		<!--
-      Preconnect to essential domains
-    -->
 		<link rel="preconnect" href="https://bsky.social" />
 		<style>
-			/**
-       * Minimum styles required to render splash.
-       *
-       * ALL OTHER STYLES BELONG IN `src/style.css`
-       */
+			/* minimum styles needed before the application loads */
 			html,
 			body {
 				margin: 0px;
@@ -39,7 +27,7 @@
 					Arial,
 					sans-serif;
 				text-rendering: optimizeLegibility;
-				/* Platform-specific reset */
+				/* platform reset */
 				-webkit-overflow-scrolling: touch;
 				-webkit-text-size-adjust: 100%;
 				-webkit-font-smoothing: antialiased;
@@ -103,12 +91,7 @@
 				top: -50px;
 				width: 100px;
 			}
-			/**
-       * We need these styles to prevent shifting due to scrollbar show/hide on
-       * OSs that have them enabled by default. This also handles cases where the
-       * screen wouldn't otherwise scroll, and therefore hide the scrollbar and
-       * shift the content, by forcing the page to show a scrollbar.
-       */
+			/* keep scrollbar appearance from shifting the page */
 			body {
 				width: 100%;
 				overflow-y: scroll;
@@ -123,10 +106,6 @@
 	</head>
 
 	<body>
-		<!--
-      A generic no script element with a reload button and a message.
-      Feel free to customize this however you'd like.
-    -->
 		<noscript>
 			<form
 				action=""
@@ -164,9 +143,7 @@
 			</form>
 		</noscript>
 
-		<!-- The root element for the web app. -->
 		<div id="splash">
-			<!-- Bluesky SVG -->
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57">
 				<path
 					fill="#006AFF"

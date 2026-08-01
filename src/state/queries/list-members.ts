@@ -63,7 +63,7 @@ export async function getAllListMembers(client: Client, uri: ResourceUri) {
 	let hasMore = true;
 	let cursor: string | undefined;
 	const listItems: AppBskyGraphDefs.ListItemView[] = [];
-	// We want to cap this at 6 pages, just for anything weird happening with the api
+	// cap pagination to prevent an unexpected API loop.
 	let i = 0;
 	while (hasMore && i < 6) {
 		const data = await ok(

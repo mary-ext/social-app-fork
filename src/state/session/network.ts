@@ -2,19 +2,10 @@ import { networkConfirmed, networkLost, sessionDropped } from '#/state/events';
 
 import type { OAuthUserAgent } from './oauth';
 
-/**
- * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s `Client`
- * — both call it with a URL/pathname and a `RequestInit`.
- */
+/** fetch handler shape shared by the OAuth agent and `@atcute/client`. */
 export type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
-/**
- * Wraps a fetch-like function so each call emits a network-confirmed or network-lost event depending on
- * whether the request settled.
- *
- * @param fetchFn the fetch-like function to instrument.
- * @returns the instrumented function.
- */
+/** emits network state events around a fetch-like function. */
 export function withNetworkEvents<Args extends unknown[]>(
 	fetchFn: (...args: Args) => Promise<Response>,
 ): (...args: Args) => Promise<Response> {
@@ -30,19 +21,12 @@ export function withNetworkEvents<Args extends unknown[]>(
 	};
 }
 
-/**
- * builds the XRPC fetch handler for an OAuth session, routing requests through the agent, adding
- * network-event instrumentation, and reporting session drops.
- *
- * @param oauthAgent atcute user-agent to route requests through
- * @returns fetch handler for @atcute/client
- */
+/** builds the authenticated XRPC fetch handler and reports token failures. */
 export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandler {
 	let dropped = false;
 	return withNetworkEvents(async (url: string, init: RequestInit) => {
 		const response = await oauthAgent.handle(url, withReadableStreamDuplex(init));
-		// `handle` refreshes tokens on its own; an invalid-token 401 coming back
-		// out of it means that refresh failed and the session is unusable.
+		// an invalid-token 401 means token refresh failed.
 		if (!dropped && isInvalidTokenResponse(response)) {
 			dropped = true;
 			sessionDropped.emit();

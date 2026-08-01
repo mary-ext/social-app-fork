@@ -18,16 +18,15 @@ import { getClients } from './session';
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];
 
 export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<AppBskyFeedDefs.Interaction['event']>([
-	// These are explicit actions and are therefore fine to send.
+	// explicit actions are safe to send.
 	'app.bsky.feed.defs#requestLess',
 	'app.bsky.feed.defs#requestMore',
-	// These can be inferred from the firehose and are therefore fine to send.
+	// these events are already available from the firehose.
 	'app.bsky.feed.defs#interactionLike',
 	'app.bsky.feed.defs#interactionQuote',
 	'app.bsky.feed.defs#interactionReply',
 	'app.bsky.feed.defs#interactionRepost',
-	// This can be inferred from pagination requests for everything except the very last page
-	// so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
+	// pagination implies this event except on the final page.
 	'app.bsky.feed.defs#interactionSeen',
 ]);
 
@@ -58,8 +57,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 
 	const queue = useRef<Set<string>>(new Set());
 	const history = useRef<
-		// Use a WeakSet so that we don't need to clear it.
-		// This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
+		// a WeakSet avoids manual cleanup when feed items are replaced.
 		WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
 	>(new WeakSet());
 
@@ -75,7 +73,6 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 			return;
 		}
 
-		// Send to the feed
 		ok(
 			appview.post('app.bsky.feed.sendInteractions', {
 				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
@@ -143,10 +140,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 	return useMemo(() => {
 		return {
 			enabled,
-			// pass this method to the <List> onItemSeen
 			onItemSeen,
-			// call on various events
-			// queues the event to be sent with the throttled sendToFeed call
 			sendInteraction,
 			feedSourceInfo: typeof feed === 'object' ? feed : undefined,
 		};
@@ -159,11 +153,7 @@ export function useFeedFeedbackContext() {
 	return useContext(stateContext);
 }
 
-// TODO
-// We will introduce a permissions framework for 3p feeds to
-// take advantage of the feed feedback API. Until that's in
-// place, we're hardcoding it to the discover feed.
-// -prf
+// restrict feedback to Discover until third-party permissions exist.
 export function isDiscoverFeed(feed?: FeedDescriptor) {
 	return !!feed && FEEDBACK_FEEDS.includes(feed);
 }

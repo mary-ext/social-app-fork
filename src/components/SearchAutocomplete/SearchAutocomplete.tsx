@@ -60,7 +60,7 @@ import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems
 import { Row } from './Row';
 import * as styles from './SearchAutocomplete.css';
 
-/** query for default-mode profile typeahead: the free text, or empty once any operator filter is present */
+/** returns the default-mode profile query, or empty when operators are present. */
 const defaultProfileQuery = (tokens: Token[]): string => {
 	const [remains, filters] = splitFilters(tokens);
 	if (filters.size > 0) {
@@ -141,8 +141,7 @@ export function SearchAutocomplete({
 	const [active, setActive] = useState(eager ?? false);
 	const placeholderRef = useRef<HTMLInputElement | null>(null);
 
-	// the global `/` hotkey wakes an idle field; once active, ActiveSearchAutocomplete owns the subscription
-	// and this placeholder ref is null, so the focus call no-ops.
+	// the active field owns focus after the lazy placeholder is replaced.
 	useEffect(() => {
 		return focusSearch.subscribe(() => {
 			placeholderRef.current?.focus();
@@ -150,8 +149,7 @@ export function SearchAutocomplete({
 	}, []);
 
 	if (active) {
-		// an eager field is already populated from context, so it shouldn't grab focus or pop the suggestions
-		// open on mount; a lazily-woken one just received user intent, so it does both.
+		// lazy fields receive focus on activation; eager fields do not.
 		return (
 			<ActiveSearchAutocomplete
 				{...props}
@@ -206,19 +204,16 @@ function ActiveSearchAutocomplete({
 	const actionsRef = useRef<Autocomplete.Root.Actions | null>(null);
 	const highlightedRef = useRef<InteractiveItem | undefined>(undefined);
 	const highlightedIndexRef = useRef<number>(-1);
-	// set by an edge-rollover keypress so the post-month-change highlight effect lands on a specific cell.
+	// target cell for keyboard rollover after a month change.
 	const pendingHighlightRef = useRef<number | null>(null);
 
-	// the global `/` hotkey focuses the search field via this event bus.
 	useEffect(() => {
 		return focusSearch.subscribe(() => {
 			inputRef.current?.focus();
 		});
 	}, []);
 
-	// when lazily woken (rail), claim focus on mount and open the popup; the layout effect transfers focus
-	// before paint, keeping the swap from the placeholder field seamless. an eager field (search screen) mounts
-	// pre-seeded from the URL, so it stays unfocused with the popup closed.
+	// focus lazy fields before paint; eager fields start closed and unfocused.
 	useLayoutEffect(() => {
 		if (autoFocus) {
 			inputRef.current?.focus();
@@ -231,9 +226,7 @@ function ActiveSearchAutocomplete({
 	const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));
 	const [trackedSnapKey, setTrackedSnapKey] = useState<string | null>(null);
 
-	// re-seed the field when the seeded query changes out from under us — navigating between searches on the
-	// search screen reuses this instance with a new URL query. the rail keeps a constant empty seed, so this
-	// never fires there.
+	// reset the field when navigation changes its seed query.
 	const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery);
 	if (initialQuery !== prevInitialQuery) {
 		setPrevInitialQuery(initialQuery);
@@ -242,18 +235,14 @@ function ActiveSearchAutocomplete({
 		setOpen(false);
 	}
 
-	// pinned once per mount so the calendar and date math don't drift mid-session; the compiler
-	// treats `new Date()` as impure (clock-reading), so useConstant holds it rather than a const.
+	// keep calendar calculations on one clock snapshot.
 	const today = useConstant(() => new Date());
 
-	// tokens/mode stay memoized: clampToConstraints (a kept useCallback, itself read from this
-	// file's own useEffect) depends on dateConstraints, which depends on this chain — React
-	// Compiler can't preserve clampToConstraints's memoization otherwise.
+	// keep parsed query data stable for the date-picker callbacks.
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
 	const mode = useMemo(() => classifyActiveToken(active), [active]);
 	const operatorSuggestions = getOperatorSuggestions(tokens, active);
-	// exclude the token under the caret so a `from:` being typed doesn't count as already set.
 	const fromActive = tokens.some(
 		(token, index) =>
 			index !== active?.tokenIndex && token.type === 'word' && token.value.startsWith('from:'),
@@ -265,7 +254,7 @@ function ActiveSearchAutocomplete({
 		[mode, tokens, today],
 	);
 
-	/** whether a date falls within the active picker's bounds, compared by calendar day. */
+	// test dates against day-granular picker bounds.
 	const isSelectableDate = (date: Date): boolean => {
 		if (!dateConstraints) {
 			return true;
@@ -278,7 +267,7 @@ function ActiveSearchAutocomplete({
 		);
 	};
 
-	/** clamps a date into the active picker's bounds (start-of-day). */
+	// clamp a date to day-granular picker bounds.
 	const clampToConstraints = useCallback(
 		(date: Date): Date => {
 			if (!dateConstraints) {
@@ -296,11 +285,7 @@ function ActiveSearchAutocomplete({
 		[dateConstraints],
 	);
 
-	// snap the calendar to the month implied by the entered date (`since:2024` → Jan 2024, `since:2025-04` →
-	// Apr 2025). with no date typed, fall back to today clamped into the active range so the picker opens on a
-	// month with selectable days — an empty `since:` beside a past `until:` opens on the `until:` month, not a
-	// fully-disabled future one. re-snapping only when that month changes keeps manual month navigation between
-	// keystrokes; adjusting state during render (vs. an effect) avoids a wrong-month flash.
+	// open the calendar on the typed month or the nearest selectable month.
 	let snapDate: Date | null = null;
 	let snapKey: string | null = null;
 	if (mode.kind === 'date') {
@@ -314,25 +299,20 @@ function ActiveSearchAutocomplete({
 		}
 	}
 
-	// actor typeahead matches the handle fragment; default typeahead matches the free text (and is suppressed
-	// once operators are in play).
+	// actor mode searches handles; default mode searches free text.
 	const profileQuery =
 		mode.kind === 'actor'
 			? mode.query.replace(/^@/, '')
 			: mode.kind === 'default'
 				? defaultProfileQuery(tokens)
 				: '';
-	// the actor picker surfaces the signed-in account when nothing is typed yet; folding that into the query
-	// (vs. a separate empty-state item) keeps one cache continuum, so keepPreviousData bridges `from:` →
-	// `from:<char>` rather than flashing an empty list while the first search loads.
+	// keep the signed-in account in the actor query so loading does not flash an empty list.
 	const { data: profileData } = useSearchActorAutocompleteQuery({
 		limit: mode.kind === 'actor' ? 10 : 6,
 		query: profileQuery,
 		self: mode.kind === 'actor' ? meProfile : undefined,
 	});
-	// the default typeahead drops its matches the moment the free text empties, so they don't linger once
-	// operators take over; the actor picker instead always shows the query (its self shortcut and the bridged
-	// loading state are the point).
+	// default matches disappear when the free text is empty; actor matches do not.
 	const profiles = mode.kind === 'actor' || profileQuery ? (profileData ?? []) : [];
 
 	const result = buildResult({
@@ -344,17 +324,14 @@ function ActiveSearchAutocomplete({
 		profiles,
 		query,
 		recentProfiles,
-		// hold a skeleton slot for an unresolved recent while its view is still loading; once settled, an
-		// unresolved did drops out.
+		// reserve a row for unresolved recent profiles while they load.
 		recentProfilesPending,
 		today,
 		visibleMonth,
 	});
 	const items = interactiveItems(result);
 
-	// in the calendar, place the keyboard highlight: on a cell carried over from a month rollover, otherwise
-	// today (when the visible month is the current one and nothing is typed) or the first of the visible month.
-	// the cell index is the day's offset from the grid's first (Sunday) cell — see buildCalendarDays.
+	// choose the initial calendar highlight.
 	const isPartialDate = mode.kind === 'date' && mode.query !== '';
 	useEffect(() => {
 		if (mode.kind !== 'date' || !open) {
@@ -371,7 +348,7 @@ function ActiveSearchAutocomplete({
 		} else {
 			const preferred =
 				!isPartialDate && isSameCalendarMonth(visibleMonth, today) ? today : startOfMonth(visibleMonth);
-			// keep the opening highlight on a selectable day.
+			// keep the initial highlight selectable.
 			const target = clampToConstraints(preferred);
 			targetIndex = differenceInCalendarDays(target, startOfWeek(startOfMonth(visibleMonth)));
 		}
@@ -411,9 +388,9 @@ function ActiveSearchAutocomplete({
 			const nextToken = tokens[active.tokenIndex + 1];
 			const prevToken = tokens[active.tokenIndex - 1];
 
-			// absorb the trailing space so the replacement (which adds its own) doesn't double up.
+			// include a trailing space in the replacement range.
 			const extra = nextToken?.type === 'whitespace' ? nextToken.value.length : 0;
-			// keep words apart when splicing right after a non-whitespace token.
+			// separate adjacent tokens when needed.
 			const text = prevToken && prevToken.type !== 'whitespace' ? ' ' + replacement : replacement;
 
 			el.setSelectionRange(start, end + extra);
@@ -421,7 +398,7 @@ function ActiveSearchAutocomplete({
 		}
 	};
 
-	// page months, clamped so the calendar can't scroll past the since/until constraint.
+	// navigate within the date bounds.
 	const goToMonth = (delta: number) =>
 		setVisibleMonth((month) => {
 			const next = startOfMonth(addMonths(month, delta));
@@ -457,8 +434,7 @@ function ActiveSearchAutocomplete({
 		reset();
 	};
 
-	// calendar keyboard month navigation, handled in the capture phase so it pre-empts Base UI's in-grid
-	// arrow navigation at the edges (and PageUp/PageDown everywhere).
+	// handle calendar month navigation before Base UI's grid navigation.
 	const onInputKeyDownCapture = (event: KeyboardEvent<HTMLInputElement>) => {
 		if (mode.kind !== 'date') {
 			return;
@@ -472,9 +448,7 @@ function ActiveSearchAutocomplete({
 			return;
 		}
 
-		// roll over to the adjacent month when an arrow would leave the grid. resolve the destination by date
-		// (±1 day horizontally, ±7 vertically) so the landing cell is continuous across the shared spillover
-		// week rather than off by a row.
+		// roll over to the adjacent month at grid edges.
 		const index = highlightedIndexRef.current;
 		if (index < 0) {
 			return;
@@ -494,7 +468,7 @@ function ActiveSearchAutocomplete({
 		}
 
 		if (target) {
-			// don't let an arrow roll past the since/until constraint.
+			// do not cross the date bounds.
 			if (!isSelectableDate(target)) {
 				event.preventDefault();
 				event.stopPropagation();
@@ -508,9 +482,7 @@ function ActiveSearchAutocomplete({
 		}
 	};
 
-	// every Autocomplete.Item commits through Base UI's item-press (a click, or Enter on the highlighted item),
-	// which fires onValueChange below — so we route the highlighted suggestion to its action from that single
-	// choke point rather than wiring an onClick onto each rendered item.
+	// route item-press actions through the highlighted item.
 	const commit = (item: InteractiveItem) => {
 		switch (item.kind) {
 			case 'date':
@@ -530,9 +502,7 @@ function ActiveSearchAutocomplete({
 				break;
 			case 'profile': {
 				if (item.op) {
-					// picking your own account commits to `me`, whether it came from the empty-state shortcut or
-					// from typing your own handle into the actor typeahead. fall back to the did when the handle
-					// is invalid, since `from:handle.invalid` wouldn't resolve.
+					// use `me` for the current account and DID for invalid handles.
 					let actor: string;
 					if (item.profile.did === currentAccount?.did) {
 						actor = 'me';
@@ -560,20 +530,14 @@ function ActiveSearchAutocomplete({
 	};
 
 	const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-		// a highlighted item handles Enter itself (via item-press); otherwise Enter runs the raw query.
+		// highlighted items handle Enter; otherwise submit the raw query.
 		if (event.key === 'Enter' && !highlightedRef.current) {
 			event.preventDefault();
 			submit(query);
 		}
 	};
 
-	// commit dispatches the *highlighted* item (see onValueChange), which mouse hover and arrow keys keep in
-	// sync with what's pressed — but touch/pen produce no hover, so a tap would otherwise commit the stale
-	// auto-highlighted row (or nothing, when the empty state highlights none). move the highlight onto the
-	// pressed row here, before the item-press fires, so the tap commits what was actually tapped. the pressed
-	// row's position among the rendered options/cells is its flat highlight index (chrome rows carry no such
-	// role, and the calendar's day cells sit in row-major order — both matching the `items` order Base UI
-	// highlights against).
+	// touch and pen have no hover, so highlight the pressed row before item-press.
 	const onListPointerDown = (event: PointerEvent<HTMLDivElement>) => {
 		if (event.pointerType === 'mouse') {
 			return;
@@ -593,13 +557,9 @@ function ActiveSearchAutocomplete({
 	return (
 		<Autocomplete.Root
 			actionsRef={actionsRef}
-			// keep the first matching row highlighted so Enter acts on it. only with a query to match against (an
-			// empty field shows recent history / operator hints, which shouldn't pre-select), and never in date
-			// mode, where we drive the calendar's highlight ourselves (today / first-of-month / edge rollover) —
-			// 'always' would keep forcing it back to grid cell 0 and disable the escape behaviour that nav needs.
+			// preselect matches, but let the date picker manage its own highlight.
 			autoHighlight={result.kind !== 'date' && query.trim() !== '' ? 'always' : false}
-			// actionsRef (needed to drive the calendar's highlighted index) otherwise opts us into Base UI's
-			// manual-unmount contract; keep the popup auto-unmounting on close (and any future exit animation).
+			// keep the popup mounted only while open.
 			autoUnmount
 			filter={null}
 			grid={result.kind === 'date'}
@@ -610,22 +570,18 @@ function ActiveSearchAutocomplete({
 				highlightedIndexRef.current = details.index;
 			}}
 			onOpenChange={(next, details) => {
-				// Base UI commits and closes on item press; a splice (operator/date/actor) only refines the query,
-				// so ignore that close and let the popup show the suggestions for the new context. final selections
-				// (search/profile) close explicitly via reset().
+				// keep the popup open when an item only refines the query.
 				if (!next && details.reason === 'item-press') {
 					return;
 				}
-				// emptying the field auto-closes the popup (Base UI's openOnInputClick is off); swallow that close
-				// so the operator hints an empty field shows stay visible. escape still closes (its own reason).
+				// keep operator hints visible when the field is cleared.
 				if (!next && details.reason === 'input-clear') {
 					return;
 				}
 				setOpen(next);
 			}}
 			onValueChange={(next, details) => {
-				// an item press refines the query (operator/date/actor splice) or leaves the popup (search/profile);
-				// dispatch the highlighted suggestion rather than treating the filled-in label as typed input.
+				// dispatch item presses instead of treating their labels as typed input.
 				if (details.reason === 'item-press') {
 					const item = highlightedRef.current;
 					if (item) {
@@ -635,9 +591,7 @@ function ActiveSearchAutocomplete({
 				}
 				setQuery(next);
 				syncCaret();
-				// reopen a popup the user dismissed with escape once the field goes empty — the empty state
-				// lists the search operators. base UI never opens on empty input and its own input-clear close
-				// is a no-op while already closed, so this explicit reopen is what revives it.
+				// reopen the operator list when the cleared field was dismissed.
 				if (next === '') {
 					setOpen(true);
 				}
@@ -649,8 +603,7 @@ function ActiveSearchAutocomplete({
 				<SearchField.Icon />
 				<Autocomplete.Input
 					onBlur={(event) => {
-						// close on focus-out unless focus moved into the field (e.g. clear) or the popup; Base UI's
-						// own dismiss only covers outside-press/escape, not tabbing or programmatic blur.
+						// close on focus-out unless focus moved within the field or popup.
 						const next = event.relatedTarget;
 						if (fieldRef.current?.contains(next) || popupRef.current?.contains(next)) {
 							return;

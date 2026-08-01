@@ -31,9 +31,7 @@ const setStatus = (next: ServiceWorkerStatus) => {
 	events.emit(status);
 };
 
-// the single source of truth: derive status from the registration's worker slots. `active` distinguishes
-// a first install (none yet) from an update (installing over an existing one), and surviving in the
-// module means progress isn't lost when a consuming component unmounts mid-install.
+// derive status from the registration so progress survives component unmounts.
 const reconcile = () => {
 	const reg = registration;
 	if (reg?.waiting) {
@@ -48,11 +46,11 @@ const reconcile = () => {
 /** @returns the current service-worker status */
 export const getServiceWorkerStatus = () => status;
 
-/** Subscribe to service-worker status changes. */
+/** subscribes to service-worker status changes. */
 export const subscribeServiceWorkerStatus = (listener: (status: ServiceWorkerStatus) => void) =>
 	events.subscribe(listener);
 
-/** React hook returning the live {@link ServiceWorkerStatus}. */
+/** returns the live {@link ServiceWorkerStatus} in a React hook. */
 export const useServiceWorkerStatus = () =>
 	useSyncExternalStore(subscribeServiceWorkerStatus, getServiceWorkerStatus);
 
@@ -108,7 +106,7 @@ export const registerServiceWorker = () => {
 	});
 };
 
-/** Activate a waiting service worker and reload once it takes control. No-op if no update is ready. */
+/** activates a waiting service worker and reloads after it takes control. */
 export const applyServiceWorkerUpdate = () => {
 	const waiting = registration?.waiting;
 	if (!waiting) {

@@ -70,30 +70,26 @@ export function isPlainArray(value: unknown): value is unknown[] {
 	return Array.isArray(value) && value.length === Object.keys(value).length;
 }
 
-// Copied from: https://github.com/jonschlinkert/is-plain-object
+// adapted from https://github.com/jonschlinkert/is-plain-object
 export function isPlainObject(o: unknown): o is PlainObject {
 	if (!hasObjectPrototype(o)) {
 		return false;
 	}
 
-	// If has no constructor
 	const ctor = o.constructor;
 	if (ctor === undefined) {
 		return true;
 	}
 
-	// If has modified prototype
 	const prot = ctor.prototype;
 	if (!hasObjectPrototype(prot)) {
 		return false;
 	}
 
-	// If constructor does not have an Object-specific method
 	if (!prot.hasOwnProperty('isPrototypeOf')) {
 		return false;
 	}
 
-	// Most likely a plain Object
 	return true;
 }
 

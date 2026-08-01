@@ -51,14 +51,13 @@ export const serveDidDocument = (): Response => {
 };
 
 /**
- * verifies the service auth token attached to this request
+ * verifies the service-auth token and charges the caller's rate limit.
  *
- * @param request the proxied request.
- * @param options.limiter the rate limiter the call is charged against.
- * @param options.lxm the method the token must have been issued for.
- * @throws {AuthRequiredError} if the token is missing, malformed, expired, or issued for another audience or
- *   method.
- * @throws {RateLimitExceededError} if the caller is over its budget for the method.
+ * @param request proxied request
+ * @param options.limiter rate limiter for the call
+ * @param options.lxm method the token must target
+ * @throws {AuthRequiredError} when the token is invalid
+ * @throws {RateLimitExceededError} when the caller exceeds its budget
  */
 export const authorizeServiceCall = async (
 	request: Request,

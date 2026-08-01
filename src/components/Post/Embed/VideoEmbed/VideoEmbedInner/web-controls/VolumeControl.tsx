@@ -60,7 +60,7 @@ export function VolumeControl({
 							aria-label={m['components.post.video.a11y.volume']()}
 							className={clsx(styles.slider, IS_WEB_SAFARI && styles.sliderSafari)}
 							onChange={onVolumeChange}
-							// @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
+							// @ts-expect-error Firefox supports this nonstandard orientation attribute.
 							orient="vertical"
 						/>
 					</div>

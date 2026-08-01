@@ -123,7 +123,6 @@ export function usePostFeedQuery(
 	const feedTuners = useFeedTuners(feedDesc);
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
-	/** awaits Active Assistant (AA) state to prevent flash of unstyled content (FOUC). */
 	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
 	const userInterests = aggregateUserInterests(preferences);
 	const { appview } = getClients();
@@ -134,10 +133,9 @@ export function usePostFeedQuery(
 		result: InfiniteData<FeedPage>;
 	} | null>(null);
 
-	/** number of posts to fetch in a single request */
 	const fetchLimit = MIN_POSTS;
 
-	// Make sure this doesn't invalidate unless really needed.
+	// keep the selector stable unless one of its inputs changes.
 	const selectArgs = useMemo(
 		() => ({
 			feedTuners,
@@ -158,7 +156,7 @@ export function usePostFeedQuery(
 						api: createApi({
 							feedDesc,
 							appview,
-							// Not in the query key because they don't change:
+							// these values do not change, so they are not query-key inputs.
 							userInterests,
 						}),
 						cursor: undefined,
@@ -166,12 +164,7 @@ export function usePostFeedQuery(
 
 			const res = await api.fetch({ cursor, limit: fetchLimit });
 
-			/*
-			 * If this is a public view, we need to check if posts fail moderation.
-			 * If all fail, we throw an error. If only some fail, we continue and let
-			 * moderations happen later, which results in some posts being shown and
-			 * some not.
-			 */
+			// public feeds must contain at least one post allowed by moderation.
 			if (!hasSession) {
 				assertSomePostsPassModeration(
 					res.feed,
@@ -196,22 +189,19 @@ export function usePostFeedQuery(
 				: undefined,
 		select: useCallback(
 			(data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
-				// If the selection depends on some data, that data should
-				// be included in the selectArgs object and read here.
+				// read selector inputs from the stable object to avoid stale closures.
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { feedTuners, moderationOpts, ignoreFilterFor } = selectArgs;
 
 				const tuner = new FeedTuner(feedTuners);
 
-				// Keep track of the last run and whether we can reuse
-				// some already selected pages from there.
 				const reusedPages: FeedPage[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
 					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
-							// Can't do reuse anything if any input has changed.
+							// reuse is only safe when every selector input is unchanged.
 							canReuse = false;
 							break;
 						}
@@ -220,11 +210,10 @@ export function usePostFeedQuery(
 						for (let i = 0; i < data.pages.length; i++) {
 							if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
 								reusedPages.push(lastResult.pages[i]!);
-								// Keep the tuner in sync so that the end result is deterministic.
+								// keep tuning state aligned with reused pages.
 								tuner.tune(lastData.pages[i]!.feed);
 								continue;
 							}
-							// Stop as soon as pages stop matching up.
 							break;
 						}
 					}
@@ -242,12 +231,10 @@ export function usePostFeedQuery(
 							slices: mapDefined(tuner.tune(page.feed), (slice) => {
 								const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
 
-								// apply moderation filter
 								for (let i = 0; i < slice.items.length; i++) {
 									const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
 
-									// on a profile, mutes shouldn't hide reposts/replies/likes the account
-									// chose to surface; blocks and labels still apply to non-owner content
+									// profile mutes do not hide content surfaced by the profile owner.
 									if (ignoreFilterFor) {
 										moderations[i]!.causes = moderations[i]!.causes.filter(
 											(cause) =>
@@ -290,24 +277,19 @@ export function usePostFeedQuery(
 						})),
 					],
 				};
-				// Save for memoization.
 				lastRun.current = { data, result, args: selectArgs };
 				return result;
 			},
-			[selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+			[selectArgs],
 		),
 	});
 
-	// The server may end up returning an empty page, a page with too few items,
-	// or a page with items that end up getting filtered out. When we fetch pages,
-	// we'll keep track of how many items we actually hope to see. If the server
-	// doesn't return enough items, we're going to continue asking for more items.
+	// fetch more pages when filtering leaves fewer items than requested.
 	const lastItemCount = useRef(0);
 	const wantedItemCount = useRef(0);
 	const autoPaginationAttemptCount = useRef(0);
 	useEffect(() => {
 		const { data, isLoading, isRefetching, isFetchingNextPage, hasNextPage } = query;
-		// Count the items that we already have.
 		let itemCount = 0;
 		for (const page of data?.pages || []) {
 			for (const slice of page.slices) {
@@ -315,7 +297,6 @@ export function usePostFeedQuery(
 			}
 		}
 
-		// If items got truncated, reset the state we're tracking below.
 		if (itemCount !== lastItemCount.current) {
 			if (itemCount < lastItemCount.current) {
 				wantedItemCount.current = itemCount;
@@ -323,23 +304,17 @@ export function usePostFeedQuery(
 			lastItemCount.current = itemCount;
 		}
 
-		// Now track how many items we really want, and fetch more if needed.
 		if (isLoading || isRefetching) {
-			// During the initial fetch, we want to get an entire page's worth of items.
 			wantedItemCount.current = MIN_POSTS;
 		} else if (isFetchingNextPage) {
 			if (itemCount > wantedItemCount.current) {
-				// We have more items than wantedItemCount, so wantedItemCount must be out of date.
-				// Some other code must have called fetchNextPage(), for example, from onEndReached.
-				// Adjust the wantedItemCount to reflect that we want one more full page of items.
+				// account for pages requested by another caller.
 				wantedItemCount.current = itemCount + MIN_POSTS;
 			}
 		} else if (hasNextPage) {
-			// At this point we're not fetching anymore, so it's time to make a decision.
-			// If we didn't receive enough items from the server, paginate again until we do.
 			if (itemCount < wantedItemCount.current) {
 				autoPaginationAttemptCount.current++;
-				if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+				if (autoPaginationAttemptCount.current < 50 /* fail-safe */) {
 					void query.fetchNextPage();
 				}
 			} else {
@@ -381,8 +356,7 @@ function createApi({
 	userInterests?: string;
 	appview: Client;
 }) {
-	// the `FeedDescriptor` template types fix what each `|`-separated segment holds, but `String.split`
-	// only yields plain strings, so the branches below re-assert them
+	// string splitting loses the segment types encoded by FeedDescriptor.
 	if (feedDesc === 'following') {
 		return new FollowingFeedAPI({ appview });
 	} else if (feedDesc.startsWith('author')) {
@@ -413,7 +387,7 @@ function createApi({
 			feedParams: { uris: uriList!.split(',') } as AppBskyFeedGetPosts.$params,
 		});
 	} else {
-		// shouldnt happen
+		// keep a safe fallback for malformed descriptors.
 		return new FollowingFeedAPI({ appview });
 	}
 }
@@ -509,12 +483,10 @@ function assertSomePostsPassModeration(
 	feed: AppBskyFeedDefs.FeedViewPost[],
 	moderationPrefs: BskyPreferences['moderationPrefs'],
 ) {
-	// no posts in this feed
 	if (feed.length === 0) {
 		return true;
 	}
 
-	// assume false
 	let somePostsPassModeration = false;
 
 	for (const item of feed) {
@@ -524,7 +496,6 @@ function assertSomePostsPassModeration(
 		});
 
 		if (getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length === 0) {
-			// we have a sfw post
 			somePostsPassModeration = true;
 		}
 	}

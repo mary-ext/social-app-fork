@@ -74,12 +74,10 @@ export default {
 					if (parent.type === 'JSXElement') {
 						const tagName = getTagName(parent);
 						if (isTextComponent(tagName)) {
-							// We're good.
 							return;
 						}
 						if (tagName === 'Trans') {
-							// Exit and rely on the traversal for <Trans> JSXElement (code below).
-							// TODO: Maybe validate that it's present.
+							// let the JSXElement visitor handle Trans.
 							return;
 						}
 						const suggestedWrapper = suggestedTextWrappers[tagName];
@@ -109,7 +107,6 @@ export default {
 						const tagName = getTagName(parent.parent.parent);
 						const propName = parent.name.name;
 						if (textProps.has(tagName + ' ' + propName) || propName === 'text' || propName.endsWith('Text')) {
-							// We're good.
 							return;
 						}
 						const message =
@@ -141,12 +138,10 @@ export default {
 					if (parent.type === 'JSXElement') {
 						const tagName = getTagName(parent);
 						if (isTextComponent(tagName)) {
-							// We're good.
 							return;
 						}
 						if (tagName === 'Trans') {
-							// Exit and rely on the traversal for <Trans> JSXElement (code below).
-							// TODO: Maybe validate that it's present.
+							// let the JSXElement visitor handle Trans.
 							return;
 						}
 						const suggestedWrapper = suggestedTextWrappers[tagName];
@@ -177,7 +172,7 @@ export default {
 						continue;
 					}
 
-					// Be conservative for other types.
+					// stop when the parent shape is unknown.
 					return;
 				}
 			},
@@ -187,12 +182,10 @@ export default {
 					if (parent.type === 'JSXElement') {
 						const tagName = getTagName(parent);
 						if (isTextComponent(tagName)) {
-							// We're good.
 							return;
 						}
 						if (tagName === 'Trans') {
-							// Exit and rely on the traversal for <Trans> JSXElement (code below).
-							// TODO: Maybe validate that it's present.
+							// let the JSXElement visitor handle Trans.
 							return;
 						}
 						const suggestedWrapper = suggestedTextWrappers[tagName];
@@ -218,7 +211,7 @@ export default {
 						parent.callee.type === 'Identifier' &&
 						parent.callee.name === '_'
 					) {
-						// This is a user-facing string, keep going up.
+						// continue through the localization call.
 						parent = parent.parent;
 						continue;
 					}
@@ -237,7 +230,7 @@ export default {
 						continue;
 					}
 
-					// Be conservative for other types.
+					// stop when the parent shape is unknown.
 					return;
 				}
 			},
@@ -250,12 +243,10 @@ export default {
 					if (parent.type === 'JSXElement') {
 						const tagName = getTagName(parent);
 						if (isTextComponent(tagName)) {
-							// We're good.
 							return;
 						}
 						if (tagName === 'Trans') {
-							// Exit and rely on the traversal for this JSXElement.
-							// TODO: Should nested <Trans> even be allowed?
+							// let the outer JSXElement visitor handle nested Trans.
 							return;
 						}
 						const suggestedWrapper = suggestedTextWrappers[tagName];
@@ -285,7 +276,6 @@ export default {
 						const tagName = getTagName(parent.parent.parent);
 						const propName = parent.name.name;
 						if (textProps.has(tagName + ' ' + propName) || propName === 'text' || propName.endsWith('Text')) {
-							// We're good.
 							return;
 						}
 						const message =

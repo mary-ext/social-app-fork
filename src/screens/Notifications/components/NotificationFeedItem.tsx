@@ -510,7 +510,6 @@ let NotificationFeedItem = ({
 					<TimeElapsed timestamp={item.notification.indexedAt}>
 						{({ timeElapsed }) => (
 							<>
-								{/* make sure there's whitespace around the middot -sfn */}
 								<Text color="textContrastMedium"> &middot; </Text>
 								<Tooltip label={niceTimestamp}>
 									<Text color="textContrastMedium">{timeElapsed}</Text>

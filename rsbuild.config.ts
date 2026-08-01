@@ -26,13 +26,7 @@ export default defineConfig(({ envMode }) => {
 				`&scope=${encodeURIComponent(oauthScope)}`;
 
 	return {
-		plugins: [
-			// React Compiler runs natively in rspack's builtin swc-loader (no Babel pass). `panicThreshold:
-			// 'none'` downlevels the components the compiler declines to optimize from hard build errors to
-			// skipped optimizations — the bail-out severity is honoured as of rspack 2.1.0
-			// (web-infra-dev/rspack#14517).
-			pluginReact({ reactCompiler: { panicThreshold: 'none' } }),
-		],
+		plugins: [pluginReact({ reactCompiler: { panicThreshold: 'none' } })],
 		source: {
 			define: {
 				'import.meta.env.PUBLIC_GIT_COMMIT_HASH': JSON.stringify(process.env.GIT_COMMIT_HASH ?? ''),
@@ -60,8 +54,7 @@ export default defineConfig(({ envMode }) => {
 			host: serverHost,
 			historyApiFallback: true,
 			port: serverPort,
-			// forward link-resolution xrpc calls to the locally-running worker (`pnpm dev:worker`), keeping
-			// them same-origin from the browser's perspective.
+			// proxy link-resolution XRPC calls to the local worker.
 			proxy: {
 				'/xrpc': 'http://127.0.0.1:8787',
 			},
@@ -89,8 +82,7 @@ export default defineConfig(({ envMode }) => {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
 
-				// prioritize deduplication in async CSS chunks: hoist any extracted-CSS module shared by
-				// 2+ chunks into its own shared chunk rather than copying it into every route chunk.
+				// hoist CSS shared by two or more chunks.
 				config.optimization ??= {};
 				if (config.optimization.splitChunks !== false) {
 					config.optimization.splitChunks ??= {};
@@ -105,8 +97,7 @@ export default defineConfig(({ envMode }) => {
 					};
 				}
 
-				// precaching only makes sense against a hashed production build; in dev it would fight
-				// the dev server and HMR, so the service worker is emitted for production builds only.
+				// emit the service worker only for production builds.
 				if (envMode === 'production') {
 					config.plugins.push(new ServiceWorkerPrecachePlugin(path.resolve(root, 'src/lib/sw-template.js')));
 				}
@@ -116,8 +107,7 @@ export default defineConfig(({ envMode }) => {
 					config.plugins.push(
 						new RsdoctorRspackPlugin({
 							disableClientServer: !process.stdout.isTTY,
-							// the loader probe recurses to a stack overflow on vanilla-extract's virtual
-							// `extracted.js` modules; we only want bundle/chunk analysis anyway.
+							// the loader probe overflows on vanilla-extract virtual modules.
 							features: { bundle: true, loader: false, plugins: true, resolver: false, treeShaking: false },
 						}),
 					);

@@ -50,8 +50,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 				return;
 			}
 			setCurrentTime(round(ref.current.currentTime) || 0);
-			// HACK: Safari randomly fires `stalled` events when changing between segments
-			// let's just clear the buffering state if the video is still progressing -sfn
+			// Safari may emit `stalled` while advancing segments; clear buffering on progress.
 			if (IS_WEB_SAFARI) {
 				if (bufferingTimeout) {
 					clearTimeout(bufferingTimeout);

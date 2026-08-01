@@ -28,9 +28,7 @@ export function useToggleMutationQueue<TServerState>({
 	runMutation: (prevState: TServerState, nextIsOn: boolean) => Promise<TServerState>;
 	onSuccess: (finalState: TServerState) => void;
 }) {
-	// the queue is a mutable object, mutated in place across toggles and never read during
-	// render (only inside processQueue/queueToggle, which run on user toggle). a useRef would
-	// also work; useConstant keeps the queue.activeTask access unchanged.
+	// keep the mutable queue outside render; it is consumed only by toggle handlers.
 	const queue = useConstant<TaskQueue<TServerState>>(() => ({
 		activeTask: null,
 		queuedTask: null,
@@ -38,12 +36,10 @@ export function useToggleMutationQueue<TServerState>({
 
 	async function processQueue() {
 		if (queue.activeTask) {
-			// There is another active processQueue call iterating over tasks.
-			// It will handle any newly added tasks, so we should exit early.
+			// another processor will handle newly queued tasks.
 			return;
 		}
-		// To avoid relying on the rendered state, capture it once at the start.
-		// From that point on, and until the queue is drained, we'll use the real server state.
+		// use the confirmed server state until the queue drains.
 		let confirmedState: TServerState = initialState;
 		try {
 			while (queue.queuedTask) {
@@ -52,13 +48,12 @@ export function useToggleMutationQueue<TServerState>({
 				queue.activeTask = nextTask;
 				queue.queuedTask = null;
 				if (prevTask?.isOn === nextTask.isOn) {
-					// Skip multiple requests to update to the same value in a row.
+					// avoid sending duplicate state changes.
 					prevTask.reject(createAbortError());
 					continue;
 				}
 				try {
-					// The state received from the server feeds into the next task.
-					// This lets us queue deletions of not-yet-created resources.
+					// pass confirmed state to the next mutation, including for resources created in flight.
 					confirmedState = await runMutation(confirmedState, nextTask.isOn);
 					nextTask.resolve(confirmedState);
 				} catch (e) {
@@ -74,7 +69,7 @@ export function useToggleMutationQueue<TServerState>({
 
 	function queueToggle(isOn: boolean): Promise<TServerState> {
 		return new Promise((resolve, reject) => {
-			// This is a toggle, so the next queued value can safely replace the queued one.
+			// a newer toggle supersedes the queued value.
 			if (queue.queuedTask) {
 				queue.queuedTask.reject(createAbortError());
 			}

@@ -52,20 +52,13 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
 	bandcamp: 'Bandcamp',
 };
 
-/**
- * These sources are proxied through our CDN and do not leak any user data, thus are safe to embed without a
- * warning.
- */
+/** sources safe to embed without a warning because they use our CDN proxy. */
 export const exemptExternalEmbedSources = new Set<EmbedPlayerSource>(['tenor', 'klipy']);
 
 export interface EmbedPlayerParams {
 	type: EmbedPlayerType;
 	playerUri: string;
-	/**
-	 * web-only ordered list of `<source>` tags for `<video>` playback.
-	 *
-	 * @param playerUri native source and fallback `<video src>` when this is empty
-	 */
+	/** web-only ordered `<source>` tags for video playback. */
 	playerSources?: ReadonlyArray<{ src: string; type: string }>;
 	isGif?: boolean;
 	source: EmbedPlayerSource;
@@ -218,14 +211,11 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 	}
 
 	if (urlp.hostname === 'music.apple.com') {
-		// This should always have: locale, type (playlist or album), name, and id. We won't use spread since we want
-		// to check if the length is correct
 		const pathParams = urlp.pathname.split('/');
 		const type = pathParams[2];
 		const songId = urlp.searchParams.get('i');
 
 		if (pathParams.length === 5 && (type === 'playlist' || type === 'album' || type === 'song')) {
-			// We want to append the songId to the end of the url if it exists
 			const embedUri = `https://embed.music.apple.com${urlp.pathname}${songId ? `?i=${songId}` : ''}`;
 
 			if (type === 'playlist') {
@@ -272,12 +262,6 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 	if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
 		const [__, gifs, nameAndId] = urlp.pathname.split('/');
 
-		/*
-		 * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
-		 * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.webp so we can
-		 * use it in an <Image> component
-		 */
-
 		if (gifs === 'gifs' && nameAndId) {
 			const gifId = nameAndId.split('-').pop();
 
@@ -294,10 +278,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		}
 	}
 
-	// There are five possible hostnames that also can be giphy urls: media.giphy.com and media0-4.giphy.com
-	// These can include (presumably) a tracking id in the path name, so we have to check for that as well
 	if (giphyRegex.test(urlp.hostname)) {
-		// We can link directly to the gif, if its a proper link
 		const [__, media, trackingOrId, idOrFilename, filename] = urlp.pathname.split('/');
 
 		if (media === 'media') {
@@ -323,8 +304,6 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		}
 	}
 
-	// Finally, we should see if it is a link to i.giphy.com. These links don't necessarily end in .gif but can also
-	// be .webp
 	if (urlp.hostname === 'i.giphy.com' || urlp.hostname === 'www.i.giphy.com') {
 		const [__, mediaOrFilename, filename] = urlp.pathname.split('/');
 
@@ -381,7 +360,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		};
 	}
 
-	// this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
+	// validate Flickr album and group paths.
 	if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
 		let i = urlp.pathname.length - 1;
 		while (i > 0 && urlp.pathname.charAt(i) === '/') {
@@ -390,10 +369,8 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 		const path_components = urlp.pathname.slice(1, i + 1).split('/');
 		if (path_components.length === 4) {
-			// discard username - it's not relevant
 			const [photos, __, albums, id] = path_components;
 			if (photos === 'photos' && albums === 'albums') {
-				// this at least has the shape of a valid photo-album URL!
 				return {
 					type: 'flickr_album',
 					source: 'flickr',
@@ -412,16 +389,13 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 				};
 			}
 		}
-		// not an album or a group pool, don't know what to do with this!
 		return undefined;
 	}
 
-	// link shortened flickr path
 	if (urlp.hostname === 'flic.kr') {
 		const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 		const [__, type, idBase58Enc] = urlp.pathname.split('/');
 		if (!idBase58Enc) {
-			// no id to decode, ergo not a valid link to embed
 			return undefined;
 		}
 		let id = 0n;
@@ -430,7 +404,6 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			if (nextIdx >= 0) {
 				id = id * 58n + BigInt(nextIdx);
 			} else {
-				// not b58 encoded, ergo not a valid link to embed
 				return undefined;
 			}
 		}
@@ -453,7 +426,6 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 					playerUri: `https://embedr.flickr.com/photosets/${id}`,
 				};
 			default:
-				// we don't know what this is so we can't embed it
 				return undefined;
 		}
 	}
@@ -575,7 +547,6 @@ export function parseTenorGif(urlp: URL):
 		width: Number(w),
 	};
 
-	// Validate dimensions are valid positive numbers
 	if (
 		isNaN(dimensions.height) ||
 		isNaN(dimensions.width) ||
@@ -585,9 +556,7 @@ export function parseTenorGif(urlp: URL):
 		return { success: false };
 	}
 
-	// Tenor encodes the format in the ID prefix: AAAP3 = webm, AAAP1 = mp4.
-	// Provide both as <source> tags so the browser picks via canPlayType
-	// instead of relying on user-agent sniffing.
+	// provide both formats so the browser can choose a supported codec.
 	const webmUrl = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP3')}/${filename.replace('.gif', '.webm')}`;
 	const mp4Url = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP1')}/${filename.replace('.gif', '.mp4')}`;
 	return {
@@ -605,7 +574,6 @@ export function isTenorGifUri(url: URL | string) {
 	try {
 		return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success;
 	} catch {
-		// Invalid URL
 		return false;
 	}
 }
@@ -638,7 +606,6 @@ export function parseKlipyGif(urlp: URL):
 		width: Number(w),
 	};
 
-	// Validate dimensions are valid positive numbers
 	if (
 		isNaN(dimensions.height) ||
 		isNaN(dimensions.width) ||
@@ -654,14 +621,13 @@ export function parseKlipyGif(urlp: URL):
 	const playerUrl = new URL(urlp.href);
 	playerUrl.hostname = 'k.gifs.bsky.app';
 
-	// Strip all metadata params — only the path matters for the CDN
+	// only the path matters to the CDN.
 	playerUrl.searchParams.delete('hh');
 	playerUrl.searchParams.delete('ww');
 	playerUrl.searchParams.delete('mp4');
 	playerUrl.searchParams.delete('webm');
 
-	// Without any slug we can't produce a playable video URL on web,
-	// so fall back to the link card instead of returning a broken player.
+	// without a media slug, use the link card.
 	if (!webmSlug && !mp4Slug) {
 		return { success: false };
 	}
@@ -685,8 +651,7 @@ export function parseKlipyGif(urlp: URL):
 		sources.push({ src: buildVideoUrl(mp4Slug, 'mp4'), type: 'video/mp4' });
 	}
 
-	// Prefer mp4 as the fallback `playerUri` for `<video src>` since it has
-	// wider codec support across legacy browsers.
+	// use MP4 as the fallback for wider browser support.
 	const fallback = mp4Slug ? buildVideoUrl(mp4Slug, 'mp4') : buildVideoUrl(webmSlug!, 'webm');
 
 	return {
@@ -701,7 +666,6 @@ export function isKlipyGifUri(url: URL | string) {
 	try {
 		return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success;
 	} catch {
-		// Invalid URL
 		return false;
 	}
 }

@@ -76,7 +76,7 @@ export class FeedViewPostsSlice {
 		});
 		if (!reply) {
 			if (record.reply) {
-				// This reply wasn't properly hydrated by the AppView.
+				// the AppView returned an incomplete reply.
 				this.isOrphan = true;
 				this.items[0]!.isParentNotFound = true;
 			}
@@ -95,12 +95,7 @@ export class FeedViewPostsSlice {
 			root?.$type === 'app.bsky.feed.defs#postView' ||
 			root?.$type === 'app.bsky.feed.defs#blockedPost' ||
 			root?.$type === 'app.bsky.feed.defs#notFoundPost';
-		/*
-		 * If the parent is also the root, we just so happen to have the data we
-		 * need to compute if the parent's parent (grandparent) is blocked. This
-		 * doesn't always happen, of course, but we can take advantage of it when
-		 * it does.
-		 */
+		// when parent and root match, the root contains the grandparent state.
 		const grandparent = rootIsView && parentRecord.reply?.parent.uri === root.uri ? root : undefined;
 		const grandparentAuthor = reply.grandparentAuthor;
 		const isGrandparentBlocked = !!(grandparent && grandparent.$type === 'app.bsky.feed.defs#blockedPost');
@@ -114,8 +109,7 @@ export class FeedViewPostsSlice {
 		});
 		if (isGrandparentBlocked) {
 			this.isOrphan = true;
-			// Keep going, it might still have a root, and we need this for thread
-			// de-deduping
+			// retain the slice for thread deduplication.
 		}
 		if (root?.$type !== 'app.bsky.feed.defs#postView') {
 			this.isOrphan = true;
@@ -202,7 +196,6 @@ export class FeedTuner {
 	): FeedViewPostsSlice[] {
 		let slices = feed.map((item) => new FeedViewPostsSlice(item));
 
-		// run the custom tuners
 		for (const tunerFn of this.tunerFns) {
 			slices = tunerFn(this, slices.slice(), dryRun);
 		}
@@ -211,32 +204,22 @@ export class FeedTuner {
 			if (this.seenKeys.has(slice._reactKey)) {
 				return false;
 			}
-			// Some feeds, like Following, dedupe by thread, so you only see the most recent reply.
-			// However, we don't want per-thread dedupe for author feeds (where we need to show every post)
-			// or for feedgens (where we want to let the feed serve multiple replies if it chooses to).
-			// To avoid showing the same context (root and/or parent) more than once, we do last resort
-			// per-post deduplication. It hides already seen posts as long as this doesn't break the thread.
+			// dedupe context posts without removing the only visible reply.
 			for (let i = 0; i < slice.items.length; i++) {
 				const item = slice.items[i]!;
 				if (this.seenUris.has(item.post.uri)) {
 					if (i === 0) {
-						// Omit contiguous seen leading items.
-						// For example, [A -> B -> C], [A -> D -> E], [A -> D -> F]
-						// would turn into [A -> B -> C], [D -> E], [F].
+						// remove already-seen leading context.
 						slice.items.splice(0, 1);
 						i--;
 					}
 					if (i === slice.items.length - 1) {
-						// If the last item in the slice was already seen, omit the whole slice.
-						// This means we'd miss its parents, but the user can "show more" to see them.
-						// For example, [A ... E -> F], [A ... D -> E], [A ... C -> D], [A -> B -> C]
-						// would get collapsed into [A ... E -> F], with B/C/D considered seen.
+						// omit a slice whose final item was already shown.
 						return false;
 					}
 				} else {
 					if (!dryRun) {
-						// Reposting a reply elevates it to top-level, so its parent/root won't be displayed.
-						// Disable in-thread dedupe for this case since we don't want to miss them later.
+						// keep reposted replies eligible for later context.
 						const disableDedupe = slice.isReply && slice.isRepost;
 						if (!disableDedupe) {
 							this.seenUris.add(item.post.uri);
@@ -259,8 +242,7 @@ export class FeedTuner {
 			if (
 				slice.isReply &&
 				!slice.isRepost &&
-				// This is not perfect but it's close as we can get to
-				// detecting threads without having to peek ahead.
+				// avoid removing probable self-threads without peeking ahead.
 				!areSameAuthor(slice.getAuthors())
 			) {
 				slices.splice(i, 1);
@@ -347,7 +329,6 @@ export class FeedTuner {
 	 */
 	static preferredLangOnly(preferredLangsCode2: string[]) {
 		return (_tuner: FeedTuner, slices: FeedViewPostsSlice[], _dryRun: boolean): FeedViewPostsSlice[] => {
-			// early return if no languages have been specified
 			if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
 				return slices;
 			}
@@ -358,12 +339,10 @@ export class FeedTuner {
 						return true;
 					}
 				}
-				// if item does not fit preferred language, remove it
 				return false;
 			});
 
-			// if the language filter cleared out the entire page, return the original set
-			// so that something always shows
+			// keep the page visible if every item was filtered.
 			if (candidateSlices.length === 0) {
 				return slices;
 			}
@@ -391,7 +370,6 @@ function areSameAuthor(authors: AuthorContext): boolean {
 function shouldDisplayReplyInFollowing(authors: AuthorContext, userDid: string): boolean {
 	const { author, parentAuthor, grandparentAuthor, rootAuthor } = authors;
 	if (!isSelfOrFollowing(author, userDid)) {
-		// Only show replies from self or people you follow.
 		return false;
 	}
 	if (
@@ -399,10 +377,8 @@ function shouldDisplayReplyInFollowing(authors: AuthorContext, userDid: string):
 		(!rootAuthor || rootAuthor.did === author.did) &&
 		(!grandparentAuthor || grandparentAuthor.did === author.did)
 	) {
-		// Always show self-threads.
 		return true;
 	}
-	// From this point on we need at least one more reason to show it.
 	if (parentAuthor && parentAuthor.did !== author.did && isSelfOrFollowing(parentAuthor, userDid)) {
 		return true;
 	}

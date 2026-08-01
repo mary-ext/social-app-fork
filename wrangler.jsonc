@@ -12,8 +12,6 @@
 	},
 	"ratelimits": [
 		{
-			// alt text drafting, charged per calling did. a round per image plus a couple of refinements is a
-			// handful of calls a minute; this leaves room for that and little more.
 			"name": "ALT_TEXT_LIMITER",
 			"namespace_id": "1001",
 			"simple": { "limit": 20, "period": 60 },

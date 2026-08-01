@@ -1,10 +1,4 @@
-/**
- * enforces the type-import convention: - specifiers used only as types are imported via `import type { A, B }
- * from 'm'` - a mix of value and type-only specifiers are imported via `import { Value, type A } from 'm'` -
- * multiple statements for the same module are merged into one
- *
- * default and namespace imports are ignored.
- */
+/** enforces the type-import convention and merges named imports from one module. */
 
 /**
  * @param variable
@@ -68,7 +62,7 @@ export default {
 			},
 			'Program:exit'() {
 				for (const declarations of bySource.values()) {
-					// statements made entirely of named specifiers — the only shape we rewrite
+					// only rewrite declarations made of named specifiers.
 					const namedDecls = declarations.filter(
 						(decl) =>
 							decl.specifiers.length > 0 && decl.specifiers.every((s) => s.type === 'ImportSpecifier'),
@@ -76,7 +70,7 @@ export default {
 					if (namedDecls.length === 0) {
 						continue;
 					}
-					// bail if a default/namespace import for this module is in play — too fragile to merge
+					// do not merge around default or namespace imports.
 					const hasComplexSibling = declarations.some((decl) =>
 						decl.specifiers.some(
 							(s) => s.type === 'ImportDefaultSpecifier' || s.type === 'ImportNamespaceSpecifier',
@@ -129,7 +123,7 @@ export default {
 								.map((e) => `${e.typeOnly ? 'type ' : ''}${specifierText(e.specifier, sourceCode)}`)
 								.join(', ')} } from ${quote};`;
 
-					// already canonical? single statement whose markers all match
+					// skip a canonical single statement.
 					if (namedDecls.length === 1) {
 						const decl = namedDecls[0];
 						const declIsType = decl.importKind === 'type';
@@ -152,7 +146,7 @@ export default {
 							const fixes = [fixer.replaceText(namedDecls[0], expected)];
 							for (let i = 1; i < namedDecls.length; i++) {
 								const decl = namedDecls[i];
-								// also swallow the newline left behind by the removed statement
+								// remove the following newline with the declaration.
 								const nextToken = sourceCode.getTokenAfter(decl, { includeComments: true });
 								const end = nextToken ? nextToken.range[0] : decl.range[1];
 								fixes.push(fixer.removeRange([decl.range[0], end]));

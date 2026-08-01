@@ -1,17 +1,17 @@
 import { contentTypeOf, readCapped, safeFetch } from './net';
 
-/** oEmbed payloads are a handful of fields; anything larger isn't one. */
+/** maximum oEmbed response size. */
 const OEMBED_MAX_BYTES = 64 * 1024;
-/** the embed types the oEmbed spec defines. */
+/** supported oEmbed types. */
 const OEMBED_TYPES = new Set(['link', 'photo', 'rich', 'video']);
-/** ceiling on endpoints tried per link, so a long redirect chain can't turn one unfurl into a probe storm. */
+/** maximum endpoints tried for one link. */
 const MAX_CANDIDATES = 3;
 
 /** the parts of an oEmbed payload a link card can use. */
 export interface OEmbedMeta {
-	/** the author or channel name. oEmbed carries no description field, so this stands in for one. */
+	/** author or channel name, used as the description. */
 	description?: string;
-	/** the provider's thumbnail, possibly relative to the page it describes. */
+	/** provider thumbnail, possibly relative to the page. */
 	image?: string;
 	title?: string;
 }
@@ -42,7 +42,7 @@ const fetchOEmbed = async (endpoint: URL, signal: AbortSignal): Promise<OEmbedMe
 	try {
 		const { response } = await safeFetch(endpoint, {
 			accept: 'application/json',
-			// an endpoint answers directly; chasing redirects would multiply every probe by the redirect limit.
+			// do not follow endpoint redirects; each candidate is already bounded.
 			maxRedirects: 0,
 			signal,
 			timeoutMs: 5_000,
@@ -52,7 +52,7 @@ const fetchOEmbed = async (endpoint: URL, signal: AbortSignal): Promise<OEmbedMe
 			return undefined;
 		}
 
-		// `JSON.parse` is `any`, so this annotation costs no assertion; a non-object payload fails below.
+		// validate the parsed payload below.
 		const payload: Record<string, unknown> = JSON.parse(
 			new TextDecoder().decode(
 				await readCapped(response, {
@@ -62,8 +62,7 @@ const fetchOEmbed = async (endpoint: URL, signal: AbortSignal): Promise<OEmbedMe
 			),
 		);
 
-		// the endpoint may be a guess, so the spec's required fields are what tell a real payload from the
-		// JSON error body served at an unrelated path. `version` comes back as both string and number.
+		// required fields distinguish an oEmbed response from a JSON error body.
 		const type = payload.type;
 		if (!payload.version || typeof type !== 'string' || !OEMBED_TYPES.has(type)) {
 			return undefined;
@@ -99,8 +98,7 @@ export const resolveOEmbed = async ({
 	signal,
 }: ResolveOEmbedOptions): Promise<{ meta: OEmbedMeta; page: URL } | undefined> => {
 	const candidates: OEmbedCandidate[] = advertised ? [advertised] : [];
-	// walking the chain is what makes short links resolve: `youtu.be/x` redirects to `youtube.com/watch` and
-	// on to a bot interstitial, and only that middle hop hosts an endpoint.
+	// try each distinct redirect origin so short links can resolve their provider endpoint.
 	const origins = new Set<string>();
 	for (const hop of chain) {
 		if (origins.has(hop.origin)) {

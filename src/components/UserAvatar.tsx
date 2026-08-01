@@ -118,8 +118,7 @@ function DefaultAvatar({
 	);
 }
 
-// HACK: we serve smaller avis but haven't updated lexicons to expose them; string-replace to the thumbnail
-// preset for small renders. -prf
+// use the thumbnail preset for small avatar renders until lexicons expose one.
 const hackModifyThumbnailPath = (uri: string, isEnabled: boolean) =>
 	isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri;
 

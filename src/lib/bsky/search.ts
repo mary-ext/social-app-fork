@@ -10,7 +10,7 @@ import { min } from '@mary/date-fns';
 const OPERATOR_RE = /^([a-z-]+):(.*)$/;
 
 /**
- * splits a token stream into free-text remainder and a map of `operator:value` filters.
+ * splits tokens into free text and `operator:value` filters.
  *
  * @param tokens the tokenized query
  * @returns a tuple of the non-filter tokens and the collected filters
@@ -42,7 +42,7 @@ const PARTIAL_DATE_RE =
 	/^((?!0{3})\d{4})(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01])(?:T([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d)(?:\.(\d+))?)?(Z|(?!-00:00)[+-](?:[01]\d|2[0-3]):(?:[0-5]\d))?)?)?)?$/;
 
 /**
- * parses a partial date (e.g. `yyyy`, `yyyy-mm`, `yyyy-mm-dd`) into the start of the period it denotes.
+ * parses a partial date into the start of its period.
  *
  * @param str partial date string
  * @returns parsed date, or `null` if invalid
@@ -65,13 +65,12 @@ export const parseStartDate = (str: string): Date | null => {
 		tz = '',
 	] = match;
 
-	// an empty timezone assumes local time.
+	// an empty timezone uses local time.
 	return new Date(`${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${miliseconds}${tz}`);
 };
 
 /**
- * parses a partial date into the latest instant it can denote, used as an `until` bound. missing components
- * widen to the end of the period.
+ * parses a partial date into the end of its period for an `until` bound.
  *
  * @param str the partial date string
  * @returns the parsed date, or `null` if it doesn't match the grammar
@@ -85,7 +84,7 @@ export const parseEndDate = (str: string): Date | null => {
 	const [, year, month, day, hour = '23', minutes = '59', seconds = '59', miliseconds = '999', tz = ''] =
 		match;
 
-	// an empty timezone assumes local time.
+	// an empty timezone uses local time.
 	const d = new Date(`${year}-01-01T${hour}:${minutes}:${seconds}.${miliseconds}${tz}`);
 
 	if (month === undefined) {
@@ -136,7 +135,7 @@ export const SEARCH_OPERATORS: SearchOperator[] = [
 	{ kind: 'language', name: 'lang', multiple: true, placeholder: 'en' },
 	{ kind: 'domain', name: 'domain', multiple: true, placeholder: 'example.com' },
 	{ kind: 'url', name: 'url', multiple: true, placeholder: 'example.com/page' },
-	// single-choice: video ⊂ media, and none/only are mutually exclusive.
+	// video is a subset of media; none and only are mutually exclusive.
 	{ kind: 'enum', name: 'has', options: ['media', 'video'], placeholder: 'media' },
 	{ kind: 'enum', name: 'replies', options: ['none', 'only'], placeholder: 'none' },
 ];
@@ -162,7 +161,7 @@ export interface ActiveToken {
 }
 
 /**
- * finds the token the caret currently sits in.
+ * finds the token under the caret.
  *
  * @param tokens the tokenized query
  * @param caret the caret offset within the whole query
@@ -192,8 +191,7 @@ export type SuggestionMode =
 	| { kind: 'enum'; op: OperatorName; options: readonly string[]; query: string };
 
 /**
- * classifies the active token into a contextual suggestion mode: an actor lookup, a date picker, an
- * enumerated value picker (`has:`/`replies:`), or the default suggestions.
+ * classifies the active token into an actor, date, enum, or default suggestion mode.
  *
  * @param active the token under the caret
  * @returns the suggestion mode to render
@@ -239,8 +237,7 @@ export const classifyActiveToken = (active: ActiveToken | undefined): Suggestion
 };
 
 /**
- * returns the operators worth offering as options for the current query: those not already used, and matching
- * whatever the caret token has typed.
+ * returns unused operators matching the token under the caret.
  *
  * @param tokens tokenized query
  * @param active token under the caret
@@ -256,8 +253,7 @@ export const getOperatorSuggestions = (
 	}
 
 	const [, present] = splitFilters(tokens);
-	// `from:following` is a query-wide scope exclusive with specific authors, so it hides `from:`. checked
-	// against tokens directly since the last-wins map can't tell it from a later `from:handle`.
+	// inspect tokens directly because the filter map keeps only the last value.
 	const followingSet = tokens.some((t) => t.type === 'word' && t.value === 'from:following');
 
 	return SEARCH_OPERATORS.filter(({ multiple, name }) => {
@@ -265,7 +261,7 @@ export const getOperatorSuggestions = (
 			return false;
 		}
 
-		// array-param operators can stack more values; scalar/enum ones drop out once set.
+		// repeated operators can stay available; scalar operators cannot.
 		if (!multiple && present.has(name)) {
 			return false;
 		}
@@ -280,8 +276,7 @@ export interface DateConstraints {
 }
 
 /**
- * derives the selectable date range for a `since`/`until` picker from its sibling operator, never allowing a
- * future date.
+ * derives the date range for a `since`/`until` picker, capped at today.
  *
  * @param tokens the tokenized query
  * @param op the operator being edited (`since` or `until`)
@@ -319,7 +314,7 @@ export const getDateConstraints = (tokens: Token[], op: OperatorName, today: Dat
 
 // #region lifting
 
-/** the filter subset of `app.bsky.feed.searchPostsV2` params (excludes query/cursor/limit/sort/allTime). */
+/** filter subset of `searchPostsV2` params. */
 export type SearchPostsFilters = Pick<
 	AppBskyFeedSearchPostsV2.$params,
 	| 'authors'
@@ -355,15 +350,11 @@ const LIFT_HASHTAG_RE = /^(-)?#([^:]+)$/;
 // only full ISO dates lift; partials stay in the text for the backend to parse.
 const LIFT_DATE_RE = /^\d{4}-\d{2}-\d{2}/;
 
-// a leading `@` is not part of a handle, and `isActorIdentifier` rejects it — without this, `from:@alice.test`
-// would fall through to the free text and search for the literal string. the suggestion list offers `@user` as
-// the placeholder for these operators, so typing the marker is the expected path, not a mistake.
+// suggestions show `@user`, but the API expects the handle without `@`.
 const stripHandleMarker = (value: string): string => (value.startsWith('@') ? value.slice(1) : value);
 
 /**
- * lifts recognized operators out of a query into structured searchPostsV2 filters, leaving free text (quotes,
- * OR groups, `-word` negations, unknown operators) in `text`. `from:me`/`mentions:me` resolve against
- * `viewerDid` and `from:following` sets `following`; with no viewer those stay in `text`.
+ * moves recognized operators into `searchPostsV2` filters and leaves other text in `text`.
  *
  * @param query the raw query text
  * @param options.viewerDid the signed-in account's did
@@ -406,7 +397,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 		}
 
 		const operator = LIFT_OPERATOR_RE.exec(value);
-		// a valueless operator (`from:`) is still being typed — leave it in the text.
+		// leave valueless operators in the text while they are being typed.
 		if (!operator || operator[3] === '') {
 			kept.push(value);
 			continue;
@@ -507,7 +498,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 		}
 	}
 
-	// excludeReplies/repliesOnly are mutually exclusive server-side; drop both rather than 400 on it.
+	// the server rejects both reply filters together.
 	if (filters.excludeReplies && filters.repliesOnly) {
 		delete filters.excludeReplies;
 		delete filters.repliesOnly;
@@ -557,14 +548,12 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 
 // #region navigation
 
-// a handle-shaped run: dot-separated labels ending in an alphabetic TLD, so a bare word or a date never
-// matches. matched anywhere in the query, mirroring how a pasted "alice.bsky.social" should still offer a
-// jump to the profile.
+// require a dotted host-like value so dates and bare words do not match.
 const LIKELY_HANDLE_RE = /\b[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})\b/;
 const LIKELY_DID_RE = /\bdid:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]\b/;
 
 /**
- * finds a handle-shaped substring in the query, for a "go to profile" shortcut.
+ * finds a handle-shaped substring for the profile shortcut.
  *
  * @param query the raw search query
  * @returns the matched handle, or `null` when none is present
@@ -575,7 +564,7 @@ export const matchHandle = (query: string): Handle | null => {
 };
 
 /**
- * finds a DID-shaped substring in the query, for a "go to profile" shortcut.
+ * finds a DID-shaped substring for the profile shortcut.
  *
  * @param query the raw search query
  * @returns the matched DID, or `null` when none is present

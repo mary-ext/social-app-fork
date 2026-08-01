@@ -31,15 +31,7 @@ StateContext.displayName = 'SessionStateContext';
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const snapshot = useSyncExternalStore(subscribe, getSnapshot);
 
-	// Boot resume and cross-tab watching run once at module load (see store.ts); the only lifecycle the Provider
-	// owns is the live-drop listener below, which must react to session state.
-	//
-	// A live session dropped mid-use: the stored token can no longer be refreshed. Drop to a logged-out guest
-	// session in place — no reload. Persisting the logged-out session keeps a reload or another tab from
-	// resuming it, and clearing the current account remounts the tree as logged out (via the
-	// `key={currentAccount?.did}` reset in InnerApp), so in-flight requests fail like any other and the UI
-	// surfaces them; `status` 'failed' raises the "session expired" toast. Held off while the boot resume is
-	// still settling, where it drops the session itself.
+	// boot and cross-tab handling live in store.ts; this provider handles live session drops.
 	useEffect(() => {
 		if (
 			snapshot.currentDid === undefined ||

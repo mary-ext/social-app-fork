@@ -97,24 +97,18 @@ export function useSearchPostsQuery({
 				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 				const { moderationOpts, isSearchingSpecificUser } = selectArgs;
 
-				/*
-				 * If a user applies the `from:<user>` filter, don't apply any
-				 * moderation. Note that if we add any more filtering logic below, we
-				 * may need to adjust this.
-				 */
+				// profile searches already scope results to the requested account.
 				if (isSearchingSpecificUser) {
 					return data;
 				}
 
-				// Keep track of the last run and whether we can reuse
-				// some already selected pages from there.
 				const reusedPages: AppBskyFeedSearchPostsV2.$output[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
 					for (const key of typedKeys(selectArgs)) {
 						if (selectArgs[key] !== lastArgs[key]) {
-							// Can't do reuse anything if any input has changed.
+							// reuse is only safe when every selector input is unchanged.
 							canReuse = false;
 							break;
 						}
@@ -125,7 +119,6 @@ export function useSearchPostsQuery({
 								reusedPages.push(lastResult.pages[i]!);
 								continue;
 							}
-							// Stop as soon as pages stop matching up.
 							break;
 						}
 					}

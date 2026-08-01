@@ -20,13 +20,7 @@ await trimRuntime(`${tmpOutdir}/runtime.js`);
 await syncDir(tmpOutdir, outdir);
 await rm(tmpOutdir, { recursive: true, force: true });
 
-/**
- * recursively updates destination directory with source directory's contents, keeping the destination
- * directory inode intact.
- *
- * @param src source directory path
- * @param dest destination directory path
- */
+/** syncs a directory tree without replacing the destination directory. */
 async function syncDir(src: string, dest: string) {
 	await mkdir(dest, { recursive: true });
 
@@ -42,11 +36,11 @@ async function syncDir(src: string, dest: string) {
 		if (entry.isDirectory()) {
 			await syncDir(srcPath, destPath);
 		} else {
-			// rename files atomically to avoid race conditions in the file watcher
+			// rename files atomically for file watchers.
 			try {
 				await rename(srcPath, destPath);
 			} catch (e) {
-				// fallback for cross-device links (e.g. Docker volumes/mounts)
+				// copy when rename crosses devices.
 				if (e && typeof e === 'object' && 'code' in e && e.code === 'EXDEV') {
 					await copyFile(srcPath, destPath);
 					await unlink(srcPath);
@@ -64,13 +58,7 @@ async function syncDir(src: string, dest: string) {
 	}
 }
 
-/**
- * strips paraglide's locale-resolution engine out of the generated `runtime.js` to reduce bundle size.
- *
- * @param path path to the generated runtime module to rewrite in place
- * @throws if the runtime structure does not match expectations, indicating the rewrite assumptions need
- *   updating
- */
+/** trims the locale-resolution engine from generated `runtime.js`. */
 async function trimRuntime(path: string) {
 	const source = await readFile(path, 'utf8');
 

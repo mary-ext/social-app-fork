@@ -13,11 +13,11 @@ type Draft = v.InferOutput<typeof altTextDraftSchema>;
 const MODEL = '@cf/google/gemma-4-26b-a4b-it';
 
 /**
- * Drafts alt text for an image, folding in the answers from any earlier rounds.
+ * drafts alt text, including answers from earlier rounds.
  *
- * @param input the image, the post it belongs to, and every completed round so far
- * @returns the next draft and the questions that would sharpen it
- * @throws {UpstreamFailureError} if the model call fails or its reply can't be read as a draft
+ * @param input image, post context, and completed rounds
+ * @returns the next draft and follow-up questions
+ * @throws {UpstreamFailureError} when the model is unavailable or returns an unreadable draft
  */
 export const generateAltTextDraft = async (input: Input): Promise<Draft> => {
 	try {
@@ -48,8 +48,7 @@ const runModel: CompleteChat = async ({ maxTokens, messages, responseSchema, tem
 			},
 		});
 	} catch (error: unknown) {
-		// the binding reports an upstream failure as whatever the edge sent back, which for a gateway timeout is
-		// an entire html error page — that belongs in the log, not in our response body
+		// keep upstream error pages out of the response body.
 		console.error('alt text model call failed:', error);
 
 		throw new UpstreamFailureError({

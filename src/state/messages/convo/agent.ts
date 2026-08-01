@@ -74,10 +74,7 @@ function toSystemMessageView(
 	}
 }
 
-/**
- * Derive a deleted-message tombstone from a (now-deleted) message, preserving the fields the deleted view
- * carries so a reply can render it as deleted.
- */
+/** derives a deleted-message tombstone from a message view. */
 function toDeletedMessageView(
 	m: ChatBskyConvoDefs.MessageView,
 ): $type.enforce<ChatBskyConvoDefs.DeletedMessageView> {
@@ -122,7 +119,7 @@ export class Convo {
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
 	private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> = new Map();
-	/** accumulated profile shadow state, keyed by DID. used to re-apply optimistic updates to profile data. */
+	/** profile shadows to reapply after server updates, keyed by DID. */
 	private profileShadows: Map<string, Partial<ProfileShadow>> = new Map();
 
 	private isProcessingPendingMessages = false;
@@ -205,7 +202,6 @@ export class Convo {
 	private generateSnapshot(): ConvoState {
 		const shared = {
 			isFetchingHistory: this.isFetchingHistory,
-			// Explicit null check since the value is initially undefined.
 			hasAllHistory: this.oldestRev === null,
 		};
 
@@ -229,21 +225,10 @@ export class Convo {
 			removeReaction: undefined,
 		};
 
-		/*
-		 * Captured as a local so the `if (convo)` narrowing below survives the
-		 * `this.getItems()` call - TS discards narrowing on mutable `this` members
-		 * after a method call, but not on a const.
-		 */
+		// keep the narrowing across `this.getItems()`.
 		const convo = this.convo;
 
-		/*
-		 * A lifecycle event (e.g. `Background` or `Suspend`) can move us into an
-		 * active status before `setup()` has resolved and populated `convo`. The
-		 * active states declare `convo` as non-optional, so we can't build one
-		 * without it - fall back to reporting `Initializing` until the convo lands.
-		 * This keeps the snapshot's type and runtime in agreement, so consumers can
-		 * trust that an active status always has a `convo`.
-		 */
+		// report Initializing until setup supplies the required convo.
 		const stillInitializing = (): ConvoState => ({
 			status: ConvoStatus.Initializing,
 			items: [],
@@ -331,7 +316,6 @@ export class Convo {
 					convo: this.convo,
 					error: undefined,
 					isFetchingHistory: false,
-					// Explicit null check since the value is initially undefined.
 					hasAllHistory: this.oldestRev === null,
 					...emptyMethods,
 				};
@@ -345,11 +329,11 @@ export class Convo {
 				switch (action.event) {
 					case ConvoDispatchEvent.Init: {
 						this.status = ConvoStatus.Initializing;
-						// `setup()` can reach `Ready` before its first await, so wire these up first
+						// setup can reach Ready before its first await.
 						this.setupFirehose();
 						this.requestPollInterval(ACTIVE_POLL_INTERVAL);
 						void this.setup();
-						// history doesn't depend on the convo view, so let the round trips overlap
+						// history does not depend on the convo view.
 						void this.fetchMessageHistory();
 						break;
 					}
@@ -512,7 +496,6 @@ export class Convo {
 				break;
 			}
 			case ConvoStatus.Disabled: {
-				// can't do anything
 				break;
 			}
 			default:
@@ -524,8 +507,7 @@ export class Convo {
 	}
 
 	private reset() {
-		// `this.convo` is deliberately kept: it's the placeholder a fresh Convo would start from, and
-		// dropping it would blank the conversation until setup() refetches
+		// keep placeholder data visible while setup refetches.
 		this.snapshot = undefined;
 
 		this.status = ConvoStatus.Uninitialized;
@@ -539,8 +521,7 @@ export class Convo {
 		this.deletedMessages = new Set();
 		this.itemCache = new Map();
 		this.relatedProfiles = new Map();
-		// Shadow updates fired while suspended are missed, so the overlay may be
-		// stale — drop it and trust the from-scratch refetch.
+		// suspended conversations may have stale shadows; refetch them.
 		this.profileShadows = new Map();
 
 		this.indexConvoMembers();
@@ -568,8 +549,7 @@ export class Convo {
 		}
 	}
 
-	// message rows take the map as a prop and compare it by identity, so it has to be replaced on a real
-	// change and left alone otherwise
+	// replace the map only when a profile changed.
 	private setRelatedProfiles(profiles: Iterable<ChatBskyActorDefs.ProfileViewBasic>) {
 		let changed = false;
 
@@ -619,7 +599,7 @@ export class Convo {
 		}
 	}
 
-	/** initializes the convo with placeholder data to render the convo header immediately. */
+	/** initializes the convo from placeholder data. */
 	private setupPlaceholderData(data: NonNullable<ConvoParams['placeholderData']>) {
 		this.setConvo(data.convo);
 	}
@@ -647,9 +627,7 @@ export class Convo {
 	}
 
 	private async setup() {
-		// a placeholder carries everything needed to go active, so don't blank the conversation for a round
-		// trip. the exception is one reporting chat as disabled: `Disabled` is terminal, so a stale
-		// placeholder would lock the conversation until remount
+		// keep a usable placeholder while refreshing, except for terminal disabled state.
 		const placeholderSelf = this.getSelfMember();
 		const startedFromPlaceholder = !!placeholderSelf && !placeholderSelf.chatDisabled;
 
@@ -661,7 +639,7 @@ export class Convo {
 		try {
 			({ convo } = await this.fetchConvo());
 		} catch (e) {
-			// only a refresh of data we already hold failed, so don't tear the placeholder down
+			// keep the placeholder on a refresh failure.
 			if (startedFromPlaceholder) {
 				return;
 			}
@@ -669,8 +647,7 @@ export class Convo {
 			return;
 		}
 
-		// unlike a failed fetch, the server contradicting the placeholder means the placeholder is wrong,
-		// and leaving it up would show a working conversation we can't send to
+		// replace a placeholder that the server rejects.
 		if (!this.applyFetchedConvo(convo) || !this.convo) {
 			this.failSetup(new Error('could not find convo'));
 			return;
@@ -685,7 +662,7 @@ export class Convo {
 
 		void this.fetchMemberList();
 
-		// dispatched even if the placeholder already reached `Ready`, so the server still gets to disable
+		// apply the server's disabled state even after placeholder setup.
 		if (self.chatDisabled) {
 			this.dispatch({ event: ConvoDispatchEvent.Disable });
 		} else {
@@ -709,10 +686,7 @@ export class Convo {
 		this.dispatch({ event: ConvoDispatchEvent.Suspend });
 	}
 
-	/**
-	 * Called on any state transition, like when the chat is backgrounded. This value is then checked on
-	 * background -> foreground transitions.
-	 */
+	/** records the last state transition time. */
 	private updateLastActiveTimestamp() {
 		this.lastActiveTimestamp = Date.now();
 	}
@@ -766,7 +740,6 @@ export class Convo {
 	async refreshConvo() {
 		try {
 			const { convo } = await this.fetchConvo();
-			// throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
 			this.applyFetchedConvo(convo);
 		} catch (e) {
 			if (!isNetworkError(e)) {
@@ -775,11 +748,7 @@ export class Convo {
 		}
 	}
 
-	// purely for populating `this.relatedProfiles` - we do not pipe it
-	// into the ConvoWithDetails. If you want to drive UI based on the member list,
-	// use `useListConvoMembersQuery`
-	// we shouldn't also block loading off of this - the UI should be resilient
-	// only a group's view truncates its member list; a direct convo's already carries everyone
+	// group views truncate members; fetch the full list for profile data only.
 	async fetchMemberList() {
 		if (this.convo?.kind !== 'group') {
 			return;
@@ -808,32 +777,21 @@ export class Convo {
 
 		if (this.setRelatedProfiles(members)) {
 			this.applyProfileShadows();
-			// rows hold the profiles they rendered with, so a late member list only reaches them here
+			// publish late member data to rows.
 			this.commit();
 		}
 	}
 
 	private fetchMessageHistoryError: { retry: () => void } | undefined;
 	async fetchMessageHistory() {
-		/*
-		 * If oldestRev is null, we've fetched all history.
-		 * Needs to explicitly check for `null` since this is initially `undefined`.
-		 */
 		if (this.oldestRev === null) {
 			return;
 		}
 
-		/*
-		 * Don't fetch again if a fetch is already in progress
-		 */
 		if (this.isFetchingHistory) {
 			return;
 		}
 
-		/*
-		 * If we've rendered a retry state for history fetching, exit. Upon retry,
-		 * this will be removed and we'll try again.
-		 */
 		if (this.fetchMessageHistoryError) {
 			return;
 		}
@@ -852,12 +810,7 @@ export class Convo {
 			});
 			const { cursor, messages, relatedProfiles } = data;
 
-			// Trust the cursor for pagination. We can't infer "no more pages" from a
-			// short page: the server pages by raw rows but strips deleted messages
-			// from the response, so a full page containing a deleted message (e.g.
-			// from a deleted account) comes back short *with* a valid cursor. Using a
-			// count heuristic here would stop history fetching early and hide
-			// messages. The tradeoff is one extra empty fetch at the true top.
+			// use the cursor because deleted rows can make a full page appear short.
 			this.oldestRev = cursor ?? null;
 
 			if (relatedProfiles && this.setRelatedProfiles(relatedProfiles)) {
@@ -870,11 +823,7 @@ export class Convo {
 					message.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
 					message.$type === 'chat.bsky.convo.defs#systemMessageView'
 				) {
-					/*
-					 * If this message is already in new messages, it was added by the
-					 * firehose ingestion, and we can safely overwrite it. This trusts
-					 * the server on ordering, and keeps it in sync.
-					 */
+					// history wins if firehose ingestion raced this fetch.
 					if (this.newMessages.has(message.id)) {
 						this.newMessages.delete(message.id);
 					}
@@ -899,10 +848,8 @@ export class Convo {
 
 	private cleanupFirehoseConnection: (() => void) | undefined;
 	private setupFirehose() {
-		// remove old listeners, if exist
 		this.cleanupFirehoseConnection?.();
 
-		// reconnect
 		this.cleanupFirehoseConnection = this.events.on(
 			(event) => {
 				switch (event.type) {
@@ -920,9 +867,7 @@ export class Convo {
 					}
 				}
 			},
-			/*
-			 * This is VERY important — we only want events for this convo.
-			 */
+			// receive events for this conversation only.
 			{ convoId: this.convoId },
 		);
 	}
@@ -944,30 +889,17 @@ export class Convo {
 		let needsCommit = false;
 
 		for (const ev of events) {
-			/*
-			 * If there's a rev, we should handle it. If there's not a rev, we don't
-			 * know what it is.
-			 */
 			if ('rev' in ev && typeof ev.rev === 'string') {
 				const latestRev = this.latestRev;
 				const isUninitialized = latestRev === undefined;
 				const isNewEvent = latestRev !== undefined && ev.rev > latestRev;
 
-				/*
-				 * We received an event prior to fetching any history, so we can safely
-				 * use this as the initial history cursor
-				 */
+				// use the first event as the initial history cursor.
 				if (this.oldestRev === undefined && isUninitialized) {
 					this.oldestRev = ev.rev;
 				}
 
-				/*
-				 * We only care about new events
-				 */
 				if (isNewEvent || isUninitialized) {
-					/*
-					 * Update rev regardless of if it's a ev type we care about or not
-					 */
 					this.latestRev = ev.rev;
 
 					if (
@@ -982,19 +914,11 @@ export class Convo {
 						ev.$type === 'chat.bsky.convo.defs#logCreateMessage' &&
 						ev.message.$type === 'chat.bsky.convo.defs#messageView'
 					) {
-						/*
-						 * If this message is already in past messages, the initial
-						 * history fetch raced this log event and already returned it.
-						 * Update in place rather than inserting a duplicate into new
-						 * messages.
-						 */
+						// update history in place if it won the race with this log event.
 						if (this.pastMessages.has(ev.message.id)) {
 							this.pastMessages.set(ev.message.id, ev.message);
 						} else {
-							/**
-							 * replaces the client-ordered message reference with the log-committed version to preserve log
-							 * ordering.
-							 */
+							// replace the client-ordered message with the log version.
 							if (this.newMessages.has(ev.message.id)) {
 								this.newMessages.delete(ev.message.id);
 							}
@@ -1005,14 +929,7 @@ export class Convo {
 						ev.$type === 'chat.bsky.convo.defs#logDeleteMessage' &&
 						ev.message.$type === 'chat.bsky.convo.defs#deletedMessageView'
 					) {
-						/*
-						 * Remove the message itself, and keep its id in `deletedMessages`
-						 * so any message that quotes it keeps rendering a deleted-message
-						 * tombstone (see `tombstoneDeletedReplyTo`) rather than reverting
-						 * to the original hydrated text. We add here rather than relying on
-						 * the optimistic entry so deletes from elsewhere (e.g. another
-						 * device) are covered too.
-						 */
+						// retain the tombstone so replies to remote deletes render correctly.
 						this.pastMessages.delete(ev.message.id);
 						this.newMessages.delete(ev.message.id);
 						this.markMessageDeleted(ev.message.id);
@@ -1022,9 +939,6 @@ export class Convo {
 							ev.$type === 'chat.bsky.convo.defs#logRemoveReaction') &&
 						ev.message.$type === 'chat.bsky.convo.defs#messageView'
 					) {
-						/*
-						 * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
-						 */
 						if (this.pastMessages.has(ev.message.id)) {
 							this.pastMessages.set(ev.message.id, ev.message);
 							needsCommit = true;
@@ -1036,7 +950,7 @@ export class Convo {
 					} else {
 						const systemView = toSystemMessageView(ev);
 						if (systemView) {
-							// same as above: avoid duplicating if history fetch won the race
+							// update the history copy if it won the race.
 							if (this.pastMessages.has(systemView.id)) {
 								this.pastMessages.set(systemView.id, systemView);
 							} else {
@@ -1061,7 +975,6 @@ export class Convo {
 		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View> | $type.enforce<ChatBskyEmbedJoinLink.View>,
 		optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>,
 	) {
-		// Ignore empty messages for now since they have no other purpose atm
 		if (!message.text.trim() && !message.embed) {
 			return;
 		}
@@ -1074,7 +987,7 @@ export class Convo {
 			message,
 			optimisticEmbedView,
 			optimisticReplyTo,
-			// stamped once, else the sender watches the timestamp creep forward on every snapshot
+			// keep the optimistic timestamp stable across snapshots.
 			sentAt: new Date().toISOString(),
 		});
 		if (this.convo?.view.status === 'request') {
@@ -1185,9 +1098,6 @@ export class Convo {
 	async processPendingMessages() {
 		const pendingMessage = Array.from(this.pendingMessages.values()).shift();
 
-		/*
-		 * If there are no pending messages, we're done.
-		 */
 		if (!pendingMessage) {
 			this.isProcessingPendingMessages = false;
 			return;
@@ -1204,21 +1114,15 @@ export class Convo {
 				}),
 			);
 
-			// remove from queue
 			this.pendingMessages.delete(id);
 
-			/*
-			 * Insert into `newMessages` as soon as we have a real ID. That way, when
-			 * we get an event log back, we can replace in situ.
-			 */
+			// insert before the event log so it can replace this entry in place.
 			this.newMessages.set(res.id, {
 				$type: 'chat.bsky.convo.defs#messageView',
 				...res,
 			});
-			// render new message state, prior to firehose
 			this.commit();
 
-			// continue queue processing
 			await this.processPendingMessages();
 		} catch (e) {
 			this.handleSendMessageFailure(e);
@@ -1254,8 +1158,7 @@ export class Convo {
 				}
 			}
 		} else if (isNetworkError(e)) {
-			// @atcute lets transport failures (offline/DNS/timeout) propagate as a plain TypeError rather
-			// than a ClientResponseError, so they must be caught here to stay retryable.
+			// @atcute reports transport failures as TypeError, so keep them retryable.
 			this.pendingMessageFailure = 'recoverable';
 		} else {
 			this.pendingMessageFailure = 'unrecoverable';
@@ -1291,10 +1194,7 @@ export class Convo {
 			);
 			const { items } = data;
 
-			/*
-			 * Insert into `newMessages` as soon as we have a real ID. That way, when
-			 * we get an event log back, we can replace in situ.
-			 */
+			// insert before the event log so it can replace each entry in place.
 			for (const item of items) {
 				this.newMessages.set(item.id, {
 					$type: 'chat.bsky.convo.defs#messageView',
@@ -1342,7 +1242,7 @@ export class Convo {
 		};
 	}
 
-	// guarded because our own deletes come back over the firehose
+	// guard against duplicate delete events.
 	private markMessageDeleted(messageId: string) {
 		if (this.deletedMessages.has(messageId)) {
 			return;
@@ -1357,7 +1257,7 @@ export class Convo {
 		}
 	}
 
-	// a deletion only changes how `tombstoneDeletedReplyTo` renders the replies to it
+	// invalidate cached replies to the deleted message.
 	private dropCachedRepliesTo(messageId: string) {
 		for (const [id, cached] of this.itemCache) {
 			const { source } = cached;
@@ -1371,10 +1271,7 @@ export class Convo {
 		}
 	}
 
-	/**
-	 * swaps the `replyTo` field of replying messages with a deleted-message tombstone when a message is deleted
-	 * locally
-	 */
+	/** replaces local deleted replies with tombstones. */
 	private tombstoneDeletedReplyTo(m: ChatBskyConvoDefs.MessageView): ChatBskyConvoDefs.MessageView {
 		const { replyTo } = m;
 		if (replyTo?.$type !== 'chat.bsky.convo.defs#messageView' || !this.deletedMessages.has(replyTo.id)) {
@@ -1383,7 +1280,7 @@ export class Convo {
 		return { ...m, replyTo: toDeletedMessageView(replyTo) };
 	}
 
-	// a snapshot is rebuilt on every commit, and a fresh wrapper each time would defeat the row `memo`
+	// reuse items while their source view is unchanged.
 	private itemCache: Map<string, { item: ConvoItem; source: MessageLikeView }> = new Map();
 
 	private toItem(source: MessageLikeView): ConvoItem | null {
@@ -1411,9 +1308,7 @@ export class Convo {
 		return item;
 	}
 
-	/*
-	 * Items in reverse order, since FlatList inverts
-	 */
+	// return history in reverse order for the inverted list.
 	getItems(): ConvoItem[] {
 		const items: ConvoItem[] = [];
 
@@ -1509,7 +1404,6 @@ export class Convo {
 			const prevMessage = this.pastMessages.get(messageId);
 			if (
 				prevMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
-				// skip optimistic update if reaction already exists
 				!prevMessage.reactions?.find(
 					(reaction) => reaction.sender.did === this.senderUserDid && reaction.value === emoji,
 				)
@@ -1575,12 +1469,7 @@ export class Convo {
 		}
 	}
 
-	/*
-	 * Remove a reaction from a message.
-	 *
-	 * @param messageId - The ID of the message to remove the reaction from.
-	 * @param emoji - The emoji to remove.
-	 */
+	/** removes the current user's reaction from a message. */
 	async removeReaction(messageId: string, emoji: string) {
 		let restore: null | (() => void) = null;
 		if (this.pastMessages.has(messageId)) {
@@ -1630,8 +1519,7 @@ export class Convo {
 	}
 
 	mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
-		// Accumulate even if the did isn't held yet — the profile may arrive
-		// later via message history or the member list, and must get the shadow.
+		// retain shadows until the profile arrives.
 		this.profileShadows.set(did, {
 			...this.profileShadows.get(did),
 			...shadow,
@@ -1641,10 +1529,7 @@ export class Convo {
 		}
 	}
 
-	/**
-	 * Re-applies all accumulated shadows. Must be called after any server data lands in `relatedProfiles` or
-	 * `this.convo`, since raw server profiles would otherwise clobber optimistic state.
-	 */
+	/** reapplies shadows after server profile data changes. */
 	private applyProfileShadows() {
 		for (const [did, shadow] of this.profileShadows) {
 			this.applyProfileShadow(did, shadow);
@@ -1672,10 +1557,7 @@ export class Convo {
 	}
 }
 
-/**
- * Returns a new convo with the shadow merged into the matching member (and `primaryMember`, if it's the same
- * profile), or null if nothing changed.
- */
+/** merges a profile shadow into a matching conversation member. */
 function applyShadowToConvo(
 	convo: ConvoWithDetails,
 	did: string,
@@ -1690,8 +1572,6 @@ function applyShadowToConvo(
 		return null;
 	}
 
-	// The branches are identical, but narrowing the union is what lets the
-	// member arrays keep their per-kind types.
 	if (convo.kind === 'group') {
 		const target = convo.members[i]!;
 		const merged = mergeShadow(target, shadow);

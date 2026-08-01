@@ -13,9 +13,7 @@ const RQKEY_ROOT = 'notification-settings';
 const RQKEY_APP = [RQKEY_ROOT, 'app'];
 const RQKEY_CHAT = [RQKEY_ROOT, 'chat'];
 
-// App notification preferences live on the appview. Chat preferences live on a separate chat service proxy
-// that can be up or down independently, so they are fetched and cached separately. This combined type names
-// every preference for the generic settings dialog, but it is never the shape of a query response.
+// app and chat preferences use separate services, so they are fetched and cached independently.
 export type NotificationSettingsPreferences = Omit<AppBskyNotificationDefs.Preferences, 'chat'> &
 	Partial<Pick<ChatBskyNotificationDefs.Preferences, 'chat' | 'chatRequest'>>;
 
@@ -34,7 +32,7 @@ export type NotificationSettingsPreference =
 	| ChatBskyNotificationDefs.ChatPreference;
 
 /**
- * Whether the given preference name is one served by the chat service (rather than the appview).
+ * whether a preference name is served by the chat service rather than the appview.
  *
  * @param name the preference name
  * @returns true for `chat`/`chatRequest`

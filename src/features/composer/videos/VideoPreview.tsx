@@ -26,8 +26,7 @@ export function VideoPreview({
 	isActivePost: boolean;
 	clear: () => void;
 }) {
-	// TODO: figure out how to pause a GIF for reduced motion
-	// it's not possible using an img tag -sfn
+	// TODO: pause GIF previews when reduced motion is enabled.
 	const autoplayDisabled = useAutoplayDisabled();
 	const [previewFailed, setPreviewFailed] = useState(false);
 	const url = useBlobUrl(video.blob);

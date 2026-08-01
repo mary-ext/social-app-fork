@@ -13,7 +13,7 @@ export function useAccountSwitcher() {
 	const onPressSwitchAccount = useCallback(
 		async (account: SessionAccount) => {
 			if (pendingDid) {
-				// The session API isn't resilient to race conditions so let's just ignore this.
+				// prevent concurrent switches because the session API is not race-safe.
 				return;
 			}
 			try {

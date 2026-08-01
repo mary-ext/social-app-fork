@@ -365,13 +365,11 @@ export function precacheStarterPack(
 	if (starterPack.$type === 'app.bsky.graph.defs#starterPackView') {
 		starterPackView = starterPack;
 	} else if (starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic') {
-		// note: the field claims to be `FeedItem`, but the appview returns un$typed `GeneratorView`
-		// objects here -sfn
+		// the appview returns generator views despite the lexicon's broader field type.
 		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the wire shape disagrees with the lexicon, see above
 		const feeds = record.feeds as unknown as AppBskyFeedDefs.GeneratorView[] | undefined;
 
 		const listView: AppBskyGraphDefs.ListViewBasic = {
-			// This will be populated once the data from server is fetched
 			cid: '',
 			name: record.name,
 			purpose: 'app.bsky.graph.defs#referencelist',

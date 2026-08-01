@@ -6,21 +6,18 @@ import { isClientUrl, resolveUrlToLink } from '#/lib/links/app-url';
 import { getGiphyMetaUri } from '#/lib/strings/embed-player';
 
 export interface LinkMeta {
-	/**
-	 * strong refs (URI and CID) of the Atmosphere records backing this external content, resolved from the
-	 * standard.site `<link rel>` tags
-	 */
+	/** standard.site record refs resolved from the page. */
 	associatedRefs?: AppBskyEmbedExternal.External['associatedRefs'];
 	description?: string;
 	image?: string;
 	title?: string;
 	url: string;
-	/** Appview-hydrated enhanced card for a standard.site link (publication source, reading time, etc.). */
+	/** appview-hydrated standard.site card. */
 	view?: AppBskyEmbedExternal.View;
 }
 
 export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta> {
-	// a client's pages have no card worth scraping, except a starter pack's og image.
+	// client URLs do not need metadata, except starter packs.
 	if (isClientUrl(url) && resolveUrlToLink(url)?.kind !== 'starter-pack') {
 		return { url };
 	}
@@ -32,7 +29,7 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 		return { url };
 	}
 
-	// Get Giphy meta uri if this is any form of giphy link
+	// resolve Giphy URLs to their canonical metadata page.
 	const giphyMetaUri = getGiphyMetaUri(urlp);
 	if (giphyMetaUri) {
 		url = giphyMetaUri;
@@ -57,7 +54,6 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 			meta.url = data.url;
 		}
 	} catch (e) {
-		// failed
 		console.error(e);
 	}
 

@@ -1,9 +1,6 @@
-// HTMLRewriter hands back raw source text for both text-node chunks and attribute values — it never
-// decodes character references. anything we scrape from a page (titles, og/twitter meta, og:image
-// urls) therefore still carries entities like `&amp;`, `&#8217;`, or `&#x2014;`, so we decode them
-// ourselves here.
+// HTMLRewriter returns raw text and attributes, so decode scraped character references here.
 
-/** the common html named character references; numeric references are handled generically. */
+/** common HTML named references; numeric references are handled separately. */
 const NAMED_ENTITIES: Record<string, string> = {
 	aacute: 'á',
 	Aacute: 'Á',
@@ -132,10 +129,7 @@ const NAMED_ENTITIES: Record<string, string> = {
 	Yuml: 'Ÿ',
 };
 
-/**
- * code points 0x80–0x9f are remapped to their windows-1252 equivalents when they appear as numeric character
- * references, per the html spec — legacy pages routinely emit e.g. `&#146;` for a curly apostrophe.
- */
+/** Windows-1252 replacements used by HTML numeric references. */
 const WINDOWS_1252: Record<number, number> = {
 	0x80: 0x20ac,
 	0x82: 0x201a,
@@ -171,7 +165,7 @@ const ENTITY_PATTERN = /&(#[xX][\da-fA-F]+|#\d+|[a-zA-Z][\da-zA-Z]*);/g;
 const decodeNumeric = (body: string): string => {
 	let code = body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
 	code = WINDOWS_1252[code] ?? code;
-	// reject nulls, out-of-range code points, and lone surrogates, which String.fromCodePoint rejects.
+	// replace invalid code points before calling String.fromCodePoint.
 	if (code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)) {
 		return '�';
 	}
@@ -179,11 +173,10 @@ const decodeNumeric = (body: string): string => {
 };
 
 /**
- * decodes html character references (named, decimal `&#NNN;`, and hexadecimal `&#xHHH;`) into their literal
- * characters. unknown named references are left untouched.
+ * decodes named and numeric HTML character references.
  *
- * @param input text that may contain html entities
- * @returns the text with recognized entities decoded
+ * @param input text that may contain HTML entities
+ * @returns text with recognized entities decoded
  */
 export const decodeHtmlEntities = (input: string): string => {
 	if (!input.includes('&')) {

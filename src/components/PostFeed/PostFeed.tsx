@@ -104,11 +104,9 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 	}
 }
 
-// DISABLED need to check if this is causing random feed refreshes -prf
-// const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 
-// Measured posts span ~120px (text) to ~700px (media), median ~240px.
+// estimate row height from typical post sizes.
 const FEED_ITEM_HEIGHT_ESTIMATE = 300;
 
 function PostFeed({
@@ -186,7 +184,7 @@ function PostFeed({
 			return;
 		}
 
-		// Discover always has fresh content
+		// Discover always has fresh content.
 		if (feedUriOrActorDid === DISCOVER_FEED_URI) {
 			return onHasNew(true);
 		}
@@ -216,10 +214,7 @@ function PostFeed({
 	const myDid = currentAccount?.did || '';
 	useFocusEffect(() => {
 		return postCreated.subscribe(() => {
-			// NOTE
-			// only invalidate if at the top of the feed
-			// changing content when scrolled can trigger some UI freakouts on iOS and android
-			// -sfn
+			// avoid invalidating while scrolled because it can disrupt native scrolling.
 			if (
 				!isScrolledDownRef.current &&
 				(feed === 'following' || feed === `author|${myDid}|posts_and_author_threads`)

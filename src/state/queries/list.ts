@@ -222,7 +222,6 @@ export function useListDeleteMutation() {
 			void queryClient.invalidateQueries({
 				queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
 			});
-			// TODO!! /* dont await */ this.rootStore.preferences.removeSavedFeed(this.uri)
 		},
 	});
 }

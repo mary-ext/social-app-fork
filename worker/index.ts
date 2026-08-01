@@ -13,21 +13,13 @@ import { issueClientAssertion, serveClientMetadata } from './client-assertion';
 import { resolveLinkMeta } from './resolve';
 import { authorizeServiceCall, serveDidDocument } from './service-auth';
 
-/** path of the OAuth client metadata document. */
 const CLIENT_METADATA_PATH = '/oauth-client-metadata.json';
 
-/** path of our DID document. */
 const DID_DOCUMENT_PATH = '/.well-known/did.json';
 
-/** seconds a resolved-metadata response is reused */
 const EXTRACT_CACHE_TTL = 60 * 60;
 
-/**
- * rejects anything that isn't a same-origin browser request.
- *
- * @param request the inbound request.
- * @throws {ForbiddenError} if the request didn't come from our own page.
- */
+/** accepts requests from the app origin only. */
 const requireSameOrigin = (request: Request): void => {
 	if (request.headers.get('sec-fetch-site') !== 'same-origin') {
 		throw new ForbiddenError({ message: 'cross-origin request rejected' });
@@ -59,8 +51,7 @@ router.addQuery(extractLinkMeta, {
 	async handler({ params, request, signal }) {
 		requireSameOrigin(request);
 
-		// repeated resolutions of the same url are served from cache, bounding outbound fetches and billed
-		// invocations under abuse. only successful results reach the cache (errors throw before the put).
+		// cache successful resolutions to bound repeated work.
 		const cached = await caches.default.match(request);
 		if (cached) {
 			return cached;
@@ -79,7 +70,7 @@ router.addQuery(getLinkImage, {
 	async handler({ request }) {
 		requireSameOrigin(request);
 
-		// the cache was populated by extractLinkMeta under this exact url; this endpoint never fetches.
+		// thumbnails are written by extractLinkMeta; this endpoint never fetches.
 		const cached = await caches.default.match(request);
 		if (!cached) {
 			throw new InvalidRequestError({

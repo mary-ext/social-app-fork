@@ -4,16 +4,16 @@ import { isResourceUri } from '@atcute/lexicons/syntax';
 import { decodeHtmlEntities } from './html-entities';
 
 export interface LinkMetaResult {
-	/** AT-URIs of the standard.site Atmosphere records the page advertises via `<link rel>` discovery tags. */
+	/** standard.site record URIs advertised by the page. */
 	associatedUris?: ResourceUri[];
 	description?: string;
 	image?: string;
-	/** the oEmbed endpoint the page advertises via its `<link rel="alternate">` discovery tag. */
+	/** oEmbed endpoint advertised by the page. */
 	oembedUrl?: string;
 	title?: string;
 }
 
-/** OpenGraph/Twitter meta keys we extract, lowercased. */
+/** OpenGraph and Twitter meta keys to extract. */
 const WANTED_META = new Set([
 	'description',
 	'og:description',
@@ -30,7 +30,7 @@ const WANTED_META = new Set([
 /** `<link rel>` values pointing at the standard.site records that back a page. */
 const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.publication']);
 
-/** the `type` an oEmbed discovery tag carries; the spec also defines an XML variant we don't consume. */
+/** JSON oEmbed discovery type. */
 const OEMBED_LINK_TYPE = 'application/json+oembed';
 
 /** folds case and whitespace so two tags that render identically compare equal. */
@@ -62,7 +62,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 				if (!rel || !href) {
 					return;
 				}
-				// rel may carry several space-separated tokens, e.g. `site.standard.document external`.
+				// rel may contain several space-separated tokens.
 				const tokens = rel.toLowerCase().split(/\s+/);
 
 				if (
@@ -70,12 +70,12 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 					tokens.includes('alternate') &&
 					element.getAttribute('type')?.trim().toLowerCase() === OEMBED_LINK_TYPE
 				) {
-					// unlike the AT-URIs below, this href carries a query string, so its `&` arrives encoded.
+					// decode query parameters before storing the endpoint.
 					oembedUrl = decodeHtmlEntities(href);
 					return;
 				}
 
-				// a malformed AT-URI would only make the appview reject the whole hydration batch, so drop it here
+				// one malformed URI would invalidate the hydration request.
 				if (!isResourceUri(href) || associatedUris.includes(href)) {
 					return;
 				}
@@ -97,7 +97,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 			},
 		});
 
-	// draining the transformed body is what actually runs the handlers above.
+	// consume the body to run the handlers above.
 	await rewriter.transform(new Response(html)).arrayBuffer();
 
 	const pick = (keys: string[], reject?: (value: string) => boolean): string | undefined => {
@@ -112,9 +112,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 
 	const title = pick(['og:title', 'twitter:title']) ?? (decodeHtmlEntities(titleText).trim() || undefined);
 
-	// a description that only restates the title renders the card's second line as an echo of its first. some
-	// CMSes do exactly that, filling `og:description` with the headline while the real summary sits in
-	// `<meta name="description">`, so a duplicate falls through to the next tag instead of ending the search.
+	// skip descriptions that only repeat the title so the next metadata key can provide the summary.
 	const flattened = title && flatten(title);
 	let description = pick(
 		['og:description', 'twitter:description', 'description'],
@@ -122,9 +120,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 	);
 
 	if (title && description) {
-		// some CMSes prepend the title verbatim to the description; strip the redundant prefix so the
-		// card doesn't render the title twice. only act on a clean separator-delimited prefix that
-		// leaves real text behind, to avoid clipping a description that merely opens with the same words.
+		// strip a separator-delimited title prefix without clipping real text.
 		const rest = description.slice(title.length);
 		if (description.toLowerCase().startsWith(title.toLowerCase()) && /^[\s\p{P}]/u.test(rest)) {
 			const stripped = rest.replace(/^[\s\p{P}]+/u, '');
