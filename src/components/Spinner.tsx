@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
-import type { Props as IconProps } from '#/components/icons/common';
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
+import LoaderIcon from '#/icons/original/Loader.svg';
+import type { iconSize } from '#/styles/tokens.css';
 
 import * as styles from './Spinner.css';
 
@@ -11,8 +11,8 @@ type SpinnerProps = {
 	color?: 'white' | 'default';
 	/** Accessible label announced by the `progressbar` role (e.g. "Loading GIF"). */
 	label: string | null;
-	/** Icon size token; defaults to `3xl`. */
-	size?: IconProps['size'];
+	/** Icon size token; defaults to `_3xl`. */
+	size?: keyof typeof iconSize;
 };
 
 /**
@@ -20,9 +20,9 @@ type SpinnerProps = {
  *
  * @param color tint applied to the spinner; defaults to 'white'
  * @param label accessible label for the `progressbar` role
- * @param size icon size token; defaults to `3xl`
+ * @param size icon size token; defaults to `_3xl`
  */
-export function Spinner({ className, color = 'white', label, size = '3xl' }: SpinnerProps) {
+export function Spinner({ className, color = 'white', label, size = '_3xl' }: SpinnerProps) {
 	return (
 		<span
 			aria-hidden={label === null}
@@ -30,7 +30,7 @@ export function Spinner({ className, color = 'white', label, size = '3xl' }: Spi
 			className={clsx(styles.spinner({ color }), className)}
 			role="progressbar"
 		>
-			<LoaderIcon fill="currentColor" size={size} />
+			<LoaderIcon className={styles.icon[size]} />
 		</span>
 	);
 }

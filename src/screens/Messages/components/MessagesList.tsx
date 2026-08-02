@@ -51,7 +51,7 @@ const HISTORY_LOOKAHEAD = '200% 0px 0px 0px';
 function MaybeLoader({ isLoading }: { isLoading: boolean }) {
 	return (
 		<div className={css.loader}>
-			{isLoading && <Spinner color="default" label={m['common.status.loading']()} size="2xl" />}
+			{isLoading && <Spinner color="default" label={m['common.status.loading']()} size="_2xl" />}
 		</div>
 	);
 }

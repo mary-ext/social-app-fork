@@ -67,7 +67,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 				</Container>
 			) : (
 				<Container style={loadingStyle}>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />
@@ -170,7 +170,7 @@ export const ExternalEmbedLink = ({
 				</Container>
 			) : (
 				<Container>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</Container>
 			)}
 			<ExternalEmbedRemoveBtn onRemove={onRemove} />

@@ -1,11 +1,10 @@
-import type { ComponentType, MouseEvent, ReactNode, Ref } from 'react';
+import type { ComponentType, MouseEvent, ReactNode, Ref, SVGProps } from 'react';
 
 import { clsx } from 'clsx';
 
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import type { Props as IconProps } from '#/components/icons/common';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import { Tooltip } from '#/components/Tooltip';
@@ -71,10 +70,10 @@ function AnchorControlButtonIconBox({ children }: { children: ReactNode }) {
 }
 
 /** A plain icon in the hover circle, inheriting the button color via `currentColor`. */
-function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
+function AnchorControlButtonIcon({ icon: Icon }: { icon: ComponentType<SVGProps<SVGSVGElement>> }) {
 	return (
 		<AnchorControlButtonIconBox>
-			<Icon size="lg" fill="currentColor" className={css.pointerEventsNone} />
+			<Icon className={css.icon} />
 		</AnchorControlButtonIconBox>
 	);
 }

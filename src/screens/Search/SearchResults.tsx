@@ -94,7 +94,7 @@ const STARTER_PACK_ITEM_HEIGHT_ESTIMATE = 120;
 function Pending() {
 	return (
 		<Layout.Content>
-			<CenteredSpinner label={m['screens.search.results.loading']()} size="2xl" />
+			<CenteredSpinner label={m['screens.search.results.loading']()} size="_2xl" />
 		</Layout.Content>
 	);
 }

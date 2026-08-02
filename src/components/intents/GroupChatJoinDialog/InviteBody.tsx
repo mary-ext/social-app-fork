@@ -152,7 +152,7 @@ export function InviteBody({
 	if (isLoading || !data) {
 		return (
 			<div className={css.loaderBox}>
-				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 			</div>
 		);
 	}

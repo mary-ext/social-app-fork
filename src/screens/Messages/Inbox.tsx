@@ -141,7 +141,7 @@ function RequestList({
 			<EmptyState
 				message={m['screens.messages.chats.inboxZero']()}
 				icon={InboxLargeIcon}
-				iconSize="4xl"
+				iconSize="_4xl"
 				messageColor="text"
 				iconColor={colors.text}
 				button={

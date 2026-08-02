@@ -349,7 +349,7 @@ export function FeedsScreen() {
 				keyExtractor={(item) => item.key}
 				ListFooterComponent={
 					isPopularFeedsFetchingNextPage ? (
-						<CenteredSpinner label={m['view.feeds.feed.loadingMore']()} size="2xl" />
+						<CenteredSpinner label={m['view.feeds.feed.loadingMore']()} size="_2xl" />
 					) : null
 				}
 				onEndReached={onEndReached}

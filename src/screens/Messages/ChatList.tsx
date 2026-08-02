@@ -90,7 +90,7 @@ export function MessagesScreen() {
 					icon={BubbleSmileIcon}
 					messageColor="text"
 					iconColor={colors.text}
-					iconSize="4xl"
+					iconSize="_4xl"
 					button={
 						chatStatus?.chatDisabled
 							? undefined
@@ -210,7 +210,7 @@ export function ChatList({
 					<EmptyState
 						message={m['screens.messages.chats.inboxEmpty']()}
 						icon={InboxLargeIcon}
-						iconSize="4xl"
+						iconSize="_4xl"
 						messageColor="text"
 						iconColor={colors.text}
 						className={css.emptyTall}
@@ -219,7 +219,7 @@ export function ChatList({
 					<EmptyState
 						message={m['screens.messages.conversation.sayHi']()}
 						icon={BubbleSmileIcon}
-						iconSize="4xl"
+						iconSize="_4xl"
 						messageColor="text"
 						iconColor={colors.text}
 						button={

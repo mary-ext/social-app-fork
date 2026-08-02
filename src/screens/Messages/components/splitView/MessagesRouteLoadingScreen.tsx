@@ -26,7 +26,7 @@ export function MessagesSplitViewColumnLoadingScreen() {
 		return <RouteLoadingScreen />;
 	}
 
-	return <CenteredSpinner fill label={m['common.status.loading']()} size="2xl" />;
+	return <CenteredSpinner fill label={m['common.status.loading']()} size="_2xl" />;
 }
 
 function MessagesSplitViewRouteLoadingScreen() {

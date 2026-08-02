@@ -116,7 +116,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 	if (!convo || !moderationOpts) {
 		return (
 			<div className={css.loading}>
-				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 			</div>
 		);
 	}

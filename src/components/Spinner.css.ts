@@ -1,6 +1,7 @@
-import { keyframes } from '@vanilla-extract/css';
+import { keyframes, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 import { recipe } from '#/styles/recipe';
 
 const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
@@ -27,3 +28,5 @@ export const spinner = recipe(
 	},
 	{ debugId: 'spinner' },
 );
+
+export const icon = styleVariants(iconSize, (size) => ({ width: size, height: size }));

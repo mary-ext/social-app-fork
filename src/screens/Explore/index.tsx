@@ -50,7 +50,7 @@ export function ExploreScreen() {
 					<EmptyState
 						icon={MagnifyingGlassIcon}
 						iconColor={colors.textContrastMedium}
-						iconSize="4xl"
+						iconSize="_4xl"
 						message={m['screens.search.input.description']()}
 						messageColor="textContrastMedium"
 					/>

@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { fontLeading, fontSize, space } from '#/styles/tokens.css';
+import { fontLeading, fontSize, iconSize, space } from '#/styles/tokens.css';
 
 const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`);
 
@@ -148,6 +148,8 @@ export const icon = style({
 	flexShrink: 0,
 	gridRow: 1,
 	gridColumn: 1,
+	width: iconSize.md,
+	height: iconSize.md,
 	marginRight: space.md,
 	marginBlock: (20 - 18) / 2,
 	color: vars.palette.contrast_500,
@@ -189,6 +191,8 @@ export const value = style({
 export const chevron = style({
 	display: 'flex',
 	flexShrink: 0,
+	width: iconSize.sm,
+	height: iconSize.sm,
 	color: vars.palette.contrast_500,
 	selectors: {
 		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },

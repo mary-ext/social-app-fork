@@ -37,7 +37,7 @@ export function ListFooter({
 			style={height != null ? assignInlineVars({ [css.heightVar]: `${height}px` }) : undefined}
 		>
 			{isFetchingNextPage ? (
-				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 			) : error ? (
 				<ListFooterError error={error} onRetry={onRetry} />
 			) : !hasNextPage && showEndMessage ? (
@@ -92,7 +92,7 @@ function ListMaybePlaceholder({
 	if (isLoading) {
 		return (
 			<div className={css.placeholderLoading({ topBorder })}>
-				<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+				<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 			</div>
 		);
 	}

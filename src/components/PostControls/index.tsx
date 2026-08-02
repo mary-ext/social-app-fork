@@ -4,6 +4,7 @@ import {
 	type MouseEvent,
 	type ReactNode,
 	type Ref,
+	type SVGProps,
 	useContext,
 } from 'react';
 
@@ -15,7 +16,6 @@ import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 import { formatPostStatCount } from '#/locale/intl/number';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import type { Props as IconProps } from '#/components/icons/common';
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import { Text } from '#/components/Text';
@@ -90,10 +90,10 @@ function PostControlButtonIconBox({ children }: { children: ReactNode }) {
 }
 
 /** A plain icon in the hover circle, inheriting the button color via `currentColor`. */
-function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
+function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<SVGProps<SVGSVGElement>> }) {
 	return (
 		<PostControlButtonIconBox>
-			<Icon size="md" fill="currentColor" className={css.pointerEventsNone} />
+			<Icon className={css.icon} />
 		</PostControlButtonIconBox>
 	);
 }

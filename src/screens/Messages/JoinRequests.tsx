@@ -79,7 +79,7 @@ function JoinRequestsInner() {
 			<>
 				<Header />
 				<div className={css.loadingFill}>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</div>
 			</>
 		);
@@ -316,7 +316,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			ListEmptyComponent={
 				isPending ? (
 					<div className={css.emptyFill}>
-						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 					</div>
 				) : null
 			}

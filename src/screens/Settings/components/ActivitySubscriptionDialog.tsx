@@ -46,7 +46,7 @@ function Inner() {
 				<Admonition type="error">{m['screens.settings.preferences.error.load']()}</Admonition>
 			) : isPending ? (
 				<div className={styles.loaderWrap}>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</div>
 			) : (
 				<Toggle.Group

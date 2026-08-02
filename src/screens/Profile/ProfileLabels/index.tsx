@@ -75,7 +75,7 @@ export function ProfileLabelsScreen() {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isPending ? (
-					<CenteredSpinner label={m['common.status.loading']()} size="2xl" />
+					<CenteredSpinner label={m['common.status.loading']()} size="_2xl" />
 				) : labeler ? (
 					<LabelerDetails labeler={labeler} />
 				) : (

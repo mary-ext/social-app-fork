@@ -28,7 +28,7 @@ export function HomeScreen() {
 	if (!preferences || !pinnedFeedInfos) {
 		return (
 			<Layout.Screen>
-				<CenteredSpinner fill label={m['common.status.loading']()} size="2xl" />
+				<CenteredSpinner fill label={m['common.status.loading']()} size="_2xl" />
 			</Layout.Screen>
 		);
 	}

@@ -43,7 +43,7 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 	const renderPostsEmpty = useCallback(() => {
 		return (
 			<div className={css.emptyState}>
-				<EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />
+				<EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />
 				{isOwner && (
 					<Button
 						color="primary"

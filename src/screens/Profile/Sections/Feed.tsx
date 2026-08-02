@@ -49,7 +49,7 @@ export function ProfileFeedSection({
 			<div className={css.emptyContainer}>
 				<EmptyState
 					icon={emptyStateIcon || EditIcon}
-					iconSize="3xl"
+					iconSize="_3xl"
 					message={emptyStateMessage || m['common.post.empty']()}
 					button={emptyStateButton}
 				/>

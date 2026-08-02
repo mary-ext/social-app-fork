@@ -1,14 +1,15 @@
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/CenteredSpinner.css';
-import type { Props as IconProps } from '#/components/icons/common';
 import { Spinner } from '#/components/Spinner';
+
+import type { iconSize } from '#/styles/tokens.css';
 
 type CenteredSpinnerProps = {
 	/** Accessible label announced by the spinner's `progressbar` role (e.g. "Loading GIFs"). */
 	label: string;
 	/** Icon size token forwarded to the {@link Spinner}. */
-	size?: IconProps['size'];
+	size?: keyof typeof iconSize;
 	/** Grow to fill a flex-column parent so the spinner centers vertically in an empty region. */
 	fill?: boolean;
 };

@@ -68,7 +68,7 @@ export function ModerationScreen() {
 			<Layout.Content>
 				{isLoading ? (
 					<div className={styles.status}>
-						<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+						<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 					</div>
 				) : error || !preferences ? (
 					<Settings.List>
@@ -197,7 +197,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 			)}
 			{isLabelersLoading ? (
 				<div className={styles.status}>
-					<Spinner color="default" label={m['common.status.loading']()} size="2xl" />
+					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</div>
 			) : labelersError || !labelers ? (
 				<Admonition type="error">{m['screens.moderation.labeler.loadError']()}</Admonition>

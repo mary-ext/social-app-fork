@@ -148,7 +148,7 @@ function BlockDialogInner({
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={css.loading}>
-							<CenteredSpinner label={m['common.status.loading']()} size="2xl" />
+							<CenteredSpinner label={m['common.status.loading']()} size="_2xl" />
 						</div>
 					) : null
 				}

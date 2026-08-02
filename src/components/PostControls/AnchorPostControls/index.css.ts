@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const root = style({
 	display: 'flex',
@@ -12,6 +13,12 @@ export const root = style({
 });
 
 export const pointerEventsNone = style({ pointerEvents: 'none' });
+
+export const icon = style({
+	pointerEvents: 'none',
+	width: iconSize.lg,
+	height: iconSize.lg,
+});
 
 export const replyDisabled = style({ opacity: 0.6 });
 

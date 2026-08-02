@@ -69,7 +69,7 @@ export function PostFeedErrorMessage({
 		return (
 			<EmptyState
 				icon={WarningIcon}
-				iconSize="2xl"
+				iconSize="_2xl"
 				message={m['view.posts.moderation.hidden']()}
 				className={css.empty}
 			/>

@@ -70,7 +70,7 @@ export function ProfileFeedScreen() {
 }
 
 function renderPostsEmpty() {
-	return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
+	return <EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />;
 }
 
 function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {

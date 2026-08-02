@@ -1,4 +1,13 @@
-import { style } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
+
+import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
+
+const iconBase = style({ color: vars.palette.contrast_400 });
+
+export const icon = styleVariants(iconSize, (size) => [iconBase, { width: size, height: size }]);
+
+export const fallbackIcon = style({ color: vars.palette.contrast_700 });
 
 export const buttonWrap = style({
 	display: 'flex',

@@ -11,7 +11,7 @@ interface PostsListProps {
 }
 
 function renderPostsEmpty() {
-	return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={m['common.feeds.empty']()} />;
+	return <EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />;
 }
 
 export function PostsList({ listUri }: PostsListProps) {

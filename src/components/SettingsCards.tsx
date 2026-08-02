@@ -1,4 +1,12 @@
-import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode } from 'react';
+import {
+	Children,
+	cloneElement,
+	type ComponentType,
+	Fragment,
+	isValidElement,
+	type ReactNode,
+	type SVGProps,
+} from 'react';
 
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
@@ -9,7 +17,6 @@ import {
 	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
-import type { Props as IconProps } from '#/components/icons/common';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -82,8 +89,8 @@ export function Section({
 	);
 }
 
-export function Icon({ icon: IconCmp }: { icon: ComponentType<IconProps> }) {
-	return <IconCmp className={styles.icon} size="md" fill="currentColor" />;
+export function Icon({ icon: IconCmp }: { icon: ComponentType<SVGProps<SVGSVGElement>> }) {
+	return <IconCmp className={styles.icon} />;
 }
 
 /**
@@ -232,7 +239,7 @@ export function CollapsibleRow({
 }: {
 	children: ReactNode;
 	className?: string;
-	icon?: ComponentType<IconProps>;
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 	onOpenChange: (open: boolean) => void;
 	open: boolean;
@@ -402,11 +409,11 @@ export function Value({ text }: { text: string }) {
 }
 
 /** a row's trailing slot: an optional current value, right-aligned against the row's own chevron. */
-function RowTrailing({ chevron: ChevronCmp, text }: { chevron: ComponentType<IconProps>; text?: string }) {
+function RowTrailing({ chevron: ChevronCmp, text }: { chevron: ComponentType<SVGProps<SVGSVGElement>>; text?: string }) {
 	return (
 		<span className={styles.trailing}>
 			{text != null && <Value text={text} />}
-			<ChevronCmp className={styles.chevron} fill="currentColor" size="sm" />
+			<ChevronCmp className={styles.chevron} />
 		</span>
 	);
 }

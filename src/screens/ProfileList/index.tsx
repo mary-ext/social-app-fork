@@ -97,7 +97,7 @@ function ProfileListScreenInner() {
 					<Layout.Header.Content />
 				</Layout.Header.Outer>
 				<Layout.Content>
-					<CenteredSpinner fill label={m['common.status.loading']()} size="3xl" />
+					<CenteredSpinner fill label={m['common.status.loading']()} size="_3xl" />
 				</Layout.Content>
 			</>
 		);

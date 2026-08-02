@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const root = style({
 	display: 'flex',
@@ -83,3 +84,9 @@ export const text = style({
 });
 
 export const pointerEventsNone = style({ pointerEvents: 'none' });
+
+export const icon = style({
+	pointerEvents: 'none',
+	width: iconSize.md,
+	height: iconSize.md,
+});

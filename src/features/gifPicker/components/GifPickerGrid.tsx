@@ -85,7 +85,7 @@ export function GifPickerGrid({
 					))}
 				</div>
 				{isFetchingNextPage ? (
-					<CenteredSpinner label={m['features.gifPicker.load.loading']()} size="2xl" />
+					<CenteredSpinner label={m['features.gifPicker.load.loading']()} size="_2xl" />
 				) : error ? (
 					<div className={styles.footer}>
 						<Text size="sm" color="textContrastMedium" align="center">
