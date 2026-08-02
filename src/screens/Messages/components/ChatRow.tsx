@@ -148,9 +148,7 @@ export function LastMessage({
 }) {
 	return (
 		<div className={css.lastMessageRow}>
-			{Icon && (
-				<Icon className={clsx(css.lastMessageIcon, unread && css.lastMessageIconUnread)} />
-			)}
+			{Icon && <Icon className={clsx(css.lastMessageIcon, unread && css.lastMessageIconUnread)} />}
 			<Text
 				color={dim ? 'textContrastMedium' : unread ? 'text' : 'textContrastHigh'}
 				numberOfLines={2}

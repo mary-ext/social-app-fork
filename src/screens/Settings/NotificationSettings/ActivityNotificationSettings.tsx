@@ -16,10 +16,7 @@ import { Trans } from '#/locale/Trans';
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Dialog from '#/components/Dialog';
-import {
-	BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon,
-	BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon,
-} from '#/components/icons/BellRinging';
+import { BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon } from '#/components/icons/BellRinging';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Settings from '#/components/SettingsCards';
@@ -30,6 +27,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ActivityNotificationSettings.css';

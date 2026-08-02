@@ -10,11 +10,7 @@ import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon } from '#/components/icons/Chevron';
-import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
-import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import * as Menu from '#/components/Menu';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -24,6 +20,10 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLink } from '#/components/web/Link';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
+import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import PaperPlaneIcon from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

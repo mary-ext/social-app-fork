@@ -1,8 +1,8 @@
-import { SquareBehindSquare_Stroke2_Corner2_Rounded as CopyIcon } from '#/components/icons/SquareBehindSquare4';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import CopyIcon from '#/icons/central/SquareBehindSquare4_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './CopyLinkField.css';

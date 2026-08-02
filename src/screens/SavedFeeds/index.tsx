@@ -19,9 +19,6 @@ import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { EmptyState, type EmptyStateIcon } from '#/components/EmptyState';
-import { FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon } from '#/components/icons/FloppyDisk';
-import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';
-import { Pin_Filled_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -30,6 +27,9 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import SaveIcon from '#/icons/central/FloppyDisk1_round_outlined_radius1_stroke2.svg';
+import ListSparkleIcon from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import PinIcon from '#/icons/central/Thumbtack_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

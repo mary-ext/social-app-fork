@@ -24,14 +24,11 @@ import { dateTimeLong } from '#/locale/intl/datetime';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { useRichText } from '#/components/hooks/useRichText';
-import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 	Heart2_Stroke2_Corner0_Rounded as Heart,
 } from '#/components/icons/Heart2';
-import { UserCircle_Stroke2_Corner0_Rounded as UserCircle } from '#/components/icons/UserCircle';
 import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';
@@ -45,6 +42,9 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, useInternalLink } from '#/components/web/Link';
 
+import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 import { colors } from '#/styles/colors';

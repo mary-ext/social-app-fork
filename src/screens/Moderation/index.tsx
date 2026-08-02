@@ -23,12 +23,6 @@ import {
 } from '#/state/queries/preferences';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
-import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
-import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
-import { EditBig_Stroke2_Corner2_Rounded as EditBig } from '#/components/icons/EditBig';
-import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Filter';
-import { Group3_Stroke2_Corner0_Rounded as Group } from '#/components/icons/Group';
-import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -39,6 +33,12 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
+import EditBig from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
+import Filter from '#/icons/central/Filter1_round_outlined_radius1_stroke2.svg';
+import Group from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
+import Person from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './index.css';

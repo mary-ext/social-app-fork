@@ -9,18 +9,18 @@ import {
 	useThreadPreferences,
 } from '#/state/queries/preferences/useThreadPreferences';
 
-import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { Hashtag_Stroke2_Corner0_Rounded as HashtagIcon } from '#/components/icons/Hashtag';
-import { Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon } from '#/components/icons/Macintosh';
-import { Play_Stroke2_Corner2_Rounded as PlayIcon } from '#/components/icons/Play';
-import { CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon } from '#/components/icons/Quote';
-import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost';
-import { Tree_Stroke2_Corner0_Rounded as TreeIcon } from '#/components/icons/Tree';
-import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import BubblesIcon from '#/icons/central/Bubbles_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
+import TreeIcon from '#/icons/central/CodeTree_round_outlined_radius1_stroke2.svg';
+import HashtagIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import MacintoshIcon from '#/icons/central/Macintosh_round_outlined_radius1_stroke2.svg';
+import PlayIcon from '#/icons/central/Play_round_outlined_radius1_stroke2.svg';
+import Graph from '#/icons/central/Trending2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function ContentAndMediaSettingsScreen() {

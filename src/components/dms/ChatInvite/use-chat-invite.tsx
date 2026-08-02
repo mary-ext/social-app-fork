@@ -9,13 +9,13 @@ import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/
 import { useSession } from '#/state/session';
 
 import { groupChatJoinHandle } from '#/components/dialogs/handles';
-import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
-import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
-import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icons/ChainLink';
-import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import * as Toast from '#/components/Toast';
 
+import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
+import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
+import LinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import HandIcon from '#/icons/central/RaisingHand4Finger_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

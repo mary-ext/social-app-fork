@@ -7,26 +7,22 @@ import {
 
 import * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
-import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
-import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
-import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/icons/Envelope';
-import {
-	Heart2_Stroke2_Corner0_Rounded as HeartIcon,
-	LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
-} from '#/components/icons/Heart2';
-import { Message_Stroke2_Corner0_Rounded as MessageIcon } from '#/components/icons/Message';
-import { PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon } from '#/components/icons/Person';
-import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
-import {
-	Repost_Stroke2_Corner2_Rounded as RepostIcon,
-	RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
-} from '#/components/icons/Repost';
-import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
 import * as Settings from '#/components/SettingsCards';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 
+import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import AtIcon from '#/icons/central/At_round_outlined_radius1_stroke2.svg';
+import BubbleIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
+import MessageIcon from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
+import CloseQuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
+import EnvelopeIcon from '#/icons/central/Email1_round_outlined_radius1_stroke2.svg';
+import HeartIcon from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
+import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
+import ShapesIcon from '#/icons/central/ShapesPlusXSquareCircle_round_outlined_radius1_stroke2.svg';
+import LikeRepostIcon from '#/icons/original/LikeRepost.svg';
+import RepostRepostIcon from '#/icons/original/RepostRepost.svg';
 import { m } from '#/paraglide/messages';
 
 import { ChatNotificationDialogs } from './components/ChatNotificationDialogs';

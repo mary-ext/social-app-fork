@@ -4,15 +4,15 @@ import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
 
-import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon } from '#/components/icons/CirclePlus';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
-import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 
+import CirclePlusIcon from '#/icons/central/CirclePlus_round_outlined_radius1_stroke2.svg';
+import CloseQuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './DraftItem.css';

@@ -1,4 +1,12 @@
-import { type ComponentType, createContext, type MouseEvent, type ReactNode, type Ref, type SVGProps, useContext } from 'react';
+import {
+	type ComponentType,
+	createContext,
+	type MouseEvent,
+	type ReactNode,
+	type Ref,
+	type SVGProps,
+	useContext,
+} from 'react';
 
 import { clsx } from 'clsx';
 
@@ -7,13 +15,13 @@ import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 
 import { formatPostStatCount } from '#/locale/intl/number';
 
-import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import { Reply as Bubble } from '#/components/icons/Reply';
-import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import { Text } from '#/components/Text';
 import { Tooltip } from '#/components/Tooltip';
 import * as Skele from '#/components/web/Skeleton';
 
+import ArrowShareRightIcon from '#/icons/central/ArrowShareRight_round_outlined_radius1_stroke2.svg';
+import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import Bubble from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

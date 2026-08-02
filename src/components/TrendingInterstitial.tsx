@@ -5,7 +5,6 @@ import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Prompt from '#/components/Prompt';
 import { useTopic } from '#/components/trending-topics';
@@ -13,6 +12,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
@@ -73,7 +73,6 @@ export function TrendingInterstitial() {
 					</Button>
 				)}
 			</div>
-
 			<Prompt.Basic
 				handle={trendingPrompt}
 				title={m['components.trendingTopics.hide.title']()}

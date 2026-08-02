@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerError.css';

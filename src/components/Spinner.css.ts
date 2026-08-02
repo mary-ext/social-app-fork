@@ -1,8 +1,8 @@
 import { keyframes, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { iconSize } from '#/styles/tokens.css';
 import { recipe } from '#/styles/recipe';
+import { iconSize } from '#/styles/tokens.css';
 
 const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 

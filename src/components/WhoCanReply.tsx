@@ -18,13 +18,13 @@ import {
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon } from '#/components/icons/Chevron';
-import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon } from '#/components/icons/CircleBanSign';
-import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
-import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import CircleBanSignIcon from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
+import GroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './WhoCanReply.css';

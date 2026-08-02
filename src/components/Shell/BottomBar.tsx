@@ -6,34 +6,25 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useSession } from '#/state/session';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import {
-	Bell_Stroke2_Corner0_Rounded as Bell,
-	Bell_Filled_Corner0_Rounded as BellFilled,
-} from '#/components/icons/Bell';
-import {
-	HomeOpen_Stoke2_Corner0_Rounded as Home,
-	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-} from '#/components/icons/HomeOpen';
 import { Logo } from '#/components/icons/Logo';
 import { Logotype } from '#/components/icons/Logotype';
-import {
-	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
-	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
-} from '#/components/icons/MagnifyingGlass';
-import {
-	Message_Stroke2_Corner0_Rounded as Message,
-	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
-} from '#/components/icons/Message';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
 
+import BellFilled from '#/icons/central/Bell_round_filled_radius1_stroke2.svg';
+import Bell from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
+import MessageFilled from '#/icons/central/BubbleAnnotation3_round_filled_radius1_stroke2.svg';
+import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
+import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
+import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
+import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
 import * as css from './BottomBar.css';
-
 
 export function BottomBar() {
 	const { hasSession } = useSession();

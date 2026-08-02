@@ -2,11 +2,11 @@ import { cloneElement, type MouseEvent, type ReactElement } from 'react';
 
 import { useRequireAuth, useSession } from '#/state/session';
 
-import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote';
-import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
 import * as Menu from '#/components/Menu';
 import { Tooltip } from '#/components/Tooltip';
 
+import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import Quote from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export const RepostMenu = ({

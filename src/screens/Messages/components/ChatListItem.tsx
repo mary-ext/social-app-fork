@@ -20,12 +20,12 @@ import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import * as Menu from '#/components/Menu';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import DotsHorizontalIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as ChatRow from './ChatRow';

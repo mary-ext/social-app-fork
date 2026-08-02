@@ -10,11 +10,11 @@ import { useSession } from '#/state/session';
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
-import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 
+import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

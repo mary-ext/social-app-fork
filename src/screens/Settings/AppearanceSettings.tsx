@@ -11,13 +11,13 @@ import {
 	useFontScale,
 } from '#/state/preferences/appearance';
 
-import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
-import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
-import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons/TextSize';
-import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/TitleCase';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import MoonIcon from '#/icons/central/Moon_round_outlined_radius1_stroke2.svg';
+import PhoneIcon from '#/icons/central/PhoneDynamicIsland_round_outlined_radius1_stroke2.svg';
+import TextSize from '#/icons/central/TextSize_round_outlined_radius1_stroke2.svg';
+import Aa from '#/icons/central/TitleCase_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function AppearanceSettingsScreen() {

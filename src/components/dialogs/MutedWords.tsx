@@ -8,7 +8,6 @@ import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import type * as Select from '#/components/Select';
 import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
@@ -18,6 +17,7 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;

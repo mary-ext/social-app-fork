@@ -15,7 +15,6 @@ import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';
-import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { MissingFeed } from '#/components/MissingFeed';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import * as Prompt from '#/components/Prompt';
@@ -26,6 +25,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
 import { borderRadius } from '#/styles/tokens.css';

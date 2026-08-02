@@ -11,13 +11,13 @@ import { timeShort } from '#/locale/intl/datetime';
 
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
-import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon } from '#/components/icons/ArrowCornerDownRight';
-import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
-import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
 
+import ReplyIcon from '#/icons/central/ArrowCornerDownRight_round_outlined_radius3_stroke2.svg';
+import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
+import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export const MessageContextMenu = ({

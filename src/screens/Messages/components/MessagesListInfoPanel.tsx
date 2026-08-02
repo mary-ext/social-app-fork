@@ -8,13 +8,13 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import PersonIcon from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

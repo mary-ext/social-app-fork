@@ -16,9 +16,6 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
-import { StarterPack } from '#/components/icons/StarterPack';
-import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle';
 import { List } from '#/components/List/List';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 import { isThreadChildAt, isThreadParentAt } from '#/components/PostFeed/PostFeed';
@@ -28,9 +25,12 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ListSparkle from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import Person from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
+import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
-import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 import { colors } from '#/styles/colors';
+import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 
 import * as ModuleHeader from './components/ModuleHeader';
 import { StarterPackCard, StarterPackCardSkeleton } from './components/StarterPackCard';

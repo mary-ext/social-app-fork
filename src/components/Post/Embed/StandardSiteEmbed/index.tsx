@@ -19,7 +19,6 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { niceDate } from '#/locale/intl/datetime';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { StandardSite } from '#/components/icons/community/StandardSite';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
@@ -28,6 +27,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLink, ExternalLinkButton } from '#/components/web/Link';
 
+import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';

@@ -1,9 +1,9 @@
 import { UNREAD_REQUEST_CAP } from '#/state/queries/messages/get-unread-counts';
 
-import { Inbox_Stroke2_Corner2_Rounded as InboxIcon } from '#/components/icons/Inbox';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 
+import InboxIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './InboxRequests.css';

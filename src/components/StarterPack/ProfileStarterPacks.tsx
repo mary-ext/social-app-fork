@@ -7,7 +7,6 @@ import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
-import { PlusSmall_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
@@ -17,6 +16,7 @@ import {
 } from '#/components/StarterPack/StarterPackCard';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

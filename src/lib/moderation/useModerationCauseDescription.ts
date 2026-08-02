@@ -10,11 +10,10 @@ import { useSession } from '#/state/session';
 
 import { LOCALE } from '#/locale/intl/locale';
 
-import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
-import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
-
+import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import Warning from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
+import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useGlobalLabelStrings } from './useGlobalLabelStrings';

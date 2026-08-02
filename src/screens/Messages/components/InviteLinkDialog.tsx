@@ -21,16 +21,16 @@ import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
-import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
-import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
-import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
+import ArrowShareRightIcon from '#/icons/central/ArrowShareRight_round_outlined_radius1_stroke2.svg';
+import EditIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

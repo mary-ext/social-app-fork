@@ -18,21 +18,19 @@ import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
-import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
-import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
-import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
-import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
-import {
-	Person_Stroke2_Corner0_Rounded as Person,
-	PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-	PersonX_Stroke2_Corner0_Rounded as PersonX,
-} from '#/components/icons/Person';
-import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
+import ArrowBoxLeftIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
+import BubbleIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
+import Flag from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import Person from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
+import PersonCheck from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
+import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
+import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

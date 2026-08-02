@@ -1,11 +1,17 @@
-import { type ComponentProps, type ComponentType, isValidElement, type ReactElement, type SVGProps } from 'react';
+import {
+	type ComponentProps,
+	type ComponentType,
+	isValidElement,
+	type ReactElement,
+	type SVGProps,
+} from 'react';
 
 import { clsx } from 'clsx';
 
-import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import { Text, type TextProps } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 
 import * as css from './EmptyState.css';
@@ -54,7 +60,9 @@ export function EmptyState({
 		}
 		const IconComponent = icon;
 		// the color is caller-supplied at runtime, so it cannot be a static class
-		return <IconComponent className={css.icon[iconSize]} style={iconColor ? { color: iconColor } : undefined} />;
+		return (
+			<IconComponent className={css.icon[iconSize]} style={iconColor ? { color: iconColor } : undefined} />
+		);
 	};
 
 	const renderButton = () => {

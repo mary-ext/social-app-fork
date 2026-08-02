@@ -11,21 +11,21 @@ import {
 import { setDevMode, useDevMode } from '#/state/preferences/dev-mode';
 import { logoutEveryAccount } from '#/state/session';
 
-import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
-import { Bell_Stroke2_Corner0_Rounded as NotificationIcon } from '#/components/icons/Bell';
-import { CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon } from '#/components/icons/CodeBrackets';
-import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
-import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/components/icons/PaintRoller';
-import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
-import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
-import { Sparkle_Filled_Corner0_Rounded as SparkleIcon } from '#/components/icons/Sparkle';
-import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
+import NotificationIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
+import AccessibilityIcon from '#/icons/central/CirclePerson_round_outlined_radius1_stroke2.svg';
+import CodeBracketsIcon from '#/icons/central/CodeBrackets_round_outlined_radius1_stroke2.svg';
+import PaintRollerIcon from '#/icons/central/ColorRoll_round_outlined_radius1_stroke2.svg';
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
+import PersonIcon from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
+import HandIcon from '#/icons/central/RaisingHand4Finger_round_outlined_radius1_stroke2.svg';
+import SparkleIcon from '#/icons/central/SparkleCentral_round_filled_radius1_stroke2.svg';
+import WindowIcon from '#/icons/central/Window_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { AccountsSection } from './components/AccountsSection';

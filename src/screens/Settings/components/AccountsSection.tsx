@@ -17,11 +17,6 @@ import { AvatarStack } from '#/components/AvatarStack';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
-import {
-	PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon,
-	PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon,
-	PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
-} from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
@@ -31,6 +26,9 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
+import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
+import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './AccountsSection.css';

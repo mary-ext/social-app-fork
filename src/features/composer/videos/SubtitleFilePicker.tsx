@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
-import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import CCIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './SubtitleFilePicker.css';

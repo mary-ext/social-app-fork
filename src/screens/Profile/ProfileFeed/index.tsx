@@ -22,13 +22,13 @@ import { EmptyState } from '#/components/EmptyState';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
-import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Layout from '#/components/web/Layout';
 
+import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams } from '#/routes';
 import { colors } from '#/styles/colors';

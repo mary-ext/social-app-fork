@@ -4,11 +4,11 @@ import { useImageDescriptionModel, useOpenRouterApiKey } from '#/state/preferenc
 import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
 
 import * as Dialog from '#/components/Dialog';
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
-import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
+import LockIcon from '#/icons/central/Lock_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { ImageDescriptionModelDialog } from './components/ImageDescriptionModelDialog';

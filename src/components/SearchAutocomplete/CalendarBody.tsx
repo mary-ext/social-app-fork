@@ -1,12 +1,10 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import {
-	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
-	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
-} from '#/components/icons/Chevron';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './CalendarBody.css';

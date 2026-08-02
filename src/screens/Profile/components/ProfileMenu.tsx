@@ -25,21 +25,6 @@ import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-s
 import * as Dialog from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
-import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
-import { ListSparkle_Stroke2_Corner0_Rounded as List } from '#/components/icons/ListSparkle';
-import { Live_Stroke2_Corner0_Rounded as LiveIcon } from '#/components/icons/Live';
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
-import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
-import { PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus } from '#/components/icons/PeopleRemove2';
-import {
-	PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-	PersonX_Stroke2_Corner0_Rounded as PersonX,
-} from '#/components/icons/Person';
-import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
-import { StarterPack } from '#/components/icons/StarterPack';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
@@ -48,6 +33,19 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
+import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import Flag from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import List from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import LiveIcon from '#/icons/central/LiveFull_round_outlined_radius1_stroke2.svg';
+import SearchIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import PersonCheck from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
+import UserMinus from '#/icons/central/PeopleRemove2_round_outlined_radius1_stroke2.svg';
+import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
+import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
+import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

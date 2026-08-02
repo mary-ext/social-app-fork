@@ -20,14 +20,14 @@ import {
 	useStarterPackDialogReopen,
 } from '#/components/dialogs/starter-pack-dialog-reopen';
 import * as css from '#/components/dialogs/StarterPackDialog.css';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { StarterPack } from '#/components/icons/StarterPack';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useLocation, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

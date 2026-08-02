@@ -8,13 +8,13 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { setDrawerOpen } from '#/state/shell/drawer-open';
 
-import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
-import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/Layout/Header.css';
 
+import ArrowLeft from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
+import Menu from '#/icons/central/BarsThree_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

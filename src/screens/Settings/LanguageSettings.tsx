@@ -16,12 +16,12 @@ import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
 import * as Dialog from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
-import { Filter_Stroke2_Corner0_Rounded as FilterIcon } from '#/components/icons/Filter';
-import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
-import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
+import FilterIcon from '#/icons/central/Filter1_round_outlined_radius1_stroke2.svg';
+import LanguageIcon from '#/icons/central/Translate_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
 

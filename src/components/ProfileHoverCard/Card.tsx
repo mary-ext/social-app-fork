@@ -25,8 +25,6 @@ import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
 import { useFollowMethods } from '#/components/hooks/useFollowMethods';
 import { useRichText } from '#/components/hooks/useRichText';
-import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -37,6 +35,8 @@ import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
 import * as Pills from '#/components/web/Pills';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import Check from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

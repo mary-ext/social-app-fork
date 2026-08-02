@@ -14,11 +14,11 @@ import {
 
 import * as Dialog from '#/components/Dialog';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
-import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
-import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
-import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import TinyChevronIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
+import GroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function ThreadgateBtn({

@@ -2,7 +2,6 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { Text } from '#/components/Text';
 
-
 import * as css from './ChatFooter.css';
 
 export function ChatFooter({

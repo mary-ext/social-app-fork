@@ -7,12 +7,7 @@ import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
-import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
-import { Pencil_Stroke2_Corner0_Rounded as Pencil } from '#/components/icons/Pencil';
-import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
@@ -20,6 +15,11 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import ListSparkle from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import Pencil from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

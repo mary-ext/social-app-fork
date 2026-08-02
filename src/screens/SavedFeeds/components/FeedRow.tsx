@@ -5,16 +5,14 @@ import { attachClosestEdge, type Edge, extractClosestEdge } from '@oomfware/tug/
 
 import type { BaseUIEvent } from '@base-ui/react';
 
-import {
-	ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon,
-	ArrowTop_Stroke2_Corner0_Rounded as ArrowUpIcon,
-} from '#/components/icons/Arrow';
-import { DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon } from '#/components/icons/DotGrid';
-import { Pin_Filled_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ArrowDownIcon from '#/icons/central/ArrowDown_round_outlined_radius1_stroke2.svg';
+import ArrowUpIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
+import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
+import PinIcon from '#/icons/central/Thumbtack_round_filled_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import type { DragData, DropData, SavedFeed, Section } from '../types';

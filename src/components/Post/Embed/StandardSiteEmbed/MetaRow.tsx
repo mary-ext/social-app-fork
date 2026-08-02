@@ -41,7 +41,7 @@ export function MetaRow({
 			key: 'domain',
 			node: (
 				<span className={styles.metaItem}>
-					{DomainIcon && <DomainIcon size="xs" fill="currentColor" />}
+					{DomainIcon && <DomainIcon className={styles.publisherIcon} />}
 					<Text size="xs" color="textContrastMedium" numberOfLines={1}>
 						{articleDomain}
 					</Text>

@@ -8,10 +8,10 @@ import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ImageDescriptionModelDialog.css';

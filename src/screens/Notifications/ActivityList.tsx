@@ -1,10 +1,10 @@
 import { useTitle } from '#/lib/hooks/useTitle';
 
 import { EmptyState } from '#/components/EmptyState';
-import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 import * as Layout from '#/components/web/Layout';
 
+import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 

@@ -34,26 +34,6 @@ import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
-import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
-import {
-	EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
-	EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
-} from '#/components/icons/Emoji';
-import { Eye_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/Eye';
-import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
-import {
-	Mute_Stroke2_Corner0_Rounded as Mute,
-	Mute_Stroke2_Corner0_Rounded as MuteIcon,
-} from '#/components/icons/Mute';
-import { PersonX_Stroke2_Corner0_Rounded as PersonX } from '#/components/icons/Person';
-import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { SettingsGear2_Stroke2_Corner0_Rounded as Gear } from '#/components/icons/SettingsGear2';
-import {
-	SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute,
-	SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon,
-} from '#/components/icons/Speaker';
-import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
-import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
@@ -62,6 +42,18 @@ import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
+import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
+import EmojiSad from '#/icons/central/EmojiSad_round_outlined_radius1_stroke2.svg';
+import EmojiSmile from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
+import Warning from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
+import Eye from '#/icons/central/EyeOpen_round_outlined_radius1_stroke2.svg';
+import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
+import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
+import Gear from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
+import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
+import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
+import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
@@ -485,7 +477,7 @@ function PostMenuItems({
 												? m['common.mute.action.unmuteAccount']()
 												: m['common.mute.action.muteAccount']()}
 										</Menu.ItemText>
-										<Menu.ItemIcon icon={postAuthor.viewer?.muted ? UnmuteIcon : MuteIcon} position="right" />
+										<Menu.ItemIcon icon={postAuthor.viewer?.muted ? Unmute : Mute} position="right" />
 									</Menu.Item>
 
 									{!postAuthor.viewer?.blocking && (

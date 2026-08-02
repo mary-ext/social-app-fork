@@ -14,7 +14,6 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
@@ -25,6 +24,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineButton } from '#/components/web/Link';
 
+import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 

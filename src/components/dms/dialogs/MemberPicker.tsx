@@ -19,13 +19,13 @@ import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
 import * as SearchField from '#/components/forms/SearchField';
-import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export type EmptyRow = { kind: 'empty'; key: string; message: string };

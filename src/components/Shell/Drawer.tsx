@@ -17,35 +17,6 @@ import { Trans } from '#/locale/Trans';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import {
-	Bell_Filled_Corner0_Rounded as BellFilled,
-	Bell_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell';
-import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
-import { BulletList_Stroke2_Corner0_Rounded as List } from '#/components/icons/BulletList';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGrid } from '#/components/icons/DotGrid';
-import {
-	Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-	Hashtag_Stroke2_Corner0_Rounded as Hashtag,
-} from '#/components/icons/Hashtag';
-import {
-	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-	HomeOpen_Stoke2_Corner0_Rounded as Home,
-} from '#/components/icons/HomeOpen';
-import {
-	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
-	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
-} from '#/components/icons/MagnifyingGlass';
-import {
-	Message_Stroke2_Corner0_Rounded as Message,
-	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
-} from '#/components/icons/Message';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { SettingsGear2_Stroke2_Corner0_Rounded as Settings } from '#/components/icons/SettingsGear2';
-import {
-	UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
-	UserCircle_Stroke2_Corner0_Rounded as UserCircle,
-} from '#/components/icons/UserCircle';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as styles from '#/components/Shell/Drawer.css';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
@@ -53,6 +24,23 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import BellFilled from '#/icons/central/Bell_round_filled_radius1_stroke2.svg';
+import Bell from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
+import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
+import Bookmark from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
+import MessageFilled from '#/icons/central/BubbleAnnotation3_round_filled_radius1_stroke2.svg';
+import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
+import List from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
+import DotGrid from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import HashtagFilled from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
+import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
+import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import UserCircleFilled from '#/icons/central/PeopleCircle_round_filled_radius1_stroke2.svg';
+import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import Settings from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
@@ -155,7 +143,7 @@ function DrawerContent() {
 					/>
 					<MenuItem
 						activeIcon={HashtagFilled}
-						inactiveIcon={Hashtag}
+						inactiveIcon={HashtagFilled}
 						isActive={isAtFeeds}
 						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}
@@ -200,7 +188,7 @@ function DrawerContent() {
 					/>
 					<MenuItem
 						activeIcon={HashtagFilled}
-						inactiveIcon={Hashtag}
+						inactiveIcon={HashtagFilled}
 						isActive={isAtFeeds}
 						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}

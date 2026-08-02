@@ -15,9 +15,9 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import * as Dialog from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import * as Menu from '#/components/Menu';
 
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { LanguageButton } from './LanguageButton';

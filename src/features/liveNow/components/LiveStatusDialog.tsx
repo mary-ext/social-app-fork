@@ -18,13 +18,13 @@ import { reportDialogHandle } from '#/components/dialogs/handles';
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
-import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

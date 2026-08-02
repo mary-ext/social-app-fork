@@ -5,10 +5,10 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Dialog from '#/components/Dialog';
-import { BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon } from '#/components/icons/BellPlus';
-import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import BellPlusIcon from '#/icons/central-custom/BellPlus_round_outlined_radius1_stroke2.svg';
+import BellRingingIcon from '#/icons/central-custom/BellRinging_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 /** Round bell button opening the activity-subscription dialog. */

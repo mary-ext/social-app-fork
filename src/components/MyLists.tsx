@@ -6,11 +6,11 @@ import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
 
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
-import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
 import { ListFooter } from '#/components/Lists';
 
+import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

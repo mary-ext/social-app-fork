@@ -2,11 +2,11 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useSession } from '#/state/session';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
+import CircleXIcon from '#/icons/central/CircleX_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

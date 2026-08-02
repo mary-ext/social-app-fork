@@ -14,18 +14,18 @@ import { clsx } from 'clsx';
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
 import type { LightboxPayload } from '#/components/dialogs/handles';
-import { ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon } from '#/components/icons/ArrowOutOfBox';
 import {
 	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
 	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
-import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
+import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
+import ShareIcon from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Lightbox.css';

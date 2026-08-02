@@ -1,15 +1,14 @@
 import type { ComponentType, SVGProps } from 'react';
 
-import { Apples_Stroke2_Corner0_Rounded as AppleIcon } from '#/components/icons/Apples';
-import { Car1_Stroke2_Corner0_Rounded as CarIcon } from '#/components/icons/Car';
-import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
-import { EmojiGrinning_Stroke2_Corner0_Rounded as EmojiIcon } from '#/components/icons/Emoji';
-import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
-import { Growth_Stroke2_Corner0_Rounded as GrowthIcon } from '#/components/icons/Growth';
-import { LightbulbSimple_Stroke2_Corner0_Rounded as LightbulbIcon } from '#/components/icons/Lightbulb';
-import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
-import { Tennis_Stroke2_Corner0_Rounded as TennisIcon } from '#/components/icons/Tennis';
-
+import AppleIcon from '#/icons/central/Apples_round_outlined_radius1_stroke2.svg';
+import CarIcon from '#/icons/central/Car1_round_outlined_radius1_stroke2.svg';
+import ClockIcon from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
+import EmojiIcon from '#/icons/central/EmojiGrinning_round_outlined_radius1_stroke2.svg';
+import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import GrowthIcon from '#/icons/central/Growth_round_outlined_radius1_stroke2.svg';
+import LightbulbIcon from '#/icons/central/LightBulbSimple_round_outlined_radius1_stroke2.svg';
+import ShapesIcon from '#/icons/central/ShapesPlusXSquareCircle_round_outlined_radius1_stroke2.svg';
+import TennisIcon from '#/icons/central/Tennis_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 /** a picker section: the representative nav icon and localized header label for a section key. */

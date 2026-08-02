@@ -9,13 +9,13 @@ import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTick } from '#/state/tick';
 
 import { AvatarStack } from '#/components/AvatarStack';
-import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';
-import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import { Text } from '#/components/Text';
 import { useTopic } from '#/components/trending-topics';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import FlameIcon from '#/icons/central/Fire2_round_outlined_radius1_stroke2.svg';
+import TrendingIcon from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ExploreTrendingTopics.css';

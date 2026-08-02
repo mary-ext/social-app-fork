@@ -3,11 +3,12 @@ import type { ComponentType, SVGProps } from 'react';
 import { Toast as BaseToast, type ToastManager } from '@base-ui/react/toast';
 import { clsx } from 'clsx';
 
-import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import * as css from '#/components/Toast/Toast.css';
 import type { ToastData, ToastType } from '#/components/Toast/types';
+
+import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import Warning from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 
 const ICONS: Record<ToastType, ComponentType<SVGProps<SVGSVGElement>>> = {
 	default: CircleCheck,

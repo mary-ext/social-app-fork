@@ -5,11 +5,11 @@ import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useSession } from '#/state/session';
 
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
+import LockIcon from '#/icons/central/Lock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

@@ -1,6 +1,5 @@
 import type { ComponentType, SVGProps } from 'react';
 
-
 export type ToastType = 'default' | 'error' | 'info' | 'success' | 'warning';
 
 /** An optional action button rendered inside a toast (e.g. "Undo", "View"). */

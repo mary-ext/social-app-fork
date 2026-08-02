@@ -28,9 +28,6 @@ import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
-import { ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlassIcon } from '#/components/icons/ListMagnifyingGlass';
-import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';
-import { SettingsGear2_Stroke2_Corner0_Rounded as Gear } from '#/components/icons/SettingsGear2';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
 import { Text } from '#/components/Text';
@@ -38,6 +35,9 @@ import { ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';
 
+import ListSparkleIcon from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import ListMagnifyingGlassIcon from '#/icons/central/SearchMenu_round_outlined_radius1_stroke2.svg';
+import Gear from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

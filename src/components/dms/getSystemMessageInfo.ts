@@ -4,18 +4,13 @@ import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
-import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
-import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
-import {
-	ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
-	ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
-} from '#/components/icons/ChainLink';
-import {
-	Lock_Stroke2_Corner0_Rounded as LockIcon,
-	Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
-} from '#/components/icons/Lock';
-import { PencilLine_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
-
+import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
+import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
+import ChainLinkBrokenIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import LockIcon from '#/icons/central/Lock_round_outlined_radius1_stroke2.svg';
+import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import UnlockIcon from '#/icons/central/Unlocked_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export type SystemMessageAction =

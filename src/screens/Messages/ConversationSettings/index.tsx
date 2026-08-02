@@ -24,15 +24,6 @@ import { AfterReportConversationDialog } from '#/components/dms/AfterReportConve
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
-import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
-import {
-	Bell2_Stroke2_Corner0_Rounded as BellIcon,
-	Bell2Off_Stroke2_Corner0_Rounded as BellOffIcon,
-} from '#/components/icons/Bell2';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
-import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
-import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Prompt from '#/components/Prompt';
@@ -41,6 +32,13 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 
+import ArrowBoxLeftIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
+import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
+import BellOffIcon from '#/icons/central/BellOff_round_outlined_radius1_stroke2.svg';
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import EditIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
+import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import LockIcon from '#/icons/central/Lock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
 

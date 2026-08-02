@@ -3,7 +3,6 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
@@ -12,6 +11,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

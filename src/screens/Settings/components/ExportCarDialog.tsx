@@ -9,13 +9,13 @@ import { getClients, useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ExportCarDialog.css';

@@ -9,14 +9,14 @@ import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
 import { EmptyState } from '#/components/EmptyState';
-import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
-import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import { List, type ListMethods } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
+import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './AboutSection.css';

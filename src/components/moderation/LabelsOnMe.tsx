@@ -6,10 +6,10 @@ import { clsx } from 'clsx';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { LabelsOnMeDialog } from '#/components/moderation/LabelsOnMeDialog';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
 
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelsOnMe.css';

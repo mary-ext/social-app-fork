@@ -13,11 +13,7 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
-import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
-import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon } from '#/components/icons/Inbox';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Text';
@@ -25,6 +21,10 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
+import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import InboxLargeIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

@@ -5,11 +5,11 @@ import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ShareDialog.css';

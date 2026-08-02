@@ -14,11 +14,6 @@ import { AfterReportConversationDialog } from '#/components/dms/AfterReportConve
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
-import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX';
-import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
-import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { Spinner } from '#/components/Spinner';
@@ -30,6 +25,11 @@ import {
 	ButtonText as WebButtonText,
 } from '#/components/web/Button';
 
+import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import CircleXIcon from '#/icons/central/CircleX_round_outlined_radius1_stroke2.svg';
+import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
+import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
@@ -117,7 +117,7 @@ export function RejectMenu({
 						{showDeleteConvo && (
 							<Menu.Item label={m['common.chat.action.deleteConversation']()} onClick={onPressDelete}>
 								<Menu.ItemText>{m['common.chat.action.deleteConversation']()}</Menu.ItemText>
-								<Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} position="right" />
+								<Menu.ItemIcon icon={CircleXIcon} position="right" />
 							</Menu.Item>
 						)}
 						<Menu.Item label={m['common.block.action.blockAccount']()} onClick={onPressBlock}>

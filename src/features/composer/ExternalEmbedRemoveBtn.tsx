@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 
-import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import X from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ExternalEmbedRemoveBtn.css';

@@ -9,7 +9,6 @@ import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-gro
 import { useSession } from '#/state/session';
 
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -17,6 +16,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import EllipsisIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './Member.css';

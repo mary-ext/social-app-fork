@@ -8,12 +8,12 @@ import {
 	useServiceWorkerStatus,
 } from '#/lib/service-worker';
 
-import { ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon } from '#/components/icons/ArrowRotate';
-import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
 
+import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
+import ArrowRotateIcon from '#/icons/central/ArrowRotateClockwise_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;

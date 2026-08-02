@@ -8,13 +8,13 @@ import { ExportCarDialog } from '#/screens/Settings/components/ExportCarDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { resolveAllowGroupInvites } from '#/components/dms/util';
-import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
-import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
-import { Message_Stroke2_Corner0_Rounded as MessageIcon } from '#/components/icons/Message';
 import * as Settings from '#/components/SettingsCards';
 import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 
+import MessageIcon from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
+import CarIcon from '#/icons/central/CarFrontView_round_outlined_radius1_stroke2.svg';
+import GroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 type AllowIncoming = 'all' | 'following' | 'none';

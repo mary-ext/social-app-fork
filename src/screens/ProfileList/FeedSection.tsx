@@ -6,13 +6,13 @@ import { softReset } from '#/state/events';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
 import { EmptyState } from '#/components/EmptyState';
-import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
-import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
+import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect } from '#/routes';
 

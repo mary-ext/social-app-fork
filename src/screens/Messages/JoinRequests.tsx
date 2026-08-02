@@ -21,7 +21,6 @@ import { useSession } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
-import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
 import { List } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
@@ -32,6 +31,7 @@ import { KnownFollowers } from '#/components/web/KnownFollowers';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

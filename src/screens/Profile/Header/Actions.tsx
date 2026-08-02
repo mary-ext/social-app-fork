@@ -3,10 +3,10 @@ import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
 import * as Dialog from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import * as Prompt from '#/components/Prompt';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useProfileHeader } from './Context';

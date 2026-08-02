@@ -24,8 +24,6 @@ import { useSession } from '#/state/session';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { BlockLink } from '#/components/BlockLink';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText, type RichTextProps } from '#/components/RichText';
@@ -37,6 +35,8 @@ import * as Pills from '#/components/web/Pills';
 import * as css from '#/components/web/ProfileCard.css';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 /**

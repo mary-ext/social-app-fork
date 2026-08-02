@@ -2,17 +2,15 @@ import type { ComponentType, SVGProps } from 'react';
 
 import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
 
-import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
-import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
-import {
-	EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
-	EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
-} from '#/components/icons/Emoji';
-import { Heart2_Stroke2_Corner0_Rounded as Heart } from '#/components/icons/Heart2';
-import { Shaka_Stroke2_Corner0_Rounded as Shaka } from '#/components/icons/Shaka';
-import { Trending3_Stroke2_Corner1_Rounded as Trending } from '#/components/icons/Trending';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import Celebrate from '#/icons/central/Celebrate_round_outlined_radius1_stroke2.svg';
+import Clock from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
+import EmojiSad from '#/icons/central/EmojiSad_round_outlined_radius1_stroke2.svg';
+import EmojiSmile from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
+import Heart from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
+import Shaka from '#/icons/central/Shaka1_round_outlined_radius1_stroke2.svg';
+import Trending from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export type GifCategory = {

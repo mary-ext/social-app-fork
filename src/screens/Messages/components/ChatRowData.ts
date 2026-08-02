@@ -17,8 +17,8 @@ import { getMessageInfo } from '#/components/dms/getMessageInfo';
 import { getReactionInfo } from '#/components/dms/getReactionInfo';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 
+import LockIcon from '#/icons/central/Lock_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 /**

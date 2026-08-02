@@ -4,13 +4,13 @@ import { ADULT_CONTENT_LABELS, OTHER_SELF_LABELS, type SelfLabel } from '#/lib/m
 
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
-import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
-import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
-import { Shield_Stroke2_Corner0_Rounded } from '#/components/icons/Shield';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import Check from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import TinyChevronIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
+import ShieldIcon from '#/icons/central/Shield_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange: (v: SelfLabel[]) => void }) {
@@ -37,7 +37,7 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 				handle={handle}
 				render={
 					<Button color="secondary" size="small" label={m['view.composer.contentWarning.title']()}>
-						<ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
+						<ButtonIcon icon={hasLabel ? Check : ShieldIcon} />
 						<ButtonText>
 							{hasLabel ? m['view.composer.contentWarning.labelsAdded']() : m['common.moderation.labels']()}
 						</ButtonText>

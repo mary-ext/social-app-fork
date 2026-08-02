@@ -8,8 +8,6 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { useListMembershipRemoveMutation } from '#/state/queries/list-memberships';
 
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
@@ -17,6 +15,8 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as profileCardCss from '#/components/web/ProfileCard.css';
 
+import DotsHorizontal from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ListMember.css';

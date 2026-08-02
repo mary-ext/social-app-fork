@@ -1,9 +1,9 @@
 import { Sparkle_Filled_Corner0_Rounded as SparkleIcon } from '#/components/icons/Sparkle';
-import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

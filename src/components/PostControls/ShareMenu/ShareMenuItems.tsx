@@ -11,12 +11,13 @@ import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import { SendViaChatDialog } from '#/components/dms/dialogs/SendViaChatDialog';
-import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
-import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
 import * as Menu from '#/components/Menu';
 
+import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
+import Bookmark from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
+import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
+import Send from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

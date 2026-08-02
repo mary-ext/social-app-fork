@@ -23,43 +23,7 @@ import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/ses
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
-import {
-	Bell_Filled_Corner0_Rounded as BellFilledIcon,
-	Bell_Stroke2_Corner0_Rounded as BellIcon,
-} from '#/components/icons/Bell';
-import { BookmarkFilled as BookmarkFilledIcon, Bookmark as BookmarkIcon } from '#/components/icons/Bookmark';
-import {
-	BulletList_Filled_Corner0_Rounded as ListFilledIcon,
-	BulletList_Stroke2_Corner0_Rounded as ListIcon,
-} from '#/components/icons/BulletList';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
-import {
-	Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
-	Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
-} from '#/components/icons/Hashtag';
-import {
-	HomeOpen_Filled_Corner0_Rounded as HomeFilledIcon,
-	HomeOpen_Stoke2_Corner0_Rounded as HomeIcon,
-} from '#/components/icons/HomeOpen';
-import {
-	MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilledIcon,
-	MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon,
-} from '#/components/icons/MagnifyingGlass';
-import {
-	Message_Stroke2_Corner0_Rounded_Filled as MessageFilledIcon,
-	Message_Stroke2_Corner0_Rounded as MessageIcon,
-} from '#/components/icons/Message';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import {
-	SettingsGear2_Filled_Corner0_Rounded as SettingsFilledIcon,
-	SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon,
-} from '#/components/icons/SettingsGear2';
-import {
-	UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
-	UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
-} from '#/components/icons/UserCircle';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
@@ -68,6 +32,26 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link, useInternalLink } from '#/components/web/Link';
 
+import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
+import BellFilledIcon from '#/icons/central/Bell_round_filled_radius1_stroke2.svg';
+import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
+import BookmarkFilledIcon from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
+import BookmarkIcon from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
+import MessageFilledIcon from '#/icons/central/BubbleAnnotation3_round_filled_radius1_stroke2.svg';
+import MessageIcon from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
+import ListFilledIcon from '#/icons/central/BulletList_round_filled_radius1_stroke2.svg';
+import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
+import HashtagFilledIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import HomeFilledIcon from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
+import HomeIcon from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassFilledIcon from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import UserCircleFilledIcon from '#/icons/central/PeopleCircle_round_filled_radius1_stroke2.svg';
+import UserCircleIcon from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import SettingsFilledIcon from '#/icons/central/SettingsGear2_round_filled_radius1_stroke2.svg';
+import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
@@ -446,7 +430,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						minimal={leftNavMinimal}
 						icons={{
 							active: HashtagFilledIcon,
-							inactive: HashtagIcon,
+							inactive: HashtagFilledIcon,
 						}}
 						label={m['common.nav.feeds']()}
 					/>

@@ -12,9 +12,6 @@ import {
 	useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences';
 
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass';
-import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
-import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { atomicSegment } from '#/components/RichText.css';
@@ -24,6 +21,9 @@ import * as textStyles from '#/components/Text.css';
 import { type InlineLinkUnderline, useInternalLink } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 
+import Search from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import Person from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

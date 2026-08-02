@@ -4,7 +4,7 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const insetFocusRing = style({
 	selectors: {
@@ -351,4 +351,9 @@ export const pubSubscribeStacked = style({
 	position: 'relative',
 	zIndex: 1,
 	marginTop: space.sm,
+});
+
+export const publisherIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
 });

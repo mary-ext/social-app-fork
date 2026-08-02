@@ -12,11 +12,11 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
 
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function ThreadItemAnchorFollowButton({ did, enabled = true }: { did: Did; enabled?: boolean }) {

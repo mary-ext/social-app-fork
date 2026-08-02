@@ -18,19 +18,8 @@ import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { EmptyState } from '#/components/EmptyState';
 import { FAB } from '#/components/FAB';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
-import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
-import { BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon } from '#/components/icons/Bubble';
-import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import {
-	Inbox_Stroke2_Corner2_Rounded as InboxIcon,
-	Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon,
-} from '#/components/icons/Inbox';
-import {
-	MessagePlus_Stroke2_Corner0_Rounded as MessagePlusIcon,
-	MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
-} from '#/components/icons/Message';
-import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/components/icons/SettingsGear2';
+import { MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon } from '#/components/icons/Message';
 import { List, type ListMethods } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Menu from '#/components/Menu';
@@ -39,6 +28,12 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import MessagePlusIcon from '#/icons/central-custom/MessagePlus_round_outlined_radius1_stroke2.svg';
+import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import CircleCheckIcon from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
+import InboxIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
+import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
+import BubbleSmileIcon from '#/icons/original/BubbleSmile.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
@@ -209,7 +204,7 @@ export function ChatList({
 				) : isWithinSplitView ? (
 					<EmptyState
 						message={m['screens.messages.chats.inboxEmpty']()}
-						icon={InboxLargeIcon}
+						icon={InboxIcon}
 						iconSize="_4xl"
 						messageColor="text"
 						iconColor={colors.text}

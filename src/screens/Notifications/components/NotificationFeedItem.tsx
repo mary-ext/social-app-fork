@@ -41,7 +41,6 @@ import { Trans } from '#/locale/Trans';
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
@@ -49,7 +48,6 @@ import {
 import { Contacts_Filled_Corner2_Rounded as ContactsIconFilled } from '#/components/icons/Contacts';
 import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2';
 import { PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
@@ -70,6 +68,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

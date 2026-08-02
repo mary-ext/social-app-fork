@@ -1,4 +1,12 @@
-import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode, type SVGProps } from 'react';
+import {
+	Children,
+	cloneElement,
+	type ComponentType,
+	Fragment,
+	isValidElement,
+	type ReactNode,
+	type SVGProps,
+} from 'react';
 
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
@@ -6,7 +14,6 @@ import { clsx } from 'clsx';
 
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
 import * as Select from '#/components/Select';
@@ -15,6 +22,8 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { type LinkProps, useInternalLink } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
+
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 
 /**
  * card-sectioned settings vocabulary: a list of titled section cards, each holding whole-row button, switch,
@@ -401,7 +410,13 @@ export function Value({ text }: { text: string }) {
 }
 
 /** a row's trailing slot: an optional current value, right-aligned against the row's own chevron. */
-function RowTrailing({ chevron: ChevronCmp, text }: { chevron: ComponentType<SVGProps<SVGSVGElement>>; text?: string }) {
+function RowTrailing({
+	chevron: ChevronCmp,
+	text,
+}: {
+	chevron: ComponentType<SVGProps<SVGSVGElement>>;
+	text?: string;
+}) {
 	return (
 		<span className={styles.trailing}>
 			{text != null && <Value text={text} />}

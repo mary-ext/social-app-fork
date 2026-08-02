@@ -11,9 +11,9 @@ import { SearchHeader } from '#/screens/Search/SearchHeader';
 import type { TabParam } from '#/screens/Search/utils';
 
 import { EmptyState } from '#/components/EmptyState';
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import * as Layout from '#/components/web/Layout';
 
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

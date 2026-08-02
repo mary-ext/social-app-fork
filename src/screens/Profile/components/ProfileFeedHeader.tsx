@@ -20,20 +20,11 @@ import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
-import {
-	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-	Heart2_Stroke2_Corner0_Rounded as Heart,
-} from '#/components/icons/Heart2';
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled } from '#/components/icons/Heart2';
 import {
 	Pin_Filled_Corner0_Rounded as PinFilled,
 	Pin_Stroke2_Corner0_Rounded as Pin,
 } from '#/components/icons/Pin';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
@@ -45,6 +36,13 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 
+import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import X from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import Heart from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 

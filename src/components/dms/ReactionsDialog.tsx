@@ -10,7 +10,6 @@ import type { SessionAccount } from '#/state/session/types';
 
 import * as Dialog from '#/components/Dialog';
 import { filterBlockedReactions } from '#/components/dms/util';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as TabScroller from '#/components/TabScroller';
 import { tabLabel } from '#/components/TabScroller.css';
 import { Text } from '#/components/Text';
@@ -18,6 +17,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 

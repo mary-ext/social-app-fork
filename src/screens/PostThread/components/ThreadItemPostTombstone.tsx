@@ -1,7 +1,7 @@
-import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { Text } from '#/components/Text';
 
+import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ThreadItemPostTombstone.css';

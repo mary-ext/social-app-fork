@@ -6,9 +6,9 @@ import type { Shadow } from '#/state/cache/post-shadow';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useRequireAuth } from '#/state/session';
 
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as toast from '#/components/Toast';
 
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 /**

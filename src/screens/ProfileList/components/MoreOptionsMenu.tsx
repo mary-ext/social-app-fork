@@ -11,19 +11,19 @@ import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
-import { ChainLink_Stroke2_Corner0_Rounded as ChainLink } from '#/components/icons/ChainLink';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon } from '#/components/icons/DotGrid';
-import { PencilLine_Stroke2_Corner0_Rounded as PencilLineIcon } from '#/components/icons/Pencil';
-import { PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon } from '#/components/icons/Person';
-import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ChainLink from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import DotGridIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
+import PencilLineIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import PersonCheckIcon from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
+import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {

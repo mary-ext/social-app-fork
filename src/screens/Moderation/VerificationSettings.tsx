@@ -9,13 +9,13 @@ import {
 
 import { Trans } from '#/locale/Trans';
 
-import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
 import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './VerificationSettings.css';

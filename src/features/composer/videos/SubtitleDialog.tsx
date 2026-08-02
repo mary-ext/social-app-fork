@@ -14,14 +14,14 @@ import { LOCALE } from '#/locale/intl/locale';
 import { LANGUAGES, langCode } from '#/locale/languages';
 
 import * as Dialog from '#/components/Dialog';
-import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
-import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import * as Select from '#/components/Select';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import CCIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
+import X from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import PageTextIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';

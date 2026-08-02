@@ -7,10 +7,10 @@ import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries
 
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
-import { Bell_Stroke2_Corner0_Rounded as BellIcon } from '#/components/icons/Bell';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 
+import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './NotificationFeed.css';

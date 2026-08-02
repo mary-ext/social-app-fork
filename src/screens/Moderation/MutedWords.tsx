@@ -17,12 +17,6 @@ import * as Dialog from '#/components/Dialog';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorScreen } from '#/components/ErrorScreen';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
-import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
-import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
-import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons/PageText';
-import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
@@ -31,6 +25,12 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import DotsHorizontal from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import Hashtag from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import PageText from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './MutedWords.css';

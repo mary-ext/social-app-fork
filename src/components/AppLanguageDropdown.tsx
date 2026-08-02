@@ -3,10 +3,10 @@ import { setAppLanguage } from '#/state/preferences/app-language';
 import { LOCALE } from '#/locale/intl/locale';
 import { APP_LANGUAGES } from '#/locale/languages';
 
-import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import * as Select from '#/components/Select';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { Locale } from '#/paraglide/runtime';
 

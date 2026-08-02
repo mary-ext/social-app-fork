@@ -11,7 +11,6 @@ import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
-
 import * as css from './SystemMessageItem.css';
 
 export function SystemMessageItem({

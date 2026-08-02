@@ -5,11 +5,11 @@ import { listTarget } from '#/lib/routes/targets';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { MyLists } from '#/components/MyLists';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

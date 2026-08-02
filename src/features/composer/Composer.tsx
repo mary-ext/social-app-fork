@@ -58,7 +58,6 @@ import { VideoPreview } from '#/features/composer/videos/VideoPreview';
 
 import * as Dialog from '#/components/Dialog';
 import { closeAllDialogs } from '#/components/Dialog/registry';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Prompt from '#/components/Prompt';
@@ -66,6 +65,7 @@ import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

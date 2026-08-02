@@ -10,13 +10,11 @@ import {
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import {
-	ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,
-	ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
-} from '#/components/icons/Arrow';
 import * as css from '#/components/TabScroller.css';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ArrowLeft from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
+import ArrowRight from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 

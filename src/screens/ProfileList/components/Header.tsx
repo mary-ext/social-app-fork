@@ -8,12 +8,12 @@ import {
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 

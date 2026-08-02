@@ -2,14 +2,14 @@ import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
 
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom } from '#/components/icons/Chevron';
-import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
-import { ListSparkle_Stroke2_Corner0_Rounded as BrowseFeedsIcon } from '#/components/icons/ListSparkle';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton, useInternalLink } from '#/components/web/Link';
 
+import FeedsIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import BrowseFeedsIcon from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './HomeHeaderLayout.css';

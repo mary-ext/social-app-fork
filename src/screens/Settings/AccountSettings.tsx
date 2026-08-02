@@ -13,14 +13,14 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
-import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
-import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon } from '#/components/icons/EyeSlash';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
+import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
+import CarIcon from '#/icons/central/CarFrontView_round_outlined_radius1_stroke2.svg';
+import EyeSlashIcon from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
+import RobotIcon from '#/icons/central/Robot_round_outlined_radius0_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';

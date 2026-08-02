@@ -3,11 +3,11 @@ import { useTitle } from '#/lib/hooks/useTitle';
 import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/state/preferences/alt-text';
 import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
-import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/icons/TextSize';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
+import TextSizeIcon from '#/icons/central/TextSize_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function AccessibilitySettingsScreen() {
