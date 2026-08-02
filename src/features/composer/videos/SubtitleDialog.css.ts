@@ -1,8 +1,17 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
-export const icon = style({ gridArea: 'icon' });
+const icon = style({
+	gridArea: 'icon',
+	width: iconSize.sm,
+	height: iconSize.sm,
+});
+
+export const fileIcon = style([icon, { color: vars.palette.contrast_1000 }]);
+
+export const warningIcon = style([icon, { color: vars.palette.negative_500 }]);
 
 export const captionsList = style({
 	containerType: 'inline-size',

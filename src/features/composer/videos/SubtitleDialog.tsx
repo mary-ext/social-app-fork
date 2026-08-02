@@ -15,17 +15,16 @@ import { LANGUAGES, langCode } from '#/locale/languages';
 
 import * as Dialog from '#/components/Dialog';
 import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC';
-import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/icons/PageText';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Select from '#/components/Select';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
+import PageTextIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './SubtitleDialog.css';
 import { SubtitleFilePicker } from './SubtitleFilePicker';
@@ -199,9 +198,9 @@ function SubtitleFileRow({
 	return (
 		<div className={clsx(css.row, alt && css.rowAlt)}>
 			{language === '' ? (
-				<WarningIcon className={css.icon} fill={colors.negative_500} size="sm" />
+				<WarningIcon className={css.warningIcon} />
 			) : (
-				<PageTextIcon className={css.icon} fill={colors.text} size="sm" />
+				<PageTextIcon className={css.fileIcon} />
 			)}
 			<Text className={css.fileName} weight="semiBold" leading="snug" numberOfLines={1}>
 				{file.name}
