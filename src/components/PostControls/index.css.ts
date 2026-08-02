@@ -83,12 +83,6 @@ export const text = style({
 	color: 'inherit',
 });
 
-export const pointerEventsNone = style({
-	width: iconSize.md,
-	height: iconSize.md,
-	pointerEvents: 'none',
-});
-
 export const icon = style({
 	pointerEvents: 'none',
 	width: iconSize.md,

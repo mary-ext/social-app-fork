@@ -248,7 +248,7 @@ let NotificationFeedItem = ({
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
-	let icon = <HeartIconFilled className={css.heartIconFilledIcon} />;
+	let icon = <HeartIconFilled className={css.likeIcon} />;
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
@@ -398,7 +398,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck className={css.verifiedCheckIcon} />;
+		icon = <VerifiedCheck className={css.verifiedIcon} />;
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.removed.multiName']({
@@ -419,7 +419,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck className={css.verifiedCheckIcon2} />;
+		icon = <VerifiedCheck className={css.unverifiedIcon} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.repost.multiName']({
@@ -460,7 +460,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <RepostIcon className={css.repostIcon2} />;
+		icon = <RepostIcon className={css.repostViaRepostIcon} />;
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors

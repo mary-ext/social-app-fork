@@ -55,7 +55,7 @@ function NotificationLoadingPlaceholder({ row, topBorder }: { row: NotificationR
 	return (
 		<div className={clsx(css.item, topBorder && css.itemTopBorder)}>
 			<div className={itemCss.iconColumn}>
-				<HeartIconFilled className={css.heartIconFilledIcon} />
+				<HeartIconFilled className={css.likeIcon} />
 			</div>
 			<div className={itemCss.content}>
 				<div className={css.avatars}>

@@ -15,7 +15,6 @@ import * as Layout from '#/components/web/Layout';
 
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { Explore } from './Explore';
 import * as css from './index.css';
@@ -49,7 +48,7 @@ export function ExploreScreen() {
 				) : (
 					<EmptyState
 						icon={MagnifyingGlassIcon}
-						iconColor={colors.textContrastMedium}
+						iconColor="textContrastMedium"
 						iconSize="_4xl"
 						message={m['screens.search.input.description']()}
 						messageColor="textContrastMedium"

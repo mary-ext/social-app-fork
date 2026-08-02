@@ -54,7 +54,7 @@ export function PostLoadingPlaceholder({ row, topBorder }: { row: PostRow; topBo
 				<div className={feedCss.reason}>
 					{reasonWidth != null ? (
 						<div className={reasonCss.includeReason}>
-							<RepostIcon className={reasonCss.repostIcon2} />
+							<RepostIcon className={reasonCss.reasonIconPlaceholder} />
 							{/* fixed px, not a %: the real reason hugs its content, so a percentage has no stable base */}
 							<Skele.Text color="contrast_25" size="md_sub" width={reasonWidth} />
 						</div>

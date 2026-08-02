@@ -46,7 +46,7 @@ export function PostOverflowMenuButton({
 			render={
 				<button type="button" aria-label={m['components.postControls.options.a11y']()} className={css.button}>
 					<span className={css.iconCircle}>
-						<DotsHorizontal className={css.pointerEventsNone} />
+						<DotsHorizontal className={css.icon} />
 					</span>
 				</button>
 			}

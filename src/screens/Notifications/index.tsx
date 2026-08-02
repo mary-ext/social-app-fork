@@ -126,11 +126,7 @@ export function NotificationsScreen() {
 					</Layout.Header.Outer>
 				}
 			/>
-			<FAB
-				icon={<EditBigIcon className={css.editBigIcon} />}
-				label={m['common.compose.action.new']()}
-				onClick={() => openComposer({})}
-			/>
+			<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={() => openComposer({})} />
 		</Layout.Screen>
 	);
 }

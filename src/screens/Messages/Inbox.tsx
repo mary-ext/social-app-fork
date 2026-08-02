@@ -27,7 +27,6 @@ import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2
 import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
@@ -143,7 +142,7 @@ function RequestList({
 				icon={InboxLargeIcon}
 				iconSize="_4xl"
 				messageColor="text"
-				iconColor={colors.text}
+				iconColor="text"
 				button={
 					isWithinSplitView
 						? undefined

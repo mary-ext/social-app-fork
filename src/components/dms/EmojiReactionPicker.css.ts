@@ -101,7 +101,7 @@ export const plusIcon = style({
 	height: iconSize.lg,
 });
 
-export const emojiSmileIcon = style({
+export const triggerIcon = style({
 	width: iconSize.lg,
 	height: iconSize.lg,
 	color: colors.textContrastMedium,

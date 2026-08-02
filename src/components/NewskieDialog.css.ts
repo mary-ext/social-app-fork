@@ -43,12 +43,12 @@ export const starterPack = style({
 	width: '100%',
 });
 
-export const newskieIcon = style({
+export const triggerIcon = style({
 	width: iconSize.xl,
 	height: iconSize.xl,
 });
 
-export const newskieIcon2 = style({
+export const headerIcon = style({
 	width: iconSize._5xl,
 	height: iconSize._5xl,
 });

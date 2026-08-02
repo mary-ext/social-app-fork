@@ -21,7 +21,6 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { FAB } from '#/components/FAB';
-import * as fabCss from '#/components/FAB.css';
 import * as Hider from '#/components/moderation/Hider';
 import { Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
@@ -171,11 +170,7 @@ function CuratedProfileList({
 				value={activeTab}
 			/>
 
-			<FAB
-				icon={<EditBigIcon className={fabCss.fabIcon} />}
-				label={m['common.compose.action.new']()}
-				onClick={() => openComposer({})}
-			/>
+			<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={() => openComposer({})} />
 			<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} onChange={onChangeMembers} />
 		</>
 	);

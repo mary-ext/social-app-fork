@@ -49,7 +49,7 @@ export const galleryTile = style({
 	maxWidth: 100,
 });
 
-export const heartIconFilledIcon = style({
+export const likeIcon = style({
 	width: iconSize.xl,
 	height: iconSize.xl,
 	color: colors.contrast_50,

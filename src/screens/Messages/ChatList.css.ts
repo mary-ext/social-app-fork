@@ -1,8 +1,15 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const banner = style({ marginBottom: space.sm });
+
+export const circleInfoIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastLow,
+});
 
 export const empty = style({ justifyContent: 'center', paddingBottom: 40, height: '100%' });
 

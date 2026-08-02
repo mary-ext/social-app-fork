@@ -47,12 +47,13 @@ export function Label({ cause, disableDetailsDialog, noBg, size = 'sm' }: LabelP
 	const desc = useModerationCauseDescription(cause);
 	const isLabeler = !!(desc.sourceType && desc.sourceDid);
 	const isBlueskyLabel = desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID;
+	// the glyph tracks the pill's text size rather than an icon token, and must match the avatar it swaps with.
 	const glyphSize = size === 'lg' ? 16 : 12;
 
 	const inner = (
 		<>
 			{isBlueskyLabel || !isLabeler ? (
-				<desc.icon className={styles.pillIcon[size]} />
+				<desc.icon height={glyphSize} width={glyphSize} />
 			) : (
 				<UserAvatar avatar={desc.sourceAvi} size={glyphSize} type="user" />
 			)}

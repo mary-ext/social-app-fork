@@ -12,7 +12,6 @@ import { ListFooter } from '#/components/Lists';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 const LIST_ITEM_HEIGHT_ESTIMATE = 120;
 
@@ -66,7 +65,7 @@ export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode 
 			if (item === LOADING) {
 				return <ListCard.LoadingPlaceholder count={10} />;
 			}
-			return <EmptyState icon={ListIcon} iconColor={colors.textContrastMedium} message={emptyText} />;
+			return <EmptyState icon={ListIcon} iconColor="textContrastMedium" message={emptyText} />;
 		}
 		return <ListCard.Default topBorder={index !== 0} view={item} />;
 	};

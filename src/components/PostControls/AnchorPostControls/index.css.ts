@@ -12,8 +12,6 @@ export const root = style({
 	height: 52,
 });
 
-export const pointerEventsNone = style({ pointerEvents: 'none' });
-
 export const icon = style({
 	pointerEvents: 'none',
 	width: iconSize.lg,

@@ -220,7 +220,7 @@ function Chrome() {
 			<div className={styles.topLeft}>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
-						<EllipsisIcon className={styles.rotated} />
+						<EllipsisIcon className={styles.controlIconRotated} />
 					</Menu.Trigger>
 					<Menu.Popup label={m['components.lightbox.a11y.options']()}>
 						<Menu.Item label={m['components.lightbox.share.label']()} onClick={() => void onShare()}>

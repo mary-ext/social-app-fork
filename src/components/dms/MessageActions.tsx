@@ -79,7 +79,7 @@ export function MessageActions({
 							className={clsx(props.className, reactionStyles.trigger)}
 							type="button"
 						>
-							<EmojiSmileIcon className={reactionStyles.emojiSmileIcon} />
+							<EmojiSmileIcon className={reactionStyles.triggerIcon} />
 						</button>
 					)}
 				/>
@@ -94,7 +94,7 @@ export function MessageActions({
 						className={clsx(props.className, reactionStyles.trigger)}
 						type="button"
 					>
-						<DotsHorizontalIcon className={reactionStyles.emojiSmileIcon} />
+						<DotsHorizontalIcon className={reactionStyles.triggerIcon} />
 					</button>
 				)}
 				senderProfile={senderProfile}

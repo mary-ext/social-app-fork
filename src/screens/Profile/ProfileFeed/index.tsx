@@ -21,7 +21,6 @@ import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
-import * as fabCss from '#/components/FAB.css';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
@@ -123,11 +122,7 @@ function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) 
 				/>
 			)}
 			{hasSession && (
-				<FAB
-					icon={<EditBigIcon className={fabCss.fabIcon} />}
-					label={m['common.compose.action.new']()}
-					onClick={() => openComposer({})}
-				/>
+				<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={() => openComposer({})} />
 			)}
 		</>
 	);

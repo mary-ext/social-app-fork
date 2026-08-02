@@ -188,7 +188,7 @@ export const starterPackBox = style({
 	padding: 8,
 });
 
-export const heartIconFilledIcon = style({
+export const likeIcon = style({
 	width: iconSize.xl,
 	height: iconSize.xl,
 	color: colors.pink,
@@ -211,19 +211,19 @@ export const starterPackIcon = style({
 	height: iconSize.xl,
 });
 
-export const verifiedCheckIcon = style({
+export const verifiedIcon = style({
 	width: iconSize._2xl,
-	color: colors.primary_500,
 	height: iconSize._2xl,
+	color: colors.primary_500,
 });
 
-export const verifiedCheckIcon2 = style({
+export const unverifiedIcon = style({
 	width: iconSize._2xl,
 	height: iconSize._2xl,
 	color: colors.contrast_500,
 });
 
-export const repostIcon2 = style({
+export const repostViaRepostIcon = style({
 	width: iconSize._2xl,
 	height: iconSize._2xl,
 	color: colors.positive_500,

@@ -78,12 +78,6 @@ export const circle = style({
 export const topLeft = style({ position: 'absolute', top: 20, left: 20, zIndex: 1 });
 export const topRight = style({ position: 'absolute', top: 20, right: 20, zIndex: 1 });
 
-export const rotated = style({
-	width: iconSize.lg,
-	height: iconSize.lg,
-	transform: 'rotate(90deg)',
-});
-
 export const navButton = style({
 	display: 'flex',
 	position: 'absolute',
@@ -195,3 +189,5 @@ export const controlIcon = style({
 	width: iconSize.lg,
 	height: iconSize.lg,
 });
+
+export const controlIconRotated = style([controlIcon, { transform: 'rotate(90deg)' }]);

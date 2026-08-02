@@ -17,8 +17,4 @@ export const reasonIcon = style({
 	height: 13,
 });
 
-export const repostIcon2 = style({
-	width: 13,
-	height: 13,
-	color: colors.contrast_50,
-});
+export const reasonIconPlaceholder = style([reasonIcon, { color: colors.contrast_50 }]);

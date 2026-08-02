@@ -35,7 +35,6 @@ import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_s
 import BubbleSmileIcon from '#/icons/original/BubbleSmile.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './ChatList.css';
 import { ChatDisabled } from './components/ChatDisabled';
@@ -83,7 +82,7 @@ export function MessagesScreen() {
 					message={m['screens.messages.conversation.sayHi']()}
 					icon={BubbleSmileIcon}
 					messageColor="text"
-					iconColor={colors.text}
+					iconColor="text"
 					iconSize="_4xl"
 					button={
 						chatStatus?.chatDisabled
@@ -111,12 +110,7 @@ export function MessagesScreen() {
 			{!chatStatus?.chatDisabled && (
 				<Dialog.Trigger
 					handle={newChatHandle}
-					render={
-						<FAB
-							icon={<NewChatIcon className={splitViewCss.newChatIcon} />}
-							label={m['common.chat.action.new']()}
-						/>
-					}
+					render={<FAB icon={NewChatIcon} label={m['common.chat.action.new']()} />}
 				/>
 			)}
 			<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
@@ -186,7 +180,7 @@ export function ChatList({
 					<ChatListLoadingPlaceholder />
 				) : isError ? (
 					<div className={css.errorWrap}>
-						<CircleInfoIcon className={splitViewCss.circleInfoIcon} />
+						<CircleInfoIcon className={css.circleInfoIcon} />
 						<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
 							{m['common.error.whoops']()}
 						</Text>
@@ -209,7 +203,7 @@ export function ChatList({
 						icon={InboxIcon}
 						iconSize="_4xl"
 						messageColor="text"
-						iconColor={colors.text}
+						iconColor="text"
 						className={css.emptyTall}
 					/>
 				) : (
@@ -218,7 +212,7 @@ export function ChatList({
 						icon={BubbleSmileIcon}
 						iconSize="_4xl"
 						messageColor="text"
-						iconColor={colors.text}
+						iconColor="text"
 						button={
 							chatStatus?.chatDisabled
 								? undefined

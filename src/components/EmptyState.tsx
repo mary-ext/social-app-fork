@@ -12,6 +12,7 @@ import { Text, type TextProps } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
+import { colors } from '#/styles/colors';
 import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 
 import * as css from './EmptyState.css';
@@ -43,7 +44,7 @@ export function EmptyState({
 	button?: EmptyStateButtonProps;
 	className?: string;
 	icon?: EmptyStateIcon | ReactElement | null;
-	iconColor?: string;
+	iconColor?: keyof typeof colors;
 	iconSize?: keyof typeof iconSizeToken;
 	message: string;
 	messageColor?: TextProps['color'];
@@ -59,9 +60,11 @@ export function EmptyState({
 			return icon;
 		}
 		const IconComponent = icon;
-		// the color is caller-supplied at runtime, so it cannot be a static class
 		return (
-			<IconComponent className={css.icon[iconSize]} style={iconColor ? { color: iconColor } : undefined} />
+			<IconComponent
+				className={css.icon[iconSize]}
+				style={iconColor ? { color: colors[iconColor] } : undefined}
+			/>
 		);
 	};
 

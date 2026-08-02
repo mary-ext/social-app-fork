@@ -14,7 +14,6 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { FAB } from '#/components/FAB';
-import * as fabCss from '#/components/FAB.css';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
@@ -81,11 +80,7 @@ export function FeedPage({
 				/>
 			)}
 			{hasSession && (
-				<FAB
-					icon={<EditBigIcon className={fabCss.fabIcon} />}
-					label={m['common.compose.action.new']()}
-					onClick={onPressCompose}
-				/>
+				<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={onPressCompose} />
 			)}
 		</>
 	);

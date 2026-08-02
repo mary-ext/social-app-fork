@@ -28,7 +28,6 @@ export const fab = style({
 	},
 });
 
-/** the glyph the {@link fab} centres; exported so call sites can style the element they pass in. */
 export const fabIcon = style({
 	width: iconSize.xl,
 	height: iconSize.xl,

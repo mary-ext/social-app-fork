@@ -351,11 +351,7 @@ function ProfileScreenLoaded({
 				}
 			/>
 			{hasSession && (
-				<FAB
-					icon={<EditBigIcon className={css.editBigIcon} />}
-					label={m['common.compose.action.new']()}
-					onClick={onPressCompose}
-				/>
+				<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={onPressCompose} />
 			)}
 		</ScreenHider>
 	);

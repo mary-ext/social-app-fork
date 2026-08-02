@@ -1,13 +1,7 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-
-// the glyph tracks the pill's text size rather than an icon token.
-export const pillIcon = styleVariants({
-	lg: { width: 16, height: 16 },
-	sm: { width: 12, height: 12 },
-});
 
 export const row = recipe(
 	{
