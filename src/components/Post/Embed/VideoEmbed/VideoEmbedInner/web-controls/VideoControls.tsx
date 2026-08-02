@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type Hls from 'hls.js';
 
+import { useInputModality } from '#/lib/input-modality';
 import { clamp } from '#/lib/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
@@ -33,6 +34,8 @@ import { Scrubber } from './Scrubber';
 import { formatTime, useVideoElement } from './utils';
 import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
+
+const isHoverPointer = (evt: React.PointerEvent) => evt.pointerType !== 'touch';
 
 export function Controls({
 	videoRef,
@@ -77,6 +80,8 @@ export function Controls({
 		canPlay,
 	} = useVideoElement(videoRef);
 	const subtitlesEnabled = useSubtitlesEnabled();
+	const isTouch = useInputModality() === 'touch';
+	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
@@ -168,12 +173,19 @@ export function Controls({
 	}, [active, setActive, setFocused]);
 
 	const onPressEmptySpace = () => {
+		if (isTouch) {
+			setTouchChromeVisible(!touchChromeVisible);
+		}
+
 		if (!focused) {
 			drawFocus();
 			if (autoplayDisabled) {
 				play();
 			}
-		} else {
+			return;
+		}
+
+		if (!isTouch) {
 			togglePlayPause();
 		}
 	};
@@ -249,7 +261,10 @@ export function Controls({
 
 	const [showCursor, setShowCursor] = useState(true);
 	const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-	const onPointerMoveEmptySpace = () => {
+	const onPointerMoveEmptySpace = (evt: React.PointerEvent<HTMLButtonElement>) => {
+		if (!isHoverPointer(evt)) {
+			return;
+		}
 		setShowCursor(true);
 		if (cursorTimeoutRef.current) {
 			clearTimeout(cursorTimeoutRef.current);
@@ -259,43 +274,39 @@ export function Controls({
 			onEndHover();
 		}, 2000);
 	};
-	const onPointerLeaveEmptySpace = () => {
+	const onPointerLeaveEmptySpace = (evt: React.PointerEvent<HTMLButtonElement>) => {
+		if (!isHoverPointer(evt)) {
+			return;
+		}
 		setShowCursor(false);
 		if (cursorTimeoutRef.current) {
 			clearTimeout(cursorTimeoutRef.current);
 		}
 	};
 
-	// these are used to trigger the hover state. on mobile, the hover state
-	// should stick around for a bit after they tap, and if the controls aren't
-	// present this initial tab should *only* show the controls and not activate anything
+	// a touch also fires enter/leave around its press, so these check the event's own pointer type
+	// rather than the ambient modality
 
-	const onPointerDown = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (evt.pointerType !== 'mouse' && !hovered) {
-			evt.preventDefault();
+	const onPointerHover = (evt: React.PointerEvent<HTMLDivElement>) => {
+		if (!isHoverPointer(evt)) {
+			return;
 		}
-		clearTimeout(timeoutRef.current);
-	};
-
-	const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-	const onHoverWithTimeout = () => {
 		onHover();
-		clearTimeout(timeoutRef.current);
 	};
 
-	const onEndHoverWithTimeout = (evt: React.PointerEvent<HTMLDivElement>) => {
-		// if touch, end after 3s
-		// if mouse, end immediately
-		if (evt.pointerType !== 'mouse') {
-			setTimeout(onEndHover, 3000);
-		} else {
-			onEndHover();
+	const onPointerEndHover = (evt: React.PointerEvent<HTMLDivElement>) => {
+		if (!isHoverPointer(evt)) {
+			return;
 		}
+		onEndHover();
 	};
 
-	const showControls =
-		((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered);
+	// a paused video keeps the chrome up for the mouse, so that play is one click away. touch reaches
+	// play through the chrome it just tapped open, so only an unstarted video pins it there — pinning
+	// it on pause would make the next tap a no-op
+	const showControls = isTouch
+		? touchChromeVisible || (autoplayDisabled && !playing)
+		: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered);
 
 	// adjust subtitle cue positioning to avoid occlusion by controls
 	// uses percentage-based positioning (snapToLines=false) so wrapped
@@ -322,10 +333,9 @@ export function Controls({
 				evt.stopPropagation();
 				setInteractingViaKeypress(false);
 			}}
-			onPointerEnter={onHoverWithTimeout}
-			onPointerMove={onHoverWithTimeout}
-			onPointerLeave={onEndHoverWithTimeout}
-			onPointerDown={onPointerDown}
+			onPointerEnter={onPointerHover}
+			onPointerMove={onPointerHover}
+			onPointerLeave={onPointerEndHover}
 			onFocus={onFocus}
 			onBlur={onBlur}
 			onKeyDown={onKeyDown}
@@ -337,9 +347,13 @@ export function Controls({
 				aria-label={
 					!focused
 						? m['components.post.video.a11y.unmute']()
-						: playing
-							? m['components.post.video.a11y.pause']()
-							: m['components.post.video.a11y.play']()
+						: isTouch
+							? showControls
+								? m['components.post.video.a11y.hideControls']()
+								: m['components.post.video.a11y.showControls']()
+							: playing
+								? m['components.post.video.a11y.pause']()
+								: m['components.post.video.a11y.play']()
 				}
 				onPointerEnter={onPointerMoveEmptySpace}
 				onPointerMove={onPointerMoveEmptySpace}
@@ -349,7 +363,11 @@ export function Controls({
 			{!showControls && !focused && duration > 0 && (
 				<TimeIndicator time={Math.floor(duration - currentTime)} />
 			)}
-			<div className={styles.gradientBar} data-visible={showControls}>
+			<div
+				className={styles.gradientBar}
+				data-visible={showControls}
+				data-modality={isTouch ? 'touch' : undefined}
+			>
 				{(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
 					<Scrubber
 						duration={duration}

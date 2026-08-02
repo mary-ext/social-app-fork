@@ -7,17 +7,18 @@ export const controls = style({
 	position: 'absolute',
 	inset: 0,
 	flexDirection: 'column',
+	justifyContent: 'flex-end',
 	overflow: 'hidden',
 });
 
 export const emptySpace = style({
 	appearance: 'none',
-	flex: 1,
+	position: 'absolute',
+	inset: 0,
 	margin: 0,
 	border: 0,
 	background: 'transparent',
 	padding: 0,
-	width: '100%',
 	cursor: 'pointer',
 	selectors: {
 		'&[data-cursor="none"]': { cursor: 'none' },
@@ -26,6 +27,7 @@ export const emptySpace = style({
 
 export const gradientBar = style({
 	boxSizing: 'border-box',
+	position: 'relative',
 	flexShrink: 0,
 	transition: 'opacity 0.2s ease-in-out',
 	opacity: 0,
@@ -34,6 +36,7 @@ export const gradientBar = style({
 	width: '100%',
 	selectors: {
 		'&[data-visible="true"]': { opacity: 1 },
+		'&[data-modality="touch"]:not([data-visible="true"])': { pointerEvents: 'none' },
 	},
 });
 
