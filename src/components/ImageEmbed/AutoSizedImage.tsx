@@ -9,10 +9,11 @@ import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
 import * as Dialog from '#/components/Dialog';
 import { lightboxHandle, type LightboxPayload } from '#/components/dialogs/handles';
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
+
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 
 export type AutoSizedImageProps = {
 	image: AppBskyEmbedGallery.ViewImage;
@@ -58,7 +59,7 @@ export function AutoSizedImage({ image, crop = 'constrained', payload, onPressIn
 		>
 			{status === 'error' ? (
 				<span className={styles.fallback}>
-					<ImageIcon fill="currentColor" size="3xl" />
+					<ImageIcon className={styles.imageIcon} />
 				</span>
 			) : (
 				<img

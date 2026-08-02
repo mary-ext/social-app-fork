@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const root = style({
 	display: 'flex',
@@ -34,4 +34,10 @@ export const cancel = style({
 	border: 'none',
 	background: 'none',
 	cursor: 'pointer',
+});
+
+export const xIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastHigh,
 });

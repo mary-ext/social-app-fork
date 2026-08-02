@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const row = style({
 	boxSizing: 'border-box',
@@ -48,4 +48,16 @@ export const iconCircle = style({
 		[`${row}:focus-visible:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
 		[`${row}:hover:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
 	},
+});
+
+export const plusIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastHigh,
+});
+
+export const chevronIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.textContrastMedium,
 });

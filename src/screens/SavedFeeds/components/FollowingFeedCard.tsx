@@ -1,8 +1,7 @@
-import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { Text } from '#/components/Text';
 
+import FilterTimeline from '#/icons/central/FilterTimeline_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './FollowingFeedCard.css';
 
@@ -10,7 +9,7 @@ export function FollowingFeedCard() {
 	return (
 		<div className={css.card}>
 			<div className={css.icon}>
-				<FilterTimeline width={22} fill={colors.white} />
+				<FilterTimeline className={css.filterTimelineIcon} />
 			</div>
 			<Text weight="medium">{m['common.follow.action.following']()}</Text>
 		</div>

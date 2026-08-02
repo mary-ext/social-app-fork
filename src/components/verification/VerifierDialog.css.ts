@@ -100,6 +100,8 @@ export const imageBox = style({
 });
 
 export const inlineCheck = style({
+	width: 14,
+	height: 14,
 	display: 'inline-flex',
 	position: 'relative',
 	top: -3,
@@ -131,3 +133,8 @@ export const verifierLabelClass = style([
 		placeSelf: 'center',
 	},
 ]);
+
+export const checkIcon = style({
+	width: 56,
+	height: 56,
+});

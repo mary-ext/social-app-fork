@@ -4,12 +4,11 @@ import { useCallOnce } from '#/lib/once';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
-import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
+import PageXIcon from '#/icons/original/PageX.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { DraftItem } from './DraftItem';
 import * as styles from './DraftsListDialog.css';
@@ -101,7 +100,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 						</div>
 					) : (
 						<div className={styles.empty}>
-							<PageXIcon size="4xl" fill={colors.textContrastLow} />
+							<PageXIcon className={styles.pageXIcon} />
 							<Text size="md" weight="medium" color="textContrastHigh" align="center">
 								{m['view.composer.drafts.empty']()}
 							</Text>

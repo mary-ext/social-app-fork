@@ -16,7 +16,6 @@ import { Trans } from '#/locale/Trans';
 import { NotificationFeed } from '#/screens/Notifications/components/NotificationFeed';
 
 import { FAB } from '#/components/FAB';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Spinner } from '#/components/Spinner';
@@ -26,10 +25,10 @@ import { ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
 
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useIsFocused } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './index.css';
 
@@ -128,7 +127,7 @@ export function NotificationsScreen() {
 				}
 			/>
 			<FAB
-				icon={<EditBigIcon size="xl" fill={colors.white} />}
+				icon={<EditBigIcon className={css.editBigIcon} />}
 				label={m['common.compose.action.new']()}
 				onClick={() => openComposer({})}
 			/>

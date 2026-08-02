@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 import { row } from './MemberPicker.css';
 
@@ -57,4 +57,16 @@ export const groupNameSection = style({
 
 export const error = style({
 	color: colors.negative_400,
+});
+
+export const personGroupIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastMedium,
+});
+
+export const chevronRightIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
 });

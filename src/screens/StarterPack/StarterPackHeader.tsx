@@ -5,14 +5,13 @@ import { profileTarget } from '#/lib/routes/targets';
 import { Trans } from '#/locale/Trans';
 
 import { StarterPack } from '#/components/icons/StarterPack';
-import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
+import TrendingIcon from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './StarterPackHeader.css';
 
@@ -48,7 +47,7 @@ export function StarterPackHeader({
 		<div className={css.outer}>
 			<div className={css.header}>
 				<div className={css.avatar}>
-					<StarterPack width={56} gradient="sky" />
+					<StarterPack gradient="sky" className={css.starterPackIcon} />
 				</div>
 				<div className={css.content}>
 					<Text size="xl" weight="semiBold" numberOfLines={2}>
@@ -90,7 +89,7 @@ export function StarterPackHeader({
 			) : null}
 			{joinedAllTimeCount >= 25 ? (
 				<div className={css.joinedRow}>
-					<TrendingIcon size="xs" fill={colors.textContrastMedium} />
+					<TrendingIcon className={css.trendingIcon} />
 					<Text weight="semiBold" size="sm" color="textContrastMedium">
 						{m['screens.starterPack.joinedCount']({ count: joinedAllTimeCount })}
 					</Text>

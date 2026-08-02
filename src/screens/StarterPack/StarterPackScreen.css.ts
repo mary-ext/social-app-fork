@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const error = {
 	root: style(
@@ -59,4 +60,10 @@ export const invalidActions = style({
 
 export const invalidButton = style({
 	width: '100%',
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.negative_400,
 });

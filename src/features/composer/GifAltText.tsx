@@ -2,11 +2,11 @@ import { GifAltTextDialog } from '#/features/composer/GifAltTextDialog';
 import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
-import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
-import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 
+import Check from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './GifAltText.css';
@@ -27,16 +27,14 @@ export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
 				handle={handle}
 				className={styles.badge}
 			>
-				{altText ? <Check size="xs" fill="currentColor" /> : <Plus size="sm" fill="currentColor" />}
+				{altText ? <Check className={styles.checkIcon} /> : <Plus className={styles.plusIcon} />}
 				<Text weight="semiBold" selectable={false}>
 					{m['common.altText.badge']()}
 				</Text>
 			</Dialog.Trigger>
-
 			<Admonition type="info" className={styles.admonition}>
 				{m['view.composer.altText.hint']()}
 			</Admonition>
-
 			<GifAltTextDialog altText={altText} gif={gif} handle={handle} onSubmit={onSubmit} />
 		</>
 	);

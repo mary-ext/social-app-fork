@@ -12,12 +12,12 @@ import { useSession } from '#/state/session';
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
 import * as Dialog from '#/components/Dialog';
-import { Newskie } from '#/components/icons/Newskie';
 import * as styles from '#/components/NewskieDialog.css';
 import { Stack } from '#/components/Stack';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 
+import Newskie from '#/icons/central-custom/Newskie_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function NewskieDialog({
@@ -44,7 +44,7 @@ export function NewskieDialog({
 				className={styles.trigger}
 				disabled={disabled}
 			>
-				<Newskie size="xl" fill="currentColor" />
+				<Newskie className={styles.newskieIcon} />
 			</Dialog.Trigger>
 			<Dialog.Popup size="narrow" label={m['components.newskieDialog.a11y.label']()}>
 				<DialogInner profile={profile} createdAt={createdAt} now={now} onClose={() => handle.close()} />
@@ -97,7 +97,7 @@ function DialogInner({
 		<Stack gap="md">
 			<div className={styles.header}>
 				<div className={styles.icon}>
-					<Newskie size="5xl" fill="currentColor" />
+					<Newskie className={styles.newskieIcon2} />
 				</div>
 				<Text size="xl" weight="semiBold">
 					{isMe ? m['components.newskieDialog.welcome']() : m['common.compose.sayHello']()}

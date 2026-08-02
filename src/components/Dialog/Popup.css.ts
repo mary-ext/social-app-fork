@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { space, zIndex } from '#/styles/tokens.css';
+import { iconSize, space, zIndex } from '#/styles/tokens.css';
 
 export const portal = style(
 	layered(components, {
@@ -255,3 +255,8 @@ export const close = recipe(
 	},
 	{ debugId: 'close', layer: components },
 );
+
+export const timesIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+});

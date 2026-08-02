@@ -30,7 +30,6 @@ import { Trans } from '#/locale/Trans';
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/PostInteractionSettingsDialog.css';
 import * as Toggle from '#/components/forms/Toggle';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -40,9 +39,9 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { CenteredSpinner } from '../CenteredSpinner';
 
@@ -316,7 +315,7 @@ export function PostInteractionSettingsForm({
 			<div className={styles.replySection}>
 				{replySettingsDisabled && (
 					<div className={styles.disabledNotice}>
-						<CircleInfo className={styles.disabledNoticeIcon} size="lg" fill={colors.textContrastLow} />
+						<CircleInfo className={styles.disabledNoticeIcon} />
 						<Text className={styles.flex1} color="textContrastMedium" size="sm">
 							{m['components.dialogs.reply.authorControlled']()}
 						</Text>

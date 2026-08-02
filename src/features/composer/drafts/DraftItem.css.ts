@@ -91,6 +91,8 @@ export const menuButton = style({
 });
 
 export const menuIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 	display: 'block',
 	position: 'relative',
 	zIndex: 1,

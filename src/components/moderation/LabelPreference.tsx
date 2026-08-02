@@ -14,10 +14,10 @@ import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/st
 import { LOCALE } from '#/locale/intl/locale';
 
 import * as Toggle from '#/components/forms/Toggle';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Text';
 
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './LabelPreference.css';
@@ -120,16 +120,14 @@ export function LabelerLabelRow({
 			<Text color="textContrastMedium" size="md_sub">
 				{labelStrings.description}
 			</Text>
-
 			{adultDisabled && (
 				<span className={styles.note}>
-					<CircleInfo fill="currentColor" size="sm" />
+					<CircleInfo className={styles.circleInfoIcon} />
 					<Text color="textContrastMedium" size="sm" weight="medium">
 						{m['components.moderation.adultContent.disabled']()}
 					</Text>
 				</span>
 			)}
-
 			{configurable && (
 				<Toggle.Group
 					className={styles.radioList}

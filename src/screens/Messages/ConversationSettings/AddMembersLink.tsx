@@ -5,14 +5,13 @@ import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
+import ChevronIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './AddMembersLink.css';
 
@@ -63,7 +62,7 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 			>
 				<div className={styles.content}>
 					<div className={styles.iconCircle}>
-						<PlusIcon fill={colors.textContrastHigh} size="sm" />
+						<PlusIcon className={styles.plusIcon} />
 					</div>
 					<Text numberOfLines={1} weight="medium">
 						{m['screens.messages.members.add.action']()}
@@ -72,10 +71,9 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 				{isAddPending ? (
 					<Spinner color="default" label={m['common.status.saving']()} size="md" />
 				) : (
-					<ChevronIcon fill={colors.textContrastMedium} size="md" />
+					<ChevronIcon className={styles.chevronIcon} />
 				)}
 			</Dialog.Trigger>
-
 			<AddMembersDialog
 				convo={convo}
 				handle={addMembersHandle}

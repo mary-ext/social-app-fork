@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const labelerAvatar = style({
 	alignSelf: 'flex-start',
@@ -34,4 +34,9 @@ export const status = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	padding: space.xl,
+});
+
+export const chevronRightIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

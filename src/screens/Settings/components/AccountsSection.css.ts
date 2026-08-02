@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const accountRow = style({
 	position: 'relative',
@@ -43,4 +43,9 @@ export const overflow = style({
 	selectors: {
 		'&:hover': { background: vars.palette.contrast_100 },
 	},
+});
+
+export const menuIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

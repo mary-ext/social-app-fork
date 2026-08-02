@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const headingLink = style({
 	display: 'flex',
@@ -51,4 +51,10 @@ export const name = style({
 
 export const badgePad = style({
 	paddingLeft: space.xs,
+});
+
+export const bellOffIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
 });

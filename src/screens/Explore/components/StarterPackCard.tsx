@@ -11,7 +11,6 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
 import { BlockLink } from '#/components/BlockLink';
-import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -19,6 +18,7 @@ import { ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import Plus from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './StarterPackCard.css';
@@ -147,7 +147,7 @@ export function AvatarStack({
 									{m['screens.search.starterPack.additionalCount']({ count: computedTotal })}
 								</Text>
 							) : (
-								<Plus fill="white" />
+								<Plus className={css.plusIcon} />
 							)}
 						</div>
 					</div>

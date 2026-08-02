@@ -14,18 +14,16 @@ import { clsx } from 'clsx';
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
 import type { LightboxPayload } from '#/components/dialogs/handles';
-import {
-	ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
-	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
-} from '#/components/icons/Chevron';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
 import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
 import ShareIcon from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
+import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import EllipsisIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Lightbox.css';
@@ -206,7 +204,7 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.previous']()}
 					onClick={prev}
 				>
-					<ChevronLeftIcon size="lg" fill="currentColor" />
+					<ChevronLeftIcon className={styles.controlIcon} />
 				</button>
 			)}
 			{canRight && (
@@ -216,13 +214,13 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.next']()}
 					onClick={next}
 				>
-					<ChevronRightIcon size="lg" fill="currentColor" />
+					<ChevronRightIcon className={styles.controlIcon} />
 				</button>
 			)}
 			<div className={styles.topLeft}>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
-						<EllipsisIcon size="lg" fill="currentColor" className={styles.rotated} />
+						<EllipsisIcon className={styles.rotated} />
 					</Menu.Trigger>
 					<Menu.Popup label={m['components.lightbox.a11y.options']()}>
 						<Menu.Item label={m['components.lightbox.share.label']()} onClick={() => void onShare()}>
@@ -240,7 +238,7 @@ function Chrome() {
 				aria-label={m['components.lightbox.a11y.close']()}
 				className={clsx(styles.circle, styles.topRight)}
 			>
-				<XIcon size="lg" fill="currentColor" />
+				<XIcon className={styles.controlIcon} />
 			</BaseDialog.Close>
 			{img?.alt ? (
 				<div className={styles.altPanel}>

@@ -7,10 +7,10 @@ import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-me
 
 import * as css from '#/components/dms/MessageProfileButton.css';
 import { canBeMessaged } from '#/components/dms/util';
-import { Message_Stroke2_Corner0_Rounded as Message } from '#/components/icons/Message';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
@@ -44,7 +44,7 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		if (canBeMessaged(profile)) {
 			return (
 				<div aria-hidden className={css.loading}>
-					<Message size="lg" fill="currentColor" />
+					<Message className={css.messageIcon} />
 				</div>
 			);
 		}

@@ -1,14 +1,13 @@
-import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 import { Text } from '#/components/Text';
 
-import { colors } from '#/styles/colors';
+import ArrowRotateCounterClockwiseIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 
 import * as css from './LoadMoreRetryBtn.css';
 
 export function LoadMoreRetryBtn({ label, onPress }: { label: string; onPress: () => void }) {
 	return (
 		<button aria-label={label} className={css.button} onClick={onPress} type="button">
-			<ArrowRotateCounterClockwiseIcon size="md" fill={colors.textContrastMedium} />
+			<ArrowRotateCounterClockwiseIcon className={css.arrowRotateCounterClockwiseIcon} />
 			<Text className={css.label} color="textContrastMedium">
 				{label}
 			</Text>

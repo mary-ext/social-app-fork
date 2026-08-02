@@ -36,20 +36,19 @@ import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
 import { useRichText } from '#/components/hooks/useRichText';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import MessageIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import HeartIcon from '#/icons/central/Heart_round_outlined_radius1_stroke1.svg';
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke1.svg';
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams, useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './index.css';
 
@@ -353,7 +352,7 @@ function ProfileScreenLoaded({
 			/>
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="xl" fill={colors.white} />}
+					icon={<EditBigIcon className={css.editBigIcon} />}
 					label={m['common.compose.action.new']()}
 					onClick={onPressCompose}
 				/>

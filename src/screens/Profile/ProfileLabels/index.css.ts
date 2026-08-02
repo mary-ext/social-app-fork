@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const aboutSection = style({
 	display: 'flex',
@@ -46,4 +47,22 @@ export const blockHint = style({
 	display: 'flex',
 	gap: space.sm,
 	alignItems: 'center',
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
+});
+
+export const heartFilledIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.negative_400,
+});
+
+export const heartIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.textContrastMedium,
 });

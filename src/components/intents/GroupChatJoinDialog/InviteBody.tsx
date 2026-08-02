@@ -18,9 +18,6 @@ import { Trans } from '#/locale/Trans';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import type * as Dialog from '#/components/Dialog';
-import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
-import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -30,11 +27,13 @@ import { InlineLinkText } from '#/components/web/Link';
 
 import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
 import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
+import ChainLinkBrokenIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
+import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import HandIcon from '#/icons/central/RaisingHand4Finger_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './GroupChatJoinDialog.css';
 
@@ -160,7 +159,7 @@ export function InviteBody({
 	if (error) {
 		return (
 			<>
-				<ChainLinkBrokenIcon fill={colors.primary_500} size="4xl" />
+				<ChainLinkBrokenIcon className={css.chainLinkBrokenIcon} />
 				<Text align="center" size="lg" weight="semiBold">
 					{m['components.intents.inviteLink.error.invalid']()}
 				</Text>
@@ -183,7 +182,7 @@ export function InviteBody({
 		return (
 			<>
 				<div className={css.unavailableSection}>
-					<WarningIcon fill={colors.textContrastHigh} size="4xl" />
+					<WarningIcon className={css.warningIcon} />
 					<Text
 						align="center"
 						className={css.noLongerAvailableText}
@@ -291,7 +290,7 @@ export function InviteBody({
 								limit: joinLinkPreview.memberLimit,
 							})}
 						</Text>
-						<PersonGroupIcon className={css.personGroupIcon} fill={colors.textContrastMedium} size="xs" />
+						<PersonGroupIcon className={css.personGroupIcon} />
 						<Text align="center" size="sm" weight="medium" color="textContrastMedium">
 							{joinLinkPreview.joinRule === 'followedByOwner'
 								? m['components.intents.permission.followers']()

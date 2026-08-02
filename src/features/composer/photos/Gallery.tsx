@@ -7,11 +7,6 @@ import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { Pencil_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import {
 	CAROUSEL_MAX_HEIGHT,
 	CAROUSEL_MIN_HEIGHT,
@@ -23,8 +18,12 @@ import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { Text } from '#/components/Text';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import type { PostAction } from '../state/composer';
 import type { AltTextContext } from './alt-text-generator/types';
@@ -52,10 +51,9 @@ export function Gallery({ dispatch, images, text }: GalleryProps) {
 			) : (
 				<Carousel dispatch={dispatch} images={images} text={text} />
 			)}
-
 			{showReminder && (
 				<div className={styles.reminder}>
-					<CircleInfoIcon className={styles.reminderIcon} size="md" fill={colors.textContrastMedium} />
+					<CircleInfoIcon className={styles.reminderIcon} />
 					<Text className={styles.reminderText} color="textContrastMedium" size="md_sub">
 						{m['view.composer.altText.hint']()}
 					</Text>
@@ -236,7 +234,11 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 				className={styles.altBadge}
 				aria-label={m['view.composer.altText.action.add']()}
 			>
-				{hasAlt ? <CheckIcon width={10} fill="currentColor" /> : <PlusIcon width={10} fill="currentColor" />}
+				{hasAlt ? (
+					<CheckIcon className={styles.altBadgeIcon} />
+				) : (
+					<PlusIcon className={styles.altBadgeIcon} />
+				)}
 				<Text className={styles.altBadgeLabel} color="white" size="sm" weight="semiBold">
 					{m['common.altText.badge']()}
 				</Text>
@@ -247,7 +249,7 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 					className={styles.control}
 					aria-label={m['view.composer.gallery.action.edit']()}
 				>
-					<PencilIcon size="xs" fill="currentColor" />
+					<PencilIcon className={styles.pencilIcon} />
 				</Dialog.Trigger>
 				<button
 					type="button"
@@ -255,10 +257,9 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 					onClick={onRemove}
 					aria-label={m['view.composer.gallery.action.remove']()}
 				>
-					<TimesIcon size="sm" fill="currentColor" />
+					<TimesIcon className={styles.timesIcon} />
 				</button>
 			</div>
-
 			<ImageAltTextDialog context={context} handle={altTextHandle} image={image} onChange={onChange} />
 			<EditImageDialog handle={editHandle} image={image} onChange={onChange} />
 		</>

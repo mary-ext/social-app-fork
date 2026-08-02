@@ -3,10 +3,9 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { BotAccountAlert } from '#/components/BotAccountAlert';
 import * as css from '#/components/BotBadge.css';
 import * as Dialog from '#/components/Dialog';
-import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 
+import RobotIcon from '#/icons/central/Robot_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
@@ -17,7 +16,7 @@ export function BotBadge({ profile, width }: { profile: AnyProfileView; width: n
 		return null;
 	}
 
-	return <RobotIcon width={width} fill={colors.textContrastMedium} className={css.icon} />;
+	return <RobotIcon className={css.icon} style={{ width, height: width }} />;
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
@@ -30,7 +29,7 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 	return (
 		<>
 			<Dialog.Trigger aria-label={m['common.account.automated']()} className={css.button} handle={handle}>
-				<RobotIcon width={width} fill="currentColor" />
+				<RobotIcon style={{ width, height: width }} />
 			</Dialog.Trigger>
 			<BotAccountAlert handle={handle} profile={profile} />
 		</>

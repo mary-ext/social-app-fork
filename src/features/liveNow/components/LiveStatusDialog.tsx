@@ -16,18 +16,17 @@ import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 import * as Dialog from '#/components/Dialog';
 import { reportDialogHandle } from '#/components/dialogs/handles';
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
 import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 /**
  * A touch-only dialog that surfaces a live status (no hover affordance on touch devices). Open it
@@ -132,7 +131,7 @@ export function LiveStatus({
 						{embed.external.title || embed.external.uri}
 					</Text>
 					<div className={css.domain}>
-						<GlobeIcon size="xs" fill={colors.textContrastMedium} />
+						<GlobeIcon className={css.globeIcon} />
 						<Text color="textContrastMedium" numberOfLines={1} size="sm">
 							{toNiceDomain(embed.external.uri)}
 						</Text>
@@ -179,7 +178,7 @@ export function LiveStatus({
 
 				<div className={css.betaRow}>
 					<div className={css.beta}>
-						<CircleInfoIcon size="sm" fill={colors.textContrastLow} />
+						<CircleInfoIcon className={css.circleInfoIcon} />
 						<Text color="textContrastLow" size="sm">
 							{m['features.liveNow.badge.beta']()}
 						</Text>

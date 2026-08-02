@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const row = style({
 	boxSizing: 'border-box',
@@ -27,6 +27,8 @@ export const avatar = style({
 
 export const icon = style({
 	flexShrink: 0,
+	width: iconSize.sm,
+	height: iconSize.sm,
 	paddingBlock: (20 - 16) / 2,
 	color: vars.palette.contrast_500,
 });

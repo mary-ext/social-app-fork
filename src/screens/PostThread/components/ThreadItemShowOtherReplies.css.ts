@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const button = style({
 	transition: 'background-color 0.15s ease',
@@ -47,4 +47,9 @@ export const iconCircle = style({
 export const label = style({
 	flex: 1,
 	textAlign: 'left',
+});
+
+export const eyeSlashIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

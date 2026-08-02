@@ -136,3 +136,8 @@ export const skeleton = style({
 	paddingTop: PADDING_LOOSE,
 	paddingInline: OUTER_SPACE,
 });
+
+export const trashIcon = style({
+	width: 14,
+	height: 14,
+});

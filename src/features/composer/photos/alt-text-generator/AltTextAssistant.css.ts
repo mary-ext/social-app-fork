@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 // a rule rather than a card: boxing the panel off from the alt text field above it read as cramped
 export const panel = style({
@@ -57,4 +58,10 @@ export const errorBox = style({
 	borderRadius: borderRadius.sm,
 	backgroundColor: vars.palette.negative_25,
 	padding: space.sm,
+});
+
+export const sparkleIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.primary_500,
 });

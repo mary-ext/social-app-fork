@@ -6,7 +6,7 @@ import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const scrim = 'rgba(0, 0, 0, 0.75)';
 
@@ -121,10 +121,28 @@ export const reminder = style({
 });
 
 export const reminderIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.textContrastMedium,
 	marginBlock: (20 - 18) / 2,
 });
 
 export const reminderText = style({
 	flex: 1,
 	minWidth: 0,
+});
+
+export const altBadgeIcon = style({
+	width: 10,
+	height: 10,
+});
+
+export const pencilIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+});
+
+export const timesIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

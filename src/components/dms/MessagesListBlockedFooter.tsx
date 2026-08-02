@@ -10,15 +10,14 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
-import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
 import PersonCheckIcon from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
+import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './MessagesListBlockedFooter.css';
 
@@ -58,7 +57,7 @@ export function MessagesListBlockedFooter({
 	return (
 		<div className={css.outer}>
 			<div className={css.card}>
-				<PersonXIcon className={css.icon} fill={colors.text} size="xl" />
+				<PersonXIcon className={css.icon} />
 				<Text align="center" className={css.heading} color="text" size="md" weight="semiBold">
 					{isGroup
 						? m['components.dms.block.youAreBlockingOwner']()

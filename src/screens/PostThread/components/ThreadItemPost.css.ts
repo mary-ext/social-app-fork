@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const hider = style({
 	backgroundColor: 'transparent',
@@ -71,4 +71,9 @@ export const deletedIcon = style({
 
 export const deletedSpacer = style({
 	height: 4,
+});
+
+export const trashIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

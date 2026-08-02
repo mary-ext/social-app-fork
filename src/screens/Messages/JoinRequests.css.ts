@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const loadingFill = style({
 	display: 'flex',
@@ -70,4 +70,10 @@ export const footer = style({
 	paddingInline: space.xl,
 	borderTop: `1px solid ${colors.borderContrastLow}`,
 	background: colors.bg,
+});
+
+export const errorIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastHigh,
 });

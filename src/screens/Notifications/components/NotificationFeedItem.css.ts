@@ -4,6 +4,7 @@ import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
+import { iconSize } from '#/styles/tokens.css';
 
 export const NOTIF_AVI_SIZE = 32;
 export const POST_AVI_SIZE = 36;
@@ -169,6 +170,9 @@ export const viaStarterPack = style({
 });
 
 export const viaStarterPackIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.primary_500,
 	display: 'inline-block',
 	position: 'relative',
 	top: 2,
@@ -182,4 +186,62 @@ export const starterPackBox = style({
 	borderRadius: 8,
 	borderColor: colors.borderContrastLow,
 	padding: 8,
+});
+
+export const heartIconFilledIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.pink,
+});
+
+export const repostIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.positive_500,
+});
+
+export const avatarBadgeIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.primary_500,
+});
+
+export const starterPackIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+});
+
+export const verifiedCheckIcon = style({
+	width: iconSize._2xl,
+	height: iconSize._2xl,
+});
+
+export const verifiedCheckIcon2 = style({
+	width: iconSize._2xl,
+	height: iconSize._2xl,
+	color: colors.contrast_500,
+});
+
+export const repostIcon2 = style({
+	width: iconSize._2xl,
+	height: iconSize._2xl,
+	color: colors.positive_500,
+});
+
+export const bellRingingIcon = style({
+	width: iconSize._2xl,
+	height: iconSize._2xl,
+	color: colors.primary_500,
+});
+
+export const chevronUpIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastHigh,
+});
+
+export const chevronDownIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
 });

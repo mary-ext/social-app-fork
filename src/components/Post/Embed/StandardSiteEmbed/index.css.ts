@@ -357,3 +357,8 @@ export const publisherIcon = style({
 	width: iconSize.xs,
 	height: iconSize.xs,
 });
+
+export const metaIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+});

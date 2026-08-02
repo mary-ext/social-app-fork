@@ -32,7 +32,7 @@ export function StepDetails() {
 	return (
 		<>
 			<div className={css.detailsHeader}>
-				<StarterPack width={90} gradient="sky" />
+				<StarterPack gradient="sky" className={css.starterPackIcon} />
 				<Text weight="semiBold" size="_3xl">
 					{m['screens.starterPack.tagline']()}
 				</Text>

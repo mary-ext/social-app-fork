@@ -2,8 +2,9 @@ import { fallbackVar, style } from '@vanilla-extract/css';
 
 import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { zIndex } from '#/styles/tokens.css';
+import { iconSize, zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
 	position: 'fixed',
@@ -58,6 +59,11 @@ export const hover = style({
 });
 
 export const icon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastMedium,
 	position: 'relative',
 	zIndex: 10,
 });
+
+export const iconIndicating = style({ color: colors.primary_500 });

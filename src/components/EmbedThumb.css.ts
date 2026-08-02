@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const frame = style({
 	display: 'block',
@@ -34,4 +35,9 @@ export const fallback = style({
 	justifyContent: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	color: vars.palette.contrast_400,
+});
+
+export const imageIcon = style({
+	width: iconSize._3xl,
+	height: iconSize._3xl,
 });

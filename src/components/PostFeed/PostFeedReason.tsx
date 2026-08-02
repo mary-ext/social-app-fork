@@ -4,12 +4,12 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';
 
-import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
-import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './PostFeedReason.css';
@@ -37,7 +37,7 @@ export function PostFeedReason({
 		const reposter = by.handle;
 		return (
 			<div className={css.includeReason}>
-				<RepostIcon fill="currentColor" width={13} height={13} />
+				<RepostIcon className={css.reasonIcon} />
 				<ProfileHoverCard did={by.did}>
 					<InlineLinkText
 						{...reasonText}
@@ -55,7 +55,7 @@ export function PostFeedReason({
 	if (reason.$type === 'app.bsky.feed.defs#reasonPin') {
 		return (
 			<div className={css.includeReason}>
-				<PinIcon fill="currentColor" width={13} height={13} />
+				<PinIcon className={css.reasonIcon} />
 				<Text {...reasonText}>{m['view.posts.feed.pinnedBadge']()}</Text>
 			</div>
 		);

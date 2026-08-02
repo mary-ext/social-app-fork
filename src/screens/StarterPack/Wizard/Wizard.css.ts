@@ -118,3 +118,8 @@ export const cta = style({
 export const ctaButton = style({
 	width: '100%',
 });
+
+export const starterPackIcon = style({
+	width: 90,
+	height: 90,
+});

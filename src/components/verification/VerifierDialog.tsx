@@ -9,14 +9,14 @@ import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import { Logo } from '#/components/icons/Logo';
-import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
-import { VerifierCheck } from '#/components/icons/VerifierCheck';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
 
+import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
+import VerifierCheck from '#/icons/original/VerifierCheck.svg';
 import { m } from '#/paraglide/messages';
 
 export function VerifierDialog({
@@ -58,7 +58,7 @@ const VerificationIllustration = () => {
 
 				{/* Step 2: Trusted Verifier badge */}
 				<div className={css.verifierCircleClass}>
-					<VerifierCheck height={56} width={56} />
+					<VerifierCheck className={css.checkIcon} />
 				</div>
 				<span className={css.verifierLabelClass}>
 					{m['components.verification.illustration.trustedVerifier']()}
@@ -73,7 +73,7 @@ const VerificationIllustration = () => {
 
 				{/* Step 3: Verified Account badge */}
 				<div className={css.verifiedCircleClass}>
-					<VerifiedCheck height={56} width={56} />
+					<VerifiedCheck className={css.checkIcon} />
 				</div>
 				<span className={css.verifiedLabelClass}>
 					{m['components.verification.illustration.verifiedAccount']()}
@@ -95,17 +95,15 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	return (
 		<Stack gap="lg">
 			<VerificationIllustration />
-
 			<Stack gap="sm">
 				<Dialog.Title>{label}</Dialog.Title>
 				<Text size="md">
 					<Trans
 						message={m['components.verification.trustedVerifier.description']}
-						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} width={14} /> }}
+						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} /> }}
 					/>
 				</Text>
 			</Stack>
-
 			<Dialog.Actions direction="responsive">
 				<ExternalLinkButton
 					color="primary"

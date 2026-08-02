@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const empty = style({ justifyContent: 'center', paddingBottom: 40, height: '100%' });
 
@@ -19,4 +20,10 @@ export const errorWrap = style({
 	flexDirection: 'column',
 	alignItems: 'center',
 	paddingTop: space._3xl,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastLow,
 });

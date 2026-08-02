@@ -2,7 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const childSpine = style({
 	marginTop: space.xs,
@@ -32,4 +33,10 @@ export const parentSpineRow = style({
 export const text = style({
 	marginBlock: (LINEAR_AVI_WIDTH - 20) / 2,
 	fontStyle: 'italic',
+});
+
+export const lockIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastMedium,
 });

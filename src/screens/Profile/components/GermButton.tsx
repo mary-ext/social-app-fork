@@ -8,12 +8,11 @@ import { useSession } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import type { LinkWarningPayload } from '#/components/dialogs/handles';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
-import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Text as WebText } from '#/components/Text';
 import { ExternalLink } from '#/components/web/Link';
 
+import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
 import * as css from './GermButton.css';
@@ -71,7 +70,7 @@ function GermLink({ url }: { url: string }) {
 				<WebText className={css.label} size="sm" weight="medium">
 					{m['screens.profile.germDm.label']()}
 				</WebText>
-				<ArrowTopRightIcon className={css.arrow} width={14} height={14} fill={colors.text} />
+				<ArrowTopRightIcon className={css.arrow} />
 			</ExternalLink>
 			<CustomLinkWarningDialog handle={linkWarningHandle} />
 		</>

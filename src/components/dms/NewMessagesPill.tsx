@@ -1,7 +1,5 @@
-import { ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon } from '#/components/icons/Arrow';
-
+import ArrowDownIcon from '#/icons/central/ArrowDown_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './NewMessagesPill.css';
 
@@ -18,7 +16,7 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 				onClick={onPress}
 				type="button"
 			>
-				<ArrowDownIcon fill={colors.text} size="lg" />
+				<ArrowDownIcon className={css.arrowDownIcon} />
 			</button>
 		</div>
 	);

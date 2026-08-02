@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 
@@ -91,4 +91,10 @@ export const emptyText = style({
 	gap: space.sm,
 	alignItems: 'center',
 	maxWidth: 260,
+});
+
+export const starterPackIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.contrast_200,
 });

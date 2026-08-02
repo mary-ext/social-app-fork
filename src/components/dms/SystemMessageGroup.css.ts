@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const toggle = style({
 	appearance: 'none',
@@ -30,3 +31,9 @@ export const chevron = recipe(
 	},
 	{ debugId: 'systemMessageGroupChevron' },
 );
+
+export const chevronDownIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
+});

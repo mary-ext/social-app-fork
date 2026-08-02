@@ -36,3 +36,8 @@ export const editBadge = style({
 	height: 24,
 	color: vars.palette.contrast_1000,
 });
+
+export const cameraFilledIcon = style({
+	width: 14,
+	height: 14,
+});

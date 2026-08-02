@@ -21,7 +21,6 @@ import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
-import { ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon } from '#/components/icons/ChainLink';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -30,9 +29,9 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import ArrowShareRightIcon from '#/icons/central/ArrowShareRight_round_outlined_radius1_stroke2.svg';
+import ChainLinkBrokenIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
 import EditIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { CopyLinkField } from './CopyLinkField';
 import { EditTextButton } from './EditTextButton';
@@ -403,9 +402,8 @@ function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogIn
 			return (
 				<Stack gap="xl">
 					<Dialog.Close variant="floating" />
-
 					<div className={css.confirm}>
-						<ChainLinkBrokenIcon fill={colors.negative_500} size="4xl" />
+						<ChainLinkBrokenIcon className={css.chainLinkBrokenIcon} />
 
 						<Dialog.Title className={css.confirmTitle}>
 							{m['screens.messages.inviteLink.disable.title']()}
@@ -415,7 +413,6 @@ function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogIn
 							{m['screens.messages.inviteLink.disable.message']()}
 						</Text>
 					</div>
-
 					<Stack gap="md">
 						<Button
 							color="negative"

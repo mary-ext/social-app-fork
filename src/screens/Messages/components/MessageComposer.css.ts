@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const MIN_HEIGHT = 40;
 
@@ -87,5 +87,13 @@ export const editor = style({
 });
 
 export const sendIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.white,
 	marginBottom: 2,
+});
+
+export const emojiSmileIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

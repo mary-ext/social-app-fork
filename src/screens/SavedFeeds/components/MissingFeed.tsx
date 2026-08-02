@@ -7,11 +7,11 @@ import { getFeedTypeFromUri } from '#/state/queries/feed';
 import { useProfileQuery } from '#/state/queries/profile';
 
 import * as Dialog from '#/components/Dialog';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './MissingFeed.css';
@@ -35,7 +35,7 @@ export function MissingFeed({ error, uri }: { error: unknown; uri: string }) {
 				handle={handle}
 			>
 				<div className={css.iconBox}>
-					<WarningIcon size="xl" />
+					<WarningIcon className={css.warningIcon} />
 				</div>
 				<div className={css.textColumn}>
 					<Text className={css.italic} numberOfLines={1} weight="medium">
@@ -46,7 +46,6 @@ export function MissingFeed({ error, uri }: { error: unknown; uri: string }) {
 					</Text>
 				</div>
 			</Dialog.Trigger>
-
 			<Dialog.Root handle={handle}>
 				<Dialog.Popup size="wide">
 					<DialogInner error={error} handle={handle} type={type} uri={uri} />

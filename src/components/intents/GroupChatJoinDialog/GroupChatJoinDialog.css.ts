@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const actionButton = style({
 	width: '100%',
@@ -53,6 +54,9 @@ export const ownerRow = style({
 });
 
 export const personGroupIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
 	marginTop: -2,
 	marginRight: 4,
 	marginLeft: space.md,
@@ -75,4 +79,16 @@ export const unavailableSection = style({
 	alignItems: 'center',
 	paddingTop: space._4xl,
 	paddingBottom: space.lg,
+});
+
+export const chainLinkBrokenIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.primary_500,
+});
+
+export const warningIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastHigh,
 });

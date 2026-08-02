@@ -18,14 +18,14 @@ import { useSession } from '#/state/session';
 import { BlockLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/FeedInterstitials.css';
-import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { SuggestedFollowsDialog } from '#/components/SuggestedFollowsDialog';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 function SuggestedFollowPlaceholder() {
@@ -70,7 +70,7 @@ function SuggestedFollowCard({
 						onClick={() => onDismiss(profile.did)}
 						type="button"
 					>
-						<XIcon fill="currentColor" size="xs" />
+						<XIcon className={css.xIcon} />
 					</button>
 				)}
 				<div className={css.body}>
@@ -240,7 +240,7 @@ export function ProfileGrid({
 					className={css.seeMoreCard}
 					handle={followDialogHandle}
 				>
-					<ArrowRightIcon fill="currentColor" size="lg" />
+					<ArrowRightIcon className={css.arrowRightIcon} />
 					<Text align="center" size="md" weight="medium">
 						{m['components.feedInterstitials.action.seeMore']()}
 					</Text>

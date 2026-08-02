@@ -3,11 +3,10 @@ import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { SystemMessageGroupItem } from '#/screens/Messages/components/message-timeline';
 
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
-import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown } from '#/components/icons/Chevron';
 import { Text } from '#/components/Text';
 
+import ChevronDown from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './SystemMessageGroup.css';
 
@@ -39,7 +38,7 @@ export function SystemMessageGroup({
 					{label}
 				</Text>
 				<span className={css.chevron({ expanded })}>
-					<ChevronDown fill={colors.textContrastMedium} size="xs" />
+					<ChevronDown className={css.chevronDownIcon} />
 				</span>
 			</button>
 			{expanded

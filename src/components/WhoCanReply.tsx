@@ -17,11 +17,11 @@ import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
-import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon } from '#/components/icons/Chevron';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import TinyChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import CircleBanSignIcon from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
 import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
 import GroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
@@ -91,7 +91,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				<Text className={css.label} size="md_sub" color={isThreadAuthor ? 'textLink' : 'textContrastMedium'}>
 					{description}
 				</Text>
-				{isThreadAuthor && <TinyChevronDownIcon size="2xs" fill="currentColor" />}
+				{isThreadAuthor && <TinyChevronDownIcon className={css.tinyChevronDownIcon} />}
 			</button>
 			{isThreadAuthor ? (
 				<PostInteractionSettingsDialog

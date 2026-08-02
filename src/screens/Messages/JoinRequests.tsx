@@ -21,7 +21,6 @@ import { useSession } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Error } from '#/components/Error';
-import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo';
 import { List } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -32,9 +31,9 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import ErrorIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
 import { useIsWithinSplitView } from './components/splitView/context';
@@ -281,7 +280,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			<>
 				<Header count={requestCount} hasMoreRequests={hasNextPage} />
 				<div className={css.errorFill}>
-					<ErrorIcon fill={colors.textContrastHigh} size="4xl" />
+					<ErrorIcon className={css.errorIcon} />
 					<Text align="center" className={css.errorText} color="textContrastHigh" size="md">
 						{m['screens.messages.requests.error.fetch']()}
 					</Text>

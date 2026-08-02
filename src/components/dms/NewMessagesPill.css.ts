@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 export const root = style({
 	display: 'flex',
@@ -26,4 +26,10 @@ export const button = style({
 	boxShadow: vars.shadow.sm,
 	cursor: 'pointer',
 	pointerEvents: 'auto',
+});
+
+export const arrowDownIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.text,
 });

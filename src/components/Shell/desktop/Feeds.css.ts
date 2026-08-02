@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
+import { borderRadius, fontWeight, iconSize, space } from '#/styles/tokens.css';
 
 export const group = style({
 	display: 'flex',
@@ -81,4 +81,15 @@ export const skeleton = style({
 export const skeletonRow = style({
 	paddingBlock: 6,
 	paddingInline: space.sm,
+});
+
+export const plusIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+});
+
+export const filterTimelineIcon = style({
+	width: 14,
+	height: 14,
+	color: colors.white,
 });

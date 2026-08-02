@@ -2,9 +2,10 @@ import { clsx } from 'clsx';
 
 import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
 
-import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
 import { Button, type ButtonProps } from '#/components/web/Button';
+
+import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
 
 import * as css from './LanguageButton.css';
 
@@ -28,13 +29,12 @@ export function LanguageButton({
 	return (
 		<Button variant="ghost" size="small" className={clsx(css.button, className)} {...props}>
 			{nudgeAt > 0 && <span key={nudgeAt} className={css.pulseOverlay} />}
-
 			{languages.length > 0 ? (
 				<Text className={css.text} color="primary_600" size="md_sub" weight="semiBold">
 					{languages.join(', ')}
 				</Text>
 			) : (
-				<GlobeIcon size="xs" fill="currentColor" />
+				<GlobeIcon className={css.globeIcon} />
 			)}
 		</Button>
 	);

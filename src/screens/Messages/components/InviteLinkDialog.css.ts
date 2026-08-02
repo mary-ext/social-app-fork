@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const confirm = style({
 	display: 'flex',
@@ -27,4 +28,10 @@ export const radioList = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xs,
+});
+
+export const chainLinkBrokenIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.negative_500,
 });

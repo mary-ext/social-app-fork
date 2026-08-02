@@ -10,7 +10,6 @@ import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -19,8 +18,8 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './ChatDisabled.css';
 
@@ -35,7 +34,7 @@ export function ChatDisabled({
 	return (
 		<div className={clsx(shape === 'pill' && css.outer, className)}>
 			<div className={css.card({ shape })}>
-				<WarningIcon className={css.warningIcon} fill={colors.negative_600} size="xl" />
+				<WarningIcon className={css.warningIcon} />
 				<Text align="center" className={css.title} size="md" weight="semiBold">
 					{m['screens.messages.moderation.chatsDisabled.title']()}
 				</Text>

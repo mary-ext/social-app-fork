@@ -2,12 +2,11 @@ import type { Did } from '@atcute/lexicons';
 
 import { labelsTarget } from '#/lib/routes/targets';
 
-import { Shield_Stroke2_Corner0_Rounded as ShieldIcon } from '#/components/icons/Shield';
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
+import ShieldIcon from '#/icons/central/Shield_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './LabelerButton.css';
 
@@ -19,7 +18,7 @@ export function LabelerButton({ did }: { did: Did }) {
 			label={m['screens.profile.labeler.action.viewLabels']()}
 			to={labelsTarget(did)}
 		>
-			<ShieldIcon fill={colors.text} size="sm" />
+			<ShieldIcon className={css.shieldIcon} />
 			<Text size="sm" weight="medium">
 				{m['common.moderation.labels']()}
 			</Text>

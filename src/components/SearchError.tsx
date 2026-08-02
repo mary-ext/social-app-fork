@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
 
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 
-import { colors } from '#/styles/colors';
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 
 import * as css from './SearchError.css';
 
@@ -12,7 +11,7 @@ export function SearchError({ title, children }: { title?: string; children?: Re
 	return (
 		<Layout.Content>
 			<div className={css.outer}>
-				<XIcon size="3xl" fill={colors.textContrastLow} />
+				<XIcon className={css.xIcon} />
 				<div className={css.body}>
 					<Text align="center" size="lg" weight="semiBold">
 						{title}

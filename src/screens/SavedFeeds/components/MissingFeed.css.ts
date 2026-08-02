@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const button = style({
 	boxSizing: 'border-box',
@@ -61,4 +61,9 @@ export const notice = style({
 	display: 'block',
 	width: '100%',
 	fontStyle: 'italic',
+});
+
+export const warningIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
 });

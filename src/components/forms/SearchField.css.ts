@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { fontLeading, fontSize } from '#/styles/tokens.css';
+import { fontLeading, fontSize, iconSize } from '#/styles/tokens.css';
 
 export const field = style({
 	boxSizing: 'border-box',
@@ -22,6 +22,8 @@ export const field = style({
 });
 
 export const icon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 	flexShrink: 0,
 	color: vars.palette.contrast_500,
 	pointerEvents: 'none',

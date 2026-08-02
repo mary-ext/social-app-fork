@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 
@@ -99,4 +99,10 @@ export const empty = style({
 
 export const emptyMessage = style({
 	fontStyle: 'italic',
+});
+
+export const listIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastLow,
 });

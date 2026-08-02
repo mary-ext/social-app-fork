@@ -19,8 +19,6 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { niceDate } from '#/locale/intl/datetime';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
-import { StandardSite } from '#/components/icons/community/StandardSite';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -28,6 +26,8 @@ import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLink, ExternalLinkButton } from '#/components/web/Link';
 
 import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
+import Clock from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
+import StandardSite from '#/icons/original/StandardSite.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
@@ -171,7 +171,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 								) : null}
 								{view.readingTime ? (
 									<span className={styles.readingTime}>
-										<Clock size="xs" fill="currentColor" />
+										<Clock className={styles.metaIcon} />
 										<Text color="textContrastMedium" size="xs">
 											{m['components.post.publication.readingTime']({ readingTime: view.readingTime })}
 										</Text>
@@ -191,7 +191,6 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 					) : null}
 				</div>
 			</ExternalLink>
-
 			{view.source ? (
 				<>
 					<div className={styles.divider} />
@@ -322,9 +321,8 @@ function PublicationIcon({
 	return (
 		<div className={styles.iconRoot}>
 			<div className={styles.standardBadge}>
-				<StandardSite size="xs" fill="currentColor" />
+				<StandardSite className={styles.metaIcon} />
 			</div>
-
 			{view.source.icon ? (
 				<div className={styles.avatarWrap}>
 					<UserAvatar

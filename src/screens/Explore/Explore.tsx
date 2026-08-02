@@ -14,8 +14,6 @@ import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStart
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
-import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { List } from '#/components/List/List';
 import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 import { isThreadChildAt, isThreadParentAt } from '#/components/PostFeed/PostFeed';
@@ -25,11 +23,12 @@ import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import ListSparkle from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
 import Person from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
 import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 
 import * as ModuleHeader from './components/ModuleHeader';
@@ -49,7 +48,7 @@ function LoadMore({ item }: { item: ExploreScreenItems & { type: 'loadMore' } })
 			type="button"
 		>
 			<Text>{item.message}</Text>
-			<ChevronDownIcon fill={colors.textContrastMedium} size="sm" />
+			<ChevronDownIcon className={css.chevronDownIcon} />
 		</button>
 	);
 }
@@ -502,7 +501,7 @@ export function Explore({
 				return (
 					<div className={css.errorOuter}>
 						<div className={css.errorBox}>
-							<CircleInfo fill={colors.negative_400} size="lg" />
+							<CircleInfo className={css.circleInfoIcon} />
 							<div className={css.errorTextCol}>
 								<Text weight="semiBold">{item.message}</Text>
 								<Text className={css.errorDetail} color="textContrastMedium">

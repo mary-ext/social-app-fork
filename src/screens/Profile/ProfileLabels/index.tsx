@@ -24,11 +24,6 @@ import { dateTimeLong } from '#/locale/intl/datetime';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { useRichText } from '#/components/hooks/useRichText';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import {
-	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-	Heart2_Stroke2_Corner0_Rounded as Heart,
-} from '#/components/icons/Heart2';
 import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';
@@ -43,11 +38,13 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, useInternalLink } from '#/components/web/Link';
 
 import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import HeartFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
+import Heart from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
 import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './index.css';
 
@@ -244,14 +241,13 @@ function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 
 				{creator.viewer?.blocking ? (
 					<div className={css.blockHint}>
-						<CircleInfo size="sm" fill={colors.textContrastMedium} />
+						<CircleInfo className={css.circleInfoIcon} />
 						<Text size="md_sub" color="textContrastMedium">
 							{m['screens.profile.labeler.blockHint']()}
 						</Text>
 					</div>
 				) : null}
 			</div>
-
 			<div className={css.settingsSection}>
 				{!hasValues ? (
 					<Text size="md_sub" color="textContrastMedium">
@@ -322,11 +318,7 @@ function LikeRow({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetailed 
 				shape="round"
 				size="small"
 			>
-				{likeUri ? (
-					<HeartFilled size="md" fill={colors.negative_400} />
-				) : (
-					<Heart size="md" fill={colors.textContrastMedium} />
-				)}
+				{likeUri ? <HeartFilled className={css.heartFilledIcon} /> : <Heart className={css.heartIcon} />}
 			</Button>
 			<InlineLinkText
 				color="textContrastMedium"

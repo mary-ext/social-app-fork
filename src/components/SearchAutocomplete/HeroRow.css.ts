@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const hero = style({
 	display: 'flex',
@@ -14,6 +14,8 @@ export const hero = style({
 });
 
 export const icon = style({
+	width: iconSize._2xl,
+	height: iconSize._2xl,
 	color: vars.palette.contrast_400,
 });
 

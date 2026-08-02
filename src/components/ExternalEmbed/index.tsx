@@ -12,10 +12,10 @@ import { EmbedThumb } from '#/components/EmbedThumb';
 import { ExternalGif } from '#/components/ExternalEmbed/ExternalGif';
 import { ExternalPlayer } from '#/components/ExternalEmbed/ExternalPlayer';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
-import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 
+import Globe from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './index.css';
@@ -132,7 +132,7 @@ function CardBody({
 			<div className={styles.domainWrap}>
 				<div className={styles.divider} />
 				<div className={styles.domainRow}>
-					<Globe size="xs" fill="currentColor" className={styles.globe} />
+					<Globe className={styles.globe} />
 					<Text size="xs" numberOfLines={1} className={styles.domain}>
 						{niceUrl}
 					</Text>

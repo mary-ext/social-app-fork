@@ -1,6 +1,7 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const button = style({
 	position: 'relative',
@@ -32,4 +33,9 @@ export const pulseOverlay = style({
 	zIndex: -1,
 	backgroundColor: vars.palette.contrast_50,
 	pointerEvents: 'none',
+});
+
+export const globeIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
 });

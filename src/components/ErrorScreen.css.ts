@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -41,4 +41,9 @@ export const details = style({
 	paddingBlock: space.sm,
 	paddingInline: space.lg,
 	overflow: 'hidden',
+});
+
+export const warningIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
 });

@@ -7,11 +7,11 @@ import { getFeedTypeFromUri } from '#/state/queries/feed';
 import { useProfileQuery } from '#/state/queries/profile';
 
 import * as Dialog from '#/components/Dialog';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './MissingFeed.css';
@@ -37,7 +37,7 @@ export function MissingFeed({
 				onClick={() => handle.open(null)}
 			>
 				<div className={styles.iconBox}>
-					<WarningIcon size="xl" />
+					<WarningIcon className={styles.warningIcon} />
 				</div>
 				<div className={styles.textContent}>
 					<Text className={styles.titleText} leading="snug" size="sm" weight="semiBold">

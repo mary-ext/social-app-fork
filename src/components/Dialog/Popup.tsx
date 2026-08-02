@@ -4,10 +4,10 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/Dialog/Popup.css';
-import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { NavigationEnabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 
+import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 // the portalled backdrop/viewport are rendered into `document.body`, but React still routes their
@@ -162,7 +162,7 @@ export function Divider() {
 export function Close({ variant }: { variant?: 'default' | 'floating' | 'outer' } = {}) {
 	return (
 		<BaseDialog.Close aria-label={m['common.a11y.closeDialog']()} className={styles.close({ variant })}>
-			<TimesIcon size="md" fill="currentColor" />
+			<TimesIcon className={styles.timesIcon} />
 		</BaseDialog.Close>
 	);
 }

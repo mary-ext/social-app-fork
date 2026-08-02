@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const rowTop = style({
 	alignItems: 'center',
@@ -30,6 +30,8 @@ export const link = style({
 });
 
 export const icon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 	color: colors.textContrastMedium,
 	selectors: {
 		[`${link}:hover &`]: {

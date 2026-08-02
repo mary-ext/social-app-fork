@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const button = style({
 	appearance: 'none',
@@ -26,4 +28,10 @@ export const button = style({
 export const label = style({
 	flex: 1,
 	minWidth: 0,
+});
+
+export const arrowRotateCounterClockwiseIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.textContrastMedium,
 });

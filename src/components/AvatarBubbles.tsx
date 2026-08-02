@@ -10,8 +10,9 @@ import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { UserAvatar } from '#/components/UserAvatar';
+
+import PersonIcon from '#/icons/central/People_round_filled_radius1_stroke2.svg';
 
 import * as css from './AvatarBubbles.css';
 
@@ -140,7 +141,7 @@ function AvatarBubble({
 function AvatarPlaceholder({ size }: { size: number }) {
 	return (
 		<div className={css.placeholder} style={assignInlineVars({ [css.placeholderSizeVar]: `${size}px` })}>
-			<PersonIcon width={size * 0.5} fill="currentColor" />
+			<PersonIcon style={{ width: size * 0.5, height: size * 0.5 }} />
 		</div>
 	);
 }

@@ -1,13 +1,13 @@
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
 
-import { TinyChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom } from '#/components/icons/Chevron';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton, useInternalLink } from '#/components/web/Link';
 
+import ChevronBottom from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import FeedsIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
 import BrowseFeedsIcon from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -79,7 +79,7 @@ function FeedSwitcher({ activeFeed, feeds, onSelectFeed }: HomeHeaderLayoutProps
 				<Text size="lg" weight="semiBold" numberOfLines={1}>
 					{activeFeed.label}
 				</Text>
-				<ChevronBottom size="xs" fill="currentColor" className={styles.chevron} />
+				<ChevronBottom className={styles.chevron} />
 			</Menu.Trigger>
 			<Menu.Popup label={m['screens.home.feedSwitcher.label']()} minWidth={200}>
 				<Menu.Group>

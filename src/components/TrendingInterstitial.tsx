@@ -5,7 +5,6 @@ import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
-import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Prompt from '#/components/Prompt';
 import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -13,8 +12,8 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import TrendingIcon from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './TrendingInterstitial.css';
 
@@ -50,7 +49,7 @@ export function TrendingInterstitial() {
 	return (
 		<>
 			<div className={css.root}>
-				<TrendingIcon className={css.icon} size="md" fill={colors.primary_600} />
+				<TrendingIcon className={css.icon} />
 				{isLoading
 					? SKELETON_WIDTHS.map((width, i) => (
 							// oxlint-disable-next-line react/no-array-index-key -- static skeleton

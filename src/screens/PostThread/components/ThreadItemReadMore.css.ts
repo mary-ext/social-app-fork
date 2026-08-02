@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -45,6 +45,8 @@ export const link = style({
 });
 
 export const icon = style({
+	width: iconSize.md,
+	height: iconSize.md,
 	color: colors.textContrastLow,
 	selectors: {
 		[`${link}:hover &`]: {

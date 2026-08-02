@@ -10,12 +10,11 @@ import { useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
 
 import { MessageContextMenu } from '#/components/dms/MessageContextMenu';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
-import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
 
+import DotsHorizontalIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import EmojiSmileIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import * as reactionStyles from './EmojiReactionPicker.css';
@@ -80,7 +79,7 @@ export function MessageActions({
 							className={clsx(props.className, reactionStyles.trigger)}
 							type="button"
 						>
-							<EmojiSmileIcon fill={colors.textContrastMedium} size="lg" />
+							<EmojiSmileIcon className={reactionStyles.emojiSmileIcon} />
 						</button>
 					)}
 				/>
@@ -95,7 +94,7 @@ export function MessageActions({
 						className={clsx(props.className, reactionStyles.trigger)}
 						type="button"
 					>
-						<DotsHorizontalIcon fill={colors.textContrastMedium} size="lg" />
+						<DotsHorizontalIcon className={reactionStyles.emojiSmileIcon} />
 					</button>
 				)}
 				senderProfile={senderProfile}

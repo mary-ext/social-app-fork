@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
 
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './Unavailable.css';
@@ -16,7 +16,7 @@ import * as css from './Unavailable.css';
 export function Unavailable({ className }: { className?: string }) {
 	return (
 		<div className={clsx(css.unavailable, className)}>
-			<WarningIcon size="lg" fill="currentColor" />
+			<WarningIcon className={css.warningIcon} />
 			<Text size="md" weight="medium" color="textContrastMedium">
 				{m['common.chat.error.inviteUnavailable']()}
 			</Text>

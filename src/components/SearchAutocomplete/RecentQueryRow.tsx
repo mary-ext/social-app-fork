@@ -1,8 +1,8 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Text } from '#/components/Text';
 
+import ClockIcon from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { SearchHistoryEntry } from '#/storage';
 
@@ -21,7 +21,7 @@ export function RecentQueryRow({
 	return (
 		<div className={styles.row}>
 			<Autocomplete.Item className={styles.item} value={row}>
-				<ClockIcon className={styles.icon} fill="currentColor" size="sm" />
+				<ClockIcon className={styles.icon} />
 				<Text className={styles.label}>{row.query}</Text>
 			</Autocomplete.Item>
 			<RecentRemoveButton

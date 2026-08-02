@@ -1,4 +1,4 @@
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
+import LoaderIcon from '#/icons/original/Loader.svg';
 
 import * as styles from './PickerPlaceholder.css';
 
@@ -6,7 +6,7 @@ import * as styles from './PickerPlaceholder.css';
 export function PickerPlaceholder() {
 	return (
 		<div className={styles.placeholder}>
-			<LoaderIcon className={styles.spinner} fill="currentColor" size="4xl" />
+			<LoaderIcon className={styles.spinner} />
 		</div>
 	);
 }

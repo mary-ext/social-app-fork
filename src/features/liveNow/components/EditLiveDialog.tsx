@@ -20,7 +20,6 @@ import {
 import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
 
 import * as Dialog from '#/components/Dialog';
-import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -28,8 +27,8 @@ import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 
+import ClockIcon from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './EditLiveDialog.css';
 
@@ -104,7 +103,7 @@ function DialogInner({
 					<Dialog.Close />
 				</Dialog.TitleRow>
 				<div className={styles.expiryRow}>
-					<ClockIcon fill={colors.textContrastHigh} size="sm" />
+					<ClockIcon className={styles.clockIcon} />
 					<Text color="textContrastHigh" size="md">
 						{typeof record?.durationMinutes === 'number'
 							? m['features.liveNow.expiry.value']({
@@ -147,10 +146,8 @@ function DialogInner({
 
 				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
 			</Stack>
-
 			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
 			{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
-
 			<Dialog.Actions>
 				<Button
 					color="negative_subtle"

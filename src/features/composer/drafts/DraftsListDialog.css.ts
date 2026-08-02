@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const list = style({
 	minHeight: 500,
@@ -46,4 +47,10 @@ export const footerNote = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	paddingBlock: space._2xl,
+});
+
+export const pageXIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastLow,
 });

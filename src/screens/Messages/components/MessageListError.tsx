@@ -1,11 +1,10 @@
 import { type ConvoItem, ConvoItemError } from '#/state/messages/convo/types';
 
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Text';
 import { InlineButton } from '#/components/web/Link';
 
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './MessageListError.css';
 
@@ -26,7 +25,7 @@ export function MessageListError({ item }: { item: ConvoItem & { type: 'error' }
 	return (
 		<div className={css.outer}>
 			<div className={css.inner}>
-				<CircleInfo fill={colors.negative_400} size="sm" />
+				<CircleInfo className={css.circleInfoIcon} />
 
 				<Text color="textContrastMedium">
 					{description}

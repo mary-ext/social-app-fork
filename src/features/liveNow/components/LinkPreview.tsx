@@ -2,10 +2,9 @@ import type { LinkMeta } from '#/lib/link-meta/link-meta';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
 
-import { colors } from '#/styles/colors';
+import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
 
 import * as styles from './LinkPreview.css';
 
@@ -28,7 +27,7 @@ export function LinkPreview({ linkMeta, loading }: { linkMeta?: LinkMeta; loadin
 							{linkMeta.title || linkMeta.url}
 						</Text>
 						<div className={styles.domainRow}>
-							<GlobeIcon fill={colors.textContrastLow} size="xs" />
+							<GlobeIcon className={styles.globeIcon} />
 							<Text color="textContrastMedium" numberOfLines={1} size="xs">
 								{toNiceDomain(linkMeta.url)}
 							</Text>

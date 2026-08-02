@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const pill = style({
 	display: 'inline-flex',
@@ -14,5 +14,11 @@ export const pill = style({
 	paddingBlock: 6,
 	paddingInline: space.sm,
 	textDecoration: 'none',
+	color: colors.text,
+});
+
+export const shieldIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 	color: colors.text,
 });

@@ -22,13 +22,13 @@ import { MessageActions } from '#/components/dms/MessageActions';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { getReplyPreviewText } from '#/components/dms/replyPreview';
-import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { InlineButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ArrowCornerDownRightIcon from '#/icons/central/ArrowCornerDownRight_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
@@ -510,7 +510,7 @@ function ReplyCaption({
 			onClick={onPress}
 			type="button"
 		>
-			<ArrowCornerDownRightIcon fill={colors.textContrastMedium} size="xs" />
+			<ArrowCornerDownRightIcon className={css.arrowCornerDownRightIcon} />
 			<Text className={css.replyCaptionText} color="textContrastMedium" numberOfLines={1} size="xs">
 				{caption}
 			</Text>

@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 import { NOTIF_AVI_SIZE } from './NotificationFeedItem.css';
 
@@ -46,4 +47,10 @@ export const galleryTile = style({
 	aspectRatio: '1',
 	minWidth: 0,
 	maxWidth: 100,
+});
+
+export const heartIconFilledIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.contrast_50,
 });

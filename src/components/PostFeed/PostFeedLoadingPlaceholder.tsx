@@ -2,13 +2,12 @@ import { weightedIndex } from '@mary/array-fns';
 
 import { triangularRandom } from '#/lib/numbers';
 
-import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControlsSkeleton } from '#/components/PostControls';
 import * as PostLayout from '#/components/PostLayout';
 import * as Skele from '#/components/web/Skeleton';
 
-import { colors } from '#/styles/colors';
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
 
 import * as feedCss from './PostFeedItem.css';
 import * as reasonCss from './PostFeedReason.css';
@@ -55,7 +54,7 @@ export function PostLoadingPlaceholder({ row, topBorder }: { row: PostRow; topBo
 				<div className={feedCss.reason}>
 					{reasonWidth != null ? (
 						<div className={reasonCss.includeReason}>
-							<RepostIcon fill={colors.contrast_50} width={13} height={13} />
+							<RepostIcon className={reasonCss.repostIcon2} />
 							{/* fixed px, not a %: the real reason hugs its content, so a percentage has no stable base */}
 							<Skele.Text color="contrast_25" size="md_sub" width={reasonWidth} />
 						</div>

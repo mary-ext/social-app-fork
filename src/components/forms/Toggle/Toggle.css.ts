@@ -241,3 +241,8 @@ export const switchThumb = style(
 		},
 	}),
 );
+
+export const checkIcon = style({
+	width: 14,
+	height: 14,
+});

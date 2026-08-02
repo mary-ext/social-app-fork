@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const radioList = style({
 	display: 'flex',
@@ -12,4 +12,9 @@ export const note = style({
 	display: 'flex',
 	gap: space.xs,
 	alignItems: 'center',
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

@@ -26,16 +26,15 @@ import {
 	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import * as SearchField from '#/components/forms/SearchField';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
-import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 /** row for the new group-chat action. */
 export type NewGroupChatRowModel = { kind: 'newGroupChat'; key: 'newGroupChat' };
@@ -275,13 +274,12 @@ export function NewGroupChatRow({ dimmed, onClick }: { dimmed: boolean; onClick:
 			value={NEW_GROUP_CHAT_ROW}
 		>
 			<div className={css.newGroupChatIcon}>
-				<PersonGroupIcon fill={colors.textContrastMedium} size="lg" />
+				<PersonGroupIcon className={css.personGroupIcon} />
 			</div>
 			<Text className={css.newGroupChatLabel} size="md" weight="medium">
 				{m['components.dms.group.title']()}
 			</Text>
-
-			<ChevronRightIcon fill={colors.textContrastMedium} size="sm" />
+			<ChevronRightIcon className={css.chevronRightIcon} />
 		</Autocomplete.Item>
 	);
 }

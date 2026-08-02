@@ -83,7 +83,7 @@ function Header({ children }: { children: ReactNode }) {
 }
 
 function Icon() {
-	return <StarterPackIcon width={40} gradient="sky" />;
+	return <StarterPackIcon gradient="sky" className={css.starterPackIcon} />;
 }
 
 function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {

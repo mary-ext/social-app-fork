@@ -3,9 +3,7 @@ import { clsx } from 'clsx';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useMediaQuery } from '#/lib/media-query';
 
-import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
-
-import { colors } from '#/styles/colors';
+import ArrowIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
 
 import * as css from './LoadLatestBtn.css';
 
@@ -38,11 +36,7 @@ export function LoadLatestBtn({
 				type="button"
 			>
 				<div className={css.hover} />
-				<ArrowIcon
-					className={css.icon}
-					size="lg"
-					fill={showIndicator ? colors.primary_500 : colors.textContrastMedium}
-				/>
+				<ArrowIcon className={clsx(css.icon, showIndicator && css.iconIndicating)} />
 			</button>
 		</div>
 	);

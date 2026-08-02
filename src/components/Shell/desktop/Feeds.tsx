@@ -5,16 +5,15 @@ import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 
-import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
-import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import FilterTimeline from '#/icons/central/FilterTimeline_round_outlined_radius1_stroke2.svg';
+import Plus from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter, useTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './Feeds.css';
 
@@ -88,7 +87,7 @@ export function DesktopFeeds() {
 				render={
 					<Link to={{ name: 'Feeds' }} label={m['view.feeds.feed.more']()} className={css.item}>
 						<span className={css.morePlusBox}>
-							<Plus size="sm" fill="currentColor" />
+							<Plus className={css.plusIcon} />
 						</span>
 						<Text size="md" numberOfLines={1} className={css.label}>
 							{m['view.feeds.feed.more']()}
@@ -112,7 +111,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 		>
 			{isFollowing ? (
 				<span className={css.followingIcon}>
-					<FilterTimeline width={14} height={14} fill={colors.white} />
+					<FilterTimeline className={css.filterTimelineIcon} />
 				</span>
 			) : (
 				<UserAvatar

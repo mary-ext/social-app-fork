@@ -124,3 +124,8 @@ export const loadingRow = recipe(
 	},
 	{ debugId: 'loadingRow' },
 );
+
+export const starterPackIcon = style({
+	width: 40,
+	height: 40,
+});

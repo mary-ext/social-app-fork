@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
-import { space, zIndex } from '#/styles/tokens.css';
+import { iconSize, space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.sm;
@@ -82,4 +82,9 @@ export const empty = style({
 
 export const emptyMessage = style({
 	fontStyle: 'italic',
+});
+
+export const checkIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

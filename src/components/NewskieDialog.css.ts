@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const trigger = style({
 	appearance: 'none',
@@ -40,4 +41,14 @@ export const starterPack = style({
 	borderRadius: 8,
 	padding: 16,
 	width: '100%',
+});
+
+export const newskieIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+});
+
+export const newskieIcon2 = style({
+	width: iconSize._5xl,
+	height: iconSize._5xl,
 });

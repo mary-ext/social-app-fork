@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -33,9 +33,8 @@ export function Box({
 	return (
 		<div className={styles.box}>
 			<div className={styles.icon}>
-				<CircleInfoIcon fill="currentColor" size="md" />
+				<CircleInfoIcon className={styles.circleInfoIcon} />
 			</div>
-
 			<div className={styles.column}>
 				<Text>{error}</Text>
 
@@ -45,7 +44,6 @@ export function Box({
 					</Text>
 				)}
 			</div>
-
 			{onDismiss && (
 				<Button
 					className={styles.dismiss}

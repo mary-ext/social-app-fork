@@ -13,7 +13,6 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Text';
@@ -24,6 +23,7 @@ import * as Layout from '#/components/web/Layout';
 import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import InboxLargeIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
@@ -117,7 +117,7 @@ function RequestList({
 		if (isError) {
 			return (
 				<div className={css.errorWrap}>
-					<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
+					<CircleInfoIcon className={css.circleInfoIcon} />
 					<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
 						{m['common.error.whoops']()}
 					</Text>

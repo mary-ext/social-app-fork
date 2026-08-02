@@ -12,15 +12,14 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { useHider } from '#/components/moderation/Hider';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
+import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './ListHiddenScreen.css';
 
@@ -95,7 +94,7 @@ export function ListHiddenScreen({
 	return (
 		<div className={styles.container}>
 			<div className={styles.iconBox}>
-				<EyeSlash fill={colors.textContrastLow} size="3xl" />
+				<EyeSlash className={styles.eyeSlashIcon} />
 			</div>
 			<Text align="center" className={styles.title} size="xl" weight="semiBold">
 				{list.creator.viewer?.blocking || list.creator.viewer?.blockedBy

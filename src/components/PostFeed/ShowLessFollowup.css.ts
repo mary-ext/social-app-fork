@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const root = recipe(
 	{
@@ -32,6 +32,9 @@ export const card = style({
 });
 
 export const icon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.contrast_500,
 	margin: (20 - 18) / 2,
 });
 

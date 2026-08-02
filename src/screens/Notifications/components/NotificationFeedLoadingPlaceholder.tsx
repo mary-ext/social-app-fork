@@ -4,7 +4,6 @@ import { clsx } from 'clsx';
 
 import { triangularRandom } from '#/lib/numbers';
 
-import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2';
 import {
 	PostLoadingPlaceholder,
 	type PostRow,
@@ -12,7 +11,7 @@ import {
 } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Skele from '#/components/web/Skeleton';
 
-import { colors } from '#/styles/colors';
+import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
 
 import * as itemCss from './NotificationFeedItem.css';
 import * as css from './NotificationFeedLoadingPlaceholder.css';
@@ -56,7 +55,7 @@ function NotificationLoadingPlaceholder({ row, topBorder }: { row: NotificationR
 	return (
 		<div className={clsx(css.item, topBorder && css.itemTopBorder)}>
 			<div className={itemCss.iconColumn}>
-				<HeartIconFilled size="xl" fill={colors.contrast_50} />
+				<HeartIconFilled className={css.heartIconFilledIcon} />
 			</div>
 			<div className={itemCss.content}>
 				<div className={css.avatars}>

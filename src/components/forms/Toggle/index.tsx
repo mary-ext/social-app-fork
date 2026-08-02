@@ -7,7 +7,8 @@ import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/Toggle/Toggle.css';
-import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
+
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 
 type GroupContextValue = {
 	/** True once a {@link Group}'s `maxSelections` cap is reached; unchecked {@link Item}s read it to disable. */
@@ -213,7 +214,7 @@ export function CheckboxIndicator() {
 	return (
 		<span className={styles.box}>
 			<Checkbox.Indicator className={styles.check}>
-				<CheckIcon width={14} fill="currentColor" />
+				<CheckIcon className={styles.checkIcon} />
 			</Checkbox.Indicator>
 		</span>
 	);

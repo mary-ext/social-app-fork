@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -18,4 +19,10 @@ export const inner = style({
 	justifyContent: 'center',
 	gap: space.sm,
 	maxWidth: 400,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.negative_400,
 });

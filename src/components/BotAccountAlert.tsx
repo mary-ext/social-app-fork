@@ -4,13 +4,12 @@ import { useSession } from '#/state/session';
 
 import * as css from '#/components/BotAccountAlert.css';
 import * as Dialog from '#/components/Dialog';
-import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
+import RobotIcon from '#/icons/central/Robot_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 export function BotAccountAlert({
 	handle,
@@ -39,7 +38,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 
 	return (
 		<div className={css.body}>
-			<RobotIcon className={css.icon} size="4xl" fill={colors.textContrastMedium} />
+			<RobotIcon className={css.icon} />
 			<Text align="center" className={css.text} color="textContrastHigh" size="md">
 				{description}
 			</Text>

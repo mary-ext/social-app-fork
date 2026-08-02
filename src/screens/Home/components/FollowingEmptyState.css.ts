@@ -1,5 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
+import { iconSize } from '#/styles/tokens.css';
+
 export const buttonWrap = style({
 	display: 'flex',
 	alignSelf: 'center',
@@ -33,4 +36,10 @@ export const message = style({
 
 export const sectionText = style({
 	marginTop: 24,
+});
+
+export const magnifyingGlassIcon = style({
+	width: iconSize._3xl,
+	height: iconSize._3xl,
+	color: colors.textContrastLow,
 });

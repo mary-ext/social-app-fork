@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const trigger = style({
 	appearance: 'none',
@@ -31,4 +31,9 @@ export const label = style({
 export const gateIcon = style({
 	width: 16,
 	height: 16,
+});
+
+export const tinyChevronDownIcon = style({
+	width: iconSize._2xs,
+	height: iconSize._2xs,
 });

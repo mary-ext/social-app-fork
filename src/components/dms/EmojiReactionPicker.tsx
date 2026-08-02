@@ -9,8 +9,8 @@ import { useSession } from '#/state/session';
 
 import { EmojiPanel } from '#/components/EmojiPicker/EmojiPanel';
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './EmojiReactionPicker.css';
@@ -105,7 +105,7 @@ function QuickReactions({
 				className={styles.expandButton}
 				onClick={onExpand}
 			>
-				<PlusIcon size="lg" fill="currentColor" />
+				<PlusIcon className={styles.plusIcon} />
 			</button>
 		</div>
 	);

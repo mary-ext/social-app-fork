@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 
 import * as styles from './EmbedThumb.css';
 
@@ -41,7 +41,7 @@ function Thumb({ frameClassName, src }: EmbedThumbProps) {
 		<div className={clsx(styles.frame, frameClassName ?? styles.cardFrame)}>
 			{status === 'error' ? (
 				<span className={styles.fallback}>
-					<ImageIcon fill="currentColor" size="3xl" />
+					<ImageIcon className={styles.imageIcon} />
 				</span>
 			) : (
 				<img

@@ -12,9 +12,9 @@ import { isCancelledError } from '#/lib/strings/errors';
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableBanner.css';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
-import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import * as Menu from '#/components/Menu';
 
+import CameraFilledIcon from '#/icons/central/Camera1_round_filled_radius1_stroke2.svg';
 import LibraryIcon from '#/icons/central/Streaming_round_outlined_radius1_stroke2.svg';
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -56,7 +56,7 @@ export function EditableBanner({
 				<Menu.Trigger aria-label={m['components.editableBanner.edit']()} className={styles.trigger}>
 					{banner && <img className={styles.image} src={banner} alt="" />}
 					<span className={styles.editBadge}>
-						<CameraFilledIcon width={14} height={14} fill="currentColor" />
+						<CameraFilledIcon className={styles.cameraFilledIcon} />
 					</span>
 				</Menu.Trigger>
 				<Menu.Popup label={m['components.editableBanner.edit']()} align="center">

@@ -7,7 +7,6 @@ import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
@@ -16,13 +15,13 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
+import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import ListSparkle from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
 import Pencil from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteParams, useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './StarterPackScreen.css';
 
@@ -160,7 +159,7 @@ export function OverflowMenu({
 								<Text>{cleanError(deleteError)}</Text>
 							</div>
 
-							<CircleInfo size="lg" fill={colors.negative_400} />
+							<CircleInfo className={css.circleInfoIcon} />
 						</div>
 					)}
 				</Prompt.Content>

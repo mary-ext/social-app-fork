@@ -19,7 +19,6 @@ import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
@@ -34,6 +33,7 @@ import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';
 
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { threadTextShape } from './skeleton-shape';
@@ -74,7 +74,7 @@ function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'i
 
 			<div className={css.deletedRow}>
 				<div className={css.deletedIcon}>
-					<TrashIcon fill="currentColor" />
+					<TrashIcon className={css.trashIcon} />
 				</div>
 				<Text size="md" weight="semiBold" color="textContrastMedium">
 					{m['screens.postThread.post.error.deleted']()}

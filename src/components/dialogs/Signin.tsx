@@ -8,7 +8,6 @@ import { AccountList } from '#/components/AccountList';
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle, type SigninDialogPayload } from '#/components/dialogs/handles';
 import * as css from '#/components/dialogs/Signin.css';
-import { At_Stroke2_Corner0_Rounded as AtIcon } from '#/components/icons/At';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -16,9 +15,9 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import AtIcon from '#/icons/central/At_round_outlined_radius1_stroke2.svg';
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 export function SigninDialog() {
 	return (
@@ -164,11 +163,10 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 
 				<Text color="textContrastMedium">{m['components.dialogs.signin.description']()}</Text>
 			</Stack>
-
 			<TextField.Root isInvalid={!!error}>
 				<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
 				<div className={css.field}>
-					<AtIcon className={css.fieldIcon} size="lg" fill={colors.contrast_500} />
+					<AtIcon className={css.fieldIcon} />
 					<TextField.Input
 						autoCapitalize="none"
 						autoFocus
@@ -187,7 +185,6 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					</Text>
 				)}
 			</TextField.Root>
-
 			<Dialog.Actions direction="column">
 				<Button
 					color="primary"

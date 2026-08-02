@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius } from '#/styles/tokens.css';
+import { borderRadius, iconSize } from '#/styles/tokens.css';
 
 export const loading = style({
 	display: 'flex',
@@ -13,4 +13,9 @@ export const loading = style({
 	width: 33,
 	height: 33,
 	color: colors.text,
+});
+
+export const messageIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

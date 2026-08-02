@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const row = style({
 	display: 'flex',
@@ -11,6 +12,9 @@ export const row = style({
 });
 
 export const icon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
 	position: 'relative',
 	top: -1,
 	flexShrink: 0,

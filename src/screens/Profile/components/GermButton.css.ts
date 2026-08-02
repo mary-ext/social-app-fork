@@ -30,5 +30,8 @@ export const label = style({
 });
 
 export const arrow = style({
+	width: 14,
+	height: 14,
+	color: colors.text,
 	marginInline: space._2xs,
 });

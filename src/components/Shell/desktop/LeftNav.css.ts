@@ -2,8 +2,9 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import * as navBadge from '#/components/Shell/nav-badge.css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 import {
 	LARGE_ELEMENT_SIZE,
@@ -133,6 +134,9 @@ export const identity = style({
 });
 
 export const ellipsisIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
 	flexShrink: 0,
 	transitionDuration: '100ms',
 	transitionProperty: 'opacity',

@@ -11,13 +11,12 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 
+import ArrowCornerDownRightIcon from '#/icons/central/ArrowCornerDownRight_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './PostRepliedTo.css';
 
@@ -62,7 +61,7 @@ export function PostRepliedTo({
 
 	return (
 		<div className={clsx(css.row, className)}>
-			<ArrowCornerDownRightIcon className={css.icon} fill={colors.textContrastMedium} size="xs" />
+			<ArrowCornerDownRightIcon className={css.icon} />
 			<Text className={css.label} color="textContrastMedium" numberOfLines={1} size="sm">
 				{label}
 			</Text>

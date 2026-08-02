@@ -20,7 +20,6 @@ import {
 	useStarterPackDialogReopen,
 } from '#/components/dialogs/starter-pack-dialog-reopen';
 import * as css from '#/components/dialogs/StarterPackDialog.css';
-import { StarterPack } from '#/components/icons/StarterPack';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -28,9 +27,9 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
 import { useLocation, useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
 
@@ -172,7 +171,7 @@ function Empty({ onStartWizard }: { onStartWizard: () => void }) {
 	return (
 		<div className={css.empty}>
 			<div className={css.emptyText}>
-				<StarterPack size="4xl" fill={colors.contrast_200} />
+				<StarterPack className={css.starterPackIcon} />
 				<Text align="center">{m['components.dialogs.starterPack.empty']()}</Text>
 			</div>
 			<CreateButton onStartWizard={onStartWizard} />

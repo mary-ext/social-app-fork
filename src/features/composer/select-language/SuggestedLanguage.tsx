@@ -12,12 +12,12 @@ import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { Trans } from '#/locale/Trans';
 
-import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './SuggestedLanguage.css';

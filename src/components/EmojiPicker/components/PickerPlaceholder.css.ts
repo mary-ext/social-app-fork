@@ -1,6 +1,7 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 import { GRID_HEIGHT, PANEL_WIDTH } from '../layout';
 
@@ -10,6 +11,8 @@ const rotate = keyframes({
 });
 
 export const spinner = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
 	animation: `${rotate} 500ms linear infinite`,
 });
 

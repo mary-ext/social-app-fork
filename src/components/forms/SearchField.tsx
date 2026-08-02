@@ -5,10 +5,10 @@ import { clsx } from 'clsx';
 import { mergeRefs } from '#/lib/merge-refs';
 
 import * as styles from '#/components/forms/SearchField.css';
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 
 // clicks landing on one of these are handled by the element itself; the field must not steal them to refocus
 // the input. `input`/`textarea` are listed so a direct click keeps native caret placement.
@@ -50,7 +50,7 @@ export function Root({
 
 /** leading, non-interactive magnifying-glass icon. */
 export function Icon() {
-	return <MagnifyingGlassIcon className={styles.icon} size="lg" fill="currentColor" />;
+	return <MagnifyingGlassIcon className={styles.icon} />;
 }
 
 /**

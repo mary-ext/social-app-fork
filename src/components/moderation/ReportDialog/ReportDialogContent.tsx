@@ -10,7 +10,6 @@ import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import * as Menu from '#/components/Menu';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -24,8 +23,8 @@ import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
 import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PaperPlaneIcon from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
+import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import { useSubmitReportMutation } from './action';
 import {
@@ -229,7 +228,7 @@ function Inner({
 								<Text className={styles.grow} color="textContrastMedium" leading="snug" size="sm">
 									{m['components.moderation.report.copyright.prompt']()}
 								</Text>
-								<SquareArrowTopRightIcon fill={colors.textContrastMedium} size="sm" />
+								<SquareArrowTopRightIcon className={styles.squareArrowTopRightIcon} />
 							</ExternalLink>
 						)}
 					</div>

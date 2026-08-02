@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -23,4 +24,10 @@ export const body = style({
 			maxWidth: 394,
 		},
 	},
+});
+
+export const xIcon = style({
+	width: iconSize._3xl,
+	height: iconSize._3xl,
+	color: colors.textContrastLow,
 });

@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	padding: space.md,
@@ -19,6 +19,9 @@ export const card = style({
 });
 
 export const icon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.text,
 	marginBottom: space.xs,
 });
 

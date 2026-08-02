@@ -112,6 +112,9 @@ export const timestamp = style({
 });
 
 export const mutedIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
 	flexShrink: 0,
 	marginLeft: space.sm,
 });

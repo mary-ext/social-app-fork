@@ -22,7 +22,6 @@ import {
 	usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences';
 
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -33,6 +32,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
+import ChevronRight from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
 import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
 import EditBig from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
@@ -272,7 +272,7 @@ function LabelerRow({
 				)}
 			</div>
 			<span className={clsx(cardStyles.chevron, styles.labelerChevron)}>
-				<ChevronRight fill="currentColor" size="sm" />
+				<ChevronRight className={styles.chevronRightIcon} />
 			</span>
 		</Settings.LinkRowRaw>
 	);

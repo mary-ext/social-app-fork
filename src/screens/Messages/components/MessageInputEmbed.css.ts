@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const sharedContainer = {
 	display: 'flex',
@@ -71,4 +71,10 @@ export const postAlerts = style({
 
 export const inviteState = style({
 	minHeight: 64,
+});
+
+export const xIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastHigh,
 });

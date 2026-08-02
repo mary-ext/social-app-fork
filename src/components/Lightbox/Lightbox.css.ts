@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-import { zIndex } from '#/styles/tokens.css';
+import { iconSize, zIndex } from '#/styles/tokens.css';
 
 const fadeIn = keyframes({
 	from: { opacity: 0 },
@@ -78,7 +78,11 @@ export const circle = style({
 export const topLeft = style({ position: 'absolute', top: 20, left: 20, zIndex: 1 });
 export const topRight = style({ position: 'absolute', top: 20, right: 20, zIndex: 1 });
 
-export const rotated = style({ transform: 'rotate(90deg)' });
+export const rotated = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	transform: 'rotate(90deg)',
+});
 
 export const navButton = style({
 	display: 'flex',
@@ -185,4 +189,9 @@ export const srOnly = style({
 	height: 1,
 	overflow: 'hidden',
 	whiteSpace: 'nowrap',
+});
+
+export const controlIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

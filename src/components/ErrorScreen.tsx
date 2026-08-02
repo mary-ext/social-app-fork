@@ -1,9 +1,9 @@
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import ArrowRotateCounterClockwiseIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ErrorScreen.css';
@@ -33,7 +33,7 @@ export function ErrorScreen({
 			)}
 			<div className={css.outer}>
 				<div className={css.badge}>
-					<WarningIcon size="xl" fill="currentColor" />
+					<WarningIcon className={css.warningIcon} />
 				</div>
 				<Text className={css.title} size="_2xl" weight="bold">
 					{title}

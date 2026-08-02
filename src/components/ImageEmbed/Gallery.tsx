@@ -10,7 +10,6 @@ import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
 import * as Dialog from '#/components/Dialog';
 import { lightboxHandle } from '#/components/dialogs/handles';
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import {
 	CAROUSEL_CHAT_MAX_HEIGHT,
 	CAROUSEL_CHAT_MIN_HEIGHT,
@@ -27,6 +26,7 @@ import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export type GalleryProps = {
@@ -198,7 +198,7 @@ function GalleryImage({
 		>
 			{status === 'error' ? (
 				<span className={styles.fallback}>
-					<ImageIcon fill="currentColor" size="3xl" />
+					<ImageIcon className={styles.imageIcon} />
 				</span>
 			) : (
 				<img

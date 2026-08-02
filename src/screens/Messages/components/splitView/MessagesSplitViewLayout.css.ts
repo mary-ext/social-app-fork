@@ -4,6 +4,7 @@ import { LEFT_NAV_MINIMAL_WIDTH } from '#/components/Shell/desktop/constants';
 import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 
 import { colors } from '#/styles/colors';
+import { iconSize } from '#/styles/tokens.css';
 
 const LEFT_COLUMN_WIDTH = 360;
 
@@ -51,4 +52,16 @@ export const splitScroller = style({
 	overflowY: 'auto',
 	scrollbarWidth: 'thin',
 	scrollbarColor: `${colors.contrast_100} transparent`,
+});
+
+export const newChatIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.white,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize._4xl,
+	height: iconSize._4xl,
+	color: colors.textContrastLow,
 });

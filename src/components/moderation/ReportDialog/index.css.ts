@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const popup = style({
 	maxWidth: 500,
@@ -130,4 +132,10 @@ export const srOnly = style({
 
 export const doneButton = style({
 	width: '100%',
+});
+
+export const squareArrowTopRightIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
 });

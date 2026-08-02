@@ -13,13 +13,12 @@ import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-d
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
-import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
-import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 
+import EmojiSmileIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
+import PaperPlaneIcon from '#/icons/central/PaperPlane_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './MessageComposer.css';
 
@@ -148,7 +147,7 @@ export function MessageComposer({
 										/>
 									}
 								>
-									<EmojiSmileIcon size="lg" fill="currentColor" />
+									<EmojiSmileIcon className={styles.emojiSmileIcon} />
 								</EmojiPicker.Trigger>
 								<EmojiPicker.Root
 									handle={emojiPickerHandle}
@@ -219,7 +218,7 @@ function SubmitButton({
 			{loading ? (
 				<Spinner className={styles.sendIcon} color="white" label={m['common.status.saving']()} size="lg" />
 			) : (
-				<PaperPlaneIcon className={styles.sendIcon} fill={colors.white} size="lg" />
+				<PaperPlaneIcon className={styles.sendIcon} />
 			)}
 		</button>
 	);

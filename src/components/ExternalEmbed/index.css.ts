@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 // marks navigable cards for descendant hover styles
 const isInteractive = style({});
@@ -106,6 +106,8 @@ export const domainRow = style({
 });
 
 export const globe = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
 	transitionProperty: 'color',
 	color: vars.palette.contrast_400,
 	selectors: {

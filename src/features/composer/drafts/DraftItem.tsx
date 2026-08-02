@@ -4,7 +4,6 @@ import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
 
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
@@ -12,6 +11,7 @@ import { TimeElapsed } from '#/components/TimeElapsed';
 
 import CirclePlusIcon from '#/icons/central/CirclePlus_round_outlined_radius1_stroke2.svg';
 import CloseQuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
+import DotsIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -118,7 +118,7 @@ export function DraftItem({
 					className={styles.menuButton}
 					aria-label={m['common.a11y.moreOptions']()}
 				>
-					<DotsIcon className={styles.menuIcon} size="sm" fill="currentColor" />
+					<DotsIcon className={styles.menuIcon} />
 				</Prompt.Trigger>
 			</div>
 			<Prompt.Basic

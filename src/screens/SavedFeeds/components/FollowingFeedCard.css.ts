@@ -21,3 +21,9 @@ export const icon = style({
 	width: 36,
 	height: 36,
 });
+
+export const filterTimelineIcon = style({
+	width: 22,
+	height: 22,
+	color: colors.white,
+});

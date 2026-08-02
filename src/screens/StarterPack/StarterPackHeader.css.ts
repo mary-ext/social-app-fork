@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -35,4 +36,15 @@ export const joinedRow = style({
 	flexDirection: 'row',
 	gap: space.sm,
 	alignItems: 'center',
+});
+
+export const starterPackIcon = style({
+	width: 56,
+	height: 56,
+});
+
+export const trendingIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
 });

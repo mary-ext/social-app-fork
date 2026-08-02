@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const badge = style({
 	display: 'flex',
@@ -25,4 +25,14 @@ export const badge = style({
 
 export const admonition = style({
 	marginTop: space.sm,
+});
+
+export const checkIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+});
+
+export const plusIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

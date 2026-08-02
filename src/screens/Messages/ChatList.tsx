@@ -18,8 +18,6 @@ import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { EmptyState } from '#/components/EmptyState';
 import { FAB } from '#/components/FAB';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon } from '#/components/icons/Message';
 import { List, type ListMethods } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Menu from '#/components/Menu';
@@ -28,9 +26,10 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
-import MessagePlusIcon from '#/icons/central-custom/MessagePlus_round_outlined_radius1_stroke2.svg';
+import NewChatIcon from '#/icons/central-custom/MessagePlus_round_outlined_radius1_stroke2.svg';
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 import CircleCheckIcon from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import InboxIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import BubbleSmileIcon from '#/icons/original/BubbleSmile.svg';
@@ -95,7 +94,7 @@ export function MessagesScreen() {
 									onPress: () => newChatHandle.open(null),
 									size: 'small',
 									color: 'primary',
-									icon: MessagePlusIcon,
+									icon: NewChatIcon,
 								}
 					}
 					className={css.empty}
@@ -113,7 +112,10 @@ export function MessagesScreen() {
 				<Dialog.Trigger
 					handle={newChatHandle}
 					render={
-						<FAB icon={<NewChatIcon size="xl" fill={colors.white} />} label={m['common.chat.action.new']()} />
+						<FAB
+							icon={<NewChatIcon className={splitViewCss.newChatIcon} />}
+							label={m['common.chat.action.new']()}
+						/>
 					}
 				/>
 			)}
@@ -184,7 +186,7 @@ export function ChatList({
 					<ChatListLoadingPlaceholder />
 				) : isError ? (
 					<div className={css.errorWrap}>
-						<CircleInfoIcon size="4xl" fill={colors.textContrastLow} />
+						<CircleInfoIcon className={splitViewCss.circleInfoIcon} />
 						<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
 							{m['common.error.whoops']()}
 						</Text>
@@ -226,7 +228,7 @@ export function ChatList({
 										onPress: openChatControl,
 										size: 'small',
 										color: 'primary',
-										icon: MessagePlusIcon,
+										icon: NewChatIcon,
 									}
 						}
 						className={css.emptyTall}

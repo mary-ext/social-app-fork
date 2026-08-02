@@ -2,8 +2,9 @@ import { style, styleVariants } from '@vanilla-extract/css';
 
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const content = style({
 	boxSizing: 'border-box',
@@ -94,4 +95,16 @@ export const reportButton = style({
 
 export const dialogPopup = style({
 	overflow: 'hidden',
+});
+
+export const globeIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastMedium,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastLow,
 });

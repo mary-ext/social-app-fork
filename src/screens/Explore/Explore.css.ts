@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const tabbedHeader = style({
 	paddingBottom: space.md,
@@ -97,4 +97,16 @@ export const previewFooter = style({
 
 export const bottomSpacer = style({
 	height: 100,
+});
+
+export const chevronDownIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastMedium,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.negative_400,
 });

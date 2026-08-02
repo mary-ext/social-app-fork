@@ -8,7 +8,6 @@ import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutati
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
 import { EmptyState } from '#/components/EmptyState';
-import { CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon } from '#/components/icons/CircleQuestion';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
@@ -21,9 +20,9 @@ import * as Skele from '#/components/web/Skeleton';
 
 import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
 import BookmarkDeleteLarge from '#/icons/central/BookmarkDelete_round_outlined_radius3_stroke1.svg';
+import QuestionIcon from '#/icons/central/CircleQuestionmark_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './Bookmarks.css';
 
@@ -178,7 +177,7 @@ function BookmarkNotFound({
 	return (
 		<div className={css.notFoundRow({ topBorder: !hideTopBorder })}>
 			<div className={css.deletedAvatar}>
-				<QuestionIcon size="xl" fill={colors.textContrastLow} />
+				<QuestionIcon className={css.questionIcon} />
 			</div>
 			<Skele.Col gap="xs">
 				<Skele.Text size="md" width="25%" />

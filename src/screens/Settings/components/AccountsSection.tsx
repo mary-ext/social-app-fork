@@ -15,8 +15,6 @@ import { removeAccount, type SessionAccount, useSession } from '#/state/session'
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
@@ -26,6 +24,8 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import DotsHorizontal from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
 import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
@@ -89,7 +89,7 @@ function CurrentAccountRow({
 		>
 			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={shadow} />
 			<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={shadow} />
-			<ChevronRightIcon className={cardStyles.chevron} fill="currentColor" size="sm" />
+			<ChevronRightIcon className={cardStyles.chevron} />
 		</Settings.LinkRowRaw>
 	);
 }
@@ -207,7 +207,7 @@ function OtherAccountRow({
 			{!pendingDid && (
 				<Menu.Root>
 					<Menu.Trigger aria-label={m['screens.settings.account.options']()} className={styles.overflow}>
-						<DotsHorizontal fill="currentColor" size="sm" />
+						<DotsHorizontal className={styles.menuIcon} />
 					</Menu.Trigger>
 					<Menu.Popup label={m['screens.settings.account.options']()}>
 						<Menu.Item
@@ -220,7 +220,6 @@ function OtherAccountRow({
 					</Menu.Popup>
 				</Menu.Root>
 			)}
-
 			<Prompt.Basic
 				confirmButtonColor="negative"
 				confirmButtonCta={m['common.action.remove']()}

@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const form = style({
 	display: 'flex',
@@ -31,7 +33,12 @@ export const disabledNotice = style({
 	paddingInline: 12,
 });
 
-export const disabledNoticeIcon = style({ flexShrink: 0 });
+export const disabledNoticeIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastLow,
+	flexShrink: 0,
+});
 
 export const flex1 = style({ flex: 1 });
 

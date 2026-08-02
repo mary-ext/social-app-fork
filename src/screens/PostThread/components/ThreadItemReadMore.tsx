@@ -2,10 +2,10 @@ import { clsx } from 'clsx';
 
 import type { PostThreadParams, ThreadItem } from '#/state/queries/usePostThread';
 
-import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlus } from '#/components/icons/CirclePlus';
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
+import CirclePlus from '#/icons/central/CirclePlus_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ThreadItemReadMore.css';
@@ -26,7 +26,7 @@ export function ThreadItemReadMore({
 			{isTreeView && <IndentGuides count={indent} keyPrefix={item.key} skipped={item.skippedIndentIndices} />}
 			<div className={clsx(css.connectorBase, isTreeView ? css.connectorTree : css.connectorLinear)} />
 			<Link className={css.link} label={m['screens.postThread.reply.action.readMore']()} to={item.target}>
-				<CirclePlus className={css.icon} fill="currentColor" size="md" />
+				<CirclePlus className={css.icon} />
 				<Text className={css.text} color="textContrastMedium" size="sm">
 					{m['screens.postThread.reply.action.readMoreCount']({ count: item.moreReplies })}
 				</Text>

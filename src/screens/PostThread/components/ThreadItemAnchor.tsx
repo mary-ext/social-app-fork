@@ -35,8 +35,6 @@ import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
-import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
-import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -56,9 +54,10 @@ import { InlineLinkText } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
+import CalendarClockIcon from '#/icons/central/CalendarClock_round_outlined_radius1_stroke2.svg';
+import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './ThreadItemAnchor.css';
 
@@ -103,7 +102,7 @@ function ThreadItemAnchorDeleted({ isRoot }: { isRoot: boolean }) {
 			<div className={clsx(css.deletedOuter, isRoot && css.deletedOuterRoot)}>
 				<div className={css.deletedRow}>
 					<div className={css.deletedIcon}>
-						<TrashIcon fill="currentColor" />
+						<TrashIcon className={css.trashIcon} />
 					</div>
 					<Text size="md" weight="semiBold" color="textContrastMedium">
 						{m['screens.postThread.post.error.deleted']()}
@@ -483,12 +482,11 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				aria-label={m['screens.postThread.archive.label']()}
 				onClick={() => handle.open(null)}
 			>
-				<CalendarClockIcon fill={colors.yellow} size="sm" aria-hidden />
+				<CalendarClockIcon aria-hidden className={css.calendarClockIcon} />
 				<Text size="xs" weight="semiBold" color="textContrastMedium">
 					{m['screens.postThread.archive.from']({ date: createdAt })}
 				</Text>
 			</button>
-
 			<Prompt.Outer handle={handle}>
 				<Prompt.Content>
 					<Prompt.TitleText>{m['screens.postThread.archive.label']()}</Prompt.TitleText>

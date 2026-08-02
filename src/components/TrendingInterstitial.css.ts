@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const root = style({
 	display: 'flex',
@@ -17,6 +18,9 @@ export const root = style({
 });
 
 export const icon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.primary_600,
 	flexShrink: 0,
 });
 

@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const notFoundRow = recipe(
 	{
@@ -45,4 +45,10 @@ export const deletedMessage = style({
 
 export const empty = style({
 	paddingTop: 28,
+});
+
+export const questionIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: colors.textContrastLow,
 });

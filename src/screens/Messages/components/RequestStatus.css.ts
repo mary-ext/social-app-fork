@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const root = style({
 	position: 'absolute',
@@ -45,4 +45,10 @@ export const close = style({
 	border: 'none',
 	background: 'none',
 	cursor: 'pointer',
+});
+
+export const statusIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.primary_500,
 });

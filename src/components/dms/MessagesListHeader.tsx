@@ -16,7 +16,6 @@ import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/co
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
-import { Bell2Off_Filled_Corner0_Rounded as BellOffIcon } from '#/components/icons/Bell2';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
@@ -25,10 +24,10 @@ import * as Layout from '#/components/web/Layout';
 import { Link, LinkButton } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import BellOffIcon from '#/icons/central/BellOff_round_filled_radius1_stroke2.svg';
 import DotsHorizontalIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './MessagesListHeader.css';
 import type { ConvoWithDetails } from './util';
@@ -204,7 +203,7 @@ function MuteStatus({ muted }: { muted: boolean }) {
 	return muted ? (
 		<>
 			<Text color="textContrastMedium"> &middot; </Text>
-			<BellOffIcon fill={colors.textContrastMedium} size="sm" />
+			<BellOffIcon className={css.bellOffIcon} />
 		</>
 	) : undefined;
 }

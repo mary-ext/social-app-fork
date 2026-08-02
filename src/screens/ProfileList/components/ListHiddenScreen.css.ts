@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { borderRadius, space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const buttonWrap = style({
 	display: 'flex',
@@ -47,4 +48,10 @@ export const message = style({
 export const title = style({
 	alignSelf: 'center',
 	marginTop: 12,
+});
+
+export const eyeSlashIcon = style({
+	width: iconSize._3xl,
+	height: iconSize._3xl,
+	color: colors.textContrastLow,
 });

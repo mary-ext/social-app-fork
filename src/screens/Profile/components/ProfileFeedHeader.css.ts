@@ -2,8 +2,9 @@ import { style } from '@vanilla-extract/css';
 
 import { leadingOverrideVar } from '#/components/Text.css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { lineHeight, space } from '#/styles/tokens.css';
+import { iconSize, lineHeight, space } from '#/styles/tokens.css';
 
 export const dialogHeaderRow = style({
 	display: 'flex',
@@ -109,3 +110,29 @@ export const skeletonPin = style({
 	width: 33,
 	height: 33,
 });
+
+export const pinIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastLow,
+});
+
+export const pinFilledIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.primary_500,
+});
+
+export const heartFilledIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.pink,
+});
+
+export const likeIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastLow,
+});
+
+export const likeIconLiked = style({ color: colors.pink });

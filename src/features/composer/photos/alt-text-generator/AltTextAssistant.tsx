@@ -1,11 +1,10 @@
-import { Sparkle_Filled_Corner0_Rounded as SparkleIcon } from '#/components/icons/Sparkle';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import SparkleIcon from '#/icons/central/SparkleCentral_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './AltTextAssistant.css';
 import { QuestionField } from './QuestionField';
@@ -92,7 +91,7 @@ export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
 	return (
 		<section className={styles.panel}>
 			<div className={styles.header}>
-				<SparkleIcon fill={colors.primary_500} size="sm" />
+				<SparkleIcon className={styles.sparkleIcon} />
 				<Text className={styles.headerText} size="md" weight="semiBold">
 					{m['view.composer.altText.generate.title']()}
 				</Text>
@@ -110,13 +109,11 @@ export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
 					</Button>
 				)}
 			</div>
-
 			{phase === 'idle' && (
 				<Text color="textContrastMedium" size="md_sub">
 					{m['view.composer.altText.generate.intro']()}
 				</Text>
 			)}
-
 			{isThinking && (
 				<div className={styles.row} role="status">
 					<Spinner color="default" label={null} size="md" />
@@ -127,7 +124,6 @@ export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
 					</Text>
 				</div>
 			)}
-
 			{phase === 'error' && (
 				<div className={styles.errorBox}>
 					<Text color="negative_600" size="md_sub" weight="semiBold">
@@ -140,7 +136,6 @@ export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
 					)}
 				</div>
 			)}
-
 			{draft !== null && (
 				<div className={styles.questionList}>
 					{questions.map(({ answer, question }) => (
@@ -161,19 +156,16 @@ export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
 					/>
 				</div>
 			)}
-
 			{hasEdits && !isThinking && (
 				<Text color="textContrastMedium" size="md_sub">
 					{m['view.composer.altText.generate.editsKept']()}
 				</Text>
 			)}
-
 			{draft !== null && (
 				<Text color="textContrastLow" size="sm">
 					{m['view.composer.altText.generate.caution']()}
 				</Text>
 			)}
-
 			<Action generator={generator} />
 		</section>
 	);

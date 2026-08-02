@@ -11,3 +11,14 @@ export const includeReason = style({
 	marginLeft: (13 + 4) * -1,
 	color: colors.textContrastMedium,
 });
+
+export const reasonIcon = style({
+	width: 13,
+	height: 13,
+});
+
+export const repostIcon2 = style({
+	width: 13,
+	height: 13,
+	color: colors.contrast_50,
+});

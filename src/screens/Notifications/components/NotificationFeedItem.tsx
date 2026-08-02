@@ -40,17 +40,7 @@ import { Trans } from '#/locale/Trans';
 
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
-import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import {
-	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron';
-import { Contacts_Filled_Corner2_Rounded as ContactsIconFilled } from '#/components/icons/Contacts';
-import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2';
-import { PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
-import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import { StarterPack } from '#/components/icons/StarterPack';
-import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import * as MediaPreview from '#/components/MediaPreview';
 import { Post } from '#/components/Post/Post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
@@ -68,8 +58,16 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import BellRingingIcon from '#/icons/central-custom/BellRinging_round_filled_radius1_stroke2.svg';
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
+import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
+import ContactsIconFilled from '#/icons/central/Contacts_round_filled_radius1_stroke2.svg';
+import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
+import PersonPlusIcon from '#/icons/central/PeopleAdd_round_filled_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter } from '#/routes';
 import { colors } from '#/styles/colors';
@@ -249,7 +247,7 @@ let NotificationFeedItem = ({
 
 	let a11yLabel = '';
 	let notificationContent: React.ReactElement;
-	let icon = <HeartIconFilled size="xl" fill={colors.pink} />;
+	let icon = <HeartIconFilled className={css.heartIconFilledIcon} />;
 
 	if (item.type === 'post-like') {
 		a11yLabel = hasMultipleAuthors
@@ -291,7 +289,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <RepostIcon size="xl" fill={colors.positive_500} />;
+		icon = <RepostIcon className={css.repostIcon} />;
 	} else if (item.type === 'follow') {
 		if (isFollowBack && !hasMultipleAuthors) {
 			/*
@@ -327,7 +325,7 @@ let NotificationFeedItem = ({
 				/>
 			);
 		}
-		icon = <PersonPlusIcon size="xl" fill={colors.primary_500} />;
+		icon = <PersonPlusIcon className={css.avatarBadgeIcon} />;
 	} else if (item.type === 'contact-match') {
 		a11yLabel = m['view.notifications.contact.singleName']({ name: firstAuthorName });
 		notificationContent = (
@@ -337,7 +335,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <ContactsIconFilled size="xl" fill={colors.primary_500} />;
+		icon = <ContactsIconFilled className={css.avatarBadgeIcon} />;
 	} else if (item.type === 'feedgen-like') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.feed.multiName']({
@@ -378,7 +376,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <StarterPack size="xl" gradient="sky" />;
+		icon = <StarterPack gradient="sky" className={css.starterPackIcon} />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.verified.multiName']({
@@ -399,7 +397,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck size="2xl" />;
+		icon = <VerifiedCheck className={css.verifiedCheckIcon} />;
 	} else if (item.type === 'unverified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.removed.multiName']({
@@ -420,7 +418,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <VerifiedCheck size="2xl" fill={colors.contrast_500} />;
+		icon = <VerifiedCheck className={css.verifiedCheckIcon2} />;
 	} else if (item.type === 'like-via-repost') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.like.repost.multiName']({
@@ -461,7 +459,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <RepostIcon size="2xl" fill={colors.positive_500} />;
+		icon = <RepostIcon className={css.repostIcon2} />;
 	} else if (item.type === 'subscribed-post') {
 		const postsCount = 1 + (item.additional?.length || 0);
 		a11yLabel = hasMultipleAuthors
@@ -483,7 +481,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <BellRingingIcon size="2xl" fill={colors.primary_500} />;
+		icon = <BellRingingIcon className={css.bellRingingIcon} />;
 	} else {
 		return null;
 	}
@@ -584,7 +582,7 @@ function FollowedViaStarterPack({ name, starterPack }: { name: string; starterPa
 							weight="semiBold"
 							size="sm"
 						>
-							<StarterPack className={css.viaStarterPackIcon} size="sm" fill={colors.primary_500} />
+							<StarterPack className={css.viaStarterPackIcon} />
 							{children}
 						</InlineLinkText>
 					),
@@ -647,7 +645,7 @@ function AuthorsList({
 				{isExpanded ? (
 					<>
 						<div className={css.authorChevron}>
-							<ChevronUpIcon size="sm" fill={colors.textContrastHigh} />
+							<ChevronUpIcon className={css.chevronUpIcon} />
 						</div>
 						<Text color="textContrastHigh" weight="semiBold">
 							{m['common.action.hide']()}
@@ -672,12 +670,11 @@ function AuthorsList({
 						) : null}
 
 						<div className={css.authorChevron}>
-							<ChevronDownIcon size="sm" fill={colors.textContrastMedium} />
+							<ChevronDownIcon className={css.chevronDownIcon} />
 						</div>
 					</>
 				)}
 			</Collapsible.Trigger>
-
 			<Collapsible.Panel className={css.expandPanel}>
 				<div className={css.expandContent}>
 					{authors.map((author, i) => (

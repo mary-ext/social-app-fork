@@ -23,7 +23,6 @@ import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/ses
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
@@ -41,6 +40,7 @@ import MessageFilledIcon from '#/icons/central/BubbleAnnotation3_round_filled_ra
 import MessageIcon from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
 import ListFilledIcon from '#/icons/central/BulletList_round_filled_radius1_stroke2.svg';
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
+import EllipsisIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import HashtagFilledIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
 import HomeFilledIcon from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
@@ -54,7 +54,6 @@ import SettingsFilledIcon from '#/icons/central/SettingsGear2_round_filled_radiu
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import { LARGE_ELEMENT_SIZE } from './constants';
 import * as css from './LeftNav.css';
@@ -107,12 +106,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 												{sanitizeDisplayName(profile.displayName || profile.handle)}
 											</Text>
 										</div>
-										<EllipsisIcon
-											aria-hidden={true}
-											fill={colors.textContrastMedium}
-											className={css.ellipsisIcon}
-											size="sm"
-										/>
+										<EllipsisIcon aria-hidden={true} className={css.ellipsisIcon} />
 									</>
 								)}
 							</button>

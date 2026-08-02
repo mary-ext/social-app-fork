@@ -1,6 +1,7 @@
 import type { Props } from '#/components/icons/common';
-import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
-import { VerifierCheck } from '#/components/icons/VerifierCheck';
+
+import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
+import VerifierCheck from '#/icons/original/VerifierCheck.svg';
 
 export function VerificationCheck({
 	verifier,

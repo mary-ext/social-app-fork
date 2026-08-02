@@ -16,7 +16,6 @@ import { Trans } from '#/locale/Trans';
 
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Dialog from '#/components/Dialog';
-import { BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon } from '#/components/icons/BellRinging';
 import { List } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
 import * as Settings from '#/components/SettingsCards';
@@ -27,6 +26,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import BellRingingFilledIcon from '#/icons/central-custom/BellRinging_round_filled_radius1_stroke2.svg';
 import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -131,7 +131,7 @@ function EmptyHint() {
 					markup={{
 						t0: ({ children }) => (
 							<Text weight="semiBold">
-								{children} <BellRingingFilledIcon size="xs" />
+								{children} <BellRingingFilledIcon className={css.bellRingingFilledIcon} />
 							</Text>
 						),
 					}}

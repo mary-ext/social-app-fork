@@ -89,3 +89,15 @@ export const noResults = style({
 	paddingBlock: 10,
 	paddingInline: space.lg,
 });
+
+export const filterTimelineIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: colors.white,
+});
+
+export const chevronRightIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.textContrastLow,
+});

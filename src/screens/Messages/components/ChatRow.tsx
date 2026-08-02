@@ -4,14 +4,13 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 import { Link as WebLink } from '#/components/web/Link';
 
+import BellStroke from '#/icons/central/BellOff_round_filled_radius1_stroke2.svg';
 import type { RouteTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './ChatRow.css';
 
@@ -112,7 +111,7 @@ export function Timestamp({ sentAt }: { sentAt: string }) {
 
 /** bell-with-slash, marking a muted or blocked conversation. */
 export function MutedIcon() {
-	return <BellStroke className={css.mutedIcon} fill={colors.textContrastMedium} size="xs" />;
+	return <BellStroke className={css.mutedIcon} />;
 }
 
 /** dot marking unread messages; `dim` when the conversation is muted, blocked, or locked. */

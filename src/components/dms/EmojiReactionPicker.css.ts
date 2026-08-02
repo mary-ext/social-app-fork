@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const trigger = style({
 	appearance: 'none',
@@ -92,4 +94,15 @@ export const expandButton = style({
 		'&:hover': { backgroundColor: vars.palette.contrast_100 },
 		'&:focus-visible': { outline: 'none', borderColor: vars.palette.contrast_1000 },
 	},
+});
+
+export const plusIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+});
+
+export const emojiSmileIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastMedium,
 });

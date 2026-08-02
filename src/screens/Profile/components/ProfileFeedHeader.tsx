@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { clsx } from 'clsx';
+
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
 import { shareUrl } from '#/lib/sharing';
@@ -20,11 +22,6 @@ import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled } from '#/components/icons/Heart2';
-import {
-	Pin_Filled_Corner0_Rounded as PinFilled,
-	Pin_Stroke2_Corner0_Rounded as Pin,
-} from '#/components/icons/Pin';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
@@ -40,11 +37,13 @@ import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.
 import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import X from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import HeartFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
 import Heart from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
 import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import PinFilled from '#/icons/central/Thumbtack_round_filled_radius1_stroke2.svg';
+import Pin from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './ProfileFeedHeader.css';
 
@@ -57,7 +56,7 @@ export function ProfileFeedHeaderSkeleton() {
 			</Layout.Header.Content>
 			<Layout.Header.Slot>
 				<div className={css.skeletonPin}>
-					<Pin size="lg" fill={colors.textContrastLow} />
+					<Pin className={css.pinIcon} />
 				</div>
 			</Layout.Header.Slot>
 		</Layout.Header.Outer>
@@ -169,7 +168,7 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 
 									{likeCount > 0 && (
 										<span className={css.infoLikes}>
-											<HeartFilled size="xs" fill={likeUri ? colors.pink : colors.textContrastLow} />
+											<HeartFilled className={clsx(css.likeIcon, likeUri && css.likeIconLiked)} />
 											<Text size="sm" color="textContrastHigh" numberOfLines={1}>
 												{formatCount(likeCount)}
 											</Text>
@@ -195,7 +194,7 @@ export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedIn
 											shape="round"
 											color="secondary"
 										>
-											<PinFilled size="lg" fill={colors.primary_500} />
+											<PinFilled className={css.pinFilledIcon} />
 										</Button>
 									}
 								/>
@@ -374,9 +373,7 @@ function DialogInner({
 					<ButtonIcon icon={Share} size="lg" />
 				</Button>
 			</div>
-
 			<RichText size="md" value={info.description} />
-
 			{likeCount > 0 && creatorDid && (
 				<div className={css.dialogLikedByRow}>
 					<InlineLinkText
@@ -402,7 +399,7 @@ function DialogInner({
 								onClick={() => void onToggleLiked()}
 								className={css.dialogActionButton}
 							>
-								{isLiked ? <HeartFilled size="sm" fill={colors.pink} /> : <ButtonIcon icon={Heart} />}
+								{isLiked ? <HeartFilled className={css.heartFilledIcon} /> : <ButtonIcon icon={Heart} />}
 
 								<ButtonText>
 									{isLiked ? m['screens.profile.action.unlike']() : m['common.action.like']()}

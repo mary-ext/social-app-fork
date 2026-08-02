@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const error = style({
 	paddingBottom: space.md,
@@ -25,4 +25,9 @@ export const rowText = style({
 	flexDirection: 'column',
 	gap: space._2xs,
 	minWidth: 0,
+});
+
+export const bellRingingFilledIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
 });

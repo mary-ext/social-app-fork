@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const list = style({
 	display: 'flex',
@@ -49,4 +49,9 @@ export const dismiss = style({
 	marginBlock: -2,
 	width: 24,
 	height: 24,
+});
+
+export const circleInfoIcon = style({
+	width: iconSize.md,
+	height: iconSize.md,
 });

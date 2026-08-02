@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const card = style({
 	boxSizing: 'border-box',
@@ -48,3 +50,9 @@ const skeleton = {
 
 export const skeletonTitle = style({ ...skeleton, width: 128, height: 16 });
 export const skeletonDomain = style({ ...skeleton, width: 72, height: 12 });
+
+export const globeIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.textContrastLow,
+});

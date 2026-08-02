@@ -3,7 +3,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const MOBILE_CARD_WIDTH = 165;
 const FINAL_CARD_WIDTH = 120;
@@ -195,4 +195,14 @@ export const seeMoreCard = style({
 	'@media': {
 		[WIDE]: { display: 'none' },
 	},
+});
+
+export const xIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+});
+
+export const arrowRightIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

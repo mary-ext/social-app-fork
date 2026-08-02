@@ -6,11 +6,10 @@ import { useConvoActive } from '#/state/messages/convo';
 
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import { getReplyPreviewText } from '#/components/dms/replyPreview';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Text';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './MessageInputReply.css';
 
@@ -54,7 +53,7 @@ export function MessageInputReply() {
 				onClick={clearReply}
 				type="button"
 			>
-				<XIcon fill={colors.textContrastHigh} size="xs" />
+				<XIcon className={css.xIcon} />
 			</button>
 		</div>
 	);

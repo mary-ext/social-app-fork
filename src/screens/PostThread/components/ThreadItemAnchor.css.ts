@@ -5,7 +5,7 @@ import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 import { OUTER_SPACE } from '#/components/PostLayout.const';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const contentHiderChild = style({
 	paddingTop: 8,
@@ -177,4 +177,15 @@ export const deletedIcon = style({
 	justifyContent: 'center',
 	width: LINEAR_AVI_WIDTH,
 	color: colors.textContrastMedium,
+});
+
+export const calendarClockIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+	color: colors.yellow,
+});
+
+export const trashIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

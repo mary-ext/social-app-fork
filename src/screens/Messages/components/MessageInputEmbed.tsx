@@ -14,7 +14,6 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
-import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
@@ -23,9 +22,9 @@ import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './MessageInputEmbed.css';
 
@@ -37,7 +36,7 @@ function RemoveButton({ floating, onRemove }: { floating?: boolean; onRemove: ()
 			onClick={onRemove}
 			type="button"
 		>
-			<XIcon fill={colors.textContrastHigh} size="xs" />
+			<XIcon className={css.xIcon} />
 		</button>
 	);
 }

@@ -3,7 +3,6 @@ import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
-import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import { useTopic } from '#/components/trending-topics';
@@ -12,8 +11,8 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import TrendingIcon from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './SidebarTrendingTopics.css';
 
@@ -37,7 +36,7 @@ function Inner() {
 		<>
 			<div className={css.card}>
 				<div className={css.header}>
-					<TrendingIcon size="sm" fill={colors.text} />
+					<TrendingIcon className={css.trendingIcon} />
 					<Text size="md" weight="semiBold" className={css.title}>
 						{m['components.trendingTopics.title']()}
 					</Text>

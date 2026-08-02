@@ -1,13 +1,12 @@
 import { clsx } from 'clsx';
 
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { Text } from '#/components/Text';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './FollowingEmptyState.css';
 
@@ -15,7 +14,7 @@ export function FollowingEmptyState() {
 	return (
 		<div className={css.container}>
 			<div className={css.iconBox}>
-				<MagnifyingGlassIcon fill={colors.textContrastLow} size="3xl" />
+				<MagnifyingGlassIcon className={css.magnifyingGlassIcon} />
 			</div>
 			<Text align="center" className={css.message} color="textContrastHigh" size="md" weight="medium">
 				{m['view.posts.feed.followingEmpty']()}
@@ -31,7 +30,6 @@ export function FollowingEmptyState() {
 					<ButtonIcon icon={ChevronRightIcon} />
 				</LinkButton>
 			</div>
-
 			<Text
 				align="center"
 				className={clsx(css.message, css.sectionText)}

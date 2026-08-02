@@ -1,7 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const card = style({
 	boxSizing: 'border-box',
@@ -108,4 +108,10 @@ export const openPackPlaceholder = style({
 	backgroundColor: colors.contrast_50,
 	width: 100,
 	height: 33,
+});
+
+export const plusIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: '#fff',
 });

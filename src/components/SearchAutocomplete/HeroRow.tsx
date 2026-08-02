@@ -1,6 +1,6 @@
-import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { Text } from '#/components/Text';
 
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './HeroRow.css';
@@ -9,7 +9,7 @@ import * as styles from './HeroRow.css';
 export function HeroRow() {
 	return (
 		<div className={styles.hero}>
-			<MagnifyingGlassIcon className={styles.icon} fill="currentColor" size="2xl" />
+			<MagnifyingGlassIcon className={styles.icon} />
 			<Text className={styles.text} color="textContrastMedium">
 				{m['components.web.search.placeholder']()}
 			</Text>

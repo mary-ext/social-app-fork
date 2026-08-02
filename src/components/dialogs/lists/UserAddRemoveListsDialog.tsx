@@ -12,16 +12,15 @@ import {
 
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dialogs/lists/UserAddRemoveListsDialog.css';
-import { BulletList_Stroke2_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import * as ListCard from '#/components/ListCard';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 export function UserAddRemoveListsDialog({
 	handle,
@@ -224,7 +223,7 @@ function NoLists() {
 	return (
 		<div className={css.noLists}>
 			<div className={css.noListsIcon}>
-				<ListIcon fill={colors.textContrastLow} size="lg" />
+				<ListIcon className={css.listIcon} />
 			</div>
 			<Text align="center" className={css.noListsText} color="textContrastMedium" size="sm">
 				{m['common.list.empty']()}
