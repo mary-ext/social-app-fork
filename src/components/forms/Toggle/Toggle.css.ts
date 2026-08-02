@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, iconSize } from '#/styles/tokens.css';
 
 const itemReset = style(
 	layered(components, {
@@ -141,6 +141,8 @@ export const panelText = style(
 export const panelIcon = style(
 	layered(components, {
 		flexShrink: 0,
+		width: iconSize.lg,
+		height: iconSize.lg,
 		color: vars.palette.contrast_700,
 		selectors: {
 			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },

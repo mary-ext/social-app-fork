@@ -52,7 +52,7 @@ export function Label({ cause, disableDetailsDialog, noBg, size = 'sm' }: LabelP
 	const inner = (
 		<>
 			{isBlueskyLabel || !isLabeler ? (
-				<desc.icon fill="currentColor" width={glyphSize} />
+				<desc.icon className={styles.pillIcon[size]} />
 			) : (
 				<UserAvatar avatar={desc.sourceAvi} size={glyphSize} type="user" />
 			)}

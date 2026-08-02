@@ -1,4 +1,4 @@
-import { type ComponentType, createContext, type ReactNode, useContext } from 'react';
+import { type ComponentType, createContext, type ReactNode, type SVGProps, useContext } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
@@ -8,7 +8,6 @@ import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/Toggle/Toggle.css';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import type { Props as IconProps } from '#/components/icons/common';
 
 type GroupContextValue = {
 	/** True once a {@link Group}'s `maxSelections` cap is reached; unchecked {@link Item}s read it to disable. */
@@ -176,7 +175,13 @@ export function Panel({
 
 // the *Text suffix makes the lint expect a <Text> return, but this renders a styled DOM span whose
 // callers already pass localized strings
-export function PanelText({ icon, children }: { icon?: ComponentType<IconProps>; children: ReactNode }) {
+export function PanelText({
+	icon,
+	children,
+}: {
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
+	children: ReactNode;
+}) {
 	if (icon) {
 		// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 		return (
@@ -190,8 +195,8 @@ export function PanelText({ icon, children }: { icon?: ComponentType<IconProps>;
 	return <span className={styles.panelText}>{children}</span>;
 }
 
-export function PanelIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
-	return <Icon className={styles.panelIcon} size="lg" fill="currentColor" />;
+export function PanelIcon({ icon: Icon }: { icon: ComponentType<SVGProps<SVGSVGElement>> }) {
+	return <Icon className={styles.panelIcon} />;
 }
 
 /** The radio dot indicator; render inside a {@link RadioItem}. */

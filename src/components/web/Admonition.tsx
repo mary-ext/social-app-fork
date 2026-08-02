@@ -2,14 +2,13 @@ import type { ReactNode } from 'react';
 
 import { clsx } from 'clsx';
 
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
-import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
-import { EmojiSad_Stroke2_Corner0_Rounded as EmojiSadIcon } from '#/components/icons/Emoji';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Admonition.css';
 
-import { colors } from '#/styles/colors';
+import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
+import CircleXIcon from '#/icons/central/CircleX_round_outlined_radius1_stroke2.svg';
+import EmojiSadIcon from '#/icons/central/EmojiSad_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 
 type AdmonitionType = 'apology' | 'error' | 'info' | 'tip' | 'warning';
 
@@ -19,14 +18,6 @@ const ICONS = {
 	info: CircleInfoIcon,
 	tip: CircleInfoIcon,
 	warning: WarningIcon,
-};
-
-const ICON_FILL: Record<AdmonitionType, string> = {
-	apology: colors.textContrastMedium,
-	error: colors.negative_500,
-	info: colors.textContrastMedium,
-	tip: colors.primary_500,
-	warning: colors.yellow,
 };
 
 export function Admonition({
@@ -42,7 +33,7 @@ export function Admonition({
 	return (
 		<div className={clsx(styles.outer({ type }), className)}>
 			<div className={styles.row}>
-				<Icon className={styles.iconWrap} fill={ICON_FILL[type]} size="lg" />
+				<Icon className={styles.iconWrap[type]} />
 				<div className={styles.content}>
 					<Text>{children}</Text>
 				</div>

@@ -1,7 +1,8 @@
-import { style } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
+import { iconSize } from '#/styles/tokens.css';
 
 export const outer = recipe(
 	{
@@ -34,9 +35,22 @@ export const row = style({
 	alignItems: 'flex-start',
 });
 
-export const iconWrap = style({
+const iconBase = style({
 	flexShrink: 0,
+	width: iconSize.lg,
+	height: iconSize.lg,
 });
+
+export const iconWrap = styleVariants(
+	{
+		apology: vars.palette.contrast_700,
+		error: vars.palette.negative_500,
+		info: vars.palette.contrast_700,
+		tip: vars.palette.primary_500,
+		warning: vars.palette.yellow,
+	},
+	(color) => [iconBase, { color }],
+);
 
 export const content = style({
 	display: 'flex',

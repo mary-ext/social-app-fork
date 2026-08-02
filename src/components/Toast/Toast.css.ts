@@ -2,7 +2,7 @@ import { createVar, style, styleVariants } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
-import { borderRadius, fontSize, fontWeight, lineHeight, zIndex } from '#/styles/tokens.css';
+import { borderRadius, fontSize, fontWeight, iconSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
 const gap = 8;
 const peek = 8;
@@ -132,6 +132,8 @@ export const icon = style({
 	flexShrink: 0,
 	marginRight: 8,
 	marginBlock: `calc((${firstLineVar} - 20px) / 2)`,
+	width: iconSize.lg,
+	height: iconSize.lg,
 });
 
 export const title = style({

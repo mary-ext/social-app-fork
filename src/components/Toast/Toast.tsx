@@ -45,7 +45,7 @@ function ToastList() {
 				className={clsx(css.root, css.rootColor[type])}
 			>
 				<BaseToast.Content className={css.content}>
-					<Icon className={css.icon} fill="currentColor" size="lg" />
+					<Icon className={css.icon} />
 					<BaseToast.Title className={css.title}>{toast.title}</BaseToast.Title>
 					{toast.actionProps && <BaseToast.Action className={css.action} />}
 				</BaseToast.Content>
