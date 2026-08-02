@@ -42,7 +42,7 @@ import ListFilledIcon from '#/icons/central/BulletList_round_filled_radius1_stro
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import EllipsisIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
-import HashtagFilledIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import HashtagIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import HomeFilledIcon from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
 import HomeIcon from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilledIcon from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
@@ -270,12 +270,13 @@ function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }:
 		return false;
 	};
 
-	const Icon = isCurrent || isRelated ? icons.active : icons.inactive;
+	const iconIsActive = isCurrent || isRelated;
+	const Icon = iconIsActive ? icons.active : icons.inactive;
 
 	return (
 		<Link to={to} action="navigate" onPress={onPress} label={label} className={css.navItem}>
 			<div className={css.iconBox}>
-				<Icon aria-hidden={true} className={css.navIcon} />
+				<Icon aria-hidden={true} className={clsx(css.navIcon, iconIsActive && css.navIconActive)} />
 				{typeof count === 'string' && count ? (
 					<Text
 						aria-label={m['view.notifications.unreadCount.a11y']({ count })}
@@ -423,8 +424,8 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						to={{ name: 'Feeds' }}
 						minimal={leftNavMinimal}
 						icons={{
-							active: HashtagFilledIcon,
-							inactive: HashtagFilledIcon,
+							active: HashtagIcon,
+							inactive: HashtagIcon,
 						}}
 						label={m['common.nav.feeds']()}
 					/>

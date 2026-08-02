@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	paddingTop: space.sm,
@@ -26,6 +26,8 @@ export const inner = style({
 
 export const icon = style({
 	flexShrink: 0,
+	width: iconSize.lg,
+	height: iconSize.lg,
 	color: colors.primary_500,
 });
 

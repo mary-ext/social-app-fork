@@ -199,8 +199,14 @@ export const composeButtonMinimal = style({
 	height: LARGE_ELEMENT_SIZE,
 });
 
+// the nav weight, stated here so the outlined Feeds glyph matches its siblings. inert on the assets
+// that hardcode `stroke-width`, which is most of them — only a `_stroke1` asset omits the attribute
+// and can inherit it.
 export const navIcon = style({
 	width: NAV_ICON_WIDTH,
 	height: NAV_ICON_WIDTH,
 	color: vars.palette.contrast_1000,
+	strokeWidth: 2,
 });
+
+export const navIconActive = style({ strokeWidth: 3 });

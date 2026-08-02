@@ -165,7 +165,13 @@ export const iconWrap = style({ display: 'inline-flex', position: 'relative' });
 
 export const countBadge = style([navBadge.badge, { top: -4, right: -10 }]);
 
+// the nav weight, stated here so the outlined Feeds glyph matches its siblings. inert on the assets
+// that hardcode `stroke-width`, which is most of them — only a `_stroke1` asset omits the attribute
+// and can inherit it.
 export const navIcon = style({
 	width: 26,
 	height: 26,
+	strokeWidth: 2,
 });
+
+export const navIconActive = style({ strokeWidth: 3 });

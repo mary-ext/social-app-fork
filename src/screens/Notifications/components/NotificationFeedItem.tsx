@@ -66,7 +66,8 @@ import ContactsIconFilled from '#/icons/central/Contacts_round_filled_radius1_st
 import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_filled_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
-import StarterPack from '#/icons/original/StarterPackSky.svg';
+import StarterPack from '#/icons/original/StarterPack.svg';
+import StarterPackSky from '#/icons/original/StarterPackSky.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter } from '#/routes';
@@ -376,7 +377,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <StarterPack className={css.starterPackIcon} />;
+		icon = <StarterPackSky className={css.starterPackIcon} />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.verified.multiName']({

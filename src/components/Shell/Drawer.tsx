@@ -1,6 +1,7 @@
 import type { ComponentType, SVGProps } from 'react';
 
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
+import { clsx } from 'clsx';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
@@ -32,7 +33,7 @@ import MessageFilled from '#/icons/central/BubbleAnnotation3_round_filled_radius
 import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
 import List from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import DotGrid from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
-import HashtagFilled from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
+import Hashtag from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.svg';
 import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
@@ -142,8 +143,8 @@ function DrawerContent() {
 						onPress={() => onPressTab('Notifications')}
 					/>
 					<MenuItem
-						activeIcon={HashtagFilled}
-						inactiveIcon={HashtagFilled}
+						activeIcon={Hashtag}
+						inactiveIcon={Hashtag}
 						isActive={isAtFeeds}
 						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}
@@ -187,8 +188,8 @@ function DrawerContent() {
 						onPress={() => onPressTab('Home')}
 					/>
 					<MenuItem
-						activeIcon={HashtagFilled}
-						inactiveIcon={HashtagFilled}
+						activeIcon={Hashtag}
+						inactiveIcon={Hashtag}
 						isActive={isAtFeeds}
 						label={m['common.nav.feeds']()}
 						onPress={() => navigateAndClose('Feeds')}
@@ -354,7 +355,7 @@ function MenuItem({
 	return (
 		<button aria-label={label} className={styles.menuItem} onClick={onPress} type="button">
 			<span className={styles.iconWrap}>
-				<Icon className={styles.navIcon} />
+				<Icon className={clsx(styles.navIcon, isActive && styles.navIconActive)} />
 				{count ? (
 					<Text
 						aria-label={countLabel}
