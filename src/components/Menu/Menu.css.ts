@@ -1,7 +1,7 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, zIndex } from '#/styles/tokens.css';
+import { fontSize, iconSize, zIndex } from '#/styles/tokens.css';
 
 export const iconColor = createVar();
 
@@ -74,6 +74,9 @@ export const itemText = style({
 export const itemIcon = style({
 	flexShrink: 0,
 	marginLeft: -2,
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: iconColor,
 });
 
 export const itemIconRight = style({

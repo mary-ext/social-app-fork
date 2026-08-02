@@ -98,6 +98,9 @@ export const row = style({
 
 export const rowIcon = style({
 	flexShrink: 0,
+	width: 22,
+	height: 22,
+	color: vars.palette.contrast_500,
 });
 
 export const rowText = style({

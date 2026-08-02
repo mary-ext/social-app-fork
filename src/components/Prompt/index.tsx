@@ -1,17 +1,15 @@
-import { type ComponentType, type ReactNode, useId } from 'react';
+import { type ComponentType, type ReactNode, type SVGProps, useId } from 'react';
 
 import { AlertDialog } from '@base-ui/react/alert-dialog';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { useRegisterDialog } from '#/components/Dialog/registry';
-import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/Prompt/Prompt.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 type Color = 'negative' | 'negative_subtle' | 'primary' | 'secondary';
 
@@ -82,10 +80,16 @@ export function Rows({ children }: { children: ReactNode }) {
 }
 
 /** A single explainer row: a muted leading icon beside its description. */
-export function Row({ children, icon: Icon }: { children: ReactNode; icon: ComponentType<IconProps> }) {
+export function Row({
+	children,
+	icon: Icon,
+}: {
+	children: ReactNode;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+}) {
 	return (
 		<div className={styles.row}>
-			<Icon className={styles.rowIcon} width={22} height={22} fill={colors.contrast_500} />
+			<Icon className={styles.rowIcon} />
 			<Text className={styles.rowText} color="textContrastHigh">
 				{children}
 			</Text>
@@ -109,7 +113,7 @@ export function Action({
 	color?: Color;
 	cta?: string;
 	disabled?: boolean;
-	icon?: ComponentType<IconProps>;
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 	shouldCloseOnPress?: boolean;
 }) {
 	const label = cta ?? m['common.action.confirm']();

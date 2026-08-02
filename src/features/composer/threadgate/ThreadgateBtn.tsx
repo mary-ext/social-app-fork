@@ -74,7 +74,7 @@ export function ThreadgateBtn({
 					<Button color="secondary" size="small" label={label}>
 						<ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
 						<ButtonText>{label}</ButtonText>
-						<ButtonIcon icon={TinyChevronIcon} size="2xs" />
+						<ButtonIcon icon={TinyChevronIcon} size="_2xs" />
 					</Button>
 				}
 			/>

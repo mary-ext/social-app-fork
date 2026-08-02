@@ -4,16 +4,17 @@ import {
 	createContext,
 	type ReactNode,
 	type Ref,
+	type SVGProps,
 	useContext,
 } from 'react';
 
 import { Button as BaseButton } from '@base-ui/react/button';
 import { clsx } from 'clsx';
 
-import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/Button.css';
 
 import type { RecipeVariants } from '#/styles/recipe';
+import type { iconSize } from '#/styles/tokens.css';
 
 type ButtonVariants = RecipeVariants<typeof styles.button>;
 
@@ -69,13 +70,13 @@ export function ButtonText({ children, size }: { children: ReactNode; size?: key
 }
 
 export type ButtonIconProps = {
-	icon: ComponentType<IconProps>;
-	size?: IconProps['size'];
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	size?: keyof typeof iconSize;
 };
 
 // default icon token per button size, so a large/tiny button's icon tracks its text rather than always
 // rendering at the `small` scale.
-const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], NonNullable<IconProps['size']>> = {
+const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], keyof typeof iconSize> = {
 	large: 'md',
 	small: 'sm',
 	tiny: 'xs',
@@ -91,12 +92,12 @@ export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
 	return (
 		<span
 			className={styles.iconBox({
-				narrow: resolvedSize === '2xs',
+				narrow: resolvedSize === '_2xs',
 				pull: ctx.shape !== 'round',
 				size: ctx.size,
 			})}
 		>
-			<Icon size={resolvedSize} fill="currentColor" />
+			<Icon className={styles.icon[resolvedSize]} />
 		</span>
 	);
 }

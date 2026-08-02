@@ -41,7 +41,7 @@ export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange:
 						<ButtonText>
 							{hasLabel ? m['view.composer.contentWarning.labelsAdded']() : m['common.moderation.labels']()}
 						</ButtonText>
-						<ButtonIcon icon={TinyChevronIcon} size="2xs" />
+						<ButtonIcon icon={TinyChevronIcon} size="_2xs" />
 					</Button>
 				}
 			/>

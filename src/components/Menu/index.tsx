@@ -1,4 +1,4 @@
-import type { ComponentType, ReactElement, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode, SVGProps } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -6,7 +6,6 @@ import { clsx } from 'clsx';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/Menu/Menu.css';
 import { Text } from '#/components/Text';
 
@@ -105,16 +104,10 @@ export function ItemIcon({
 	icon: Icon,
 	position = 'left',
 }: {
-	icon: ComponentType<IconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	position?: 'left' | 'right';
 }) {
-	return (
-		<Icon
-			size="lg"
-			fill={styles.iconColor}
-			className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)}
-		/>
-	);
+	return <Icon className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)} />;
 }
 
 /** A radio/selection indicator for an item — an outlined circle, filled when `selected`. */

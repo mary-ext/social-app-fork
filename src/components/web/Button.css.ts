@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
+import { fontSize, fontWeight, iconSize, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
 
@@ -288,3 +288,5 @@ export const iconBox = recipe(
 	},
 	{ debugId: 'buttonIcon', layer: components },
 );
+
+export const icon = styleVariants(iconSize, (size) => ({ width: size, height: size }));
