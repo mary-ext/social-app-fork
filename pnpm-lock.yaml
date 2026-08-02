@@ -170,8 +170,8 @@ importers:
         specifier: 2.22.0
         version: 2.22.0(@typescript/typescript6@6.0.2)
       '@oomfware/rspack-plugin-svg-sprites':
-        specifier: ^0.1.0
-        version: 0.1.0(@rspack/core@2.1.6(@swc/helpers@0.5.23))(react@19.2.8)
+        specifier: ^0.1.2
+        version: 0.1.2(@rspack/core@2.1.6(@swc/helpers@0.5.23))(react@19.2.8)
       '@rsbuild/core':
         specifier: ^2.1.8
         version: 2.1.8
@@ -957,8 +957,8 @@ packages:
       '@base-ui/react':
         optional: true
 
-  '@oomfware/rspack-plugin-svg-sprites@0.1.0':
-    resolution: {integrity: sha512-2u7/983Z3fzSL8wOH2Bae0YqBhhsjLf6dIG3uGqHIH+BOdZlQMdtypnIlMPZFpNG/dBIlRMmiR2bqwDif5fM+Q==}
+  '@oomfware/rspack-plugin-svg-sprites@0.1.2':
+    resolution: {integrity: sha512-iCxQxjutCsRPgTby4bJs54QR5HY00ugxegQ1GhvDmlF33qeuArgAR4TxSr1q+7GW9sqS+vXUYfv4xJHbaMh0/A==}
     peerDependencies:
       '@rspack/core': ^2.0.0
       react: '>=18'
@@ -3292,7 +3292,7 @@ snapshots:
     optionalDependencies:
       '@base-ui/react': 1.6.0(patch_hash=86393160efad050af7184290f6accdc01ce55e71eb3ff4582ee1f2d7b5459b15)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  '@oomfware/rspack-plugin-svg-sprites@0.1.0(@rspack/core@2.1.6(@swc/helpers@0.5.23))(react@19.2.8)':
+  '@oomfware/rspack-plugin-svg-sprites@0.1.2(@rspack/core@2.1.6(@swc/helpers@0.5.23))(react@19.2.8)':
     dependencies:
       '@rspack/core': 2.1.6(@swc/helpers@0.5.23)
       svgo: 4.0.2

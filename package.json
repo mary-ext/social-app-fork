@@ -71,7 +71,7 @@
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "2.22.0",
-		"@oomfware/rspack-plugin-svg-sprites": "^0.1.0",
+		"@oomfware/rspack-plugin-svg-sprites": "^0.1.2",
 		"@rsbuild/core": "^2.1.8",
 		"@rsbuild/plugin-react": "^2.1.0",
 		"@rsdoctor/rspack-plugin": "^1.6.1",
