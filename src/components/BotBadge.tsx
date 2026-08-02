@@ -16,7 +16,7 @@ export function BotBadge({ profile, width }: { profile: AnyProfileView; width: n
 		return null;
 	}
 
-	return <RobotIcon className={css.icon} style={{ width, height: width }} />;
+	return <RobotIcon className={css.icon} width={width} height={width} />;
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
@@ -29,7 +29,7 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 	return (
 		<>
 			<Dialog.Trigger aria-label={m['common.account.automated']()} className={css.button} handle={handle}>
-				<RobotIcon style={{ width, height: width }} />
+				<RobotIcon width={width} height={width} />
 			</Dialog.Trigger>
 			<BotAccountAlert handle={handle} profile={profile} />
 		</>

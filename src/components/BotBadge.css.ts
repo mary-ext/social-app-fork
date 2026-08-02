@@ -4,6 +4,7 @@ import { colors } from '#/styles/colors';
 
 export const icon = style({
 	display: 'inline-block',
+	color: colors.textContrastMedium,
 });
 
 export const button = style({

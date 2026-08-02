@@ -141,7 +141,7 @@ function AvatarBubble({
 function AvatarPlaceholder({ size }: { size: number }) {
 	return (
 		<div className={css.placeholder} style={assignInlineVars({ [css.placeholderSizeVar]: `${size}px` })}>
-			<PersonIcon style={{ width: size * 0.5, height: size * 0.5 }} />
+			<PersonIcon width={size * 0.5} height={size * 0.5} />
 		</div>
 	);
 }

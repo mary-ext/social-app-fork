@@ -151,7 +151,8 @@ function Badge({
 			>
 				<VerificationCheck
 					className={isMuted ? css.checkMuted : css.check}
-					style={{ width, height: width }}
+					width={width}
+					height={width}
 					verifier={isVerifier}
 				/>
 			</Dialog.Trigger>
