@@ -65,5 +65,6 @@ export const notice = style({
 
 export const warningIcon = style({
 	width: iconSize.xl,
+	color: colors.primary_500,
 	height: iconSize.xl,
 });

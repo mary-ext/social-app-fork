@@ -58,6 +58,7 @@ export const sectionHeader = recipe(
 export const sectionHeaderIcon = style({
 	flexShrink: 0,
 	marginLeft: -2,
+	color: colors.primary_500,
 	width: iconSize.lg,
 	height: iconSize.lg,
 });

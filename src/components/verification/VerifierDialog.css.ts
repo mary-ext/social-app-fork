@@ -101,6 +101,7 @@ export const imageBox = style({
 
 export const inlineCheck = style({
 	width: 14,
+	color: colors.primary_500,
 	height: 14,
 	display: 'inline-flex',
 	position: 'relative',
@@ -136,5 +137,6 @@ export const verifierLabelClass = style([
 
 export const checkIcon = style({
 	width: 56,
+	color: colors.primary_500,
 	height: 56,
 });

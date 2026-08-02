@@ -213,6 +213,7 @@ export const starterPackIcon = style({
 
 export const verifiedCheckIcon = style({
 	width: iconSize._2xl,
+	color: colors.primary_500,
 	height: iconSize._2xl,
 });
 

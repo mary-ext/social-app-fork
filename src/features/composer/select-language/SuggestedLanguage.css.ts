@@ -26,6 +26,7 @@ export const inner = style({
 
 export const icon = style({
 	flexShrink: 0,
+	color: colors.primary_500,
 });
 
 export const text = style({
