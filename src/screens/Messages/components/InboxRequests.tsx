@@ -3,7 +3,7 @@ import { UNREAD_REQUEST_CAP } from '#/state/queries/messages/get-unread-counts';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 
-import InboxIcon from '#/icons/central/InboxEmpty_round_outlined_radius2_stroke1.svg';
+import InboxIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './InboxRequests.css';
