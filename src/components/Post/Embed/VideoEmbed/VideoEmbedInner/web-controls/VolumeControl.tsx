@@ -1,10 +1,10 @@
 import { clsx } from 'clsx';
 
-import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
-import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
+import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
+import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { ControlButton } from './ControlButton';

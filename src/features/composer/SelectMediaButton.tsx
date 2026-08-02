@@ -7,8 +7,7 @@ import type { VideoAsset } from '#/lib/media/video/types';
 
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
-
+import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { ComposerToolbarButton } from './ComposerToolbarButton';

@@ -11,20 +11,16 @@ import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/su
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
-import {
-	ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
-	ArrowsDiagonalOut_Stroke2_Corner0_Rounded as ArrowsOutIcon,
-} from '#/components/icons/ArrowsDiagonal';
-import {
-	CC_Filled_Corner0_Rounded as CCActiveIcon,
-	CC_Stroke2_Corner0_Rounded as CCInactiveIcon,
-} from '#/components/icons/CC';
-import { Pause_Filled_Corner0_Rounded as PauseIcon } from '#/components/icons/Pause';
-import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+import CCActiveIcon from '#/icons/central/ClosedCaptioning_round_filled_radius1_stroke2.svg';
+import CCInactiveIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
+import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_stroke2.svg';
+import ArrowsInIcon from '#/icons/central/Minimize45_round_outlined_radius1_stroke2.svg';
+import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
+import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { GifPresentationControls } from '../../GifPresentationControls';

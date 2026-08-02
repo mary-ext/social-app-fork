@@ -1,8 +1,7 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import { clsx } from 'clsx';
 
-import type { Props as IconProps } from '#/components/icons/common';
 import { Button, type ButtonProps } from '#/components/web/Button';
 
 import * as styles from './ComposerToolbarButton.css';
@@ -17,11 +16,11 @@ export function ComposerToolbarButton({
 	className,
 	...props
 }: Omit<ButtonProps, 'children' | 'color' | 'shape' | 'size' | 'variant'> & {
-	icon: ComponentType<IconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 }) {
 	return (
 		<Button variant="ghost" className={clsx(styles.button, className)} {...props}>
-			<Icon size="lg" fill="currentColor" />
+			<Icon className={styles.icon} />
 		</Button>
 	);
 }

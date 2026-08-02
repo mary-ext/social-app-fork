@@ -3,8 +3,8 @@ import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
 import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
-import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
 
+import GifIcon from '#/icons/central/GifSquare_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 type Props = {

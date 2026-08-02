@@ -1,4 +1,4 @@
-import type { Props as IconProps } from '#/components/icons/common';
+import type { ComponentType, SVGProps } from 'react';
 
 import * as styles from './ControlButton.css';
 
@@ -13,8 +13,8 @@ export function ControlButton({
 	active: boolean;
 	activeLabel: string;
 	inactiveLabel: string;
-	activeIcon: React.ComponentType<IconProps>;
-	inactiveIcon: React.ComponentType<IconProps>;
+	activeIcon: ComponentType<SVGProps<SVGSVGElement>>;
+	inactiveIcon: ComponentType<SVGProps<SVGSVGElement>>;
 	onPress: () => void;
 }) {
 	const Icon = active ? ActiveIcon : InactiveIcon;
@@ -25,7 +25,7 @@ export function ControlButton({
 			aria-label={active ? activeLabel : inactiveLabel}
 			onClick={onPress}
 		>
-			<Icon fill="#fff" size="lg" aria-hidden />
+			<Icon className={styles.icon} aria-hidden />
 		</button>
 	);
 }

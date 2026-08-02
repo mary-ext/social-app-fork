@@ -8,10 +8,10 @@ import { CharProgress } from '#/features/composer/char-progress/CharProgress';
 import type { Gif } from '#/features/gifPicker/types';
 
 import * as EmojiPicker from '#/components/EmojiPicker';
-import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
 
+import EmojiSmileIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerFooter.css';
