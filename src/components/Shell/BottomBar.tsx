@@ -35,7 +35,6 @@ import { colors } from '#/styles/colors';
 
 import * as css from './BottomBar.css';
 
-const iconWidth = 24;
 
 export function BottomBar() {
 	const { hasSession } = useSession();
@@ -121,7 +120,7 @@ function NavItem({ hasNew, icons, notificationCount, to }: NavItemProps) {
 
 	return (
 		<Link to={to} onPress={onPress} label={routeName} className={css.ctrl}>
-			<Icon aria-hidden={true} width={iconWidth} fill={colors.text} />
+			<Icon aria-hidden={true} className={css.navIcon} />
 			{notificationCount ? (
 				<Text
 					size="sm"

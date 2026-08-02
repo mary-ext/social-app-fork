@@ -61,7 +61,7 @@ export function Icon({
 	const iconSize = iconSizes[size ?? 'lg'];
 	return (
 		<div className={css.icon} style={assignInlineVars({ [css.iconSizeVar]: `${iconSize}px` })}>
-			<Comp width={iconSize} />
+			<Comp className={css.iconGlyph} />
 		</div>
 	);
 }

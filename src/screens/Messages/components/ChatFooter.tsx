@@ -1,7 +1,6 @@
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Text';
 
-import { colors } from '#/styles/colors';
 
 import * as css from './ChatFooter.css';
 
@@ -19,7 +18,7 @@ export function ChatFooter({
 		<div className={css.outer}>
 			<div className={css.pill}>
 				<div className={css.inner}>
-					<Icon className={css.icon} fill={colors.textContrastMedium} size="lg" />
+					<Icon className={css.icon} />
 					<div className={css.textColumn}>
 						<Text color="textContrastMedium" numberOfLines={1} size="sm" weight="semiBold">
 							{heading}

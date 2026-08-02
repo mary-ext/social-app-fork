@@ -11,7 +11,6 @@ import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
-import { colors } from '#/styles/colors';
 
 import * as css from './SystemMessageItem.css';
 
@@ -34,7 +33,7 @@ export function SystemMessageItem({
 
 	const row = (
 		<div className={css.row}>
-			<Icon className={css.icon} fill={colors.textContrastMedium} size="xs" />
+			<Icon className={css.icon} />
 			<Text align="center" color="textContrastMedium" size="xs">
 				{text}
 			</Text>

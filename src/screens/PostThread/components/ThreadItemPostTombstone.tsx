@@ -29,7 +29,7 @@ export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) 
 		<div className={css.outer}>
 			<div className={css.row}>
 				<div className={css.iconCell}>
-					<Icon fill="currentColor" />
+					<Icon className={css.icon} />
 				</div>
 				<Text size="md" weight="semiBold" color="textContrastMedium">
 					{copy}

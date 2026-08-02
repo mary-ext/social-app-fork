@@ -150,11 +150,7 @@ export function LastMessage({
 	return (
 		<div className={css.lastMessageRow}>
 			{Icon && (
-				<Icon
-					className={css.lastMessageIcon}
-					fill={unread ? colors.textContrastHigh : colors.textContrastMedium}
-					size="xs"
-				/>
+				<Icon className={clsx(css.lastMessageIcon, unread && css.lastMessageIconUnread)} />
 			)}
 			<Text
 				color={dim ? 'textContrastMedium' : unread ? 'text' : 'textContrastHigh'}

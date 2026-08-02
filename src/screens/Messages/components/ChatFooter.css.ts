@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	padding: space.lg,
@@ -32,6 +32,9 @@ export const textColumn = style({
 });
 
 export const icon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.contrast_700,
 	marginRight: space.sm,
 });
 

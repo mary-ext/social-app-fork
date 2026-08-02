@@ -41,7 +41,7 @@ export function CategoryNav({
 					key={key}
 					value={key}
 				>
-					<Icon fill="currentColor" size="lg" />
+					<Icon className={styles.navIcon} />
 				</Toggle>
 			))}
 		</ToggleGroup>

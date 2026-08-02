@@ -73,7 +73,7 @@ import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
 import { colors } from '#/styles/colors';
 
-import { LARGE_ELEMENT_SIZE, NAV_ICON_WIDTH } from './constants';
+import { LARGE_ELEMENT_SIZE } from './constants';
 import * as css from './LeftNav.css';
 
 function ProfileCard({ minimal }: { minimal: boolean }) {
@@ -298,7 +298,7 @@ function NavItem({ activeRouteNames, count, hasNew, icons, label, minimal, to }:
 	return (
 		<Link to={to} action="navigate" onPress={onPress} label={label} className={css.navItem}>
 			<div className={css.iconBox}>
-				<Icon aria-hidden={true} width={NAV_ICON_WIDTH} fill={colors.text} />
+				<Icon aria-hidden={true} className={css.navIcon} />
 				{typeof count === 'string' && count ? (
 					<Text
 						aria-label={m['view.notifications.unreadCount.a11y']({ count })}

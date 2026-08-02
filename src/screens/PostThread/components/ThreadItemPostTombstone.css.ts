@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -30,4 +30,9 @@ export const iconCell = style({
 	flexDirection: 'row',
 	justifyContent: 'center',
 	width: LINEAR_AVI_WIDTH,
+});
+
+export const icon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

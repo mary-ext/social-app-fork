@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const wrapper = style({
 	position: 'relative',
@@ -125,6 +125,8 @@ export const tagText = style({
 });
 
 export const tagIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 	flexShrink: 0,
 });
 

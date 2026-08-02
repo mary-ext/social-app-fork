@@ -164,3 +164,8 @@ export const menuItem = style(
 export const iconWrap = style({ display: 'inline-flex', position: 'relative' });
 
 export const countBadge = style([navBadge.badge, { top: -4, right: -10 }]);
+
+export const navIcon = style({
+	width: 26,
+	height: 26,
+});

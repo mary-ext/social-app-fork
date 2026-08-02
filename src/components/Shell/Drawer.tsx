@@ -55,7 +55,6 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
-const ICON_WIDTH = 26;
 const SWITCHER_AVATAR_SIZE = 24;
 const SWITCHER_ACCOUNT_LIMIT = 2;
 
@@ -366,7 +365,7 @@ function MenuItem({
 	return (
 		<button aria-label={label} className={styles.menuItem} onClick={onPress} type="button">
 			<span className={styles.iconWrap}>
-				<Icon fill="currentColor" width={ICON_WIDTH} />
+				<Icon className={styles.navIcon} />
 				{count ? (
 					<Text
 						aria-label={countLabel}

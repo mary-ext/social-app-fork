@@ -75,3 +75,8 @@ export const feedLink = style({
 		backgroundColor: colors.contrast_25,
 	},
 });
+
+export const iconGlyph = style({
+	width: '100%',
+	height: '100%',
+});

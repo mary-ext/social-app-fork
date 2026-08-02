@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const nav = style({
 	display: 'flex',
@@ -31,4 +31,9 @@ export const navButton = style({
 		'&[data-disabled]': { opacity: 0.4, cursor: 'default' },
 		'&[data-pressed]': { color: vars.palette.primary_600 },
 	},
+});
+
+export const navIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
 });

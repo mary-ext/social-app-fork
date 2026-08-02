@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const link = style({
 	display: 'block',
@@ -35,4 +35,9 @@ export const button = style({
 	},
 });
 
-export const icon = style({ marginRight: 2 });
+export const icon = style({
+	marginRight: 2,
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: vars.palette.contrast_700,
+});

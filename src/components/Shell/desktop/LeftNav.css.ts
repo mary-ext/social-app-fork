@@ -10,6 +10,7 @@ import {
 	LEFT_NAV_MINIMAL_WIDTH,
 	LEFT_NAV_PWI_WIDTH,
 	LEFT_NAV_STANDARD_WIDTH,
+	NAV_ICON_WIDTH,
 } from './constants';
 
 const TIMING = 'cubic-bezier(0.17, 0.73, 0.14, 1)';
@@ -192,4 +193,10 @@ export const composeButtonMinimal = style({
 	padding: 0,
 	width: LARGE_ELEMENT_SIZE,
 	height: LARGE_ELEMENT_SIZE,
+});
+
+export const navIcon = style({
+	width: NAV_ICON_WIDTH,
+	height: NAV_ICON_WIDTH,
+	color: vars.palette.contrast_1000,
 });

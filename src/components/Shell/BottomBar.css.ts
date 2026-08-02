@@ -63,3 +63,9 @@ export const logotypeWrapper = style({
 	display: 'flex',
 	paddingTop: 4,
 });
+
+export const navIcon = style({
+	width: 24,
+	height: 24,
+	color: colors.contrast_1000,
+});

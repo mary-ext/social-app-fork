@@ -145,7 +145,7 @@ function DraftMetadataTag({
 }) {
 	return (
 		<div className={clsx(styles.tagRow, display === 'warning' ? styles.tagWarning : styles.tagInfo)}>
-			<Icon className={styles.tagIcon} size="sm" fill="currentColor" />
+			<Icon className={styles.tagIcon} />
 			<Text size="sm" className={styles.tagText}>
 				{text}
 			</Text>

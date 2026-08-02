@@ -2,7 +2,7 @@ import { createVar, globalStyle, style, styleVariants } from '@vanilla-extract/c
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const AVATAR_COLUMN = 48;
 
@@ -137,7 +137,15 @@ export const requestInfo = style({ paddingBottom: space._2xs });
 
 export const lastMessageRow = style({ display: 'flex', alignItems: 'center' });
 
-export const lastMessageIcon = style({ flexShrink: 0, marginRight: 2 });
+export const lastMessageIcon = style({
+	flexShrink: 0,
+	marginRight: 2,
+	width: iconSize.xs,
+	height: iconSize.xs,
+	color: colors.contrast_700,
+});
+
+export const lastMessageIconUnread = style({ color: colors.contrast_900 });
 
 export const postAlerts = style({
 	paddingBottom: space._2xs,
