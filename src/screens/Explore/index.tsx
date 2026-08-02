@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useFocusEffect } from '@oomfware/stacker';
 
 import { useTitle } from '#/lib/hooks/useTitle';
-import { MagnifyingGlassIcon } from '#/lib/icons';
 
 import { focusSearch, softReset } from '#/state/events';
 import { useSession } from '#/state/session';
@@ -11,7 +10,8 @@ import { useSession } from '#/state/session';
 import { SearchHeader } from '#/screens/Search/SearchHeader';
 import type { TabParam } from '#/screens/Search/utils';
 
-import { Text } from '#/components/Text';
+import { EmptyState } from '#/components/EmptyState';
+import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -47,20 +47,13 @@ export function ExploreScreen() {
 				{hasSession ? (
 					<Explore focusSearchInput={focusSearchInput} />
 				) : (
-					<Layout.Content>
-						<div className={css.heading}>
-							<Text size="_2xl" weight="bold">
-								{m['common.action.search']()}
-							</Text>
-						</div>
-
-						<div className={css.empty}>
-							<MagnifyingGlassIcon strokeWidth={3} size={60} color={colors.textContrastMedium} />
-							<Text color="textContrastMedium" size="md">
-								{m['screens.search.input.description']()}
-							</Text>
-						</div>
-					</Layout.Content>
+					<EmptyState
+						icon={MagnifyingGlassIcon}
+						iconColor={colors.textContrastMedium}
+						iconSize="4xl"
+						message={m['screens.search.input.description']()}
+						messageColor="textContrastMedium"
+					/>
 				)}
 			</div>
 		</Layout.Screen>
