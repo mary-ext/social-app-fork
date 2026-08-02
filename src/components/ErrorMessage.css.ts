@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 export const outer = style({
 	display: 'flex',
@@ -38,4 +39,10 @@ export const retry = style({
 	width: 24,
 	height: 24,
 	cursor: 'pointer',
+});
+
+export const icon = style({
+	width: iconSize.md,
+	height: iconSize.md,
+	color: vars.palette.white,
 });

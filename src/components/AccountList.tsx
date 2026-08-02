@@ -7,14 +7,13 @@ import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 
 import * as css from '#/components/AccountList.css';
-import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import ChevronIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 export function AccountList({
 	onSelectAccount,
@@ -53,12 +52,12 @@ export function AccountList({
 					type="button"
 				>
 					<span className={css.addAvatar}>
-						<PlusIcon size="lg" fill="currentColor" />
+						<PlusIcon className={css.addIcon} />
 					</span>
 					<Text className={css.addLabel} size="md" weight="medium">
 						{otherLabel ?? m['components.accountList.other']()}
 					</Text>
-					<ChevronIcon className={css.chevron} size="lg" fill={colors.textContrastLow} />
+					<ChevronIcon className={css.chevron} />
 				</button>
 			)}
 		</div>
@@ -115,10 +114,10 @@ function AccountItem({
 			<ProfileCard.NameAndHandle moderationOpts={rowModerationOpts} profile={profileView} />
 			{isCurrentAccount ? (
 				<span className={css.check}>
-					<CheckIcon size="xs" fill="currentColor" />
+					<CheckIcon className={css.checkIcon} />
 				</span>
 			) : (
-				<ChevronIcon className={css.chevron} size="lg" fill={colors.textContrastLow} />
+				<ChevronIcon className={css.chevron} />
 			)}
 		</button>
 	);

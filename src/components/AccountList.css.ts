@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const avatarSize = 40;
 
@@ -63,6 +63,9 @@ export const check = style({
 });
 
 export const chevron = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastLow,
 	flexShrink: 0,
 });
 
@@ -76,4 +79,14 @@ export const container = style({
 
 export const rowActive = style({
 	backgroundColor: colors.contrast_25,
+});
+
+export const addIcon = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+});
+
+export const checkIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
 });

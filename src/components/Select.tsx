@@ -3,12 +3,11 @@ import { createContext, Fragment, type ReactElement, type ReactNode, useContext 
 import { Select as BaseSelect } from '@base-ui/react/select';
 import { clsx } from 'clsx';
 
-import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import {
-	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron';
 import * as styles from '#/components/Select.css';
+
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
+import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
 
 export type SelectItem<Value = string> = {
 	label: string;
@@ -106,7 +105,7 @@ export type IconProps = {
 export function Icon({ className }: IconProps) {
 	return (
 		<BaseSelect.Icon className={clsx(styles.icon, className)}>
-			<ChevronDownIcon size="xs" fill="currentColor" />
+			<ChevronDownIcon className={styles.chevronIcon} />
 		</BaseSelect.Icon>
 	);
 }
@@ -141,7 +140,7 @@ export function Content<Value = string>({
 			>
 				<BaseSelect.Popup className={styles.popup({ matchTriggerWidth })}>
 					<BaseSelect.ScrollUpArrow className={styles.scrollUpArrow}>
-						<ChevronUpIcon size="xs" fill="currentColor" />
+						<ChevronUpIcon className={styles.chevronIcon} />
 					</BaseSelect.ScrollUpArrow>
 					<BaseSelect.List className={styles.list}>
 						{items.map((item) => (
@@ -149,7 +148,7 @@ export function Content<Value = string>({
 						))}
 					</BaseSelect.List>
 					<BaseSelect.ScrollDownArrow className={styles.scrollDownArrow}>
-						<ChevronDownIcon size="xs" fill="currentColor" />
+						<ChevronDownIcon className={styles.chevronIcon} />
 					</BaseSelect.ScrollDownArrow>
 				</BaseSelect.Popup>
 			</BaseSelect.Positioner>
@@ -178,7 +177,7 @@ export function Item<Value = string>({ children, className, label, value }: Item
 export function ItemIndicator() {
 	return (
 		<BaseSelect.ItemIndicator className={styles.indicator}>
-			<CheckIcon size="sm" fill="currentColor" />
+			<CheckIcon className={styles.checkIcon} />
 		</BaseSelect.ItemIndicator>
 	);
 }

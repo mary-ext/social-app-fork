@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { fontSize, space, zIndex } from '#/styles/tokens.css';
+import { fontSize, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 export const trigger = style(
 	layered(components, {
@@ -172,3 +172,13 @@ export const indicator = style(
 		color: vars.palette.primary_600,
 	}),
 );
+
+export const chevronIcon = style({
+	width: iconSize.xs,
+	height: iconSize.xs,
+});
+
+export const checkIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+});

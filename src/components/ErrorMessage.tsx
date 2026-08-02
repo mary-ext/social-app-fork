@@ -1,9 +1,8 @@
-import { ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotateClockwiseIcon } from '#/components/icons/ArrowRotate';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Text';
 
+import ArrowRotateClockwiseIcon from '#/icons/central/ArrowRotateClockwise_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './ErrorMessage.css';
 
@@ -17,7 +16,7 @@ export function ErrorMessage({
 	return (
 		<div className={css.outer}>
 			<div className={css.iconBox}>
-				<WarningIcon size="md" fill={colors.white} />
+				<WarningIcon className={css.icon} />
 			</div>
 			<Text className={css.message} size="md" weight="medium" color="white">
 				{message}
@@ -29,7 +28,7 @@ export function ErrorMessage({
 					onClick={onPressTryAgain}
 					type="button"
 				>
-					<ArrowRotateClockwiseIcon size="md" fill={colors.white} />
+					<ArrowRotateClockwiseIcon className={css.icon} />
 				</button>
 			)}
 		</div>
