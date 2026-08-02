@@ -1,9 +1,8 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import { Apples_Stroke2_Corner0_Rounded as AppleIcon } from '#/components/icons/Apples';
 import { Car1_Stroke2_Corner0_Rounded as CarIcon } from '#/components/icons/Car';
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
-import type { Props as IconProps } from '#/components/icons/common';
 import { EmojiGrinning_Stroke2_Corner0_Rounded as EmojiIcon } from '#/components/icons/Emoji';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Growth_Stroke2_Corner0_Rounded as GrowthIcon } from '#/components/icons/Growth';
@@ -15,7 +14,7 @@ import { m } from '#/paraglide/messages';
 
 /** a picker section: the representative nav icon and localized header label for a section key. */
 type EmojiCategory = {
-	icon: ComponentType<IconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	key: string;
 	label: () => string;
 };

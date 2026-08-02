@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -11,7 +11,6 @@ import { feedTarget } from '#/lib/routes/targets';
 import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { type Props as SVGIconProps, sizes as iconSizes } from '#/components/icons/common';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
@@ -23,6 +22,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { iconSize as iconSizeToken } from '#/styles/tokens.css';
 
 import * as css from './ModuleHeader.css';
 
@@ -55,12 +55,12 @@ export function Icon({
 	icon: Comp,
 	size = 'lg',
 }: {
-	icon: ComponentType<SVGIconProps>;
-	size?: SVGIconProps['size'];
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	size?: keyof typeof iconSizeToken;
 }) {
-	const iconSize = iconSizes[size ?? 'lg'];
+	const resolved = iconSizeToken[size];
 	return (
-		<div className={css.icon} style={assignInlineVars({ [css.iconSizeVar]: `${iconSize}px` })}>
+		<div className={css.icon} style={assignInlineVars({ [css.iconSizeVar]: `${resolved}px` })}>
 			<Comp className={css.iconGlyph} />
 		</div>
 	);

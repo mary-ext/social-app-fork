@@ -1,12 +1,4 @@
-import {
-	type ComponentType,
-	createContext,
-	type MouseEvent,
-	type ReactNode,
-	type Ref,
-	type SVGProps,
-	useContext,
-} from 'react';
+import { type ComponentType, createContext, type MouseEvent, type ReactNode, type Ref, type SVGProps, useContext } from 'react';
 
 import { clsx } from 'clsx';
 

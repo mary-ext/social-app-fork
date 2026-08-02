@@ -1,11 +1,10 @@
-import type { MouseEvent, ReactNode } from 'react';
+import type { ComponentType, MouseEvent, ReactNode, SVGProps } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
 import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
@@ -144,7 +143,7 @@ export function LastMessage({
 }: {
 	children: string;
 	dim: boolean;
-	icon: React.ComponentType<SVGIconProps> | null;
+	icon: ComponentType<SVGProps<SVGSVGElement>> | null;
 	unread: boolean;
 }) {
 	return (

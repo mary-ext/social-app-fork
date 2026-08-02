@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { type ComponentType, type SVGProps, useEffect, useState } from 'react';
 
 import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
 
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon } from '#/components/icons/CirclePlus';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
@@ -140,7 +139,7 @@ function DraftMetadataTag({
 	text,
 }: {
 	display?: 'info' | 'warning';
-	icon: React.ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	text: string;
 }) {
 	return (

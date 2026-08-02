@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ComponentType, type SVGProps, useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
@@ -16,7 +16,6 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import type { Props as IcoProps, Props as SVGIconProps } from '#/components/icons/common';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle';
@@ -30,6 +29,7 @@ import { Admonition } from '#/components/web/Admonition';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
+import type { iconSize as iconSizeToken } from '#/styles/tokens.css';
 import { colors } from '#/styles/colors';
 
 import * as ModuleHeader from './components/ModuleHeader';
@@ -59,8 +59,8 @@ type ExploreScreenItems =
 			type: 'header';
 			key: string;
 			title: string;
-			icon: React.ComponentType<SVGIconProps>;
-			iconSize?: IcoProps['size'];
+			icon: ComponentType<SVGProps<SVGSVGElement>>;
+			iconSize?: keyof typeof iconSizeToken;
 			bottomBorder?: boolean;
 			searchButton?: {
 				label: string;
@@ -72,7 +72,7 @@ type ExploreScreenItems =
 			type: 'tabbedHeader';
 			key: string;
 			title: string;
-			icon: React.ComponentType<SVGIconProps>;
+			icon: ComponentType<SVGProps<SVGSVGElement>>;
 			searchButton?: {
 				label: string;
 				metricsTag: ExploreSearchButtonModule;

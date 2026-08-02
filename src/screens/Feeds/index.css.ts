@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const savedFeedRow = style({
 	flex: 1,
@@ -58,6 +58,8 @@ export const sectionHeader = recipe(
 export const sectionHeaderIcon = style({
 	flexShrink: 0,
 	marginLeft: -2,
+	width: iconSize.lg,
+	height: iconSize.lg,
 });
 
 export const sectionHeaderTitle = style({

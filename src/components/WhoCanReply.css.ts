@@ -27,3 +27,8 @@ export const label = style({
 		[`${trigger}:hover &, ${trigger}:focus-visible &`]: { textDecoration: 'underline' },
 	},
 });
+
+export const gateIcon = style({
+	width: 16,
+	height: 16,
+});

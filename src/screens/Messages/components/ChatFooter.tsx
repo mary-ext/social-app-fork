@@ -1,4 +1,5 @@
-import type { Props as SVGIconProps } from '#/components/icons/common';
+import type { ComponentType, SVGProps } from 'react';
+
 import { Text } from '#/components/Text';
 
 
@@ -12,7 +13,7 @@ export function ChatFooter({
 }: React.PropsWithChildren<{
 	heading: string;
 	subheading?: string;
-	icon: React.ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 }>) {
 	return (
 		<div className={css.outer}>

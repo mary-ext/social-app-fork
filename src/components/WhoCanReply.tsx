@@ -87,7 +87,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				// prefetch the interaction settings so the edit dialog opens without a spinner
 				onMouseEnter={isThreadAuthor ? prefetch : undefined}
 			>
-				<Icon width={16} settings={settings} />
+				<Icon settings={settings} />
 				<Text className={css.label} size="md_sub" color={isThreadAuthor ? 'textLink' : 'textContrastMedium'}>
 					{description}
 				</Text>
@@ -112,11 +112,11 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	);
 }
 
-function Icon({ width, settings }: { width?: number; settings: ThreadgateAllowUISetting[] }) {
+function Icon({ settings }: { settings: ThreadgateAllowUISetting[] }) {
 	const isEverybody = settings.every((setting) => setting.type === 'everybody');
 	const isNobody = !!settings.find((gate) => gate.type === 'nobody');
 	const IconComponent = isEverybody ? EarthIcon : isNobody ? CircleBanSignIcon : GroupIcon;
-	return <IconComponent fill="currentColor" width={width} />;
+	return <IconComponent className={css.gateIcon} />;
 }
 
 function WhoCanReplyDialog({

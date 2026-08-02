@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
+import { iconSize } from '#/styles/tokens.css';
 
 const focusRing = {
 	outline: `2px solid ${vars.palette.primary_500}`,
@@ -64,4 +65,9 @@ export const toggle = style({
 	selectors: {
 		'&:focus-visible': focusRing,
 	},
+});
+
+export const icon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

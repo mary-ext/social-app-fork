@@ -1,8 +1,9 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
 
 import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
 	EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
@@ -16,7 +17,7 @@ import { m } from '#/paraglide/messages';
 
 export type GifCategory = {
 	id: string;
-	icon: React.ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: () => string;
 	searchterm: string | null; // null = trending/recents (handled by consumer)
 };

@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
@@ -10,7 +12,6 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 
@@ -23,7 +24,7 @@ import { getDefinition, getLabelStrings } from './useLabelInfo';
 export type ModerationCauseSourceType = 'labeler' | 'list' | 'user';
 
 export interface ModerationCauseDescription {
-	icon: React.ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	name: string;
 	description: string;
 	source?: string;

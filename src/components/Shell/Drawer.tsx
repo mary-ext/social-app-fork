@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
@@ -21,7 +23,6 @@ import {
 } from '#/components/icons/Bell';
 import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { BulletList_Stroke2_Corner0_Rounded as List } from '#/components/icons/BulletList';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGrid } from '#/components/icons/DotGrid';
 import {
 	Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -353,10 +354,10 @@ function MenuItem({
 	label,
 	onPress,
 }: {
-	activeIcon: React.ComponentType<SVGIconProps>;
+	activeIcon: ComponentType<SVGProps<SVGSVGElement>>;
 	count?: string;
 	countLabel?: string;
-	inactiveIcon: React.ComponentType<SVGIconProps>;
+	inactiveIcon: ComponentType<SVGProps<SVGSVGElement>>;
 	isActive: boolean;
 	label: string;
 	onPress: () => void;

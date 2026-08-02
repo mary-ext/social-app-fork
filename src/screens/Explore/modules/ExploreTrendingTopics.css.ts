@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const rowBase = style({
 	boxSizing: 'border-box',
@@ -114,4 +114,9 @@ export const pill = recipe(
 
 export const pillText = style({
 	color: 'inherit',
+});
+
+export const topicIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
 });

@@ -1,4 +1,4 @@
-import { type ComponentType, useRef, useState } from 'react';
+import { type ComponentType, type SVGProps, useRef, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
@@ -27,7 +27,6 @@ import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/components/icons/FilterTimeline';
 import { ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlassIcon } from '#/components/icons/ListMagnifyingGlass';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkleIcon } from '#/components/icons/ListSparkle';
@@ -416,12 +415,12 @@ function SectionHeader({
 }: {
 	bottomBorder?: boolean;
 	first?: boolean;
-	icon: ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	title: string;
 }) {
 	return (
 		<div className={css.sectionHeader({ bottomBorder, first })}>
-			<Icon className={css.sectionHeaderIcon} size="lg" />
+			<Icon className={css.sectionHeaderIcon} />
 			<Text className={css.sectionHeaderTitle} size="xl" weight="semiBold">
 				{title}
 			</Text>

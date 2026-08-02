@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -8,7 +10,6 @@ import {
 	ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
 	ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
 } from '#/components/icons/ChainLink';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	Lock_Stroke2_Corner0_Rounded as LockIcon,
 	Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
@@ -27,7 +28,7 @@ export type SystemMessageAction =
 
 export type SystemMessageInfo = {
 	message: string;
-	Icon: React.ComponentType<SVGIconProps>;
+	Icon: ComponentType<SVGProps<SVGSVGElement>>;
 	action?: SystemMessageAction;
 };
 

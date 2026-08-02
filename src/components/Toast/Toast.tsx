@@ -1,16 +1,15 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import { Toast as BaseToast, type ToastManager } from '@base-ui/react/toast';
 import { clsx } from 'clsx';
 
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import type { Props as IconProps } from '#/components/icons/common';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import * as css from '#/components/Toast/Toast.css';
 import type { ToastData, ToastType } from '#/components/Toast/types';
 
-const ICONS: Record<ToastType, ComponentType<IconProps>> = {
+const ICONS: Record<ToastType, ComponentType<SVGProps<SVGSVGElement>>> = {
 	default: CircleCheck,
 	error: CircleInfo,
 	info: CircleInfo,

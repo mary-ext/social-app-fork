@@ -1,15 +1,14 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import { clsx } from 'clsx';
 
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, type ButtonProps } from '#/components/web/Button';
 
 import * as styles from './SettingsButton.css';
 
 type SettingsButtonProps = Omit<ButtonProps, 'children' | 'shape' | 'size'> & {
-	icon: ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	text: string;
 };
 

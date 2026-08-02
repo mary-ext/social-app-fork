@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
@@ -9,7 +9,6 @@ import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTick } from '#/state/tick';
 
 import { AvatarStack } from '#/components/AvatarStack';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import { Text } from '#/components/Text';
@@ -102,7 +101,7 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 		return <div className={css.pill({ type: 'skeleton' })} />;
 	}
 
-	let Icon: ComponentType<SVGIconProps> | null = null;
+	let Icon: ComponentType<SVGProps<SVGSVGElement>> | null = null;
 	let text: string;
 	let variant: 'age' | 'hot' | 'new';
 	switch (type) {
@@ -127,7 +126,7 @@ function TrendingIndicator({ type }: { type: 'hot' | 'new' | 'skeleton' | number
 
 	return (
 		<div className={css.pill({ type: variant })}>
-			{Icon && <Icon fill="currentColor" size="sm" />}
+			{Icon && <Icon className={css.topicIcon} />}
 			<Text className={css.pillText} size="sm" weight="medium">
 				{text}
 			</Text>

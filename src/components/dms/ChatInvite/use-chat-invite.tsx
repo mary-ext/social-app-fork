@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
@@ -11,7 +13,6 @@ import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/componen
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
 import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icons/ChainLink';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import * as Toast from '#/components/Toast';
 
@@ -38,7 +39,7 @@ export type ChatInviteAction = {
 	 * doesn't meet the join rule.
 	 */
 	disabled: boolean;
-	icon: React.ComponentType<SVGIconProps>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 	onPress: () => void;
 	side: 'left' | 'right';
@@ -124,7 +125,7 @@ export function useChatInvite({
 			};
 		} else {
 			let canJoin = true;
-			let icon: React.ComponentType<SVGIconProps> = JoinIcon;
+			let icon: ComponentType<SVGProps<SVGSVGElement>> = JoinIcon;
 			let label = preview.requireApproval
 				? m['common.requests.action.request']()
 				: m['common.chat.action.join']();

@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { iconSize } from '#/styles/tokens.css';
 
 const viewBase = {
 	boxSizing: 'border-box',
@@ -41,6 +43,9 @@ export const blurButton = style({
 });
 
 export const iconWrap = style({
+	width: iconSize.lg,
+	height: iconSize.lg,
+	color: colors.textContrastMedium,
 	flexShrink: 0,
 });
 

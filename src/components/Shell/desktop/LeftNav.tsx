@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from 'react';
+import { type ComponentType, type MouseEvent, type SVGProps, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
@@ -33,7 +33,6 @@ import {
 	BulletList_Filled_Corner0_Rounded as ListFilledIcon,
 	BulletList_Stroke2_Corner0_Rounded as ListIcon,
 } from '#/components/icons/BulletList';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import {
@@ -260,8 +259,8 @@ interface NavItemProps {
 	count?: string;
 	hasNew?: boolean;
 	icons: {
-		active: React.ComponentType<SVGIconProps>;
-		inactive: React.ComponentType<SVGIconProps>;
+		active: ComponentType<SVGProps<SVGSVGElement>>;
+		inactive: ComponentType<SVGProps<SVGSVGElement>>;
 	};
 	label: string;
 	minimal: boolean;

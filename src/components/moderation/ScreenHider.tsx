@@ -42,7 +42,7 @@ export function ScreenHider({
 		<div className={css.container}>
 			<div className={css.badgeWrap}>
 				<div className={css.badge}>
-					<desc.icon fill="currentColor" size="xl" />
+					<desc.icon className={css.icon} />
 				</div>
 			</div>
 			<Text className={css.title} size="_4xl" weight="semiBold">

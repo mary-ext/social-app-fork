@@ -26,7 +26,6 @@ import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetai
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as styles from './ContentHider.css';
 
@@ -148,7 +147,7 @@ function ContentHiderActive({
 
 	const triggerInner = (
 		<>
-			<desc.icon size="lg" fill={colors.textContrastMedium} className={styles.iconWrap} />
+			<desc.icon className={styles.iconWrap} />
 			<Text
 				size="md"
 				weight="medium"

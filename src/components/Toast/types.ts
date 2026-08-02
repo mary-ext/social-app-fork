@@ -1,6 +1,5 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
-import type { Props as IconProps } from '#/components/icons/common';
 
 export type ToastType = 'default' | 'error' | 'info' | 'success' | 'warning';
 
@@ -16,7 +15,7 @@ export type ShowOptions = {
 	/** Time in ms before auto-dismiss; `0` keeps the toast until dismissed. */
 	duration?: number;
 	/** Overrides the default icon for the toast's {@link ToastType}. */
-	icon?: ComponentType<IconProps>;
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 	/** Reusing an id updates the existing toast in place instead of stacking a new one. */
 	id?: string;
 	type?: ToastType;
@@ -24,5 +23,5 @@ export type ShowOptions = {
 
 /** Custom per-toast data carried through Base UI's toast manager to the renderer. */
 export type ToastData = {
-	icon?: ComponentType<IconProps>;
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 };

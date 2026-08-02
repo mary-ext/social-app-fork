@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { iconSize, space } from '#/styles/tokens.css';
 
 export const container = style({
 	display: 'flex',
@@ -65,4 +65,9 @@ export const learnMore = style({
 	padding: 0,
 	font: 'inherit',
 	cursor: 'pointer',
+});
+
+export const icon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
 });

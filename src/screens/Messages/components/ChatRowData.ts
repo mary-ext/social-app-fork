@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
@@ -17,7 +17,6 @@ import { getMessageInfo } from '#/components/dms/getMessageInfo';
 import { getReactionInfo } from '#/components/dms/getReactionInfo';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 
 import { m } from '#/paraglide/messages';
@@ -97,7 +96,7 @@ export function isDimmed(
 
 export type LastMessagePreview = {
 	/** leading glyph for a system message or a locked group; `null` for an ordinary message. */
-	Icon: ComponentType<SVGIconProps> | null;
+	Icon: ComponentType<SVGProps<SVGSVGElement>> | null;
 	/** timestamp of whatever is being previewed, or `null` when the conversation is empty. */
 	sentAt: string | null;
 	text: string;

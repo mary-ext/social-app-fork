@@ -1,12 +1,4 @@
-import {
-	Children,
-	cloneElement,
-	type ComponentType,
-	Fragment,
-	isValidElement,
-	type ReactNode,
-	type SVGProps,
-} from 'react';
+import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode, type SVGProps } from 'react';
 
 import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';

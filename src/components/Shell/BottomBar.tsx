@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import type { ComponentType, MouseEvent, SVGProps } from 'react';
 
 import { softReset } from '#/state/events';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
@@ -10,7 +10,6 @@ import {
 	Bell_Stroke2_Corner0_Rounded as Bell,
 	Bell_Filled_Corner0_Rounded as BellFilled,
 } from '#/components/icons/Bell';
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	HomeOpen_Stoke2_Corner0_Rounded as Home,
 	HomeOpen_Filled_Corner0_Rounded as HomeFilled,
@@ -89,8 +88,8 @@ export function BottomBar() {
 interface NavItemProps {
 	hasNew?: boolean;
 	icons: {
-		active: React.ComponentType<SVGIconProps>;
-		inactive: React.ComponentType<SVGIconProps>;
+		active: ComponentType<SVGProps<SVGSVGElement>>;
+		inactive: ComponentType<SVGProps<SVGSVGElement>>;
 	};
 	notificationCount?: string;
 	to: RouteTarget;

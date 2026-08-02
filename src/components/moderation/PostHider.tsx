@@ -82,7 +82,7 @@ export function PostHider({
 					className={clsx(styles.iconCircle, iconClassName)}
 					style={{ borderRadius: iconSize, height: iconSize, width: iconSize }}
 				>
-					<desc.icon size="sm" fill="currentColor" />
+					<desc.icon className={styles.icon} />
 				</span>
 			</Dialog.Trigger>
 			<Text className={styles.name} color="textContrastMedium" numberOfLines={1}>

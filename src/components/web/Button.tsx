@@ -1,12 +1,4 @@
-import {
-	type ComponentPropsWithoutRef,
-	type ComponentType,
-	createContext,
-	type ReactNode,
-	type Ref,
-	type SVGProps,
-	useContext,
-} from 'react';
+import { type ComponentPropsWithoutRef, type ComponentType, createContext, type ReactNode, type Ref, type SVGProps, useContext } from 'react';
 
 import { Button as BaseButton } from '@base-ui/react/button';
 import { clsx } from 'clsx';
