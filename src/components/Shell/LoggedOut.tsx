@@ -7,13 +7,12 @@ import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { Logo } from '#/components/icons/Logo';
-import { Logotype } from '#/components/icons/Logotype';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
+import LogoSky from '#/icons/original/LogoSky.svg';
+import Logotype from '#/icons/original/Logotype.svg';
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 import * as css from './LoggedOut.css';
 
@@ -33,10 +32,10 @@ export function LoggedOut() {
 			<div className={css.content}>
 				<ErrorBoundary>
 					<div className={css.brand}>
-						<Logo fill="sky" width={92} />
+						<LogoSky className={css.logo} />
 
 						<div className={css.logotypeWrap}>
-							<Logotype fill={colors.text} width={161} />
+							<Logotype className={css.logotype} />
 						</div>
 
 						<Text color="textContrastMedium" size="md" weight="semiBold">

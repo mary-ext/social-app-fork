@@ -5,10 +5,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import * as styles from '#/lib/custom-animations/LikeIcon.css';
 import { useReducedMotion } from '#/lib/reduced-motion';
 
-import {
-	Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-	Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2';
+import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
+import HeartIconOutline from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
 
 const animationConfig: KeyframeAnimationOptions = {
 	duration: 600,
@@ -68,9 +66,9 @@ export function AnimatedLikeIcon({
 	return (
 		<div className={styles.root} style={assignInlineVars({ [styles.sizeVar]: `${size}px` })}>
 			{isLiked ? (
-				<HeartIconFilled ref={heartRef} fill="currentColor" width={size} />
+				<HeartIconFilled ref={heartRef} className={styles.heart} />
 			) : (
-				<HeartIconOutline fill="currentColor" width={size} />
+				<HeartIconOutline className={styles.heart} />
 			)}
 			<div ref={circle1Ref} className={styles.circle1} />
 			<div ref={circle2Ref} className={styles.circle2} />

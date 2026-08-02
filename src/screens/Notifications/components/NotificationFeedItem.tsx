@@ -40,7 +40,6 @@ import { Trans } from '#/locale/Trans';
 
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
-import { StarterPack } from '#/components/icons/StarterPack';
 import * as MediaPreview from '#/components/MediaPreview';
 import { Post } from '#/components/Post/Post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
@@ -67,6 +66,7 @@ import ContactsIconFilled from '#/icons/central/Contacts_round_filled_radius1_st
 import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_filled_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
+import StarterPack from '#/icons/original/StarterPackSky.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter } from '#/routes';
@@ -376,7 +376,7 @@ let NotificationFeedItem = ({
 				markup={{ authorLink: authorLinkMarkup }}
 			/>
 		);
-		icon = <StarterPack gradient="sky" className={css.starterPackIcon} />;
+		icon = <StarterPack className={css.starterPackIcon} />;
 	} else if (item.type === 'verified') {
 		a11yLabel = hasMultipleAuthors
 			? m['view.notifications.verification.verified.multiName']({

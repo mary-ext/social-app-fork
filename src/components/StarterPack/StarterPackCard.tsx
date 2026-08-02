@@ -17,12 +17,12 @@ import { precacheStarterPack } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
-import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
 import { Link as WebLink } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
+import StarterPackIcon from '#/icons/original/StarterPackSky.svg';
 import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
@@ -83,7 +83,7 @@ function Header({ children }: { children: ReactNode }) {
 }
 
 function Icon() {
-	return <StarterPackIcon gradient="sky" className={css.starterPackIcon} />;
+	return <StarterPackIcon className={css.starterPackIcon} />;
 }
 
 function TitleAndByline({ starterPack }: { starterPack: AnyStarterPackView }) {

@@ -8,13 +8,13 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { Logo } from '#/components/icons/Logo';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 import { ExternalLinkButton } from '#/components/web/Link';
 
+import Logo from '#/icons/original/Logo.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import VerifierCheck from '#/icons/original/VerifierCheck.svg';
 import { m } from '#/paraglide/messages';
@@ -45,7 +45,7 @@ const VerificationIllustration = () => {
 			<div className={css.illustrationInner}>
 				{/* Step 1: Bluesky logo */}
 				<div className={css.blueskyCircleClass}>
-					<Logo fill="#ffffff" width={32} />
+					<Logo className={css.logo} />
 				</div>
 				<span className={css.blueskyLabelClass}>{m['components.verification.illustration.bluesky']()}</span>
 

@@ -6,8 +6,6 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useSession } from '#/state/session';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { Logo } from '#/components/icons/Logo';
-import { Logotype } from '#/components/icons/Logotype';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
@@ -20,9 +18,10 @@ import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.sv
 import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
 import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import Logo from '#/icons/original/Logo.svg';
+import Logotype from '#/icons/original/Logotype.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import * as css from './BottomBar.css';
 
@@ -56,9 +55,9 @@ export function BottomBar() {
 			) : (
 				<div className={css.signInRow}>
 					<div className={css.logoGroup}>
-						<Logo width={24} />
+						<Logo className={css.logo} />
 						<div className={css.logotypeWrapper}>
-							<Logotype width={72} fill={colors.text} />
+							<Logotype className={css.logotype} />
 						</div>
 					</div>
 					<Button

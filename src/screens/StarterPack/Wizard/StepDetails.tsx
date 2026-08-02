@@ -6,10 +6,10 @@ import { useSession } from '#/state/session';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
-import { StarterPack } from '#/components/icons/StarterPack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 
+import StarterPack from '#/icons/original/StarterPackSky.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './Wizard.css';
@@ -32,7 +32,7 @@ export function StepDetails() {
 	return (
 		<>
 			<div className={css.detailsHeader}>
-				<StarterPack gradient="sky" className={css.starterPackIcon} />
+				<StarterPack className={css.starterPackIcon} />
 				<Text weight="semiBold" size="_3xl">
 					{m['screens.starterPack.tagline']()}
 				</Text>

@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
@@ -71,4 +72,15 @@ export const footerSpacer = style({
 export const logotypeWrap = style({
 	paddingTop: space._5xl,
 	paddingBottom: space.sm,
+});
+
+export const logo = style({
+	width: 92,
+	height: 'auto',
+});
+
+export const logotype = style({
+	width: 161,
+	height: 'auto',
+	color: colors.text,
 });

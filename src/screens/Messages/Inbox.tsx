@@ -22,9 +22,9 @@ import * as Layout from '#/components/web/Layout';
 
 import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import InboxLargeIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
-import InboxLargeIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 import { colors } from '#/styles/colors';

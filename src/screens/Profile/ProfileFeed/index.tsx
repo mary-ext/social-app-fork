@@ -21,17 +21,17 @@ import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
+import * as fabCss from '#/components/FAB.css';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Layout from '#/components/web/Layout';
 
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams } from '#/routes';
-import { colors } from '#/styles/colors';
 
 export function ProfileFeedScreen() {
 	const [{ rkey, actor: handleOrDid }] = useParams('ProfileFeed');
@@ -124,7 +124,7 @@ function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) 
 			)}
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="xl" fill={colors.white} />}
+					icon={<EditBigIcon className={fabCss.fabIcon} />}
 					label={m['common.compose.action.new']()}
 					onClick={() => openComposer({})}
 				/>

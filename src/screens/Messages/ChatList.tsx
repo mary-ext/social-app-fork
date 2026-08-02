@@ -28,9 +28,9 @@ import * as Layout from '#/components/web/Layout';
 
 import NewChatIcon from '#/icons/central-custom/MessagePlus_round_outlined_radius1_stroke2.svg';
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
+import InboxIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import CircleCheckIcon from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
 import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
-import InboxIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import BubbleSmileIcon from '#/icons/original/BubbleSmile.svg';
 import { m } from '#/paraglide/messages';

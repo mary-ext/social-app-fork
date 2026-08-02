@@ -23,3 +23,8 @@ const circle = style({
 });
 export const circle1 = style([circle, { backgroundColor: vars.palette.pink }]);
 export const circle2 = style([circle, { backgroundColor: vars.palette.contrast_0 }]);
+
+export const heart = style({
+	width: sizeVar,
+	height: sizeVar,
+});

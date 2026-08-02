@@ -4,13 +4,13 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
-import { StarterPack } from '#/components/icons/StarterPack';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import TrendingIcon from '#/icons/central/Trending3_round_outlined_radius1_stroke2.svg';
+import StarterPack from '#/icons/original/StarterPackSky.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './StarterPackHeader.css';
@@ -47,7 +47,7 @@ export function StarterPackHeader({
 		<div className={css.outer}>
 			<div className={css.header}>
 				<div className={css.avatar}>
-					<StarterPack gradient="sky" className={css.starterPackIcon} />
+					<StarterPack className={css.starterPackIcon} />
 				</div>
 				<div className={css.content}>
 					<Text size="xl" weight="semiBold" numberOfLines={2}>

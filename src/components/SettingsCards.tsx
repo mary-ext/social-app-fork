@@ -12,10 +12,6 @@ import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
-import {
-	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -23,7 +19,9 @@ import { Text } from '#/components/Text';
 import { type LinkProps, useInternalLink } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 
+import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
 
 /**
  * card-sectioned settings vocabulary: a list of titled section cards, each holding whole-row button, switch,
@@ -276,9 +274,9 @@ export function CollapsibleRow({
 				<span className={styles.trailing}>
 					{!open && trailing}
 					{open ? (
-						<ChevronUpIcon className={styles.chevron} fill="currentColor" size="sm" />
+						<ChevronUpIcon className={styles.chevron} />
 					) : (
-						<ChevronDownIcon className={styles.chevron} fill="currentColor" size="sm" />
+						<ChevronDownIcon className={styles.chevron} />
 					)}
 				</span>
 			</Collapsible.Trigger>

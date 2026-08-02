@@ -14,14 +14,14 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { FAB } from '#/components/FAB';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
+import * as fabCss from '#/components/FAB.css';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect } from '#/routes';
-import { colors } from '#/styles/colors';
 
 const POLL_FREQ = 60e3; // 60sec
 
@@ -82,7 +82,7 @@ export function FeedPage({
 			)}
 			{hasSession && (
 				<FAB
-					icon={<EditBigIcon size="xl" fill={colors.white} />}
+					icon={<EditBigIcon className={fabCss.fabIcon} />}
 					label={m['common.compose.action.new']()}
 					onClick={onPressCompose}
 				/>

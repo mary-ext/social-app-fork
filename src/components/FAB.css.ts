@@ -3,7 +3,7 @@ import { fallbackVar, style } from '@vanilla-extract/css';
 import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
 
 import { colors } from '#/styles/colors';
-import { space, zIndex } from '#/styles/tokens.css';
+import { iconSize, space, zIndex } from '#/styles/tokens.css';
 
 export const fab = style({
 	display: 'flex',
@@ -26,4 +26,11 @@ export const fab = style({
 	'@media': {
 		'screen and (min-width: 800px)': { display: 'none' },
 	},
+});
+
+/** the glyph the {@link fab} centres; exported so call sites can style the element they pass in. */
+export const fabIcon = style({
+	width: iconSize.xl,
+	height: iconSize.xl,
+	color: '#fff',
 });

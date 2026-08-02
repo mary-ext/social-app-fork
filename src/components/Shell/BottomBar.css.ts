@@ -69,3 +69,15 @@ export const navIcon = style({
 	height: 24,
 	color: colors.contrast_1000,
 });
+
+export const logo = style({
+	width: 24,
+	height: 'auto',
+	color: colors.primary_500,
+});
+
+export const logotype = style({
+	width: 72,
+	height: 'auto',
+	color: colors.text,
+});

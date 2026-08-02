@@ -1,10 +1,10 @@
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { Logo } from '#/components/icons/Logo';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 
+import Logo from '#/icons/original/Logo.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './NavSignInCard.css';
@@ -14,7 +14,7 @@ export function NavSignInCard(): React.ReactNode {
 	return (
 		<div className={styles.root}>
 			<Link label="Bluesky - Home" to={{ name: 'Home' }}>
-				<Logo width={32} />
+				<Logo className={styles.logo} />
 			</Link>
 			<div className={styles.titleWrap}>
 				<Text leading="none" size="_3xl" weight="bold">

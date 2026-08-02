@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
 export const buttonRow = style({
@@ -22,4 +23,10 @@ export const root = style({
 
 export const titleWrap = style({
 	paddingTop: space.lg,
+});
+
+export const logo = style({
+	width: 32,
+	height: 'auto',
+	color: colors.primary_500,
 });

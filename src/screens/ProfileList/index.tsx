@@ -21,14 +21,14 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { FAB } from '#/components/FAB';
-import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
+import * as fabCss from '#/components/FAB.css';
 import * as Hider from '#/components/moderation/Hider';
 import { Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
+import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
-import { colors } from '#/styles/colors';
 
 import { AboutSection } from './AboutSection';
 import { ErrorScreen } from './components/ErrorScreen';
@@ -172,7 +172,7 @@ function CuratedProfileList({
 			/>
 
 			<FAB
-				icon={<EditBigIcon fill={colors.white} size="xl" />}
+				icon={<EditBigIcon className={fabCss.fabIcon} />}
 				label={m['common.compose.action.new']()}
 				onClick={() => openComposer({})}
 			/>

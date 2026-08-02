@@ -140,3 +140,9 @@ export const checkIcon = style({
 	color: colors.primary_500,
 	height: 56,
 });
+
+export const logo = style({
+	width: 32,
+	height: 'auto',
+	color: '#fff',
+});
