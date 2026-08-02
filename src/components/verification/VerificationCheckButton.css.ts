@@ -1,5 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
+
 export const button = style({
 	display: 'inline-flex',
 	transition: 'transform 0.1s',
@@ -9,3 +11,7 @@ export const button = style({
 	cursor: 'pointer',
 	':hover': { transform: 'scale(1.1)' },
 });
+
+export const check = style({ color: colors.primary_500 });
+
+export const checkMuted = style({ color: colors.contrast_100 });

@@ -1,3 +1,6 @@
+import { style } from '@vanilla-extract/css';
+
+import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
@@ -18,3 +21,5 @@ export const container = recipe(
 	},
 	{ debugId: 'container' },
 );
+
+export const verificationCheck = style({ color: colors.primary_500 });

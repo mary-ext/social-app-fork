@@ -64,7 +64,11 @@ export function ProfileBadges({
 			) : (
 				<>
 					{verification.showBadge && (
-						<VerificationCheck verifier={verification.role === 'verifier'} width={verificationIconWidth} />
+						<VerificationCheck
+							className={css.verificationCheck}
+							style={{ width: verificationIconWidth, height: verificationIconWidth }}
+							verifier={verification.role === 'verifier'}
+						/>
 					)}
 					<BotBadge profile={shadowed} width={botIconWidth} />
 				</>

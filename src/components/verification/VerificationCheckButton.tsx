@@ -12,7 +12,6 @@ import { VerificationsDialog } from '#/components/verification/VerificationsDial
 import { VerifierDialog } from '#/components/verification/VerifierDialog';
 
 import { m } from '#/paraglide/messages';
-import { colors } from '#/styles/colors';
 
 type FullVerificationState = {
 	profile: {
@@ -136,11 +135,7 @@ function Badge({
 
 	const isVerifier = state.profile.role === 'verifier';
 	const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer;
-	const fill = verifiedByHidden
-		? colors.contrast_100
-		: state.profile.isVerified
-			? colors.primary_500
-			: colors.contrast_100;
+	const isMuted = verifiedByHidden || !state.profile.isVerified;
 	const handle = isVerifier ? verifierHandle : verificationsHandle;
 
 	return (
@@ -154,7 +149,11 @@ function Badge({
 				className={css.button}
 				handle={handle}
 			>
-				<VerificationCheck fill={fill} verifier={isVerifier} width={width} />
+				<VerificationCheck
+					className={isMuted ? css.checkMuted : css.check}
+					style={{ width, height: width }}
+					verifier={isVerifier}
+				/>
 			</Dialog.Trigger>
 			<VerificationsDialog handle={verificationsHandle} profile={profile} />
 			<VerifierDialog handle={verifierHandle} profile={profile} />
