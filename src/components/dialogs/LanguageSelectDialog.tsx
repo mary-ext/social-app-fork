@@ -177,7 +177,12 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 				renderItem={(entry, index) => {
 					if (entry.type === 'header') {
 						return (
-							<Text className={styles.sectionHeader} color="textContrastLow" size="md_sub" weight="semiBold">
+							<Text
+								className={styles.sectionHeader({ topPadded: index !== 0 })}
+								color="textContrastLow"
+								size="md_sub"
+								weight="semiBold"
+							>
 								{entry.label}
 							</Text>
 						);

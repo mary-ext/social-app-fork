@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { recipe } from '#/styles/recipe';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
@@ -54,12 +55,26 @@ export const list = style({
 	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 });
 
-export const sectionHeader = style({
-	display: 'block',
-	paddingTop: space.xl,
-	paddingBottom: space.sm,
-	paddingInline: DIALOG_PADDING,
-});
+export const sectionHeader = recipe(
+	{
+		base: {
+			display: 'block',
+			paddingBottom: space.xs,
+			paddingInline: DIALOG_PADDING,
+		},
+		variants: {
+			topPadded: {
+				true: {
+					paddingTop: space._2xl,
+				},
+				false: {
+					paddingTop: ROW_BLOCK_PADDING,
+				},
+			},
+		},
+	},
+	{ debugId: 'sectionHeader' },
+);
 
 export const item = style({
 	boxSizing: 'border-box',
