@@ -56,7 +56,6 @@ export default defineConfig(({ envMode }) => {
 			host: serverHost,
 			historyApiFallback: true,
 			port: serverPort,
-			// proxy link-resolution XRPC calls to the local worker.
 			proxy: {
 				'/xrpc': 'http://127.0.0.1:8787',
 			},
@@ -64,6 +63,7 @@ export default defineConfig(({ envMode }) => {
 		output: {
 			cleanDistPath: true,
 			distPath: { root: 'web-build' },
+			filenameHash: 'contenthash:6',
 			sourceMap: { js: 'source-map' },
 			minify: {
 				jsOptions: {
@@ -81,6 +81,9 @@ export default defineConfig(({ envMode }) => {
 		},
 		tools: {
 			rspack(config) {
+				config.output ??= {};
+				config.output.hashDigest = 'base64url';
+
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
 
@@ -88,7 +91,7 @@ export default defineConfig(({ envMode }) => {
 					new SvgSpritesPlugin({
 						target: 'react19-jsx',
 						splitting: 'chunk',
-						spriteFilename: 'static/svg/svg-sprite.[contenthash].svg',
+						spriteFilename: 'static/svg/sprites.[contenthash:6].svg',
 					}),
 				);
 
