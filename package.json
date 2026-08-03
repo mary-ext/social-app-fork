@@ -18,8 +18,8 @@
 		"nuke": "rm -rf ./node_modules ./web-build"
 	},
 	"dependencies": {
-		"@atcute/atproto": "^4.0.3",
-		"@atcute/bluesky": "^4.0.16",
+		"@atcute/atproto": "^4.0.4",
+		"@atcute/bluesky": "^4.0.17",
 		"@atcute/bluesky-moderation": "^4.2.2",
 		"@atcute/bluesky-richtext-builder": "^4.0.1",
 		"@atcute/bluesky-richtext-parser": "^2.1.2",
@@ -33,9 +33,9 @@
 		"@atcute/lexicons": "^2.0.3",
 		"@atcute/microcosm": "^2.0.2",
 		"@atcute/multibase": "^1.2.5",
-		"@atcute/oauth-browser-client": "^4.0.1",
+		"@atcute/oauth-browser-client": "^5.0.0",
 		"@atcute/oauth-cab": "^0.1.1",
-		"@atcute/ozone": "^4.0.7",
+		"@atcute/ozone": "^4.0.8",
 		"@atcute/tid": "^1.1.4",
 		"@atcute/util-text": "^1.3.4",
 		"@atcute/xrpc-server": "^2.0.2",
@@ -66,28 +66,28 @@
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
 		"react-image-crop": "^11.1.2",
-		"tldts": "^7.4.9",
+		"tldts": "^7.4.10",
 		"valibot": "^1.4.2"
 	},
 	"devDependencies": {
-		"@inlang/paraglide-js": "2.22.0",
+		"@inlang/paraglide-js": "2.23.1",
 		"@oomfware/rspack-plugin-svg-sprites": "^0.1.4",
-		"@rsbuild/core": "^2.1.8",
+		"@rsbuild/core": "^2.1.9",
 		"@rsbuild/plugin-react": "^2.1.0",
 		"@rsdoctor/rspack-plugin": "^1.6.1",
 		"@types/node": "^26.1.2",
-		"@types/react": "^19.2.17",
-		"@types/react-dom": "^19.2.3",
+		"@types/react": "^19.2.18",
+		"@types/react-dom": "^19.2.4",
 		"@typescript/native": "npm:typescript@^7.0.2",
 		"@vanilla-extract/private": "^1.0.9",
 		"@vanilla-extract/webpack-plugin": "^2.3.27",
 		"eslint-plugin-bsky-internal": "link:eslint",
-		"oxfmt": "^0.60.0",
+		"oxfmt": "^0.61.0",
 		"oxlint": "^1.76.0",
 		"oxlint-tsgolint": "^7.0.2001",
 		"type-fest": "^5.8.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"wrangler": "^4.114.0"
+		"wrangler": "^4.118.0"
 	},
 	"browserslist": {
 		"production": [
