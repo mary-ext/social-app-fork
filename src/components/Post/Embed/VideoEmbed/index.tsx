@@ -16,7 +16,7 @@ import {
 	VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb';
 
-import { IS_WEB_FIREFOX } from '#/env';
+import { IS_FIREFOX } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import { useActiveVideo } from './active-video';
@@ -46,7 +46,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 		if (!ref.current) {
 			return;
 		}
-		if (isFullscreen && !IS_WEB_FIREFOX) {
+		if (isFullscreen && !IS_FIREFOX) {
 			return;
 		}
 		const observer = new IntersectionObserver(
@@ -146,7 +146,7 @@ function ViewportObserver({
 		if (!ref.current) {
 			return;
 		}
-		if (isFullscreen && !IS_WEB_FIREFOX) {
+		if (isFullscreen && !IS_FIREFOX) {
 			return;
 		}
 		const observer = new IntersectionObserver(

@@ -2,7 +2,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
-import { IS_WEB_SAFARI } from '#/env';
+import { IS_SAFARI } from '#/env';
 
 export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const [playing, setPlaying] = useState(false);
@@ -51,7 +51,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 			}
 			setCurrentTime(round(ref.current.currentTime) || 0);
 			// Safari may emit `stalled` while advancing segments; clear buffering on progress.
-			if (IS_WEB_SAFARI) {
+			if (IS_SAFARI) {
 				if (bufferingTimeout) {
 					clearTimeout(bufferingTimeout);
 				}

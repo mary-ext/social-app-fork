@@ -18,7 +18,7 @@ import { type BaseUserAvatarProps, UserAvatar } from '#/components/UserAvatar';
 import * as styles from '#/components/UserAvatar.css';
 import { Link } from '#/components/web/Link';
 
-import { IS_WEB_TOUCH_DEVICE } from '#/env';
+import { IS_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
 
 type PreviewableUserAvatarProps = BaseUserAvatarProps & {
@@ -61,7 +61,7 @@ export function PreviewableUserAvatar({
 	);
 
 	// live status on touch opens a dialog on tap (there's no hover); elsewhere the avatar links to the profile.
-	const isTouchLive = status.isActive && IS_WEB_TOUCH_DEVICE;
+	const isTouchLive = status.isActive && IS_TOUCH_DEVICE;
 
 	const trigger = disableNavigation ? (
 		avatarEl

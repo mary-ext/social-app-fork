@@ -7,7 +7,7 @@ const BSKY_TRUSTED_HOSTS = new Set([
 	'blueskyweb.zendesk.com',
 	'bsky.app',
 	'bsky.social',
-	...(import.meta.env.DEV ? ['localhost:19006', 'localhost:8100'] : []),
+	...(import.meta.env.DEV ? ['localhost:19006'] : []),
 ]);
 
 export function makeRecordUri(didOrName: ActorIdentifier, collection: Nsid, rkey: RecordKey): ResourceUri {

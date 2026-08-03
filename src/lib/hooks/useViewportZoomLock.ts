@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { IS_WEB_MOBILE_IOS } from '#/env';
+import { IS_MOBILE_IOS } from '#/env';
 
 const ZOOM_LOCKED_VIEWPORT =
 	'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover';
@@ -11,7 +11,7 @@ const ZOOM_LOCKED_VIEWPORT =
  */
 export function useViewportZoomLock({ enabled } = { enabled: true }) {
 	useEffect(() => {
-		if (!IS_WEB_MOBILE_IOS) {
+		if (!IS_MOBILE_IOS) {
 			return;
 		}
 		if (!enabled) {

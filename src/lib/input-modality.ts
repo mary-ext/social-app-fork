@@ -3,14 +3,14 @@ import { useSyncExternalStore } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { MODIFIERS } from '@mary/keybinds';
 
-import { IS_WEB_TOUCH_DEVICE } from '#/env';
+import { IS_TOUCH_DEVICE } from '#/env';
 
 /** the kind of input the user is currently driving the ui with */
 export type InputModality = 'keyboard' | 'mouse' | 'pen' | 'touch';
 
 const emitter = new SimpleEventEmitter<[]>();
 
-let modality: InputModality = IS_WEB_TOUCH_DEVICE ? 'touch' : 'mouse';
+let modality: InputModality = IS_TOUCH_DEVICE ? 'touch' : 'mouse';
 
 const setModality = (next: InputModality) => {
 	if (next !== modality) {

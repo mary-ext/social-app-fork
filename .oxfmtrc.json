@@ -19,19 +19,15 @@
 			"cloudflare",
 
 			"react",
-			"expo",
 			"atcute",
 			"oomfware",
 			"external",
 
 			"lib",
 			"state",
-			"logger",
-			"platform",
 			"locale",
 			"features",
 			"screens",
-			"alf",
 			"components",
 			["internal", "subpath"],
 			["parent", "sibling", "index"],
@@ -44,18 +40,7 @@
 			},
 			{
 				"groupName": "react",
-				"elementNamePattern": [
-					"react",
-					"react/**",
-					"react-native",
-					"react-native/**",
-					"react-native-*",
-					"react-native-*/**"
-				]
-			},
-			{
-				"groupName": "expo",
-				"elementNamePattern": ["expo", "expo/**", "expo-*", "expo-*/**"]
+				"elementNamePattern": ["react", "react/**"]
 			},
 			{
 				"groupName": "atcute",
@@ -74,14 +59,6 @@
 				"elementNamePattern": ["#/state", "#/state/**"]
 			},
 			{
-				"groupName": "logger",
-				"elementNamePattern": ["#/logger", "#/logger/**"]
-			},
-			{
-				"groupName": "platform",
-				"elementNamePattern": ["#/platform", "#/platform/**"]
-			},
-			{
 				"groupName": "locale",
 				"elementNamePattern": ["#/locale", "#/locale/**"]
 			},
@@ -94,16 +71,12 @@
 				"elementNamePattern": ["#/screens", "#/screens/**"]
 			},
 			{
-				"groupName": "alf",
-				"elementNamePattern": ["#/alf", "#/alf/**"]
-			},
-			{
 				"groupName": "components",
 				"elementNamePattern": ["#/components", "#/components/**"]
 			}
 		]
 	},
-	"ignorePatterns": ["node_modules", "pnpm-lock.yaml", "src/lib/router", "src/locale/locales"],
+	"ignorePatterns": ["node_modules", "pnpm-lock.yaml", "src/paraglide"],
 	"overrides": [
 		{
 			"files": ["tsconfig*.json"],

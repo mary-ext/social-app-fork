@@ -54,7 +54,7 @@ const applyTheme = () => {
 	meta?.setAttribute('content', bgColor);
 
 	try {
-		// read back by the boot script in `web/index.html` to paint the theme before we load
+		// read back by the boot script in `index.html` to paint the theme before we load
 		localStorage.setItem('ALF_THEME', theme);
 	} catch {}
 };

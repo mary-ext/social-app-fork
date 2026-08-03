@@ -1,6 +1,6 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 
-import { IS_WEB_FIREFOX, IS_WEB_SAFARI } from '#/env';
+import { IS_FIREFOX, IS_SAFARI } from '#/env';
 
 function fullscreenSubscribe(onChange: () => void) {
 	document.addEventListener('fullscreenchange', onChange);
@@ -38,7 +38,7 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 
 		// Chrome has an issue where it doesn't scroll back to the top after exiting fullscreen
 		// Let's play it safe and do it if not FF or Safari, since anything else will probably be chromium
-		if (prevIsFullscreen && !IS_WEB_FIREFOX && !IS_WEB_SAFARI) {
+		if (prevIsFullscreen && !IS_FIREFOX && !IS_SAFARI) {
 			setTimeout(() => {
 				if (scrollYRef.current !== null) {
 					window.scrollTo(0, scrollYRef.current);

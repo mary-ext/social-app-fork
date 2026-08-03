@@ -4,7 +4,7 @@ import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
 import { tween } from '#/components/ImageEmbed/carousel/tween';
 import { getOffsetForIndex } from '#/components/ImageEmbed/carousel/utils';
 
-import { IS_WEB_SAFARI } from '#/env';
+import { IS_SAFARI } from '#/env';
 
 const DRAG_THRESHOLD = 3;
 const FLICK_DECAY = 0.85;
@@ -280,7 +280,7 @@ export function usePointerHandlers({
 		 * Listener must be non-passive so preventDefault is honored.
 		 */
 		const onWheel = (e: WheelEvent) => {
-			if (!IS_WEB_SAFARI) {
+			if (!IS_SAFARI) {
 				return;
 			}
 			// Only act on predominantly-horizontal scrolls. Vertical-dominant events are page scroll and

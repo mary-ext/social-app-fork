@@ -7,7 +7,7 @@ import { clamp } from '#/lib/numbers';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 
-import { IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { IS_FIREFOX, IS_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Scrubber.css';
@@ -85,7 +85,7 @@ export function Scrubber({
 
 	useEffect(() => {
 		// Firefox can click under a captured pointer after pointerup; disable clicks while seeking.
-		if (IS_WEB_FIREFOX && scrubberActive) {
+		if (IS_FIREFOX && scrubberActive) {
 			document.body.classList.add(styles.forceNoClicks);
 
 			return () => {
@@ -139,7 +139,7 @@ export function Scrubber({
 
 	return (
 		<div
-			className={clsx(styles.scrubber, IS_WEB_TOUCH_DEVICE && styles.scrubberTouch)}
+			className={clsx(styles.scrubber, IS_TOUCH_DEVICE && styles.scrubberTouch)}
 			onPointerEnter={onStartHover}
 			onPointerLeave={onEndHover}
 		>

@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
-import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { IS_SAFARI, IS_TOUCH_DEVICE } from '#/env';
 import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -49,7 +49,7 @@ export function VolumeControl({
 
 	return (
 		<div className={styles.root} onPointerEnter={onHover} onPointerLeave={onEndHover}>
-			{hovered && !IS_WEB_TOUCH_DEVICE && (
+			{hovered && !IS_TOUCH_DEVICE && (
 				<div className={styles.popup}>
 					<div className={styles.popupInner}>
 						<input
@@ -58,7 +58,7 @@ export function VolumeControl({
 							max={100}
 							value={sliderVolume}
 							aria-label={m['components.post.video.a11y.volume']()}
-							className={clsx(styles.slider, IS_WEB_SAFARI && styles.sliderSafari)}
+							className={clsx(styles.slider, IS_SAFARI && styles.sliderSafari)}
 							onChange={onVolumeChange}
 							// @ts-expect-error Firefox supports this nonstandard orientation attribute.
 							orient="vertical"

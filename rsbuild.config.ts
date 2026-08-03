@@ -42,7 +42,7 @@ export default defineConfig(({ envMode }) => {
 		},
 		html: {
 			favicon: path.resolve(root, 'assets/favicon.png'),
-			template: path.resolve(root, 'web/index.html'),
+			template: path.resolve(root, 'index.html'),
 			title: 'Bluesky',
 		},
 		resolve: {

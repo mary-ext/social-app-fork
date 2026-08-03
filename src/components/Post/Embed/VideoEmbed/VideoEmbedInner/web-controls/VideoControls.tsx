@@ -14,7 +14,7 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
-import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { IS_MOBILE_IOS, IS_TOUCH_DEVICE } from '#/env';
 import CCActiveIcon from '#/icons/central/ClosedCaptioning_round_filled_radius1_stroke2.svg';
 import CCInactiveIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
 import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_stroke2.svg';
@@ -364,7 +364,7 @@ export function Controls({
 				data-visible={showControls}
 				data-modality={isTouch ? 'touch' : undefined}
 			>
-				{(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
+				{(!volumeHovered || IS_TOUCH_DEVICE) && (
 					<Scrubber
 						duration={duration}
 						currentTime={currentTime}
@@ -410,7 +410,7 @@ export function Controls({
 						onEndHover={onVolumeEndHover}
 						drawFocus={drawFocus}
 					/>
-					{!IS_WEB_MOBILE_IOS && (
+					{!IS_MOBILE_IOS && (
 						<ControlButton
 							active={isFullscreen}
 							activeLabel={m['components.post.video.action.exitFullscreen']()}

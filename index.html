@@ -27,12 +27,9 @@
 					Arial,
 					sans-serif;
 				text-rendering: optimizeLegibility;
-				/* platform reset */
-				-webkit-overflow-scrolling: touch;
 				-webkit-text-size-adjust: 100%;
 				-webkit-font-smoothing: antialiased;
 				-moz-osx-font-smoothing: grayscale;
-				-ms-overflow-style: scrollbar;
 				font-synthesis-weight: none;
 			}
 
@@ -91,6 +88,33 @@
 				top: -50px;
 				width: 100px;
 			}
+
+			#noscript {
+				display: flex;
+				position: fixed;
+				inset: 0;
+				z-index: 9999;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				background-color: var(--background);
+				color: var(--text);
+				font-size: 18px;
+				line-height: 24px;
+				text-align: center;
+			}
+			#noscript button {
+				margin-top: 20px;
+				padding: 8px 20px;
+				border: none;
+				border-radius: 999px;
+				background-color: #006aff;
+				color: white;
+				font-family: inherit;
+				font-size: inherit;
+				font-weight: bold;
+				cursor: pointer;
+			}
 			/* keep scrollbar appearance from shifting the page */
 			body {
 				width: 100%;
@@ -107,38 +131,10 @@
 
 	<body>
 		<noscript>
-			<form
-				action=""
-				style="background-color: #fff; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999"
-			>
-				<div
-					style="
-						font-size: 18px;
-						font-family: Helvetica, sans-serif;
-						line-height: 24px;
-						margin: 10%;
-						width: 80%;
-					"
-				>
+			<form id="noscript" action="">
+				<div>
 					<p lang="en">Oh no! It looks like JavaScript is not enabled in your browser.</p>
-					<p lang="en" style="margin: 20px 0">
-						<button
-							type="submit"
-							style="
-								background-color: #4630eb;
-								border-radius: 100px;
-								border: none;
-								box-shadow: none;
-								color: #fff;
-								cursor: pointer;
-								font-weight: bold;
-								line-height: 20px;
-								padding: 6px 16px;
-							"
-						>
-							Reload
-						</button>
-					</p>
+					<button lang="en" type="submit">Reload</button>
 				</div>
 			</form>
 		</noscript>
