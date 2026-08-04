@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
-import type { Compiler } from '@rspack/core';
+import type { Rspack } from '@rsbuild/core';
 
 // precache every content-hashed asset so the whole app is available offline.
 const PRECACHE_FILE = /\.(?:css|gif|ico|jpe?g|js|png|svg|webp|woff2?)$/;
@@ -18,7 +18,7 @@ export class ServiceWorkerPrecachePlugin {
 		this.#templatePath = templatePath;
 	}
 
-	apply(compiler: Compiler) {
+	apply(compiler: Rspack.Compiler) {
 		const { Compilation, sources } = compiler.rspack;
 		compiler.hooks.thisCompilation.tap('ServiceWorkerPrecachePlugin', (compilation) => {
 			compilation.hooks.processAssets.tap(
