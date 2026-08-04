@@ -1,4 +1,4 @@
-import type { ComponentType, ReactElement, ReactNode, SVGProps } from 'react';
+import type { ComponentType, ReactElement, ReactNode, RefObject, SVGProps } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -32,18 +32,23 @@ export function Popup({
 	children,
 	label,
 	align = 'start',
+	side = 'bottom',
 	minWidth,
+	container,
 }: {
 	children: ReactNode;
 	/** Accessible name for the menu. */
 	label?: string;
 	align?: BaseMenu.Positioner.Props['align'];
+	side?: BaseMenu.Positioner.Props['side'];
 	/** Floor on the popup width, so a short item list still reads as a menu rather than a tooltip. */
 	minWidth?: number;
+	/** portal target, such as the fullscreen container. */
+	container?: RefObject<HTMLElement | null>;
 }) {
 	return (
-		<BaseMenu.Portal className={styles.portal}>
-			<BaseMenu.Positioner align={align} side="bottom" sideOffset={5} collisionPadding={5}>
+		<BaseMenu.Portal className={styles.portal} container={container}>
+			<BaseMenu.Positioner align={align} side={side} sideOffset={5} collisionPadding={5}>
 				<BaseMenu.Popup
 					aria-label={label}
 					className={styles.popup}

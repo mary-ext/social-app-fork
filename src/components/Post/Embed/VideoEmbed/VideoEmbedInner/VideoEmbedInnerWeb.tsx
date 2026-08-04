@@ -6,6 +6,8 @@ import { difference } from '@mary/array-fns';
 
 import type * as HlsTypes from 'hls.js';
 
+import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
+
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 
 import { m } from '#/paraglide/messages';
@@ -13,6 +15,7 @@ import { m } from '#/paraglide/messages';
 import { AltBadge } from '../GifPresentationControls';
 import * as BandwidthEstimate from './bandwidth-estimate';
 import * as styles from './VideoEmbedInnerWeb.css';
+import type { VideoQuality, VideoSubtitles } from './web-controls/SettingsMenu';
 import { Controls } from './web-controls/VideoControls';
 
 export function VideoEmbedInnerWeb({
@@ -31,7 +34,6 @@ export function VideoEmbedInnerWeb({
 	const containerRef = useRef<HTMLDivElement>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [focused, setFocused] = useState(false);
-	const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false);
 	const [hlsLoading, setHlsLoading] = useState(false);
 	const figId = useId();
 	const [isFullscreen] = useFullscreen();
@@ -42,9 +44,8 @@ export function VideoEmbedInnerWeb({
 		throw error;
 	}
 
-	const { hlsRef, loop, updateCuePositions } = useHLS({
+	const { hlsRef, loop, updateCuePositions, quality, subtitles } = useHLS({
 		playlist: embed.playlist,
-		setHasSubtitleTrack,
 		setError,
 		videoRef,
 		setHlsLoading,
@@ -91,7 +92,8 @@ export function VideoEmbedInnerWeb({
 					hlsLoading={hlsLoading}
 					onScreen={onScreen}
 					fullscreenRef={containerRef}
-					hasSubtitleTrack={hasSubtitleTrack}
+					quality={quality}
+					subtitles={subtitles}
 					isGif={isGif}
 					altText={embed.alt}
 					updateCuePositions={updateCuePositions}
@@ -147,13 +149,11 @@ void promiseForHls.then((Hls) => {
 
 function useHLS({
 	playlist,
-	setHasSubtitleTrack,
 	setError,
 	videoRef,
 	setHlsLoading,
 }: {
 	playlist: string;
-	setHasSubtitleTrack: (v: boolean) => void;
 	setError: (v: Error | null) => void;
 	videoRef: React.RefObject<HTMLVideoElement | null>;
 	setHlsLoading: (v: boolean) => void;
@@ -215,6 +215,31 @@ function useHLS({
 		[videoRef],
 	);
 	const [lowQualityFragments, setLowQualityFragments] = useState<HlsTypes.Fragment[]>([]);
+	const [levels, setLevels] = useState<HlsTypes.Level[]>([]);
+	const [activeLevel, setActiveLevel] = useState(-1);
+	const [selectedLevel, setSelectedLevel] = useState(-1);
+	const [subtitleTracks, setSubtitleTracks] = useState<HlsTypes.MediaPlaylist[]>([]);
+	const [preferredSubtitleTrack, setPreferredSubtitleTrack] = useState(0);
+	const subtitlesEnabled = useSubtitlesEnabled();
+
+	const selectLevel = (level: number) => {
+		setSelectedLevel(level);
+		const hls = hlsRef.current;
+		if (hls) {
+			// nextLevel avoids flushing the buffer when changing quality
+			hls.nextLevel = level;
+		}
+	};
+
+	// caption visibility persists; track choice is per player
+	const selectSubtitleTrack = (track: number) => {
+		if (track === -1) {
+			setSubtitlesEnabled(false);
+			return;
+		}
+		setPreferredSubtitleTrack(track);
+		setSubtitlesEnabled(true);
+	};
 
 	// purge low quality segments from buffer on next frag change
 	const handleFragChange = useEffectEvent(
@@ -227,8 +252,8 @@ function useHLS({
 			}
 			const hls = hlsRef.current;
 
-			// if the current quality level goes above 0, flush the low quality segments
-			if (hls.nextAutoLevel > 0) {
+			// use the level that will play; nextAutoLevel can be stale when quality is pinned
+			if (nextPlayingLevel(hls) > 0) {
 				const flushed: HlsTypes.Fragment[] = [];
 
 				for (const lowQualFrag of lowQualityFragments) {
@@ -285,10 +310,23 @@ function useHLS({
 			BandwidthEstimate.set(hls.bandwidthEstimate);
 		});
 
+		// refresh the rendition list after manifest updates
+		const updateLevels = (
+			_event: HlsTypes.Events.MANIFEST_PARSED | HlsTypes.Events.LEVELS_UPDATED,
+			data: { levels: HlsTypes.Level[] },
+		) => {
+			setLevels(data.levels);
+		};
+
+		hls.on(Hls.Events.MANIFEST_PARSED, updateLevels);
+		hls.on(Hls.Events.LEVELS_UPDATED, updateLevels);
+
+		hls.on(Hls.Events.LEVEL_SWITCHED, (_event, data) => {
+			setActiveLevel(data.level);
+		});
+
 		hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
-			if (data.subtitleTracks.length > 0) {
-				setHasSubtitleTrack(true);
-			}
+			setSubtitleTracks(data.subtitleTracks);
 		});
 
 		hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
@@ -319,8 +357,14 @@ function useHLS({
 			hlsRef.current = undefined;
 			hls.detachMedia();
 			hls.destroy();
+			// clear data from the previous playlist
+			setLevels([]);
+			setActiveLevel(-1);
+			setSelectedLevel(-1);
+			setSubtitleTracks([]);
+			setPreferredSubtitleTrack(0);
 		};
-	}, [Hls, playlist, setError, setHasSubtitleTrack, updateCuePositions, videoRef]);
+	}, [Hls, playlist, setError, updateCuePositions, videoRef]);
 
 	const flushOnLoop = useEffectEvent(() => {
 		if (!Hls) {
@@ -333,7 +377,11 @@ function useHLS({
 		// `handleFragChange` will catch most stale frags, but there's a corner case -
 		// if there's only one segment in the video, it won't get flushed because it avoids
 		// flushing the currently active segment. Therefore, we have to catch it when we loop
-		if (hls.nextAutoLevel > 0 && lowQualityFragments.length === 1 && lowQualityFragments[0]!.start === 0) {
+		if (
+			nextPlayingLevel(hls) > 0 &&
+			lowQualityFragments.length === 1 &&
+			lowQualityFragments[0]!.start === 0
+		) {
 			const lowQualFrag = lowQualityFragments[0]!;
 
 			hls.trigger(Hls.Events.BUFFER_FLUSHING, {
@@ -382,5 +430,15 @@ function useHLS({
 		hlsRef,
 		loop: !hasLowQualityFragmentAtStart,
 		updateCuePositions,
+		quality: { levels, activeLevel, selectedLevel, selectLevel } satisfies VideoQuality,
+		subtitles: {
+			tracks: subtitleTracks,
+			selectedTrack: subtitlesEnabled && subtitleTracks.length > 0 ? preferredSubtitleTrack : -1,
+			selectTrack: selectSubtitleTrack,
+		} satisfies VideoSubtitles,
 	};
+}
+
+function nextPlayingLevel(hls: HlsTypes.default): number {
+	return hls.autoLevelEnabled ? hls.nextAutoLevel : hls.manualLevel;
 }

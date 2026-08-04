@@ -6,7 +6,6 @@ import { useInputModality } from '#/lib/input-modality';
 import { clamp } from '#/lib/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
-import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
@@ -15,8 +14,6 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 import { IS_MOBILE_IOS, IS_TOUCH_DEVICE } from '#/env';
-import CCActiveIcon from '#/icons/central/ClosedCaptioning_round_filled_radius1_stroke2.svg';
-import CCInactiveIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
 import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_stroke2.svg';
 import ArrowsInIcon from '#/icons/central/Minimize45_round_outlined_radius1_stroke2.svg';
 import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
@@ -27,6 +24,7 @@ import { GifPresentationControls } from '../../GifPresentationControls';
 import { TimeIndicator } from '../TimeIndicator';
 import { ControlButton } from './ControlButton';
 import { Scrubber } from './Scrubber';
+import { SettingsMenu, type VideoQuality, type VideoSubtitles } from './SettingsMenu';
 import { formatTime, useVideoElement } from './utils';
 import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
@@ -43,7 +41,8 @@ export function Controls({
 	onScreen,
 	fullscreenRef,
 	hlsLoading,
-	hasSubtitleTrack,
+	quality,
+	subtitles,
 	isGif,
 	altText,
 	updateCuePositions,
@@ -57,7 +56,8 @@ export function Controls({
 	onScreen: boolean;
 	fullscreenRef: React.RefObject<HTMLDivElement | null>;
 	hlsLoading: boolean;
-	hasSubtitleTrack: boolean;
+	quality: VideoQuality;
+	subtitles: VideoSubtitles;
 	isGif: boolean;
 	altText?: string;
 	updateCuePositions: (controlsVisible?: boolean) => void;
@@ -75,9 +75,9 @@ export function Controls({
 		error,
 		canPlay,
 	} = useVideoElement(videoRef);
-	const subtitlesEnabled = useSubtitlesEnabled();
 	const isTouch = useInputModality() === 'touch';
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
+	const [settingsOpen, setSettingsOpen] = useState(false);
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
@@ -153,12 +153,9 @@ export function Controls({
 		if (!hlsRef.current) {
 			return;
 		}
-		if (hasSubtitleTrack && subtitlesEnabled && canPlay) {
-			hlsRef.current.subtitleTrack = 0;
-		} else {
-			hlsRef.current.subtitleTrack = -1;
-		}
-	}, [hasSubtitleTrack, subtitlesEnabled, hlsRef, canPlay]);
+		// apply captions after the media is ready
+		hlsRef.current.subtitleTrack = canPlay ? subtitles.selectedTrack : -1;
+	}, [subtitles.selectedTrack, hlsRef, canPlay]);
 
 	// clicking on any button should focus the player, if it's not already focused
 	const drawFocus = useCallback(() => {
@@ -191,9 +188,11 @@ export function Controls({
 		togglePlayPause();
 	};
 
-	const onPressSubtitles = () => {
-		drawFocus();
-		setSubtitlesEnabled(!subtitlesEnabled);
+	const onSettingsOpenChange = (open: boolean) => {
+		setSettingsOpen(open);
+		if (open) {
+			drawFocus();
+		}
 	};
 
 	const onPressFullscreen = () => {
@@ -297,12 +296,15 @@ export function Controls({
 		onEndHover();
 	};
 
+	// keep controls visible while the menu is open
 	// a paused video keeps the chrome up for the mouse, so that play is one click away. touch reaches
 	// play through the chrome it just tapped open, so only an unstarted video pins it there — pinning
 	// it on pause would make the next tap a no-op
-	const showControls = isTouch
-		? touchChromeVisible || (autoplayDisabled && !playing)
-		: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered);
+	const showControls =
+		settingsOpen ||
+		(isTouch
+			? touchChromeVisible || (autoplayDisabled && !playing)
+			: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered));
 
 	// adjust subtitle cue positioning to avoid occlusion by controls
 	// uses percentage-based positioning (snapToLines=false) so wrapped
@@ -392,16 +394,6 @@ export function Controls({
 							{formatTime(currentTime)} / {formatTime(duration)}
 						</Text>
 					)}
-					{hasSubtitleTrack && (
-						<ControlButton
-							active={subtitlesEnabled}
-							activeLabel={m['components.post.video.captions.disable']()}
-							inactiveLabel={m['components.post.video.captions.enable']()}
-							activeIcon={CCActiveIcon}
-							inactiveIcon={CCInactiveIcon}
-							onPress={onPressSubtitles}
-						/>
-					)}
 					<VolumeControl
 						muted={muted}
 						changeMuted={changeMuted}
@@ -409,6 +401,12 @@ export function Controls({
 						onHover={onVolumeHover}
 						onEndHover={onVolumeEndHover}
 						drawFocus={drawFocus}
+					/>
+					<SettingsMenu
+						quality={quality}
+						subtitles={subtitles}
+						onOpenChange={onSettingsOpenChange}
+						fullscreenContainer={isFullscreen ? fullscreenRef : undefined}
 					/>
 					{!IS_MOBILE_IOS && (
 						<ControlButton
