@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { borderRadius, iconSize, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize } from '#/styles/tokens.css';
 
 export const button = style({
 	appearance: 'none',
@@ -12,7 +12,8 @@ export const button = style({
 	border: 0,
 	borderRadius: borderRadius.full,
 	background: 'transparent',
-	padding: space.xs,
+	height: 32,
+	width: 32,
 	cursor: 'pointer',
 	selectors: {
 		'&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
@@ -20,7 +21,7 @@ export const button = style({
 });
 
 export const icon = style({
-	width: iconSize.lg,
-	height: iconSize.lg,
+	width: iconSize.md,
+	height: iconSize.md,
 	color: '#fff',
 });

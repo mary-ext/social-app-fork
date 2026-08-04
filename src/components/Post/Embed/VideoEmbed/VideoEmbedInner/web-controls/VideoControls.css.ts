@@ -45,7 +45,6 @@ export const controlsRow = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
-	gap: space.sm,
 	alignItems: 'center',
 	paddingBottom: space.sm,
 	paddingInline: space.xs,
