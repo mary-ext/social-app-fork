@@ -47,6 +47,7 @@ const STALL_CHECK_MS = 2000;
 const STALL_MARGIN = 0.5;
 // avoid restarting a slow request that is still delivering data.
 const STALL_SILENCE_MS = 6000;
+const OPEN_TIMEOUT_MS = 15000;
 
 // #endregion
 
@@ -130,10 +131,19 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	let recoveredAt = 0;
 	let attempted: { start: number; end: number } | undefined;
 	let lastDelivery = performance.now();
+	const attachedAt = performance.now();
 	const queue: Operation[] = [];
 
+	let opened = false;
 	const openPromise = new Promise<void>((resolve) => {
-		mediaSource.addEventListener('sourceopen', () => resolve(), { once: true, signal });
+		mediaSource.addEventListener(
+			'sourceopen',
+			() => {
+				opened = true;
+				resolve();
+			},
+			{ once: true, signal },
+		);
 	});
 
 	const applyBufferAhead = () => {
@@ -325,6 +335,16 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	};
 
 	const onWaiting = () => {
+		if (!opened) {
+			if (!video.paused && performance.now() - attachedAt > OPEN_TIMEOUT_MS) {
+				fail({
+					code: 'media',
+					message: `MediaSource stayed closed for ${OPEN_TIMEOUT_MS / 1000}s`,
+					fatal: true,
+				});
+			}
+			return;
+		}
 		const time = video.currentTime;
 		if (bufferedAhead(time) > STALL_MARGIN || video.duration - time < STALL_MARGIN) {
 			return;

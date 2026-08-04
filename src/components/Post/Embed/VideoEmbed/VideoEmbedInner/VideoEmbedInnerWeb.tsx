@@ -59,7 +59,6 @@ export function VideoEmbedInnerWeb({
 		<div className={styles.root} aria-label={m['components.post.video.a11y.player']()}>
 			<div ref={containerRef} style={{ height: '100%', width: '100%' }}>
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
-					{/* `preload="none"` prevents MediaSource from opening before playback. */}
 					<video
 						ref={videoRef}
 						poster={embed.thumbnail}
