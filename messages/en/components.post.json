@@ -83,8 +83,6 @@
 	"components.post.video.error.load": "An error occurred while loading the video. Please try again.",
 	"components.post.video.error.notFound": "Video not found.",
 	"components.post.video.error.unsupportedCodec": "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).",
-	"components.post.video.quality.auto": "Auto",
-	"components.post.video.quality.autoActive": "Auto ({quality})",
 	"components.post.video.quality.label": "Quality",
 	"components.post.video.settings.label": "Video settings"
 }

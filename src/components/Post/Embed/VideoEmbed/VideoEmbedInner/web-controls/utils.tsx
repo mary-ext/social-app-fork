@@ -11,7 +11,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const [duration, setDuration] = useState(0);
 	const [buffering, setBuffering] = useState(false);
 	const [error, setError] = useState(false);
-	const [canPlay, setCanPlay] = useState(false);
 	const playWhenReadyRef = useRef(false);
 
 	useEffect(() => {
@@ -90,7 +89,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 				clearTimeout(bufferingTimeout);
 			}
 			setBuffering(false);
-			setCanPlay(true);
 
 			if (!ref.current) {
 				return;
@@ -258,7 +256,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		changeMuted,
 		buffering,
 		error,
-		canPlay,
 	};
 }
 

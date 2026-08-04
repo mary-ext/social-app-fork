@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useEffectEvent, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
-import { difference } from '@mary/array-fns';
-
-import type * as HlsTypes from 'hls.js';
+import { attachHlsPlayer, isHlsPlayerSupported, type PlayerHandle } from '#/lib/media/hls/attach';
+import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
+import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
 
 import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
 
@@ -13,7 +13,6 @@ import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { m } from '#/paraglide/messages';
 
 import { AltBadge } from '../GifPresentationControls';
-import * as BandwidthEstimate from './bandwidth-estimate';
 import * as styles from './VideoEmbedInnerWeb.css';
 import type { VideoQuality, VideoSubtitles } from './web-controls/SettingsMenu';
 import { Controls } from './web-controls/VideoControls';
@@ -34,7 +33,6 @@ export function VideoEmbedInnerWeb({
 	const containerRef = useRef<HTMLDivElement>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [focused, setFocused] = useState(false);
-	const [hlsLoading, setHlsLoading] = useState(false);
 	const figId = useId();
 	const [isFullscreen] = useFullscreen();
 	const isGif = embed.presentation === 'gif';
@@ -44,11 +42,11 @@ export function VideoEmbedInnerWeb({
 		throw error;
 	}
 
-	const { hlsRef, loop, updateCuePositions, quality, subtitles } = useHLS({
+	const { playerLoading, quality, subtitles } = useHlsPlayer({
 		playlist: embed.playlist,
 		setError,
 		videoRef,
-		setHlsLoading,
+		focused,
 	});
 
 	useEffect(() => {
@@ -61,19 +59,19 @@ export function VideoEmbedInnerWeb({
 		<div className={styles.root} aria-label={m['components.post.video.a11y.player']()}>
 			<div ref={containerRef} style={{ height: '100%', width: '100%' }}>
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
+					{/* `preload="none"` prevents MediaSource from opening before playback. */}
 					<video
 						ref={videoRef}
 						poster={embed.thumbnail}
 						style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 						playsInline
-						preload="none"
 						muted={isGif || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
 						onTimeUpdate={(e) => {
 							// oxlint-disable-next-line react/react-compiler -- `lastKnownTime` is a ref prop; writing `.current` is intended
 							lastKnownTime.current = e.currentTarget.currentTime;
 						}}
-						loop={loop}
+						loop
 					/>
 					{embed.alt && (
 						<figcaption id={figId} className={styles.srOnly}>
@@ -84,19 +82,17 @@ export function VideoEmbedInnerWeb({
 				{!isFullscreen && !isGif && embed.alt && <AltBadge text={embed.alt} position="top-right" />}
 				<Controls
 					videoRef={videoRef}
-					hlsRef={hlsRef}
 					active={active}
 					setActive={setActive}
 					focused={focused}
 					setFocused={setFocused}
-					hlsLoading={hlsLoading}
+					playerLoading={playerLoading}
 					onScreen={onScreen}
 					fullscreenRef={containerRef}
 					quality={quality}
 					subtitles={subtitles}
 					isGif={isGif}
 					altText={embed.alt}
-					updateCuePositions={updateCuePositions}
 				/>
 			</div>
 		</div>
@@ -109,126 +105,34 @@ export class HLSUnsupportedError extends Error {
 	}
 }
 
-// Bluesky serves HLS as MPEG-TS with H.264 + AAC. `Hls.isSupported()` is loose
-// and can pass on systems that are missing the codecs needed for Bluesky video.
-function canPlayBskyVideoCodecs(): boolean {
-	if (typeof self === 'undefined') {
-		return false;
-	}
-
-	const globalSelf = self as typeof self & {
-		ManagedMediaSource?: typeof MediaSource;
-		WebKitMediaSource?: typeof MediaSource;
-	};
-	const mediaSource = globalSelf.ManagedMediaSource || globalSelf.MediaSource || globalSelf.WebKitMediaSource;
-	if (!mediaSource || typeof mediaSource.isTypeSupported !== 'function') {
-		return false;
-	}
-
-	return (
-		mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
-		mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
-	);
-}
-
 export class VideoNotFoundError extends Error {
 	constructor() {
 		super('Video not found');
 	}
 }
 
-const promiseForHls = import(
-	// @ts-ignore
-	'hls.js/dist/hls.min'
-).then((mod: { default: typeof HlsTypes.default }) => mod.default);
-// once resolved, keep the constructor around so remounts can seed their state synchronously
-let cachedHls: typeof HlsTypes.default | undefined;
-void promiseForHls.then((Hls) => {
-	cachedHls = Hls;
-});
-
-function useHLS({
+function useHlsPlayer({
 	playlist,
 	setError,
 	videoRef,
-	setHlsLoading,
+	focused,
 }: {
 	playlist: string;
 	setError: (v: Error | null) => void;
 	videoRef: React.RefObject<HTMLVideoElement | null>;
-	setHlsLoading: (v: boolean) => void;
+	focused: boolean;
 }) {
-	// Hls is the hls.js constructor class loaded asynchronously. the state holds the class itself, used
-	// as `Hls.Events.*`, `new Hls(...)`, `Hls.isSupported()` — an uppercase name is correct for a
-	// constructor. react/hook-use-state enforces a lowercase-start value name and can't fit this shape.
-	// eslint-disable-next-line react/hook-use-state
-	const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(() => cachedHls);
-	useEffect(() => {
-		if (!Hls) {
-			setHlsLoading(true);
-			void promiseForHls.then((loadedHls) => {
-				setHls(() => loadedHls);
-				setHlsLoading(false);
-			});
-		}
-	}, [Hls, setHlsLoading]);
-
-	const hlsRef = useRef<HlsTypes.default | undefined>(undefined);
-	const controlsVisibleRef = useRef(false);
-
-	/**
-	 * repositions VTT subtitle cues using percentage-based line values so that wrapped cues grow upward and are
-	 * not occluded by visible video controls.
-	 */
-	const updateCuePositions = useCallback(
-		(controlsVisible?: boolean) => {
-			if (controlsVisible != null) {
-				// save controlsVisible state so that when it's called from SUBTITLE_FRAG_PROCESSED,
-				// the most recent value is used (as we won't know the control state there)
-				controlsVisibleRef.current = controlsVisible;
-			}
-			// magic numbers: cue position, % from top of video
-			const line = controlsVisibleRef.current ? 70 : 85;
-			const video = videoRef.current;
-			if (!video) {
-				return;
-			}
-			for (let i = 0; i < video.textTracks.length; i++) {
-				const track = video.textTracks[i]!;
-				if (track.cues) {
-					for (let j = 0; j < track.cues.length; j++) {
-						const cue = track.cues[j];
-						if (cue instanceof VTTCue) {
-							// mutating live DOM VTTCue objects read off the video element
-							cue.snapToLines = false;
-							cue.line = line;
-						}
-					}
-				}
-				// toggle track mode to force the browser to re-render active cues
-				if (track.mode === 'showing') {
-					track.mode = 'hidden';
-					track.mode = 'showing';
-				}
-			}
-		},
-		[videoRef],
-	);
-	const [lowQualityFragments, setLowQualityFragments] = useState<HlsTypes.Fragment[]>([]);
-	const [levels, setLevels] = useState<HlsTypes.Level[]>([]);
-	const [activeLevel, setActiveLevel] = useState(-1);
-	const [selectedLevel, setSelectedLevel] = useState(-1);
-	const [subtitleTracks, setSubtitleTracks] = useState<HlsTypes.MediaPlaylist[]>([]);
+	const playerRef = useRef<PlayerHandle | undefined>(undefined);
+	const [renditions, setRenditions] = useState<Rendition[]>([]);
+	const [selectedRendition, setSelectedRendition] = useState(-1);
+	const [subtitleTracks, setSubtitleTracks] = useState<SubtitleTrack[]>([]);
 	const [preferredSubtitleTrack, setPreferredSubtitleTrack] = useState(0);
+	const [retrying, setRetrying] = useState(false);
 	const subtitlesEnabled = useSubtitlesEnabled();
 
-	const selectLevel = (level: number) => {
-		setSelectedLevel(level);
-		const hls = hlsRef.current;
-		if (hls) {
-			// nextLevel avoids flushing the buffer when changing quality
-			hls.nextLevel = level;
-		}
+	const selectRendition = (index: number) => {
+		setSelectedRendition(index);
+		playerRef.current?.select(index);
 	};
 
 	// caption visibility persists; track choice is per player
@@ -241,204 +145,78 @@ function useHLS({
 		setSubtitlesEnabled(true);
 	};
 
-	// purge low quality segments from buffer on next frag change
-	const handleFragChange = useEffectEvent(
-		(_event: HlsTypes.Events.FRAG_CHANGED, { frag }: HlsTypes.FragChangedData) => {
-			if (!Hls) {
-				return;
-			}
-			if (!hlsRef.current) {
-				return;
-			}
-			const hls = hlsRef.current;
-
-			// use the level that will play; nextAutoLevel can be stale when quality is pinned
-			if (nextPlayingLevel(hls) > 0) {
-				const flushed: HlsTypes.Fragment[] = [];
-
-				for (const lowQualFrag of lowQualityFragments) {
-					// avoid if close to the current fragment
-					if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
-						continue;
-					}
-
-					hls.trigger(Hls.Events.BUFFER_FLUSHING, {
-						type: 'video',
-						startOffset: lowQualFrag.start,
-						endOffset: lowQualFrag.end,
-					});
-
-					flushed.push(lowQualFrag);
-				}
-
-				setLowQualityFragments((prev) => difference(prev, flushed));
-			}
-		},
-	);
-
 	useEffect(() => {
-		if (!videoRef.current) {
+		const video = videoRef.current;
+		if (!video) {
 			return;
 		}
-		if (!Hls) {
+		if (!isHlsPlayerSupported()) {
+			setError(new HLSUnsupportedError());
 			return;
 		}
-		if (!Hls.isSupported() || !canPlayBskyVideoCodecs()) {
-			throw new HLSUnsupportedError();
-		}
 
-		const latestEstimate = BandwidthEstimate.get();
-		const hls = new Hls({
-			maxMaxBufferLength: 10, // only load 10s ahead
-			// note: the amount buffered is affected by both maxBufferLength and maxBufferSize
-			// it will buffer until it is greater than *both* of those values
-			// so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
-			startLevel: latestEstimate === undefined ? -1 : Hls.DefaultConfig.startLevel,
-			// the '-1' value makes a test request to estimate bandwidth and quality level
-			// before showing the first fragment
-		});
-		hlsRef.current = hls;
+		const player = attachHlsPlayer(video, playlist);
+		playerRef.current = player;
 
-		if (latestEstimate !== undefined) {
-			hls.bandwidthEstimate = latestEstimate;
-		}
-
-		hls.attachMedia(videoRef.current);
-		hls.loadSource(playlist);
-
-		hls.on(Hls.Events.FRAG_LOADED, () => {
-			BandwidthEstimate.set(hls.bandwidthEstimate);
+		player.onRenditions((available, selected) => {
+			setRenditions(available);
+			setSelectedRendition(selected);
 		});
 
-		// refresh the rendition list after manifest updates
-		const updateLevels = (
-			_event: HlsTypes.Events.MANIFEST_PARSED | HlsTypes.Events.LEVELS_UPDATED,
-			data: { levels: HlsTypes.Level[] },
-		) => {
-			setLevels(data.levels);
-		};
+		player.onSubtitles(setSubtitleTracks);
 
-		hls.on(Hls.Events.MANIFEST_PARSED, updateLevels);
-		hls.on(Hls.Events.LEVELS_UPDATED, updateLevels);
-
-		hls.on(Hls.Events.LEVEL_SWITCHED, (_event, data) => {
-			setActiveLevel(data.level);
+		player.onStatus((status) => {
+			setRetrying(status === 'retrying');
 		});
 
-		hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
-			setSubtitleTracks(data.subtitleTracks);
+		player.onError((failure) => {
+			setError(toAppError(failure));
 		});
-
-		hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
-			updateCuePositions();
-		});
-
-		hls.on(Hls.Events.FRAG_BUFFERED, (_event, { frag }) => {
-			if (frag.level === 0) {
-				setLowQualityFragments((prev) => [...prev, frag]);
-			}
-		});
-
-		hls.on(Hls.Events.ERROR, (_event, data) => {
-			if (data.fatal) {
-				if (data.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR && data.response?.code === 404) {
-					setError(new VideoNotFoundError());
-				} else {
-					setError(data.error);
-				}
-			} else {
-				console.error(data.error);
-			}
-		});
-
-		hls.on(Hls.Events.FRAG_CHANGED, handleFragChange);
 
 		return () => {
-			hlsRef.current = undefined;
-			hls.detachMedia();
-			hls.destroy();
+			playerRef.current = undefined;
+			player.destroy();
 			// clear data from the previous playlist
-			setLevels([]);
-			setActiveLevel(-1);
-			setSelectedLevel(-1);
+			setRenditions([]);
+			setSelectedRendition(-1);
 			setSubtitleTracks([]);
 			setPreferredSubtitleTrack(0);
+			setRetrying(false);
 		};
-	}, [Hls, playlist, setError, updateCuePositions, videoRef]);
+	}, [playlist, setError, videoRef]);
 
-	const flushOnLoop = useEffectEvent(() => {
-		if (!Hls) {
-			return;
-		}
-		if (!hlsRef.current) {
-			return;
-		}
-		const hls = hlsRef.current;
-		// `handleFragChange` will catch most stale frags, but there's a corner case -
-		// if there's only one segment in the video, it won't get flushed because it avoids
-		// flushing the currently active segment. Therefore, we have to catch it when we loop
-		if (
-			nextPlayingLevel(hls) > 0 &&
-			lowQualityFragments.length === 1 &&
-			lowQualityFragments[0]!.start === 0
-		) {
-			const lowQualFrag = lowQualityFragments[0]!;
-
-			hls.trigger(Hls.Events.BUFFER_FLUSHING, {
-				type: 'video',
-				startOffset: lowQualFrag.start,
-				endOffset: lowQualFrag.end,
-			});
-			setLowQualityFragments([]);
-		}
-	});
-
-	// manually loop, so if we've flushed the first buffer it doesn't get confused
-	const hasLowQualityFragmentAtStart = lowQualityFragments.some((frag) => frag.start === 0);
 	useEffect(() => {
-		if (!videoRef.current) {
-			return;
-		}
+		playerRef.current?.setBufferAhead(focused ? BUFFER_AHEAD.focused : BUFFER_AHEAD.background);
+	}, [focused]);
 
-		// use `loop` prop on `<video>` element if the starting frag is high quality.
-		// otherwise, we need to do it with an event listener as we may need to manually flush the frag
-		if (!hasLowQualityFragmentAtStart) {
-			return;
+	const activeSubtitleTrack = subtitlesEnabled && subtitleTracks.length > 0 ? preferredSubtitleTrack : -1;
+	useEffect(() => {
+		for (const [index, { track }] of subtitleTracks.entries()) {
+			track.mode = index === activeSubtitleTrack ? 'showing' : 'hidden';
 		}
-
-		const abortController = new AbortController();
-		const { signal } = abortController;
-		const videoNode = videoRef.current;
-		videoNode.addEventListener(
-			'ended',
-			() => {
-				flushOnLoop();
-				videoNode.currentTime = 0;
-				const maybePromise = videoNode.play() as Promise<void> | undefined;
-				if (maybePromise) {
-					maybePromise.catch(() => {});
-				}
-			},
-			{ signal },
-		);
-		return () => {
-			abortController.abort();
-		};
-	}, [hasLowQualityFragmentAtStart, videoRef]);
+	}, [activeSubtitleTrack, subtitleTracks]);
 
 	return {
-		hlsRef,
-		loop: !hasLowQualityFragmentAtStart,
-		updateCuePositions,
-		quality: { levels, activeLevel, selectedLevel, selectLevel } satisfies VideoQuality,
+		playerLoading: renditions.length === 0 || retrying,
+		quality: { renditions, selected: selectedRendition, select: selectRendition } satisfies VideoQuality,
 		subtitles: {
 			tracks: subtitleTracks,
-			selectedTrack: subtitlesEnabled && subtitleTracks.length > 0 ? preferredSubtitleTrack : -1,
+			selectedTrack: activeSubtitleTrack,
 			selectTrack: selectSubtitleTrack,
 		} satisfies VideoSubtitles,
 	};
 }
 
-function nextPlayingLevel(hls: HlsTypes.default): number {
-	return hls.autoLevelEnabled ? hls.nextAutoLevel : hls.manualLevel;
+function toAppError(failure: PlayerError): Error {
+	switch (failure.code) {
+		case 'not_found': {
+			return new VideoNotFoundError();
+		}
+		case 'unsupported': {
+			return new HLSUnsupportedError();
+		}
+		default: {
+			return new Error(failure.message);
+		}
+	}
 }

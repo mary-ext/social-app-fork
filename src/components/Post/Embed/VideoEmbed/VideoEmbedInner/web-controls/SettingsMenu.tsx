@@ -1,5 +1,7 @@
 import { clsx } from 'clsx';
-import type { Level, MediaPlaylist } from 'hls.js';
+
+import type { Rendition } from '#/lib/media/hls/protocol';
+import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -12,32 +14,28 @@ import { m } from '#/paraglide/messages';
 import * as controlButtonStyles from './ControlButton.css';
 import * as styles from './SettingsMenu.css';
 
-/** video renditions and selection. */
 export type VideoQuality = {
 	/** available renditions. */
-	levels: Level[];
-	/** active rendition, or `-1` before playback starts. */
-	activeLevel: number;
-	/** selected rendition, or `-1` for automatic selection. */
-	selectedLevel: number;
+	renditions: Rendition[];
+	/** selected rendition, or `-1` before loading. */
+	selected: number;
 	/**
-	 * selects a rendition.
+	 * selects a video rendition.
 	 *
-	 * @param level rendition index, or `-1` for automatic selection
+	 * @param index rendition index
 	 */
-	selectLevel: (level: number) => void;
+	select: (index: number) => void;
 };
 
-/** video caption tracks and selection. */
 export type VideoSubtitles = {
 	/** available tracks. */
-	tracks: MediaPlaylist[];
+	tracks: SubtitleTrack[];
 	/** selected track, or `-1` when captions are off. */
 	selectedTrack: number;
 	/**
-	 * selects a caption track.
+	 * selects a subtitle track.
 	 *
-	 * @param track track index, or `-1` to turn captions off
+	 * @param track track index, or `-1` to disable subtitles
 	 */
 	selectTrack: (track: number) => void;
 };
@@ -54,17 +52,13 @@ export function SettingsMenu({
 	/** portal target while fullscreen. */
 	fullscreenContainer?: React.RefObject<HTMLElement | null>;
 }) {
-	const hasQualityChoice = quality.levels.length > 1;
+	const hasQualityChoice = quality.renditions.length > 1;
 	const hasSubtitleChoice = subtitles.tracks.length > 0;
 	if (!hasQualityChoice && !hasSubtitleChoice) {
 		return null;
 	}
 
 	const label = m['components.post.video.settings.label']();
-	const activeLevel = quality.selectedLevel === -1 ? quality.levels[quality.activeLevel] : undefined;
-	const autoLabel = activeLevel
-		? m['components.post.video.quality.autoActive']({ quality: formatQualityLabel(activeLevel) })
-		: m['components.post.video.quality.auto']();
 	const offLabel = m['common.status.off']();
 
 	return (
@@ -76,28 +70,19 @@ export function SettingsMenu({
 				{hasQualityChoice && (
 					<Menu.Group>
 						<Menu.LabelText>{m['components.post.video.quality.label']()}</Menu.LabelText>
-						<Menu.Item
-							label={m['components.post.video.quality.auto']()}
-							onClick={() => {
-								quality.selectLevel(-1);
-							}}
-						>
-							<Menu.ItemText>{autoLabel}</Menu.ItemText>
-							<Menu.ItemRadio selected={quality.selectedLevel === -1} />
-						</Menu.Item>
-						{quality.levels
-							.map((level, index) => {
-								const levelLabel = formatQualityLabel(level);
+						{quality.renditions
+							.map((rendition) => {
+								const renditionLabel = formatQualityLabel(rendition);
 								return (
 									<Menu.Item
-										key={level.url[0]}
-										label={levelLabel}
+										key={rendition.index}
+										label={renditionLabel}
 										onClick={() => {
-											quality.selectLevel(index);
+											quality.select(rendition.index);
 										}}
 									>
-										<Menu.ItemText>{levelLabel}</Menu.ItemText>
-										<Menu.ItemRadio selected={quality.selectedLevel === index} />
+										<Menu.ItemText>{renditionLabel}</Menu.ItemText>
+										<Menu.ItemRadio selected={quality.selected === rendition.index} />
 									</Menu.Item>
 								);
 							})
@@ -121,7 +106,7 @@ export function SettingsMenu({
 							const trackLabel = formatTrackLabel(track, index);
 							return (
 								<Menu.Item
-									key={track.url}
+									key={track.id}
 									label={trackLabel}
 									onClick={() => {
 										subtitles.selectTrack(index);
@@ -139,21 +124,20 @@ export function SettingsMenu({
 	);
 }
 
-function formatQualityLabel(level: Level): string {
-	if (level.height) {
-		return `${level.height}p`;
+function formatQualityLabel(rendition: Rendition): string {
+	if (rendition.height) {
+		return `${rendition.height}p`;
 	}
-	// use bitrate when resolution is unavailable
-	return `${Math.round(level.bitrate / 1000)}k`;
+	return `${Math.round((rendition.bitrate ?? 0) / 1000)}k`;
 }
 
 // prefer localized language names over manifest names
-function formatTrackLabel(track: MediaPlaylist, index: number): string {
-	if (track.lang) {
-		return codeToLanguageName(track.lang, LOCALE);
+function formatTrackLabel(track: SubtitleTrack, index: number): string {
+	if (track.language) {
+		return codeToLanguageName(track.language, LOCALE);
 	}
-	if (track.name) {
-		return track.name;
+	if (track.label) {
+		return track.label;
 	}
 	return m['components.post.video.captions.unnamedTrack']({ number: index + 1 });
 }

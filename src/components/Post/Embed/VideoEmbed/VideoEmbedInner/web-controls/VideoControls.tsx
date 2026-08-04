@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type Hls from 'hls.js';
-
 import { useInputModality } from '#/lib/input-modality';
 import { clamp } from '#/lib/numbers';
 
@@ -31,36 +29,34 @@ import { VolumeControl } from './VolumeControl';
 
 const isHoverPointer = (evt: React.PointerEvent) => evt.pointerType !== 'touch';
 
+const CUE_LINE = { withControls: 70, bare: 85 };
+
 export function Controls({
 	videoRef,
-	hlsRef,
 	active,
 	setActive,
 	focused,
 	setFocused,
 	onScreen,
 	fullscreenRef,
-	hlsLoading,
+	playerLoading,
 	quality,
 	subtitles,
 	isGif,
 	altText,
-	updateCuePositions,
 }: {
 	videoRef: React.RefObject<HTMLVideoElement | null>;
-	hlsRef: React.RefObject<Hls | undefined | null>;
 	active: boolean;
 	setActive: () => void;
 	focused: boolean;
 	setFocused: (focused: boolean) => void;
 	onScreen: boolean;
 	fullscreenRef: React.RefObject<HTMLDivElement | null>;
-	hlsLoading: boolean;
+	playerLoading: boolean;
 	quality: VideoQuality;
 	subtitles: VideoSubtitles;
 	isGif: boolean;
 	altText?: string;
-	updateCuePositions: (controlsVisible?: boolean) => void;
 }) {
 	const {
 		play,
@@ -73,7 +69,6 @@ export function Controls({
 		duration,
 		buffering,
 		error,
-		canPlay,
 	} = useVideoElement(videoRef);
 	const isTouch = useInputModality() === 'touch';
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
@@ -82,7 +77,7 @@ export function Controls({
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const [interactingViaKeypress, setInteractingViaKeypress] = useState(false);
-	const showSpinner = hlsLoading || buffering;
+	const showSpinner = playerLoading || buffering;
 	const { state: volumeHovered, onIn: onVolumeHover, onOut: onVolumeEndHover } = useInteractionState();
 
 	const onKeyDown = () => {
@@ -133,29 +128,6 @@ export function Controls({
 			}
 		}
 	}, [onScreen, pause, active, play, autoplayDisabled, isGif]);
-
-	// use minimal quality when not focused
-	useEffect(() => {
-		if (!hlsRef.current) {
-			return;
-		}
-		if (focused) {
-			// allow 30s of buffering
-			// `hlsRef` is a ref prop; mutating the hls.js instance config is intended
-			hlsRef.current.config.maxMaxBufferLength = 30;
-		} else {
-			// back to what we initially set
-			hlsRef.current.config.maxMaxBufferLength = 10;
-		}
-	}, [hlsRef, focused]);
-
-	useEffect(() => {
-		if (!hlsRef.current) {
-			return;
-		}
-		// apply captions after the media is ready
-		hlsRef.current.subtitleTrack = canPlay ? subtitles.selectedTrack : -1;
-	}, [subtitles.selectedTrack, hlsRef, canPlay]);
 
 	// clicking on any button should focus the player, if it's not already focused
 	const drawFocus = useCallback(() => {
@@ -306,12 +278,29 @@ export function Controls({
 			? touchChromeVisible || (autoplayDisabled && !playing)
 			: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered));
 
-	// adjust subtitle cue positioning to avoid occlusion by controls
-	// uses percentage-based positioning (snapToLines=false) so wrapped
-	// multi-line cues grow upward instead of extending offscreen
+	// percentage positions make multiline cues grow away from the controls.
+	const subtitleTrackCount = subtitles.tracks.length;
 	useEffect(() => {
-		updateCuePositions(showControls);
-	}, [showControls, updateCuePositions]);
+		const video = videoRef.current;
+		if (!video) {
+			return;
+		}
+		const line = showControls ? CUE_LINE.withControls : CUE_LINE.bare;
+		for (const track of video.textTracks) {
+			for (const cue of track.cues ?? []) {
+				if (cue instanceof VTTCue) {
+					// oxlint-disable-next-line react/react-compiler -- mutates live DOM VTTCues from a ref prop
+					cue.snapToLines = false;
+					cue.line = line;
+				}
+			}
+			// force the browser to lay out the active cue again.
+			if (track.mode === 'showing') {
+				track.mode = 'hidden';
+				track.mode = 'showing';
+			}
+		}
+	}, [showControls, subtitleTrackCount, videoRef]);
 
 	if (isGif) {
 		return (
