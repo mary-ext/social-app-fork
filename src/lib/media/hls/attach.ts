@@ -90,15 +90,23 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	if (!MediaSourceClass) {
 		throw new Error('no MediaSource implementation');
 	}
-	const worker = new Worker(new URL('./remux-worker.ts', import.meta.url), { type: 'module' });
-	const send = (message: MainToWorker) => worker.postMessage(message, []);
+
+	const teardown = new AbortController();
+	const signal = teardown.signal;
+
 	const mediaSource = new MediaSourceClass();
 	const objectUrl = URL.createObjectURL(mediaSource);
+
 	// iOS Safari requires this before ManagedMediaSource can open.
 	video.disableRemotePlayback = true;
 	video.src = objectUrl;
-	const teardown = new AbortController();
-	const { signal } = teardown;
+
+	const worker = new Worker(new URL('./remux-worker.ts', import.meta.url), {
+		type: 'module',
+		name: 'remux-worker',
+	});
+
+	const send = (message: MainToWorker) => worker.postMessage(message, []);
 
 	let sourceBuffer: SourceBuffer | undefined;
 	let renditions: Rendition[] = [];

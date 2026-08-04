@@ -10,6 +10,7 @@ overrides:
 patchedDependencies:
   '@base-ui/react': 86393160efad050af7184290f6accdc01ce55e71eb3ff4582ee1f2d7b5459b15
   '@vanilla-extract/css': 7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5
+  mediabunny: f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4
 
 importers:
 
@@ -146,7 +147,7 @@ importers:
         version: 6.3.0
       mediabunny:
         specifier: ^1.52.2
-        version: 1.52.2
+        version: 1.52.2(patch_hash=f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4)
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -4363,7 +4364,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  mediabunny@1.52.2:
+  mediabunny@1.52.2(patch_hash=f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4):
     dependencies:
       '@types/dom-mediacapture-transform': 0.1.12
       '@types/dom-webcodecs': 0.1.13
