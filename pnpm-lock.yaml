@@ -164,8 +164,8 @@ importers:
         version: 1.4.2(@typescript/typescript6@6.0.2)
     devDependencies:
       '@inlang/paraglide-js':
-        specifier: 2.23.1
-        version: 2.23.1(@typescript/typescript6@6.0.2)
+        specifier: 2.22.0
+        version: 2.22.0(@typescript/typescript6@6.0.2)
       '@oomfware/rspack-plugin-svg-sprites':
         specifier: ^0.1.4
         version: 0.1.4(@rspack/core@2.1.7(@swc/helpers@0.5.23))(react@19.2.8)
@@ -856,8 +856,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inlang/paraglide-js@2.23.1':
-    resolution: {integrity: sha512-KEnJhvRLhB1zbGNmt2DHi4SuIbr7ZcZ0tftFYxQDDSpS1GqjJJ+b+ZaxVC2PElpgcQYNgD5Bt9hYUpV+et8IMw==}
+  '@inlang/paraglide-js@2.22.0':
+    resolution: {integrity: sha512-GSzG7KEKcYAhwuPNJczIPB+DzyndYxr4lsXAkkB7xh00jTrt80NF2KfgjEAkxuJvWcnscqXf7y7d1Q0SWtSu7A==}
     hasBin: true
     peerDependencies:
       typescript: '>=5.6'
@@ -3183,7 +3183,7 @@ snapshots:
   '@img/sharp-win32-x64@0.35.2':
     optional: true
 
-  '@inlang/paraglide-js@2.23.1(@typescript/typescript6@6.0.2)':
+  '@inlang/paraglide-js@2.22.0(@typescript/typescript6@6.0.2)':
     dependencies:
       '@inlang/recommend-sherlock': 0.2.1
       '@inlang/sdk': 2.10.2
