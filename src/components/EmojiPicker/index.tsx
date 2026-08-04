@@ -5,7 +5,7 @@ import { Popover } from '@base-ui/react/popover';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { emojiInserted } from '#/components/EmojiPicker/emoji-inserted';
-import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
+import { useEmojiPreload } from '#/components/EmojiPicker/preload';
 import type { Emoji } from '#/components/EmojiPicker/types';
 
 import { EmojiPanel } from './EmojiPanel';
@@ -55,7 +55,7 @@ export function useEmojiPickerHandle(): EmojiPickerHandle {
  * `onEmojiSelect` callback when an emoji is selected.
  */
 export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProps) {
-	useWebPreloadEmoji({ immediate: true });
+	useEmojiPreload({ immediate: true });
 	// close via the Root's own actions; `handle.close()` only affects popovers opened through `handle.open()`,
 	// not ones opened by clicking the Trigger.
 	const actionsRef = useRef<{ close: () => void; unmount: () => void }>(null);

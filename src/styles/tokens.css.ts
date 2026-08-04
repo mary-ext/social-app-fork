@@ -52,6 +52,8 @@ export const fontWeight = {
 export const systemFontFamily = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 export const themeFontFamily = `"Inter Variable", ${systemFontFamily}`;
 
+export const emojiFontFamily = `"Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", sans-serif`;
+
 export const fontFamilyVar = createVar();
 
 export const fontFamily = fallbackVar(fontFamilyVar, themeFontFamily);

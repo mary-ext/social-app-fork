@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { space } from '#/styles/tokens.css';
+import { emojiFontFamily, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.md;
@@ -72,5 +72,6 @@ export const nameColumn = style({
 export const emojiGlyph = style({
 	flexShrink: 0,
 	lineHeight: 1,
+	fontFamily: emojiFontFamily,
 	fontSize: 24,
 });

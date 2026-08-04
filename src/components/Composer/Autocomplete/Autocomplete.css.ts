@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, space, zIndex } from '#/styles/tokens.css';
+import { emojiFontFamily, fontSize, space, zIndex } from '#/styles/tokens.css';
 
 export const positioner = style({
 	zIndex: zIndex.popover,
@@ -52,5 +52,6 @@ export const text = style({
 
 export const emojiGlyph = style({
 	lineHeight: 1.15,
+	fontFamily: emojiFontFamily,
 	fontSize: fontSize.xl,
 });

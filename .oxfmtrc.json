@@ -76,7 +76,7 @@
 			}
 		]
 	},
-	"ignorePatterns": ["node_modules", "pnpm-lock.yaml", "src/paraglide"],
+	"ignorePatterns": ["node_modules", "pnpm-lock.yaml", "src/components/EmojiPicker/dataset", "src/paraglide"],
 	"overrides": [
 		{
 			"files": ["tsconfig*.json"],

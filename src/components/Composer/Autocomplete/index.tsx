@@ -123,7 +123,7 @@ function EmojiItem({
 	return (
 		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
 			<Text className={styles.emojiGlyph}>{item.value}</Text>
-			<Text>:{item.emoji.id}:</Text>
+			<Text>:{item.id}:</Text>
 		</BaseAutocomplete.Item>
 	);
 }

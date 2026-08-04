@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { emojiFontFamily } from '#/styles/tokens.css';
 
 import {
 	GRID_HEIGHT,
@@ -69,5 +70,6 @@ export const cell = style({
 
 export const glyph = style({
 	lineHeight: 1,
+	fontFamily: emojiFontFamily,
 	fontSize: 20,
 });

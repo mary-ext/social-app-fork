@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { zIndex } from '#/styles/tokens.css';
+import { emojiFontFamily, zIndex } from '#/styles/tokens.css';
 
 export const trigger = style({
 	appearance: 'none',
@@ -63,5 +63,6 @@ export const item = style({
 
 export const glyph = style({
 	lineHeight: 1,
+	fontFamily: emojiFontFamily,
 	fontSize: 18,
 });

@@ -21,5 +21,8 @@ export const STALE = {
 };
 
 export const GCTIME = {
+	MINUTES: {
+		FIVE: 5 * MINUTE,
+	},
 	INFINITY: Infinity,
 };

@@ -174,7 +174,7 @@ let MessageItem = ({
 	const reactionPillContents = (
 		<>
 			{groupedReactions.slice(0, 10).map((group) => (
-				<Text key={group.value} leading="none" size="lg">
+				<Text className={css.reactionGlyph} key={group.value} leading="none" size="lg">
 					{group.value}
 				</Text>
 			))}

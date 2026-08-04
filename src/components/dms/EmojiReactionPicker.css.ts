@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { iconSize } from '#/styles/tokens.css';
+import { emojiFontFamily, iconSize } from '#/styles/tokens.css';
 
 export const trigger = style({
 	appearance: 'none',
@@ -75,6 +75,7 @@ export const reactionDisabled = style({
 
 export const reactionGlyph = style({
 	lineHeight: 1,
+	fontFamily: emojiFontFamily,
 	fontSize: 28,
 });
 

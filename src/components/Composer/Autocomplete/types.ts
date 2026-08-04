@@ -1,7 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import type { Emoji } from '@emoji-mart/data';
-
 export type AutocompleteProfile = {
 	type: 'profile';
 	key: string;
@@ -20,7 +18,8 @@ export type AutocompleteEmoji = {
 	type: 'emoji';
 	key: string;
 	value: string;
-	emoji: Emoji;
+	/** shortcode id. */
+	id: string;
 };
 
 export type AutocompleteSearch = {

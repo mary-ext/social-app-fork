@@ -1,16 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { emojiDataQuery } from '#/components/EmojiPicker/data';
+import { emojiDatasetQuery } from '#/components/EmojiPicker/data';
 
 /**
  * preloads the emoji dataset.
  *
- * @returns a function that triggers preloading (e.g., on hover).
+ * @returns the preload function.
  */
-export function useWebPreloadEmoji({ immediate }: { immediate?: boolean } = {}) {
+export function useEmojiPreload({ immediate }: { immediate?: boolean } = {}) {
 	const queryClient = useQueryClient();
 	const preload = () => {
-		void queryClient.prefetchQuery(emojiDataQuery());
+		void queryClient.prefetchQuery(emojiDatasetQuery());
 	};
 	if (immediate) {
 		preload();

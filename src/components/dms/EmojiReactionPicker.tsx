@@ -8,7 +8,7 @@ import { clsx } from 'clsx';
 import { useSession } from '#/state/session';
 
 import { EmojiPanel } from '#/components/EmojiPicker/EmojiPanel';
-import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
+import { useEmojiPreload } from '#/components/EmojiPicker/preload';
 
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -30,7 +30,7 @@ export function EmojiReactionPicker({
 }) {
 	const [open, setOpen] = useState(false);
 	const [expanded, setExpanded] = useState(false);
-	const preloadEmoji = useWebPreloadEmoji();
+	const preloadEmoji = useEmojiPreload();
 
 	const handleSelect = (emoji: string) => {
 		setOpen(false);

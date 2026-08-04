@@ -4,9 +4,11 @@ import { Autocomplete } from '@base-ui/react/autocomplete';
 
 import { Text } from '#/components/Text';
 
+import type { SkinTone } from '#/storage/schema';
+
 import { CATEGORY_LABELS } from '../categories';
+import type { EmojiDataset } from '../data';
 import { type EmojiLayout, GRID_HEIGHT, OVERSCAN } from '../layout';
-import type { EmojiCell } from '../util';
 import * as styles from './EmojiGrid.css';
 
 /** imperative handle the panel uses to drive the grid's scroll position. */
@@ -16,20 +18,24 @@ export type EmojiGridHandle = {
 };
 
 type EmojiGridProps = {
-	cells: EmojiCell[];
+	cells: number[];
+	dataset: EmojiDataset;
 	layout: EmojiLayout;
 	/** reports the section currently scrolled to the top of the viewport. */
 	onActiveSectionChange: (key: string | null) => void;
-	onSelect: (cell: EmojiCell, shiftHeld: boolean) => void;
+	onSelect: (emojiIndex: number, shiftHeld: boolean) => void;
+	skinTone: SkinTone;
 };
 
 /** the virtualized emoji grid, rendering only the rows within the viewport (plus {@link OVERSCAN}). */
 export function EmojiGrid({
 	cells,
+	dataset,
 	layout,
 	onActiveSectionChange,
 	onSelect,
 	ref,
+	skinTone,
 }: EmojiGridProps & { ref?: React.Ref<EmojiGridHandle> }) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [scrollTop, setScrollTop] = useState(0);
@@ -125,23 +131,23 @@ export function EmojiGrid({
 							style={{ height: row.height, top: row.top }}
 						>
 							{Array.from({ length: row.count }, (_, col) => {
-								const index = row.firstIndex + col;
-								const cell = cells[index];
-								if (!cell) {
+								const position = row.firstIndex + col;
+								const emojiIndex = cells[position];
+								if (emojiIndex === undefined) {
 									return null;
 								}
 								return (
 									<Autocomplete.Item
-										aria-label={cell.emoji.name}
-										aria-posinset={index + 1}
+										aria-label={dataset.names[emojiIndex]}
+										aria-posinset={position + 1}
 										aria-setsize={cells.length}
 										className={styles.cell}
-										index={index}
-										key={cell.key}
-										onClick={(event) => onSelect(cell, event.shiftKey)}
-										value={cell}
+										index={position}
+										key={col}
+										onClick={(event) => onSelect(emojiIndex, event.shiftKey)}
+										value={emojiIndex}
 									>
-										<span className={styles.glyph}>{cell.native}</span>
+										<span className={styles.glyph}>{dataset.nativeAt(emojiIndex, skinTone)}</span>
 									</Autocomplete.Item>
 								);
 							})}

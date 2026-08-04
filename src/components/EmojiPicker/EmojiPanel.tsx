@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { mapDefined } from '@mary/array-fns';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
-import type { Emoji as DataEmoji } from '@emoji-mart/data';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -16,33 +15,35 @@ import {
 import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
-import type { SkinTone } from '#/storage/schema';
 
 import { CategoryNav } from './components/CategoryNav';
 import { EmojiGrid, type EmojiGridHandle } from './components/EmojiGrid';
 import { PickerPlaceholder } from './components/PickerPlaceholder';
 import { SkinToneButton } from './components/SkinToneButton';
-import { type EmojiData, emojiDataQuery } from './data';
+import { type EmojiDataset, emojiDatasetQuery, type EmojiSearch, emojiSearchQuery } from './data';
 import * as styles from './EmojiPanel.css';
 import { buildEmojiLayout } from './layout';
 import type { Emoji } from './types';
-import { type EmojiCell, makeCell, toSelection } from './util';
 
 /**
- * emoji picker panel featuring a searchable autocomplete grid, category navigation, skin-tone selector, and
- * recently-used section.
+ * renders the emoji picker panel.
  *
- * @param onSelect callback triggered when an emoji is selected, receiving the selection and whether the Shift
- *   key was held.
+ * @param onEmojiSelect called with the selected emoji and whether Shift was held.
  */
 export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, shiftHeld: boolean) => void }) {
-	const { data } = useQuery(emojiDataQuery());
+	const { data } = useQuery(emojiDatasetQuery());
 	const [query, setQuery] = useState('');
+	const trimmed = query.trim();
+	const { data: search, isPending: isSearchPending } = useQuery({
+		...emojiSearchQuery(),
+		enabled: trimmed !== '',
+	});
 	const skinTone = useEmojiSkinTone();
 	const recents = useRecentEmojis();
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	const gridRef = useRef<EmojiGridHandle>(null);
 	const pendingJump = useRef<string | null>(null);
+	const isSearchLoading = trimmed !== '' && isSearchPending;
 
 	// a category jump made while searching has to clear the query first; once the category layout is back,
 	// scroll to the requested section (child layout effects run before this, so the jump wins the scroll reset).
@@ -53,15 +54,16 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 		}
 	}, [query]);
 
-	const model = useMemo(() => buildModel(data, query, skinTone, recents), [data, query, recents, skinTone]);
+	const model = useMemo(() => buildModel(data, search, trimmed, recents), [data, search, recents, trimmed]);
 
 	if (!data) {
 		return <PickerPlaceholder />;
 	}
 
-	const handleSelect = (cell: EmojiCell, shiftHeld: boolean) => {
-		addRecentEmoji(cell.emoji.id);
-		onEmojiSelect(toSelection(cell.emoji, skinTone), shiftHeld);
+	const handleSelect = (index: number, shiftHeld: boolean) => {
+		const id = data.ids[index]!;
+		addRecentEmoji(id);
+		onEmojiSelect({ id, native: data.nativeAt(index, skinTone) }, shiftHeld);
 		if (!shiftHeld) {
 			setQuery('');
 		}
@@ -82,7 +84,7 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 			grid
 			inline
 			items={model.cells}
-			itemToStringValue={(cell: EmojiCell) => cell.emoji.id}
+			itemToStringValue={(index: number) => data.ids[index]!}
 			onItemHighlighted={(_item, details) => {
 				if (details.reason === 'keyboard' && details.index >= 0) {
 					gridRef.current?.ensureVisible(details.index);
@@ -108,7 +110,7 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 						/>
 						<SearchField.Slot>
 							<Autocomplete.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
-							<SkinToneButton onChange={setEmojiSkinTone} tone={skinTone} />
+							{data.skinTones && <SkinToneButton onChange={setEmojiSkinTone} tone={skinTone} />}
 						</SearchField.Slot>
 					</SearchField.Root>
 				</div>
@@ -116,15 +118,19 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 				<Autocomplete.List className={styles.list}>
 					<Autocomplete.Empty>
 						{}
-						<div className={styles.empty}>{m['components.emojiPicker.search.empty']()}</div>
+						{!isSearchLoading && (
+							<div className={styles.empty}>{m['components.emojiPicker.search.empty']()}</div>
+						)}
 					</Autocomplete.Empty>
 
 					<EmojiGrid
 						cells={model.cells}
+						dataset={data}
 						layout={model.layout}
 						onActiveSectionChange={setActiveSection}
 						onSelect={handleSelect}
 						ref={gridRef}
+						skinTone={skinTone}
 					/>
 				</Autocomplete.List>
 
@@ -134,42 +140,29 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 	);
 }
 
-/**
- * builds the renderable cells and virtualization layout for the current query and tone, plus whether a recent
- * section exists.
- */
-function buildModel(data: EmojiData | undefined, query: string, skinTone: SkinTone, recents: string[]) {
+function buildModel(
+	data: EmojiDataset | undefined,
+	search: EmojiSearch | undefined,
+	query: string,
+	recents: string[],
+) {
 	if (!data) {
-		return { cells: [] as EmojiCell[], hasRecent: false, layout: buildEmojiLayout([]) };
+		return { cells: [] as number[], hasRecent: false, layout: buildEmojiLayout([]) };
 	}
 
-	const recentEmojis = recents.length ? resolve(data, recents) : [];
-	const hasRecent = recentEmojis.length > 0;
+	const recentIndices = mapDefined(recents, (id) => data.indexById.get(id));
+	const hasRecent = recentIndices.length > 0;
 
-	const trimmed = query.trim();
-	if (trimmed) {
-		const cells = data.search(trimmed).map((emoji) => makeCell(emoji, skinTone, 'search'));
+	if (query) {
+		const cells = search ? search(query) : [];
 		return { cells, hasRecent, layout: buildEmojiLayout([{ count: cells.length, key: 'search' }]) };
 	}
 
-	const sections: { emojis: DataEmoji[]; key: string }[] = [];
-	if (hasRecent) {
-		sections.push({ emojis: recentEmojis, key: 'recent' });
-	}
-	for (const category of data.categories) {
-		sections.push({ emojis: resolve(data, category.emojis), key: category.id });
-	}
+	const sections = hasRecent ? [{ indices: recentIndices, key: 'recent' }, ...data.sections] : data.sections;
 
-	const cells = sections.flatMap((section) =>
-		section.emojis.map((emoji) => makeCell(emoji, skinTone, section.key)),
-	);
+	const cells = sections.flatMap((section) => section.indices);
 	const layout = buildEmojiLayout(
-		sections.map((section) => ({ count: section.emojis.length, key: section.key, labeled: true })),
+		sections.map((section) => ({ count: section.indices.length, key: section.key, labeled: true })),
 	);
 	return { cells, hasRecent, layout };
-}
-
-/** maps emoji ids to dataset emoji, dropping any unknown ids. */
-function resolve(data: EmojiData, ids: string[]): DataEmoji[] {
-	return mapDefined(ids, (id) => data.emojis[id]);
 }

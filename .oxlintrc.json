@@ -9,7 +9,14 @@
 		"browser": true,
 		"es2026": true
 	},
-	"ignorePatterns": ["*.html", "*.lock", "patches/**", "src/lib/sw-template.js", "src/paraglide/**"],
+	"ignorePatterns": [
+		"*.html",
+		"*.lock",
+		"patches/**",
+		"src/components/EmojiPicker/dataset/**",
+		"src/lib/sw-template.js",
+		"src/paraglide/**"
+	],
 	"jsPlugins": ["eslint-plugin-bsky-internal"],
 	"options": {
 		"typeAware": true,

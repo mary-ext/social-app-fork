@@ -18,7 +18,7 @@ type EmojiCategory = {
 	label: () => string;
 };
 
-/** picker's sections in display order: `recent` followed by `@emoji-mart/data` categories. */
+/** picker sections in display order; keys must match the dataset. */
 export const CATEGORIES = [
 	{ icon: ClockIcon, key: 'recent', label: m['common.status.recentlyUsed'] },
 	{ icon: EmojiIcon, key: 'people', label: m['components.emojiPicker.category.smileysPeople'] },

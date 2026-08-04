@@ -1,15 +1,7 @@
-/** represents an emoji selected from the picker. sourced from the `emoji-mart` library's selection data. */
+/** emoji selected from the picker. */
 export type Emoji = {
-	aliases?: string[];
-	emoticons: string[];
+	/** stable id. */
 	id: string;
-	keywords: string[];
-	name: string;
-	/** The native unicode character for the emoji, e.g. "😀" */
+	/** glyph at the selected tone. */
 	native: string;
-	shortcodes?: string;
-	/** The unicode codepoint, e.g. "1f600" */
-	unified: string;
-	/** Skin tone variant (1–6), if applicable */
-	skin?: number;
 };

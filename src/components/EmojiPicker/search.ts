@@ -1,24 +1,52 @@
-import { definite, unique } from '@mary/array-fns';
-
-/** a search entry: an emoji id plus a comma-delimited, lowercased haystack of its searchable terms. */
-export type SearchEntry = {
-	id: string;
-	/** each term is preceded by a comma (`,grin,smile,…`). */
-	haystack: string;
-};
+import { definite, range, unique } from '@mary/array-fns';
 
 /**
- * ranks emoji ids against a free-text query: every query word must match, results best-first and capped.
+ * builds search haystacks for visible emoji.
  *
- * @param entries the search entries to rank
- * @param query the search query
- * @param limit maximum number of ids to return
- * @returns the matching emoji ids, best match first
+ * @param columns search columns and the predicate for visible emoji
+ * @returns index-addressed haystacks
  */
-export function searchEmojiIds(entries: readonly SearchEntry[], query: string, limit: number): string[] {
+export function buildHaystacks(columns: {
+	emoticons: string[];
+	ids: string[];
+	keywords: string[];
+	names: string[];
+	shown: (index: number) => boolean;
+}): string[] {
+	return columns.ids.map((id, index) => {
+		if (!columns.shown(index)) {
+			return '';
+		}
+		// include the full id for exact matches.
+		const terms = definite(
+			[
+				id,
+				...id.split('_'),
+				columns.names[index]!,
+				columns.keywords[index]!,
+				columns.emoticons[index]!,
+			].flatMap((field) => field.toLowerCase().split(/\s+/)),
+		);
+		return `,${unique(terms).join(',')}`;
+	});
+}
+
+/**
+ * ranks emoji haystacks for a query.
+ *
+ * @param options haystacks, ids, query, and result limit
+ * @returns matching emoji indices, best match first
+ */
+export function searchHaystacks(options: {
+	haystacks: readonly string[];
+	ids: readonly string[];
+	limit: number;
+	query: string;
+}): number[] {
+	const { haystacks, ids, limit } = options;
 	const words = unique(
 		definite(
-			query
+			options.query
 				.toLowerCase()
 				.replace(/(\w)-/, '$1 ')
 				.split(/[\s|,]+/),
@@ -28,36 +56,35 @@ export function searchEmojiIds(entries: readonly SearchEntry[], query: string, l
 		return [];
 	}
 
-	let pool = entries;
-	let scores = new Map<string, number>();
+	let pool = range(0, haystacks.length);
+	let scores = new Map<number, number>();
 	for (const word of words) {
 		if (!pool.length) {
 			break;
 		}
-		const matched: SearchEntry[] = [];
+		const matched: number[] = [];
 		const needle = `,${word}`;
-		// scores reset each word so the final ranking reflects the last word's match positions (matches emoji-mart)
+		// rank by the final query word.
 		scores = new Map();
-		for (const entry of pool) {
-			const at = entry.haystack.indexOf(needle);
+		for (const index of pool) {
+			const at = haystacks[index]!.indexOf(needle);
 			if (at === -1) {
 				continue;
 			}
-			matched.push(entry);
-			scores.set(entry.id, (scores.get(entry.id) ?? 0) + (entry.id === word ? 0 : at + 1));
+			matched.push(index);
+			scores.set(index, ids[index] === word ? 0 : at + 1);
 		}
 		pool = matched;
 	}
 
 	if (pool.length < 2) {
-		return pool.map((entry) => entry.id);
+		return pool;
 	}
 
-	const ids = pool.map((entry) => entry.id);
-	ids.sort((a, b) => {
-		const sa = scores.get(a)!;
-		const sb = scores.get(b)!;
-		return sa === sb ? a.localeCompare(b) : sa - sb;
+	pool.sort((a, b) => {
+		const scoreA = scores.get(a)!;
+		const scoreB = scores.get(b)!;
+		return scoreA === scoreB ? ids[a]!.localeCompare(ids[b]!) : scoreA - scoreB;
 	});
-	return ids.length > limit ? ids.slice(0, limit) : ids;
+	return pool.length > limit ? pool.slice(0, limit) : pool;
 }

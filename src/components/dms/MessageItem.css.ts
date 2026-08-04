@@ -3,7 +3,7 @@ import { generateIdentifier, style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, iconSize, space } from '#/styles/tokens.css';
+import { borderRadius, emojiFontFamily, iconSize, space } from '#/styles/tokens.css';
 
 export const AVATAR_SIZE = 28;
 export const CLUSTERED_MESSAGE_GAP = 2;
@@ -298,6 +298,10 @@ export const reactionPillButton = style({
 
 export const reactionPillSelected = style({
 	backgroundColor: vars.palette.primary_100,
+});
+
+export const reactionGlyph = style({
+	fontFamily: emojiFontFamily,
 });
 
 export const reactionCount = style({
