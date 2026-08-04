@@ -240,12 +240,10 @@ async function serializeVideo(
 				return;
 			}
 
-			return caption.file.text().then(
-				(text): AppBskyDraftDefs.DraftEmbedCaption => ({
-					content: text,
-					lang: caption.lang,
-				}),
-			);
+			return caption.file.text().then((text): AppBskyDraftDefs.DraftEmbedCaption => ({
+				content: text,
+				lang: caption.lang,
+			}));
 		}),
 	);
 

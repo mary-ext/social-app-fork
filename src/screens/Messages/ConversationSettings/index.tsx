@@ -205,14 +205,12 @@ function GroupSettings({
 			: []),
 	];
 	items.push(
-		...groupMembers.map(
-			(profile): Item => ({
-				type: 'chatMember',
-				key: profile.did,
-				profile,
-				status: primaryMember?.did === profile.did ? 'owner' : 'standard',
-			}),
-		),
+		...groupMembers.map((profile): Item => ({
+			type: 'chatMember',
+			key: profile.did,
+			profile,
+			status: primaryMember?.did === profile.did ? 'owner' : 'standard',
+		})),
 	);
 	const placeholderCount = Math.max(0, convo.details.memberCount - groupMembers.length);
 	for (let i = 0; i < placeholderCount; i++) {
