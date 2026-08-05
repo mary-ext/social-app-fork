@@ -10,12 +10,6 @@ export const thumbVar = createVar();
 
 export const root = style({ marginTop: space.sm });
 
-export const viewport = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'row',
-});
-
 export const box = style([
 	mediaBorder,
 	{
@@ -38,13 +32,3 @@ export const contents = style({
 	overflow: 'hidden',
 	cursor: 'default',
 });
-
-export const observer = style({
-	position: 'absolute',
-	left: '50%',
-	width: 1,
-	pointerEvents: 'none',
-});
-
-export const observerInMessage = style({ top: 0, height: '100%' });
-export const observerDefault = style({ top: 'calc(50% - 50vh)', height: '100vh' });

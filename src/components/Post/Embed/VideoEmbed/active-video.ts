@@ -1,76 +1,291 @@
-import { useId, useSyncExternalStore } from 'react';
+import { useEffect, useId, useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
+import { onFullscreenChange } from '#/lib/fullscreen';
+
+import { IS_FIREFOX } from '#/env';
+
+// place the active video above center to keep its post visible.
+const IDEAL_POSITION = 1 / 2.5;
+
+// prevent nearby videos from swapping the active slot on each frame.
+const SWITCH_DEADBAND = 32;
+
+// avoid loading videos that a fast scroll passes.
+const LOAD_DWELL_MS = 200;
+
+const MOUNT_MARGIN = '30% 0px';
+
+/** video selection and loading state. */
+export type ViewState = {
+	/** whether the view holds the active slot. */
+	readonly isActive: boolean;
+	/** whether the view can start its media pipeline. */
+	readonly mayLoad: boolean;
+	/** whether the view is within the mount margin. */
+	readonly nearScreen: boolean;
+	/** whether the view overlaps the viewport. */
+	readonly onScreen: boolean;
+};
+
+const UNPLACED: ViewState = { isActive: false, mayLoad: false, nearScreen: false, onScreen: false };
+
+type Entry = {
+	readonly id: string;
+	readonly element: Element;
+	readonly isGif: boolean;
+	near: boolean;
+	visible: boolean;
+	loaded: boolean;
+	dwellTimer: ReturnType<typeof setTimeout> | undefined;
+	// replace only when a field changes to keep the snapshot identity stable.
+	state: ViewState;
+};
+
 const emitter = new SimpleEventEmitter<[]>();
 
-let activeViewId: string | null = null;
-/** viewport-relative centre of the active view; `Infinity` while no view has claimed the slot. */
-let activeViewLocation = Infinity;
-/** whether the active view won by being pressed rather than by scrolling into a good position. */
+const byId = new Map<string, Entry>();
+const byElement = new WeakMap<Element, Entry>();
+
+let activeId: string | null = null;
 let manuallySet = false;
 
-let viewportHeight = window.innerHeight;
-window.addEventListener('resize', () => {
-	viewportHeight = window.innerHeight;
+let nearCount = 0;
+let listening = false;
+let frameHandle = 0;
+let frozen = false;
+
+// #region measurement
+
+const schedule = () => {
+	if (frameHandle === 0) {
+		frameHandle = requestAnimationFrame(arbitrate);
+	}
+};
+
+const arbitrate = () => {
+	frameHandle = 0;
+	if (frozen) {
+		return;
+	}
+
+	const viewportHeight = window.innerHeight;
+	const idealY = viewportHeight * IDEAL_POSITION;
+	const incumbent = activeId !== null ? byId.get(activeId) : undefined;
+
+	let challenger: Entry | undefined;
+	let challengerScore = Infinity;
+	let incumbentScore = Infinity;
+
+	for (const entry of byId.values()) {
+		let visible = false;
+		let score = Infinity;
+
+		if (entry.near) {
+			const rect = entry.element.getBoundingClientRect();
+			visible = rect.bottom > 0 && rect.top < viewportHeight;
+			if (visible) {
+				score = Math.abs(rect.top + rect.height / 2 - idealY);
+			}
+		}
+
+		entry.visible = visible;
+		if (entry === incumbent) {
+			incumbentScore = score;
+		}
+		if (!entry.isGif && score < challengerScore) {
+			challenger = entry;
+			challengerScore = score;
+		}
+	}
+
+	// keep the incumbent until it leaves or a challenger clears the deadband.
+	const holds =
+		incumbent !== undefined &&
+		incumbent.visible &&
+		(manuallySet || challenger === undefined || challengerScore > incumbentScore - SWITCH_DEADBAND);
+
+	if (!holds && challenger !== incumbent) {
+		activeId = challenger?.id ?? null;
+		manuallySet = false;
+	}
+
+	for (const entry of byId.values()) {
+		syncDwell(entry);
+	}
+
+	publish();
+};
+
+const isWanted = (entry: Entry) => (entry.isGif ? entry.near : entry.id === activeId);
+
+const syncDwell = (entry: Entry) => {
+	const wanted = isWanted(entry);
+	// a direct selection skips the loading delay.
+	const immediate = wanted && manuallySet && entry.id === activeId;
+
+	if (!wanted || immediate) {
+		clearTimeout(entry.dwellTimer);
+		entry.dwellTimer = undefined;
+		entry.loaded = immediate;
+		return;
+	}
+
+	if (entry.loaded || entry.dwellTimer !== undefined) {
+		return;
+	}
+	entry.dwellTimer = setTimeout(() => {
+		entry.dwellTimer = undefined;
+		entry.loaded = true;
+		publish();
+	}, LOAD_DWELL_MS);
+};
+
+const publish = () => {
+	let changed = false;
+	for (const entry of byId.values()) {
+		const previous = entry.state;
+		const isActive = entry.id === activeId;
+		if (
+			previous.isActive === isActive &&
+			previous.mayLoad === entry.loaded &&
+			previous.nearScreen === entry.near &&
+			previous.onScreen === entry.visible
+		) {
+			continue;
+		}
+		entry.state = {
+			isActive,
+			mayLoad: entry.loaded,
+			nearScreen: entry.near,
+			onScreen: entry.visible,
+		};
+		changed = true;
+	}
+	if (changed) {
+		emitter.emit();
+	}
+};
+
+const observer = new IntersectionObserver(
+	(records) => {
+		for (const record of records) {
+			const entry = byElement.get(record.target);
+			if (!entry || entry.near === record.isIntersecting) {
+				continue;
+			}
+			entry.near = record.isIntersecting;
+			nearCount += record.isIntersecting ? 1 : -1;
+		}
+		syncScrollListener();
+		schedule();
+	},
+	{ rootMargin: MOUNT_MARGIN },
+);
+
+const syncScrollListener = () => {
+	const wanted = nearCount > 0;
+	if (wanted === listening) {
+		return;
+	}
+	listening = wanted;
+	if (wanted) {
+		// capture scroll events from nested feed containers.
+		window.addEventListener('scroll', schedule, { capture: true, passive: true });
+		window.addEventListener('resize', schedule, { passive: true });
+	} else {
+		window.removeEventListener('scroll', schedule, { capture: true });
+		window.removeEventListener('resize', schedule);
+	}
+};
+
+onFullscreenChange((fullscreen) => {
+	// Firefox keeps usable page layout measurements in fullscreen.
+	frozen = !IS_FIREFOX && fullscreen;
+	if (!frozen) {
+		schedule();
+	}
 });
+
+// #endregion
+
+// #region contest
+
+const register = (id: string, element: Element, isGif: boolean) => {
+	const entry: Entry = {
+		id,
+		element,
+		isGif,
+		near: false,
+		visible: false,
+		loaded: false,
+		dwellTimer: undefined,
+		state: UNPLACED,
+	};
+	byId.set(id, entry);
+	byElement.set(element, entry);
+	observer.observe(element);
+
+	return () => {
+		observer.unobserve(element);
+		byId.delete(id);
+		byElement.delete(element);
+		clearTimeout(entry.dwellTimer);
+
+		if (entry.near) {
+			nearCount--;
+			syncScrollListener();
+		}
+		if (activeId === id) {
+			activeId = null;
+			manuallySet = false;
+		}
+		schedule();
+	};
+};
+
+const setActiveView = (id: string) => {
+	if (activeId === id && manuallySet) {
+		return;
+	}
+	const previous = activeId !== null ? byId.get(activeId) : undefined;
+	activeId = id;
+	manuallySet = true;
+
+	if (previous) {
+		syncDwell(previous);
+	}
+	const entry = byId.get(id);
+	if (entry) {
+		syncDwell(entry);
+	}
+	publish();
+};
 
 const subscribe = (onStoreChange: () => void) => emitter.subscribe(onStoreChange);
 
-/** the state of the contest as one entrant sees it */
-type SlotStatus = 'active' | 'other' | 'unclaimed';
-
-const getSlotStatus = (viewId: string): SlotStatus => {
-	if (activeViewId === viewId) {
-		return 'active';
-	}
-	if (activeViewId !== null) {
-		return 'other';
-	}
-	return 'unclaimed';
-};
-
-const distanceToIdealPosition = (y: number) => Math.abs(y - viewportHeight / 2.5);
-
-const withinViewport = (y: number) => y > 0 && y < viewportHeight;
-
-const setActiveView = (viewId: string) => {
-	activeViewId = viewId;
-	manuallySet = true;
-	// the real position is unknown, but it is definitely on screen — any non-offscreen value will do
-	activeViewLocation = viewportHeight / 2;
-	emitter.emit();
-};
-
-const sendViewPosition = (viewId: string, y: number) => {
-	if (viewId === activeViewId) {
-		activeViewLocation = y;
-		return;
-	}
-
-	if (distanceToIdealPosition(y) >= distanceToIdealPosition(activeViewLocation)) {
-		return;
-	}
-
-	// if the old view was manually set, only usurp it once it has left the viewport
-	if (manuallySet && withinViewport(activeViewLocation)) {
-		return;
-	}
-
-	activeViewId = viewId;
-	activeViewLocation = y;
-	manuallySet = false;
-	emitter.emit();
-};
-
-/** enter into the page-wide contest for the one video allowed to play at a time. */
-export function useActiveVideo() {
+/**
+ * registers a view for active video selection and deferred loading.
+ *
+ * @param ref a stable ref to the view element
+ * @param options.isGif whether the view is a gif
+ * @returns the view state and a function that activates it immediately
+ */
+export function useActiveVideo(ref: React.RefObject<Element | null>, { isGif }: { isGif: boolean }) {
 	const id = useId();
-	const status = useSyncExternalStore(subscribe, () => getSlotStatus(id));
 
-	return {
-		sendPosition: (y: number) => sendViewPosition(id, y),
-		setActive: () => setActiveView(id),
-		status,
-	};
+	useEffect(() => {
+		const element = ref.current;
+		if (!element) {
+			return;
+		}
+		return register(id, element, isGif);
+	}, [id, isGif, ref]);
+
+	const state = useSyncExternalStore(subscribe, () => byId.get(id)?.state ?? UNPLACED);
+
+	return { ...state, setActive: () => setActiveView(id) };
 }
+
+// #endregion

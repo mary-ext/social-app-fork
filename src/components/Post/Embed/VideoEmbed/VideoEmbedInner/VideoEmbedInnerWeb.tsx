@@ -22,12 +22,14 @@ export function VideoEmbedInnerWeb({
 	active,
 	setActive,
 	onScreen,
+	canLoad,
 	lastKnownTime,
 }: {
 	embed: AppBskyEmbedVideo.View;
 	active: boolean;
 	setActive: () => void;
 	onScreen: boolean;
+	canLoad: boolean;
 	lastKnownTime: React.RefObject<number | undefined>;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,7 @@ export function VideoEmbedInnerWeb({
 		setError,
 		videoRef,
 		focused,
+		canLoad,
 	});
 
 	useEffect(() => {
@@ -115,11 +118,13 @@ function useHlsPlayer({
 	setError,
 	videoRef,
 	focused,
+	canLoad,
 }: {
 	playlist: string;
 	setError: (v: Error | null) => void;
 	videoRef: React.RefObject<HTMLVideoElement | null>;
 	focused: boolean;
+	canLoad: boolean;
 }) {
 	const playerRef = useRef<PlayerHandle | undefined>(undefined);
 	const [renditions, setRenditions] = useState<Rendition[]>([]);
@@ -146,7 +151,7 @@ function useHlsPlayer({
 
 	useEffect(() => {
 		const video = videoRef.current;
-		if (!video) {
+		if (!video || !canLoad) {
 			return;
 		}
 		if (!isHlsPlayerSupported()) {
@@ -182,7 +187,7 @@ function useHlsPlayer({
 			setPreferredSubtitleTrack(0);
 			setRetrying(false);
 		};
-	}, [playlist, setError, videoRef]);
+	}, [canLoad, playlist, setError, videoRef]);
 
 	useEffect(() => {
 		playerRef.current?.setBufferAhead(focused ? BUFFER_AHEAD.focused : BUFFER_AHEAD.background);
@@ -196,7 +201,7 @@ function useHlsPlayer({
 	}, [activeSubtitleTrack, subtitleTracks]);
 
 	return {
-		playerLoading: renditions.length === 0 || retrying,
+		playerLoading: canLoad && (renditions.length === 0 || retrying),
 		quality: { renditions, selected: selectedRendition, select: selectRendition } satisfies VideoQuality,
 		subtitles: {
 			tracks: subtitleTracks,
