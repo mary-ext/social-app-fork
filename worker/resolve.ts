@@ -21,6 +21,21 @@ const ALLOWED_IMAGE_TYPES = new Set(['image/avif', 'image/gif', 'image/jpeg', 'i
 const TITLE_MAX = 1000;
 const DESCRIPTION_MAX = 2000;
 
+const METADATA_HOST_ALIASES = new Map<string, string>([
+	['m.youtube.com', 'www.youtube.com'],
+	['music.youtube.com', 'www.youtube.com'],
+]);
+
+const aliasMetadataHost = (url: URL): URL | undefined => {
+	const hostname = METADATA_HOST_ALIASES.get(url.hostname);
+	if (!hostname) {
+		return undefined;
+	}
+	const aliased = new URL(url.href);
+	aliased.hostname = hostname;
+	return aliased;
+};
+
 /** normalizes whitespace and control characters, then truncates by code point. */
 const clean = (value: string | undefined, max: number): string | undefined => {
 	if (!value) {
@@ -165,7 +180,9 @@ export const resolveLinkMeta = async ({
 	signal,
 	url,
 }: ResolveLinkMetaOptions): Promise<LinkMetaResponse> => {
-	const target = assertHttpUrl(url);
+	const requested = assertHttpUrl(url);
+	const alias = aliasMetadataHost(requested);
+	const target = alias ?? requested;
 	const {
 		chain,
 		response,
@@ -230,7 +247,7 @@ export const resolveLinkMeta = async ({
 		description,
 		image,
 		title,
-		url: pageUrl.href,
+		url: (alias ? requested : pageUrl).href,
 		view: standardSite?.view,
 	};
 };
