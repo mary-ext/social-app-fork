@@ -1,4 +1,5 @@
 import { timeout } from '#/lib/async/timeout';
+import { toVideoCdnUrl } from '#/lib/bsky/video';
 
 /** request attempt limits by resource type. */
 export const MAX_ATTEMPTS = { master: 2, media: 4 };
@@ -32,6 +33,18 @@ const fetchOrThrow: typeof fetch = async (input, init) => {
 	return response;
 };
 
+const urlOf = (url: string | URL | Request) => {
+	if (typeof url === 'string') {
+		return url;
+	}
+	return url instanceof URL ? url.href : url.url;
+};
+
+const retargetingFetch =
+	(fetchFn: typeof fetch, retarget: (url: string) => string): typeof fetch =>
+	(input, init) =>
+		fetchFn(retarget(urlOf(input)), init);
+
 const countingFetch =
 	(onBytes: (bytes: number) => void): typeof fetch =>
 	async (input, init) => {
@@ -60,13 +73,6 @@ const countingFetch =
 	};
 
 const delayFor = (failures: number) => 0.25 * 2 ** failures;
-
-const urlOf = (url: string | URL | Request) => {
-	if (typeof url === 'string') {
-		return url;
-	}
-	return url instanceof URL ? url.href : url.url;
-};
 
 export type RetryPolicy = {
 	fetchFn: typeof fetch;
@@ -106,8 +112,9 @@ export const createRetryPolicy = ({
 		return count;
 	};
 
+	// keep the master on the video service because the CDN copy omits subtitles.
 	return {
-		fetchFn: countingFetch(onBytes),
+		fetchFn: retargetingFetch(countingFetch(onBytes), (url) => (url === master ? url : toVideoCdnUrl(url))),
 		getRetryDelay: (_previousAttempts, error, url) => {
 			const href = urlOf(url);
 			if (error instanceof HttpError && !isRetryable(error.status)) {

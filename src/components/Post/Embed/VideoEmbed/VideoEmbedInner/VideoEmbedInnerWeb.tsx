@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
+import { videoThumbnailUrl } from '#/lib/bsky/video';
 import { attachHlsPlayer, isHlsPlayerSupported, type PlayerHandle } from '#/lib/media/hls/attach';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
 import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
@@ -64,7 +65,7 @@ export function VideoEmbedInnerWeb({
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
 					<video
 						ref={videoRef}
-						poster={embed.thumbnail}
+						poster={videoThumbnailUrl(embed)}
 						style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 						playsInline
 						muted={isGif || !focused}

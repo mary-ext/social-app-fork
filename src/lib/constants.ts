@@ -86,6 +86,8 @@ export const GIF_KLIPY_FEATURED = (params: string) => `${GIF_SERVICE}/klipy/v2/f
 export const MAX_LABELERS = 20;
 
 export const VIDEO_SERVICE = 'https://video.bsky.app';
+/** Bluesky video CDN origin. */
+export const VIDEO_CDN_SERVICE = 'https://video.cdn.bsky.app';
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000; // 3 minutes in milliseconds
 /** Maximum size of a video in megabytes, _not_ mebibytes. Backend uses ISO megabytes. */

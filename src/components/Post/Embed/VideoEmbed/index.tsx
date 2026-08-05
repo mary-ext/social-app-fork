@@ -4,6 +4,8 @@ import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { videoThumbnailUrl } from '#/lib/bsky/video';
+
 import { noRowLink } from '#/components/BlockLink';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
@@ -48,6 +50,8 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	// which costs a couple of thin bars but keeps the player usable.
 	const boxAspectRatio = Math.max(aspectRatio ?? 1, MIN_CARD_WIDTH / MAX_MEDIA_HEIGHT);
 
+	const thumbnail = videoThumbnailUrl(embed);
+
 	return (
 		<div className={styles.root}>
 			<div
@@ -55,7 +59,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 				className={styles.box}
 				style={assignInlineVars({
 					[styles.aspectVar]: String(boxAspectRatio),
-					[styles.thumbVar]: `url(${embed.thumbnail})`,
+					[styles.thumbVar]: thumbnail ? `url('${thumbnail}')` : 'none',
 				})}
 			>
 				<div className={styles.contents} {...noRowLink}>

@@ -2,6 +2,7 @@ import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
+import { videoThumbnailUrl } from '#/lib/bsky/video';
 import { isGifEmbed } from '#/lib/strings/embed-player';
 
 import * as styles from '#/components/MediaPreview.css';
@@ -61,9 +62,9 @@ export function Embed({
 			return (
 				<Outer className={className}>
 					{media.presentation === 'gif' ? (
-						<GifItem thumbnail={media.thumbnail} alt={media.alt} />
+						<GifItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} />
 					) : (
-						<VideoItem thumbnail={media.thumbnail} alt={media.alt} />
+						<VideoItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} />
 					)}
 				</Outer>
 			);
