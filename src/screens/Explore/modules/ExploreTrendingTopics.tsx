@@ -8,14 +8,13 @@ import {
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useIsTrendingEnabled } from '#/state/preferences/trending';
-import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
+import { type TrendingTopic, useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { formatCount } from '#/locale/intl/number';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
-import { useTopic } from '#/components/trending-topics';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
@@ -58,18 +57,13 @@ function Inner() {
 	);
 }
 
-function TrendRow({ rank, trend }: { rank: number; trend: AppBskyUnspeccedDefs.TrendView }) {
+function TrendRow({ rank, trend }: { rank: number; trend: TrendingTopic }) {
 	const moderationOpts = useModerationOpts();
 
 	const actors = moderateTrendingActors(trend.actors, moderationOpts);
-	const { label, target } = useTopic(trend);
-
-	if (!target) {
-		return null;
-	}
 
 	return (
-		<Link className={css.row} label={label} to={target}>
+		<Link className={css.row} label={trend.label} to={trend.target}>
 			<Text className={css.rank} color="textContrastLow" size="md" weight="medium">
 				{m['screens.search.trending.rank']({ rank })}
 			</Text>

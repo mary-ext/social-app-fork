@@ -1,12 +1,9 @@
-import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
-
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
-import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
+import { type TrendingTopic, useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import * as Prompt from '#/components/Prompt';
-import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
@@ -83,17 +80,11 @@ export function TrendingInterstitial() {
 	);
 }
 
-function TopicLink({ topic }: { topic: AppBskyUnspeccedDefs.TrendView }) {
-	const { label, target } = useTopic(topic);
-
-	if (!target) {
-		return null;
-	}
-
+function TopicLink({ topic }: { topic: TrendingTopic }) {
 	return (
 		<InlineLinkText
-			to={target}
-			label={label}
+			to={topic.target}
+			label={topic.label}
 			size="sm"
 			weight="semiBold"
 			color="textContrastMedium"

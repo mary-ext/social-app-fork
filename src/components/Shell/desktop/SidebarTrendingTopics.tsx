@@ -1,11 +1,8 @@
-import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
-
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
-import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
+import { type TrendingTopic, useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
-import { useTopic } from '#/components/trending-topics';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
@@ -79,13 +76,9 @@ function Inner() {
 	);
 }
 
-function TopicLink({ index, topic }: { index: number; topic: AppBskyUnspeccedDefs.TrendView }) {
-	const { label, target } = useTopic(topic);
-	if (!target) {
-		return null;
-	}
+function TopicLink({ index, topic }: { index: number; topic: TrendingTopic }) {
 	return (
-		<Link to={target} label={label} className={css.topicLink}>
+		<Link to={topic.target} label={topic.label} className={css.topicLink}>
 			<Text size="sm" className={css.index}>
 				{index + 1}.
 			</Text>
