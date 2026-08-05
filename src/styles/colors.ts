@@ -17,5 +17,4 @@ export const colors = {
 	textContrastMedium: vars.palette.contrast_700,
 	textInverted: vars.palette.contrast_0,
 	textLink: vars.text.link,
-	transparent: 'transparent',
 };

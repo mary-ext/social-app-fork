@@ -20,6 +20,23 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 	return out as { [Key in keyof Scale]: Record<Property, Scale[Key]> };
 };
 
+const textColors = {
+	text: colors.text,
+	textContrastHigh: colors.textContrastHigh,
+	textContrastLow: colors.textContrastLow,
+	textContrastMedium: colors.textContrastMedium,
+	textLink: colors.textLink,
+
+	white: colors.white,
+	contrast_400: colors.contrast_400,
+	primary_500: colors.primary_500,
+	primary_600: colors.primary_600,
+	primary_900: colors.primary_900,
+	negative_400: colors.negative_400,
+	negative_500: colors.negative_500,
+	negative_600: colors.negative_600,
+};
+
 export const fontSizeVar = createVar();
 export const sizeLeadingVar = createVar();
 export const leadingOverrideVar = createVar();
@@ -51,7 +68,7 @@ export const text = recipe(
 		defaultVariants: { color: 'text', leading: 'snug', size: 'md' },
 		variants: {
 			align: { center: { textAlign: 'center' }, left: { textAlign: 'left' }, right: { textAlign: 'right' } },
-			color: variantsFor(colors, 'color'),
+			color: variantsFor(textColors, 'color'),
 			leading: {
 				none: { vars: { [leadingOverrideVar]: String(lineHeight.none) } },
 				snug: { vars: { [leadingOverrideVar]: pairedLeading } },

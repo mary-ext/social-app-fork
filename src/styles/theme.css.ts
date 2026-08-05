@@ -1,16 +1,19 @@
 import { assignVars, globalStyle } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from '#/styles/palette';
+import { DARK_PALETTE, DIM_PALETTE, LIGHT_PALETTE, type Palette } from '#/styles/palette';
 import { fontFamily } from '#/styles/tokens.css';
+
+// shadows tint from pure black in every theme, so this never had to ride along as a themed palette entry
+const SHADOW_BASE = '#000000';
 
 const alpha = (hex: string, opacity: number) => {
 	const a = Math.round(opacity * 255).toString(16);
 	return hex + a.padStart(2, a);
 };
 
-const shadows = (palette: Palette, opacity: number) => {
-	const c = alpha(palette.black, opacity);
+const shadows = (opacity: number) => {
+	const c = alpha(SHADOW_BASE, opacity);
 	return {
 		dialog: `0 0 30px ${c}`,
 		lg: `0 20px 25px -5px ${c}, 0 8px 10px -6px ${c}`,
@@ -23,9 +26,9 @@ const shadows = (palette: Palette, opacity: number) => {
 interface ThemeOptions {
 	hoverOpacity: string;
 	/**
-	 * palette step for link text. `invertPalette` mirrors around the midpoint, so `primary_500` comes out
-	 * unchanged on the dark backgrounds and lands near the 4.5:1 floor there — the darker themes step up to
-	 * keep link text legible.
+	 * palette step for link text. the dark palettes mirror the light one around each ramp's midpoint, so
+	 * `primary_500` is the same color in every theme and lands near the 4.5:1 floor on dark backgrounds — the
+	 * darker themes step up to keep link text legible.
 	 */
 	linkStep: 'primary_500' | 'primary_600';
 	palette: Palette;
@@ -35,7 +38,7 @@ interface ThemeOptions {
 const themeValues = ({ hoverOpacity, linkStep, palette, shadowOpacity }: ThemeOptions) => ({
 	opacity: { hover: hoverOpacity },
 	palette,
-	shadow: shadows(palette, shadowOpacity),
+	shadow: shadows(shadowOpacity),
 	text: { link: palette[linkStep] },
 });
 
@@ -45,7 +48,7 @@ globalStyle('.theme--light', {
 		themeValues({
 			hoverOpacity: '50%',
 			linkStep: 'primary_500',
-			palette: DEFAULT_PALETTE,
+			palette: LIGHT_PALETTE,
 			shadowOpacity: 0.1,
 		}),
 	),
@@ -56,7 +59,7 @@ globalStyle('.theme--dark', {
 		themeValues({
 			hoverOpacity: '40%',
 			linkStep: 'primary_600',
-			palette: invertPalette(DEFAULT_PALETTE),
+			palette: DARK_PALETTE,
 			shadowOpacity: 0.4,
 		}),
 	),
@@ -67,7 +70,7 @@ globalStyle('.theme--dim', {
 		themeValues({
 			hoverOpacity: '45%',
 			linkStep: 'primary_600',
-			palette: invertPalette(DEFAULT_SUBDUED_PALETTE),
+			palette: DIM_PALETTE,
 			shadowOpacity: 0.4,
 		}),
 	),
