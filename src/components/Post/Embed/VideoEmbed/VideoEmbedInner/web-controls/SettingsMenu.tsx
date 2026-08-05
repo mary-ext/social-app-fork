@@ -1,5 +1,3 @@
-import { clsx } from 'clsx';
-
 import type { Rendition } from '#/lib/media/hls/protocol';
 import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
 
@@ -11,8 +9,7 @@ import * as Menu from '#/components/Menu';
 import SettingsGearIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import * as controlButtonStyles from './ControlButton.css';
-import * as styles from './SettingsMenu.css';
+import { ControlButton } from './ControlButton';
 
 export type VideoQuality = {
 	/** available renditions. */
@@ -63,9 +60,11 @@ export function SettingsMenu({
 
 	return (
 		<Menu.Root onOpenChange={onOpenChange}>
-			<Menu.Trigger className={clsx(controlButtonStyles.button, styles.trigger)} aria-label={label}>
-				<SettingsGearIcon className={controlButtonStyles.icon} aria-hidden />
-			</Menu.Trigger>
+			<Menu.Trigger
+				render={
+					<ControlButton icon={SettingsGearIcon} label={label} tooltipContainer={fullscreenContainer} />
+				}
+			/>
 			<Menu.Popup label={label} align="end" side="top" minWidth={170} container={fullscreenContainer}>
 				{hasQualityChoice && (
 					<Menu.Group>

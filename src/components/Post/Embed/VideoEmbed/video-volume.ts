@@ -11,6 +11,10 @@ export const getVideoVolume = () => volume;
 
 /** sets the page-wide video volume. */
 export const setVideoVolume = (value: number) => {
+	if (value === volume) {
+		return;
+	}
+
 	volume = value;
 	emitter.emit();
 };

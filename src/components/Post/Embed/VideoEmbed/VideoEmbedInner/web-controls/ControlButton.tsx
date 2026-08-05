@@ -1,31 +1,37 @@
-import type { ComponentType, SVGProps } from 'react';
+import type { ComponentPropsWithRef, ComponentType, RefObject, SVGProps } from 'react';
+
+import { clsx } from 'clsx';
+
+import { Tooltip } from '#/components/Tooltip';
 
 import * as styles from './ControlButton.css';
 
 export function ControlButton({
-	active,
-	activeLabel,
-	inactiveLabel,
-	activeIcon: ActiveIcon,
-	inactiveIcon: InactiveIcon,
-	onPress,
+	className,
+	icon: Icon,
+	label,
+	tooltip = true,
+	tooltipContainer,
+	...props
 }: {
-	active: boolean;
-	activeLabel: string;
-	inactiveLabel: string;
-	activeIcon: ComponentType<SVGProps<SVGSVGElement>>;
-	inactiveIcon: ComponentType<SVGProps<SVGSVGElement>>;
-	onPress: () => void;
-}) {
-	const Icon = active ? ActiveIcon : InactiveIcon;
-	return (
-		<button
-			type="button"
-			className={styles.button}
-			aria-label={active ? activeLabel : inactiveLabel}
-			onClick={onPress}
-		>
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	label: string;
+	tooltip?: boolean;
+	tooltipContainer?: RefObject<HTMLElement | null>;
+} & Omit<ComponentPropsWithRef<'button'>, 'children' | 'aria-label'>) {
+	const button = (
+		<button type="button" aria-label={label} className={clsx(styles.button, className)} {...props}>
 			<Icon className={styles.icon} aria-hidden />
 		</button>
+	);
+
+	if (!tooltip) {
+		return button;
+	}
+
+	return (
+		<Tooltip label={label} container={tooltipContainer}>
+			{button}
+		</Tooltip>
 	);
 }

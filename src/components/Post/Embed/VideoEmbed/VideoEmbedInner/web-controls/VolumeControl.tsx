@@ -1,8 +1,11 @@
-import { clsx } from 'clsx';
+import { Popover } from '@base-ui/react/popover';
+import { Slider } from '@base-ui/react/slider';
+
+import { useInputModality } from '#/lib/input-modality';
+import { clamp } from '#/lib/numbers';
 
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
-import { IS_SAFARI, IS_TOUCH_DEVICE } from '#/env';
 import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -10,36 +13,34 @@ import { m } from '#/paraglide/messages';
 import { ControlButton } from './ControlButton';
 import * as styles from './VolumeControl.css';
 
+const VOLUME_STEP = 5;
+
 export function VolumeControl({
 	muted,
 	changeMuted,
-	hovered,
-	onHover,
-	onEndHover,
+	open,
+	onOpenChange,
 	drawFocus,
+	fullscreenContainer,
 }: {
 	muted: boolean;
 	changeMuted: (muted: boolean | ((prev: boolean) => boolean)) => void;
-	hovered: boolean;
-	onHover: () => void;
-	onEndHover: () => void;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
 	drawFocus: () => void;
+	fullscreenContainer?: React.RefObject<HTMLElement | null>;
 }) {
 	const volume = useVideoVolume();
+	const isTouch = useInputModality() === 'touch';
 
-	const onVolumeChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		drawFocus();
-		const vol = sliderVolumeToVideoVolume(Number(evt.target.value));
-		setVideoVolume(vol);
-		changeMuted(vol === 0);
-	};
+	const isMuted = muted || volume === 0;
+	const Icon = isMuted ? MuteIcon : UnmuteIcon;
+	const label = isMuted ? m['common.mute.action.unmute']() : m['common.mute.action.mute']();
+	const sliderVolume = isMuted ? 0 : videoVolumeToSliderVolume(volume);
 
-	const sliderVolume = muted ? 0 : videoVolumeToSliderVolume(volume);
-
-	const isZeroVolume = volume === 0;
 	const onPressMute = () => {
 		drawFocus();
-		if (isZeroVolume) {
+		if (volume === 0) {
 			setVideoVolume(1);
 			changeMuted(false);
 		} else {
@@ -47,34 +48,84 @@ export function VolumeControl({
 		}
 	};
 
+	const onPopupOpenChange = (nextOpen: boolean, eventDetails: Popover.Root.ChangeEventDetails) => {
+		if (eventDetails.reason === 'trigger-press') {
+			return;
+		}
+
+		onOpenChange(nextOpen);
+	};
+
+	const setSliderVolume = (value: number) => {
+		drawFocus();
+		const vol = sliderVolumeToVideoVolume(value);
+		setVideoVolume(vol);
+		changeMuted(vol === 0);
+	};
+
+	const onTriggerFocus = (evt: React.FocusEvent<HTMLButtonElement>) => {
+		if (evt.target.matches(':focus-visible')) {
+			onOpenChange(true);
+		}
+	};
+
+	const onTriggerKeyDown = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
+		switch (evt.key) {
+			case 'ArrowUp': {
+				evt.preventDefault();
+				setSliderVolume(clamp(sliderVolume + VOLUME_STEP, 0, 100));
+				break;
+			}
+			case 'ArrowDown': {
+				evt.preventDefault();
+				setSliderVolume(clamp(sliderVolume - VOLUME_STEP, 0, 100));
+				break;
+			}
+		}
+	};
+
+	if (isTouch) {
+		return (
+			<ControlButton icon={Icon} label={label} tooltipContainer={fullscreenContainer} onClick={onPressMute} />
+		);
+	}
+
 	return (
-		<div className={styles.root} onPointerEnter={onHover} onPointerLeave={onEndHover}>
-			{hovered && !IS_TOUCH_DEVICE && (
-				<div className={styles.popup}>
-					<div className={styles.popupInner}>
-						<input
-							type="range"
+		<Popover.Root open={open} onOpenChange={onPopupOpenChange}>
+			<Popover.Trigger
+				render={<ControlButton icon={Icon} label={label} tooltip={false} />}
+				openOnHover
+				delay={0}
+				closeDelay={120}
+				onClick={onPressMute}
+				onFocus={onTriggerFocus}
+				onKeyDown={onTriggerKeyDown}
+			/>
+			<Popover.Portal className={styles.portal} container={fullscreenContainer}>
+				<Popover.Positioner side="top" sideOffset={6} collisionPadding={6}>
+					<Popover.Popup className={styles.popup} initialFocus={false} finalFocus={false}>
+						<Slider.Root
+							orientation="vertical"
+							value={sliderVolume}
+							onValueChange={setSliderVolume}
 							min={0}
 							max={100}
-							value={sliderVolume}
-							aria-label={m['components.post.video.a11y.volume']()}
-							className={clsx(styles.slider, IS_SAFARI && styles.sliderSafari)}
-							onChange={onVolumeChange}
-							// @ts-expect-error Firefox supports this nonstandard orientation attribute.
-							orient="vertical"
-						/>
-					</div>
-				</div>
-			)}
-			<ControlButton
-				active={muted || volume === 0}
-				activeLabel={m['common.mute.action.unmute']()}
-				inactiveLabel={m['common.mute.action.mute']()}
-				activeIcon={MuteIcon}
-				inactiveIcon={UnmuteIcon}
-				onPress={onPressMute}
-			/>
-		</div>
+							step={VOLUME_STEP}
+						>
+							<Slider.Control className={styles.control}>
+								<Slider.Track className={styles.track}>
+									<Slider.Indicator className={styles.indicator} />
+									<Slider.Thumb
+										className={styles.thumb}
+										aria-label={m['components.post.video.a11y.volume']()}
+									/>
+								</Slider.Track>
+							</Slider.Control>
+						</Slider.Root>
+					</Popover.Popup>
+				</Popover.Positioner>
+			</Popover.Portal>
+		</Popover.Root>
 	);
 }
 

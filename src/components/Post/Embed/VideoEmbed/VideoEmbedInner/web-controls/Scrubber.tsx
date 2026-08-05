@@ -1,17 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-import { assignInlineVars } from '@vanilla-extract/dynamic';
-import { clsx } from 'clsx';
+import { Slider } from '@base-ui/react/slider';
 
-import { clamp } from '#/lib/numbers';
+import { useInputModality } from '#/lib/input-modality';
 
-import { useInteractionState } from '#/components/hooks/useInteractionState';
-
-import { IS_FIREFOX, IS_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Scrubber.css';
 import { formatTime } from './utils';
+
+// match the video time precision.
+const SEEK_STEP = 0.01;
 
 export function Scrubber({
 	duration,
@@ -22,7 +21,6 @@ export function Scrubber({
 	seekLeft,
 	seekRight,
 	togglePlayPause,
-	drawFocus,
 }: {
 	duration: number;
 	currentTime: number;
@@ -32,153 +30,88 @@ export function Scrubber({
 	seekLeft: () => void;
 	seekRight: () => void;
 	togglePlayPause: () => void;
-	drawFocus: () => void;
 }) {
-	const [scrubberActive, setScrubberActive] = useState(false);
-	const { state: hovered, onIn: onStartHover, onOut: onEndHover } = useInteractionState();
-	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
-	const [seekPosition, setSeekPosition] = useState(0);
-	const isSeekingRef = useRef(false);
-	const barRef = useRef<HTMLDivElement>(null);
-	const circleRef = useRef<HTMLDivElement>(null);
+	const isTouch = useInputModality() === 'touch';
+	// keep drag updates smooth between `currentTime` events.
+	const [seekPosition, setSeekPosition] = useState<number>();
+	// pair each seek start with one seek end.
+	const seekingRef = useRef(false);
 
-	const seek = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (!barRef.current) {
+	const onValueChange = (value: number, eventDetails: Slider.Root.ChangeEventDetails) => {
+		// keyboard seeks do not pause playback.
+		if (eventDetails.reason === 'keyboard') {
+			onSeek(value);
 			return;
 		}
-		const { left, width } = barRef.current.getBoundingClientRect();
-		const x = evt.clientX;
-		const percent = clamp((x - left) / width, 0, 1) * duration;
-		onSeek(percent);
-		setSeekPosition(percent);
-	};
 
-	const onPointerDown = (evt: React.PointerEvent<HTMLDivElement>) => {
-		const target = evt.target;
-		if (target instanceof Element) {
-			evt.preventDefault();
-			target.setPointerCapture(evt.pointerId);
-			isSeekingRef.current = true;
-			seek(evt);
-			setScrubberActive(true);
+		if (!seekingRef.current) {
+			seekingRef.current = true;
 			onSeekStart();
 		}
+		setSeekPosition(value);
+		onSeek(value);
 	};
 
-	const onPointerMove = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (isSeekingRef.current) {
-			evt.preventDefault();
-			seek(evt);
-		}
-	};
-
-	const onPointerUp = (evt: React.PointerEvent<HTMLDivElement>) => {
-		const target = evt.target;
-		if (isSeekingRef.current && target instanceof Element) {
-			evt.preventDefault();
-			target.releasePointerCapture(evt.pointerId);
-			isSeekingRef.current = false;
-			onSeekEnd();
-			setScrubberActive(false);
-		}
-	};
-
-	useEffect(() => {
-		// Firefox can click under a captured pointer after pointerup; disable clicks while seeking.
-		if (IS_FIREFOX && scrubberActive) {
-			document.body.classList.add(styles.forceNoClicks);
-
-			return () => {
-				document.body.classList.remove(styles.forceNoClicks);
-			};
-		}
-	}, [scrubberActive, onSeekEnd]);
-
-	useEffect(() => {
-		if (!circleRef.current) {
+	const onValueCommitted = () => {
+		if (!seekingRef.current) {
 			return;
 		}
-		if (focused) {
-			const abortController = new AbortController();
-			const { signal } = abortController;
-			circleRef.current.addEventListener(
-				'keydown',
-				(evt) => {
-					// space: play/pause
-					// arrow left: seek backward
-					// arrow right: seek forward
+		seekingRef.current = false;
+		setSeekPosition(undefined);
+		onSeekEnd();
+	};
 
-					if (evt.key === ' ') {
-						evt.preventDefault();
-						drawFocus();
-						togglePlayPause();
-					} else if (evt.key === 'ArrowLeft') {
-						evt.preventDefault();
-						drawFocus();
-						seekLeft();
-					} else if (evt.key === 'ArrowRight') {
-						evt.preventDefault();
-						drawFocus();
-						seekRight();
-					}
-				},
-				{ signal },
-			);
-
-			return () => abortController.abort();
+	const onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+		// use the player keyboard shortcuts.
+		switch (evt.key) {
+			case ' ': {
+				evt.preventDefault();
+				togglePlayPause();
+				break;
+			}
+			case 'ArrowLeft': {
+				evt.preventDefault();
+				seekLeft();
+				break;
+			}
+			case 'ArrowRight': {
+				evt.preventDefault();
+				seekRight();
+				break;
+			}
 		}
-	}, [focused, seekLeft, seekRight, togglePlayPause, drawFocus]);
-
-	const progress = scrubberActive ? seekPosition : currentTime;
-	const progressPercent = (progress / duration) * 100;
-	const circleScale = hovered || scrubberActive || focused ? (scrubberActive ? 1 : 0.6) : 0;
+	};
 
 	if (duration < 3) {
 		return null;
 	}
 
 	return (
-		<div
-			className={clsx(styles.scrubber, IS_TOUCH_DEVICE && styles.scrubberTouch)}
-			onPointerEnter={onStartHover}
-			onPointerLeave={onEndHover}
+		<Slider.Root
+			className={styles.root}
+			value={seekPosition ?? currentTime}
+			onValueChange={onValueChange}
+			onValueCommitted={onValueCommitted}
+			min={0}
+			max={duration}
+			step={SEEK_STEP}
 		>
-			<div
-				ref={barRef}
-				className={styles.bar}
-				data-active={scrubberActive}
-				data-expanded={hovered || scrubberActive}
-				style={assignInlineVars({
-					[styles.progressVar]: `${progressPercent}%`,
-					[styles.scaleVar]: String(circleScale),
-				})}
-				onPointerDown={onPointerDown}
-				onPointerMove={onPointerMove}
-				onPointerUp={onPointerUp}
-				onPointerCancel={onPointerUp}
-			>
-				<div className={styles.track}>
-					<div className={styles.fill} />
-				</div>
-				<div
-					ref={circleRef}
-					aria-label={m['components.post.video.a11y.seekSlider']()}
-					role="slider"
-					aria-valuemax={duration}
-					aria-valuemin={0}
-					aria-valuenow={currentTime}
-					aria-valuetext={m['components.post.video.a11y.timeProgress']({
-						currentTime: formatTime(currentTime),
-						duration: formatTime(duration),
-					})}
-					tabIndex={0}
-					onFocus={onFocus}
-					onBlur={onBlur}
-					className={styles.circle}
-				>
-					<div className={styles.circleInner} />
-				</div>
-			</div>
-		</div>
+			<Slider.Control className={styles.control({ touch: isTouch })}>
+				<Slider.Track className={styles.track}>
+					<Slider.Indicator className={styles.indicator} />
+					<Slider.Thumb
+						className={styles.thumb}
+						aria-label={m['components.post.video.a11y.seekSlider']()}
+						getAriaValueText={() =>
+							m['components.post.video.a11y.timeProgress']({
+								currentTime: formatTime(currentTime),
+								duration: formatTime(duration),
+							})
+						}
+						onKeyDown={onKeyDown}
+					/>
+				</Slider.Track>
+			</Slider.Control>
+		</Slider.Root>
 	);
 }

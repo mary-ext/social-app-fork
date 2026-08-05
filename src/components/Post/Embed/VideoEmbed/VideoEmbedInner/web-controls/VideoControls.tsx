@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useInputModality } from '#/lib/input-modality';
 import { clamp } from '#/lib/numbers';
@@ -11,7 +11,7 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
-import { IS_MOBILE_IOS, IS_TOUCH_DEVICE } from '#/env';
+import { IS_MOBILE_IOS } from '#/env';
 import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_stroke2.svg';
 import ArrowsInIcon from '#/icons/central/Minimize45_round_outlined_radius1_stroke2.svg';
 import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
@@ -73,12 +73,12 @@ export function Controls({
 	const isTouch = useInputModality() === 'touch';
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [volumeOpen, setVolumeOpen] = useState(false);
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const [interactingViaKeypress, setInteractingViaKeypress] = useState(false);
 	const showSpinner = playerLoading || buffering;
-	const { state: volumeHovered, onIn: onVolumeHover, onOut: onVolumeEndHover } = useInteractionState();
 
 	const onKeyDown = () => {
 		setInteractingViaKeypress(true);
@@ -130,12 +130,12 @@ export function Controls({
 	}, [onScreen, pause, active, play, autoplayDisabled, isGif]);
 
 	// clicking on any button should focus the player, if it's not already focused
-	const drawFocus = useCallback(() => {
+	const drawFocus = () => {
 		if (!active) {
 			setActive();
 		}
 		setFocused(true);
-	}, [active, setActive, setFocused]);
+	};
 
 	const onPressEmptySpace = () => {
 		if (isTouch) {
@@ -172,20 +172,16 @@ export function Controls({
 		toggleFullscreen();
 	};
 
-	// kept memoized: seekLeft/seekRight depend on it and are themselves read from Scrubber's effect.
-	const onSeek = useCallback(
-		(time: number) => {
-			if (!videoRef.current) {
-				return;
-			}
-			if (videoRef.current.fastSeek) {
-				videoRef.current.fastSeek(time);
-			} else {
-				videoRef.current.currentTime = time;
-			}
-		},
-		[videoRef],
-	);
+	const onSeek = (time: number) => {
+		if (!videoRef.current) {
+			return;
+		}
+		if (videoRef.current.fastSeek) {
+			videoRef.current.fastSeek(time);
+		} else {
+			videoRef.current.currentTime = time;
+		}
+	};
 
 	const playStateBeforeSeekRef = useRef(false);
 
@@ -195,36 +191,35 @@ export function Controls({
 		pause();
 	};
 
-	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
-	const onSeekEnd = useCallback(() => {
+	const onSeekEnd = () => {
 		if (playStateBeforeSeekRef.current) {
 			play();
 		}
-	}, [play]);
+	};
 
-	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
-	const seekLeft = useCallback(() => {
+	const seekLeft = () => {
 		if (!videoRef.current) {
 			return;
 		}
+		drawFocus();
 
 		const videoTime = videoRef.current.currentTime;
 
 		const videoDuration = videoRef.current.duration || 0;
 		onSeek(clamp(videoTime - 5, 0, videoDuration));
-	}, [onSeek, videoRef]);
+	};
 
-	// read from Scrubber's own useEffect dep array — keep memoized (escape-hatch case).
-	const seekRight = useCallback(() => {
+	const seekRight = () => {
 		if (!videoRef.current) {
 			return;
 		}
+		drawFocus();
 
 		const videoTime = videoRef.current.currentTime;
 
 		const videoDuration = videoRef.current.duration || 0;
 		onSeek(clamp(videoTime + 5, 0, videoDuration));
-	}, [onSeek, videoRef]);
+	};
 
 	const [showCursor, setShowCursor] = useState(true);
 	const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -268,12 +263,13 @@ export function Controls({
 		onEndHover();
 	};
 
-	// keep controls visible while the menu is open
-	// a paused video keeps the chrome up for the mouse, so that play is one click away. touch reaches
-	// play through the chrome it just tapped open, so only an unstarted video pins it there — pinning
-	// it on pause would make the next tap a no-op
+	// fullscreen hides body-level portals.
+	const portalContainer = isFullscreen ? fullscreenRef : undefined;
+
+	// pin paused controls for mouse input only.
 	const showControls =
 		settingsOpen ||
+		volumeOpen ||
 		(isTouch
 			? touchChromeVisible || (autoplayDisabled && !playing)
 			: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered));
@@ -355,27 +351,24 @@ export function Controls({
 				data-visible={showControls}
 				data-modality={isTouch ? 'touch' : undefined}
 			>
-				{(!volumeHovered || IS_TOUCH_DEVICE) && (
-					<Scrubber
-						duration={duration}
-						currentTime={currentTime}
-						onSeek={onSeek}
-						onSeekStart={onSeekStart}
-						onSeekEnd={onSeekEnd}
-						seekLeft={seekLeft}
-						seekRight={seekRight}
-						togglePlayPause={togglePlayPause}
-						drawFocus={drawFocus}
-					/>
-				)}
+				<Scrubber
+					duration={duration}
+					currentTime={currentTime}
+					onSeek={onSeek}
+					onSeekStart={onSeekStart}
+					onSeekEnd={onSeekEnd}
+					seekLeft={seekLeft}
+					seekRight={seekRight}
+					togglePlayPause={onPressPlayPause}
+				/>
 				<div className={styles.controlsRow}>
 					<ControlButton
-						active={playing}
-						activeLabel={m['components.post.video.action.pause']()}
-						inactiveLabel={m['components.post.video.action.play']()}
-						activeIcon={PauseIcon}
-						inactiveIcon={PlayIcon}
-						onPress={onPressPlayPause}
+						icon={playing ? PauseIcon : PlayIcon}
+						label={
+							playing ? m['components.post.video.action.pause']() : m['components.post.video.action.play']()
+						}
+						tooltipContainer={portalContainer}
+						onClick={onPressPlayPause}
 					/>
 					<div className={styles.spacer} />
 					{Math.round(duration) > 0 && (
@@ -386,25 +379,27 @@ export function Controls({
 					<VolumeControl
 						muted={muted}
 						changeMuted={changeMuted}
-						hovered={volumeHovered}
-						onHover={onVolumeHover}
-						onEndHover={onVolumeEndHover}
+						open={volumeOpen}
+						onOpenChange={setVolumeOpen}
 						drawFocus={drawFocus}
+						fullscreenContainer={portalContainer}
 					/>
 					<SettingsMenu
 						quality={quality}
 						subtitles={subtitles}
 						onOpenChange={onSettingsOpenChange}
-						fullscreenContainer={isFullscreen ? fullscreenRef : undefined}
+						fullscreenContainer={portalContainer}
 					/>
 					{!IS_MOBILE_IOS && (
 						<ControlButton
-							active={isFullscreen}
-							activeLabel={m['components.post.video.action.exitFullscreen']()}
-							inactiveLabel={m['components.post.video.action.enterFullscreen']()}
-							activeIcon={ArrowsInIcon}
-							inactiveIcon={ArrowsOutIcon}
-							onPress={onPressFullscreen}
+							icon={isFullscreen ? ArrowsInIcon : ArrowsOutIcon}
+							label={
+								isFullscreen
+									? m['components.post.video.action.exitFullscreen']()
+									: m['components.post.video.action.enterFullscreen']()
+							}
+							tooltipContainer={portalContainer}
+							onClick={onPressFullscreen}
 						/>
 					)}
 				</div>

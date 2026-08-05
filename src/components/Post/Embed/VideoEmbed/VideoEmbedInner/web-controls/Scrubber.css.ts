@@ -1,71 +1,71 @@
-import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
+import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-export const progressVar = createVar();
-export const scaleVar = createVar();
+export const root = style({
+	boxSizing: 'border-box',
+	flexShrink: 0,
+	paddingInline: space.xs,
+	width: '100%',
+});
 
-export const bar = style({
-	display: 'flex',
+export const control = recipe(
+	{
+		base: {
+			display: 'flex',
+			alignItems: 'center',
+			width: '100%',
+			height: 18,
+			touchAction: 'none',
+			cursor: 'grab',
+			userSelect: 'none',
+			selectors: {
+				'&[data-dragging]': { cursor: 'grabbing' },
+			},
+		},
+		variants: {
+			touch: {
+				true: { height: 32 },
+			},
+		},
+	},
+	{ debugId: 'control' },
+);
+
+export const track = style({
 	position: 'relative',
-	flex: 1,
-	alignItems: 'center',
-	padding: '4px 0',
-	cursor: 'grab',
+	borderRadius: borderRadius.full,
+	backgroundColor: 'rgba(255, 255, 255, 0.4)',
+	width: '100%',
+	height: 3,
+	transition: 'height 0.1s ease',
 	selectors: {
-		'&[data-active="true"]': { cursor: 'grabbing' },
+		[`${root}:hover &, ${root}[data-dragging] &`]: { height: 6 },
 	},
 });
 
-export const circle = style({
-	position: 'absolute',
-	left: `calc(${progressVar} - 8px)`,
+export const indicator = style({
+	borderRadius: borderRadius.full,
+	backgroundColor: '#fff',
+});
+
+export const thumb = style({
+	borderRadius: borderRadius.full,
+	backgroundColor: '#fff',
+	boxShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
 	width: 16,
 	height: 16,
-	borderRadius: 8,
-	pointerEvents: 'none',
-});
-
-export const circleInner = style({
-	width: '100%',
-	height: '100%',
-	borderRadius: borderRadius.full,
-	backgroundColor: '#fff',
-	transform: `scale(${scaleVar})`,
-});
-
-export const fill = style({
-	width: progressVar,
-	height: '100%',
-	backgroundColor: '#fff',
-});
-
-export const forceNoClicks = style({});
-
-globalStyle(`${forceNoClicks} *`, {
-	pointerEvents: 'none',
-});
-
-export const scrubber = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	flexShrink: 0,
-	width: '100%',
-	height: 18,
-	paddingInline: space.xs,
-});
-
-export const scrubberTouch = style({ height: 32 });
-
-export const track = style({
-	width: '100%',
-	height: 3,
-	overflow: 'hidden',
-	borderRadius: borderRadius.full,
-	backgroundColor: 'rgba(255, 255, 255, 0.4)',
-	transition: 'height 0.1s ease',
+	transition: 'scale 0.1s ease',
+	scale: '0',
 	selectors: {
-		[`${bar}[data-expanded="true"] &`]: { height: 6 },
+		'&::after': {
+			content: '""',
+			position: 'absolute',
+			inset: -8,
+		},
+		'&:has(:focus-visible)': { outline: '2px solid #fff', outlineOffset: 2 },
+		[`${root}:hover &, &:has(:focus-visible)`]: { scale: '1' },
+		[`${root}[data-dragging] &`]: { scale: '1.5' },
 	},
 });

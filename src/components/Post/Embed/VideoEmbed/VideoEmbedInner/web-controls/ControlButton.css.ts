@@ -16,7 +16,8 @@ export const button = style({
 	width: 32,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+		'&:hover, &[data-popup-open]': { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+		'&:focus-visible': { outline: '2px solid #fff', outlineOffset: 2 },
 	},
 });
 

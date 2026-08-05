@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, RefObject } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 
@@ -13,14 +13,16 @@ export type TooltipProps = {
 	children: ReactElement;
 	/** The hint shown in the popup on hover/focus. */
 	label: string;
+	/** portal target. */
+	container?: RefObject<HTMLElement | null>;
 };
 
 /** A hover/focus hint built on Base UI's Tooltip, wrapping a single ref-forwarding trigger element. */
-export function Tooltip({ children, label }: TooltipProps) {
+export function Tooltip({ children, label, container }: TooltipProps) {
 	return (
 		<BaseTooltip.Root disableHoverablePopup>
 			<BaseTooltip.Trigger render={children} />
-			<BaseTooltip.Portal>
+			<BaseTooltip.Portal container={container}>
 				<BaseTooltip.Positioner className={styles.positioner} side="top" sideOffset={6}>
 					<BaseTooltip.Popup className={styles.popup}>
 						<Text color="text" size="sm" weight="medium">
