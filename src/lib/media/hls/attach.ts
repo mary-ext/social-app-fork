@@ -51,6 +51,36 @@ const OPEN_TIMEOUT_MS = 15000;
 
 // #endregion
 
+// #region worker pool
+
+// retain one worker to avoid repeated demuxer startup.
+let spareWorker: Worker | undefined;
+
+// global epochs keep stale replies from matching a new player.
+let epochCounter = 0;
+
+const acquireWorker = () => {
+	const spare = spareWorker;
+	spareWorker = undefined;
+	return (
+		spare ??
+		new Worker(new URL('./remux-worker.ts', import.meta.url), {
+			type: 'module',
+			name: 'remux-worker',
+		})
+	);
+};
+
+const releaseWorker = (worker: Worker) => {
+	if (spareWorker) {
+		worker.terminate();
+		return;
+	}
+	spareWorker = worker;
+};
+
+// #endregion
+
 export type PlayerStatus = 'ok' | 'retrying' | 'stopped';
 
 export type PlayerHandle = {
@@ -101,12 +131,10 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	video.disableRemotePlayback = true;
 	video.src = objectUrl;
 
-	const worker = new Worker(new URL('./remux-worker.ts', import.meta.url), {
-		type: 'module',
-		name: 'remux-worker',
-	});
+	const worker = acquireWorker();
 
 	const send = (message: MainToWorker) => worker.postMessage(message, []);
+	const nextEpoch = () => (epoch = ++epochCounter);
 
 	let sourceBuffer: SourceBuffer | undefined;
 	let renditions: Rendition[] = [];
@@ -115,7 +143,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	let onSubtitles: ((tracks: SubtitleTrack[]) => void) | undefined;
 	let onError: ((error: PlayerError) => void) | undefined;
 	let subtitles: SubtitleTrack[] | undefined;
-	let epoch = 0;
+	let epoch = epochCounter;
 	let loaded = false;
 	let recoveries = 0;
 	let stopped = false;
@@ -185,7 +213,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		// stop mediabunny's internal retry loop.
 		loaded = false;
 		queue.length = 0;
-		send({ type: 'stop', epoch: ++epoch });
+		send({ type: 'stop', epoch: nextEpoch() });
 		setStatus('stopped');
 		console.error('[hls]', error.code, error.message);
 		onError?.(error);
@@ -322,10 +350,10 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		recoveredAt = time;
 		queue.length = 0;
 		if (!loaded) {
-			send({ type: 'load', epoch: ++epoch, playlist });
+			send({ type: 'load', epoch: nextEpoch(), playlist });
 			return true;
 		}
-		send({ type: 'seek', epoch: ++epoch, time });
+		send({ type: 'seek', epoch: nextEpoch(), time });
 		return true;
 	};
 
@@ -378,10 +406,32 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 
 	// #endregion
 
+	// Mediabunny needs a separate subtitle request; defer it to prioritize playback segments.
+	let subtitlesStarted = false;
+	const startSubtitles = () => {
+		if (subtitlesStarted || destroyed) {
+			return;
+		}
+		subtitlesStarted = true;
+		loadSubtitles(video, playlist, signal)
+			.then((tracks) => {
+				if (destroyed) {
+					return;
+				}
+				subtitles = tracks;
+				onSubtitles?.(tracks);
+			})
+			.catch((error: unknown) => {
+				if (!signal.aborted) {
+					console.warn('[hls] subtitles unavailable', error);
+				}
+			});
+	};
+
 	const selectRendition = (index: number, time: number) => {
 		selectedRendition = index;
 		queue.length = 0;
-		send({ type: 'select', epoch: ++epoch, index, time });
+		send({ type: 'select', epoch: nextEpoch(), index, time });
 	};
 
 	const handleMessage = async (message: WorkerToMain) => {
@@ -448,6 +498,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				setStatus('ok');
 				queue.push({ type: 'append', data: message.data });
 				pump();
+				startSubtitles();
 				break;
 			}
 			case 'retrying': {
@@ -515,22 +566,9 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	};
 	video.addEventListener('seeking', onSeeking, { signal });
 
-	send({ type: 'load', epoch: ++epoch, playlist });
-
-	// mediabunny does not demux HLS subtitle tracks.
-	loadSubtitles(video, playlist, signal)
-		.then((tracks) => {
-			if (destroyed) {
-				return;
-			}
-			subtitles = tracks;
-			onSubtitles?.(tracks);
-		})
-		.catch((error: unknown) => {
-			if (!signal.aborted) {
-				console.warn('[hls] subtitles unavailable', error);
-			}
-		});
+	send({ type: 'load', epoch: nextEpoch(), playlist });
+	// overwrite the previous player's read-ahead limit.
+	applyBufferAhead();
 
 	return {
 		onRenditions: (fn) => {
@@ -567,7 +605,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			// invalidate in-flight work before releasing its resources.
 			destroyed = true;
 			stopped = true;
-			epoch++;
+			nextEpoch();
 			queue.length = 0;
 			clearTimeout(deferredRestart);
 			clearInterval(watchdog);
@@ -576,7 +614,13 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			for (const track of subtitles ?? []) {
 				track.track.mode = 'disabled';
 			}
-			worker.terminate();
+			// do not reuse a worker that reported a fatal error.
+			if (status === 'stopped') {
+				worker.terminate();
+			} else {
+				send({ type: 'stop', epoch });
+				releaseWorker(worker);
+			}
 			URL.revokeObjectURL(objectUrl);
 			// revoking the URL does not detach an active MediaSource.
 			video.removeAttribute('src');

@@ -261,6 +261,8 @@ self.addEventListener('message', (event) => {
 			input = undefined;
 			videoTracks = [];
 			audioTracks = [];
+			// reset state before another player reuses the worker.
+			bufferAhead = BUFFER_AHEAD.background;
 			break;
 		}
 		case 'select': {
