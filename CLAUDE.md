@@ -34,6 +34,8 @@ another session, stop and report to the user rather than waiting or forcing it.
 if dev server opens on another port than :19006, copy the localStorage values from the :19006 origin
 to the new one.
 
+the first load of a page often comes up blank; reload once before you treat it as a bug.
+
 do not run `agent-browser close --all`.
 
 ### code writing
