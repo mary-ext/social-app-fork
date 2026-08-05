@@ -10,7 +10,7 @@ import { prefetchImage } from '#/lib/media/prefetch';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { enforceLen } from '#/lib/strings/helpers';
+import { enforceLen, trimText } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -225,10 +225,12 @@ function WizardInner({
 
 	const submit = () => {
 		dispatch({ type: 'SetProcessing', processing: true });
+		const name = state.name?.trim() || getDefaultName();
+		const description = trimText(state.description ?? '') || undefined;
 		if (currentStarterPack && currentListItems) {
 			editStarterPack({
-				name: state.name?.trim() || getDefaultName(),
-				description: state.description?.trim(),
+				name,
+				description,
 				profiles: state.profiles,
 				feeds: state.feeds,
 				currentStarterPack: currentStarterPack,
@@ -236,8 +238,8 @@ function WizardInner({
 			});
 		} else {
 			createStarterPack({
-				name: state.name?.trim() || getDefaultName(),
-				description: state.description?.trim(),
+				name,
+				description,
 				profiles: state.profiles,
 				feeds: state.feeds,
 			});

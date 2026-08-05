@@ -5,7 +5,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 import { clsx } from 'clsx';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
-import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
 
 import { usePrimaryLanguage } from '#/state/preferences/languages';
 
@@ -164,7 +164,7 @@ function SubtitleDialogInner({
 					color="primary"
 					variant="solid"
 					onClick={() => {
-						saveAltText(altText);
+						saveAltText(trimText(altText));
 						handle.close();
 					}}
 					disabled={isOverMaxLength}

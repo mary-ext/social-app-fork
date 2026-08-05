@@ -5,8 +5,8 @@ import { ok } from '@atcute/client';
 
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
-import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
-import { cleanNewlines, detectFacets, getShortenedLength } from '#/lib/strings/rich-text-facets';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
+import { detectFacets, getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
@@ -199,7 +199,8 @@ function DialogInner({
 		setImageError('');
 		setDisplayNameTooShort(false);
 		try {
-			if (displayName.length === 0) {
+			const name = displayName.trim();
+			if (name.length === 0) {
 				setDisplayNameTooShort(true);
 				return;
 			}
@@ -207,7 +208,7 @@ function DialogInner({
 			// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
 			// mentions left to strip.
 			const richText = shortenLinks(
-				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (h) => {
+				await detectFacets(trimText(descriptionText), async (h) => {
 					try {
 						const res = await ok(
 							appview.get('com.atproto.identity.resolveHandle', {
@@ -224,7 +225,7 @@ function DialogInner({
 			if (list) {
 				await updateListMutation({
 					uri: list.uri,
-					name: displayName,
+					name,
 					description: richText.text,
 					descriptionFacets: richText.facets,
 					avatar: newListAvatar,
@@ -239,7 +240,7 @@ function DialogInner({
 			} else {
 				const { uri } = await createListMutation({
 					purpose: activePurpose,
-					name: displayName,
+					name,
 					description: richText.text,
 					descriptionFacets: richText.facets,
 					avatar: newListAvatar,

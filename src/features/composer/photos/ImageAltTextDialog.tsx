@@ -4,6 +4,7 @@ import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import type { ComposerImage } from '#/lib/media/composer-image';
+import { trimText } from '#/lib/strings/helpers';
 
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
@@ -70,7 +71,7 @@ const DialogInner = ({ context, handle, image, onChange }: Props): React.ReactNo
 		: m['view.composer.altText.charCount']({ length: alt.length, max: MAX_ALT_TEXT });
 
 	const onSave = () => {
-		onChange({ ...image, alt });
+		onChange({ ...image, alt: trimText(alt) });
 		handle.close();
 	};
 

@@ -17,21 +17,6 @@ export type Richtext = {
 	facets?: RichtextFacet[];
 };
 
-// Collapses runs of 3+ newlines (allowing zero-width separators between them) down to a blank line.
-// oxlint-disable-next-line no-misleading-character-class -- the zero-width separators are deliberate
-const EXCESS_NEWLINES_RE = /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g;
-
-/**
- * Collapses runs of three or more newlines down to a single blank line, matching `@atproto/api`'s `RichText`
- * `cleanNewlines` option.
- *
- * @param text the text to sanitize.
- * @returns the text with excess blank lines removed.
- */
-export function cleanNewlines(text: string): string {
-	return text.replace(EXCESS_NEWLINES_RE, '\n\n');
-}
-
 /**
  * counts the graphemes of `text` as it will be displayed, with link URLs replaced by their shortened form.
  *
@@ -104,12 +89,13 @@ export function detectFacetsWithoutResolution(text: string): Richtext {
 }
 
 /**
- * Detects facets in `text`, resolving each mention handle to a DID via `resolve`. Mentions whose handle does
- * not resolve are rendered as plain text.
+ * detects facets and resolves mention handles.
  *
- * @param text the input text.
- * @param resolve maps a syntactically valid handle to a DID, or undefined when it cannot be resolved.
- * @returns the text and its detected facets.
+ * facet offsets refer to the returned text.
+ *
+ * @param text input text
+ * @param resolve maps a valid handle to a DID or undefined
+ * @returns text and detected facets
  */
 export async function detectFacets(
 	text: string,

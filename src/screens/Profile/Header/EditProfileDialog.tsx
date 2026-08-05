@@ -5,7 +5,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
-import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
 
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
@@ -152,8 +152,8 @@ function DialogInner({
 			await updateProfileMutation({
 				profile,
 				updates: {
-					displayName: displayName.trimEnd(),
-					description: description.trimEnd(),
+					displayName: displayName.trim(),
+					description: trimText(description),
 				},
 				newUserAvatar,
 				newUserBanner,

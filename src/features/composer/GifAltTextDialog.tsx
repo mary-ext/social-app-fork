@@ -4,6 +4,7 @@ import { MAX_ALT_TEXT } from '#/lib/constants';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
+import { trimText } from '#/lib/strings/helpers';
 
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
 
@@ -86,7 +87,7 @@ const GifAltTextForm = ({
 		: m['view.composer.altText.charCount']({ length: altText.length, max: MAX_ALT_TEXT });
 
 	const onSave = () => {
-		onSubmit(altText);
+		onSubmit(trimText(altText));
 		handle.close();
 	};
 

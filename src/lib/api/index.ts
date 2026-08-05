@@ -22,7 +22,8 @@ import { getPostRecord } from '#/lib/api/record-views';
 import { task } from '#/lib/async/task';
 import { compressImage } from '#/lib/media/composer-image';
 import { isNetworkError } from '#/lib/strings/errors';
-import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
+import { trimText } from '#/lib/strings/helpers';
+import { detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
@@ -211,14 +212,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 }
 
 async function resolveRT(appview: Client, text: string) {
-	const trimmedText = cleanNewlines(
-		text
-			// keep leading ASCII art while removing empty lines.
-			.replace(/^(\s*\n)+/, '')
-			.trimEnd(),
-	);
-
-	const rt = await detectFacets(trimmedText, async (handle) => {
+	const rt = await detectFacets(trimText(text), async (handle) => {
 		try {
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {
@@ -328,7 +322,7 @@ async function resolveMedia(
 			imagesDraft.map(async (image) => {
 				const { blob, width, height } = await compressImage(image);
 				return {
-					alt: image.alt,
+					alt: trimText(image.alt),
 					aspectRatio: { height, width },
 					image: await uploadBlob(pds, blob),
 				};
@@ -346,7 +340,7 @@ async function resolveMedia(
 				const { blob, width, height } = await compressImage(image);
 				return {
 					$type: 'app.bsky.embed.gallery#image',
-					alt: image.alt,
+					alt: trimText(image.alt),
 					aspectRatio: { height, width },
 					image: await uploadBlob(pds, blob),
 				};
@@ -379,7 +373,7 @@ async function resolveMedia(
 
 		return {
 			$type: 'app.bsky.embed.video',
-			alt: videoDraft.altText || undefined,
+			alt: trimText(videoDraft.altText) || undefined,
 			aspectRatio,
 			captions: captions.length === 0 ? undefined : captions,
 			presentation: videoDraft.video.mimeType === 'image/gif' ? 'gif' : 'default',

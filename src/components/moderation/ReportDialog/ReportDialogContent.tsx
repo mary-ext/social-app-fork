@@ -4,6 +4,7 @@ import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
 import { getLabelingServiceTitle } from '#/lib/moderation';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
+import { trimText } from '#/lib/strings/helpers';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 
@@ -170,7 +171,7 @@ function Inner({
 		try {
 			setIsPending(true);
 			await submitReport({
-				details: state.details.trim() || undefined,
+				details: trimText(state.details) || undefined,
 				labeler: selectedLabeler,
 				reason: state.reason.reason,
 				subject,

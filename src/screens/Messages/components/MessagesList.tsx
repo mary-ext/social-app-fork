@@ -7,7 +7,8 @@ import type { $type } from '@atcute/lexicons';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
-import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
+import { trimText } from '#/lib/strings/helpers';
+import { detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
@@ -86,6 +87,16 @@ function IntersectionSentinel({
 	}, [root, rootMargin, stableOnChange]);
 
 	return <div ref={nodeRef} />;
+}
+
+function stripEdgeToken(text: string, raw: string): string {
+	if (text.startsWith(raw)) {
+		return trimText(text.slice(raw.length));
+	}
+	if (text.endsWith(raw)) {
+		return trimText(text.slice(0, -raw.length));
+	}
+	return text;
 }
 
 function getLastMessageKey(items: RenderItem[]): string | undefined {
@@ -200,7 +211,7 @@ export function MessagesList({
 
 	// -- Message sending
 	const onSendMessage = async (text: string, reply?: $type.enforce<ChatBskyConvoDefs.MessageView>) => {
-		let trimmedText = cleanNewlines(text.trimEnd());
+		let trimmedText = trimText(text);
 
 		let embed: $type.enforce<AppBskyEmbedRecord.Main> | $type.enforce<ChatBskyEmbedJoinLink.Main> | undefined;
 		let embedView:
@@ -225,8 +236,6 @@ export function MessagesList({
 						record: createEmbedViewRecordFromPost(post),
 					};
 
-					// If the embedded post's own link sits at the start or end of the message text,
-					// strip it — it shows as the quote embed instead.
 					for (const token of tokenize(trimmedText)) {
 						if (token.type !== 'autolink') {
 							continue;
@@ -234,11 +243,7 @@ export function MessagesList({
 						const link = resolveUrlToLink(token.url);
 						// this might have a handle instead of a DID, so just compare the rkey
 						if (link?.kind === 'post' && post.uri.endsWith(link.rkey)) {
-							if (trimmedText.startsWith(token.raw)) {
-								trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
-							} else if (trimmedText.endsWith(token.raw)) {
-								trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
-							}
+							trimmedText = stripEdgeToken(trimmedText, token.raw);
 							break;
 						}
 					}
@@ -261,8 +266,6 @@ export function MessagesList({
 				};
 			}
 
-			// If the invite link sits at the start or end of the message text, strip it — it shows as the
-			// invite card instead.
 			for (const token of tokenize(trimmedText)) {
 				if (token.type !== 'autolink') {
 					continue;
@@ -271,11 +274,7 @@ export function MessagesList({
 				if (link?.kind !== 'chat-invite' || link.code !== code) {
 					continue;
 				}
-				if (trimmedText.startsWith(token.raw)) {
-					trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
-				} else if (trimmedText.endsWith(token.raw)) {
-					trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
-				}
+				trimmedText = stripEdgeToken(trimmedText, token.raw);
 				break;
 			}
 		}

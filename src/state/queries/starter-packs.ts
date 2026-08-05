@@ -29,10 +29,14 @@ import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
 import { getClients, useSession } from '#/state/session';
 
-async function detectDescriptionFacets(
+async function resolveDescription(
 	appview: Client,
-	description: string,
-): Promise<AppBskyRichtextFacet.Main[] | undefined> {
+	description: string | undefined,
+): Promise<{ description?: string; descriptionFacets?: AppBskyRichtextFacet.Main[] }> {
+	if (!description) {
+		return {};
+	}
+
 	const rt = await detectFacets(description, async (handle) => {
 		try {
 			const res = await ok(appview.get('com.atproto.identity.resolveHandle', { params: { handle } }));
@@ -41,7 +45,8 @@ async function detectDescriptionFacets(
 			return undefined;
 		}
 	});
-	return rt.facets;
+
+	return { description: rt.text, descriptionFacets: rt.facets };
 }
 
 const RQKEY_ROOT = 'starter-pack';
@@ -112,13 +117,13 @@ export function useCreateStarterPackMutation({
 	return useMutation<{ cid: Cid; uri: ResourceUri }, Error, UseCreateStarterPackMutationParams>({
 		mutationFn: async ({ name, description, feeds, profiles }) => {
 			const did = currentAccount!.did;
-			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
-			if (description) {
-				descriptionFacets = await detectDescriptionFacets(appview, description);
-			}
+			const { description: trimmedDescription, descriptionFacets } = await resolveDescription(
+				appview,
+				description,
+			);
 
 			const listRes = await createStarterPackList({
-				description,
+				description: trimmedDescription,
 				descriptionFacets,
 				did,
 				name,
@@ -132,7 +137,7 @@ export function useCreateStarterPackMutation({
 				record: {
 					$type: 'app.bsky.graph.starterpack',
 					createdAt: new Date().toISOString(),
-					description,
+					description: trimmedDescription,
 					descriptionFacets,
 					feeds: feeds?.map((f) => ({ uri: f.uri })),
 					list: listRes.uri,
@@ -177,10 +182,10 @@ export function useEditStarterPackMutation({
 	>({
 		mutationFn: async ({ name, description, feeds, profiles, currentStarterPack, currentListItems }) => {
 			const did = currentAccount!.did;
-			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
-			if (description) {
-				descriptionFacets = await detectDescriptionFacets(appview, description);
-			}
+			const { description: trimmedDescription, descriptionFacets } = await resolveDescription(
+				appview,
+				description,
+			);
 
 			const spRecord = getStarterPackRecord(currentStarterPack);
 			if (spRecord.$type !== 'app.bsky.graph.starterpack') {
@@ -241,7 +246,7 @@ export function useEditStarterPackMutation({
 				record: {
 					$type: 'app.bsky.graph.starterpack',
 					createdAt: spRecord.createdAt,
-					description,
+					description: trimmedDescription,
 					descriptionFacets,
 					feeds: feeds?.map((f) => ({ uri: f.uri })),
 					list: currentStarterPack.list!.uri,

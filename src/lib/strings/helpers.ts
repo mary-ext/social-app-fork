@@ -29,6 +29,23 @@ export function isOverMaxGraphemeCount({ text, maxCount }: { text: string; maxCo
 	return !isGraphemeLengthInRange(text, 0, maxCount);
 }
 
+const BLANK_LINE_PADDING = '[ \\u00AD\\u2060\\u200D\\u200C\\u200B]';
+
+const TRIM_RE = new RegExp(
+	`^\\s+|\\s+$|${BLANK_LINE_PADDING}+(?=\\n)|\\n(?=(?:${BLANK_LINE_PADDING}*\\n){2})${BLANK_LINE_PADDING}*`,
+	'g',
+);
+
+/**
+ * trims multiline text and collapses excess blank lines.
+ *
+ * @param text text to trim
+ * @returns trimmed text
+ */
+export function trimText(text: string): string {
+	return text.replace(TRIM_RE, '');
+}
+
 export function countLines(str: string | undefined): number {
 	if (!str) {
 		return 0;
