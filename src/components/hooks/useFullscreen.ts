@@ -1,14 +1,11 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useRef } from 'react';
+
+import { useIsFullscreen } from '#/lib/fullscreen';
 
 import { IS_FIREFOX, IS_SAFARI } from '#/env';
 
-function fullscreenSubscribe(onChange: () => void) {
-	document.addEventListener('fullscreenchange', onChange);
-	return () => document.removeEventListener('fullscreenchange', onChange);
-}
-
 export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
-	const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () => !!document.fullscreenElement);
+	const isFullscreen = useIsFullscreen();
 	const scrollYRef = useRef<null | number>(null);
 	// transition detection for the scroll-restore side effect, not derived render state — keep it in a ref
 	// so the effect can read the previous value without a synchronous setState.
