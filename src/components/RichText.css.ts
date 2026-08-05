@@ -30,6 +30,7 @@ export const emoji = recipe(
 			size: {
 				lg: { vars: { [sizeVar]: fontSize.lg } },
 				md: { vars: { [sizeVar]: fontSize.md } },
+				md_sub: { vars: { [sizeVar]: fontSize.md_sub } },
 				sm: { vars: { [sizeVar]: fontSize.sm } },
 				xl: { vars: { [sizeVar]: fontSize.xl } },
 				xs: { vars: { [sizeVar]: fontSize.xs } },

@@ -31,23 +31,22 @@
 		}
 	],
 	"screens.search.starterPack.open": "Open pack",
-	"screens.search.trending.entertainment": "Entertainment",
-	"screens.search.trending.hot": "Hot",
+	"screens.search.trending.postCount": [
+		{
+			"declarations": ["input count", "input formatted", "local cp = count: plural"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{formatted} post",
+				"cp=other": "{formatted} posts"
+			}
+		}
+	],
 	"screens.search.trending.rank": [
 		{
 			"declarations": ["input rank", "local cp = rank: plural", "local n = rank: number"],
 			"selectors": [],
 			"match": {
 				"": "{n}."
-			}
-		}
-	],
-	"screens.search.trending.timeAgo": [
-		{
-			"declarations": ["input type", "local cp = type: plural", "local n = type: number"],
-			"selectors": [],
-			"match": {
-				"": "{n}h ago"
 			}
 		}
 	]

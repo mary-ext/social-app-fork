@@ -37,7 +37,7 @@ export type RichTextProps = Pick<
 	/** Underline timing for inline links, mentions, and tags; defaults to `hover`. */
 	linkUnderline?: InlineLinkUnderline;
 	/** The body-text sizes RichText renders (a subset of the full scale), each enlarged for emoji-only content. */
-	size?: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+	size?: 'lg' | 'md' | 'md_sub' | 'sm' | 'xl' | 'xs';
 	value: Richtext | string;
 };
 
