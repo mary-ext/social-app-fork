@@ -22,19 +22,15 @@ this project uses React Compiler.
 
 ### browser automation
 
-`mise.toml` preconfigures /agent-browser skill with a session name and a single persistent browser
-profile, and Chrome locks that profile to one browser session at a time.
+`mise.toml` preconfigures /agent-browser skill with a namespace and a session name. check
+`agent-browser session` for the assigned name and `agent-browser session list` to see if the browser
+is already running or not.
 
-unless the work needs the logged-in account, launch without the profile:
+work that needs the logged-in account should pass `--restore` when opening a session for the first
+time, later commands may omit this flag. if you're still signed out, try going through the sign in
+flow anyway but if it asks for a credential, stop and report to the user.
 
-    env -u AGENT_BROWSER_PROFILE agent-browser open <url>
-
-only the launch command reads the AGENT_BROWSER_PROFILE variable, subsequent commands can be run
-without `env -u`. check `agent-browser session` for the assigned session name and
-`agent-browser session list` to see if the browser is already running or not.
-
-when the work does need the account, launch with the profile as-is. if it is already locked by
-another session, stop and report to the user rather than waiting or forcing it.
+the daemon may close itself after some inactivity.
 
 the first load of a page often comes up blank; reload once before you treat it as a bug. using curl
 tests nothing of value.

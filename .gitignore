@@ -14,8 +14,6 @@ yarn-*.log
 *.local.json
 .DS_Store
 
-/.claude/agent-browser/
-
 tsconfig.tsbuildinfo
 .oxlintcache
 
