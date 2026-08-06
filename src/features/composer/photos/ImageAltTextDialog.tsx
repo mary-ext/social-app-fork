@@ -1,10 +1,10 @@
 import { useId, useRef, useState } from 'react';
 
-import { getBlobUrl } from '#/lib/blob-url';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import type { ComposerImage } from '#/lib/media/composer-image';
-import { trimText } from '#/lib/text';
+import { getBlobUrl } from '#/lib/utils/blob-url';
+import { trimText } from '#/lib/utils/text';
 
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';

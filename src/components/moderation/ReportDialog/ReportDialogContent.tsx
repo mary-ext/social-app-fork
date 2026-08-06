@@ -4,7 +4,7 @@ import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
 import { profileDisplayName } from '#/lib/display-names';
 import { BSKY_LABELER_DID } from '#/lib/moderation/labelers';
-import { trimText } from '#/lib/text';
+import { trimText } from '#/lib/utils/text';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 

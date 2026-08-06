@@ -151,7 +151,7 @@ export function shouldRetryError(e: unknown) {
  * checks if an error was raised by aborting an in-flight action.
  *
  * matches on `name` because aborts arrive from several sources — `AbortController`, the toggle mutation
- * queue, `#/lib/async/cancelable` — with no common class.
+ * queue, `#/lib/utils/abort-error` — with no common class.
  *
  * @param e the thrown value to check
  * @returns true if the value is an abort error

@@ -4,7 +4,7 @@ import type { Handle } from '@atcute/lexicons';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import type { Richtext } from '#/lib/rich-text';
-import { countLines } from '#/lib/text';
+import { countLines } from '#/lib/utils/text';
 
 import { RichText } from '#/components/RichText';
 

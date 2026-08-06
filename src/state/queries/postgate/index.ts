@@ -8,7 +8,7 @@ import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
-import { networkRetry, retry } from '#/lib/async/retry';
+import { networkRetry, retry } from '#/lib/utils/retry';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { STALE } from '#/state/queries';

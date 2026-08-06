@@ -2,7 +2,7 @@ import { cloneElement, createContext, isValidElement, use, useState } from 'reac
 
 import { clsx } from 'clsx';
 
-import { mergeRefs } from '#/lib/merge-refs';
+import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import { useIsFocused } from '#/routes';
 

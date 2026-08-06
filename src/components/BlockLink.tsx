@@ -12,7 +12,7 @@ import {
 
 import { clsx } from 'clsx';
 
-import { mergeRefs } from '#/lib/merge-refs';
+import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { isModifiedClick, navigateTo } from '#/components/web/Link';

@@ -1,4 +1,4 @@
-import { safeUrlParse } from '#/lib/url';
+import { safeUrlParse } from '#/lib/utils/url';
 
 const BSKY_TRUSTED_HOSTS = new Set([
 	'blueskyweb.xyz',

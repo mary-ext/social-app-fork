@@ -1,6 +1,6 @@
 import { type Client, ok } from '@atcute/client';
 
-import { networkRetry } from '#/lib/async/retry';
+import { networkRetry } from '#/lib/utils/retry';
 
 import { type Clients, createOAuthClients, createPublicClients } from './clients';
 import { configureModerationForAccount, configureModerationForGuest } from './labelers';

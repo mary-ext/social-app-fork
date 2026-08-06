@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { ok } from '@atcute/client';
 
-import { downloadBytes } from '#/lib/download';
+import { downloadBytes } from '#/lib/utils/download';
 
 import { getClients, useSession } from '#/state/session';
 

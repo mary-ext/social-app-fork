@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { APP_LABELERS } from '#/lib/moderation/labelers';
 import type { BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
-import { replaceEqualDeep } from '#/lib/objects';
+import { replaceEqualDeep } from '#/lib/utils/objects';
 
 import { GCTIME, STALE } from '#/state/queries';
 import {

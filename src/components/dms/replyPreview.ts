@@ -1,7 +1,7 @@
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { toShortUrl } from '#/lib/url';
+import { toShortUrl } from '#/lib/utils/url';
 
 import { m } from '#/paraglide/messages';
 

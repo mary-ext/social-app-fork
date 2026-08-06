@@ -4,10 +4,10 @@ import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
-import { isOnlyEmoji } from '#/lib/emoji';
 import { parseRichtext, type Richtext, segmentizeRichtext, toPlainText } from '#/lib/rich-text';
 import { profileTarget } from '#/lib/routes/targets';
-import { parseLinkableUrl, toShortUrl } from '#/lib/url';
+import { isOnlyEmoji } from '#/lib/utils/emoji';
+import { parseLinkableUrl, toShortUrl } from '#/lib/utils/url';
 
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { atomicSegment, emoji } from '#/components/RichText.css';

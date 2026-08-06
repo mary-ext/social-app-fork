@@ -1,4 +1,4 @@
-import { limitConcurrency } from '#/lib/async/task';
+import { limitConcurrency } from '#/lib/utils/task';
 
 import { fetchTextWithRetry, MAX_ATTEMPTS } from './fetch-policy';
 

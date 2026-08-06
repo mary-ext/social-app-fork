@@ -12,9 +12,9 @@ import type { $type, Did } from '@atcute/lexicons';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { networkRetry } from '#/lib/async/retry';
 import { isNetworkError } from '#/lib/errors';
-import { replaceEqualDeep } from '#/lib/objects';
+import { replaceEqualDeep } from '#/lib/utils/objects';
+import { networkRetry } from '#/lib/utils/retry';
 
 import {
 	isProfileShadowApplied,

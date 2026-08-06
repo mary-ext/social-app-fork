@@ -21,12 +21,12 @@ import type { QueryClient } from '@tanstack/react-query';
 import { getPostRecord } from '#/lib/api/record-casts';
 import { uploadBlob } from '#/lib/api/records';
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
-import { task } from '#/lib/async/task';
 import { isNetworkError } from '#/lib/errors';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { compressImage } from '#/lib/media/composer-image';
 import type { Richtext } from '#/lib/rich-text';
-import { trimText } from '#/lib/text';
+import { task } from '#/lib/utils/task';
+import { trimText } from '#/lib/utils/text';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import {

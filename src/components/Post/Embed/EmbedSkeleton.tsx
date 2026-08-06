@@ -1,6 +1,6 @@
 import { weightedIndex } from '@mary/array-fns';
 
-import { randomInRange } from '#/lib/numbers';
+import { randomInRange } from '#/lib/utils/numbers';
 
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { clampAspectRatio, deriveCarouselHeight } from '#/components/ImageEmbed/carousel/utils';

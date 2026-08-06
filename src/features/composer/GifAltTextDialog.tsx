@@ -1,11 +1,11 @@
 import { useId, useState } from 'react';
 
-import { getBlobUrl } from '#/lib/blob-url';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import type { Gif } from '#/lib/gif';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/media/embed-player';
-import { trimText } from '#/lib/text';
+import { getBlobUrl } from '#/lib/utils/blob-url';
+import { trimText } from '#/lib/utils/text';
 
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
 

@@ -5,7 +5,7 @@ import * as TID from '@atcute/tid';
 
 import { chunked } from '@mary/array-fns';
 
-import { until } from '#/lib/async/until';
+import { until } from '#/lib/utils/until';
 
 /**
  * Creates follow records in chunks and waits until at least one follow indexes.

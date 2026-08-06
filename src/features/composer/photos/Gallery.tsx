@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { getBlobUrl } from '#/lib/blob-url';
 import type { ComposerImage } from '#/lib/media/composer-image';
+import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';

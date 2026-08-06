@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { AbortError } from '#/lib/async/abort-error';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { AbortError } from '#/lib/utils/abort-error';
 
 type Task<TServerState> = {
 	isOn: boolean;

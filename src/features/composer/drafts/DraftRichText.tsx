@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 
 import { clsx } from 'clsx';
 
-import { isOnlyEmoji } from '#/lib/emoji';
 import { parseRichtext, toPlainText } from '#/lib/rich-text';
-import { parseLinkableUrl, toShortUrl } from '#/lib/url';
+import { isOnlyEmoji } from '#/lib/utils/emoji';
+import { parseLinkableUrl, toShortUrl } from '#/lib/utils/url';
 
 import { Text } from '#/components/Text';
 

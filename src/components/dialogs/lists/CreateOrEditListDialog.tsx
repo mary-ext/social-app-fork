@@ -7,7 +7,7 @@ import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { getShortenedLength, richTextToSourceText } from '#/lib/rich-text';
-import { isOverMaxGraphemeCount, trimText } from '#/lib/text';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';

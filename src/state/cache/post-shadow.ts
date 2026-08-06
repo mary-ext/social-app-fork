@@ -5,7 +5,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
+import { KeyedEventEmitter } from '#/lib/utils/keyed-event-emitter';
 
 import { getPostFinders } from './registry';
 import { castAsShadow, type Shadow } from './types';

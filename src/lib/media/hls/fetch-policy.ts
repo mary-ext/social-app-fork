@@ -1,5 +1,5 @@
-import { sleep } from '#/lib/async/sleep';
 import { toVideoCdnUrl } from '#/lib/bsky-cdn';
+import { sleep } from '#/lib/utils/sleep';
 
 /** request attempt limits by resource type. */
 export const MAX_ATTEMPTS = { master: 2, media: 4 };

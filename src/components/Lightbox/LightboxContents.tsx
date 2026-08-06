@@ -11,7 +11,7 @@ import {
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
-import { downloadImage } from '#/lib/download';
+import { downloadImage } from '#/lib/media/download-image';
 
 import type { LightboxPayload } from '#/components/dialogs/handles';
 import * as Menu from '#/components/Menu';

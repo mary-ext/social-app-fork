@@ -5,7 +5,7 @@ import { clsx } from 'clsx';
 
 import { isMisleadingLink } from '#/lib/links/trust';
 import { resolveUrl } from '#/lib/routes/app-links';
-import { safeUrlParse } from '#/lib/url';
+import { safeUrlParse } from '#/lib/utils/url';
 
 import { groupChatJoinHandle, linkWarningDialogHandle } from '#/components/dialogs/handles';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';

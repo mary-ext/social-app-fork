@@ -6,7 +6,7 @@ import { differenceInMinutes } from '@mary/date-fns';
 
 import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
-import { parseLooseUrl } from '#/lib/url';
+import { parseLooseUrl } from '#/lib/utils/url';
 
 import { useTick } from '#/state/tick';
 

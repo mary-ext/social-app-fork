@@ -17,7 +17,7 @@ import {
 } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';
-import { accumulate } from '#/lib/async/accumulate';
+import { accumulate } from '#/lib/utils/accumulate';
 
 import { STALE } from '#/state/queries';
 import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';

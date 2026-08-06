@@ -3,8 +3,8 @@ import { type Client, ok } from '@atcute/client';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { networkRetry } from '#/lib/async/retry';
 import { isNetworkError } from '#/lib/errors';
+import { networkRetry } from '#/lib/utils/retry';
 
 import { BACKGROUND_POLL_INTERVAL, DEFAULT_POLL_INTERVAL } from '#/state/messages/events/const';
 import {

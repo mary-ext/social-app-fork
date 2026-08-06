@@ -24,9 +24,9 @@ import {
 } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
-import { retry } from '#/lib/async/retry';
-import { until } from '#/lib/async/until';
 import type { ImageMeta } from '#/lib/media/composer-image';
+import { retry } from '#/lib/utils/retry';
+import { until } from '#/lib/utils/until';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { registerShadowFinders } from '#/state/cache/registry';

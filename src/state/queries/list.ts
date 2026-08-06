@@ -9,8 +9,8 @@ import { chunked, mapDefined } from '@mary/array-fns';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, getRecord, listRecords, putRecord, uploadBlob } from '#/lib/api/records';
-import { until } from '#/lib/async/until';
 import type { ImageMeta } from '#/lib/media/composer-image';
+import { until } from '#/lib/utils/until';
 
 import { STALE } from '#/state/queries';
 import { getClients, useSession } from '#/state/session';

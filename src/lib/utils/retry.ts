@@ -1,5 +1,5 @@
-import { sleep } from '#/lib/async/sleep';
 import { isNetworkError } from '#/lib/errors';
+import { sleep } from '#/lib/utils/sleep';
 
 export async function retry<P>(
 	retries: number,

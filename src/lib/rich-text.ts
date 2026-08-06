@@ -9,7 +9,7 @@ import { getGraphemeLength } from '@atcute/util-text';
 import { mapDefined, unique } from '@mary/array-fns';
 
 import { isMisleadingLink } from '#/lib/links/trust';
-import { toShortUrl } from '#/lib/url';
+import { toShortUrl } from '#/lib/utils/url';
 
 export type RichtextFacet = AppBskyRichtextFacet.Main;
 

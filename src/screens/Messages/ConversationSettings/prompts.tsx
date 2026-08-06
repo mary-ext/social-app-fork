@@ -1,5 +1,5 @@
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
-import { isOverMaxGraphemeCount } from '#/lib/text';
+import { isOverMaxGraphemeCount } from '#/lib/utils/text';
 
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';

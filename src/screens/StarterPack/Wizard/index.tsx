@@ -9,7 +9,7 @@ import { profileDisplayName, sanitizeDisplayName } from '#/lib/display-names';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/starter-pack';
-import { enforceLen, trimText } from '#/lib/text';
+import { enforceLen, trimText } from '#/lib/utils/text';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAllListMembersQuery } from '#/state/queries/list-members';

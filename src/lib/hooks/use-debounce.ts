@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 
-import { type DebounceOptions, type Debounced, debounce } from '#/lib/debounce';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { type DebounceOptions, type Debounced, debounce } from '#/lib/utils/debounce';
 
 /** what happens to a pending trailing invocation when the owning component unmounts. */
 type UnmountBehavior =

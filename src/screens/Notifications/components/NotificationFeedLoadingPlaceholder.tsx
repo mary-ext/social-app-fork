@@ -2,7 +2,7 @@ import { weightedIndex } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { triangularRandom } from '#/lib/numbers';
+import { triangularRandom } from '#/lib/utils/numbers';
 
 import {
 	PostLoadingPlaceholder,

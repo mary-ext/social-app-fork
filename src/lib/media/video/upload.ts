@@ -1,9 +1,9 @@
 import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 
-import { AbortError } from '#/lib/async/abort-error';
 import { ServerError } from '#/lib/media/video/errors';
 import type { CompressedVideo } from '#/lib/media/video/types';
+import { AbortError } from '#/lib/utils/abort-error';
 
 import { m } from '#/paraglide/messages';
 

@@ -3,8 +3,8 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
+import { toNiceDomain } from '#/lib/links/nice-domain';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/media/embed-player';
-import { toNiceDomain } from '#/lib/url';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
 

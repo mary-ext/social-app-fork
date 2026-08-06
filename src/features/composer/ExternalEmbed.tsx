@@ -2,10 +2,10 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { getBlobUrl } from '#/lib/blob-url';
 import { cleanError } from '#/lib/errors';
 import type { Gif } from '#/lib/gif';
-import { toNiceDomain } from '#/lib/url';
+import { toNiceDomain } from '#/lib/links/nice-domain';
+import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
 

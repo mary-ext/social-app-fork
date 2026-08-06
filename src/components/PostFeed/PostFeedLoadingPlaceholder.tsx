@@ -1,6 +1,6 @@
 import { weightedIndex } from '@mary/array-fns';
 
-import { triangularRandom } from '#/lib/numbers';
+import { triangularRandom } from '#/lib/utils/numbers';
 
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { PostControlsSkeleton } from '#/components/PostControls';

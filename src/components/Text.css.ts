@@ -1,6 +1,6 @@
 import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
 
-import { typedKeys } from '#/lib/objects';
+import { typedKeys } from '#/lib/utils/objects';
 
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';

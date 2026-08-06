@@ -3,7 +3,7 @@ import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcu
 import { profileDisplayName } from '#/lib/display-names';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
-import { toShortUrl } from '#/lib/url';
+import { toShortUrl } from '#/lib/utils/url';
 
 import { m } from '#/paraglide/messages';
 

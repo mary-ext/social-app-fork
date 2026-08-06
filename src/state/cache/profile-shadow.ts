@@ -6,7 +6,7 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { KeyedEventEmitter } from '#/lib/keyed-event-emitter';
+import { KeyedEventEmitter } from '#/lib/utils/keyed-event-emitter';
 
 import type { FeedPage } from '#/state/queries/post-feed';
 

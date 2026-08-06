@@ -27,7 +27,7 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 import { isDocumentVisible } from '#/lib/browser/visibility';
 import { toModerationPreferences } from '#/lib/moderation/preferences';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
-import { typedKeys } from '#/lib/objects';
+import { typedKeys } from '#/lib/utils/objects';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';

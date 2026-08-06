@@ -1,5 +1,5 @@
 import type { LinkMeta } from '#/lib/link-meta';
-import { toNiceDomain } from '#/lib/url';
+import { toNiceDomain } from '#/lib/links/nice-domain';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { Text } from '#/components/Text';

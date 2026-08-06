@@ -10,7 +10,7 @@ import {
 } from '@atcute/oauth-browser-client';
 
 import { internalClient } from '#/lib/api/internal-client';
-import { sleep } from '#/lib/async/sleep';
+import { sleep } from '#/lib/utils/sleep';
 
 import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE, SLINGSHOT_SERVICE_URL } from '#/env';
 

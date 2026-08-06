@@ -1,5 +1,3 @@
-import { BSKY_SERVICE } from '#/lib/constants';
-
 /**
  * parses a string into a URL, accepting only safe http(s) schemes.
  *
@@ -36,18 +34,6 @@ export const parseLooseUrl = (text: string): string | null => {
 	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 	return parseLinkableUrl(candidate)?.href ?? null;
 };
-
-export function toNiceDomain(url: string): string {
-	try {
-		const urlp = new URL(url);
-		if (`https://${urlp.host}` === BSKY_SERVICE) {
-			return 'Bluesky Social';
-		}
-		return urlp.host ? urlp.host : url;
-	} catch {
-		return url;
-	}
-}
 
 export function toShortUrl(url: string): string {
 	try {

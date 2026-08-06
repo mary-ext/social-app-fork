@@ -3,7 +3,7 @@ import type { ActorIdentifier, RecordKey } from '@atcute/lexicons/syntax';
 import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
 import { parseBlueskyShortPath } from '#/lib/links/schemes/bluesky-short';
 import { parseOwnPath } from '#/lib/links/schemes/own';
-import { safeUrlParse } from '#/lib/url';
+import { safeUrlParse } from '#/lib/utils/url';
 
 /**
  * a destination named by a client's URL, in terms of the records behind it rather than any one app's paths.

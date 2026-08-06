@@ -1,6 +1,6 @@
 import { weightedIndex } from '@mary/array-fns';
 
-import { triangularRandom } from '#/lib/numbers';
+import { triangularRandom } from '#/lib/utils/numbers';
 
 import * as Skeleton from '#/components/web/Skeleton';
 

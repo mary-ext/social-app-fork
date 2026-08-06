@@ -4,8 +4,8 @@ import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react
 
 import { ReactCrop, type PercentCrop } from 'react-image-crop';
 
-import { getBlobUrl } from '#/lib/blob-url';
 import { type ImageSource, type ImageTransformation, manipulateImage } from '#/lib/media/composer-image';
+import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';

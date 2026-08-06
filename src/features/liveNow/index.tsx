@@ -6,8 +6,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
-import { retry } from '#/lib/async/retry';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
+import { retry } from '#/lib/utils/retry';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { getClients, useSession } from '#/state/session';

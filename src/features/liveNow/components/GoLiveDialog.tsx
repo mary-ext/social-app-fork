@@ -4,7 +4,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
-import { parseLooseUrl } from '#/lib/url';
+import { parseLooseUrl } from '#/lib/utils/url';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useTick } from '#/state/tick';

@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
-import { accumulate } from '#/lib/async/accumulate';
+import { accumulate } from '#/lib/utils/accumulate';
 
 import { STALE } from '#/state/queries';
 import { getClients, useSession } from '#/state/session';

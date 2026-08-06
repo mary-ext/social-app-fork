@@ -2,8 +2,8 @@ import type { AppBskyEmbedDefs } from '@atcute/bluesky';
 
 import { remove as removeExif } from '@mary/exif-rm';
 
-import { limitConcurrency } from '#/lib/async/task';
 import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
+import { limitConcurrency } from '#/lib/utils/task';
 
 const MAX_CONCURRENT_COMPRESSIONS = 2;
 

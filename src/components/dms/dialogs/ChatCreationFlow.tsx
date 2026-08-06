@@ -9,7 +9,7 @@ import { clsx } from 'clsx';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
 import { isNetworkError } from '#/lib/errors';
-import { isOverMaxGraphemeCount } from '#/lib/text';
+import { isOverMaxGraphemeCount } from '#/lib/utils/text';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useCreateGroupChat } from '#/state/queries/messages/create-group-chat';

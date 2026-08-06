@@ -2,7 +2,7 @@ import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, type Ref, 
 
 import { clsx } from 'clsx';
 
-import { mergeRefs } from '#/lib/merge-refs';
+import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import * as styles from '#/components/forms/SearchField.css';
 import { Button, ButtonIcon } from '#/components/web/Button';

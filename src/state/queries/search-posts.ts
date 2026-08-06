@@ -8,8 +8,8 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { typedKeys } from '#/lib/objects';
 import { liftSearchQuery } from '#/lib/search-query';
+import { typedKeys } from '#/lib/utils/objects';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

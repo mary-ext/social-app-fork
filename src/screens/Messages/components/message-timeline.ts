@@ -1,6 +1,6 @@
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { isOnlyEmoji } from '#/lib/emoji';
+import { isOnlyEmoji } from '#/lib/utils/emoji';
 
 import type { ConvoItem } from '#/state/messages/convo/types';
 

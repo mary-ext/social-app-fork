@@ -5,8 +5,8 @@ import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
-import { until } from '#/lib/async/until';
 import { errorMessage } from '#/lib/errors';
+import { until } from '#/lib/utils/until';
 
 import { RQKEY } from '#/state/queries/profile';
 import { getClients } from '#/state/session';

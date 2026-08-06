@@ -5,7 +5,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants';
 import { cleanError } from '#/lib/errors';
 import type { ImageMeta } from '#/lib/media/composer-image';
-import { isOverMaxGraphemeCount, trimText } from '#/lib/text';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 

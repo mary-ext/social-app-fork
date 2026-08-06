@@ -2,7 +2,7 @@ import { Popover } from '@base-ui/react/popover';
 import { Slider } from '@base-ui/react/slider';
 
 import { useInputModality } from '#/lib/browser/input-modality';
-import { clamp } from '#/lib/numbers';
+import { clamp } from '#/lib/utils/numbers';
 
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 

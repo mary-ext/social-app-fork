@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useInputModality } from '#/lib/browser/input-modality';
-import { clamp } from '#/lib/numbers';
+import { clamp } from '#/lib/utils/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 

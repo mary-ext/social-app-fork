@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { enforceLen } from '#/lib/text';
+import { enforceLen } from '#/lib/utils/text';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useTitle } from '#/state/use-title';
