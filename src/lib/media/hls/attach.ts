@@ -81,7 +81,7 @@ const releaseWorker = (worker: Worker) => {
 
 // #endregion
 
-type PlayerStatus = 'ok' | 'retrying' | 'stopped';
+export type PlayerStatus = 'loading' | 'ok' | 'retrying' | 'stopped';
 
 export type PlayerHandle = {
 	/** switches quality at the current playback position. */
@@ -103,6 +103,7 @@ export type PlayerHandle = {
 type Operation =
 	| { type: 'append'; data: ArrayBuffer }
 	| { type: 'changeType'; mimeType: string }
+	| { type: 'duration'; duration: number }
 	| ({ type: 'evict' } & BufferWindow)
 	| { type: 'end' };
 
@@ -150,7 +151,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	let destroyed = false;
 	let requestedAhead = BUFFER_AHEAD.background;
 	let sated = false;
-	let status: PlayerStatus = 'ok';
+	let status: PlayerStatus = 'loading';
 	let onStatus: ((status: PlayerStatus) => void) | undefined;
 	let forwardBuffer = BUFFER_AHEAD.background + FORWARD_SLACK;
 	let lastTimeReport = 0;
@@ -285,6 +286,19 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 					} catch (error) {
 						fail({ code: 'unsupported', message: String(error), fatal: true });
 						return;
+					}
+					break;
+				}
+				case 'duration': {
+					const buffered = sourceBuffer.buffered;
+					const end = buffered.length > 0 ? buffered.end(buffered.length - 1) : 0;
+					// MSE rejects durations shorter than buffered media.
+					if (mediaSource.readyState === 'open' && operation.duration >= end) {
+						try {
+							mediaSource.duration = operation.duration;
+						} catch (error) {
+							console.warn('[hls] could not set duration', error);
+						}
 					}
 					break;
 				}
@@ -455,12 +469,16 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				if (message.epoch !== epoch || destroyed) {
 					break;
 				}
-				mediaSource.duration = message.duration;
 				const tallest = renditions.reduce((best, rendition) =>
 					rendition.height > best.height ? rendition : best,
 				);
 				onRenditions?.(renditions, tallest.index);
 				selectRendition(tallest.index, 0);
+				break;
+			}
+			case 'duration': {
+				queue.push({ type: 'duration', duration: message.duration });
+				pump();
 				break;
 			}
 			case 'init': {
@@ -559,10 +577,12 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	const onSeeking = () => {
 		recoveries = 0;
 		stopped = false;
-		setStatus('ok');
-		if (bufferedAhead(video.currentTime) <= STALL_MARGIN) {
-			restartAt(video.currentTime);
+		if (bufferedAhead(video.currentTime) > STALL_MARGIN) {
+			setStatus('ok');
+			return;
 		}
+		setStatus('loading');
+		restartAt(video.currentTime);
 	};
 	video.addEventListener('seeking', onSeeking, { signal });
 

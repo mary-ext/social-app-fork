@@ -30,8 +30,9 @@ export type MainToWorker =
 	| { type: 'buffer'; ahead: number };
 
 export type WorkerToMain =
-	| { type: 'renditions'; epoch: number; renditions: Rendition[]; duration: number }
+	| { type: 'renditions'; epoch: number; renditions: Rendition[] }
 	| { type: 'init'; epoch: number; mimeType: string }
+	| { type: 'duration'; epoch: number; duration: number }
 	| { type: 'chunk'; epoch: number; data: ArrayBuffer }
 	| { type: 'done'; epoch: number }
 	| { type: 'retrying'; epoch: number; failures: number }

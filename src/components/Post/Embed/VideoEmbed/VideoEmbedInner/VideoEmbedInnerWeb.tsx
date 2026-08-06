@@ -4,7 +4,12 @@ import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
-import { attachHlsPlayer, isHlsPlayerSupported, type PlayerHandle } from '#/lib/media/hls/attach';
+import {
+	attachHlsPlayer,
+	isHlsPlayerSupported,
+	type PlayerHandle,
+	type PlayerStatus,
+} from '#/lib/media/hls/attach';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
 import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
 
@@ -131,7 +136,7 @@ function useHlsPlayer({
 	const [selectedRendition, setSelectedRendition] = useState(-1);
 	const [subtitleTracks, setSubtitleTracks] = useState<SubtitleTrack[]>([]);
 	const [preferredSubtitleTrack, setPreferredSubtitleTrack] = useState(0);
-	const [retrying, setRetrying] = useState(false);
+	const [status, setStatus] = useState<PlayerStatus>('loading');
 	const subtitlesEnabled = useSubtitlesEnabled();
 
 	const selectRendition = (index: number) => {
@@ -169,9 +174,7 @@ function useHlsPlayer({
 
 		player.onSubtitles(setSubtitleTracks);
 
-		player.onStatus((status) => {
-			setRetrying(status === 'retrying');
-		});
+		player.onStatus(setStatus);
 
 		player.onError((failure) => {
 			setError(toAppError(failure));
@@ -185,7 +188,7 @@ function useHlsPlayer({
 			setSelectedRendition(-1);
 			setSubtitleTracks([]);
 			setPreferredSubtitleTrack(0);
-			setRetrying(false);
+			setStatus('loading');
 		};
 	}, [canLoad, playlist, setError, videoRef]);
 
@@ -201,7 +204,7 @@ function useHlsPlayer({
 	}, [activeSubtitleTrack, subtitleTracks]);
 
 	return {
-		playerLoading: canLoad && (renditions.length === 0 || retrying),
+		playerLoading: canLoad && (status === 'loading' || status === 'retrying'),
 		quality: { renditions, selected: selectedRendition, select: selectRendition } satisfies VideoQuality,
 		subtitles: {
 			tracks: subtitleTracks,

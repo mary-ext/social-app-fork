@@ -37,6 +37,7 @@ let currentTime = 0;
 let bufferAhead = BUFFER_AHEAD.background;
 let epoch = 0;
 let currentIndex = 0;
+let durationReported = false;
 
 let parked: (() => void)[] = [];
 
@@ -50,6 +51,18 @@ const wakeParked = () => {
 
 // Bluesky pairs audio and video renditions by index.
 const audioFor = (index: number) => audioTracks[index] ?? audioTracks[0];
+
+const reportDuration = async (track: InputVideoTrack, myEpoch: number) => {
+	if (durationReported) {
+		return;
+	}
+	durationReported = true;
+	const duration = await input?.getDurationFromMetadata([track]);
+	if (epoch !== myEpoch || duration == null) {
+		return;
+	}
+	post({ type: 'duration', epoch: myEpoch, duration });
+};
 
 const streamFrom = async (index: number, startTime: number, myEpoch: number) => {
 	currentIndex = index;
@@ -92,6 +105,11 @@ const streamFrom = async (index: number, startTime: number, myEpoch: number) => 
 		type: 'init',
 		epoch: myEpoch,
 		mimeType: `video/mp4; codecs="${codecs.join(',')}"`,
+	});
+
+	// decoder setup has loaded the track metadata needed here.
+	reportDuration(videoTrack, myEpoch).catch(() => {
+		// duration is optional.
 	});
 
 	const writable = new WritableStream<Uint8Array>({
@@ -172,6 +190,7 @@ const streamFrom = async (index: number, startTime: number, myEpoch: number) => 
 
 const load = async (playlist: string, myEpoch: number) => {
 	input?.dispose();
+	durationReported = false;
 	let lastProgress = 0;
 	input = new Input({
 		formats: FORMATS,
@@ -222,13 +241,10 @@ const load = async (playlist: string, myEpoch: number) => {
 		}),
 	);
 
-	// avoid fetching every rendition to calculate duration.
-	const duration =
-		(await input.getDurationFromMetadata([videoTracks[0]!])) ?? (await videoTracks[0]!.computeDuration());
 	if (epoch !== myEpoch) {
 		return;
 	}
-	post({ type: 'renditions', epoch: myEpoch, renditions, duration });
+	post({ type: 'renditions', epoch: myEpoch, renditions });
 };
 
 const report = (myEpoch: number) => (error: unknown) => {
@@ -263,6 +279,7 @@ self.addEventListener('message', (event) => {
 			audioTracks = [];
 			// reset state before another player reuses the worker.
 			bufferAhead = BUFFER_AHEAD.background;
+			durationReported = false;
 			break;
 		}
 		case 'select': {
