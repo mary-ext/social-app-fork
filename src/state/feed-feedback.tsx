@@ -5,7 +5,7 @@ import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants/feeds';
+import { FIRST_PARTY_FEEDS } from '#/lib/constants/feeds';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
@@ -14,8 +14,6 @@ import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-fee
 import * as PostFeed from '#/components/PostFeed/PostFeed';
 
 import { getClients } from './session';
-
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];
 
 export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<AppBskyFeedDefs.Interaction['event']>([
 	// explicit actions are safe to send.
@@ -155,7 +153,7 @@ export function useFeedFeedbackContext() {
 
 // restrict feedback to Discover until third-party permissions exist.
 export function isDiscoverFeed(feed?: FeedDescriptor) {
-	return !!feed && FEEDBACK_FEEDS.includes(feed);
+	return !!feed && FIRST_PARTY_FEEDS.includes(feed);
 }
 
 function isInteractionAllowed(

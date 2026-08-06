@@ -1,6 +1,6 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { DISCOVER_FEED_URI, prodFeedUri } from '#/lib/constants/feeds';
+import { DISCOVER_FEED_URI, bskyFeedUri } from '#/lib/constants/feeds';
 import { feedTarget } from '#/lib/routes/targets';
 
 import { setSelectedFeed } from '#/state/preferences/selected-feed';
@@ -32,7 +32,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 		useReplaceForYouWithDiscoverFeedMutation();
 
 	const feedConfig = preferences?.savedFeeds?.find((f) => f.value === feedUri && f.pinned);
-	const discoverFeedConfig = preferences?.savedFeeds?.find((f) => f.value === prodFeedUri('whats-hot'));
+	const discoverFeedConfig = preferences?.savedFeeds?.find((f) => f.value === bskyFeedUri('whats-hot'));
 	const hasFeedPinned = !!feedConfig;
 	const hasDiscoverPinned = !!discoverFeedConfig?.pinned;
 
@@ -43,7 +43,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 				Toast.show(m['common.feeds.removedToast']());
 			}
 			if (hasDiscoverPinned) {
-				setSelectedFeed(`feedgen|${prodFeedUri('whats-hot')}`);
+				setSelectedFeed(`feedgen|${bskyFeedUri('whats-hot')}`);
 			}
 		} catch (err) {
 			console.error('Failed to update feeds', err);
@@ -59,7 +59,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 				forYouFeedConfig: feedConfig,
 				discoverFeedConfig,
 			});
-			setSelectedFeed(`feedgen|${prodFeedUri('whats-hot')}`);
+			setSelectedFeed(`feedgen|${bskyFeedUri('whats-hot')}`);
 			Toast.show(m['view.posts.feed.replace.toast']());
 		} catch (err) {
 			console.error('Failed to update feeds', err);

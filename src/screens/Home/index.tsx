@@ -1,4 +1,4 @@
-import { prodFeedUri } from '#/lib/constants/feeds';
+import { bskyFeedUri } from '#/lib/constants/feeds';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
@@ -53,7 +53,7 @@ function HomeScreenReady({
 	const { hasSession } = useSession();
 	const selectedFeed = useSelectedFeed();
 
-	const whatsHotFeed: FeedDescriptor = `feedgen|${prodFeedUri('whats-hot')}`;
+	const whatsHotFeed: FeedDescriptor = `feedgen|${bskyFeedUri('whats-hot')}`;
 
 	let sections: Section<FeedDescriptor>[];
 	if (!hasSession) {

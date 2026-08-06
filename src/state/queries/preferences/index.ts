@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { prodFeedUri } from '#/lib/constants/feeds';
+import { bskyFeedUri } from '#/lib/constants/feeds';
 import { APP_LABELERS } from '#/lib/moderation/labelers';
 import type { BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 import { replaceEqualDeep } from '#/lib/utils/objects';
@@ -280,7 +280,7 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
 				await addSavedFeeds(pds!, [
 					{
 						type: 'feed',
-						value: prodFeedUri('whats-hot'),
+						value: bskyFeedUri('whats-hot'),
 						pinned: true,
 					},
 				]);

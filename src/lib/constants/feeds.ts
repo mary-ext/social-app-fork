@@ -1,20 +1,11 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { CanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-export const prodFeedUri = (rkey: string) =>
-	`at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`;
-
-const stagingFeedUri = (rkey: string) =>
-	`at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`;
-
-export const PROD_FEEDS = [`feedgen|${prodFeedUri('whats-hot')}`, `feedgen|${prodFeedUri('thevids')}`];
-
-export const STAGING_FEEDS = [
-	`feedgen|${stagingFeedUri('whats-hot')}`,
-	`feedgen|${stagingFeedUri('thevids')}`,
-];
-
 const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur';
+
+export const bskyFeedUri = (rkey: string) => `at://${BSKY_APP_ACCOUNT_DID}/app.bsky.feed.generator/${rkey}`;
+
+export const FIRST_PARTY_FEEDS = [`feedgen|${bskyFeedUri('whats-hot')}`, `feedgen|${bskyFeedUri('thevids')}`];
 
 export const BSKY_FEED_OWNER_DIDS = [
 	BSKY_APP_ACCOUNT_DID,
