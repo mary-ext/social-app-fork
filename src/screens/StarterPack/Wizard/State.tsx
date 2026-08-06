@@ -4,6 +4,7 @@ import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { richTextToSourceText } from '#/lib/strings/rich-text-helpers';
 
 import * as Toast from '#/components/Toast';
 
@@ -133,7 +134,10 @@ export function Provider({
 				canNext: true,
 				currentStep: 'Details',
 				name: record.name,
-				description: record.description,
+				description: richTextToSourceText({
+					text: record.description ?? '',
+					facets: record.descriptionFacets,
+				}),
 				profiles: listItems?.map((i) => i.subject) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,

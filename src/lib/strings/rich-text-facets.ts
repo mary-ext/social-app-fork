@@ -8,7 +8,7 @@ import { getGraphemeLength } from '@atcute/util-text';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
-import { toShortUrl } from './url-helpers';
+import { isMisleadingLink, toShortUrl } from './url-helpers';
 
 export type RichtextFacet = AppBskyRichtextFacet.Main;
 
@@ -132,6 +132,20 @@ export async function resolveMentions(
 export function shortenLinks(segments: RichtextSegment[]): RichtextSegment[] {
 	return segments.map((segment) => {
 		return segment.type === 'link' ? { ...segment, text: toShortUrl(segment.text) } : segment;
+	});
+}
+
+/**
+ * restores full URLs in link text that represents its target.
+ *
+ * @param segments rich-text segments
+ * @returns segments with full link text
+ */
+export function unshortenLinks(segments: RichtextSegment[]): RichtextSegment[] {
+	return segments.map((segment) => {
+		return segment.type === 'link' && !isMisleadingLink(segment.uri, segment.text)
+			? { ...segment, text: segment.uri }
+			: segment;
 	});
 }
 

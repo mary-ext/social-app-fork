@@ -10,7 +10,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { isAbortError } from '#/lib/strings/errors';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
-import { richTextToString } from '#/lib/strings/rich-text-helpers';
+import { richTextToCopyableText } from '#/lib/strings/rich-text-helpers';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -170,7 +170,7 @@ function PostMenuItems({
 	};
 
 	const onCopyPostText = () => {
-		const str = richTextToString(richText, true);
+		const str = richTextToCopyableText(richText);
 
 		void navigator.clipboard.writeText(str);
 		Toast.show(m['common.share.copiedToast'](), {

@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { richTextToString } from '#/lib/strings/rich-text-helpers';
+import { richTextToCopyableText } from '#/lib/strings/rich-text-helpers';
 
 import { useSession } from '#/state/session';
 
@@ -39,7 +39,7 @@ export const MessageContextMenu = ({
 	const isFromSelf = message.sender?.did === currentAccount?.did;
 
 	const onCopyMessage = () => {
-		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
+		const str = richTextToCopyableText({ text: message.text, facets: message.facets });
 
 		void navigator.clipboard.writeText(str);
 		Toast.show(m['common.share.copiedToast'](), {

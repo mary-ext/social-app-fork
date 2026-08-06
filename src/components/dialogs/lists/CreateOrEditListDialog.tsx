@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { useConstant } from '#/lib/hooks/use-constant';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
-import { richTextToString } from '#/lib/strings/rich-text-helpers';
+import { richTextToSourceText } from '#/lib/strings/rich-text-helpers';
 
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';
@@ -136,18 +137,14 @@ function DialogInner({
 	const [displayNameTooShort, setDisplayNameTooShort] = useState(false);
 	const initialDisplayName = list?.name || initialValues?.name || '';
 	const [displayName, setDisplayName] = useState(initialDisplayName);
-	const initialDescription = list?.description || initialValues?.description || '';
-	const [descriptionText, setDescriptionText] = useState<string>(() => {
-		const text = list?.description ?? initialValues?.description;
-		const facets = list?.descriptionFacets;
 
-		if (!text || !facets) {
-			return text || '';
-		}
-
-		// Serialize the stored facets back into editable plain text.
-		return richTextToString({ text, facets }, false);
+	const initialDescription = useConstant(() => {
+		return richTextToSourceText({
+			text: list?.description ?? initialValues?.description ?? '',
+			facets: list?.descriptionFacets,
+		});
 	});
+	const [descriptionText, setDescriptionText] = useState(initialDescription);
 
 	const initialAvatar = list?.avatar ?? initialValues?.avatar;
 	const [listAvatar, setListAvatar] = useState<string | undefined | null>(initialAvatar);
