@@ -2,14 +2,13 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
+import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 import { attachHlsPlayer, isHlsPlayerSupported, type PlayerHandle } from '#/lib/media/hls/attach';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
 import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
 
 import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
-
-import { useFullscreen } from '#/components/hooks/useFullscreen';
 
 import { m } from '#/paraglide/messages';
 
@@ -37,7 +36,7 @@ export function VideoEmbedInnerWeb({
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [focused, setFocused] = useState(false);
 	const figId = useId();
-	const [isFullscreen] = useFullscreen();
+	const isFullscreen = useIsFullscreen();
 	const isGif = embed.presentation === 'gif';
 	// send error up to error boundary
 	const [error, setError] = useState<Error | null>(null);

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { useInputModality } from '#/lib/browser/input-modality';
-import { IS_MOBILE_IOS } from '#/lib/browser/platform';
+import { IS_FIREFOX, IS_MOBILE_IOS, IS_SAFARI } from '#/lib/browser/platform';
 import { clamp } from '#/lib/utils/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
-import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -75,7 +75,13 @@ export function Controls({
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [volumeOpen, setVolumeOpen] = useState(false);
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
-	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
+
+	const isFullscreen = useIsFullscreen();
+	const scrollYRef = useRef<null | number>(null);
+	// transition detection for the scroll-restore side effect, not derived render state — keep it in a ref
+	// so the effect can read the previous value without a synchronous setState.
+	const prevIsFullscreenRef = useRef(isFullscreen);
+
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
 	const [interactingViaKeypress, setInteractingViaKeypress] = useState(false);
 	const showSpinner = playerLoading || buffering;
@@ -83,6 +89,37 @@ export function Controls({
 	const onKeyDown = () => {
 		setInteractingViaKeypress(true);
 	};
+
+	const toggleFullscreen = () => {
+		if (isFullscreen) {
+			void document.exitFullscreen();
+		} else {
+			if (!fullscreenRef.current) {
+				return;
+			}
+			scrollYRef.current = window.scrollY;
+			void fullscreenRef.current.requestFullscreen();
+		}
+	};
+
+	useEffect(() => {
+		const prevIsFullscreen = prevIsFullscreenRef.current;
+		if (prevIsFullscreen === isFullscreen) {
+			return;
+		}
+		prevIsFullscreenRef.current = isFullscreen;
+
+		// Chrome has an issue where it doesn't scroll back to the top after exiting fullscreen
+		// Let's play it safe and do it if not FF or Safari, since anything else will probably be chromium
+		if (prevIsFullscreen && !IS_FIREFOX && !IS_SAFARI) {
+			setTimeout(() => {
+				if (scrollYRef.current !== null) {
+					window.scrollTo(0, scrollYRef.current);
+					scrollYRef.current = null;
+				}
+			}, 100);
+		}
+	}, [isFullscreen]);
 
 	useEffect(() => {
 		if (interactingViaKeypress) {
