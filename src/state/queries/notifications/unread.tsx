@@ -6,7 +6,6 @@ import { ok } from '@atcute/client';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import BroadcastChannel from '#/lib/broadcast-channel';
 import { isDocumentVisible } from '#/lib/browser/visibility';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
