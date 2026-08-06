@@ -1,6 +1,6 @@
 import { useId, useState } from 'react';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import type { Gif } from '#/lib/gif';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
@@ -38,7 +38,7 @@ export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): Rea
 
 function DialogInner({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
 	const { data } = useResolveGifQuery(gif);
-	const thumb = useBlobUrl(data?.thumb?.source.blob);
+	const thumb = getBlobUrl(data?.thumb?.source.blob);
 	const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined;
 	const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt;
 

@@ -4,7 +4,7 @@ import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react
 
 import { ReactCrop, type PercentCrop } from 'react-image-crop';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import { type ImageSource, type ImageTransformation, manipulateImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
@@ -94,7 +94,7 @@ function EditImageInner({
 		saveRef: React.RefObject<{ save: () => Promise<void> } | null>;
 	}) {
 	const source = image.source;
-	const sourceUrl = useBlobUrl(source.blob);
+	const sourceUrl = getBlobUrl(source.blob);
 
 	const initialCrop = getInitialCrop(source, image.manips);
 	const [crop, setCrop] = useState(initialCrop);

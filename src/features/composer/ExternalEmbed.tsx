@@ -2,7 +2,7 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import { cleanError } from '#/lib/errors';
 import type { Gif } from '#/lib/gif';
 import { toNiceDomain } from '#/lib/url';
@@ -27,7 +27,7 @@ import * as styles from './ExternalEmbed.css';
 
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const { data, error } = useResolveGifQuery(gif);
-	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
+	const thumbUrl = getBlobUrl(data?.thumb?.source.blob);
 	let linkInfo: AppBskyEmbedExternal.ViewExternal | undefined;
 	if (data) {
 		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a tenor url and a `blob:` object url, both absolute
@@ -85,7 +85,7 @@ export const ExternalEmbedLink = ({
 	onRemove: () => void;
 }) => {
 	const { data, error } = useResolveLinkQuery(uri);
-	const thumbUrl = useBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
+	const thumbUrl = getBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
 	let linkComponent: React.ReactNode;
 	if (data) {
 		if (data.type === 'external') {

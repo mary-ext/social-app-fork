@@ -8,8 +8,8 @@ import {
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
 
+import { type GlobalLabelStrings, getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
-import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
 
 import { matchesLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -23,7 +23,7 @@ interface LabelInfo {
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
 	const { labelDefs, labelers } = useLabelDefinitions();
-	const globalLabelStrings = useGlobalLabelStrings();
+	const globalLabelStrings = getGlobalLabelStrings();
 	const def = getDefinition(labelDefs, label);
 	return {
 		label,

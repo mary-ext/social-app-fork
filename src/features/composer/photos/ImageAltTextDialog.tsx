@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import type { ComposerImage } from '#/lib/media/composer-image';
@@ -45,7 +45,7 @@ const DialogInner = ({ context, handle, image, onChange }: Props): React.ReactNo
 	const [alt, setAlt] = useState(image.alt);
 	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 	const source = image.transformed ?? image.source;
-	const imageUrl = useBlobUrl(source.blob);
+	const imageUrl = getBlobUrl(source.blob);
 	const counterId = useId();
 
 	const generator = useAltTextGenerator({

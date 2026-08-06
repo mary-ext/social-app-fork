@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Dialog from '#/components/Dialog';
@@ -219,7 +219,7 @@ type ItemChromeProps = {
 
 /** The image plus its editing overlay (ALT badge, edit/remove controls) and the dialogs those open. */
 const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => {
-	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
+	const imageUrl = getBlobUrl((image.transformed ?? image.source).blob);
 
 	const altTextHandle = Dialog.useDialogHandle();
 	const editHandle = Dialog.useDialogHandle();

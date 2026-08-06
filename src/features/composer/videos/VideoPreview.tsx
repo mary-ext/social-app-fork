@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useBlobUrl } from '#/lib/blob-url';
+import { getBlobUrl } from '#/lib/blob-url';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
@@ -29,7 +29,7 @@ export function VideoPreview({
 	// TODO: pause GIF previews when reduced motion is enabled.
 	const autoplayDisabled = useAutoplayDisabled();
 	const [previewFailed, setPreviewFailed] = useState(false);
-	const url = useBlobUrl(video.blob);
+	const url = getBlobUrl(video.blob);
 
 	let aspectRatio: number | undefined;
 	if (asset.width && asset.height) {

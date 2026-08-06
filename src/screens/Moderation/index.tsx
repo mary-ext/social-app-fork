@@ -12,7 +12,7 @@ import { isAppLabeler } from '#/lib/moderation/labelers';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 import { labelsTarget } from '#/lib/routes/targets';
 
-import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
+import { getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
 	useMyLabelersQuery,
@@ -217,7 +217,7 @@ function AdultContentLabelRow({ labelDefinition }: { labelDefinition: Interprete
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
 	const { isPending, mutate, variables } = usePreferencesSetContentLabelMutation();
-	const labelStrings = useGlobalLabelStrings()[identifier] ?? { description: '', name: identifier };
+	const labelStrings = getGlobalLabelStrings()[identifier] ?? { description: '', name: identifier };
 
 	const saved = preferences
 		? resolveGlobalLabelPreference(preferences.moderationPrefs, labelDefinition)

@@ -8,7 +8,7 @@ export type GlobalLabelStrings = Record<
 	}
 >;
 
-export function useGlobalLabelStrings(): GlobalLabelStrings {
+export function getGlobalLabelStrings(): GlobalLabelStrings {
 	return {
 		'!hide': {
 			name: m['lib.moderation.contentBlocked'](),
