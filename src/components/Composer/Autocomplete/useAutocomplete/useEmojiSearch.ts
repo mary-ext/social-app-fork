@@ -12,9 +12,9 @@ export function useEmojiSearch(): (query: string, limit?: number) => Promise<Aut
 			queryClient.fetchQuery(emojiSearchQuery()),
 		]);
 		return search(query, limit).map((index) => ({
-			id: dataset.ids[index]!,
-			key: dataset.ids[index]!,
 			type: 'emoji' as const,
+			key: dataset.ids[index]!,
+			label: dataset.names[index]!,
 			value: dataset.natives[index]!,
 		}));
 	};

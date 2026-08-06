@@ -55,3 +55,7 @@ export const emojiGlyph = style({
 	fontFamily: emojiFontFamily,
 	fontSize: fontSize.xl,
 });
+
+export const emojiName = style({
+	minWidth: 0,
+});

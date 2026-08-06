@@ -18,8 +18,7 @@ export type AutocompleteEmoji = {
 	type: 'emoji';
 	key: string;
 	value: string;
-	/** shortcode id. */
-	id: string;
+	label: string;
 };
 
 export type AutocompleteSearch = {
