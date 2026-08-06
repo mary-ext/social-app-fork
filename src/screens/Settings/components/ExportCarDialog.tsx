@@ -6,14 +6,11 @@ import { downloadBytes } from '#/lib/download';
 
 import { getClients, useSession } from '#/state/session';
 
-import { Trans } from '#/locale/Trans';
-
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -120,23 +117,6 @@ function DialogInner() {
 				)}
 				<ButtonText>{m['screens.settings.export.action.downloadChat']()}</ButtonText>
 			</Button>
-
-			<Text className={styles.footnote} color="textContrastMedium" size="sm">
-				<Trans
-					message={m['screens.settings.export.betaNotice']}
-					markup={{
-						t0: ({ children }) => (
-							<ExternalInlineLinkText
-								label={m['screens.settings.export.viewBlogpost']()}
-								size="sm"
-								href="https://docs.bsky.app/blog/repo-export"
-							>
-								{children}
-							</ExternalInlineLinkText>
-						),
-					}}
-				/>
-			</Text>
 		</div>
 	);
 }

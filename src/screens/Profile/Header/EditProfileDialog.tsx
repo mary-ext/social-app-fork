@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
+import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants';
 import { cleanError } from '#/lib/errors';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/text';
 
 import { useProfileUpdateMutation } from '#/state/queries/profile';
-
-import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import { EditableBanner } from '#/components/EditableBanner';
@@ -22,7 +20,6 @@ import * as TextField from '#/components/TextField';
 import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
 
@@ -236,19 +233,7 @@ function DialogInner({
 						verification.role === 'default' &&
 						displayName !== initialDisplayName && (
 							<Admonition type="error">
-								<Trans
-									message={m['screens.profile.editProfile.displayName.verificationWarning']}
-									markup={{
-										t0: ({ children }) => (
-											<ExternalInlineLinkText
-												href={urls.website.blog.initialVerificationAnnouncement}
-												label={m['common.action.learnMore']()}
-											>
-												{children}
-											</ExternalInlineLinkText>
-										),
-									}}
-								/>
+								{m['screens.profile.editProfile.displayName.verificationWarning']()}
 							</Admonition>
 						)}
 

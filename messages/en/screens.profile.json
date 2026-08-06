@@ -29,7 +29,7 @@
 			}
 		}
 	],
-	"screens.profile.editProfile.displayName.verificationWarning": "You are verified. You will lose your verification status if you change your display name. {#t0}Learn more.{/t0}",
+	"screens.profile.editProfile.displayName.verificationWarning": "You are verified. You will lose your verification status if you change your display name.",
 	"screens.profile.editProfile.invalidHandle": "⚠Invalid handle",
 	"screens.profile.editProfile.title": "Edit profile",
 	"screens.profile.error.server": "There was an issue contacting the server, please check your internet connection and try again.",

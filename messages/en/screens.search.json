@@ -16,7 +16,7 @@
 	"screens.search.input.description": "Find posts, users, and feeds on Bluesky",
 	"screens.search.input.placeholder": "Search for posts, users, or feeds",
 	"screens.search.results.empty": "No results found for “{#t0}{query}{/t0}”.",
-	"screens.search.results.emptyHint": "Try a different search term, or {#t0}read about how to use search filters{/t0}.",
+	"screens.search.results.emptyHint": "Try a different search term, or use search filters to narrow the results.",
 	"screens.search.results.error.failed": "We’re sorry, but your search could not be completed.",
 	"screens.search.results.error.failedRetryable": "We’re sorry, but your search could not be completed. Please try again in a few minutes.",
 	"screens.search.results.error.generic": "Error: {error}",

@@ -5,8 +5,6 @@ import { OzoneReason, RootReason } from '#/lib/moderation/report-reasons';
 
 import type { ParsedReportSubject } from '#/components/moderation/ReportDialog/types';
 
-export const SUPPORT_PAGE = 'https://bsky.social/about/support';
-
 /**
  * Mapping of new (Ozone namespace) reason types to old reason types.
  *

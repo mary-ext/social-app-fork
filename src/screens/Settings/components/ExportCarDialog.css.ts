@@ -19,7 +19,3 @@ export const heading = style({
 export const body = style({
 	marginBottom: space.lg,
 });
-
-export const footnote = style({
-	marginTop: space._2xl,
-});

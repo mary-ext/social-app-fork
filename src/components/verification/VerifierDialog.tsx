@@ -1,6 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { urls } from '#/lib/constants';
 import { profileDisplayName } from '#/lib/display-names';
 
 import { useSession } from '#/state/session';
@@ -12,7 +11,6 @@ import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
-import { ExternalLinkButton } from '#/components/web/Link';
 
 import Logo from '#/icons/original/Logo.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
@@ -105,16 +103,8 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				</Text>
 			</Stack>
 			<Dialog.Actions direction="responsive">
-				<ExternalLinkButton
-					color="primary"
-					label={m['components.verification.learnMore']()}
-					size="small"
-					href={urls.website.blog.initialVerificationAnnouncement}
-				>
-					<ButtonText>{m['common.action.learnMore']()}</ButtonText>
-				</ExternalLinkButton>
 				<Button
-					color="secondary"
+					color="primary"
 					label={m['common.a11y.closeDialog']()}
 					onClick={() => handle.close()}
 					size="small"

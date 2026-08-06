@@ -1,8 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { iconSize } from '#/styles/tokens.css';
 
 export const popup = style({
 	maxWidth: 500,
@@ -45,23 +43,6 @@ export const card = style({
 	},
 });
 
-export const legal = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	gap: 8,
-	alignItems: 'center',
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 8,
-	paddingBlock: 10,
-	paddingInline: 12,
-	width: '100%',
-	textDecoration: 'none',
-	selectors: {
-		'&:hover': { borderColor: vars.palette.contrast_300 },
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
-	},
-});
-
 export const summary = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -84,11 +65,6 @@ export const changeLink = style({
 			borderRadius: 2,
 		},
 	},
-});
-
-export const grow = style({
-	flex: 1,
-	minWidth: 0,
 });
 
 export const labelerOption = style({
@@ -132,10 +108,4 @@ export const srOnly = style({
 
 export const doneButton = style({
 	width: '100%',
-});
-
-export const squareArrowTopRightIcon = style({
-	width: iconSize.sm,
-	height: iconSize.sm,
-	color: colors.textContrastMedium,
 });

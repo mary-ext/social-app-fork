@@ -1,7 +1,5 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 
-import { urls } from '#/lib/constants';
-
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -15,7 +13,6 @@ import { useSimpleVerificationState } from '#/components/verification';
 import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
-import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -88,15 +85,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				) : null}
 			</Stack>
 
-			<Dialog.Actions direction="responsive" reverse>
-				<ExternalLinkButton
-					color="secondary"
-					label={m['components.verification.learnMore']()}
-					size="small"
-					href={urls.website.blog.initialVerificationAnnouncement}
-				>
-					<ButtonText>{m['common.action.learnMore']()}</ButtonText>
-				</ExternalLinkButton>
+			<Dialog.Actions direction="responsive">
 				<Button
 					color="primary"
 					label={m['common.a11y.closeDialog']()}

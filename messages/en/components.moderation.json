@@ -126,8 +126,6 @@
 	"components.moderation.reason.violenceDesc": "Violent or threatening content",
 	"components.moderation.report.a11yLabel": "Report dialog",
 	"components.moderation.report.conversation": "Report this conversation",
-	"components.moderation.report.copyright.prompt": "Need to report a copyright violation, legal request, or regulatory compliance issue?",
-	"components.moderation.report.copyright.title": "Report a copyright violation, legal request, or regulatory compliance issue",
 	"components.moderation.report.details.charCount": [
 		{
 			"declarations": ["input length", "input max", "local n = length: number", "local m = max: number"],

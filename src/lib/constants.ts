@@ -105,16 +105,3 @@ export const SUPPORTED_MIME_TYPES = [
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number];
 
 export const EMOJI_REACTION_LIMIT = 5;
-
-export const urls = {
-	website: {
-		blog: {
-			findFriendsAnnouncement: 'https://bsky.social/about/blog/12-16-2025-find-friends',
-			initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
-			searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
-		},
-		support: {
-			findFriendsPrivacyPolicy: 'https://bsky.social/about/support/find-friends-privacy-policy',
-		},
-	},
-};

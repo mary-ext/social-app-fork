@@ -4,7 +4,6 @@ import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { definite } from '@mary/array-fns';
 
-import { urls } from '#/lib/constants';
 import { cleanError, isNetworkError, shouldRetryError } from '#/lib/errors';
 import { normalizeSearchQuery } from '#/lib/search-query';
 
@@ -28,7 +27,7 @@ import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
-import { ExternalInlineLinkText, InlineLinkText } from '#/components/web/Link';
+import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -154,16 +153,7 @@ function NoResultsText({ query }: { query: string }) {
 			</Text>
 			{'\n\n'}
 			<Text color="textContrastHigh" size="md">
-				<Trans
-					markup={{
-						t0: ({ children }) => (
-							<ExternalInlineLinkText href={urls.website.blog.searchTipsAndTricks} size="md">
-								{children}
-							</ExternalInlineLinkText>
-						),
-					}}
-					message={m['screens.search.results.emptyHint']}
-				/>
+				{m['screens.search.results.emptyHint']()}
 			</Text>
 		</>
 	);

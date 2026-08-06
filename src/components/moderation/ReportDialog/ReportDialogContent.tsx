@@ -18,13 +18,11 @@ import * as TextField from '#/components/TextField';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import { ExternalLink } from '#/components/web/Link';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
 import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PaperPlaneIcon from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
-import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useSubmitReportMutation } from './action';
@@ -32,7 +30,6 @@ import {
 	BSKY_LABELER_ONLY_REPORT_REASONS,
 	BSKY_LABELER_ONLY_SUBJECT_TYPES,
 	NEW_TO_OLD_REASONS_MAP,
-	SUPPORT_PAGE,
 } from './const';
 import { useCopyForSubject } from './copy';
 import * as styles from './index.css';
@@ -220,18 +217,6 @@ function Inner({
 								/>
 							))}
 						</div>
-						{(subject.type === 'account' || subject.type === 'post') && (
-							<ExternalLink
-								className={styles.legal}
-								href={SUPPORT_PAGE}
-								label={m['components.moderation.report.copyright.title']()}
-							>
-								<Text className={styles.grow} color="textContrastMedium" leading="snug" size="sm">
-									{m['components.moderation.report.copyright.prompt']()}
-								</Text>
-								<SquareArrowTopRightIcon className={styles.squareArrowTopRightIcon} />
-							</ExternalLink>
-						)}
 					</div>
 				</Dialog.Body>
 			)}

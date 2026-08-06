@@ -37,7 +37,7 @@
 	"screens.moderation.mutedWord.title": "Muted words",
 	"screens.moderation.title": "Moderation tools",
 	"screens.moderation.verification.hideBadges": "Hide verification badges",
-	"screens.moderation.verification.info": "Verifications on Bluesky work differently than on other platforms. {#t0}Learn more here.{/t0}",
+	"screens.moderation.verification.info": "Verifications on Bluesky work differently than on other platforms.",
 	"screens.moderation.verification.manage": "Manage verification settings",
 	"screens.moderation.verification.title": "Verification settings"
 }

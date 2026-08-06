@@ -1,5 +1,3 @@
-import { urls } from '#/lib/constants';
-
 import {
 	type UsePreferencesQueryResponse,
 	usePreferencesQuery,
@@ -7,13 +5,10 @@ import {
 } from '#/state/queries/preferences';
 import { useTitle } from '#/state/use-title';
 
-import { Trans } from '#/locale/Trans';
-
 import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
-import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -35,21 +30,7 @@ export function Screen() {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<Settings.List>
-					<Admonition type="tip">
-						<Trans
-							message={m['screens.moderation.verification.info']}
-							markup={{
-								t0: ({ children }) => (
-									<ExternalInlineLinkText
-										label={m['common.action.learnMore']()}
-										href={urls.website.blog.initialVerificationAnnouncement}
-									>
-										{children}
-									</ExternalInlineLinkText>
-								),
-							}}
-						/>
-					</Admonition>
+					<Admonition type="tip">{m['screens.moderation.verification.info']()}</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
