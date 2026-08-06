@@ -1,10 +1,12 @@
 import { lazy, type ReactElement, Suspense, useRef } from 'react';
 
-import type { Did } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 
 import { PreviewCard } from '@base-ui/react/preview-card';
 
 import { usePrefetchProfileQuery } from '#/state/queries/profile';
+import { usePrefetchResolveDidQuery } from '#/state/queries/resolve-uri';
 
 import { Spinner } from '#/components/Spinner';
 
@@ -15,35 +17,37 @@ import * as css from './ProfileHoverCard.css';
 const Card = lazy(() => import('./Card').then((mod) => ({ default: mod.Card })));
 
 export type ProfileHoverCardProps = {
+	/** profile DID or handle. */
+	actor: ActorIdentifier;
 	/**
 	 * trigger element. must forward a ref and spread DOM props onto its host node (used as
 	 * {@link PreviewCard.Trigger}'s `render`).
 	 */
 	children: ReactElement;
-	did: Did;
 };
 
 /** profile preview shown on hover, built on Base UI's PreviewCard. wraps a single ref-forwarding trigger. */
-export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
+export function ProfileHoverCard({ actor, children }: ProfileHoverCardProps) {
 	const prefetchProfileQuery = usePrefetchProfileQuery();
+	const prefetchResolveDidQuery = usePrefetchResolveDidQuery();
 	const prefetched = useRef(false);
 
 	const prefetchIfNeeded = () => {
-		if (!prefetched.current) {
-			prefetched.current = true;
-			void prefetchProfileQuery(did);
+		if (prefetched.current) {
+			return;
+		}
+		prefetched.current = true;
+
+		if (isDid(actor)) {
+			void prefetchProfileQuery(actor);
+		} else {
+			void prefetchResolveDidQuery(actor);
 		}
 	};
 
 	return (
 		<PreviewCard.Root>
-			<PreviewCard.Trigger
-				render={children}
-				// closeDelay={HIDE_DELAY}
-				// delay={SHOW_DELAY}
-				// warm the cache as soon as the pointer lands so the card has data before the open delay elapses
-				onPointerMove={prefetchIfNeeded}
-			/>
+			<PreviewCard.Trigger render={children} onPointerMove={prefetchIfNeeded} />
 			<PreviewCard.Portal>
 				<PreviewCard.Positioner className={css.positioner} collisionPadding={16} sideOffset={4}>
 					<PreviewCard.Popup className={css.popup}>
@@ -54,7 +58,7 @@ export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
 								</div>
 							}
 						>
-							<Card did={did} />
+							<Card actor={actor} />
 						</Suspense>
 					</PreviewCard.Popup>
 				</PreviewCard.Positioner>

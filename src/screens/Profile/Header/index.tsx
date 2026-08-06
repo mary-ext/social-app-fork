@@ -5,8 +5,6 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
-import type { Richtext } from '#/lib/strings/rich-text-facets';
-
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/KnownFollowers';
 
@@ -24,7 +22,6 @@ import { ProfileHeaderSuggestedFollows } from './SuggestedFollows';
 
 interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOptions;
 	isPlaceholderProfile: boolean;
 }
@@ -75,18 +72,12 @@ function ProfileHeaderBody() {
 }
 
 /** Profile header for an account; labeler accounts additionally get a link to the labels they publish. */
-export function ProfileHeader({
-	descriptionRT,
-	isPlaceholderProfile,
-	moderationOpts,
-	profile,
-}: Props): React.ReactNode {
+export function ProfileHeader({ isPlaceholderProfile, moderationOpts, profile }: Props): React.ReactNode {
 	const [showSuggestedFollows, setShowSuggestedFollows] = useState(false);
 	const [hasSeenAllSuggestedFollows, setHasSeenAllSuggestedFollows] = useState(false);
 
 	return (
 		<ProfileHeaderProvider
-			descriptionRT={descriptionRT}
 			isPlaceholderProfile={isPlaceholderProfile}
 			moderationOpts={moderationOpts}
 			onFollowChange={setShowSuggestedFollows}

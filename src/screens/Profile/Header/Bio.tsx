@@ -7,10 +7,13 @@ import { useProfileHeader } from './Context';
 /** The profile description, rendered unless moderation blurs the profile view. */
 export function ProfileHeaderBio({ selectable }: { selectable?: boolean }) {
 	const {
-		state: { descriptionRT, moderation, profile },
+		state: { moderation, profile },
 	} = useProfileHeader();
 
-	if (!descriptionRT || getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length > 0) {
+	if (
+		!profile.description ||
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length > 0
+	) {
 		return null;
 	}
 
@@ -21,7 +24,7 @@ export function ProfileHeaderBio({ selectable }: { selectable?: boolean }) {
 			numberOfLines={15}
 			selectable={selectable}
 			size="md"
-			value={descriptionRT}
+			value={profile.description}
 		/>
 	);
 }

@@ -38,7 +38,7 @@ export function PostFeedReason({
 		return (
 			<div className={css.includeReason}>
 				<RepostIcon className={css.reasonIcon} />
-				<ProfileHoverCard did={by.did}>
+				<ProfileHoverCard actor={by.did}>
 					<InlineLinkText
 						{...reasonText}
 						onPress={onOpenReposter}

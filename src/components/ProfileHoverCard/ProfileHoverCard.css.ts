@@ -46,13 +46,24 @@ export const profileCard = style([
 	},
 ]);
 
-export const loadingCard = style({
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	width: 300,
-	minHeight: 200,
-});
+export const loadingCard = style([
+	baseCard,
+	{
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 300,
+		minHeight: 200,
+	},
+]);
+
+export const errorCard = style([
+	loadingCard,
+	{
+		gap: space.xs,
+		padding: space.lg,
+		textAlign: 'center',
+	},
+]);
 
 export const headerRow = style({
 	display: 'flex',

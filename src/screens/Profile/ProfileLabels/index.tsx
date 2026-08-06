@@ -23,7 +23,6 @@ import { dateTimeLong } from '#/locale/intl/datetime';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorScreen } from '#/components/ErrorScreen';
-import { useRichText } from '#/components/hooks/useRichText';
 import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';
@@ -203,7 +202,6 @@ function LabelerActions({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 
 function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetailed }) {
 	const { creator } = labeler;
-	const [descriptionRT] = useRichText(creator.description ?? '');
 	const isSubscribed = useIsSubscribed(creator.did);
 	const [openLabel, setOpenLabel] = useState<string | null>(null);
 
@@ -234,7 +232,7 @@ function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 				</div>
 
 				{creator.description ? (
-					<RichText authorHandle={creator.handle} enableTags size="md" value={descriptionRT} />
+					<RichText authorHandle={creator.handle} enableTags size="md" value={creator.description} />
 				) : null}
 
 				{!isAppLabeler(creator.did) && <LikeRow labeler={labeler} />}

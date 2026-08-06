@@ -35,7 +35,6 @@ import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
-import { useRichText } from '#/components/hooks/useRichText';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
 import { type Section, Tabs } from '#/components/Tabs';
@@ -163,11 +162,6 @@ function ProfileScreenLoaded({
 
 	useTitle(combinedDisplayName(profile));
 
-	const description = profile.description ?? '';
-	const hasDescription = description !== '';
-	const [descriptionRT, isResolvingDescriptionRT] = useRichText(description);
-	const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT;
-	const isHeaderReady = !showPlaceholder;
 	const moderation = moderateProfile(profile, moderationOpts);
 
 	const isMe = profile.did === currentAccount?.did;
@@ -338,15 +332,14 @@ function ProfileScreenLoaded({
 		>
 			<Tabs
 				// the tab set isn't known until the real profile loads, so hold the bar back until then
-				sections={isHeaderReady ? sections : []}
+				sections={isPlaceholderProfile ? [] : sections}
 				value={selectedTab ?? ''}
 				onValueChange={setSelectedTab}
 				header={
 					<ProfileHeader
 						profile={profile}
-						descriptionRT={hasDescription ? descriptionRT : null}
 						moderationOpts={moderationOpts}
-						isPlaceholderProfile={showPlaceholder}
+						isPlaceholderProfile={isPlaceholderProfile}
 					/>
 				}
 			/>

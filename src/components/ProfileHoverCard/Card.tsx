@@ -5,14 +5,16 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { profileTarget } from '#/lib/routes/targets';
+import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
+import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 
 import { formatCount } from '#/locale/intl/number';
@@ -24,7 +26,6 @@ import { useActorStatus } from '#/features/liveNow/use-actor-status';
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
 import { useFollowMethods } from '#/components/hooks/useFollowMethods';
-import { useRichText } from '#/components/hooks/useRichText';
 import { RichText } from '#/components/RichText';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -42,9 +43,10 @@ import { useRouter } from '#/routes';
 
 import * as css from './ProfileHoverCard.css';
 
-export function Card({ did }: { did: Did }) {
+export function Card({ actor }: { actor: ActorIdentifier }) {
 	const router = useRouter();
-	const profile = useProfileQuery({ did });
+	const resolvedDid = useResolveDidQuery(actor);
+	const profile = useProfileQuery({ did: resolvedDid.data });
 	const moderationOpts = useModerationOpts();
 	const data = profile.data;
 	const status = useActorStatus(data);
@@ -73,6 +75,19 @@ export function Card({ did }: { did: Did }) {
 		return <Inner moderationOpts={moderationOpts} profile={data} />;
 	}
 
+	if (resolvedDid.error || profile.error) {
+		return (
+			<div className={css.errorCard}>
+				<Text size="md" weight="semiBold">
+					{resolvedDid.error ? m['common.error.oops']() : m['common.error.notFound']()}
+				</Text>
+				<Text color="textContrastMedium" size="sm">
+					{cleanError(resolvedDid.error ?? profile.error)}
+				</Text>
+			</div>
+		);
+	}
+
 	return (
 		<div className={css.loadingCard}>
 			<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
@@ -89,7 +104,6 @@ function Inner({
 }) {
 	const { currentAccount } = useSession();
 	const moderation = moderateProfile(profile, moderationOpts);
-	const [descriptionRT] = useRichText(profile.description ?? '');
 	const profileShadow = useProfileShadow(profile);
 	const { follow, unfollow } = useFollowMethods({
 		profile: profileShadow,
@@ -209,7 +223,7 @@ function Inner({
 					{profile.description?.trim() &&
 					getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 						<div className={css.description}>
-							<RichText disableHoverCards numberOfLines={8} value={descriptionRT} />
+							<RichText disableHoverCards numberOfLines={8} value={profile.description} />
 						</div>
 					) : undefined}
 

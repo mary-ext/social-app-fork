@@ -11,7 +11,6 @@ import {
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isAbortError } from '#/lib/strings/errors';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';
@@ -31,7 +30,6 @@ import { m } from '#/paraglide/messages';
 export type ProfileRelationship = 'blocked-by' | 'blocking' | 'blocking-by-list' | 'default' | 'self';
 
 interface ProfileHeaderState {
-	descriptionRT: Richtext | null;
 	moderation: ModerationDecision;
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 }
@@ -81,14 +79,12 @@ export const useProfileHeader = (): ProfileHeaderContextValue => {
  */
 export function ProfileHeaderProvider({
 	children,
-	descriptionRT,
 	isPlaceholderProfile = false,
 	moderationOpts,
 	onFollowChange,
 	profile: profileUnshadowed,
 }: {
 	children: React.ReactNode;
-	descriptionRT: Richtext | null;
 	isPlaceholderProfile?: boolean;
 	moderationOpts: ModerationOptions;
 	/** Called after a successful follow/unfollow with the new following state. */
@@ -179,7 +175,7 @@ export function ProfileHeaderProvider({
 			moderationOpts,
 			relationship,
 		},
-		state: { descriptionRT, moderation, profile },
+		state: { moderation, profile },
 	};
 
 	return <ProfileHeaderContext value={value}>{children}</ProfileHeaderContext>;

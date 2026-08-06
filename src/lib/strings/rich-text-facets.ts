@@ -24,11 +24,15 @@ export type RichtextSegment =
 	| { type: 'mention'; text: string; did: Did }
 	| { type: 'tag'; text: string; tag: string }
 	| { type: 'text'; text: string }
-	| { type: 'unresolvedMention'; text: string; handle: string };
+	| { type: 'unresolvedMention'; text: string; handle: Handle };
 
 const toSegment = (token: Token): RichtextSegment => {
 	switch (token.type) {
 		case 'mention':
+			if (!isHandle(token.handle)) {
+				return { type: 'text', text: token.raw };
+			}
+
 			return { type: 'unresolvedMention', text: token.raw, handle: token.handle };
 		case 'topic':
 			return { type: 'tag', text: token.raw, tag: token.name };
@@ -101,7 +105,7 @@ export async function resolveMentions(
 ): Promise<RichtextSegment[]> {
 	const handles = unique(
 		mapDefined(segments, (segment) => {
-			if (segment.type === 'unresolvedMention' && isHandle(segment.handle)) {
+			if (segment.type === 'unresolvedMention') {
 				return segment.handle;
 			}
 		}),

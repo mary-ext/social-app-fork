@@ -117,7 +117,10 @@ export function RichText({
 					}
 					break;
 				}
-				case 'mention': {
+				case 'mention':
+				case 'unresolvedMention': {
+					const actor = segment.type === 'mention' ? segment.did : segment.handle;
+
 					if (!disableLinks) {
 						const link = (
 							<InlineLinkText
@@ -127,7 +130,7 @@ export function RichText({
 								leading={leading}
 								selectable={selectable}
 								size={size}
-								to={profileTarget(segment.did)}
+								to={profileTarget(actor)}
 								underline={linkUnderline}
 								weight={weight}
 							>
@@ -137,7 +140,7 @@ export function RichText({
 						el = disableHoverCards ? (
 							link
 						) : (
-							<ProfileHoverCard did={segment.did} key={key}>
+							<ProfileHoverCard actor={actor} key={key}>
 								{link}
 							</ProfileHoverCard>
 						);

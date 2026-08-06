@@ -3,7 +3,7 @@ import { type Client, ok } from '@atcute/client';
 import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { isDid, isResourceUri, type ParsedResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 
-import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
+import { type QueryClient, queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
@@ -44,6 +44,9 @@ const resolvedDidQueryOptions = (
 			if (!didOrHandle) {
 				return;
 			}
+			if (isDid(didOrHandle)) {
+				return didOrHandle;
+			}
 			const profile = getUnstableProfile(didOrHandle);
 			return profile?.did;
 		},
@@ -82,6 +85,17 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 
 	return useQuery(resolvedDidQueryOptions(appview, getUnstableProfile, didOrHandle));
+}
+
+/** @returns a DID resolution prefetcher. */
+export function usePrefetchResolveDidQuery() {
+	const queryClient = useQueryClient();
+	const { appview } = getClients();
+	const { getUnstableProfile } = useUnstableProfileViewCache();
+
+	return async (didOrHandle: string) => {
+		await queryClient.prefetchQuery(resolvedDidQueryOptions(appview, getUnstableProfile, didOrHandle));
+	};
 }
 
 export function precacheResolvedUri(queryClient: QueryClient, handle: string, did: string) {

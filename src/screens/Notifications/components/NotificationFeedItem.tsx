@@ -217,7 +217,7 @@ let NotificationFeedItem = ({
 	}
 
 	const authorLinkMarkup = ({ children }: { children?: React.ReactNode }) => (
-		<ProfileHoverCard did={firstAuthor.profile.did}>
+		<ProfileHoverCard actor={firstAuthor.profile.did}>
 			<InlineLinkText
 				key={firstAuthor.profile.did}
 				to={firstAuthor.target}

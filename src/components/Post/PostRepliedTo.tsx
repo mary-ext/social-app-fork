@@ -88,7 +88,7 @@ function ParentAuthorName({ did }: { did: Did }) {
 	if (profile) {
 		const name = profile.handle;
 		return (
-			<ProfileHoverCard did={did}>
+			<ProfileHoverCard actor={did}>
 				<InlineLinkText
 					size="sm"
 					label={name}
