@@ -8,7 +8,6 @@ import { clamp } from '#/lib/utils/numbers';
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
@@ -74,7 +73,7 @@ export function Controls({
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [volumeOpen, setVolumeOpen] = useState(false);
-	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
+	const [hovered, setHovered] = useState(false);
 
 	const isFullscreen = useIsFullscreen();
 	const scrollYRef = useRef<null | number>(null);
@@ -82,7 +81,7 @@ export function Controls({
 	// so the effect can read the previous value without a synchronous setState.
 	const prevIsFullscreenRef = useRef(isFullscreen);
 
-	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();
+	const [hasFocus, setHasFocus] = useState(false);
 	const [interactingViaKeypress, setInteractingViaKeypress] = useState(false);
 	const showSpinner = playerLoading || buffering;
 
@@ -270,7 +269,7 @@ export function Controls({
 		}
 		cursorTimeoutRef.current = setTimeout(() => {
 			setShowCursor(false);
-			onEndHover();
+			setHovered(false);
 		}, 2000);
 	};
 	const onPointerLeaveEmptySpace = (evt: React.PointerEvent<HTMLButtonElement>) => {
@@ -281,23 +280,6 @@ export function Controls({
 		if (cursorTimeoutRef.current) {
 			clearTimeout(cursorTimeoutRef.current);
 		}
-	};
-
-	// a touch also fires enter/leave around its press, so these check the event's own pointer type
-	// rather than the ambient modality
-
-	const onPointerHover = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (!isHoverPointer(evt)) {
-			return;
-		}
-		onHover();
-	};
-
-	const onPointerEndHover = (evt: React.PointerEvent<HTMLDivElement>) => {
-		if (!isHoverPointer(evt)) {
-			return;
-		}
-		onEndHover();
 	};
 
 	// fullscreen hides body-level portals.
@@ -353,11 +335,22 @@ export function Controls({
 				evt.stopPropagation();
 				setInteractingViaKeypress(false);
 			}}
-			onPointerEnter={onPointerHover}
-			onPointerMove={onPointerHover}
-			onPointerLeave={onPointerEndHover}
-			onFocus={onFocus}
-			onBlur={onBlur}
+			onPointerMove={(evt) => {
+				if (isHoverPointer(evt)) {
+					setHovered(true);
+				}
+			}}
+			onPointerLeave={(evt) => {
+				if (isHoverPointer(evt)) {
+					setHovered(false);
+				}
+			}}
+			onFocus={() => {
+				setHasFocus(true);
+			}}
+			onBlur={() => {
+				setHasFocus(false);
+			}}
 			onKeyDown={onKeyDown}
 		>
 			<button
