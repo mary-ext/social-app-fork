@@ -5,8 +5,8 @@ import { ClientResponseError } from '@atcute/client';
 
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
-import { isNetworkError } from '#/lib/hooks/useCleanError';
 import { useTitle } from '#/lib/hooks/useTitle';
+import { isNetworkError } from '#/lib/strings/errors';
 
 import { ConvoProvider, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
