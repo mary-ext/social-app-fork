@@ -6,7 +6,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
-import { MAX_LABELERS } from '#/lib/constants';
+import { MAX_LABELERS } from '#/lib/constants/profile';
 import { combinedDisplayName, profileDisplayName } from '#/lib/display-names';
 import { cleanError } from '#/lib/errors';
 import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation/labelers';

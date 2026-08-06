@@ -5,7 +5,7 @@ import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
+import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants/feeds';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';

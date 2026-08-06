@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useInputModality } from '#/lib/browser/input-modality';
+import { IS_MOBILE_IOS } from '#/lib/browser/platform';
 import { clamp } from '#/lib/utils/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
@@ -11,7 +12,6 @@ import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
-import { IS_MOBILE_IOS } from '#/env';
 import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_stroke2.svg';
 import ArrowsInIcon from '#/icons/central/Minimize45_round_outlined_radius1_stroke2.svg';
 import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';

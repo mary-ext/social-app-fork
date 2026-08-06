@@ -1,4 +1,4 @@
-import { PROD_DEFAULT_FEED } from '#/lib/constants';
+import { prodFeedUri } from '#/lib/constants/feeds';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
@@ -53,7 +53,7 @@ function HomeScreenReady({
 	const { hasSession } = useSession();
 	const selectedFeed = useSelectedFeed();
 
-	const whatsHotFeed: FeedDescriptor = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`;
+	const whatsHotFeed: FeedDescriptor = `feedgen|${prodFeedUri('whats-hot')}`;
 
 	let sections: Section<FeedDescriptor>[];
 	if (!hasSession) {

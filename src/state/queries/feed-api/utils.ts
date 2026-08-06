@@ -1,6 +1,6 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants';
+import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants/feeds';
 
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences';
 

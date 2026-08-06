@@ -5,7 +5,7 @@ import * as TID from '@atcute/tid';
 import { createDnd, type DndChannel } from '@oomfware/tug';
 import { extractClosestEdge } from '@oomfware/tug/hitbox';
 
-import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
+import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants/feeds';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useConstant } from '#/lib/hooks/use-constant';
 

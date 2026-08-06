@@ -4,7 +4,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { MAX_ALT_TEXT } from '#/lib/constants';
+import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
 import { usePrimaryLanguage } from '#/state/preferences/languages';

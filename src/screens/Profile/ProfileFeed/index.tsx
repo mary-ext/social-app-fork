@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeRecordUri } from '#/lib/at-uri';
-import { TRENDING_DID } from '#/lib/constants';
+import { TRENDING_DID } from '#/lib/constants/feeds';
 import { cleanError } from '#/lib/errors';
 
 import { softReset } from '#/state/events';

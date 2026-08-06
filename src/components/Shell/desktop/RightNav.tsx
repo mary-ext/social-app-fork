@@ -8,7 +8,7 @@ import { DesktopSearch } from '#/components/Shell/desktop/Search';
 import { SidebarTrendingTopics } from '#/components/Shell/desktop/SidebarTrendingTopics';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
-import { SOURCE_CODE_URL } from '#/env/common';
+import { SOURCE_CODE_URL } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import * as css from './RightNav.css';

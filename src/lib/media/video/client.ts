@@ -1,6 +1,6 @@
 import { Client } from '@atcute/client';
 
-import { type SupportedMimeTypes, VIDEO_SERVICE } from '#/lib/constants';
+import { type VideoUploadMimeType, VIDEO_SERVICE } from '#/lib/constants/video';
 
 export const createVideoEndpointUrl = (route: string, params?: Record<string, string>) => {
 	const url = new URL(VIDEO_SERVICE);
@@ -31,7 +31,7 @@ export function createVideoClient(token?: string): Client {
 	});
 }
 
-export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
+export function mimeToExt(mimeType: VideoUploadMimeType | (string & {})) {
 	switch (mimeType) {
 		case 'video/mp4':
 			return 'mp4';

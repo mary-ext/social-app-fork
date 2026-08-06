@@ -1,6 +1,6 @@
 import * as TID from '@atcute/tid';
 
-import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants';
+import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants/feeds';
 
 import {
 	type UsePreferencesQueryResponse,

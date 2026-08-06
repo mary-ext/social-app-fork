@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 import { MODIFIERS } from '@mary/keybinds';
 
-import { IS_TOUCH_DEVICE } from '#/env';
+import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
 
 /** the kind of input the user is currently driving the ui with */
 export type InputModality = 'keyboard' | 'mouse' | 'pen' | 'touch';

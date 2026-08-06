@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
-
-import { IS_FIREFOX, IS_SAFARI } from '#/env';
+import { IS_FIREFOX, IS_SAFARI } from '#/lib/browser/platform';
 
 export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 	const isFullscreen = useIsFullscreen();

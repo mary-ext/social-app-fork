@@ -5,7 +5,7 @@ import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
+import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants/feeds';
 import { cleanError, isNetworkError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { Richtext } from '#/lib/rich-text';

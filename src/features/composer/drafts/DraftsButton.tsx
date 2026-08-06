@@ -1,4 +1,4 @@
-import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants';
+import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 
 import * as Dialog from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';

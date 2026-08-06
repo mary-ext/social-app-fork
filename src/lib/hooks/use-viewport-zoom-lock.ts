@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { IS_MOBILE_IOS } from '#/env';
+import { IS_MOBILE_IOS } from '#/lib/browser/platform';
 
 const ZOOM_LOCKED_VIEWPORT =
 	'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover';

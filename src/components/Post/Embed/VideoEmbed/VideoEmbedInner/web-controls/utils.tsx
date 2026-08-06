@@ -1,8 +1,8 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
-import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
+import { IS_SAFARI } from '#/lib/browser/platform';
 
-import { IS_SAFARI } from '#/env';
+import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const [playing, setPlaying] = useState(false);

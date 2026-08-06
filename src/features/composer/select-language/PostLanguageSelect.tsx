@@ -1,6 +1,6 @@
 import { unique } from '@mary/array-fns';
 
-import { MAX_POST_LANGUAGES } from '#/lib/constants';
+import { MAX_POST_LANGUAGES } from '#/lib/constants/composer';
 
 import {
 	setPostLanguage,

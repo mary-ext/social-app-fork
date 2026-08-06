@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH } from '#/lib/constants';
+import { gifKlipyFeaturedUrl, gifKlipySearchUrl } from '#/lib/constants/services';
 import type { Gif } from '#/lib/gif';
 
 import { deviceLocales } from '#/locale/deviceLocales';
@@ -9,8 +9,8 @@ export const RQKEY_ROOT = 'klipy-gif-service';
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured'];
 export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query];
 
-const getTrendingGifs = createKlipyApi(GIF_KLIPY_FEATURED);
-const searchGifs = createKlipyApi<{ q: string }>(GIF_KLIPY_SEARCH);
+const getTrendingGifs = createKlipyApi(gifKlipyFeaturedUrl);
+const searchGifs = createKlipyApi<{ q: string }>(gifKlipySearchUrl);
 
 export function useFeaturedGifsQuery(options?: { enabled?: boolean }) {
 	return useInfiniteQuery({

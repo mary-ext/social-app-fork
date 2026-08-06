@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
+import { IS_SAFARI } from '#/lib/browser/platform';
+
 import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
 import { tween } from '#/components/ImageEmbed/carousel/tween';
 import { getOffsetForIndex } from '#/components/ImageEmbed/carousel/utils';
-
-import { IS_SAFARI } from '#/env';
 
 const DRAG_THRESHOLD = 3;
 const FLICK_DECAY = 0.85;

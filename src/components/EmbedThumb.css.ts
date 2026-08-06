@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { CARD_ASPECT_RATIO } from '#/lib/constants';
+import { CARD_ASPECT_RATIO } from '#/lib/constants/post';
 
 import { vars } from '#/styles/contract.css';
 import { iconSize } from '#/styles/tokens.css';

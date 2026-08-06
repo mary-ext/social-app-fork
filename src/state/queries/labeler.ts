@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { MAX_LABELERS } from '#/lib/constants';
+import { MAX_LABELERS } from '#/lib/constants/profile';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';

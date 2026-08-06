@@ -4,6 +4,7 @@ import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
 import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
@@ -18,7 +19,6 @@ import { type BaseUserAvatarProps, UserAvatar } from '#/components/UserAvatar';
 import * as styles from '#/components/UserAvatar.css';
 import { Link } from '#/components/web/Link';
 
-import { IS_TOUCH_DEVICE } from '#/env';
 import { m } from '#/paraglide/messages';
 
 type PreviewableUserAvatarProps = BaseUserAvatarProps & {

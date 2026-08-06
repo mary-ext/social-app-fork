@@ -1,4 +1,4 @@
-import { BSKY_SERVICE } from '#/lib/constants';
+import { BSKY_SERVICE } from '#/lib/constants/services';
 
 /**
  * renders a URL's host for display, naming the Bluesky service instead of showing its hostname.

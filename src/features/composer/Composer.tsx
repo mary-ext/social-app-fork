@@ -20,7 +20,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
-import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES } from '#/lib/constants';
+import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
@@ -543,7 +544,7 @@ export const ComposePost = ({
 		thread.posts.every(
 			(post) =>
 				isEmptyPost(post) ||
-				(post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+				(post.shortenedGraphemeLength <= MAX_POST_GRAPHEME_LENGTH &&
 					!(post.embed.media?.type === 'video' && post.embed.media.video.status === 'error')),
 		);
 
@@ -1084,7 +1085,7 @@ const ComposerPost = memo(function ComposerPost({
 		async (blob: Blob) => {
 			const mimeType = blob.type;
 			if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
-				if (!SUPPORTED_MIME_TYPES.some((supported) => supported === mimeType)) {
+				if (!VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType)) {
 					Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
 						type: 'error',
 					});
@@ -1145,7 +1146,9 @@ const ComposerPost = memo(function ComposerPost({
 						onError={onError}
 						onPressPublish={onPublish}
 						accessibilityLabel={m['common.compose.action.write']()}
-						accessibilityHint={m['view.composer.text.maxLengthHint']({ count: MAX_GRAPHEME_LENGTH || 0 })}
+						accessibilityHint={m['view.composer.text.maxLengthHint']({
+							count: MAX_POST_GRAPHEME_LENGTH || 0,
+						})}
 					/>
 
 					{canRemovePost && isActive && (

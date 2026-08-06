@@ -5,7 +5,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { DISCOVER_FEED_URI } from '#/lib/constants';
+import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';

@@ -1,6 +1,6 @@
 import { Client, simpleFetchHandler } from '@atcute/client';
 
-import { PUBLIC_BSKY_SERVICE } from '#/lib/constants';
+import { PUBLIC_BSKY_SERVICE } from '#/lib/constants/services';
 
 import { APPVIEW_PROXY_AUDIENCE, CHAT_PROXY_AUDIENCE } from '#/env';
 

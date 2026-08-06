@@ -1,6 +1,5 @@
-export * from '#/env/common';
-
 /** Browser and input-device detection */
+
 export const IS_TOUCH_DEVICE = window.matchMedia('(pointer: coarse)').matches;
 export const IS_MOBILE_IOS: boolean = /iPhone/.test(navigator.userAgent);
 export const IS_SAFARI: boolean = /^((?!chrome|android).)*safari/i.test(

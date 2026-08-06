@@ -1,6 +1,6 @@
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
-import { VIDEO_CDN_SERVICE, VIDEO_SERVICE } from '#/lib/constants';
+import { VIDEO_CDN_SERVICE, VIDEO_SERVICE } from '#/lib/constants/video';
 
 type ImgproxyPreset =
 	| 'default'

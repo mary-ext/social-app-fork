@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer } from 'react';
 import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { getStarterPackRecord } from '#/lib/api/record-casts';
-import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
 import { richTextToSourceText } from '#/lib/rich-text';
 
 import * as Toast from '#/components/Toast';

@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 
-import { MAX_ALT_TEXT } from '#/lib/constants';
+import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';

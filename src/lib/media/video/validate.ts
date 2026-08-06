@@ -1,4 +1,4 @@
-import { VIDEO_MAX_SIZE } from '#/lib/constants';
+import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { VideoTooLargeError } from '#/lib/media/video/errors';
 
 import type { CompressedVideo, VideoAsset } from './types';

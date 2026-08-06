@@ -8,7 +8,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
+import { STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
 import { sanitizeDisplayName } from '#/lib/display-names';
 
 import { useSession } from '#/state/session';

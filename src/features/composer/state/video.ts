@@ -3,7 +3,8 @@ import { type Client, ok } from '@atcute/client';
 import type { Blob as AtpBlob } from '@atcute/lexicons';
 
 import { uploadBlob } from '#/lib/api/records';
-import { LOCAL_DEV_SERVICE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
+import { LOCAL_DEV_SERVICE } from '#/lib/constants/services';
+import { VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { isNetworkError } from '#/lib/errors';
 import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';

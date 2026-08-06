@@ -25,7 +25,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
+import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants/feeds';
 import { sanitizeDisplayName } from '#/lib/display-names';
 import type { Richtext, RichtextFacet } from '#/lib/rich-text';
 import { feedTarget, listTarget } from '#/lib/routes/targets';

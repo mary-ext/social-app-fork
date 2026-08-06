@@ -3,7 +3,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
-import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
+import { EMOJI_REACTION_LIMIT } from '#/lib/constants/messages';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';

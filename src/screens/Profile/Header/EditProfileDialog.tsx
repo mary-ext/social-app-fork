@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants';
+import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants/profile';
 import { cleanError } from '#/lib/errors';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';

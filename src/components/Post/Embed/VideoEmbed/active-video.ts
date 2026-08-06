@@ -3,8 +3,7 @@ import { useEffect, useId, useSyncExternalStore } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { onFullscreenChange } from '#/lib/browser/fullscreen';
-
-import { IS_FIREFOX } from '#/env';
+import { IS_FIREFOX } from '#/lib/browser/platform';
 
 // place the active video above center to keep its post visible.
 const IDEAL_POSITION = 1 / 2.5;

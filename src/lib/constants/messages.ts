@@ -1,0 +1,5 @@
+export const MAX_DM_GRAPHEME_LENGTH = 1000;
+
+export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50;
+
+export const EMOJI_REACTION_LIMIT = 5;

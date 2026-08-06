@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { CARD_ASPECT_RATIO } from '#/lib/constants';
+import { CARD_ASPECT_RATIO } from '#/lib/constants/post';
 
 import { borderRadius } from '#/styles/tokens.css';
 

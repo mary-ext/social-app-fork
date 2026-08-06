@@ -7,7 +7,7 @@ import type { Did } from '@atcute/lexicons';
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
-import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants';
+import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants/messages';
 import { isNetworkError } from '#/lib/errors';
 import { isOverMaxGraphemeCount } from '#/lib/utils/text';
 

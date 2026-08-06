@@ -24,7 +24,7 @@ import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
-import { MAX_POST_LINES } from '#/lib/constants';
+import { MAX_POST_LINES } from '#/lib/constants/post';
 import { sanitizeDisplayName } from '#/lib/display-names';
 import { isAbortError } from '#/lib/errors';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';

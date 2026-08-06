@@ -9,7 +9,7 @@ import {
 import type { $type, Did } from '@atcute/lexicons';
 import { isTid, type Tid } from '@atcute/lexicons/syntax';
 
-import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
+import { EMOJI_REACTION_LIMIT } from '#/lib/constants/messages';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import type { Shadow } from '#/state/cache/profile-shadow';

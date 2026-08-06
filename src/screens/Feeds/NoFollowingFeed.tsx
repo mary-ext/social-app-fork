@@ -1,4 +1,4 @@
-import { TIMELINE_SAVED_FEED } from '#/lib/constants';
+import { TIMELINE_SAVED_FEED } from '#/lib/constants/feeds';
 
 import { useAddSavedFeedsMutation } from '#/state/queries/preferences';
 
