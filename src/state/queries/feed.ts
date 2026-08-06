@@ -28,7 +28,7 @@ import {
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { feedTarget, listTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { bakeRichtext, parseRichtext, type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext, RichtextFacet } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
@@ -52,7 +52,7 @@ export type FeedSourceFeedInfo = {
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
-	description: Richtext;
+	description: Richtext | string | undefined;
 	/** undefined on the pseudo-feeds (Following, the logged-out Discover stub), which have no creator. */
 	creatorDid: Did | undefined;
 	creatorHandle: string;
@@ -71,7 +71,7 @@ export type FeedSourceListInfo = {
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
-	description: Richtext;
+	description: Richtext | string | undefined;
 	/** undefined on the pseudo-feeds (Following, the logged-out Discover stub), which have no creator. */
 	creatorDid: Did | undefined;
 	creatorHandle: string;
@@ -98,13 +98,23 @@ const recordTarget = (urip: ParsedCanonicalResourceUri): RouteTarget =>
 		? feedTarget(urip.repo, urip.rkey)
 		: listTarget(urip.repo, urip.rkey);
 
+const hydrateDescription = (
+	text: string | undefined,
+	facets: RichtextFacet[] | undefined,
+): Richtext | string | undefined => {
+	if (!text) {
+		return undefined;
+	}
+
+	if (facets) {
+		return { text, facets };
+	}
+
+	return text;
+};
+
 export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedSourceInfo {
 	const urip = parseCanonicalResourceUri(view.uri);
-
-	// specified facets take priority; only detect when none were provided
-	const description: Richtext = view.descriptionFacets
-		? { text: view.description || '', facets: view.descriptionFacets.slice() }
-		: bakeRichtext(parseRichtext(view.description || ''));
 
 	return {
 		type: 'feed',
@@ -117,7 +127,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
 			: m['common.feeds.feedBy']({ handle: view.creator.handle }),
-		description,
+		description: hydrateDescription(view.description, view.descriptionFacets),
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		likeCount: view.likeCount,
@@ -130,11 +140,6 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 	const urip = parseCanonicalResourceUri(view.uri);
 
-	// specified facets take priority; only detect when none were provided
-	const description: Richtext = view.descriptionFacets
-		? { text: view.description || '', facets: view.descriptionFacets.slice() }
-		: bakeRichtext(parseRichtext(view.description || ''));
-
 	return {
 		type: 'list',
 		uri: view.uri,
@@ -143,7 +148,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		target: recordTarget(urip),
 		cid: view.cid,
 		avatar: view.avatar,
-		description,
+		description: hydrateDescription(view.description, view.descriptionFacets),
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		displayName: view.name
@@ -374,7 +379,7 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	target: { name: 'Home' },
 	cid: '',
 	avatar: '',
-	description: { text: '', facets: [] },
+	description: undefined,
 	creatorDid: undefined,
 	creatorHandle: '',
 	likeCount: 0,
@@ -473,7 +478,7 @@ export function usePinnedFeedsInfos() {
 						target: { name: 'Home' },
 						cid: '',
 						avatar: '',
-						description: { text: '', facets: [] },
+						description: undefined,
 						creatorDid: undefined,
 						creatorHandle: '',
 						likeCount: 0,

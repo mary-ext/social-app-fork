@@ -373,7 +373,7 @@ function DialogInner({
 					<ButtonIcon icon={Share} size="lg" />
 				</Button>
 			</div>
-			<RichText size="md" value={info.description} />
+			{info.description && <RichText size="md" value={info.description} />}
 			{likeCount > 0 && creatorDid && (
 				<div className={css.dialogLikedByRow}>
 					<InlineLinkText

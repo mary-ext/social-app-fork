@@ -84,7 +84,7 @@ export type FeedRow =
 	| {
 			type: 'description';
 			key: string;
-			value: Richtext;
+			value: Richtext | string;
 	  };
 
 export function getItemsForFeedback(feedRow: FeedRow): {
@@ -123,7 +123,7 @@ function PostFeed({
 }: {
 	feed: FeedDescriptor;
 	/** shown as the first row, above the posts. for feeds whose description is part of the surface. */
-	description?: Richtext;
+	description?: Richtext | string;
 	ignoreFilterFor?: string;
 	pollInterval?: number;
 	disablePoll?: boolean;
@@ -402,9 +402,7 @@ function PostFeed({
 			}
 		}
 
-		// unshifted so it sits above every state, loading and error included — it describes the feed itself
-		// rather than the posts, so it shouldn't pop in only once they arrive.
-		if (description?.text) {
+		if (description) {
 			arr.unshift({
 				type: 'description',
 				key: 'description',
