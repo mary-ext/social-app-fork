@@ -7,7 +7,7 @@ import { device, useStorageValue } from '#/storage';
 // cap for the composer's post language history.
 const HISTORY_LIMIT = 6;
 
-const defaultContentLanguages = deviceLanguageCodes;
+const defaultContentLanguages: string[] = [];
 const defaultLanguage = deviceLanguageCodes[0] || 'en';
 const defaultPostLanguageHistory = deviceLanguageCodes
 	.concat(['en', 'ja', 'pt', 'de'])
