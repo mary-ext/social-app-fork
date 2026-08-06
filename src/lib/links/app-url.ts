@@ -24,7 +24,7 @@ export type AppLink =
 // #region scheme registry
 
 /** a URL scheme belonging to some other client, and the hosts that serve it. */
-export type LinkScheme = {
+type LinkScheme = {
 	/** hostnames serving this scheme, lowercase and without a port. */
 	readonly hosts: ReadonlySet<string>;
 	/** reads a path written in this scheme. */
@@ -58,7 +58,7 @@ const isOwnUrl = (url: URL): boolean => {
  * a URL this app can open, and what it names. our own URLs are already in-app paths, so `own` carries the
  * path verbatim, and `link` is undefined for one with no cross-client meaning.
  */
-export type UrlTarget =
+type UrlTarget =
 	| { kind: 'client'; link: AppLink }
 	| { kind: 'own'; link: AppLink | undefined; path: string };
 

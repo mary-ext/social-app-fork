@@ -1,6 +1,6 @@
 import { useMediaQuery } from '#/lib/media-query';
 
-export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
+type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
 
 export function useBreakpoints(): Record<Breakpoint, boolean> {
 	const gtPhone = useMediaQuery('(width >= 500px)');

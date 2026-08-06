@@ -74,7 +74,7 @@ const countingFetch =
 
 const delayFor = (failures: number) => 0.25 * 2 ** failures;
 
-export type RetryPolicy = {
+type RetryPolicy = {
 	fetchFn: typeof fetch;
 	getRetryDelay: (previousAttempts: number, error: unknown, url: string | URL | Request) => number | null;
 };

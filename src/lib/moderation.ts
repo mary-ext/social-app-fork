@@ -15,7 +15,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;
-export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS] as const;
+const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS] as const;
 export type SelfLabel = (typeof SELF_LABELS)[number];
 
 function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {
@@ -87,7 +87,7 @@ export function isAppLabeler(
 	return did === BSKY_LABELER_DID;
 }
 
-export type Subject =
+type Subject =
 	| {
 			uri: string;
 			cid: string;

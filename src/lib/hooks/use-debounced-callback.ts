@@ -4,7 +4,7 @@ import { type DebounceOptions, type Debounced, debounce } from '#/lib/debounce';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 /** what happens to a pending trailing invocation when the owning component unmounts. */
-export type UnmountBehavior =
+type UnmountBehavior =
 	/** discard it. */
 	| 'cancel'
 	/** invoke it immediately, during teardown. */
@@ -12,7 +12,7 @@ export type UnmountBehavior =
 	/** leave the timer running; it fires on schedule regardless of the component's fate. */
 	| 'ignore';
 
-export type UseDebouncedCallbackOptions = DebounceOptions & {
+type UseDebouncedCallbackOptions = DebounceOptions & {
 	/** defaults to `'cancel'`. */
 	onUnmount?: UnmountBehavior;
 };

@@ -14,7 +14,7 @@ import type { Records } from '@atcute/lexicons/ambient';
 /** An NSID for which a record type is registered in the ambient `Records` map. */
 type RecordType = keyof Records;
 
-export interface CreateRecordOptions<K extends RecordType> {
+interface CreateRecordOptions<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	record: InferInput<Records[K]>;
@@ -34,7 +34,7 @@ export const createRecord = async <K extends RecordType>(client: Client, options
 	return await ok(client.post('com.atproto.repo.createRecord', { input: options }));
 };
 
-export interface PutRecordOptions<K extends RecordType> {
+interface PutRecordOptions<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	rkey: string;
@@ -55,7 +55,7 @@ export const putRecord = async <K extends RecordType>(client: Client, options: P
 	return await ok(client.post('com.atproto.repo.putRecord', { input: options }));
 };
 
-export interface DeleteRecordOptions<K extends RecordType> {
+interface DeleteRecordOptions<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	rkey: string;
@@ -73,7 +73,7 @@ export const deleteRecord = async <K extends RecordType>(client: Client, options
 	await ok(client.post('com.atproto.repo.deleteRecord', { input: options }));
 };
 
-export interface GetRecordOptions<K extends RecordType> {
+interface GetRecordOptions<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	rkey: string;
@@ -81,7 +81,7 @@ export interface GetRecordOptions<K extends RecordType> {
 	signal?: AbortSignal;
 }
 
-export type GetRecordOutput<T> = ComAtprotoRepoGetRecord.$output & { value: T };
+type GetRecordOutput<T> = ComAtprotoRepoGetRecord.$output & { value: T };
 
 /**
  * reads a single repo record via `com.atproto.repo.getRecord`, typed by its `collection`.
@@ -110,7 +110,7 @@ export const getRecord = async <K extends RecordType>(
 	return data as GetRecordOutput<InferInput<Records[K]>>;
 };
 
-export interface ListRecordsOptions<K extends RecordType> {
+interface ListRecordsOptions<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	cursor?: string;
@@ -118,7 +118,7 @@ export interface ListRecordsOptions<K extends RecordType> {
 	signal?: AbortSignal;
 }
 
-export type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'records'> & {
+type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'records'> & {
 	cursor?: string;
 	records: { cid: Cid; uri: ResourceUri; value: T }[];
 };

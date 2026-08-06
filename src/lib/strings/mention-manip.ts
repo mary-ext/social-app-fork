@@ -3,7 +3,7 @@ interface FoundMention {
 	index: number;
 }
 
-export function getMentionAt(text: string, cursorPos: number): FoundMention | undefined {
+function getMentionAt(text: string, cursorPos: number): FoundMention | undefined {
 	const re = /(^|\s)@([a-z0-9.-]*)/gi;
 	let match;
 	while ((match = re.exec(text))) {

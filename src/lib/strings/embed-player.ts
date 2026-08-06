@@ -17,7 +17,7 @@ export const embedPlayerSources = [
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number];
 
-export type EmbedPlayerType =
+type EmbedPlayerType =
 	| 'youtube_video'
 	| 'youtube_short'
 	| 'twitch_video'
@@ -513,7 +513,7 @@ export function getGiphyMetaUri(url: URL) {
 	}
 }
 
-export function parseTenorGif(urlp: URL):
+function parseTenorGif(urlp: URL):
 	| { success: false }
 	| {
 			success: true;
@@ -570,7 +570,7 @@ export function parseTenorGif(urlp: URL):
 	};
 }
 
-export function isTenorGifUri(url: URL | string) {
+function isTenorGifUri(url: URL | string) {
 	try {
 		return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success;
 	} catch {
@@ -662,7 +662,7 @@ export function parseKlipyGif(urlp: URL):
 	};
 }
 
-export function isKlipyGifUri(url: URL | string) {
+function isKlipyGifUri(url: URL | string) {
 	try {
 		return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success;
 	} catch {

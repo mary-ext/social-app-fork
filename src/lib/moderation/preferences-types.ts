@@ -13,13 +13,13 @@ export type { AppBskyActorDefs };
 export type LabelVisibility = 'hide' | 'ignore' | 'warn';
 
 /** A subscribed labeler and the per-label visibility the user has chosen for it. */
-export interface LabelerPreference {
+interface LabelerPreference {
 	did: Did;
 	labels: Record<string, LabelVisibility>;
 }
 
 /** The app's own persisted moderation preferences. */
-export interface ModerationPrefs {
+interface ModerationPrefs {
 	adultContentEnabled: boolean;
 	labelers: LabelerPreference[];
 	labels: Record<string, LabelVisibility>;

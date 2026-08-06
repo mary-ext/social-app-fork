@@ -1,7 +1,7 @@
 import { getImageFromBlob } from './image';
 import type { Dimensions } from './types';
 
-export type VideoMetadata = Dimensions & {
+type VideoMetadata = Dimensions & {
 	/** duration in milliseconds, or null when it could not be determined */
 	duration: number | null;
 };

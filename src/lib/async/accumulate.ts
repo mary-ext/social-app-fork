@@ -1,9 +1,9 @@
-export interface AccumulateResponse<T> {
+interface AccumulateResponse<T> {
 	cursor?: string;
 	items: T[];
 }
 
-export type AccumulateFetchFn<T> = (cursor: string | undefined) => Promise<AccumulateResponse<T>>;
+type AccumulateFetchFn<T> = (cursor: string | undefined) => Promise<AccumulateResponse<T>>;
 
 export async function accumulate<T>(fn: AccumulateFetchFn<T>, pageLimit = 100): Promise<T[]> {
 	let cursor: string | undefined;

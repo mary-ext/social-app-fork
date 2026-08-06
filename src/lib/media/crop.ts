@@ -1,4 +1,4 @@
-export type CropResult = [offsetX: number, offsetY: number, width: number, height: number];
+type CropResult = [offsetX: number, offsetY: number, width: number, height: number];
 
 /**
  * compute the placement of an image to cover a target box, cropping the overflow. returns the source image's

@@ -12,7 +12,7 @@ import { isPostInLanguage } from '../../locale/helpers';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
 
-export type FeedTunerFn = (
+type FeedTunerFn = (
 	tuner: FeedTuner,
 	slices: FeedViewPostsSlice[],
 	dryRun: boolean,
@@ -33,7 +33,7 @@ type AuthorContext = {
 	rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 };
 
-export class FeedViewPostsSlice {
+class FeedViewPostsSlice {
 	_reactKey: string;
 	_feedPost: FeedViewPost;
 	items: FeedSliceItem[];

@@ -19,7 +19,7 @@ export type Richtext = {
 };
 
 /** a parsed or segmented rich-text run. */
-export type RichtextSegment =
+type RichtextSegment =
 	| { type: 'link'; text: string; uri: GenericUri }
 	| { type: 'mention'; text: string; did: Did }
 	| { type: 'tag'; text: string; tag: string }

@@ -15,7 +15,7 @@ import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { matchesLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 
-export interface LabelInfo {
+interface LabelInfo {
 	label: ComAtprotoLabelDefs.Label;
 	def: InterpretedLabelDefinition;
 	strings: LabelLocale;

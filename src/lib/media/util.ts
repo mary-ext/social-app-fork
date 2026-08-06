@@ -2,7 +2,7 @@ export function isUriImage(uri: string): boolean {
 	return /\.(jpg|jpeg|png|webp).*$/.test(uri);
 }
 
-export type ImgproxyPreset =
+type ImgproxyPreset =
 	| 'default'
 	| 'avatar_thumbnail'
 	| 'avatar'

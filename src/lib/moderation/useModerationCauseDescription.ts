@@ -20,9 +20,9 @@ import { useGlobalLabelStrings } from './useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from './useLabelInfo';
 
 /** Provenance of a moderation cause, replacing `@atproto/api`'s `ModerationCauseSource['type']`. */
-export type ModerationCauseSourceType = 'labeler' | 'list' | 'user';
+type ModerationCauseSourceType = 'labeler' | 'list' | 'user';
 
-export interface ModerationCauseDescription {
+interface ModerationCauseDescription {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	name: string;
 	description: string;

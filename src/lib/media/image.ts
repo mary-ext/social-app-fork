@@ -331,7 +331,7 @@ const encodeAt = (
  * @param blob source image
  * @returns a blob with EXIF removed, or the original blob if no stripping was applied
  */
-export const stripExif = async (blob: Blob): Promise<Blob> => {
+const stripExif = async (blob: Blob): Promise<Blob> => {
 	const stripped = removeExif(new Uint8Array(await blob.arrayBuffer()));
 	if (stripped === null) {
 		return blob;

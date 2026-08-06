@@ -46,7 +46,7 @@ export const appLinkToTarget = (link: AppLink): RouteTarget => {
 // #region inbound
 
 /** an in-app destination resolved from a URL. */
-export type ResolvedUrl = {
+type ResolvedUrl = {
 	/** what the URL names, or undefined for one of our own routes with no meaning outside this app. */
 	link: AppLink | undefined;
 	/** the in-app path that renders it. */

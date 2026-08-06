@@ -1,7 +1,7 @@
 import { compressPostImage, compressProfileImage as compressProfileBlob, getImageFromBlob } from './image';
 
 /** A pixel-space rectangle to crop an image down to. */
-export type ImageCrop = {
+type ImageCrop = {
 	height: number;
 	originX: number;
 	originY: number;

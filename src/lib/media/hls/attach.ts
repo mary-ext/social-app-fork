@@ -30,7 +30,7 @@ export const isHlsPlayerSupported = () => MediaSourceClass !== undefined;
  * @param mimeType MIME type to check
  * @returns whether the MIME type is supported
  */
-export const canPlayMimeType = (mimeType: string) => MediaSourceClass?.isTypeSupported(mimeType) ?? false;
+const canPlayMimeType = (mimeType: string) => MediaSourceClass?.isTypeSupported(mimeType) ?? false;
 
 // #region policy
 
@@ -81,7 +81,7 @@ const releaseWorker = (worker: Worker) => {
 
 // #endregion
 
-export type PlayerStatus = 'ok' | 'retrying' | 'stopped';
+type PlayerStatus = 'ok' | 'retrying' | 'stopped';
 
 export type PlayerHandle = {
 	/** switches quality at the current playback position. */
