@@ -19,12 +19,12 @@ import { mapDefined } from '@mary/array-fns';
 import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { task } from '#/lib/async/task';
 import { compressImage } from '#/lib/media/composer-image';
 import { isNetworkError } from '#/lib/strings/errors';
 import { trimText } from '#/lib/strings/helpers';
-import { detectFacets } from '#/lib/strings/rich-text-facets';
-import { shortenLinks } from '#/lib/strings/rich-text-manip';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import {
@@ -57,7 +57,7 @@ type Write = ComAtprotoRepoApplyWrites.$input['writes'][number];
 /** Assembles a post record once its rich text, embed, and reply ref have all resolved. */
 const buildRecord = task(
 	(
-		rt: Awaited<ReturnType<typeof resolveRT>>,
+		rt: Richtext,
 		embed: AppBskyFeedPost.Main['embed'],
 		reply: AppBskyFeedPost.Main['reply'],
 		meta: {
@@ -138,7 +138,7 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 		uris.push(uri);
 
 		const recordPromise = buildRecord(
-			resolveRT(appview, draft.text),
+			resolvePublishedRichtext(appview, trimText(draft.text)),
 			resolveEmbed(appview, pds, queryClient, draft),
 			replyPromise,
 			{ createdAt, labels, langs },
@@ -209,23 +209,6 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 	}
 
 	return { uris };
-}
-
-async function resolveRT(appview: Client, text: string) {
-	const rt = await detectFacets(trimText(text), async (handle) => {
-		try {
-			const res = await ok(
-				appview.get('com.atproto.identity.resolveHandle', {
-					params: { handle },
-				}),
-			);
-			return res.did;
-		} catch {
-			return undefined;
-		}
-	});
-
-	return shortenLinks(rt);
 }
 
 export class ReplyDeletedError extends Error {

@@ -1,6 +1,7 @@
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
+import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 import { isHandle } from '@atcute/lexicons/syntax';
 import { getGraphemeLength } from '@atcute/util-text';
@@ -17,96 +18,91 @@ export type Richtext = {
 	facets?: RichtextFacet[];
 };
 
-/**
- * counts the graphemes of `text` as it will be displayed, with link URLs replaced by their shortened form.
- *
- * @param text the compose-input text
- * @returns the shortened grapheme length
- */
-export function getShortenedLength(text: string): number {
-	let shortened = '';
-	for (const token of tokenize(text)) {
-		shortened += token.type === 'autolink' ? toShortUrl(token.url) : token.raw;
-	}
-	return getGraphemeLength(shortened);
-}
+/** a parsed or segmented rich-text run. */
+export type RichtextSegment =
+	| { type: 'link'; text: string; uri: GenericUri }
+	| { type: 'mention'; text: string; did: Did }
+	| { type: 'tag'; text: string; tag: string }
+	| { type: 'text'; text: string }
+	| { type: 'unresolvedMention'; text: string; handle: string };
 
-/**
- * appends a parser token to a richtext builder, converting only mentions, hashtags, and scheme-prefixed
- * autolinks into facets.
- *
- * @param token the parser token to append
- * @param builder the richtext builder to append to
- * @param resolveDid maps a mention handle to a DID, or returns undefined to render the mention as plain text
- */
-function appendToken(
-	builder: RichtextBuilder,
-	token: Token,
-	resolveDid: (handle: string) => Did | undefined,
-): void {
+const toSegment = (token: Token): RichtextSegment => {
 	switch (token.type) {
-		case 'text':
-			// the tokenizer merges adjacent text runs into `raw` only, leaving `content` holding just the
-			// first run; use `raw` so failed-facet text (`$5`, `16:9`, a stray `:`) isn't truncated.
-			builder.addText(token.raw);
-			break;
-		case 'mention': {
-			const did = resolveDid(token.handle);
-			if (did) {
-				builder.addMention(token.raw, did);
-			} else {
-				builder.addText(token.raw);
-			}
-			break;
-		}
+		case 'mention':
+			return { type: 'unresolvedMention', text: token.raw, handle: token.handle };
 		case 'topic':
-			builder.addTag(token.raw, token.name);
-			break;
+			return { type: 'tag', text: token.raw, tag: token.name };
 		case 'autolink':
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the parser only emits `autolink` for `http(s)://` runs
-			builder.addLink(token.raw, token.url as GenericUri);
-			break;
+			return { type: 'link', text: token.raw, uri: token.url as GenericUri };
 		default:
-			// markdown links/formatting, code, cashtags, emotes and escapes carry no facet — emit them as
-			// the literal text the user typed (cashtag faceting is intentionally unsupported).
-			builder.addText(token.raw);
+			// unsupported facets stay literal; `content` can omit merged or invalid syntax
+			return { type: 'text', text: token.raw };
 	}
+};
+
+/**
+ * joins segment display text.
+ *
+ * @param segments rich-text segments
+ * @returns joined display text
+ */
+export function toPlainText(segments: RichtextSegment[]): string {
+	return segments.reduce((text, segment) => text + segment.text, '');
 }
 
 /**
- * detects facets in `text` without resolving mention handles to DIDs.
+ * parses inline syntax into rich-text segments with unresolved mentions.
  *
- * @param text the input text.
- * @returns the text and its detected facets.
+ * @param text the source text
+ * @returns parsed segments
  */
-export function detectFacetsWithoutResolution(text: string): Richtext {
-	const builder = new RichtextBuilder();
-	for (const token of tokenize(text)) {
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- display-only pass; consumers won't link a mention without a `did:`
-		appendToken(builder, token, (handle) => handle as Did);
-	}
-	return builder.build();
+export function parseRichtext(text: string): RichtextSegment[] {
+	return tokenize(text).map(toSegment);
 }
 
 /**
- * detects facets and resolves mention handles.
+ * converts network rich text to segments without parsing inline syntax.
  *
- * facet offsets refer to the returned text.
- *
- * @param text input text
- * @param resolve maps a valid handle to a DID or undefined
- * @returns text and detected facets
+ * @param richtext network rich text
+ * @returns segmented rich text
  */
-export async function detectFacets(
-	text: string,
+export function segmentizeRichtext({ text, facets }: Richtext): RichtextSegment[] {
+	if (!facets?.length) {
+		return [{ type: 'text', text }];
+	}
+
+	return segmentize(text, facets).map((segment): RichtextSegment => {
+		// use the first supported feature in wire order
+		for (const feature of segment.features ?? []) {
+			switch (feature.$type) {
+				case 'app.bsky.richtext.facet#link':
+					return { type: 'link', text: segment.text, uri: feature.uri };
+				case 'app.bsky.richtext.facet#mention':
+					return { type: 'mention', text: segment.text, did: feature.did };
+				case 'app.bsky.richtext.facet#tag':
+					return { type: 'tag', text: segment.text, tag: feature.tag };
+			}
+		}
+		return { type: 'text', text: segment.text };
+	});
+}
+
+/**
+ * resolves valid mention handles and leaves failed resolutions unresolved.
+ *
+ * @param segments rich-text segments
+ * @param resolve the handle resolver
+ * @returns resolved segments
+ */
+export async function resolveMentions(
+	segments: RichtextSegment[],
 	resolve: (handle: Handle) => Promise<Did | undefined>,
-): Promise<Richtext> {
-	const tokens = tokenize(text);
-
+): Promise<RichtextSegment[]> {
 	const handles = unique(
-		mapDefined(tokens, (token) => {
-			if (token.type === 'mention' && isHandle(token.handle)) {
-				return token.handle;
+		mapDefined(segments, (segment) => {
+			if (segment.type === 'unresolvedMention' && isHandle(segment.handle)) {
+				return segment.handle;
 			}
 		}),
 	);
@@ -118,9 +114,59 @@ export async function detectFacets(
 		}),
 	);
 
+	return segments.map((segment) => {
+		if (segment.type !== 'unresolvedMention') {
+			return segment;
+		}
+		const did = resolved.get(segment.handle);
+		return did ? { type: 'mention', text: segment.text, did } : segment;
+	});
+}
+
+/**
+ * shortens link display text.
+ *
+ * @param segments rich-text segments
+ * @returns segments with shortened links
+ */
+export function shortenLinks(segments: RichtextSegment[]): RichtextSegment[] {
+	return segments.map((segment) => {
+		return segment.type === 'link' ? { ...segment, text: toShortUrl(segment.text) } : segment;
+	});
+}
+
+/**
+ * converts segments to network rich text; unresolved mentions become plain text.
+ *
+ * @param segments rich-text segments
+ * @returns network rich text
+ */
+export function bakeRichtext(segments: RichtextSegment[]): Richtext {
 	const builder = new RichtextBuilder();
-	for (const token of tokens) {
-		appendToken(builder, token, (handle) => resolved.get(handle));
+	for (const segment of segments) {
+		switch (segment.type) {
+			case 'link':
+				builder.addLink(segment.text, segment.uri);
+				break;
+			case 'mention':
+				builder.addMention(segment.text, segment.did);
+				break;
+			case 'tag':
+				builder.addTag(segment.text, segment.tag);
+				break;
+			default:
+				builder.addText(segment.text);
+		}
 	}
 	return builder.build();
+}
+
+/**
+ * counts graphemes after shortening links.
+ *
+ * @param text source text
+ * @returns displayed grapheme count
+ */
+export function getShortenedLength(text: string): number {
+	return getGraphemeLength(toPlainText(shortenLinks(parseRichtext(text))));
 }

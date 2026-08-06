@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { ok } from '@atcute/client';
-
-import { detectFacets, type Richtext } from '#/lib/strings/rich-text-facets';
+import { createHandleResolver } from '#/lib/api/identity';
+import { bakeRichtext, parseRichtext, resolveMentions, type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { getClients } from '#/state/session';
 
@@ -20,20 +19,9 @@ export function useRichText(text: string): [Richtext, boolean] {
 	useEffect(() => {
 		let ignore = false;
 		async function resolveRTFacets() {
-			const nextRT = await detectFacets(text, async (handle) => {
-				try {
-					const res = await ok(
-						appview.get('com.atproto.identity.resolveHandle', {
-							params: { handle },
-						}),
-					);
-					return res.did;
-				} catch {
-					return undefined;
-				}
-			});
+			const segments = await resolveMentions(parseRichtext(text), createHandleResolver(appview));
 			if (!ignore) {
-				setResolvedRT(nextRT);
+				setResolvedRT(bakeRichtext(segments));
 			}
 		}
 		void resolveRTFacets();

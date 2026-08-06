@@ -1,14 +1,17 @@
 import type { ReactNode } from 'react';
 
-import type { AppBskyRichtextFacet } from '@atcute/bluesky';
-import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
 import { profileTarget } from '#/lib/routes/targets';
 import { isOnlyEmoji } from '#/lib/strings/emoji';
-import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
+import {
+	parseRichtext,
+	type Richtext,
+	segmentizeRichtext,
+	toPlainText,
+} from '#/lib/strings/rich-text-facets';
 import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
@@ -16,8 +19,6 @@ import { atomicSegment, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
 import { ContentLinkText, InlineLinkText, type InlineLinkUnderline } from '#/components/web/Link';
-
-type Feature = AppBskyRichtextFacet.Main['features'][number];
 
 export type RichTextProps = Pick<
 	TextProps,
@@ -63,10 +64,15 @@ export function RichText({
 	value,
 	weight,
 }: RichTextProps) {
-	const { text, facets } = typeof value === 'string' ? detectFacetsWithoutResolution(value) : value;
+	const segments = typeof value === 'string' ? parseRichtext(value) : segmentizeRichtext(value);
+
+	let text: string | undefined;
+	if (segments.every((segment) => segment.type === 'text')) {
+		text = toPlainText(segments);
+	}
 
 	// emoji-only text is enlarged and unclamped, so it takes its own host rather than the shared one below
-	if (!facets?.length && isOnlyEmoji(text)) {
+	if (text !== undefined && isOnlyEmoji(text)) {
 		return (
 			<Text
 				align={align}
@@ -82,85 +88,78 @@ export function RichText({
 	}
 
 	let children: ReactNode = text;
-	if (facets?.length) {
+	if (text === undefined) {
 		const els: ReactNode[] = [];
 		let key = 0;
-		for (const segment of segmentize<Feature>(text, facets)) {
+		for (const segment of segments) {
 			let el: ReactNode = segment.text;
 
-			// Render the first feature we support, in array order — a facet's `features` can carry more
-			// than one, and we take whichever comes first rather than imposing a type precedence.
-			features: for (const feature of segment.features ?? []) {
-				switch (feature.$type) {
-					case 'app.bsky.richtext.facet#link': {
-						// require a genuine http(s) URL with a real host — a loose match would render
-						// degenerate facet URIs (`https://` + a run of dots, `at://…`, other schemes) as
-						// clickable links whose visible text reveals nothing about where they lead
-						const isValidLink = parseLinkableUrl(feature.uri) != null;
-						if (!isValidLink || disableLinks) {
-							el = toShortUrl(segment.text);
-						} else {
-							el = (
-								<ContentLinkText
-									color={color}
-									href={feature.uri}
-									key={key}
-									leading={leading}
-									selectable={selectable}
-									size={size}
-									underline={linkUnderline}
-									weight={weight}
-								>
-									{toShortUrl(segment.text)}
-								</ContentLinkText>
-							);
-						}
-						break features;
+			switch (segment.type) {
+				case 'link': {
+					// reject malformed and non-http(s) facet URIs
+					if (disableLinks || parseLinkableUrl(segment.uri) == null) {
+						el = toShortUrl(segment.text);
+					} else {
+						el = (
+							<ContentLinkText
+								color={color}
+								href={segment.uri}
+								key={key}
+								leading={leading}
+								selectable={selectable}
+								size={size}
+								underline={linkUnderline}
+								weight={weight}
+							>
+								{toShortUrl(segment.text)}
+							</ContentLinkText>
+						);
 					}
-					case 'app.bsky.richtext.facet#mention': {
-						if (!disableLinks && feature.did.startsWith('did:')) {
-							const link = (
-								<InlineLinkText
-									className={atomicSegment}
-									color={color}
-									key={key}
-									leading={leading}
-									selectable={selectable}
-									size={size}
-									to={profileTarget(feature.did)}
-									underline={linkUnderline}
-									weight={weight}
-								>
-									{segment.text}
-								</InlineLinkText>
-							);
-							el = disableHoverCards ? (
-								link
-							) : (
-								<ProfileHoverCard did={feature.did} key={key}>
-									{link}
-								</ProfileHoverCard>
-							);
-						}
-						break features;
+					break;
+				}
+				case 'mention': {
+					if (!disableLinks) {
+						const link = (
+							<InlineLinkText
+								className={atomicSegment}
+								color={color}
+								key={key}
+								leading={leading}
+								selectable={selectable}
+								size={size}
+								to={profileTarget(segment.did)}
+								underline={linkUnderline}
+								weight={weight}
+							>
+								{segment.text}
+							</InlineLinkText>
+						);
+						el = disableHoverCards ? (
+							link
+						) : (
+							<ProfileHoverCard did={segment.did} key={key}>
+								{link}
+							</ProfileHoverCard>
+						);
 					}
-					case 'app.bsky.richtext.facet#tag': {
-						if (!disableLinks && enableTags) {
-							el = (
-								<RichTextTag
-									authorHandle={authorHandle}
-									color={color}
-									display={segment.text}
-									key={key}
-									leading={leading}
-									size={size}
-									tag={feature.tag}
-									underline={linkUnderline}
-								/>
-							);
-						}
-						break features;
+					break;
+				}
+				case 'tag': {
+					if (!disableLinks && enableTags) {
+						el = (
+							<RichTextTag
+								authorHandle={authorHandle}
+								color={color}
+								display={segment.text}
+								key={key}
+								leading={leading}
+								size={size}
+								tag={segment.tag}
+								underline={linkUnderline}
+							/>
+						);
 					}
+					break;
 				}
 			}
 

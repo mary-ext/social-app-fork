@@ -13,11 +13,12 @@ import { chunked } from '@mary/array-fns';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { createHandleResolver } from '#/lib/api/identity';
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { createStarterPackList } from '#/lib/generate-starterpack';
-import { detectFacets } from '#/lib/strings/rich-text-facets';
+import { bakeRichtext, parseRichtext, resolveMentions } from '#/lib/strings/rich-text-facets';
 import {
 	createStarterPackUri,
 	httpStarterPackUriToAtUri,
@@ -37,14 +38,8 @@ async function resolveDescription(
 		return {};
 	}
 
-	const rt = await detectFacets(description, async (handle) => {
-		try {
-			const res = await ok(appview.get('com.atproto.identity.resolveHandle', { params: { handle } }));
-			return res.did;
-		} catch {
-			return undefined;
-		}
-	});
+	const segments = await resolveMentions(parseRichtext(description), createHandleResolver(appview));
+	const rt = bakeRichtext(segments);
 
 	return { description: rt.text, descriptionFacets: rt.facets };
 }

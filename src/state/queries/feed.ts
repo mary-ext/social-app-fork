@@ -28,7 +28,7 @@ import {
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { feedTarget, listTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
+import { bakeRichtext, parseRichtext, type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
@@ -104,7 +104,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
 		? { text: view.description || '', facets: view.descriptionFacets.slice() }
-		: detectFacetsWithoutResolution(view.description || '');
+		: bakeRichtext(parseRichtext(view.description || ''));
 
 	return {
 		type: 'feed',
@@ -133,7 +133,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 	// specified facets take priority; only detect when none were provided
 	const description: Richtext = view.descriptionFacets
 		? { text: view.description || '', facets: view.descriptionFacets.slice() }
-		: detectFacetsWithoutResolution(view.description || '');
+		: bakeRichtext(parseRichtext(view.description || ''));
 
 	return {
 		type: 'list',

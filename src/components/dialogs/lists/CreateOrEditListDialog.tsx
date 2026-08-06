@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
 
+import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
-import { detectFacets, getShortenedLength } from '#/lib/strings/rich-text-facets';
+import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
-import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';
@@ -205,22 +204,7 @@ function DialogInner({
 				return;
 			}
 
-			// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
-			// mentions left to strip.
-			const richText = shortenLinks(
-				await detectFacets(trimText(descriptionText), async (h) => {
-					try {
-						const res = await ok(
-							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: h },
-							}),
-						);
-						return res.did;
-					} catch {
-						return undefined;
-					}
-				}),
-			);
+			const richText = await resolvePublishedRichtext(appview, trimText(descriptionText));
 
 			if (list) {
 				await updateListMutation({

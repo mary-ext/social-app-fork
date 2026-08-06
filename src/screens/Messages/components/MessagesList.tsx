@@ -1,15 +1,13 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
-import { tokenize } from '@atcute/bluesky-richtext-parser';
-import { ok } from '@atcute/client';
 import type { $type } from '@atcute/lexicons';
 
+import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { trimText } from '#/lib/strings/helpers';
-import { detectFacets } from '#/lib/strings/rich-text-facets';
-import { shortenLinks } from '#/lib/strings/rich-text-manip';
+import { parseRichtext } from '#/lib/strings/rich-text-facets';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import type { ConvoState } from '#/state/messages/convo/types';
@@ -236,14 +234,14 @@ export function MessagesList({
 						record: createEmbedViewRecordFromPost(post),
 					};
 
-					for (const token of tokenize(trimmedText)) {
-						if (token.type !== 'autolink') {
+					for (const segment of parseRichtext(trimmedText)) {
+						if (segment.type !== 'link') {
 							continue;
 						}
-						const link = resolveUrlToLink(token.url);
+						const link = resolveUrlToLink(segment.uri);
 						// this might have a handle instead of a DID, so just compare the rkey
 						if (link?.kind === 'post' && post.uri.endsWith(link.rkey)) {
-							trimmedText = stripEdgeToken(trimmedText, token.raw);
+							trimmedText = stripEdgeToken(trimmedText, segment.text);
 							break;
 						}
 					}
@@ -266,35 +264,20 @@ export function MessagesList({
 				};
 			}
 
-			for (const token of tokenize(trimmedText)) {
-				if (token.type !== 'autolink') {
+			for (const segment of parseRichtext(trimmedText)) {
+				if (segment.type !== 'link') {
 					continue;
 				}
-				const link = resolveUrlToLink(token.url);
+				const link = resolveUrlToLink(segment.uri);
 				if (link?.kind !== 'chat-invite' || link.code !== code) {
 					continue;
 				}
-				trimmedText = stripEdgeToken(trimmedText, token.raw);
+				trimmedText = stripEdgeToken(trimmedText, segment.text);
 				break;
 			}
 		}
 
-		// `detectFacets` only emits mention facets for handles that resolve, so there are no
-		// invalid mentions left to strip.
-		const rt = shortenLinks(
-			await detectFacets(trimmedText, async (handle) => {
-				try {
-					const res = await ok(
-						appview.get('com.atproto.identity.resolveHandle', {
-							params: { handle },
-						}),
-					);
-					return res.did;
-				} catch {
-					return undefined;
-				}
-			}),
-		);
+		const rt = await resolvePublishedRichtext(appview, trimmedText);
 
 		convoState.sendMessage(
 			{
