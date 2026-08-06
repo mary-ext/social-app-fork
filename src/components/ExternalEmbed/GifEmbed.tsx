@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import { onVisibilityChange } from '#/lib/browser/visibility';
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
-import { onVisibilityChange } from '#/lib/visibility';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 

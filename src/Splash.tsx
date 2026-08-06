@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { getReducedMotion } from '#/lib/reduced-motion';
+import { getReducedMotion } from '#/lib/browser/reduced-motion';
 
 import * as styles from '#/Splash.css';
 

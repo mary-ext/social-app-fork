@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect } from 'react';
 
 import type { Client } from '@atcute/client';
 
+import { onVisibilityChange } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { onVisibilityChange } from '#/lib/visibility';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
 import { getClients, useSession } from '#/state/session';

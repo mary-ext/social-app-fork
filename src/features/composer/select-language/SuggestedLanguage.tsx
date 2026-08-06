@@ -5,7 +5,7 @@ import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { mapDefined } from '@mary/array-fns';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type Detection, detectLanguagesAsync } from '#/lib/language-detection';
 
 import { code3ToCode2, codeToLanguageName } from '#/locale/helpers';

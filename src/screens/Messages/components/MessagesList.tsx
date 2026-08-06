@@ -4,7 +4,7 @@ import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } fro
 import type { $type } from '@atcute/lexicons';
 
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { trimText } from '#/lib/strings/helpers';
 import { parseRichtext } from '#/lib/strings/rich-text-facets';

@@ -1,7 +1,7 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useGoBack } from '#/lib/hooks/useGoBack';
+import { useGoBack } from '#/lib/hooks/use-go-back';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { listTarget } from '#/lib/routes/targets';
 

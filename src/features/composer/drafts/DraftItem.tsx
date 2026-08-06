@@ -2,7 +2,7 @@ import { type ComponentType, type SVGProps, useEffect, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import * as device from '#/lib/deviceName';
+import * as device from '#/lib/device-name';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';

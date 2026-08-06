@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
+import { useBlobUrl } from '#/lib/blob-url';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';

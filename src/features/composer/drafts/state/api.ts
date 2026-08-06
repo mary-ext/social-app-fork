@@ -5,7 +5,7 @@ import type { GenericUri } from '@atcute/lexicons';
 import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
-import { getDeviceName } from '#/lib/deviceName';
+import { getDeviceName } from '#/lib/device-name';
 import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions } from '#/lib/media/metadata';

@@ -1,7 +1,9 @@
 import * as v from '@atcute/lexicons/validations';
 
+// the worker imports this module, and `tsconfig.worker.json` maps no `#/*` alias — these have to stay
+// relative to resolve in both programs.
 import { MAX_ALT_TEXT } from '../constants';
-import { altTextDraftSchema, type generateAltText } from '../lexicons/internal-app';
+import { altTextDraftSchema, type generateAltText } from '../lexicons';
 import type { ChatContentPart, ChatMessage, ChatResponseSchema, CompleteChat } from './chat';
 
 export type AltTextInput = v.InferOutput<(typeof generateAltText)['input']['schema']>;

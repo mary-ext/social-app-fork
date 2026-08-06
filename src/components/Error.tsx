@@ -1,4 +1,4 @@
-import { useGoBack } from '#/lib/hooks/useGoBack';
+import { useGoBack } from '#/lib/hooks/use-go-back';
 
 import * as css from '#/components/Error.css';
 import { Text } from '#/components/Text';

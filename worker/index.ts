@@ -2,12 +2,7 @@ import { env } from 'cloudflare:workers';
 
 import { ForbiddenError, InvalidRequestError, json, XRPCRouter } from '@atcute/xrpc-server';
 
-import {
-	extractLinkMeta,
-	generateAltText,
-	getClientAssertion,
-	getLinkImage,
-} from '../src/lib/lexicons/internal-app';
+import { extractLinkMeta, generateAltText, getClientAssertion, getLinkImage } from '../src/lib/lexicons';
 import { generateAltTextDraft } from './alt-text';
 import { issueClientAssertion, serveClientMetadata } from './client-assertion';
 import { resolveLinkMeta } from './resolve';

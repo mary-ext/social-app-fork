@@ -1,7 +1,7 @@
 import { createContext, useEffect, type ReactNode } from 'react';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 type SeenObserver = {
 	connect(root: HTMLElement | null): () => void;

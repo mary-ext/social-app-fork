@@ -2,7 +2,7 @@ import { Client, simpleFetchHandler } from '@atcute/client';
 
 // registers the `internal.app.*` queries on the ambient XRPC interface so `.get()` is typed.
 // oxlint-disable-next-line import/no-empty-named-blocks, unicorn/require-module-specifiers -- the empty specifier list is the point
-import type {} from '#/lib/lexicons/internal-app';
+import type {} from '#/lib/lexicons';
 
 /**
  * XRPC client for fork-internal endpoints (the `internal.app.*` namespace) served same-origin by our

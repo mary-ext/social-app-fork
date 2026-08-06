@@ -24,10 +24,10 @@ import { mapDefined } from '@mary/array-fns';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { isDocumentVisible } from '#/lib/browser/visibility';
 import { typedKeys } from '#/lib/functions';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
-import { isDocumentVisible } from '#/lib/visibility';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';

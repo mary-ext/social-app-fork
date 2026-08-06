@@ -4,9 +4,9 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import { onVisibilityChange } from '#/lib/browser/visibility';
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
-import { onVisibilityChange } from '#/lib/visibility';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-feed';

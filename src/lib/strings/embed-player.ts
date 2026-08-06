@@ -1,4 +1,4 @@
-import { getViewportSize } from '#/lib/viewport';
+import { getViewportSize } from '#/lib/browser/viewport';
 
 export const embedPlayerSources = [
 	'youtube',

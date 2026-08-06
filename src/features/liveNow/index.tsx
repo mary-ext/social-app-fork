@@ -8,7 +8,7 @@ import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { retry } from '#/lib/async/retry';
-import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
+import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { getClients, useSession } from '#/state/session';

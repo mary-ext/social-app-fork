@@ -1,4 +1,4 @@
-import type { LinkMeta } from '#/lib/link-meta/link-meta';
+import type { LinkMeta } from '#/lib/link-meta';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { EmbedThumb } from '#/components/EmbedThumb';

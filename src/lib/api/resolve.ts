@@ -5,14 +5,13 @@ import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import type { Gif } from '#/lib/gif';
-import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
-import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
+import { createGIFDescription } from '#/lib/gif-alt-text';
+import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 import { resolveUrlToLink } from '#/lib/links/app-url';
+import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
-
-import { createGIFDescription } from '../gif-alt-text';
 
 type ResolvedExternalLink = {
 	type: 'external';

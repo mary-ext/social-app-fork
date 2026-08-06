@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { useReducedMotion } from '#/lib/reduced-motion';
+import { useReducedMotion } from '#/lib/browser/reduced-motion';
 
 import * as styles from '#/components/PostControls/CountWheel.css';
 

@@ -2,7 +2,7 @@ import { type Client, ok } from '@atcute/client';
 import { toBase64Pad } from '@atcute/multibase';
 
 import { internalClient } from '#/lib/api/internal-client';
-import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons/internal-app';
+import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
 import { compressAltTextImage } from '#/lib/media/image';
 
 import { getImageDescriptionConfig } from '#/state/preferences/openrouter';

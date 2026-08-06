@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { Slider } from '@base-ui/react/slider';
 
-import { useInputModality } from '#/lib/input-modality';
+import { useInputModality } from '#/lib/browser/input-modality';
 
 import { m } from '#/paraglide/messages';
 

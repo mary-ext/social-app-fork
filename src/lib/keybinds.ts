@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { type Keybind, matchKeybind, parseKeybind } from '@mary/keybinds';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 /** callback run when a registered keybind matches. */
 type KeybindHandler = (ev: KeyboardEvent) => void;

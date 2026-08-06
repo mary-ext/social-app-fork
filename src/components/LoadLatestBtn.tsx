@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
+import { useMediaQuery } from '#/lib/browser/media-query';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { useMediaQuery } from '#/lib/media-query';
 
 import ArrowIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
 

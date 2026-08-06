@@ -2,8 +2,8 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
+import { useBlobUrl } from '#/lib/blob-url';
 import type { Gif } from '#/lib/gif';
-import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 

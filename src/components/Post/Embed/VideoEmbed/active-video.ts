@@ -2,7 +2,7 @@ import { useEffect, useId, useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { onFullscreenChange } from '#/lib/fullscreen';
+import { onFullscreenChange } from '#/lib/browser/fullscreen';
 
 import { IS_FIREFOX } from '#/env';
 

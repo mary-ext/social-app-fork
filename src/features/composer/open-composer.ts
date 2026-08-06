@@ -4,7 +4,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 

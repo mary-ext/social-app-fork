@@ -1,4 +1,4 @@
-import { useGoBack } from '#/lib/hooks/useGoBack';
+import { useGoBack } from '#/lib/hooks/use-go-back';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';

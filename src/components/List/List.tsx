@@ -1,6 +1,6 @@
 import { type ReactNode, type Ref, startTransition, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import * as css from '#/components/List/List.css';
 

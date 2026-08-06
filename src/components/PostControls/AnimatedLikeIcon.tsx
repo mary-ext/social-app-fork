@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useReducedMotion } from '#/lib/reduced-motion';
+import { useReducedMotion } from '#/lib/browser/reduced-motion';
 
 import * as styles from '#/components/PostControls/AnimatedLikeIcon.css';
 

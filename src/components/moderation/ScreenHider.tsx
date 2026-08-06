@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useGoBack } from '#/lib/hooks/useGoBack';
+import { useGoBack } from '#/lib/hooks/use-go-back';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 

@@ -1,4 +1,4 @@
-import { useIsDocumentVisible } from '#/lib/visibility';
+import { useIsDocumentVisible } from '#/lib/browser/visibility';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';

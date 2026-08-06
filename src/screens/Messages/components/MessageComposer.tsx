@@ -5,8 +5,8 @@ import type { $type } from '@atcute/lexicons';
 import { getGraphemeLength } from '@atcute/util-text';
 
 import { MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
-import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import { resolveUrlToLink } from '#/lib/links/app-url';
+import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 

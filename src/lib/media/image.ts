@@ -3,7 +3,7 @@ import type { AppBskyEmbedDefs } from '@atcute/bluesky';
 import { remove as removeExif } from '@mary/exif-rm';
 
 import { limitConcurrency } from '#/lib/async/task';
-import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons/internal-app';
+import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
 
 import { cover } from './crop';
 

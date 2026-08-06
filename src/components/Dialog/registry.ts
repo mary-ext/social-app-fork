@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { setKeybindScopeActive } from '#/lib/keybinds';
 
 const openDialogs = new Map<string, () => void>();

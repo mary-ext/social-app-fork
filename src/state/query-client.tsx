@@ -6,9 +6,9 @@ import {
 	type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client';
 
+import { isDocumentVisible } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
-import { isDocumentVisible } from '#/lib/visibility';
 
 import { networkConfirmed, networkLost } from '#/state/events';
 import { isQueryPersisted } from '#/state/queries/util';

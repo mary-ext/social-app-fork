@@ -1,4 +1,4 @@
-import { getReducedMotion } from '#/lib/reduced-motion';
+import { getReducedMotion } from '#/lib/browser/reduced-motion';
 
 import { device, useStorageValue } from '#/storage';
 

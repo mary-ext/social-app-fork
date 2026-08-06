@@ -1,6 +1,6 @@
 import type * as v from '@atcute/lexicons/validations';
 
-import type { altTextDraftSchema, generateAltText } from '#/lib/lexicons/internal-app';
+import type { altTextDraftSchema, generateAltText } from '#/lib/lexicons';
 
 type Input = v.InferOutput<(typeof generateAltText)['input']['schema']>;
 

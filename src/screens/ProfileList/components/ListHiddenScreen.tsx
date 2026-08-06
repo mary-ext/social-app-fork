@@ -4,7 +4,7 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useGoBack } from '#/lib/hooks/useGoBack';
+import { useGoBack } from '#/lib/hooks/use-go-back';
 
 import { RQKEY_ROOT as listQueryRoot, useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state/queries/preferences';

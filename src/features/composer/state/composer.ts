@@ -2,8 +2,8 @@ import type { AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import type { Gif } from '#/lib/gif';
-import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link-detection';
 import { resolveUrlToLink } from '#/lib/links/app-url';
+import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import type { VideoAsset } from '#/lib/media/video/types';
 import type { SelfLabel } from '#/lib/moderation';

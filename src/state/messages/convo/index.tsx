@@ -6,8 +6,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useIsDocumentVisible } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useIsDocumentVisible } from '#/lib/visibility';
 
 import { Convo } from '#/state/messages/convo/agent';
 import type { ConvoParams, ConvoState } from '#/state/messages/convo/types';

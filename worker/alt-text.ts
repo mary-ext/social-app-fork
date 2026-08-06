@@ -5,7 +5,7 @@ import { UpstreamFailureError } from '@atcute/xrpc-server';
 
 import { runAltTextRound, UnreadableDraftError } from '../src/lib/ai/alt-text';
 import type { CompleteChat } from '../src/lib/ai/chat';
-import type { altTextDraftSchema, generateAltText } from '../src/lib/lexicons/internal-app';
+import type { altTextDraftSchema, generateAltText } from '../src/lib/lexicons';
 
 type Input = v.InferOutput<(typeof generateAltText)['input']['schema']>;
 type Draft = v.InferOutput<typeof altTextDraftSchema>;

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { useIsFullscreen } from '#/lib/fullscreen';
+import { useIsFullscreen } from '#/lib/browser/fullscreen';
 
 import { IS_FIREFOX, IS_SAFARI } from '#/env';
 

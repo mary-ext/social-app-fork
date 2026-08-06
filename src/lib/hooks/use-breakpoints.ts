@@ -1,4 +1,4 @@
-import { useMediaQuery } from '#/lib/media-query';
+import { useMediaQuery } from '#/lib/browser/media-query';
 
 type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet';
 

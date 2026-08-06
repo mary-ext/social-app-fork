@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
+import { useViewportZoomLock } from '#/lib/hooks/use-viewport-zoom-lock';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
