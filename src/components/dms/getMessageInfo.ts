@@ -1,8 +1,8 @@
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
+import { profileDisplayName } from '#/lib/strings/display-names';
 import { toShortUrl } from '#/lib/strings/url-helpers';
 
 import { m } from '#/paraglide/messages';
@@ -58,7 +58,7 @@ export function getMessageInfo({
 	const isFromMe = lastMessage.sender?.did === currentAccountDid;
 	const senderDid = lastMessage.sender?.did;
 	const sender = convo.members.find((mem) => mem.did === senderDid);
-	const name = sender ? createSanitizedDisplayName(sender) : null;
+	const name = sender ? profileDisplayName(sender) : null;
 	const isGroup = convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 
 	const reportableMessage = isFromMe ? undefined : lastMessage;

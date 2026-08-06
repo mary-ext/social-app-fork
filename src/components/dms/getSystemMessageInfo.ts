@@ -2,7 +2,7 @@ import type { ComponentType, SVGProps } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
 import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
@@ -38,7 +38,7 @@ function getProfileAction(
 	return {
 		kind: 'profile',
 		profile,
-		displayName: createSanitizedDisplayName(profile),
+		displayName: profileDisplayName(profile),
 	};
 }
 

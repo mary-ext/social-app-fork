@@ -9,7 +9,6 @@ import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
-import { createStarterPackUri } from '#/lib/strings/starter-pack';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import type { Gif } from '#/features/gifPicker/types';
@@ -131,7 +130,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		}
 		case 'starter-pack': {
 			const did = await fetchDid(link.actor);
-			const starterPack = createStarterPackUri({ did, rkey: link.rkey });
+			const starterPack = makeRecordUri(did, 'app.bsky.graph.starterpack', link.rkey);
 			const res = await ok(
 				appview.get('app.bsky.graph.getStarterPack', {
 					params: { starterPack },

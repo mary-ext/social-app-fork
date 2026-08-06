@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
-import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
+import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 import { useCallOnce } from '#/lib/once';
 
 import { usePreferencesQuery, useSetThreadViewPreferencesMutation } from '#/state/queries/preferences';

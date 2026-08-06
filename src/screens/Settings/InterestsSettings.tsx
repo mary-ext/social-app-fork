@@ -4,7 +4,7 @@ import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
+import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 

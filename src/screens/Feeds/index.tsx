@@ -6,7 +6,7 @@ import * as TID from '@atcute/tid';
 import { partition } from '@mary/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
-import { useDebouncedCallback } from '#/lib/hooks/use-debounced-callback';
+import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 

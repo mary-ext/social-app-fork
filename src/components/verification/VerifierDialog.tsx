@@ -1,7 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { urls } from '#/lib/constants';
-import { getUserDisplayName } from '#/lib/getUserDisplayName';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useSession } from '#/state/session';
 
@@ -87,7 +87,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
-	const name = getUserDisplayName(profile);
+	const name = profileDisplayName(profile);
 	const label = isSelf
 		? m['components.verification.trustedVerifier.youStatus']()
 		: m['components.verification.trustedVerifier.userStatus']({ name });

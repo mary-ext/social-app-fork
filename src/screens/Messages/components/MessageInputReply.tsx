@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useConvoActive } from '#/state/messages/convo';
 
@@ -26,7 +26,7 @@ export function MessageInputReply() {
 	}
 
 	const senderProfile = convo.relatedProfiles.get(replyTo.sender.did);
-	const displayName = senderProfile ? createSanitizedDisplayName(senderProfile, false) : null;
+	const displayName = senderProfile ? profileDisplayName(senderProfile) : null;
 
 	const { subtle, text } = getReplyPreviewText(replyTo);
 

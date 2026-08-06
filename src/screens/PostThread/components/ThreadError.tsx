@@ -1,4 +1,4 @@
-import { useCleanError } from '#/lib/hooks/useCleanError';
+import { cleanError } from '#/lib/strings/errors';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -9,16 +9,12 @@ import { m } from '#/paraglide/messages';
 import * as css from './ThreadError.css';
 
 export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => void }) {
-	const cleanError = useCleanError();
-
 	let title = m['screens.postThread.post.error.load']();
 	let message: string = m['screens.postThread.post.error.generic']();
 	{
-		const { raw, clean } = cleanError(error);
-
 		if (error.message.startsWith('Post not found')) {
 			title = m['screens.postThread.post.error.notFound']();
-			message = clean || raw || message;
+			message = cleanError(error) || message;
 		}
 	}
 

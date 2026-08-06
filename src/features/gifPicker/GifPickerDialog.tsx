@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { uniqueBy } from '@mary/array-fns';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
+import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
 import { addRecentGif, useRecentGifs } from '#/state/preferences/recent-gifs';
 
@@ -21,7 +22,6 @@ import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 
 export function GifPickerDialog({
 	handle,

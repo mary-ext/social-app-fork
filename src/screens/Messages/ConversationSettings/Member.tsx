@@ -1,7 +1,7 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -56,24 +56,22 @@ export function Member({
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
 		? m['common.account.deleted']()
-		: createSanitizedDisplayName(
-				profile,
-				true,
-				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-			);
+		: profileDisplayName(profile, {
+				bareHandle: true,
+				moderation: getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+			});
 	const isProfileOwner = profile.did === convo.primaryMember?.did;
 	const isSelf = currentAccount?.did === profile.did;
 
 	const joinedReason = profile.kind?.addedBy
 		? m['screens.messages.addedToChat.addedBy']({
-				name: createSanitizedDisplayName(
-					profile.kind.addedBy,
-					true,
-					getDisplayRestrictions(
+				name: profileDisplayName(profile.kind.addedBy, {
+					bareHandle: true,
+					moderation: getDisplayRestrictions(
 						moderateProfile(profile.kind.addedBy, moderationOpts),
 						DisplayContext.ProfileBio,
 					),
-				),
+				}),
 			})
 		: m['screens.messages.addedToChat.addedByInviteLink']();
 

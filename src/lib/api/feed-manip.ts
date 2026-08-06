@@ -12,11 +12,7 @@ import { isPostInLanguage } from '../../locale/helpers';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
 
-type FeedTunerFn = (
-	tuner: FeedTuner,
-	slices: FeedViewPostsSlice[],
-	dryRun: boolean,
-) => FeedViewPostsSlice[];
+type FeedTunerFn = (tuner: FeedTuner, slices: FeedViewPostsSlice[], dryRun: boolean) => FeedViewPostsSlice[];
 
 type FeedSliceItem = {
 	post: AppBskyFeedDefs.PostView;

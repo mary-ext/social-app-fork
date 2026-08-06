@@ -18,11 +18,8 @@ import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { until } from '#/lib/async/until';
 import { createStarterPackList } from '#/lib/generate-starterpack';
-import {
-	createStarterPackUri,
-	httpStarterPackUriToAtUri,
-	parseStarterPackUri,
-} from '#/lib/strings/starter-pack';
+import { httpStarterPackUriToAtUri, parseStarterPackUri } from '#/lib/strings/starter-pack';
+import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';
@@ -306,10 +303,7 @@ export function useDeleteStarterPackMutation({
 			});
 		},
 		onSuccess: async (_, { listUri, rkey }) => {
-			const uri = createStarterPackUri({
-				did: currentAccount!.did,
-				rkey,
-			});
+			const uri = makeRecordUri(currentAccount!.did, 'app.bsky.graph.starterpack', rkey);
 
 			if (uri) {
 				await whenAppViewReady(appview, uri, (v) => {

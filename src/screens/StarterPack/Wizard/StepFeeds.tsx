@@ -6,6 +6,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { mapDefined } from '@mary/array-fns';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
+import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
 
@@ -13,7 +14,6 @@ import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SearchInput } from '#/components/forms/SearchInput';
-import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';

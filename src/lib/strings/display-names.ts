@@ -24,6 +24,27 @@ export function sanitizeDisplayName(str: string, moderation?: DisplayRestriction
 	return '';
 }
 
+/**
+ * the name to show for a profile: its sanitized display name, falling back to the handle when the profile has
+ * no display name.
+ *
+ * moderation applies only to the display name — a profile whose display name is blurred renders as empty
+ * rather than falling back to the handle.
+ *
+ * @param profile the profile to name
+ * @param options `bareHandle` drops the `@` from the handle fallback; `moderation` blurs the display name
+ * @returns the display name, the handle, or an empty string when moderation blurs the name
+ */
+export function profileDisplayName(
+	profile: { displayName?: string; handle: Handle },
+	options?: { bareHandle?: boolean; moderation?: DisplayRestrictions },
+): string {
+	if (profile.displayName) {
+		return sanitizeDisplayName(profile.displayName, options?.moderation);
+	}
+	return options?.bareHandle ? profile.handle : `@${profile.handle}`;
+}
+
 export function combinedDisplayName({
 	handle,
 	displayName,

@@ -9,9 +9,9 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { shareUrl } from '#/lib/sharing';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
 import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';
@@ -63,11 +63,9 @@ export function InviteLinkDialog(props: DialogInnerProps) {
 }
 
 function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogInnerProps) {
-	const ownerName = createSanitizedDisplayName(
-		owner,
-		false,
-		getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileBio),
-	);
+	const ownerName = profileDisplayName(owner, {
+		moderation: getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileBio),
+	});
 
 	const { joinLink } = convo.details;
 

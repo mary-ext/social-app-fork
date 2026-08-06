@@ -7,9 +7,8 @@ import { useParams, useRoute } from '@oomfware/stacker';
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { starterPackTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName, sanitizeDisplayName } from '#/lib/strings/display-names';
 import { enforceLen, trimText } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
 
@@ -148,7 +147,7 @@ function WizardInner({
 	const parsed = parseStarterPackUri(currentStarterPack?.uri);
 
 	const getDefaultName = () => {
-		const displayName = createSanitizedDisplayName(currentProfile!, true);
+		const displayName = profileDisplayName(currentProfile!, { bareHandle: true });
 		return m['screens.starterPack.name.display']({ name: displayName }).slice(0, 50);
 	};
 

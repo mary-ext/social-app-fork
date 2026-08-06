@@ -12,7 +12,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { useThrottledCallback } from '#/lib/hooks/use-debounced-callback';
+import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';

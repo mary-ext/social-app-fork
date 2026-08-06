@@ -3,7 +3,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { clsx } from 'clsx';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
@@ -100,11 +100,10 @@ function InviterHeader({
 }) {
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const displayName = createSanitizedDisplayName(
-		profile,
-		true,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	);
+	const displayName = profileDisplayName(profile, {
+		bareHandle: true,
+		moderation: getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+	});
 
 	return (
 		<div className={styles.inviterRow}>

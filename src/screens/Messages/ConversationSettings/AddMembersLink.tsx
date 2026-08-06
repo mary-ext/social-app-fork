@@ -1,4 +1,4 @@
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
@@ -27,17 +27,17 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 
 			let names = null;
 			if (members.length === 1) {
-				names = m['screens.messages.addedToChat.one']({ name: createSanitizedDisplayName(members[0]!) });
+				names = m['screens.messages.addedToChat.one']({ name: profileDisplayName(members[0]!) });
 			} else if (members.length === 2) {
 				names = m['screens.messages.addedToChat.two']({
-					name: createSanitizedDisplayName(members[0]!),
-					name2: createSanitizedDisplayName(members[1]!),
+					name: profileDisplayName(members[0]!),
+					name2: profileDisplayName(members[1]!),
 				});
 			} else if (members.length > 2) {
 				const memberCount = convo.details.memberCount - 2;
 				names = m['screens.messages.addedToChat.many']({
-					name: createSanitizedDisplayName(members[0]!),
-					name2: createSanitizedDisplayName(members[1]!),
+					name: profileDisplayName(members[0]!),
+					name2: profileDisplayName(members[1]!),
 					count: memberCount,
 				});
 			}

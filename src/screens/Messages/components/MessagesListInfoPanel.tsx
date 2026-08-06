@@ -1,7 +1,7 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { profileTarget } from '#/lib/routes/targets';
+import { profileDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -32,11 +32,13 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 
 	const handle = `@${profile.handle}`;
 	const displayName = moderationOpts
-		? createSanitizedDisplayName(
-				profile,
-				true,
-				getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileBio),
-			)
+		? profileDisplayName(profile, {
+				bareHandle: true,
+				moderation: getDisplayRestrictions(
+					moderateProfile(profile, moderationOpts),
+					DisplayContext.ProfileBio,
+				),
+			})
 		: handle;
 	const profileLink = profile.handle && !isInvalidHandle(profile.handle) ? profile.handle : profile.did;
 

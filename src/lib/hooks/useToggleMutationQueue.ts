@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
+import { AbortError } from '#/lib/async/cancelable';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 type Task<TServerState> = {
@@ -12,12 +13,6 @@ type TaskQueue<TServerState> = {
 	activeTask: Task<TServerState> | null;
 	queuedTask: Task<TServerState> | null;
 };
-
-function createAbortError() {
-	const e = new Error();
-	e.name = 'AbortError';
-	return e;
-}
 
 export function useToggleMutationQueue<TServerState>({
 	initialState,
@@ -49,7 +44,7 @@ export function useToggleMutationQueue<TServerState>({
 				queue.queuedTask = null;
 				if (prevTask?.isOn === nextTask.isOn) {
 					// avoid sending duplicate state changes.
-					prevTask.reject(createAbortError());
+					prevTask.reject(new AbortError());
 					continue;
 				}
 				try {
@@ -71,7 +66,7 @@ export function useToggleMutationQueue<TServerState>({
 		return new Promise((resolve, reject) => {
 			// a newer toggle supersedes the queued value.
 			if (queue.queuedTask) {
-				queue.queuedTask.reject(createAbortError());
+				queue.queuedTask.reject(new AbortError());
 			}
 			queue.queuedTask = { isOn, resolve, reject };
 			void processQueue();

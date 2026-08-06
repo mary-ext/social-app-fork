@@ -1,8 +1,6 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import {
 	type ActorIdentifier,
-	type CanonicalResourceUri,
-	type Did,
 	isActorIdentifier,
 	isRecordKey,
 	parseResourceUri,
@@ -78,8 +76,4 @@ export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | stri
 		const packRkey = parseResourceUri(didOrStarterPack.uri).rkey;
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${packRkey}`;
 	}
-}
-
-export function createStarterPackUri({ did, rkey }: { did: Did; rkey: RecordKey }): CanonicalResourceUri {
-	return `at://${did}/app.bsky.graph.starterpack/${rkey}`;
 }

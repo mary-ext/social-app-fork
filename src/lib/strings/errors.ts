@@ -42,11 +42,13 @@ export function errorToString(error: unknown): string {
 	}
 }
 
-export function cleanError(error: unknown): string {
-	if (!error) {
-		return '';
-	}
-	const str = errorToString(error);
+/**
+ * the localized rewording for a recognized failure, or undefined when the raw text is the best we have.
+ *
+ * @param str the stringified error
+ * @returns the localized message, or undefined
+ */
+function localizeError(str: string): string | undefined {
 	if (isNetworkError(str)) {
 		return m['lib.error.connectionFailed']();
 	}
@@ -56,6 +58,9 @@ export function cleanError(error: unknown): string {
 		str.includes('pipethrough network error')
 	) {
 		return m['lib.error.serverIssues']();
+	}
+	if (str.includes('Rate Limit Exceeded')) {
+		return m['lib.error.rateLimit']();
 	}
 	if (str.includes('Account has been suspended')) {
 		return m['lib.account.error.suspended']();
@@ -69,10 +74,42 @@ export function cleanError(error: unknown): string {
 	if (str.includes('Unable to resolve handle')) {
 		return m['lib.error.handleResolveFailed']();
 	}
-	if (str.startsWith('Error: ')) {
-		return str.slice('Error: '.length);
+	return undefined;
+}
+
+/**
+ * splits an error into the text it carries and the localized rewording we show in its place.
+ *
+ * callers that only render one string want {@link cleanError}; this exists for the ones that fall back to
+ * their own copy when we have no rewording.
+ *
+ * @param error the thrown value to describe
+ * @returns `raw` is the error's own text (sans `Error: ` prefix), `clean` the rewording when one applies
+ */
+export function describeError(error: unknown): {
+	raw: string | undefined;
+	clean: string | undefined;
+} {
+	if (!error) {
+		return { raw: undefined, clean: undefined };
 	}
-	return str;
+	const str = errorToString(error);
+	return {
+		raw: str.startsWith('Error: ') ? str.slice('Error: '.length) : str,
+		clean: localizeError(str),
+	};
+}
+
+/**
+ * the message to show a person for a thrown value: a localized rewording when we recognize the failure,
+ * otherwise the error's own text.
+ *
+ * @param error the thrown value to describe
+ * @returns the message, or an empty string when there is no error
+ */
+export function cleanError(error: unknown): string {
+	const { raw, clean } = describeError(error);
+	return clean ?? raw ?? '';
 }
 
 const NETWORK_ERRORS = [

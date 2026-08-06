@@ -8,10 +8,11 @@ import {
 import { clsx } from 'clsx';
 
 import { useTitle } from '#/lib/hooks/useTitle';
-import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
+import { isAppLabeler } from '#/lib/moderation';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { labelsTarget } from '#/lib/routes/targets';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -248,7 +249,7 @@ function LabelerRow({
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
 }) {
 	const { creator } = labeler;
-	const title = getLabelingServiceTitle({ displayName: creator.displayName, handle: creator.handle });
+	const title = profileDisplayName({ displayName: creator.displayName, handle: creator.handle });
 
 	return (
 		<Settings.LinkRowRaw

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 
 import { type DebounceOptions, type Debounced, debounce } from '#/lib/debounce';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -73,4 +73,51 @@ export const useThrottledCallback = <A extends unknown[]>(
 	}: Omit<UseDebouncedCallbackOptions, 'maxWait'> = {},
 ): Debounced<A> => {
 	return useDebouncedCallback(fn, wait, { leading, maxWait: wait, onUnmount, trailing });
+};
+
+/**
+ * a value that follows `value` only once it has stopped changing for `wait` ms.
+ *
+ * @param value the value to defer
+ * @param wait milliseconds of quiet required before the value is adopted
+ * @returns the most recent settled value
+ */
+export const useDebouncedValue = <T>(value: T, wait: number): T => {
+	const [settled, setSettled] = useState(value);
+
+	useEffect(() => {
+		const timer = setTimeout(() => setSettled(value), wait);
+		return () => clearTimeout(timer);
+	}, [value, wait]);
+
+	return settled;
+};
+
+/**
+ * a value that follows `value` at most once every `wait` ms.
+ *
+ * @param value the value to sample
+ * @param wait milliseconds between samples
+ * @returns the most recently sampled value
+ */
+export const useThrottledValue = <T>(value: T, wait: number): T => {
+	const pending = useRef(value);
+	const [sampled, setSampled] = useState(value);
+
+	useEffect(() => {
+		pending.current = value;
+	}, [value]);
+
+	const sample = useEffectEvent(() => {
+		if (pending.current !== sampled) {
+			setSampled(pending.current);
+		}
+	});
+
+	useEffect(() => {
+		const timer = setInterval(sample, wait);
+		return () => clearInterval(timer);
+	}, [wait]);
+
+	return sampled;
 };

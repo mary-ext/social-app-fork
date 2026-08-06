@@ -2,8 +2,8 @@ import { useId, useMemo, useReducer, useState } from 'react';
 
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
-import { getLabelingServiceTitle } from '#/lib/moderation';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
+import { profileDisplayName } from '#/lib/strings/display-names';
 import { trimText } from '#/lib/strings/helpers';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
@@ -408,7 +408,7 @@ function Recipient({
 	onChange: (labeler: AppBskyLabelerDefs.LabelerViewDetailed) => void;
 	options: AppBskyLabelerDefs.LabelerViewDetailed[];
 }) {
-	const title = getLabelingServiceTitle({
+	const title = profileDisplayName({
 		displayName: labeler.creator.displayName,
 		handle: labeler.creator.handle,
 	});
@@ -434,7 +434,7 @@ function Recipient({
 					/>
 					<Menu.Popup align="end" label={m['components.moderation.service.choose']()} minWidth={240}>
 						{options.map((option) => {
-							const optionTitle = getLabelingServiceTitle({
+							const optionTitle = profileDisplayName({
 								displayName: option.creator.displayName,
 								handle: option.creator.handle,
 							});

@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
@@ -52,18 +52,18 @@ export function MessagesListGroupInfoPanel({
 
 	let names: React.ReactNode = null;
 	if (members.length === 1) {
-		names = m['screens.messages.newChat.one']({ name: createSanitizedDisplayName(members[0]!) });
+		names = m['screens.messages.newChat.one']({ name: profileDisplayName(members[0]!) });
 	} else if (members.length === 2) {
 		names = m['screens.messages.newChat.two']({
-			name: createSanitizedDisplayName(members[0]!),
-			name2: createSanitizedDisplayName(members[1]!),
+			name: profileDisplayName(members[0]!),
+			name2: profileDisplayName(members[1]!),
 		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
 		names = m['screens.messages.newChat.many']({
-			name: createSanitizedDisplayName(members[0]!),
+			name: profileDisplayName(members[0]!),
 			count: memberCount,
-			name2: createSanitizedDisplayName(members[1]!),
+			name2: profileDisplayName(members[1]!),
 		});
 	}
 

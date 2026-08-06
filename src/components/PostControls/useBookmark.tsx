@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { useCleanError } from '#/lib/hooks/useCleanError';
+import { cleanError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
@@ -19,7 +19,6 @@ import { m } from '#/paraglide/messages';
  */
 export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 	const { mutateAsync: bookmark } = useBookmarkMutation();
-	const cleanError = useCleanError();
 	const requireAuth = useRequireAuth();
 
 	const isBookmarked = !!post.viewer?.bookmarked;
@@ -35,8 +34,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				post,
 			});
 		} catch (e) {
-			const { raw, clean } = cleanError(e);
-			toast.show(clean || raw || String(e), {
+			toast.show(cleanError(e) || String(e), {
 				type: 'error',
 			});
 		}
@@ -54,8 +52,7 @@ export function useBookmark(post: Shadow<AppBskyFeedDefs.PostView>) {
 				icon: TrashIcon,
 			});
 		} catch (e) {
-			const { raw, clean } = cleanError(e);
-			toast.show(clean || raw || String(e), {
+			toast.show(cleanError(e) || String(e), {
 				type: 'error',
 			});
 		}

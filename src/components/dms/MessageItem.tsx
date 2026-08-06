@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { profileDisplayName } from '#/lib/strings/display-names';
 import { isOnlyEmoji } from '#/lib/strings/emoji';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -88,7 +88,7 @@ let MessageItem = ({
 
 	const isPending = item.type === 'pending-message';
 
-	const displayName = profile ? createSanitizedDisplayName(profile) : null;
+	const displayName = profile ? profileDisplayName(profile) : null;
 
 	const isFromSelf = message.sender?.did != null && message.sender.did === currentAccount?.did;
 
@@ -157,7 +157,7 @@ let MessageItem = ({
 			const memberSender = relatedProfiles.get(senderDid);
 			if (memberSender) {
 				reactionsLabel = m['components.dms.reaction.reactedBy']({
-					name: createSanitizedDisplayName(memberSender),
+					name: profileDisplayName(memberSender),
 					reaction: reaction.value,
 				});
 			} else {
@@ -483,7 +483,7 @@ function ReplyCaption({
 		const originalName = originalSenderIsSelf
 			? null
 			: originalProfile
-				? createSanitizedDisplayName(originalProfile)
+				? profileDisplayName(originalProfile)
 				: null;
 		caption = isFromSelf
 			? originalSenderIsSelf
@@ -545,7 +545,7 @@ function ReplyQuote({
 	// Hide the quoted content if we block, or are blocked by, the original
 	// sender - mirroring how the message bubble itself is hidden.
 	const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false;
-	const senderName = senderProfile && !isBlocked ? createSanitizedDisplayName(senderProfile) : null;
+	const senderName = senderProfile && !isBlocked ? profileDisplayName(senderProfile) : null;
 
 	const tintColor = isFromSelf ? 'white' : 'text';
 	const subtleColor = isFromSelf ? 'white' : 'textContrastHigh';

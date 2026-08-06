@@ -7,11 +7,10 @@ import {
 	type ModerationCause,
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
-import type { Did, Handle } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;
@@ -60,10 +59,6 @@ export function moduiContainsHideableOffense(modui: DisplayRestrictions): boolea
 
 export function labelIsHideableOffense(label: ComAtprotoLabelDefs.Label): boolean {
 	return ['!hide', '!takedown'].includes(label.val);
-}
-
-export function getLabelingServiceTitle({ displayName, handle }: { displayName?: string; handle: Handle }) {
-	return displayName ? sanitizeDisplayName(displayName) : `@${handle}`;
 }
 
 export function lookupLabelValueDefinition(

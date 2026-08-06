@@ -8,9 +8,9 @@ import { mapDefined, unique } from '@mary/array-fns';
 
 import { MAX_LABELERS } from '#/lib/constants';
 import { useTitle } from '#/lib/hooks/useTitle';
-import { getLabelingServiceTitle, isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation';
+import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation';
 import { profileTarget } from '#/lib/routes/targets';
-import { combinedDisplayName } from '#/lib/strings/display-names';
+import { combinedDisplayName, profileDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useLabelerInfoQuery, useLabelerSubscriptionMutation } from '#/state/queries/labeler';
@@ -223,7 +223,7 @@ function LabelerDetails({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 					<UserAvatar avatar={creator.avatar} size={56} type="labeler" />
 					<div className={css.identityText}>
 						<Text numberOfLines={2} size="xl" weight="semiBold">
-							{getLabelingServiceTitle(creator)}
+							{profileDisplayName(creator)}
 						</Text>
 						<Text color="textContrastMedium" numberOfLines={1}>
 							{`@${creator.handle}`}

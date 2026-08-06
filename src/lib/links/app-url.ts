@@ -58,9 +58,7 @@ const isOwnUrl = (url: URL): boolean => {
  * a URL this app can open, and what it names. our own URLs are already in-app paths, so `own` carries the
  * path verbatim, and `link` is undefined for one with no cross-client meaning.
  */
-type UrlTarget =
-	| { kind: 'client'; link: AppLink }
-	| { kind: 'own'; link: AppLink | undefined; path: string };
+type UrlTarget = { kind: 'client'; link: AppLink } | { kind: 'own'; link: AppLink | undefined; path: string };
 
 /**
  * recognises a URL this app can open and describes what it points at. another client's URL resolves only when
