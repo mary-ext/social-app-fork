@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { detectLanguages } from '#/lib/language-detection';
 
 import { LOCALE } from './intl/locale';

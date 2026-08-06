@@ -19,7 +19,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { typedKeys } from '#/lib/functions';
+import { typedKeys } from '#/lib/objects';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

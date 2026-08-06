@@ -9,7 +9,7 @@ import { getDeviceName } from '#/lib/device-name';
 import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions } from '#/lib/media/metadata';
-import { mimeToExt } from '#/lib/media/video/util';
+import { mimeToExt } from '#/lib/media/video/client';
 import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 

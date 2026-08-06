@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { AbortError } from '#/lib/async/cancelable';
+import { AbortError } from '#/lib/async/abort-error';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 type Task<TServerState> = {

@@ -6,7 +6,7 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
-import { aggregateUserInterests, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
+import { joinInterestTags, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
@@ -29,7 +29,7 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 		staleTime: STALE.MINUTES.THREE,
 		queryFn: async () => {
 			const contentLangs = getContentLanguages().join(',');
-			const userInterests = aggregateUserInterests(preferences);
+			const userInterests = joinInterestTags(preferences);
 
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getSuggestedUsersForDiscover', {

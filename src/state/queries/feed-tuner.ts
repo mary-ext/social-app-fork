@@ -6,7 +6,7 @@ import {
 	type AppBskyFeedPost,
 } from '@atcute/bluesky';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 
 import { isPostInLanguage } from '#/locale/helpers';
 

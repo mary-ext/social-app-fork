@@ -5,7 +5,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { listTarget, profileTarget } from '#/lib/routes/targets';
 
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';

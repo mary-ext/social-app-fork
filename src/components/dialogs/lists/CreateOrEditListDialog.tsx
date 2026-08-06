@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
 import type { ImageMeta } from '#/lib/media/composer-image';
@@ -200,7 +200,7 @@ function DialogInner({
 				return;
 			}
 
-			const richText = await resolvePublishedRichtext(appview, trimText(descriptionText));
+			const richText = await prepareRichtextForPublish(appview, trimText(descriptionText));
 
 			if (list) {
 				await updateListMutation({

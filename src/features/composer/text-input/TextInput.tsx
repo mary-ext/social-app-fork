@@ -3,7 +3,7 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'r
 import { createPortal } from 'react-dom';
 
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
-import { isUriImage } from '#/lib/media/util';
+import { isUriImage } from '#/lib/media/compress-image';
 
 import {
 	Composer as TapperComposer,

@@ -7,7 +7,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';

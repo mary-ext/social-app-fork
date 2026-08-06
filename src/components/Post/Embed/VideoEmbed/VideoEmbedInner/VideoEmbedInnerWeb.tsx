@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
-import { videoThumbnailUrl } from '#/lib/bsky/video';
+import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 import { attachHlsPlayer, isHlsPlayerSupported, type PlayerHandle } from '#/lib/media/hls/attach';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
 import type { SubtitleTrack } from '#/lib/media/hls/subtitles';

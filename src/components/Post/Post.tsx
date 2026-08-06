@@ -12,7 +12,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
 

@@ -6,7 +6,7 @@ import { Avatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { convertCdnPreset } from '#/lib/media/util';
+import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 
@@ -120,7 +120,7 @@ function DefaultAvatar({
 
 // use the thumbnail preset for small avatar renders until lexicons expose one.
 const hackModifyThumbnailPath = (uri: string, isEnabled: boolean) =>
-	isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri;
+	isEnabled ? toImageCdnUrl(uri, 'avatar_thumbnail') : uri;
 
 /** Avatar image with a typed vector fallback, moderation blur/alert, optional live badge, and inset border. */
 export function UserAvatar({

@@ -2,15 +2,15 @@ import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { Blob as AtpBlob } from '@atcute/lexicons';
 
-import { uploadBlob } from '#/lib/api/upload-blob';
-import { AbortError } from '#/lib/async/cancelable';
+import { uploadBlob } from '#/lib/api/records';
+import { AbortError } from '#/lib/async/abort-error';
 import { LOCAL_DEV_SERVICE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
 import { isNetworkError } from '#/lib/errors';
-import { compressVideo } from '#/lib/media/video/compress';
+import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
-import { createVideoClient } from '#/lib/media/video/util';
+import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 
 import { m } from '#/paraglide/messages';
 
@@ -241,7 +241,7 @@ export async function processVideo(
 ) {
 	let video: CompressedVideo | undefined;
 	try {
-		video = compressVideo(asset);
+		video = assertVideoWithinLimit(asset);
 	} catch (e) {
 		const message = getCompressErrorMessage(e);
 		if (message !== null) {

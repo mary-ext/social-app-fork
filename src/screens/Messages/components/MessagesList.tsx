@@ -3,7 +3,7 @@ import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { parseRichtext } from '#/lib/rich-text';
@@ -277,7 +277,7 @@ export function MessagesList({
 			}
 		}
 
-		const rt = await resolvePublishedRichtext(appview, trimmedText);
+		const rt = await prepareRichtextForPublish(appview, trimmedText);
 
 		convoState.sendMessage(
 			{

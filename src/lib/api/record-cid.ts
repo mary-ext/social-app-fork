@@ -7,7 +7,7 @@ import * as CID from '@atcute/cid';
  * @param record record to hash, including its `$type`
  * @returns base32 CIDv1 string
  */
-export const serializeRecordCid = async (record: { $type: string }): Promise<string> => {
+export const computeRecordCid = async (record: { $type: string }): Promise<string> => {
 	const bytes = encode(record);
 	const cid = await CID.create(0x71, bytes);
 	return CID.toString(cid);

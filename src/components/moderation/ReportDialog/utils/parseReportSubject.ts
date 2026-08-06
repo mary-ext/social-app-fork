@@ -1,6 +1,6 @@
 import { unwrapEmbed } from '@atcute/bluesky';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 
 import type { ParsedReportSubject, ReportSubject } from '#/components/moderation/ReportDialog/types';
 

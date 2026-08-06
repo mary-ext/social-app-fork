@@ -1,6 +1,6 @@
 import type { ComAtprotoRepoGetRecord, ComAtprotoRepoListRecords } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
-import type { Cid, Did, InferInput, ResourceUri } from '@atcute/lexicons';
+import type { Blob as AtpBlob, Cid, Did, InferInput, ResourceUri } from '@atcute/lexicons';
 import type { Records } from '@atcute/lexicons/ambient';
 
 /**
@@ -149,3 +149,21 @@ export const listRecords = async <K extends RecordType>(
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the requested collection pins each `value`, which the wire type leaves `unknown`
 	return data as ListRecordsOutput<InferInput<Records[K]>>;
 };
+
+/**
+ * uploads a blob to the user's repo.
+ *
+ * @param client the PDS client.
+ * @param blob the blob to upload.
+ * @param encoding the blob's mime type, sent as a content-type override; defaults to the blob's own type.
+ * @returns the resulting blob ref.
+ */
+export async function uploadBlob(client: Client, blob: Blob, encoding?: string): Promise<AtpBlob> {
+	const data = await ok(
+		client.post('com.atproto.repo.uploadBlob', {
+			headers: encoding ? { 'content-type': encoding } : undefined,
+			input: blob,
+		}),
+	);
+	return data.blob;
+}

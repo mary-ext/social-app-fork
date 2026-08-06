@@ -25,9 +25,9 @@ import { mapDefined } from '@mary/array-fns';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { isDocumentVisible } from '#/lib/browser/visibility';
-import { typedKeys } from '#/lib/functions';
 import { toModerationPreferences } from '#/lib/moderation/preferences';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
+import { typedKeys } from '#/lib/objects';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
@@ -38,8 +38,8 @@ import { LikesFeedAPI } from '#/state/queries/feed-api/likes';
 import { ListFeedAPI } from '#/state/queries/feed-api/list';
 import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
-import { aggregateUserInterests } from '#/state/queries/feed-api/utils';
-import { FeedTuner } from '#/state/queries/feed-manip';
+import { joinInterestTags } from '#/state/queries/feed-api/utils';
+import { FeedTuner } from '#/state/queries/feed-tuner';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
 
@@ -124,7 +124,7 @@ export function usePostFeedQuery(
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
 	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
-	const userInterests = aggregateUserInterests(preferences);
+	const userInterests = joinInterestTags(preferences);
 	const { appview } = getClients();
 	const { hasSession } = useSession();
 	const lastRun = useRef<{

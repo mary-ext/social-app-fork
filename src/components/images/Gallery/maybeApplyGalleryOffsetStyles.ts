@@ -3,7 +3,7 @@ import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moder
 
 import { uniqueBy } from '@mary/array-fns';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { type AppModerationCause, getModerationCauseKey } from '#/lib/moderation/causes';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 8 };

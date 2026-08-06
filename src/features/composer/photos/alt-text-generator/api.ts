@@ -3,7 +3,7 @@ import { toBase64Pad } from '@atcute/multibase';
 
 import { internalClient } from '#/lib/api/internal-client';
 import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
-import { compressAltTextImage } from '#/lib/media/image';
+import { compressAltTextImage } from '#/lib/media/compress-image';
 
 import { getImageDescriptionConfig } from '#/state/preferences/openrouter';
 import { getClients } from '#/state/session';

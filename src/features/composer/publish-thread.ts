@@ -18,9 +18,9 @@ import { mapDefined } from '@mary/array-fns';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { getPostRecord } from '#/lib/api/record-views';
-import { resolvePublishedRichtext } from '#/lib/api/richtext';
-import { uploadBlob } from '#/lib/api/upload-blob';
+import { getPostRecord } from '#/lib/api/record-casts';
+import { uploadBlob } from '#/lib/api/records';
+import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { task } from '#/lib/async/task';
 import { isNetworkError } from '#/lib/errors';
 import { createGIFDescription } from '#/lib/gif-alt-text';
@@ -85,9 +85,9 @@ const chainReply = task(
 		record: AppBskyFeedPost.Main,
 		uri: ResourceUri,
 	): Promise<AppBskyFeedPost.Main['reply']> => {
-		const { serializeRecordCid } = await import('#/lib/api/cid');
+		const { computeRecordCid } = await import('#/lib/api/record-cid');
 		const ref: ComAtprotoRepoStrongRef.Main = {
-			cid: await serializeRecordCid(record),
+			cid: await computeRecordCid(record),
 			uri: uri,
 		};
 
@@ -141,7 +141,7 @@ export async function publishThread(
 		uris.push(uri);
 
 		const recordPromise = buildRecord(
-			resolvePublishedRichtext(appview, trimText(draft.text)),
+			prepareRichtextForPublish(appview, trimText(draft.text)),
 			resolveEmbed(appview, pds, queryClient, draft),
 			replyPromise,
 			{ createdAt, labels, langs },

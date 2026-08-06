@@ -1,4 +1,4 @@
-import { FeedTuner } from '#/state/queries/feed-manip';
+import { FeedTuner } from '#/state/queries/feed-tuner';
 
 import { useContentLanguages } from '../preferences/languages';
 import { useSession } from '../session';

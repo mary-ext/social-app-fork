@@ -15,7 +15,7 @@ import { appLinkToTarget } from '#/lib/routes/app-links';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
-import { aggregateUserInterests, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
+import { joinInterestTags, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
@@ -99,7 +99,7 @@ export function useGetTrendsQuery({
 			return ok(
 				appview.get('app.bsky.unspecced.getTrends', {
 					headers: {
-						...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+						...createBskyTopicsHeader(joinInterestTags(preferences)),
 						'Accept-Language': contentLangs,
 					},
 					params: { limit },

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
-import { aggregateUserInterests, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
+import { joinInterestTags, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
@@ -33,7 +33,7 @@ export function useSuggestedStarterPacksQuery({
 				appview.get('app.bsky.unspecced.getSuggestedStarterPacks', {
 					headers: {
 						...createBskyTopicsHeader(
-							overrideInterests ? overrideInterests.join(',') : aggregateUserInterests(preferences),
+							overrideInterests ? overrideInterests.join(',') : joinInterestTags(preferences),
 						),
 						'Accept-Language': contentLangs,
 					},

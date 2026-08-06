@@ -1,5 +1,9 @@
-import { getImageFromBlob } from './image';
-import type { Dimensions } from './types';
+export interface Dimensions {
+	width: number;
+	height: number;
+}
+
+import { getImageFromBlob } from './compress-image';
 
 type VideoMetadata = Dimensions & {
 	/** duration in milliseconds, or null when it could not be determined */

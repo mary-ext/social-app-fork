@@ -10,7 +10,7 @@ import {
 } from '@atcute/oauth-browser-client';
 
 import { internalClient } from '#/lib/api/internal-client';
-import { timeout } from '#/lib/async/timeout';
+import { sleep } from '#/lib/async/sleep';
 
 import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE, SLINGSHOT_SERVICE_URL } from '#/env';
 
@@ -73,6 +73,6 @@ export async function startOAuthSignIn({ identifier }: { identifier: ActorIdenti
 		scope: OAUTH_SCOPE,
 	});
 
-	await timeout(200);
+	await sleep(200);
 	window.location.assign(authUrl);
 }

@@ -11,7 +11,7 @@ import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import { compressLinkThumbImage } from '#/lib/media/image';
+import { compressLinkThumbImage } from '#/lib/media/compress-image';
 
 type ResolvedExternalLink = {
 	type: 'external';

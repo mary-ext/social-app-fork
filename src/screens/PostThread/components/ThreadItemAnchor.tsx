@@ -10,7 +10,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { AppModerationCause } from '#/lib/moderation/causes';
 import { triangularRandom } from '#/lib/numbers';

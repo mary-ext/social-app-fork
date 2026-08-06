@@ -4,7 +4,7 @@ import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { videoThumbnailUrl } from '#/lib/bsky/video';
+import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 
 import { noRowLink } from '#/components/BlockLink';
 import { ErrorBoundary } from '#/components/ErrorBoundary';

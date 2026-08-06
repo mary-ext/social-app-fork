@@ -1,6 +1,6 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
-import { typedKeys } from '#/lib/functions';
+import { typedKeys } from '#/lib/objects';
 
 import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';

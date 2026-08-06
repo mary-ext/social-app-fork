@@ -13,9 +13,9 @@ import { chunked } from '@mary/array-fns';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
-import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { until } from '#/lib/async/until';
 import { makeRecordUri } from '#/lib/at-uri';
 import { createStarterPackList } from '#/lib/generate-starterpack';
@@ -34,7 +34,7 @@ async function resolveDescription(
 		return {};
 	}
 
-	const rt = await resolvePublishedRichtext(appview, description);
+	const rt = await prepareRichtextForPublish(appview, description);
 
 	return { description: rt.text, descriptionFacets: rt.facets };
 }

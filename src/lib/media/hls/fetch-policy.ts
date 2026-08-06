@@ -1,5 +1,5 @@
-import { timeout } from '#/lib/async/timeout';
-import { toVideoCdnUrl } from '#/lib/bsky/video';
+import { sleep } from '#/lib/async/sleep';
+import { toVideoCdnUrl } from '#/lib/bsky-cdn';
 
 /** request attempt limits by resource type. */
 export const MAX_ATTEMPTS = { master: 2, media: 4 };
@@ -151,7 +151,7 @@ export const fetchTextWithRetry = async (
 			if (fatal || failures >= attempts || signal.aborted) {
 				throw error;
 			}
-			await timeout(delayFor(failures) * 1000);
+			await sleep(delayFor(failures) * 1000);
 		}
 	}
 };

@@ -16,7 +16,7 @@ export function createBskyTopicsHeader(userInterests?: string) {
 	};
 }
 
-export function aggregateUserInterests(preferences?: UsePreferencesQueryResponse) {
+export function joinInterestTags(preferences?: UsePreferencesQueryResponse) {
 	return preferences?.interests?.tags?.join(',') || '';
 }
 

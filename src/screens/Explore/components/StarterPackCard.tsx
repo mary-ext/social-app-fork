@@ -5,7 +5,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

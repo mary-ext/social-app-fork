@@ -11,7 +11,7 @@ import {
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
-import { saveImageToMediaLibrary } from '#/lib/media/manip';
+import { downloadImage } from '#/lib/download';
 
 import type { LightboxPayload } from '#/components/dialogs/handles';
 import * as Menu from '#/components/Menu';
@@ -189,7 +189,7 @@ function Chrome() {
 		if (!url) {
 			return;
 		}
-		saveImageToMediaLibrary({ uri: url }).then(
+		downloadImage({ uri: url }).then(
 			() => Toast.show(m['components.lightbox.download.savedToast']()),
 			() => Toast.show(m['components.lightbox.download.error'](), { type: 'error' }),
 		);

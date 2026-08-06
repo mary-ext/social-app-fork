@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { ok } from '@atcute/client';
 
-import { saveBytesToDisk } from '#/lib/media/manip';
+import { downloadBytes } from '#/lib/download';
 
 import { getClients, useSession } from '#/state/session';
 
@@ -44,8 +44,8 @@ function DialogInner() {
 			setLoading('repo');
 			const did = currentAccount.did;
 			const carData = await ok(pds.get('com.atproto.sync.getRepo', { as: 'bytes', params: { did } }));
-			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
-			saveBytesToDisk('repo.car', carData, 'application/vnd.ipld.car');
+			// downloadBytes triggers the browser download as a side effect and returns true synchronously
+			downloadBytes('repo.car', carData, 'application/vnd.ipld.car');
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {
@@ -63,8 +63,8 @@ function DialogInner() {
 		try {
 			setLoading('chat');
 			const res = await ok(chat.get('chat.bsky.actor.exportAccountData', { as: 'bytes' }));
-			// saveBytesToDisk triggers the browser download as a side effect and returns true synchronously
-			saveBytesToDisk('chat.jsonl', res, 'application/jsonl');
+			// downloadBytes triggers the browser download as a side effect and returns true synchronously
+			downloadBytes('chat.jsonl', res, 'application/jsonl');
 
 			Toast.show(m['screens.settings.export.savedToast']());
 		} catch (e) {

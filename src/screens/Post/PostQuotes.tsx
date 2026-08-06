@@ -1,7 +1,7 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { makeRecordUri } from '#/lib/at-uri';
 import { cleanError } from '#/lib/errors';
 

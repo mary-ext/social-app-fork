@@ -3,7 +3,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { listTarget } from '#/lib/routes/targets';
 
 import { useSession } from '#/state/session';

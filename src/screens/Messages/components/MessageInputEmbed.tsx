@@ -5,7 +5,7 @@ import type { ResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { makeRecordUri } from '#/lib/at-uri';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';

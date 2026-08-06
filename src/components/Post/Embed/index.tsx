@@ -5,7 +5,7 @@ import type { $type } from '@atcute/lexicons';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 

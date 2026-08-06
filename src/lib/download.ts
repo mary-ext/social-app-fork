@@ -1,20 +1,20 @@
-import { convertCdnPreset } from './util';
+import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
 /**
- * saves an image to the user's device.
+ * downloads an image to the user's device, at the CDN's full-size preset.
  *
  * @returns a promise that resolves when the download is initiated and rejects if the setup fails.
  */
-export function saveImageToMediaLibrary({ uri }: { uri: string }): Promise<void> {
+export function downloadImage({ uri }: { uri: string }): Promise<void> {
 	return Promise.resolve().then(() => {
-		const downloadUri = convertCdnPreset(uri, 'download');
+		const downloadUri = toImageCdnUrl(uri, 'download');
 		const segments = downloadUri.split('/');
 		const filename = `bluesky-${segments.at(-1)}.jpg`;
 		downloadUrl(downloadUri, filename);
 	});
 }
 
-export function saveBytesToDisk(filename: string, bytes: Uint8Array, type: string) {
+export function downloadBytes(filename: string, bytes: Uint8Array, type: string) {
 	// reuse the backing buffer when possible to avoid copying large exports.
 	const { buffer, byteLength, byteOffset } = bytes;
 	const part = buffer instanceof ArrayBuffer ? new Uint8Array(buffer, byteOffset, byteLength) : bytes.slice();

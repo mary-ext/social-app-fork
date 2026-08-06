@@ -1,4 +1,4 @@
-import { timeout } from '#/lib/async/timeout';
+import { sleep } from '#/lib/async/sleep';
 import { isNetworkError } from '#/lib/errors';
 
 export async function retry<P>(
@@ -15,7 +15,7 @@ export async function retry<P>(
 			lastErr = e;
 			if (shouldRetry(e)) {
 				if (delay) {
-					await timeout(delay);
+					await sleep(delay);
 				}
 				retries--;
 				continue;

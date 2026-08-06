@@ -23,7 +23,7 @@ import { uniqueBy } from '@mary/array-fns';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-views';
+import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/display-names';
 import { isAbortError } from '#/lib/errors';

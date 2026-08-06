@@ -1,14 +1,14 @@
 import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 
-import { AbortError } from '#/lib/async/cancelable';
+import { AbortError } from '#/lib/async/abort-error';
 import { ServerError } from '#/lib/media/video/errors';
 import type { CompressedVideo } from '#/lib/media/video/types';
 
 import { m } from '#/paraglide/messages';
 
-import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared';
-import { createVideoEndpointUrl, mimeToExt } from './util';
+import { createVideoEndpointUrl, mimeToExt } from './client';
+import { getServiceAuthToken, assertCanUploadVideo } from './upload-auth';
 
 export async function uploadVideo({
 	video,
@@ -28,7 +28,7 @@ export async function uploadVideo({
 	if (signal.aborted) {
 		throw new AbortError();
 	}
-	await getVideoUploadLimits({ pds, dispatchUrl });
+	await assertCanUploadVideo({ pds, dispatchUrl });
 
 	const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
 		did,

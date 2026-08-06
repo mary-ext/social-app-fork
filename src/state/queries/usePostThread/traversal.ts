@@ -1,7 +1,7 @@
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { getPostRecord } from '#/lib/api/record-views';
+import { getPostRecord } from '#/lib/api/record-casts';
 
 import type {
 	ApiThreadItem,

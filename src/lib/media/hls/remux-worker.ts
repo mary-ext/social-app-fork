@@ -13,7 +13,7 @@ import {
 	Output,
 } from 'mediabunny';
 
-import { createSource, describeError } from './network';
+import { createSource, toPlayerError } from './network';
 import { BUFFER_AHEAD, type MainToWorker, type Rendition, type WorkerToMain } from './protocol';
 
 const FORMATS = [HLS, MPEG_TS];
@@ -232,7 +232,7 @@ const load = async (playlist: string, myEpoch: number) => {
 };
 
 const report = (myEpoch: number) => (error: unknown) => {
-	post({ type: 'error', epoch: myEpoch, ...describeError(error) });
+	post({ type: 'error', epoch: myEpoch, ...toPlayerError(error) });
 };
 
 self.addEventListener('message', (event) => {

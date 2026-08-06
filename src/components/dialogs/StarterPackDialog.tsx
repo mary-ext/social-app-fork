@@ -1,7 +1,7 @@
 import type { AnyProfileView, AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';

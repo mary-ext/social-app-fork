@@ -4,9 +4,8 @@ import type { $type, GenericUri } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
+import { deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
-import { uploadBlob } from '#/lib/api/upload-blob';
 import { retry } from '#/lib/async/retry';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 

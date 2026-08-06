@@ -1,4 +1,8 @@
-import { compressPostImage, compressProfileImage as compressProfileBlob, getImageFromBlob } from './image';
+import {
+	compressPostImage,
+	compressProfileImage as compressProfileBlob,
+	getImageFromBlob,
+} from './compress-image';
 
 /** A pixel-space rectangle to crop an image down to. */
 type ImageCrop = {

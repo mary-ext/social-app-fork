@@ -26,7 +26,7 @@ export const createSource = (
  * @param error source error
  * @returns classified player error
  */
-export const describeError = (error: unknown): PlayerError => {
+export const toPlayerError = (error: unknown): PlayerError => {
 	const message = error instanceof Error ? error.message : String(error);
 	if (error instanceof HttpError) {
 		switch (error.status) {

@@ -14,7 +14,7 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { networkRetry } from '#/lib/async/retry';
 import { isNetworkError } from '#/lib/errors';
-import { replaceEqualDeep } from '#/lib/functions';
+import { replaceEqualDeep } from '#/lib/objects';
 
 import {
 	isProfileShadowApplied,

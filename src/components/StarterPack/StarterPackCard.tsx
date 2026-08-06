@@ -8,7 +8,7 @@ import { weightedIndex } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { getStarterPackRecord } from '#/lib/api/record-views';
+import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard } from '#/lib/starter-pack';
 

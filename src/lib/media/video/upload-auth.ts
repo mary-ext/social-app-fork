@@ -6,7 +6,7 @@ import { UploadLimitError } from '#/lib/media/video/errors';
 import { VIDEO_PROXY_DID } from '#/env';
 import { m } from '#/paraglide/messages';
 
-import { createVideoClient } from './util';
+import { createVideoClient } from './client';
 
 /** the `did:web` audience naming the service behind a URL, or null when the URL has no host. */
 function serviceAuthAudience(url: string | URL): Did | null {
@@ -61,7 +61,7 @@ export async function getServiceAuthToken({
  * @param pds the signed-in PDS client (used to mint the service-auth token).
  * @param dispatchUrl the resolved PDS URL.
  */
-export async function getVideoUploadLimits({ pds, dispatchUrl }: { pds: Client; dispatchUrl: string }) {
+export async function assertCanUploadVideo({ pds, dispatchUrl }: { pds: Client; dispatchUrl: string }) {
 	const token = await getServiceAuthToken({
 		pds,
 		dispatchUrl,

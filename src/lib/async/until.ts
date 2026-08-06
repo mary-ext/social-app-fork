@@ -1,4 +1,4 @@
-import { timeout } from './timeout';
+import { sleep } from './sleep';
 
 export async function until<T>(
 	retries: number,
@@ -20,7 +20,7 @@ export async function until<T>(
 				return true;
 			}
 		}
-		await timeout(delay);
+		await sleep(delay);
 		retries--;
 	}
 	return false;

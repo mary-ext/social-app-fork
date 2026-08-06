@@ -23,8 +23,7 @@ import {
 	type UseQueryResult,
 } from '@tanstack/react-query';
 
-import { createRecord, deleteRecord, getRecord, putRecord } from '#/lib/api/records';
-import { uploadBlob } from '#/lib/api/upload-blob';
+import { createRecord, deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import type { ImageMeta } from '#/lib/media/composer-image';
