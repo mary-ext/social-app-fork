@@ -1,5 +1,6 @@
+import type { Gif } from '#/lib/gif';
+
 import { GifAltTextDialog } from '#/features/composer/GifAltTextDialog';
-import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';

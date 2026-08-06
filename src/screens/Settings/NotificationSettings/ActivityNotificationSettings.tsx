@@ -1,7 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -11,6 +10,7 @@ import {
 	useNotificationSettingsQuery,
 	useNotificationSettingsUpdateMutation,
 } from '#/state/queries/notifications/settings';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 

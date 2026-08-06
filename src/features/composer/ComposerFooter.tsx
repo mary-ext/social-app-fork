@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 
+import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import type { VideoAsset } from '#/lib/media/video/types';
 
 import { CharProgress } from '#/features/composer/char-progress/CharProgress';
-import type { Gif } from '#/features/gifPicker/types';
 
 import * as EmojiPicker from '#/components/EmojiPicker';
 import * as Toast from '#/components/Toast';

@@ -1,7 +1,8 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { listTarget } from '#/lib/routes/targets';
+
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';

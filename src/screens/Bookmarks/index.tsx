@@ -1,11 +1,11 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
+import { useTitle } from '#/state/use-title';
 
 import { EmptyState } from '#/components/EmptyState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';

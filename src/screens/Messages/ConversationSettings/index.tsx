@@ -4,7 +4,6 @@ import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { conversationTarget } from '#/lib/routes/targets';
 
@@ -17,6 +16,7 @@ import { useListJoinRequestsQuery } from '#/state/queries/messages/list-join-req
 import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';

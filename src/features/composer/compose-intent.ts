@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getVideoMetadata } from '#/lib/media/metadata';
 
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 export function useComposeIntent() {
 	const { openComposer } = useOpenComposer();

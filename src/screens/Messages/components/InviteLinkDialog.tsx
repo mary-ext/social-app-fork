@@ -8,9 +8,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { shareUrl } from '#/lib/sharing';
 import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
@@ -18,9 +16,12 @@ import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';
 import { useEditJoinLink } from '#/state/queries/messages/edit-join-link';
 import { useEnableJoinLink } from '#/state/queries/messages/enable-join-link';
 
+import { useOpenComposer } from '#/features/composer/open-composer';
+
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
+import { shareUrl } from '#/components/sharing';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';

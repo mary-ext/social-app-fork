@@ -1,12 +1,12 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileKnownFollowersQuery } from '#/state/queries/known-followers';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';

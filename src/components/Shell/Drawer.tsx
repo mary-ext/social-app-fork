@@ -3,13 +3,12 @@ import type { ComponentType, SVGProps } from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import { clsx } from 'clsx';
 
-import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
-import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
+import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 import { setDrawerOpen, useIsDrawerOpen } from '#/state/shell/drawer-open';
 
 import { formatCount } from '#/locale/intl/number';
@@ -21,6 +20,7 @@ import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as styles from '#/components/Shell/Drawer.css';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
+import { useNavigationTabState } from '#/components/Shell/use-nav-tab-state';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';

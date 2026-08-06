@@ -4,8 +4,6 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { dequal } from 'dequal/lite';
 
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
@@ -13,6 +11,7 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate';
+import { useTitle } from '#/state/use-title';
 
 import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { Spinner } from '#/components/Spinner';

@@ -13,6 +13,13 @@ import {
 	toISODateString,
 } from '@mary/date-fns';
 
+import { resolveUrl } from '#/lib/routes/app-links';
+import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
+
+import { m } from '#/paraglide/messages';
+import { type RouteTarget, router } from '#/routes';
+import type { SearchHistoryEntry } from '#/storage';
+
 import {
 	type DateConstraints,
 	matchDid,
@@ -20,13 +27,7 @@ import {
 	type OperatorName,
 	type SearchOperator,
 	type SuggestionMode,
-} from '#/lib/bsky/search';
-import { resolveUrl } from '#/lib/routes/app-links';
-import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
-
-import { m } from '#/paraglide/messages';
-import { type RouteTarget, router } from '#/routes';
-import type { SearchHistoryEntry } from '#/storage';
+} from './query-syntax';
 
 /**
  * resolves a pasted client URL or `at://` uri to the in-app path that renders it.

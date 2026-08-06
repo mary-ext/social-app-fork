@@ -1,6 +1,5 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -8,6 +7,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
 import { usePostRepostedByQuery } from '#/state/queries/post-reposted-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';

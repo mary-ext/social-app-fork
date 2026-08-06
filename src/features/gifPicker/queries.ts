@@ -1,10 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH } from '#/lib/constants';
+import type { Gif } from '#/lib/gif';
 
 import { deviceLocales } from '#/locale/deviceLocales';
-
-import type { Gif } from '#/features/gifPicker/types';
 
 export const RQKEY_ROOT = 'klipy-gif-service';
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured'];

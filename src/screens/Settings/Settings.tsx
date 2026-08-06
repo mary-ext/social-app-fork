@@ -2,14 +2,13 @@ import { useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import {
 	setDebugFeedContextEnabled,
 	useDebugFeedContextEnabled,
 } from '#/state/preferences/debug-feed-context';
 import { setDevMode, useDevMode } from '#/state/preferences/dev-mode';
 import { logoutEveryAccount } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';

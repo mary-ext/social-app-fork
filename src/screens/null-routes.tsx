@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { useComposeIntent } from '#/lib/hooks/useComposeIntent';
 import { postTarget, profileTarget } from '#/lib/routes/targets';
+
+import { useComposeIntent } from '#/features/composer/compose-intent';
 
 import { groupChatJoinHandle } from '#/components/dialogs/handles';
 

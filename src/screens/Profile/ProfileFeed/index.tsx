@@ -3,8 +3,6 @@ import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { TRENDING_DID } from '#/lib/constants';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -15,6 +13,9 @@ import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-f
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
 

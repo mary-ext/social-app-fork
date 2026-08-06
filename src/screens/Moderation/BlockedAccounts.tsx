@@ -1,10 +1,10 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
+import { useTitle } from '#/state/use-title';
 
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { List } from '#/components/List/List';

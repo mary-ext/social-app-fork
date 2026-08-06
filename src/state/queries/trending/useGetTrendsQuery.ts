@@ -8,7 +8,6 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
 import type { AppLink } from '#/lib/links/app-url';
 import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
 import { hasMutedWord } from '#/lib/moderation/muted-words';
@@ -16,6 +15,7 @@ import { appLinkToTarget } from '#/lib/routes/app-links';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
+import { aggregateUserInterests, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 

@@ -2,9 +2,9 @@ import { useLayoutEffect, useRef, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import * as styles from '#/lib/custom-animations/CountWheel.css';
-import { decideShouldRoll } from '#/lib/custom-animations/util';
 import { useReducedMotion } from '#/lib/reduced-motion';
+
+import * as styles from '#/components/PostControls/CountWheel.css';
 
 export function CountWheel({
 	count,
@@ -58,4 +58,21 @@ export function CountWheel({
 			) : null}
 		</div>
 	);
+}
+// roll at direction changes, count boundaries, and while the count is below 1000.
+export function decideShouldRoll(isSet: boolean, count: number) {
+	let shouldRoll = false;
+	if (!isSet && count === 1) {
+		shouldRoll = true;
+	} else if (count > 1 && count < 1000) {
+		shouldRoll = true;
+	} else if (count > 0) {
+		const mod = count % 100;
+		if (isSet && mod === 0) {
+			shouldRoll = true;
+		} else if (!isSet && mod === 99) {
+			shouldRoll = true;
+		}
+	}
+	return shouldRoll;
 }

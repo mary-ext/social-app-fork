@@ -10,11 +10,10 @@ import {
 
 import { clsx } from 'clsx';
 
-import { CountWheel } from '#/lib/custom-animations/CountWheel';
-import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
-
 import { formatPostStatCount } from '#/locale/intl/number';
 
+import { AnimatedLikeIcon } from '#/components/PostControls/AnimatedLikeIcon';
+import { CountWheel } from '#/components/PostControls/CountWheel';
 import { Text } from '#/components/Text';
 import { Tooltip } from '#/components/Tooltip';
 import * as Skele from '#/components/web/Skeleton';

@@ -7,7 +7,6 @@ import { partition } from '@mary/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import {
@@ -18,6 +17,7 @@ import {
 } from '#/state/queries/feed';
 import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';

@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
-import { shareText, shareUrl } from '#/lib/sharing';
 import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
@@ -30,6 +29,7 @@ import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
+import { shareText, shareUrl } from '#/components/sharing';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

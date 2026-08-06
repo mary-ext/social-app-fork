@@ -4,14 +4,14 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { FeedSourceInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { FAB } from '#/components/FAB';
 import type { ListMethods } from '#/components/List/List';

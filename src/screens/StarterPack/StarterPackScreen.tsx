@@ -9,7 +9,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { targetToShareUrl } from '#/lib/routes/app-links';
@@ -23,6 +22,7 @@ import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-l
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { getClients, useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';

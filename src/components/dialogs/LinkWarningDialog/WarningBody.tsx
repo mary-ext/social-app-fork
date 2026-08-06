@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { shareUrl } from '#/lib/sharing';
 import { splitApexDomain } from '#/lib/strings/url-helpers';
 
 import * as Dialog from '#/components/Dialog';
 import type { LinkWarningPayload } from '#/components/dialogs/handles';
+import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';

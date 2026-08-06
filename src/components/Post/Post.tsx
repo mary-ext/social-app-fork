@@ -13,13 +13,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';

@@ -1,5 +1,3 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import {
 	setColorMode,
 	setDarkTheme,
@@ -10,6 +8,7 @@ import {
 	useFontFamily,
 	useFontScale,
 } from '#/state/preferences/appearance';
+import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';

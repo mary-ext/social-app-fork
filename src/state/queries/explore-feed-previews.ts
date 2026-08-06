@@ -11,14 +11,14 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
-import { FeedTuner } from '#/lib/api/feed-manip';
-import { CustomFeedAPI } from '#/lib/api/feed/custom';
-import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { cleanError } from '#/lib/strings/errors';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { CustomFeedAPI } from '#/state/queries/feed-api/custom';
+import { aggregateUserInterests } from '#/state/queries/feed-api/utils';
+import { FeedTuner } from '#/state/queries/feed-manip';
 import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';

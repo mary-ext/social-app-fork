@@ -6,6 +6,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
 import { getDeviceName } from '#/lib/deviceName';
+import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
@@ -18,7 +19,6 @@ import { getClients } from '#/state/session';
 
 import type { ComposerState, EmbedDraft, PostDraft } from '#/features/composer/state/composer';
 import type { VideoState } from '#/features/composer/state/video';
-import type { Gif } from '#/features/gifPicker/types';
 
 import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';

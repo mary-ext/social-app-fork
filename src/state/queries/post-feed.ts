@@ -24,15 +24,6 @@ import { mapDefined } from '@mary/array-fns';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { FeedTuner } from '#/lib/api/feed-manip';
-import { AuthorFeedAPI } from '#/lib/api/feed/author';
-import { CustomFeedAPI } from '#/lib/api/feed/custom';
-import { FollowingFeedAPI } from '#/lib/api/feed/following';
-import { LikesFeedAPI } from '#/lib/api/feed/likes';
-import { ListFeedAPI } from '#/lib/api/feed/list';
-import { PostListFeedAPI } from '#/lib/api/feed/posts';
-import type { FeedAPI } from '#/lib/api/feed/types';
-import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { typedKeys } from '#/lib/functions';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
@@ -40,6 +31,15 @@ import { isDocumentVisible } from '#/lib/visibility';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
+import { AuthorFeedAPI } from '#/state/queries/feed-api/author';
+import { CustomFeedAPI } from '#/state/queries/feed-api/custom';
+import { FollowingFeedAPI } from '#/state/queries/feed-api/following';
+import { LikesFeedAPI } from '#/state/queries/feed-api/likes';
+import { ListFeedAPI } from '#/state/queries/feed-api/list';
+import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
+import type { FeedAPI } from '#/state/queries/feed-api/types';
+import { aggregateUserInterests } from '#/state/queries/feed-api/utils';
+import { FeedTuner } from '#/state/queries/feed-manip';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
 

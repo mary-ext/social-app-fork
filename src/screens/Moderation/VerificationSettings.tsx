@@ -1,11 +1,11 @@
 import { urls } from '#/lib/constants';
-import { useTitle } from '#/lib/hooks/useTitle';
 
 import {
 	type UsePreferencesQueryResponse,
 	usePreferencesQuery,
 	useSetVerificationPrefsMutation,
 } from '#/state/queries/preferences';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 

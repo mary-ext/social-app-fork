@@ -2,7 +2,6 @@ import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { postUriToTarget } from '#/lib/routes/targets';
-import { shareText, shareUrl } from '#/lib/sharing';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -12,6 +11,7 @@ import { useSession } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import { SendViaChatDialog } from '#/components/dms/dialogs/SendViaChatDialog';
 import * as Menu from '#/components/Menu';
+import { shareText, shareUrl } from '#/components/sharing';
 
 import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
 import Bookmark from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';

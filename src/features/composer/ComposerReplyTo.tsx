@@ -9,7 +9,7 @@ import {
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
-import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
+import type { ComposerOptsPostRef } from '#/features/composer/open-composer';
 
 import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { QuoteEmbed } from '#/components/Post/Embed';

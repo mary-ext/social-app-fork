@@ -2,9 +2,9 @@ import type { LightboxImage } from '@oomfware/lightbox';
 
 import { Dialog } from '@base-ui/react/dialog';
 
-import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
-
 import type { SessionAccount } from '#/state/session';
+
+import type { ComposerOpts } from '#/features/composer/open-composer';
 
 import type { ReportSubject } from '#/components/moderation/ReportDialog/types';
 

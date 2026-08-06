@@ -12,8 +12,6 @@ import { definite } from '@mary/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { profileTarget } from '#/lib/routes/targets';
 import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
@@ -26,6 +24,9 @@ import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
 import { ProfileLists } from '#/screens/Profile/components/ProfileLists';

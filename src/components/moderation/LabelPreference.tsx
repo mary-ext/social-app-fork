@@ -6,9 +6,9 @@ import {
 import type { Did } from '@atcute/lexicons';
 
 import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
-import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
 
+import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
+import { getLabelStrings } from '#/state/moderation/use-label-info';
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
 
 import { LOCALE } from '#/locale/intl/locale';

@@ -5,7 +5,6 @@ import { isDid, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useParams, useRoute } from '@oomfware/stacker';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { profileDisplayName, sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -21,6 +20,7 @@ import {
 	useStarterPackQuery,
 } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 

@@ -6,7 +6,8 @@ import { clsx } from 'clsx';
 
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
+
+import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 
 import * as Dialog from '#/components/Dialog';
 import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';

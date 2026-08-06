@@ -7,13 +7,12 @@ import {
 
 import { clsx } from 'clsx';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { isAppLabeler } from '#/lib/moderation';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
-import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { labelsTarget } from '#/lib/routes/targets';
 import { profileDisplayName } from '#/lib/strings/display-names';
 
+import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
 	useMyLabelersQuery,
@@ -22,6 +21,7 @@ import {
 	usePreferencesSetAdultContentMutation,
 	usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences';
+import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';

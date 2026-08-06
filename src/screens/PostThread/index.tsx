@@ -1,7 +1,7 @@
-import { useTitle } from '#/lib/hooks/useTitle';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { usePostQuery } from '#/state/queries/post';
+import { useTitle } from '#/state/use-title';
 
 import { PostThread } from '#/screens/PostThread/PostThread';
 

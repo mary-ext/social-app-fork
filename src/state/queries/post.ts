@@ -8,10 +8,10 @@ import { isDid, parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexi
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';
-import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import type { Shadow } from '#/state/cache/types';
+import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
 import { getClients, useSession } from '#/state/session';
 import { setThreadMute, useIsThreadMuted } from '#/state/thread-mutes';
 

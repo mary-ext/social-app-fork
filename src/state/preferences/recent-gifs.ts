@@ -1,6 +1,6 @@
-import { getCurrentDid } from '#/state/session';
+import type { Gif } from '#/lib/gif';
 
-import type { Gif } from '#/features/gifPicker/types';
+import { getCurrentDid } from '#/state/session';
 
 import { account, useStorageValue } from '#/storage';
 

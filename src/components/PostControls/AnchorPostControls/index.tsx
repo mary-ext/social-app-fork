@@ -2,8 +2,7 @@ import type { ComponentType, MouseEvent, ReactNode, Ref, SVGProps } from 'react'
 
 import { clsx } from 'clsx';
 
-import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
-
+import { AnimatedLikeIcon } from '#/components/PostControls/AnimatedLikeIcon';
 import { Tooltip } from '#/components/Tooltip';
 import * as Skele from '#/components/web/Skeleton';
 

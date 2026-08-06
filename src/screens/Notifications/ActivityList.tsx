@@ -1,4 +1,4 @@
-import { useTitle } from '#/lib/hooks/useTitle';
+import { useTitle } from '#/state/use-title';
 
 import { EmptyState } from '#/components/EmptyState';
 import { PostFeed } from '#/components/PostFeed/PostFeed';

@@ -4,7 +4,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
-import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -13,6 +12,8 @@ import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-s
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
+
+import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 
 import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 

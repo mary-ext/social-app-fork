@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
-import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
+
+import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 
 import * as Dialog from '#/components/Dialog';
 import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';

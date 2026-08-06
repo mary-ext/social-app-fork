@@ -4,12 +4,12 @@ import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDe
 
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
+import { useTitle } from '#/state/use-title';
 
 import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';

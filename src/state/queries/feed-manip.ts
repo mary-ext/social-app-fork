@@ -8,7 +8,7 @@ import {
 
 import { getPostRecord } from '#/lib/api/record-views';
 
-import { isPostInLanguage } from '../../locale/helpers';
+import { isPostInLanguage } from '#/locale/helpers';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
 

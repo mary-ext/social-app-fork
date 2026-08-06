@@ -8,9 +8,8 @@ import {
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
 
-import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
+import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
 
 import { matchesLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

@@ -1,16 +1,16 @@
 import { useState } from 'react';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
+import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
+import { shareUrl } from '#/components/sharing';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';

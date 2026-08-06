@@ -5,7 +5,6 @@ import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
@@ -17,6 +16,7 @@ import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trend
 import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
 import { getClients } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';

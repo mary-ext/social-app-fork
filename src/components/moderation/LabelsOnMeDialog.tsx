@@ -3,9 +3,9 @@ import { useState } from 'react';
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { profileTarget } from '#/lib/routes/targets';
 
+import { useLabelInfo } from '#/state/moderation/use-label-info';
 import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';

@@ -1,13 +1,12 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import type { OperatorName } from '#/lib/bsky/search';
-
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
 import type { ListRow } from './model';
 import * as styles from './OperatorRow.css';
+import type { OperatorName } from './query-syntax';
 
 /** the human-readable description for a fixed `op:value` filter (`has:media`, `from:following`). */
 const valueLabel = (op: OperatorName, value: string): string | undefined => {

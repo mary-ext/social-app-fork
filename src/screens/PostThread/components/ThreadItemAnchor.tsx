@@ -12,7 +12,6 @@ import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { triangularRandom } from '#/lib/numbers';
 import { profileTarget } from '#/lib/routes/targets';
@@ -30,6 +29,7 @@ import { niceDate } from '#/locale/intl/datetime';
 import { formatPostStatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';

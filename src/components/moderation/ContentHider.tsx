@@ -12,12 +12,12 @@ import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 
 import { ADULT_CONTENT_LABELS, isJustAMute } from '#/lib/moderation';
-import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
-import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
+import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
+import { getDefinition, getLabelStrings } from '#/state/moderation/use-label-info';
+import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 
 import { LOCALE } from '#/locale/intl/locale';
 

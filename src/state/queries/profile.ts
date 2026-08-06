@@ -27,7 +27,6 @@ import { createRecord, deleteRecord, getRecord, putRecord } from '#/lib/api/reco
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
-import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 import type { ImageMeta } from '#/lib/media/composer-image';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -36,6 +35,7 @@ import type { Shadow } from '#/state/cache/types';
 import { STALE } from '#/state/queries';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { RQKEY as PROFILE_FOLLOWS_RQKEY } from '#/state/queries/profile-follows';
+import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
 import {
 	unstableCacheProfileView,
 	useUnstableProfileViewCache,

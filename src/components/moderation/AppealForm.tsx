@@ -8,9 +8,9 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
-import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { profileTarget } from '#/lib/routes/targets';
 
+import { useLabelInfo } from '#/state/moderation/use-label-info';
 import { getClients } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';

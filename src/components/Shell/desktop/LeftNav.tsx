@@ -7,8 +7,6 @@ import { mapDefined } from '@mary/array-fns';
 import { clsx } from 'clsx';
 
 import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { profileTarget } from '#/lib/routes/targets';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -19,7 +17,9 @@ import { useUnreadMessageCount } from '#/state/queries/messages/list-conversatio
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';
+import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 
+import { useOpenComposer } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';

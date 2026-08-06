@@ -4,7 +4,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useGoBack } from '#/lib/hooks/useGoBack';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { listTarget } from '#/lib/routes/targets';
-import { shareUrl } from '#/lib/sharing';
 
 import { useListBlockMutation, useListDeleteMutation, useListMuteMutation } from '#/state/queries/list';
 import { useSession } from '#/state/session';
@@ -14,6 +13,7 @@ import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditL
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
+import { shareUrl } from '#/components/sharing';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

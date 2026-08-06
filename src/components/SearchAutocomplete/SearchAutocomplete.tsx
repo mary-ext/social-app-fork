@@ -10,6 +10,7 @@ import {
 } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
+import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 
 import { mapDefined } from '@mary/array-fns';
 import {
@@ -27,16 +28,6 @@ import {
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
-import {
-	classifyActiveToken,
-	findActiveToken,
-	getDateConstraints,
-	getOperatorSuggestions,
-	parseStartDate,
-	splitFilters,
-	type Token,
-	tokenize,
-} from '#/lib/bsky/search';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
@@ -57,6 +48,14 @@ import { router } from '#/routes';
 
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
+import {
+	classifyActiveToken,
+	findActiveToken,
+	getDateConstraints,
+	getOperatorSuggestions,
+	parseStartDate,
+	splitFilters,
+} from './query-syntax';
 import { Row } from './Row';
 import * as styles from './SearchAutocomplete.css';
 

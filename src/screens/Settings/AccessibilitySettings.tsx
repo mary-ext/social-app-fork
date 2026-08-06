@@ -1,7 +1,6 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/state/preferences/alt-text';
 import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';

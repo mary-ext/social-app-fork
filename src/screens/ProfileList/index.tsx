@@ -5,8 +5,6 @@ import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bl
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -16,6 +14,9 @@ import { type UsePreferencesQueryResponse, usePreferencesQuery } from '#/state/q
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';

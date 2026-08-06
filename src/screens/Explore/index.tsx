@@ -2,10 +2,9 @@ import { useState } from 'react';
 
 import { useFocusEffect } from '@oomfware/stacker';
 
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { focusSearch, softReset } from '#/state/events';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { SearchHeader } from '#/screens/Search/SearchHeader';
 import type { TabParam } from '#/screens/Search/utils';

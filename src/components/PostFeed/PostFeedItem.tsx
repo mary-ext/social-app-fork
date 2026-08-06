@@ -11,7 +11,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -23,6 +22,7 @@ import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
+import { useOpenComposer } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { BlockLink } from '#/components/BlockLink';

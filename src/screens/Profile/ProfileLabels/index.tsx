@@ -7,7 +7,6 @@ import type { Did } from '@atcute/lexicons';
 import { mapDefined, unique } from '@mary/array-fns';
 
 import { MAX_LABELERS } from '#/lib/constants';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation';
 import { profileTarget } from '#/lib/routes/targets';
 import { combinedDisplayName, profileDisplayName } from '#/lib/strings/display-names';
@@ -18,6 +17,7 @@ import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useRequireAuth } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { dateTimeLong } from '#/locale/intl/datetime';
 

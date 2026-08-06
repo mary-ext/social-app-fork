@@ -1,4 +1,3 @@
-import { useTitle } from '#/lib/hooks/useTitle';
 import {
 	type EmbedPlayerSource,
 	exemptExternalEmbedSources,
@@ -6,6 +5,7 @@ import {
 } from '#/lib/strings/embed-player';
 
 import { setExternalEmbedPref, useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
+import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';

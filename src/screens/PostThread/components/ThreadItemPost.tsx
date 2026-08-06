@@ -4,7 +4,6 @@ import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import type { AppModerationCause } from '#/lib/moderation/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -14,6 +13,7 @@ import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
+import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';

@@ -20,7 +20,9 @@ import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { uploadBlob } from '#/lib/api/upload-blob';
 import { task } from '#/lib/async/task';
+import { createGIFDescription } from '#/lib/gif-alt-text';
 import { compressImage } from '#/lib/media/composer-image';
 import { isNetworkError } from '#/lib/strings/errors';
 import { trimText } from '#/lib/strings/helpers';
@@ -35,9 +37,6 @@ import {
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
 
 import { m } from '#/paraglide/messages';
-
-import { createGIFDescription } from '../gif-alt-text';
-import { uploadBlob } from './upload-blob';
 
 /** The authenticated clients and repo DID a publish runs against. */
 export interface PostClients {
@@ -86,7 +85,7 @@ const chainReply = task(
 		record: AppBskyFeedPost.Main,
 		uri: ResourceUri,
 	): Promise<AppBskyFeedPost.Main['reply']> => {
-		const { serializeRecordCid } = await import('./cid');
+		const { serializeRecordCid } = await import('#/lib/api/cid');
 		const ref: ComAtprotoRepoStrongRef.Main = {
 			cid: await serializeRecordCid(record),
 			uri: uri,
@@ -99,7 +98,11 @@ const chainReply = task(
 	},
 );
 
-export async function post({ appview, did, pds }: PostClients, queryClient: QueryClient, opts: PostOpts) {
+export async function publishThread(
+	{ appview, did, pds }: PostClients,
+	queryClient: QueryClient,
+	opts: PostOpts,
+) {
 	const thread = opts.thread;
 
 	// resolve the reply while the post record is built.

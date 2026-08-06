@@ -1,5 +1,6 @@
-import { useTitle } from '#/lib/hooks/useTitle';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
+
+import { useTitle } from '#/state/use-title';
 
 import { LikedByList } from '#/components/LikedByList';
 import * as Layout from '#/components/web/Layout';

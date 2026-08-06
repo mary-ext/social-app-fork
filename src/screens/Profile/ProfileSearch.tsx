@@ -1,8 +1,7 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { SearchHeader } from '#/screens/Search/SearchHeader';
 

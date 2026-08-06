@@ -16,8 +16,8 @@ import Warning from '#/icons/central/ExclamationTriangle_round_outlined_radius1_
 import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { useGlobalLabelStrings } from './useGlobalLabelStrings';
-import { getDefinition, getLabelStrings } from './useLabelInfo';
+import { useGlobalLabelStrings } from './use-global-label-strings';
+import { getDefinition, getLabelStrings } from './use-label-info';
 
 /** Provenance of a moderation cause, replacing `@atproto/api`'s `ModerationCauseSource['type']`. */
 type ModerationCauseSourceType = 'labeler' | 'list' | 'user';

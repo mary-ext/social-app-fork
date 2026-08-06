@@ -1,5 +1,3 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { setAutoplayDisabled, useAutoplayDisabled } from '#/state/preferences/autoplay';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
 import { usePreferencesQuery, useSetFeedViewPreferencesMutation } from '#/state/queries/preferences';
@@ -8,6 +6,7 @@ import {
 	normalizeView,
 	useThreadPreferences,
 } from '#/state/queries/preferences/useThreadPreferences';
+import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';

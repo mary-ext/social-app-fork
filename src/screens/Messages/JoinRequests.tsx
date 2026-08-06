@@ -5,7 +5,6 @@ import { ClientResponseError } from '@atcute/client';
 
 import { type InfiniteData, useQueryClient } from '@tanstack/react-query';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { ConvoProvider, useConvo } from '#/state/messages/convo';
@@ -17,6 +16,7 @@ import {
 	useListJoinRequestsQuery,
 } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';

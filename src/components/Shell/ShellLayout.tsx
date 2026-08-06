@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 
 import { Outlet, resolveMeta, useRoute } from '@oomfware/stacker';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useKeybind } from '#/lib/keybinds';
 
 import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';

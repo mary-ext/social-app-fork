@@ -1,5 +1,6 @@
+import type { Gif } from '#/lib/gif';
+
 import * as styles from '#/features/gifPicker/components/GifPickerItem.css';
-import type { Gif } from '#/features/gifPicker/types';
 import { gifPreviewUrl } from '#/features/gifPicker/utils';
 
 import { m } from '#/paraglide/messages';

@@ -2,14 +2,13 @@ import { useState } from 'react';
 
 import type { ActorIdentifier } from '@atcute/lexicons';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
@@ -18,6 +17,7 @@ import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
 import { SearchError } from '#/components/SearchError';
+import { shareUrl } from '#/components/sharing';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';

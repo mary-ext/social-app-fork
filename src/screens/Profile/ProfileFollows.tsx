@@ -1,6 +1,5 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -9,6 +8,7 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';

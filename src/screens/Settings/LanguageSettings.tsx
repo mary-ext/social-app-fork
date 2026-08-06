@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { setAppLanguage } from '#/state/preferences/app-language';
 import {
 	setContentLanguages as persistContentLanguages,
@@ -9,6 +7,7 @@ import {
 	useContentLanguages,
 	usePrimaryLanguage,
 } from '#/state/preferences/languages';
+import { useTitle } from '#/state/use-title';
 
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

@@ -6,8 +6,7 @@ import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moder
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
-
+import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
 import { BlockLink } from '#/components/BlockLink';

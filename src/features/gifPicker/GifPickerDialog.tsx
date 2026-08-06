@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { uniqueBy } from '@mary/array-fns';
 
+import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
@@ -18,7 +19,6 @@ import { GifPickerHeader } from '#/features/gifPicker/components/GifPickerHeader
 import { GifPickerPlaceholder } from '#/features/gifPicker/components/GifPickerPlaceholder';
 import * as styles from '#/features/gifPicker/GifPickerDialog.css';
 import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
-import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
 import { ErrorBoundary } from '#/components/ErrorBoundary';

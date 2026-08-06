@@ -4,9 +4,9 @@ import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moder
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import type { AppModerationCause } from '#/lib/moderation/types';
-import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { profileTarget } from '#/lib/routes/targets';
 
+import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';

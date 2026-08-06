@@ -1,10 +1,10 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { shareUrl } from '#/lib/sharing';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';
+import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';

@@ -2,16 +2,16 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { softReset } from '#/state/events';
 import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
 import { truncateAndInvalidate } from '#/state/queries/util';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { NotificationFeed } from '#/screens/Notifications/components/NotificationFeed';
 

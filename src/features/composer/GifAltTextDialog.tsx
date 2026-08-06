@@ -1,14 +1,13 @@
 import { useId, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
+import type { Gif } from '#/lib/gif';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 import { trimText } from '#/lib/strings/helpers';
 
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
-
-import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';

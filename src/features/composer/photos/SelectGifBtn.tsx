@@ -1,6 +1,7 @@
+import type { Gif } from '#/lib/gif';
+
 import { ComposerToolbarButton } from '#/features/composer/ComposerToolbarButton';
 import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
-import type { Gif } from '#/features/gifPicker/types';
 
 import * as Dialog from '#/components/Dialog';
 

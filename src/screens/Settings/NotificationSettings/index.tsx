@@ -1,9 +1,8 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import {
 	useChatNotificationSettingsQuery,
 	useNotificationSettingsQuery,
 } from '#/state/queries/notifications/settings';
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';

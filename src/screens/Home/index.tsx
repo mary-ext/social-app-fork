@@ -1,5 +1,4 @@
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
-import { useTitle } from '#/lib/hooks/useTitle';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
@@ -8,6 +7,7 @@ import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { CustomFeedEmptyState } from '#/screens/Home/components/CustomFeedEmptyState';
 import { FeedPage } from '#/screens/Home/components/FeedPage';

@@ -1,10 +1,9 @@
 import type { Did, Handle } from '@atcute/lexicons';
 
+import type { Gif } from '#/lib/gif';
 import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
-
-import type { Gif } from '#/features/gifPicker/types';
 
 import type { Locale } from '#/paraglide/runtime';
 

@@ -19,18 +19,11 @@ import { isGraphemeLengthInRange } from '@atcute/util-text';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import {
-	closeComposer,
-	COMPOSER_DIALOG_ID,
-	type ComposerOpts,
-	type OnPostSuccessData,
-} from '#/lib/hooks/useOpenComposer';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
@@ -48,7 +41,14 @@ import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 import { GifAltText } from '#/features/composer/GifAltText';
+import {
+	closeComposer,
+	COMPOSER_DIALOG_ID,
+	type ComposerOpts,
+	type OnPostSuccessData,
+} from '#/features/composer/open-composer';
 import { Gallery } from '#/features/composer/photos/Gallery';
+import { publishThread, ReplyDeletedError } from '#/features/composer/publish-thread';
 import { SuggestedLanguage } from '#/features/composer/select-language/SuggestedLanguage';
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
@@ -611,7 +611,7 @@ export const ComposePost = ({
 		let postSuccessData: OnPostSuccessData;
 		try {
 			postUri = (
-				await apilib.post({ appview, did: currentDid, pds: pds! }, queryClient, {
+				await publishThread({ appview, did: currentDid, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
 					langs: currentLanguages,
@@ -657,7 +657,7 @@ export const ComposePost = ({
 		} catch (e: unknown) {
 			console.error('Composer: create post failed', e);
 			let err = cleanError(e);
-			if (e instanceof apilib.ReplyDeletedError || err.includes('not locate record')) {
+			if (e instanceof ReplyDeletedError || err.includes('not locate record')) {
 				err = m['view.composer.reply.deleted']();
 			} else if (e instanceof EmbeddingDisabledError) {
 				err = m['view.composer.quote.disabled']();

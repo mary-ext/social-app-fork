@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import * as styles from '#/lib/custom-animations/LikeIcon.css';
 import { useReducedMotion } from '#/lib/reduced-motion';
+
+import * as styles from '#/components/PostControls/AnimatedLikeIcon.css';
 
 import HeartIconFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg';
 import HeartIconOutline from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';

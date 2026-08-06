@@ -1,7 +1,6 @@
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { useImageDescriptionModel, useOpenRouterApiKey } from '#/state/preferences/openrouter';
 import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/SettingsCards';

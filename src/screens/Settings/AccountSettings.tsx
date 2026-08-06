@@ -2,13 +2,12 @@ import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useTitle } from '#/lib/hooks/useTitle';
-
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 

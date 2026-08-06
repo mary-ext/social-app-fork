@@ -1,6 +1,5 @@
 import { definite } from '@mary/array-fns';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -9,6 +8,7 @@ import {
 	useRemoveMutedWordMutation,
 	useUpdateMutedWordMutation,
 } from '#/state/queries/preferences';
+import { useTitle } from '#/state/use-title';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 

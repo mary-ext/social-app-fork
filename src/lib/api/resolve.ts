@@ -4,14 +4,13 @@ import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
+import type { Gif } from '#/lib/gif';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
-
-import type { Gif } from '#/features/gifPicker/types';
 
 import { createGIFDescription } from '../gif-alt-text';
 

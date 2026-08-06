@@ -2,6 +2,7 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
+import type { Gif } from '#/lib/gif';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
@@ -9,7 +10,6 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
 
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
-import type { Gif } from '#/features/gifPicker/types';
 
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { NavigationDisabled } from '#/components/NavigationDisabled';

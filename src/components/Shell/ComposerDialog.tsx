@@ -1,8 +1,7 @@
 import { lazy, Suspense, useRef } from 'react';
 
-import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
-
 import type { CancelRef } from '#/features/composer/Composer';
+import { COMPOSER_DIALOG_ID } from '#/features/composer/open-composer';
 
 import * as Dialog from '#/components/Dialog';
 import { composerDialogHandle } from '#/components/dialogs/handles';

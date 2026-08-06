@@ -3,7 +3,6 @@ import { type ComponentProps, useRef } from 'react';
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { useTitle } from '#/lib/hooks/useTitle';
 import { conversationTarget } from '#/lib/routes/targets';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -12,6 +11,7 @@ import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
+import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';

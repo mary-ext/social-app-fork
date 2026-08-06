@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useTitle } from '#/lib/hooks/useTitle';
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -11,6 +10,7 @@ import { ConvoStatus } from '#/state/messages/convo/types';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMarkJoinRequestsRead } from '#/state/queries/messages/mark-join-request-read';
+import { useTitle } from '#/state/use-title';
 
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
 import { RequestStatus } from '#/screens/Messages/components/RequestStatus';

@@ -6,13 +6,14 @@ import { clsx } from 'clsx';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 
 import { useFeedFeedback } from '#/state/feed-feedback';
 import type { ThreadViewOption } from '#/state/queries/preferences/useThreadPreferences';
 import { PostThreadContextProvider, type ThreadItem, usePostThread } from '#/state/queries/usePostThread';
 import { useSession } from '#/state/session';
 import { useUnstablePostSource } from '#/state/unstable-post-source';
+
+import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 
 import { HeaderDropdown } from '#/screens/PostThread/components/HeaderDropdown';
 import { ThreadComposePrompt } from '#/screens/PostThread/components/ThreadComposePrompt';

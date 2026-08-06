@@ -3,13 +3,14 @@ import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
 import { useRequireAuth } from '#/state/session';
+
+import { useOpenComposer } from '#/features/composer/open-composer';
 
 import * as Toast from '#/components/Toast';
 

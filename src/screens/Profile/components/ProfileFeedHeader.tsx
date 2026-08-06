@@ -6,7 +6,6 @@ import { clsx } from 'clsx';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
-import { shareUrl } from '#/lib/sharing';
 
 import type { FeedSourceFeedInfo } from '#/state/queries/feed';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
@@ -25,6 +24,7 @@ import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
+import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';

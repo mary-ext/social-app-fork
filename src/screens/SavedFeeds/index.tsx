@@ -8,10 +8,10 @@ import { extractClosestEdge } from '@oomfware/tug/hitbox';
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useTitle } from '#/lib/hooks/useTitle';
 
 import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
