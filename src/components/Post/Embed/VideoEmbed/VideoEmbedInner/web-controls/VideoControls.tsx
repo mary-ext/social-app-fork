@@ -154,8 +154,7 @@ export function Controls({
 	const autoplayDisabled = autoplayDisabledPref || isWithinMessage;
 	useEffect(() => {
 		if (active) {
-			// GIFs play immediately, videos wait until onScreen
-			if (onScreen || isGif) {
+			if (onScreen) {
 				if (!autoplayDisabled) {
 					play();
 				}
@@ -163,7 +162,7 @@ export function Controls({
 				pause();
 			}
 		}
-	}, [onScreen, pause, active, play, autoplayDisabled, isGif]);
+	}, [onScreen, pause, active, play, autoplayDisabled]);
 
 	// clicking on any button should focus the player, if it's not already focused
 	const drawFocus = () => {

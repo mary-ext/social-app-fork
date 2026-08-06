@@ -33,7 +33,6 @@ const UNPLACED: ViewState = { isActive: false, mayLoad: false, nearScreen: false
 type Entry = {
 	readonly id: string;
 	readonly element: Element;
-	readonly isGif: boolean;
 	near: boolean;
 	visible: boolean;
 	loaded: boolean;
@@ -93,7 +92,7 @@ const arbitrate = () => {
 		if (entry === incumbent) {
 			incumbentScore = score;
 		}
-		if (!entry.isGif && score < challengerScore) {
+		if (score < challengerScore) {
 			challenger = entry;
 			challengerScore = score;
 		}
@@ -117,12 +116,10 @@ const arbitrate = () => {
 	publish();
 };
 
-const isWanted = (entry: Entry) => (entry.isGif ? entry.near : entry.id === activeId);
-
 const syncDwell = (entry: Entry) => {
-	const wanted = isWanted(entry);
+	const wanted = entry.id === activeId;
 	// a direct selection skips the loading delay.
-	const immediate = wanted && manuallySet && entry.id === activeId;
+	const immediate = wanted && manuallySet;
 
 	if (!wanted || immediate) {
 		clearTimeout(entry.dwellTimer);
@@ -211,11 +208,10 @@ onFullscreenChange((fullscreen) => {
 
 // #region contest
 
-const register = (id: string, element: Element, isGif: boolean) => {
+const register = (id: string, element: Element) => {
 	const entry: Entry = {
 		id,
 		element,
-		isGif,
 		near: false,
 		visible: false,
 		loaded: false,
@@ -268,10 +264,9 @@ const subscribe = (onStoreChange: () => void) => emitter.subscribe(onStoreChange
  * registers a view for active video selection and deferred loading.
  *
  * @param ref a stable ref to the view element
- * @param options.isGif whether the view is a gif
  * @returns the view state and a function that activates it immediately
  */
-export function useActiveVideo(ref: React.RefObject<Element | null>, { isGif }: { isGif: boolean }) {
+export function useActiveVideo(ref: React.RefObject<Element | null>) {
 	const id = useId();
 
 	useEffect(() => {
@@ -279,8 +274,8 @@ export function useActiveVideo(ref: React.RefObject<Element | null>, { isGif }: 
 		if (!element) {
 			return;
 		}
-		return register(id, element, isGif);
-	}, [id, isGif, ref]);
+		return register(id, element);
+	}, [id, ref]);
 
 	const state = useSyncExternalStore(subscribe, () => byId.get(id)?.state ?? UNPLACED);
 

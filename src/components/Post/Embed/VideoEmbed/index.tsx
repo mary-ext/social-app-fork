@@ -25,12 +25,8 @@ const MIN_CARD_WIDTH = 280;
 
 export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	const ref = useRef<HTMLDivElement>(null);
-	const isGif = embed.presentation === 'gif';
-	const { isActive, mayLoad, nearScreen, onScreen, setActive } = useActiveVideo(ref, { isGif });
+	const { isActive, mayLoad, nearScreen, onScreen, setActive } = useActiveVideo(ref);
 	const lastKnownTime = useRef<number | undefined>(undefined);
-
-	// GIFs don't participate in the "one video at a time" system
-	const active = isGif || isActive;
 
 	const [key, setKey] = useState(0);
 	const renderError = (error: unknown) => <VideoError error={error} retry={() => setKey(key + 1)} />;
@@ -67,7 +63,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 						{nearScreen && (
 							<VideoEmbedInnerWeb
 								embed={embed}
-								active={active}
+								active={isActive}
 								setActive={setActive}
 								onScreen={onScreen}
 								canLoad={mayLoad}
