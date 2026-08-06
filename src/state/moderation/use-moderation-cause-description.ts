@@ -16,7 +16,6 @@ import Warning from '#/icons/central/ExclamationTriangle_round_outlined_radius1_
 import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { getGlobalLabelStrings } from './global-label-strings';
 import { getDefinition, getLabelStrings } from './use-label-info';
 
 /** Provenance of a moderation cause, replacing `@atproto/api`'s `ModerationCauseSource['type']`. */
@@ -39,7 +38,6 @@ export function useModerationCauseDescription(
 ): ModerationCauseDescription {
 	const { currentAccount } = useSession();
 	const { labelDefs, labelers } = useLabelDefinitions();
-	const globalLabelStrings = getGlobalLabelStrings();
 
 	if (!cause) {
 		return {
@@ -118,7 +116,7 @@ export function useModerationCauseDescription(
 		}
 		case ModerationCauseType.Label: {
 			const def = cause.labelDef || getDefinition(labelDefs, cause.label);
-			const strings = getLabelStrings(LOCALE, globalLabelStrings, def);
+			const strings = getLabelStrings(LOCALE, def);
 			const labeler = labelers.find((l) => l.creator.did === cause.label.src);
 			let source = labeler ? `@${labeler.creator.handle}` : undefined;
 			let sourceDisplayName = labeler?.creator.displayName;

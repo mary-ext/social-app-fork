@@ -8,7 +8,7 @@ import {
 	type LabelLocale,
 } from '@atcute/bluesky-moderation';
 
-import { type GlobalLabelStrings, getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
+import { getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
 
 import { matchesLanguage } from '#/locale/helpers';
@@ -23,12 +23,11 @@ interface LabelInfo {
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
 	const { labelDefs, labelers } = useLabelDefinitions();
-	const globalLabelStrings = getGlobalLabelStrings();
 	const def = getDefinition(labelDefs, label);
 	return {
 		label,
 		def,
-		strings: getLabelStrings(LOCALE, globalLabelStrings, def),
+		strings: getLabelStrings(LOCALE, def),
 		labeler: labelers.find((labeler) => label.src === labeler.creator.did),
 	};
 }
@@ -61,15 +60,11 @@ export function getDefinition(
 	});
 }
 
-export function getLabelStrings(
-	locale: string,
-	globalLabelStrings: GlobalLabelStrings,
-	def: InterpretedLabelDefinition,
-): LabelLocale {
-	// global/builtin labels carry their localized strings in `globalLabelStrings`, keyed by identifier
-	if (def.identifier in globalLabelStrings) {
-		const strings = globalLabelStrings[def.identifier]!;
-		return { lang: locale, name: strings.name, description: strings.description };
+export function getLabelStrings(locale: string, def: InterpretedLabelDefinition): LabelLocale {
+	// global/builtin labels carry their localized strings in the app, keyed by identifier
+	const globalStrings = getGlobalLabelStrings(def.identifier);
+	if (globalStrings) {
+		return { lang: locale, name: globalStrings.name, description: globalStrings.description };
 	}
 	// custom labels: try to find a locale match in the definition's own strings
 	const localeMatch = def.locales.find((strings) => matchesLanguage(locale, strings.lang));

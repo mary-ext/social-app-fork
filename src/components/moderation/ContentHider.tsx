@@ -15,7 +15,6 @@ import { sanitizeDisplayName } from '#/lib/display-names';
 import { isJustAMute } from '#/lib/moderation/causes';
 import { ADULT_CONTENT_LABELS } from '#/lib/moderation/self-labels';
 
-import { getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { getDefinition, getLabelStrings } from '#/state/moderation/use-label-info';
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
@@ -93,7 +92,6 @@ function ContentHiderActive({
 	const [override, setOverride] = useState(false);
 	const handle = Dialog.useDialogHandle();
 	const { labelDefs } = useLabelDefinitions();
-	const globalLabelStrings = getGlobalLabelStrings();
 	const blur = modui.blurs[0]!;
 	const desc = useModerationCauseDescription(blur);
 
@@ -136,7 +134,7 @@ function ContentHiderActive({
 				if (def.identifier === 'porn' || def.identifier === 'sexual') {
 					return m['common.moderation.adultContent']();
 				}
-				return getLabelStrings(LOCALE, globalLabelStrings, def).name;
+				return getLabelStrings(LOCALE, def).name;
 			});
 
 		if (selfBlurNames.length === 0) {

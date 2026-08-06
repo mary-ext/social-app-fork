@@ -217,7 +217,7 @@ function AdultContentLabelRow({ labelDefinition }: { labelDefinition: Interprete
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
 	const { isPending, mutate, variables } = usePreferencesSetContentLabelMutation();
-	const labelStrings = getGlobalLabelStrings()[identifier] ?? { description: '', name: identifier };
+	const labelStrings = getGlobalLabelStrings(identifier) ?? { description: '', name: identifier };
 
 	const saved = preferences
 		? resolveGlobalLabelPreference(preferences.moderationPrefs, labelDefinition)

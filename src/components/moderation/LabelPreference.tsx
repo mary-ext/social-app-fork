@@ -7,7 +7,6 @@ import type { Did } from '@atcute/lexicons';
 
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 
-import { getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
 import { getLabelStrings } from '#/state/moderation/use-label-info';
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
 
@@ -60,8 +59,7 @@ export function LabelerLabelRow({
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
 	const { isPending, mutate, variables } = usePreferencesSetContentLabelMutation();
-	const globalLabelStrings = getGlobalLabelStrings();
-	const labelStrings = getLabelStrings(LOCALE, globalLabelStrings, labelDefinition);
+	const labelStrings = getLabelStrings(LOCALE, labelDefinition);
 
 	const adultOnly = !!(labelDefinition.flags & LabelFlags.AdultOnly);
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
