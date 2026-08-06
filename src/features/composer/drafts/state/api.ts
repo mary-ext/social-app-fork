@@ -5,7 +5,6 @@ import type { GenericUri } from '@atcute/lexicons';
 import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
-import { getDeviceName } from '#/lib/device-name';
 import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions } from '#/lib/media/metadata';
@@ -71,7 +70,7 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
 	const draft: AppBskyDraftDefs.Draft = {
 		$type: 'app.bsky.draft.defs#draft',
 		deviceId: getDeviceId(),
-		deviceName: getDeviceName().slice(0, 100), // max length of 100 in lex
+		deviceName: 'Web',
 		posts,
 		threadgateAllow: threadgateAllowUISettingToAllowRecordValue(state.thread.threadgate),
 		postgateEmbeddingRules:

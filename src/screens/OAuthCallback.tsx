@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useCallOnce } from '#/lib/once';
+import { useCallOnce } from '#/lib/hooks/use-call-once';
 
 import { completeOAuthCallback } from '#/state/session';
 import { InactiveAccountError } from '#/state/session/agent';

@@ -2,8 +2,6 @@ import { type ComponentType, type SVGProps, useEffect, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import * as device from '#/lib/device-name';
-
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
@@ -19,6 +17,9 @@ import * as styles from './DraftItem.css';
 import { DraftRichText } from './DraftRichText';
 import type { DraftPostDisplay, DraftSummary } from './state/schema';
 import * as storage from './state/storage';
+
+/** what clients write when they cannot name the device, so they say nothing about which one it was. */
+const GENERIC_DEVICE_NAMES = new Set(['Android', 'iOS', 'Web']);
 
 export function DraftItem({
 	draft,
@@ -36,17 +37,8 @@ export function DraftItem({
 	const mediaIsMissing = draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia;
 	const hasMetadata = draft.meta.replyCount > 0 || mediaExistsOnOtherDevice || draft.meta.hasQuotes;
 
-	let isUnknownDevice: boolean;
-	switch (draft.draft.deviceName) {
-		case device.FALLBACK_ANDROID:
-		case device.FALLBACK_IOS:
-		case device.FALLBACK_WEB:
-			isUnknownDevice = true;
-			break;
-		default:
-			isUnknownDevice = false;
-			break;
-	}
+	const { deviceName } = draft.draft;
+	const isUnknownDevice = deviceName !== undefined && GENERIC_DEVICE_NAMES.has(deviceName);
 
 	const handleDelete = () => {
 		onDelete(draft);
@@ -74,7 +66,7 @@ export function DraftItem({
 									isUnknownDevice
 										? m['view.composer.media.storedOtherDevice']()
 										: m['view.composer.media.storedOn']({
-												deviceName: draft.draft.deviceName ?? '',
+												deviceName: deviceName ?? '',
 											})
 								}
 							/>

@@ -1,7 +1,3 @@
-import { useEffect } from 'react';
-
-import { useCallOnce } from '#/lib/once';
-
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
@@ -35,16 +31,6 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 	const { mutate: deleteDraft } = useDeleteDraftMutation();
 
 	const drafts = data?.pages.flatMap((page) => page.drafts) ?? [];
-
-	// Fire draft:listOpen metric when dialog opens and data is loaded
-	const draftCount = drafts.length;
-	const isDataReady = !isLoading && data !== undefined;
-	const onDraftListOpen = useCallOnce();
-	useEffect(() => {
-		if (isDataReady) {
-			onDraftListOpen(() => {});
-		}
-	}, [onDraftListOpen, isDataReady, draftCount]);
 
 	const handleSelectDraft = (summary: DraftSummary) => {
 		handle.close();

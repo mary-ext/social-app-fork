@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { useCallOnce } from '#/lib/once';
 
 import { usePreferencesQuery, useSetThreadViewPreferencesMutation } from '#/state/queries/preferences';
 import type { ThreadViewPreferences } from '#/state/queries/preferences/types';
@@ -25,7 +24,6 @@ export type ThreadPreferences = {
 export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadPreferences {
 	const { data: preferences } = usePreferencesQuery();
 	const serverPrefs = preferences?.threadViewPrefs;
-	const once = useCallOnce();
 
 	/*
 	 * Create local state representations of server state
@@ -52,8 +50,6 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 				treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
 			}),
 		);
-
-		once(() => {});
 	}
 
 	// latch set in the setters below (event callbacks, not render) and read + cleared after commit.
