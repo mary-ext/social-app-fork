@@ -9,6 +9,11 @@ this project uses React Compiler.
 
 - Node.js and pnpm are managed by mise
 - start the dev server with `pnpm dev` (rsbuild)
+  - always at http://127.0.0.1:19006
+  - if it's already running, use it as-is
+  - if port is used by another program: stop and report
+  - if you need to stop a server you did not spawn for any reason, like stale HMR issues, confirm
+    with the user.
 - build with `pnpm build` (rsbuild)
 - format with `pnpm format` (oxfmt)
 - lint and typecheck with `pnpm lint` (oxlint)
@@ -30,9 +35,6 @@ without `env -u`. check `agent-browser session` for the assigned session name an
 
 when the work does need the account, launch with the profile as-is. if it is already locked by
 another session, stop and report to the user rather than waiting or forcing it.
-
-if dev server opens on another port than :19006, copy the localStorage values from the :19006 origin
-to the new one.
 
 the first load of a page often comes up blank; reload once before you treat it as a bug. using curl
 tests nothing of value.
