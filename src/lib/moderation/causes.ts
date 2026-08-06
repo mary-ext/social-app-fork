@@ -1,21 +1,18 @@
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
-import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	BUILTIN_LABELS,
 	type DisplayRestrictions,
-	type InterpretedLabelDefinition,
 	type ModerationCause,
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
-import type { Did } from '@atcute/lexicons';
 
-import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import type { AppModerationCause } from '#/lib/moderation/types';
-
-export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
-export const OTHER_SELF_LABELS = ['graphic-media'] as const;
-const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS] as const;
-export type SelfLabel = (typeof SELF_LABELS)[number];
+export type AppModerationCause =
+	| ModerationCause
+	| {
+			type: 'reply-hidden';
+			source: { type: 'user'; did: string };
+			priority: 6;
+			downgraded?: boolean;
+	  };
 
 function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {
 	switch (cause.type) {
@@ -59,54 +56,4 @@ export function moduiContainsHideableOffense(modui: DisplayRestrictions): boolea
 
 export function labelIsHideableOffense(label: ComAtprotoLabelDefs.Label): boolean {
 	return ['!hide', '!takedown'].includes(label.val);
-}
-
-export function lookupLabelValueDefinition(
-	labelValue: string,
-	customDefs: InterpretedLabelDefinition[] | undefined,
-): InterpretedLabelDefinition | undefined {
-	let def;
-	if (!labelValue.startsWith('!') && customDefs) {
-		def = customDefs.find((d) => d.identifier === labelValue);
-	}
-	if (!def) {
-		def = BUILTIN_LABELS[labelValue];
-	}
-	return def;
-}
-
-export function isAppLabeler(
-	labeler: Did | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
-): boolean {
-	const did = typeof labeler === 'string' ? labeler : labeler.creator.did;
-	return did === BSKY_LABELER_DID;
-}
-
-type Subject =
-	| {
-			uri: string;
-			cid: string;
-	  }
-	| {
-			did: string;
-	  };
-
-export function useLabelSubject({ label }: { label: ComAtprotoLabelDefs.Label }): {
-	subject: Subject;
-} {
-	const { cid, uri } = label;
-	if (cid) {
-		return {
-			subject: {
-				uri,
-				cid,
-			},
-		};
-	} else {
-		return {
-			subject: {
-				did: uri,
-			},
-		};
-	}
 }

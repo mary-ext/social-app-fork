@@ -11,8 +11,8 @@ import { ok } from '@atcute/client';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
-import { toModerationPreferences } from '#/lib/moderation/prefs';
+import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation/causes';
+import { toModerationPreferences } from '#/lib/moderation/preferences';
 
 import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';

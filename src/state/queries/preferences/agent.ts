@@ -6,9 +6,8 @@ import * as TID from '@atcute/tid';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
+import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/preferences';
 import type {
-	AppBskyActorDefs as AtpActorDefs,
 	BskyFeedViewPreference,
 	BskyInterestsPreference,
 	BskyPreferences,
@@ -321,7 +320,10 @@ async function updateSavedFeedsV2Preferences(
  * @param pds the PDS client.
  * @param savedFeeds the saved feeds to write.
  */
-export async function overwriteSavedFeeds(pds: Client, savedFeeds: AtpActorDefs.SavedFeed[]): Promise<void> {
+export async function overwriteSavedFeeds(
+	pds: Client,
+	savedFeeds: AppBskyActorDefs.SavedFeed[],
+): Promise<void> {
 	savedFeeds.forEach(validateSavedFeed);
 	const uniqueSavedFeeds = new Map<string, AppBskyActorDefs.SavedFeed>();
 	savedFeeds.forEach((feed) => {
@@ -342,7 +344,7 @@ export async function overwriteSavedFeeds(pds: Client, savedFeeds: AtpActorDefs.
  */
 export async function updateSavedFeeds(
 	pds: Client,
-	savedFeedsToUpdate: AtpActorDefs.SavedFeed[],
+	savedFeedsToUpdate: AppBskyActorDefs.SavedFeed[],
 ): Promise<void> {
 	savedFeedsToUpdate.forEach(validateSavedFeed);
 	await updateSavedFeedsV2Preferences(pds, (savedFeeds) =>
@@ -365,7 +367,7 @@ export async function updateSavedFeeds(
  */
 export async function addSavedFeeds(
 	pds: Client,
-	savedFeeds: Pick<AtpActorDefs.SavedFeed, 'pinned' | 'type' | 'value'>[],
+	savedFeeds: Pick<AppBskyActorDefs.SavedFeed, 'pinned' | 'type' | 'value'>[],
 ): Promise<void> {
 	const toSave: AppBskyActorDefs.SavedFeed[] = savedFeeds.map((f) => ({ ...f, id: TID.now() }));
 	toSave.forEach(validateSavedFeed);
@@ -459,7 +461,7 @@ export async function removeContentLabelPref(pds: Client, key: string, labelerDi
  */
 export async function upsertMutedWords(
 	pds: Client,
-	mutedWords: Pick<AtpActorDefs.MutedWord, 'actorTarget' | 'expiresAt' | 'targets' | 'value'>[],
+	mutedWords: Pick<AppBskyActorDefs.MutedWord, 'actorTarget' | 'expiresAt' | 'targets' | 'value'>[],
 ): Promise<void> {
 	const newWords = mapDefined(mutedWords, (mutedWord): AppBskyActorDefs.MutedWord | undefined => {
 		const sanitizedValue = sanitizeMutedWordValue(mutedWord.value);
@@ -497,7 +499,7 @@ export async function upsertMutedWords(
  * @param pds the PDS client.
  * @param mutedWord the muted word to update (matched by `id`, falling back to value).
  */
-export async function updateMutedWord(pds: Client, mutedWord: AtpActorDefs.MutedWord): Promise<void> {
+export async function updateMutedWord(pds: Client, mutedWord: AppBskyActorDefs.MutedWord): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isMutedWordsPref);
 		if (!existing) {
@@ -532,7 +534,7 @@ export async function updateMutedWord(pds: Client, mutedWord: AtpActorDefs.Muted
  * @param pds the PDS client.
  * @param mutedWord the muted word to remove (matched by `id`, falling back to value).
  */
-export async function removeMutedWord(pds: Client, mutedWord: AtpActorDefs.MutedWord): Promise<void> {
+export async function removeMutedWord(pds: Client, mutedWord: AppBskyActorDefs.MutedWord): Promise<void> {
 	await removeMutedWords(pds, [mutedWord]);
 }
 
@@ -542,7 +544,7 @@ export async function removeMutedWord(pds: Client, mutedWord: AtpActorDefs.Muted
  * @param pds the PDS client.
  * @param mutedWords the muted words to remove (each matched by `id`, falling back to value).
  */
-export async function removeMutedWords(pds: Client, mutedWords: AtpActorDefs.MutedWord[]): Promise<void> {
+export async function removeMutedWords(pds: Client, mutedWords: AppBskyActorDefs.MutedWord[]): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isMutedWordsPref);
 		if (!existing) {
@@ -679,7 +681,7 @@ export async function setInterestsPref(pds: Client, pref: Partial<BskyInterestsP
  */
 export async function setPostInteractionSettings(
 	pds: Client,
-	settings: AtpActorDefs.PostInteractionSettingsPref,
+	settings: AppBskyActorDefs.PostInteractionSettingsPref,
 ): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const existing = prefs.findLast(isPostInteractionSettingsPref);
@@ -701,7 +703,7 @@ export async function setPostInteractionSettings(
  */
 export async function setVerificationPrefs(
 	pds: Client,
-	settings: AtpActorDefs.VerificationPrefs,
+	settings: AppBskyActorDefs.VerificationPrefs,
 ): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
 		const next: PrefOf<'app.bsky.actor.defs#verificationPrefs'> = {

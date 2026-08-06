@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { splitApexDomain } from '#/lib/strings/url-helpers';
+import { splitApexDomain } from '#/lib/links/trust';
 
 import * as Dialog from '#/components/Dialog';
 import type { LinkWarningPayload } from '#/components/dialogs/handles';

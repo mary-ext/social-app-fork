@@ -3,7 +3,7 @@ import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { videoThumbnailUrl } from '#/lib/bsky/video';
-import { isGifEmbed } from '#/lib/strings/embed-player';
+import { isGifEmbed } from '#/lib/media/embed-player';
 
 import * as styles from '#/components/MediaPreview.css';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';

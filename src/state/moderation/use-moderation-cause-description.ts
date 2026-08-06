@@ -2,8 +2,8 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
+import { BSKY_LABELER_DID } from '#/lib/moderation/labelers';
 
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { useSession } from '#/state/session';

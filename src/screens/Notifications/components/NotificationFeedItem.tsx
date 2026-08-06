@@ -25,9 +25,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-views';
 import { MAX_POST_LINES } from '#/lib/constants';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import { isAbortError } from '#/lib/errors';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { FeedNotification } from '#/state/queries/notifications/feed';

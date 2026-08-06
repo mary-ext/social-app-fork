@@ -11,9 +11,9 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
+import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';

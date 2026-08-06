@@ -1,4 +1,4 @@
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useLikedByQuery } from '#/state/queries/post-liked-by';

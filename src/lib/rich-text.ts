@@ -8,7 +8,8 @@ import { getGraphemeLength } from '@atcute/util-text';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
-import { isMisleadingLink, toShortUrl } from './url-helpers';
+import { isMisleadingLink } from '#/lib/links/trust';
+import { toShortUrl } from '#/lib/url';
 
 export type RichtextFacet = AppBskyRichtextFacet.Main;
 
@@ -187,4 +188,36 @@ export function bakeRichtext(segments: RichtextSegment[]): Richtext {
  */
 export function getShortenedLength(text: string): number {
 	return getGraphemeLength(toPlainText(shortenLinks(parseRichtext(text))));
+}
+
+/**
+ * converts rich text to publishable source text.
+ *
+ * @param rt the rich text
+ * @returns source text with full link targets
+ */
+export function richTextToSourceText(rt: Richtext): string {
+	return toPlainText(unshortenLinks(segmentizeRichtext(rt)));
+}
+
+/**
+ * converts rich text to copyable text with explicit link targets.
+ *
+ * @param rt the rich text
+ * @returns copyable text
+ */
+export function richTextToCopyableText(rt: Richtext): string {
+	let result = '';
+
+	for (const segment of segmentizeRichtext(rt)) {
+		if (segment.type !== 'link') {
+			result += segment.text;
+		} else if (isMisleadingLink(segment.uri, segment.text)) {
+			result += `[${segment.text}](${segment.uri})`;
+		} else {
+			result += segment.uri;
+		}
+	}
+
+	return result;
 }

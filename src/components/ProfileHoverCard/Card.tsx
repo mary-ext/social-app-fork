@@ -7,9 +7,9 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { ActorIdentifier } from '@atcute/lexicons';
 
-import { getModerationCauseKey } from '#/lib/moderation';
+import { cleanError } from '#/lib/errors';
+import { getModerationCauseKey } from '#/lib/moderation/causes';
 import { profileTarget } from '#/lib/routes/targets';
-import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

@@ -9,7 +9,7 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeDisplayName } from '#/lib/display-names';
 
 import { useSession } from '#/state/session';
 

@@ -4,8 +4,8 @@ import type { ModerationCause } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
-import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
+import { BSKY_LABELER_DID } from '#/lib/moderation/labelers';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 

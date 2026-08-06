@@ -1,7 +1,7 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';

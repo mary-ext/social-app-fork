@@ -6,8 +6,8 @@ import * as TID from '@atcute/tid';
 import { partition } from '@mary/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
+import { cleanError } from '#/lib/errors';
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { cleanError } from '#/lib/strings/errors';
 
 import {
 	type SavedFeedItem,

@@ -19,7 +19,7 @@ import { chunked } from '@mary/array-fns';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { labelIsHideableOffense } from '#/lib/moderation';
+import { labelIsHideableOffense } from '#/lib/moderation/causes';
 import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { precacheProfile } from '../profile';

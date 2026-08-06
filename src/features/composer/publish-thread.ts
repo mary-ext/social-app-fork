@@ -22,11 +22,11 @@ import { getPostRecord } from '#/lib/api/record-views';
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { task } from '#/lib/async/task';
+import { isNetworkError } from '#/lib/errors';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { compressImage } from '#/lib/media/composer-image';
-import { isNetworkError } from '#/lib/strings/errors';
-import { trimText } from '#/lib/strings/helpers';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/rich-text';
+import { trimText } from '#/lib/text';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import {

@@ -2,9 +2,9 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { isAbortError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
-import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useDevMode } from '#/state/preferences/dev-mode';

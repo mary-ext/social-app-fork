@@ -4,7 +4,7 @@ import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { STARTER_PACK_MAX_FEEDS, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { richTextToSourceText } from '#/lib/strings/rich-text-helpers';
+import { richTextToSourceText } from '#/lib/rich-text';
 
 import * as Toast from '#/components/Toast';
 

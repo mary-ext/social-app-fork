@@ -1,6 +1,6 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileKnownFollowersQuery } from '#/state/queries/known-followers';

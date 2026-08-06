@@ -1,4 +1,4 @@
-import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
+import type { EmbedPlayerSource } from '#/lib/media/embed-player';
 
 import { device, useStorageValue } from '#/storage';
 

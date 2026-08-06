@@ -17,9 +17,9 @@ import { getStarterPackRecord } from '#/lib/api/record-views';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { until } from '#/lib/async/until';
+import { makeRecordUri } from '#/lib/at-uri';
 import { createStarterPackList } from '#/lib/generate-starterpack';
-import { httpStarterPackUriToAtUri, parseStarterPackUri } from '#/lib/strings/starter-pack';
-import { makeRecordUri } from '#/lib/strings/url-helpers';
+import { httpStarterPackUriToAtUri, parseStarterPackUri } from '#/lib/starter-pack';
 
 import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';

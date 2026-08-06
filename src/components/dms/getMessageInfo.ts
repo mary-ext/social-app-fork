@@ -1,9 +1,9 @@
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
+import { profileDisplayName } from '#/lib/display-names';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
-import { profileDisplayName } from '#/lib/strings/display-names';
-import { toShortUrl } from '#/lib/strings/url-helpers';
+import { toShortUrl } from '#/lib/url';
 
 import { m } from '#/paraglide/messages';
 

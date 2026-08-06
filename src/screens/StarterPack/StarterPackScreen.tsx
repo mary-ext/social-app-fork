@@ -13,7 +13,7 @@ import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { starterPackTarget } from '#/lib/routes/targets';
-import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+import { getStarterPackOgCard } from '#/lib/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

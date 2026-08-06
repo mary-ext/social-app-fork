@@ -1,8 +1,7 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
+import { profileDisplayName, isInvalidHandle } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
-import { profileDisplayName } from '#/lib/strings/display-names';
-import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';

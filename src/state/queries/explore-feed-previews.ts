@@ -11,8 +11,8 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
+import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { cleanError } from '#/lib/strings/errors';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

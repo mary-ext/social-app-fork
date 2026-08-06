@@ -37,3 +37,11 @@ export const resolveGlobalLabelPreference = (
 	moderationPrefs: BskyPreferences['moderationPrefs'],
 	labelDefinition: InterpretedLabelDefinition,
 ): LabelVisibility => moderationPrefs.labels[labelDefinition.identifier] ?? labelDefinition.defaultPref;
+
+/** default visibility for the self-applied adult/graphic labels when the user has no stored preference. */
+export const DEFAULT_LABEL_SETTINGS: Record<string, LabelVisibility> = {
+	'graphic-media': 'warn',
+	nudity: 'ignore',
+	porn: 'hide',
+	sexual: 'warn',
+};

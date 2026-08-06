@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
-import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
+import type { EmbedPlayerParams } from '#/lib/media/embed-player';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
 

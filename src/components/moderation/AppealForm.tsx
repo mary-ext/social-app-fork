@@ -6,7 +6,6 @@ import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { useLabelSubject } from '#/lib/moderation';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { profileTarget } from '#/lib/routes/targets';
 
@@ -39,7 +38,9 @@ export interface AppealFormProps {
 export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 	const { labeler, strings } = useLabelInfo(label);
 	const [details, setDetails] = useState('');
-	const { subject } = useLabelSubject({ label });
+	// a label on a record carries a cid and appeals as a strong ref; one on an account has none and
+	// appeals as a repo ref.
+	const subject = label.cid ? { uri: label.uri, cid: label.cid } : { did: label.uri };
 	const { pds } = getClients();
 	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const [error, setError] = useState<string | null>(null);
@@ -52,7 +53,7 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 			// the appeal is funnelled to the labeler that applied the label
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
 			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `useLabelSubject` already split this into a repo ref or a strong ref
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
 			const ref = (
 				'did' in subject
 					? { $type: 'com.atproto.admin.defs#repoRef', ...subject }

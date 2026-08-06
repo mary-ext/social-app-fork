@@ -28,8 +28,8 @@ import {
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
+import { isInvalidHandle } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { focusSearch } from '#/state/events';
 import {

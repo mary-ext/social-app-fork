@@ -6,8 +6,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { Trans } from '#/locale/Trans';
 

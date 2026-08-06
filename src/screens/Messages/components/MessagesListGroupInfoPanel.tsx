@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName } from '#/lib/display-names';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';

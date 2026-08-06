@@ -7,10 +7,10 @@ import {
 
 import { clsx } from 'clsx';
 
-import { isAppLabeler } from '#/lib/moderation';
-import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
+import { profileDisplayName } from '#/lib/display-names';
+import { isAppLabeler } from '#/lib/moderation/labelers';
+import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 import { labelsTarget } from '#/lib/routes/targets';
-import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';

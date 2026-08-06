@@ -1,7 +1,7 @@
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { Text } from '#/components/Text';
 

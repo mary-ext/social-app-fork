@@ -11,8 +11,9 @@ import { unique } from '@mary/array-fns';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 
-import { ADULT_CONTENT_LABELS, isJustAMute } from '#/lib/moderation';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import { isJustAMute } from '#/lib/moderation/causes';
+import { ADULT_CONTENT_LABELS } from '#/lib/moderation/self-labels';
 
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';

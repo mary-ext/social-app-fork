@@ -23,12 +23,12 @@ import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES } from '#/lib/constants';
+import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
-import { cleanError } from '#/lib/strings/errors';
 
 import { postCreated } from '#/state/events';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';

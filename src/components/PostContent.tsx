@@ -1,8 +1,8 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
-import type { AppModerationCause } from '#/lib/moderation/types';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import type { AppModerationCause } from '#/lib/moderation/causes';
+import type { Richtext } from '#/lib/rich-text';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { ContentHider } from '#/components/moderation/ContentHider';

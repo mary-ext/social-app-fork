@@ -6,7 +6,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';

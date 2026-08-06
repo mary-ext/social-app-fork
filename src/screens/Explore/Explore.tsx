@@ -2,8 +2,8 @@ import { type ComponentType, type SVGProps, useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
+import { cleanError } from '#/lib/errors';
 import { useInterestsDisplayNames } from '#/lib/interests';
-import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';

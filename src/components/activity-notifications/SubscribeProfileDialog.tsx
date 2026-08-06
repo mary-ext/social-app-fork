@@ -10,7 +10,7 @@ import { ok } from '@atcute/client';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';

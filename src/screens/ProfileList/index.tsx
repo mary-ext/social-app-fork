@@ -5,7 +5,7 @@ import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bl
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListQuery } from '#/state/queries/list';

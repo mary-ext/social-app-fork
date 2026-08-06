@@ -12,10 +12,10 @@ import { weightedIndex } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { getModerationCauseKey } from '#/lib/moderation';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import { isAbortError } from '#/lib/errors';
+import { getModerationCauseKey } from '#/lib/moderation/causes';
 import { profileTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';

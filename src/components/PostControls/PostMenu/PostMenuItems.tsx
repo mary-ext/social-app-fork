@@ -8,9 +8,8 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { isAbortError } from '#/lib/strings/errors';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
-import { richTextToCopyableText } from '#/lib/strings/rich-text-helpers';
+import { isAbortError } from '#/lib/errors';
+import { type Richtext, richTextToCopyableText } from '#/lib/rich-text';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';

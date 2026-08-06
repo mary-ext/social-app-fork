@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';

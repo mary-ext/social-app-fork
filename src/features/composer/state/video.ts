@@ -5,12 +5,12 @@ import type { Blob as AtpBlob } from '@atcute/lexicons';
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { AbortError } from '#/lib/async/cancelable';
 import { LOCAL_DEV_SERVICE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
+import { isNetworkError } from '#/lib/errors';
 import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoClient } from '#/lib/media/video/util';
-import { isNetworkError } from '#/lib/strings/errors';
 
 import { m } from '#/paraglide/messages';
 

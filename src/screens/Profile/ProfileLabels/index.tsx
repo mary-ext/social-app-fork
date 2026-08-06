@@ -7,10 +7,10 @@ import type { Did } from '@atcute/lexicons';
 import { mapDefined, unique } from '@mary/array-fns';
 
 import { MAX_LABELERS } from '#/lib/constants';
-import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation';
+import { combinedDisplayName, profileDisplayName } from '#/lib/display-names';
+import { cleanError } from '#/lib/errors';
+import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation/labelers';
 import { profileTarget } from '#/lib/routes/targets';
-import { combinedDisplayName, profileDisplayName } from '#/lib/strings/display-names';
-import { cleanError } from '#/lib/strings/errors';
 
 import { useLabelerInfoQuery, useLabelerSubscriptionMutation } from '#/state/queries/labeler';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';

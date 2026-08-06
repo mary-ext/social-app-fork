@@ -1,6 +1,6 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useDeleteStarterPackMutation } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';

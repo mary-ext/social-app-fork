@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { profileTarget } from '#/lib/routes/targets';
-import { toNiceDomain } from '#/lib/strings/url-helpers';
+import { toNiceDomain } from '#/lib/url';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';

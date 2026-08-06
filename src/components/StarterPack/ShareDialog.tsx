@@ -1,6 +1,6 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+import { getStarterPackOgCard } from '#/lib/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
 import { EmbedThumb } from '#/components/EmbedThumb';

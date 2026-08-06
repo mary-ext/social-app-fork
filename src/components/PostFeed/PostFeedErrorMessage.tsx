@@ -3,8 +3,8 @@ import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { cleanError, errorToString } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
-import { cleanError, errorToString } from '#/lib/strings/errors';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';

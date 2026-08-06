@@ -2,7 +2,7 @@ import type { ComponentType, SVGProps } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { profileDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName } from '#/lib/display-names';
 
 import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
 import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';

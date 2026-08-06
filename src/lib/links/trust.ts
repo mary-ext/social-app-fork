@@ -1,13 +1,4 @@
-import type {
-	ActorIdentifier,
-	CanonicalResourceUri,
-	Did,
-	Nsid,
-	RecordKey,
-	ResourceUri,
-} from '@atcute/lexicons/syntax';
-
-import { BSKY_SERVICE } from '#/lib/constants';
+import { safeUrlParse } from '#/lib/url';
 
 const BSKY_TRUSTED_HOSTS = new Set([
 	'blueskyweb.xyz',
@@ -16,48 +7,6 @@ const BSKY_TRUSTED_HOSTS = new Set([
 	'bsky.social',
 	...(import.meta.env.DEV ? ['localhost:19006'] : []),
 ]);
-
-/**
- * builds the at-uri for a record.
- *
- * @param repo the repo holding the record; a did yields a canonical uri, a handle a resolvable one
- * @param collection the record's collection nsid
- * @param rkey the record key
- * @returns the at-uri
- */
-export function makeRecordUri(repo: Did, collection: Nsid, rkey: RecordKey): CanonicalResourceUri;
-export function makeRecordUri(repo: ActorIdentifier, collection: Nsid, rkey: RecordKey): ResourceUri;
-export function makeRecordUri(repo: ActorIdentifier, collection: Nsid, rkey: RecordKey): ResourceUri {
-	return `at://${repo}/${collection}/${rkey}`;
-}
-
-export function toNiceDomain(url: string): string {
-	try {
-		const urlp = new URL(url);
-		if (`https://${urlp.host}` === BSKY_SERVICE) {
-			return 'Bluesky Social';
-		}
-		return urlp.host ? urlp.host : url;
-	} catch {
-		return url;
-	}
-}
-
-export function toShortUrl(url: string): string {
-	try {
-		const urlp = new URL(url);
-		if (urlp.protocol !== 'http:' && urlp.protocol !== 'https:') {
-			return url;
-		}
-		const path = (urlp.pathname === '/' ? '' : urlp.pathname) + urlp.search + urlp.hash;
-		if (path.length > 15) {
-			return urlp.host + path.slice(0, 13) + '...';
-		}
-		return urlp.host + path;
-	} catch {
-		return url;
-	}
-}
 
 /**
  * whether a link target is trusted, i.e. safe to navigate to without a leaving-the-app warning. relative
@@ -143,58 +92,3 @@ export async function splitApexDomain(hostname: string): Promise<[string, string
 	}
 	return [parsed.subdomain ? `${parsed.subdomain}.` : '', parsed.domain];
 }
-
-function getHostnameFromUrl(url: string | URL): string | null {
-	let urlp;
-	try {
-		urlp = new URL(url);
-	} catch {
-		return null;
-	}
-	return urlp.hostname;
-}
-
-export function getServiceAuthAudFromUrl(url: string | URL): Did | null {
-	const hostname = getHostnameFromUrl(url);
-	if (!hostname) {
-		return null;
-	}
-	return `did:web:${hostname}`;
-}
-
-/**
- * parses a user-entered URL, assuming https when no scheme is given.
- *
- * @param text the user-entered URL
- * @returns the normalized URL string, or null if the input is not a usable URL
- */
-export const parseLooseUrl = (text: string): string | null => {
-	const trimmed = text.trim();
-	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-	return parseLinkableUrl(candidate)?.href ?? null;
-};
-
-/**
- * parses a string into a URL, accepting only HTTP(S) URLs with a genuine dotted host.
- *
- * @param text the URL string to parse
- * @returns the parsed URL, or null if invalid or lacking a real host
- */
-export const parseLinkableUrl = (text: string): URL | null => {
-	const url = safeUrlParse(text);
-	if (url === null || !url.hostname.includes('.') || url.hostname.endsWith('.')) {
-		return null;
-	}
-	return url;
-};
-
-/**
- * parses a string into a URL, accepting only safe http(s) schemes.
- *
- * @param text the URL string to parse
- * @returns the parsed URL, or null if invalid or unsafe
- */
-export const safeUrlParse = (text: string): URL | null => {
-	const url = URL.parse(text);
-	return url !== null && (url.protocol === 'http:' || url.protocol === 'https:') ? url : null;
-};

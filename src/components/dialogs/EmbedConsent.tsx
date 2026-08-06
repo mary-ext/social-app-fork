@@ -1,4 +1,4 @@
-import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
+import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/media/embed-player';
 
 import { setExternalEmbedPref } from '#/state/preferences/external-embeds';
 

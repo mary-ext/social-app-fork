@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { resolveShortLink } from '#/lib/links/short-link';
-import { parseStarterPackUri } from '#/lib/strings/starter-pack';
+import { parseStarterPackUri } from '#/lib/starter-pack';
 
 import { STALE } from '#/state/queries/index';
 

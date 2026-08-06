@@ -12,10 +12,9 @@ import { definite } from '@mary/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { combinedDisplayName, isInvalidHandle } from '#/lib/display-names';
+import { cleanError } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
-import { combinedDisplayName } from '#/lib/strings/display-names';
-import { cleanError } from '#/lib/strings/errors';
-import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { softReset } from '#/state/events';

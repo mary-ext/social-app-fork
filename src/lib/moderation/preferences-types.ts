@@ -7,8 +7,6 @@ import type { Did } from '@atcute/lexicons';
  * not on `@atcute/bluesky-moderation`'s engine types.
  */
 
-export type { AppBskyActorDefs };
-
 /** The app's persisted visibility setting for a moderation label. */
 export type LabelVisibility = 'hide' | 'ignore' | 'warn';
 

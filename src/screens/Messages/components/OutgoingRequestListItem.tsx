@@ -1,7 +1,7 @@
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 
-import { isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/errors';
 
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 

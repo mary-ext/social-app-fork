@@ -3,8 +3,8 @@ import { useState } from 'react';
 import type { Handle } from '@atcute/lexicons';
 
 import { MAX_POST_LINES } from '#/lib/constants';
-import { countLines } from '#/lib/strings/helpers';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/rich-text';
+import { countLines } from '#/lib/text';
 
 import { RichText } from '#/components/RichText';
 

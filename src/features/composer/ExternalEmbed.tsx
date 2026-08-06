@@ -3,9 +3,9 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { useBlobUrl } from '#/lib/blob-url';
+import { cleanError } from '#/lib/errors';
 import type { Gif } from '#/lib/gif';
-import { cleanError } from '#/lib/strings/errors';
-import { toNiceDomain } from '#/lib/strings/url-helpers';
+import { toNiceDomain } from '#/lib/url';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
 

@@ -4,9 +4,9 @@ import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
+import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';

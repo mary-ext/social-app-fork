@@ -5,7 +5,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { resolveGlobalLabelPreference } from '#/lib/moderation/prefs';
+import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 
 import { useGlobalLabelStrings } from '#/state/moderation/use-global-label-strings';
 import { getLabelStrings } from '#/state/moderation/use-label-info';

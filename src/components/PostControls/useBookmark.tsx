@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';

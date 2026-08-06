@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { isAbortError } from '#/lib/strings/errors';
+import { isAbortError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';

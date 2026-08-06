@@ -1,3 +1,4 @@
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { LabelPreference } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
@@ -5,8 +6,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
-import { APP_LABELERS } from '#/lib/moderation/const';
-import type { AppBskyActorDefs, BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
+import { APP_LABELERS } from '#/lib/moderation/labelers';
+import type { BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 
 import { GCTIME, STALE } from '#/state/queries';
 import {

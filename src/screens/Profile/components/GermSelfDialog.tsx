@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
-import { errorMessage } from '#/lib/strings/errors';
+import { errorMessage } from '#/lib/errors';
 
 import { RQKEY } from '#/state/queries/profile';
 import { getClients } from '#/state/session';

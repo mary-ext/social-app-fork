@@ -3,12 +3,11 @@ import { useEffect, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
+import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
 import type { ImageMeta } from '#/lib/media/composer-image';
-import { cleanError } from '#/lib/strings/errors';
-import { isOverMaxGraphemeCount, trimText } from '#/lib/strings/helpers';
-import { getShortenedLength } from '#/lib/strings/rich-text-facets';
-import { richTextToSourceText } from '#/lib/strings/rich-text-helpers';
+import { getShortenedLength, richTextToSourceText } from '#/lib/rich-text';
+import { isOverMaxGraphemeCount, trimText } from '#/lib/text';
 
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { getClients } from '#/state/session';

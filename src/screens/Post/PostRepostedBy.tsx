@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
-import { makeRecordUri } from '#/lib/strings/url-helpers';
+import { makeRecordUri } from '#/lib/at-uri';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';

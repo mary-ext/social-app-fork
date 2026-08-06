@@ -4,15 +4,10 @@ import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import { isOnlyEmoji } from '#/lib/emoji';
+import { parseRichtext, type Richtext, segmentizeRichtext, toPlainText } from '#/lib/rich-text';
 import { profileTarget } from '#/lib/routes/targets';
-import { isOnlyEmoji } from '#/lib/strings/emoji';
-import {
-	parseRichtext,
-	type Richtext,
-	segmentizeRichtext,
-	toPlainText,
-} from '#/lib/strings/rich-text-facets';
-import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
+import { parseLinkableUrl, toShortUrl } from '#/lib/url';
 
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { atomicSegment, emoji } from '#/components/RichText.css';

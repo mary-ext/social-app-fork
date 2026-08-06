@@ -1,7 +1,8 @@
 import { type KeyboardEvent, useState } from 'react';
 
-import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
-import { errorMessage } from '#/lib/strings/errors';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+
+import { errorMessage } from '#/lib/errors';
 
 import { useUpsertMutedWordsMutation } from '#/state/queries/preferences';
 import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';

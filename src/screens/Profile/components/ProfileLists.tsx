@@ -1,7 +1,7 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileListsQuery } from '#/state/queries/profile-lists';

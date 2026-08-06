@@ -6,8 +6,8 @@ import type { $type } from '@atcute/lexicons';
 import { resolvePublishedRichtext } from '#/lib/api/richtext';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
-import { trimText } from '#/lib/strings/helpers';
-import { parseRichtext } from '#/lib/strings/rich-text-facets';
+import { parseRichtext } from '#/lib/rich-text';
+import { trimText } from '#/lib/text';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import type { ConvoState } from '#/state/messages/convo/types';

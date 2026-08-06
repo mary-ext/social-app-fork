@@ -4,7 +4,7 @@ import { uniqueBy } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
-import { getModerationCauseKey } from '#/lib/moderation';
+import { getModerationCauseKey } from '#/lib/moderation/causes';
 
 import * as Pills from '#/components/web/Pills';
 

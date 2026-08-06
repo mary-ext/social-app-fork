@@ -5,8 +5,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useFocusEffect } from '@oomfware/stacker';
 
+import { isAbortError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { isAbortError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';

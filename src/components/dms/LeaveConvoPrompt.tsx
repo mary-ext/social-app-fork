@@ -1,6 +1,6 @@
 import { ClientResponseError } from '@atcute/client';
 
-import { isNetworkError } from '#/lib/strings/errors';
+import { isNetworkError } from '#/lib/errors';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 

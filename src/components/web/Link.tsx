@@ -3,8 +3,9 @@ import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import { isMisleadingLink } from '#/lib/links/trust';
 import { resolveUrl } from '#/lib/routes/app-links';
-import { isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
+import { safeUrlParse } from '#/lib/url';
 
 import { groupChatJoinHandle, linkWarningDialogHandle } from '#/components/dialogs/handles';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';

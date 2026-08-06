@@ -2,9 +2,9 @@ import { useId, useMemo, useReducer, useState } from 'react';
 
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
-import { BSKY_LABELER_DID } from '#/lib/moderation/const';
-import { profileDisplayName } from '#/lib/strings/display-names';
-import { trimText } from '#/lib/strings/helpers';
+import { profileDisplayName } from '#/lib/display-names';
+import { BSKY_LABELER_DID } from '#/lib/moderation/labelers';
+import { trimText } from '#/lib/text';
 
 import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
 

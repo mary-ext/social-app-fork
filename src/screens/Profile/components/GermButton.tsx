@@ -1,7 +1,7 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
-import { safeUrlParse } from '#/lib/strings/url-helpers';
+import { safeUrlParse } from '#/lib/url';
 
 import { useSession } from '#/state/session';
 

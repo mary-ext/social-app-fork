@@ -2,8 +2,8 @@ import { ClientResponseError } from '@atcute/client';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { isNetworkError } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
-import { isNetworkError } from '#/lib/strings/errors';
 
 import {
 	invalidateJoinLinkPreviewsForCode,

@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { cleanError } from '#/lib/strings/errors';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';

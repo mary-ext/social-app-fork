@@ -2,9 +2,9 @@ import { useCallback, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
-import { cleanError } from '#/lib/strings/errors';
-import { parseLooseUrl } from '#/lib/strings/url-helpers';
+import { parseLooseUrl } from '#/lib/url';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useTick } from '#/state/tick';

@@ -26,9 +26,9 @@ import {
 } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import type { Richtext, RichtextFacet } from '#/lib/rich-text';
 import { feedTarget, listTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import type { Richtext, RichtextFacet } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';

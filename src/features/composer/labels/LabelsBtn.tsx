@@ -1,6 +1,6 @@
 import { unique } from '@mary/array-fns';
 
-import { ADULT_CONTENT_LABELS, OTHER_SELF_LABELS, type SelfLabel } from '#/lib/moderation';
+import { ADULT_CONTENT_LABELS, OTHER_SELF_LABELS, type SelfLabel } from '#/lib/moderation/self-labels';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';

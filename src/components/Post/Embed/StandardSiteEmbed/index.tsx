@@ -14,7 +14,7 @@ import {
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { toNiceDomain } from '#/lib/strings/url-helpers';
+import { toNiceDomain } from '#/lib/url';
 
 import { niceDate } from '#/locale/intl/datetime';
 

@@ -1,7 +1,8 @@
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+
 import { definite } from '@mary/array-fns';
 
-import type { AppBskyActorDefs } from '#/lib/moderation/preferences-types';
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import {
 	usePreferencesQuery,

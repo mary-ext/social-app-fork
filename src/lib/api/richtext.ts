@@ -1,13 +1,7 @@
 import type { Client } from '@atcute/client';
 
 import { createHandleResolver } from '#/lib/api/identity';
-import {
-	bakeRichtext,
-	parseRichtext,
-	resolveMentions,
-	type Richtext,
-	shortenLinks,
-} from '#/lib/strings/rich-text-facets';
+import { bakeRichtext, parseRichtext, resolveMentions, type Richtext, shortenLinks } from '#/lib/rich-text';
 
 /**
  * creates publishable rich text with resolved mentions and shortened links.

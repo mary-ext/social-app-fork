@@ -3,7 +3,7 @@ import { ok } from '@atcute/client';
 
 import { internalClient } from '#/lib/api/internal-client';
 import { isClientUrl, resolveUrlToLink } from '#/lib/links/app-url';
-import { getGiphyMetaUri } from '#/lib/strings/embed-player';
+import { getGiphyMetaUri } from '#/lib/media/embed-player';
 
 export interface LinkMeta {
 	/** standard.site record refs resolved from the page. */

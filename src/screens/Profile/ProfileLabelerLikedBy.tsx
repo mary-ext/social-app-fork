@@ -1,4 +1,4 @@
-import { makeRecordUri } from '#/lib/strings/url-helpers';
+import { makeRecordUri } from '#/lib/at-uri';
 
 import { useTitle } from '#/state/use-title';
 

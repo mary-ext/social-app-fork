@@ -2,8 +2,8 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { cleanError } from '#/lib/strings/errors';
-import { makeRecordUri } from '#/lib/strings/url-helpers';
+import { makeRecordUri } from '#/lib/at-uri';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';

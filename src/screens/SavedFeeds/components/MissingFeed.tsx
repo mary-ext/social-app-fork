@@ -1,6 +1,6 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { getFeedTypeFromUri } from '#/state/queries/feed';

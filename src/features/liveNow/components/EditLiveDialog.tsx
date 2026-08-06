@@ -4,9 +4,9 @@ import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { differenceInMinutes } from '@mary/date-fns';
 
+import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
-import { cleanError } from '#/lib/strings/errors';
-import { parseLooseUrl } from '#/lib/strings/url-helpers';
+import { parseLooseUrl } from '#/lib/url';
 
 import { useTick } from '#/state/tick';
 

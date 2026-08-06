@@ -2,8 +2,8 @@ import type { ReactElement } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
+import { isAbortError } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
-import { isAbortError } from '#/lib/strings/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';

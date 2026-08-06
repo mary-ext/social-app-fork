@@ -4,7 +4,7 @@ import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDe
 
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';

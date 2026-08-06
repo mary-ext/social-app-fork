@@ -1,6 +1,6 @@
 import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
 

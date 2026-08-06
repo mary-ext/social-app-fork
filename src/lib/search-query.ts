@@ -232,3 +232,8 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 
 	return { filters, text: kept.join(' ') };
 };
+
+export function normalizeSearchQuery(query: string) {
+	// some keyboards add fancy unicode quotes, but only normal ones work
+	return query.replaceAll(/[“”]/g, '"');
+}

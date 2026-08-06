@@ -2,8 +2,8 @@ import { createContext, useContext } from 'react';
 
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { APP_LABELERS } from '#/lib/moderation/const';
-import { toModerationPreferences } from '#/lib/moderation/prefs';
+import { APP_LABELERS } from '#/lib/moderation/labelers';
+import { toModerationPreferences } from '#/lib/moderation/preferences';
 
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';

@@ -1,6 +1,7 @@
 import { interpretLabelerDefinition } from '@atcute/bluesky-moderation';
 
-import { APP_LABELERS, DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
+import { APP_LABELERS } from '#/lib/moderation/labelers';
+import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/preferences';
 
 import { useLabelersDetailedInfoQuery } from '../labeler';
 import { usePreferencesQuery } from './index';

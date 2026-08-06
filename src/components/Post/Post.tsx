@@ -13,8 +13,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
+import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';

@@ -2,7 +2,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { difference } from '@mary/array-fns';
 
-import { APP_LABELERS, BSKY_LABELER_DID } from '#/lib/moderation/const';
+import { APP_LABELERS, BSKY_LABELER_DID } from '#/lib/moderation/labelers';
 
 import { account as accountStore } from '#/storage';
 

@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import type { ActorIdentifier } from '@atcute/lexicons';
 
+import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { cleanError } from '#/lib/strings/errors';
-import { enforceLen } from '#/lib/strings/helpers';
+import { enforceLen } from '#/lib/text';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';

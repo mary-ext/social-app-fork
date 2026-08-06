@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { richTextToCopyableText } from '#/lib/strings/rich-text-helpers';
+import { richTextToCopyableText } from '#/lib/rich-text';
 
 import { useSession } from '#/state/session';
 

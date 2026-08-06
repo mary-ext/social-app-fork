@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { makeRecordUri } from '#/lib/at-uri';
 import { TRENDING_DID } from '#/lib/constants';
-import { cleanError } from '#/lib/strings/errors';
-import { makeRecordUri } from '#/lib/strings/url-helpers';
+import { cleanError } from '#/lib/errors';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';

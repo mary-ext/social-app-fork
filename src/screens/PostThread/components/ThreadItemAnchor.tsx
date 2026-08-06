@@ -12,10 +12,10 @@ import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-views';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import type { AppModerationCause } from '#/lib/moderation/causes';
 import { triangularRandom } from '#/lib/numbers';
+import type { Richtext } from '#/lib/rich-text';
 import { profileTarget } from '#/lib/routes/targets';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';

@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { isCancelledError } from '#/lib/errors';
 import {
 	type ComposerImage,
 	compressProfileImage,
@@ -9,7 +10,6 @@ import {
 	type ImageMeta,
 } from '#/lib/media/composer-image';
 import { openImagePicker } from '#/lib/media/picker';
-import { isCancelledError } from '#/lib/strings/errors';
 
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableUserAvatar.css';

@@ -57,3 +57,8 @@ export function combinedDisplayName({
 	}
 	return displayName ? `${sanitizeDisplayName(displayName)} (@${handle})` : `@${handle}`;
 }
+
+/** whether a handle is the `handle.invalid` sentinel the appview returns for an unresolvable handle. */
+export function isInvalidHandle(handle: string): boolean {
+	return handle === 'handle.invalid';
+}

@@ -3,7 +3,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName } from '#/lib/display-names';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';

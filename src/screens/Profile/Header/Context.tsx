@@ -9,8 +9,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { isAbortError } from '#/lib/strings/errors';
+import { sanitizeDisplayName } from '#/lib/display-names';
+import { isAbortError } from '#/lib/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';

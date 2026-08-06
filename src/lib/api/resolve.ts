@@ -4,6 +4,7 @@ import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
+import { makeRecordUri } from '#/lib/at-uri';
 import type { Gif } from '#/lib/gif';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
@@ -11,7 +12,6 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/image';
-import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 type ResolvedExternalLink = {
 	type: 'external';

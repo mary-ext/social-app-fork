@@ -2,12 +2,22 @@ import { type Client, ok } from '@atcute/client';
 import type { Did, Nsid } from '@atcute/lexicons';
 
 import { UploadLimitError } from '#/lib/media/video/errors';
-import { getServiceAuthAudFromUrl } from '#/lib/strings/url-helpers';
 
 import { VIDEO_PROXY_DID } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import { createVideoClient } from './util';
+
+/** the `did:web` audience naming the service behind a URL, or null when the URL has no host. */
+function serviceAuthAudience(url: string | URL): Did | null {
+	let hostname;
+	try {
+		hostname = new URL(url).hostname;
+	} catch {
+		return null;
+	}
+	return `did:web:${hostname}`;
+}
 
 /**
  * mints a short-lived service-auth token on the user's PDS.
@@ -32,7 +42,7 @@ export async function getServiceAuthToken({
 	lxm: Nsid;
 	exp?: number;
 }) {
-	const pdsAud = getServiceAuthAudFromUrl(dispatchUrl);
+	const pdsAud = serviceAuthAudience(dispatchUrl);
 	if (!pdsAud) {
 		throw new Error('Agent does not have a PDS URL');
 	}

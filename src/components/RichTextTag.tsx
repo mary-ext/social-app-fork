@@ -4,7 +4,7 @@ import type { Handle } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
-import { isInvalidHandle } from '#/lib/strings/handles';
+import { isInvalidHandle } from '#/lib/display-names';
 
 import {
 	usePreferencesQuery,

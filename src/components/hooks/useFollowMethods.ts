@@ -1,6 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { isAbortError } from '#/lib/strings/errors';
+import { isAbortError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';

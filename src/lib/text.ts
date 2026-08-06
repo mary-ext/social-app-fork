@@ -59,7 +59,3 @@ export function countLines(str: string | undefined): number {
  * @param query the raw query as typed by the user
  * @returns the query with “smart quotes” replaced by normal ones
  */
-export function normalizeSearchQuery(query: string) {
-	// some keyboards add fancy unicode quotes, but only normal ones work
-	return query.replaceAll(/[“”]/g, '"');
-}

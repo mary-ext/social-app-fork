@@ -5,11 +5,11 @@ import { isDid, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useParams, useRoute } from '@oomfware/stacker';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { profileDisplayName, sanitizeDisplayName } from '#/lib/display-names';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { starterPackTarget } from '#/lib/routes/targets';
-import { profileDisplayName, sanitizeDisplayName } from '#/lib/strings/display-names';
-import { enforceLen, trimText } from '#/lib/strings/helpers';
-import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
+import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/starter-pack';
+import { enforceLen, trimText } from '#/lib/text';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAllListMembersQuery } from '#/state/queries/list-members';

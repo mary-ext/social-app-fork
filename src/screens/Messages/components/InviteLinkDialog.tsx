@@ -8,8 +8,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { profileDisplayName } from '#/lib/display-names';
 import { targetToShareUrl } from '#/lib/routes/app-links';
-import { profileDisplayName } from '#/lib/strings/display-names';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
 import { useDisableJoinLink } from '#/state/queries/messages/disable-join-link';

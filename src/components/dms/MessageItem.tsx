@@ -5,9 +5,9 @@ import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { profileDisplayName } from '#/lib/display-names';
+import { isOnlyEmoji } from '#/lib/emoji';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { profileDisplayName } from '#/lib/strings/display-names';
-import { isOnlyEmoji } from '#/lib/strings/emoji';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';

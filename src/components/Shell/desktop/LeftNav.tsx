@@ -6,10 +6,9 @@ import { mapDefined } from '@mary/array-fns';
 
 import { clsx } from 'clsx';
 
+import { sanitizeDisplayName, isInvalidHandle } from '#/lib/display-names';
 import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { profileTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { isInvalidHandle } from '#/lib/strings/handles';
 
 import { softReset } from '#/state/events';
 import { useFetchHandle } from '#/state/queries/handle';

@@ -4,8 +4,7 @@ import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moder
 import { uniqueBy } from '@mary/array-fns';
 
 import { getPostRecord } from '#/lib/api/record-views';
-import { getModerationCauseKey } from '#/lib/moderation';
-import type { AppModerationCause } from '#/lib/moderation/types';
+import { type AppModerationCause, getModerationCauseKey } from '#/lib/moderation/causes';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 8 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };

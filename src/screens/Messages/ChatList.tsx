@@ -2,9 +2,9 @@ import { type ComponentProps, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
+import { cleanError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { conversationTarget } from '#/lib/routes/targets';
-import { cleanError } from '#/lib/strings/errors';
 
 import { softReset } from '#/state/events';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';

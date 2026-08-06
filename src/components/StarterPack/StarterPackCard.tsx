@@ -10,7 +10,7 @@ import { clsx } from 'clsx';
 
 import { getStarterPackRecord } from '#/lib/api/record-views';
 import { starterPackTarget } from '#/lib/routes/targets';
-import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+import { getStarterPackOgCard } from '#/lib/starter-pack';
 
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
 import { precacheStarterPack } from '#/state/queries/starter-packs';

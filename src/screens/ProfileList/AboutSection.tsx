@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { cleanError } from '#/lib/strings/errors';
+import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';

@@ -1,7 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { urls } from '#/lib/constants';
-import { profileDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName } from '#/lib/display-names';
 
 import { useSession } from '#/state/session';
 

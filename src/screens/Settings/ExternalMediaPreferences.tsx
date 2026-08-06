@@ -2,7 +2,7 @@ import {
 	type EmbedPlayerSource,
 	exemptExternalEmbedSources,
 	externalEmbedLabels,
-} from '#/lib/strings/embed-player';
+} from '#/lib/media/embed-player';
 
 import { setExternalEmbedPref, useExternalEmbedsPrefs } from '#/state/preferences/external-embeds';
 import { useTitle } from '#/state/use-title';

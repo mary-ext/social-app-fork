@@ -1,6 +1,6 @@
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { profileDisplayName } from '#/lib/strings/display-names';
+import { profileDisplayName } from '#/lib/display-names';
 
 import { isDidBlockedInConvo } from '#/components/dms/getMessageInfo';
 

@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/rich-text';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 

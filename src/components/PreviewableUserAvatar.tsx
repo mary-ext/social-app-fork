@@ -4,8 +4,8 @@ import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 

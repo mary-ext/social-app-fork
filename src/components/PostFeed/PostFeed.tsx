@@ -6,9 +6,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
+import { cleanError, isNetworkError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
-import { cleanError, isNetworkError } from '#/lib/strings/errors';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/rich-text';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { postCreated } from '#/state/events';

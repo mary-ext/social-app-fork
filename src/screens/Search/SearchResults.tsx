@@ -5,8 +5,8 @@ import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { definite } from '@mary/array-fns';
 
 import { urls } from '#/lib/constants';
-import { cleanError, isNetworkError, shouldRetryError } from '#/lib/strings/errors';
-import { normalizeSearchQuery } from '#/lib/strings/helpers';
+import { cleanError, isNetworkError, shouldRetryError } from '#/lib/errors';
+import { normalizeSearchQuery } from '#/lib/search-query';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';

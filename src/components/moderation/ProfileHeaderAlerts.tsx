@@ -2,7 +2,7 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 
 import { uniqueBy } from '@mary/array-fns';
 
-import { getModerationCauseKey } from '#/lib/moderation';
+import { getModerationCauseKey } from '#/lib/moderation/causes';
 
 import * as Pills from '#/components/web/Pills';
 

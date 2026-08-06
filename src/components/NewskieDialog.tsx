@@ -3,8 +3,8 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { differenceInSeconds } from '@mary/date-fns';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
