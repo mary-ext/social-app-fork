@@ -22,11 +22,26 @@ import { TimeIndicator } from '../TimeIndicator';
 import { ControlButton } from './ControlButton';
 import { Scrubber } from './Scrubber';
 import { SettingsMenu, type VideoQuality, type VideoSubtitles } from './SettingsMenu';
-import { formatTime, useVideoElement } from './utils';
+import { formatTime, useVideoElement, useVideoTime } from './utils';
 import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
 
 const isHoverPointer = (evt: React.PointerEvent) => evt.pointerType !== 'touch';
+
+function ElapsedText({
+	videoRef,
+	duration,
+}: {
+	videoRef: React.RefObject<HTMLVideoElement | null>;
+	duration: number;
+}) {
+	const currentTime = useVideoTime(videoRef, 1);
+	return (
+		<Text className={styles.timeText}>
+			{formatTime(currentTime)} / {formatTime(duration)}
+		</Text>
+	);
+}
 
 const CUE_LINE = { withControls: 70, bare: 85 };
 
@@ -57,18 +72,8 @@ export function Controls({
 	isGif: boolean;
 	altText?: string;
 }) {
-	const {
-		play,
-		pause,
-		playing,
-		muted,
-		changeMuted,
-		togglePlayPause,
-		currentTime,
-		duration,
-		buffering,
-		error,
-	} = useVideoElement(videoRef);
+	const { play, pause, playing, muted, changeMuted, togglePlayPause, duration, buffering, error } =
+		useVideoElement(videoRef);
 	const isTouch = useInputModality() === 'touch';
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
 	const [settingsOpen, setSettingsOpen] = useState(false);
@@ -372,17 +377,16 @@ export function Controls({
 				onPointerLeave={onPointerLeaveEmptySpace}
 				onClick={onPressEmptySpace}
 			/>
-			{!showControls && !focused && duration > 0 && (
-				<TimeIndicator time={Math.floor(duration - currentTime)} />
-			)}
+			{!showControls && !focused && duration > 0 && <TimeIndicator videoRef={videoRef} duration={duration} />}
 			<div
 				className={styles.gradientBar}
 				data-visible={showControls}
 				data-modality={isTouch ? 'touch' : undefined}
 			>
 				<Scrubber
+					videoRef={videoRef}
+					visible={showControls}
 					duration={duration}
-					currentTime={currentTime}
 					onSeek={onSeek}
 					onSeekStart={onSeekStart}
 					onSeekEnd={onSeekEnd}
@@ -400,11 +404,7 @@ export function Controls({
 						onClick={onPressPlayPause}
 					/>
 					<div className={styles.spacer} />
-					{Math.round(duration) > 0 && (
-						<Text className={styles.timeText}>
-							{formatTime(currentTime)} / {formatTime(duration)}
-						</Text>
-					)}
+					{Math.round(duration) > 0 && <ElapsedText videoRef={videoRef} duration={duration} />}
 					<VolumeControl
 						muted={muted}
 						changeMuted={changeMuted}

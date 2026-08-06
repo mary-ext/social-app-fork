@@ -1,13 +1,52 @@
-import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { IS_SAFARI } from '#/lib/browser/platform';
 
 import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
+const TIME_EVENTS = ['timeupdate', 'seeking', 'seeked', 'loadedmetadata', 'emptied'] as const;
+
+/**
+ * subscribes to a video's quantized playback position.
+ *
+ * @param ref mounted video element
+ * @param precision position step in seconds
+ * @returns playback position in seconds
+ */
+export const useVideoTime = (ref: RefObject<HTMLVideoElement | null>, precision: number) => {
+	// currentTime changes independently of store notifications, so cache the snapshot.
+	const quantized = useRef(0);
+
+	return useSyncExternalStore(
+		(onStoreChange) => {
+			const element = ref.current;
+			if (!element) {
+				return () => {};
+			}
+
+			const controller = new AbortController();
+			const update = () => {
+				const next = Math.floor(element.currentTime / precision) * precision;
+				if (next === quantized.current) {
+					return;
+				}
+				quantized.current = next;
+				onStoreChange();
+			};
+
+			update();
+			for (const type of TIME_EVENTS) {
+				element.addEventListener(type, update, { signal: controller.signal });
+			}
+			return () => controller.abort();
+		},
+		() => quantized.current,
+	);
+};
+
 export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 	const [playing, setPlaying] = useState(false);
 	const [muted, setMuted] = useState(true);
-	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration] = useState(0);
 	const [buffering, setBuffering] = useState(false);
 	const [error, setError] = useState(false);
@@ -39,24 +78,28 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		}
 
 		// Initial values
-		setCurrentTime(round(ref.current.currentTime) || 0);
 		setDuration(round(ref.current.duration) || 0);
 		setMuted(ref.current.muted);
 		setPlaying(!ref.current.paused);
 
-		const handleTimeUpdate = () => {
-			if (!ref.current) {
-				return;
+		const clearBuffering = () => {
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
 			}
-			setCurrentTime(round(ref.current.currentTime) || 0);
-			// Safari may emit `stalled` while advancing segments; clear buffering on progress.
-			if (IS_SAFARI) {
-				if (bufferingTimeout) {
-					clearTimeout(bufferingTimeout);
-				}
-				setBuffering(false);
-			}
+			setBuffering(false);
 		};
+
+		const deferBuffering = () => {
+			if (bufferingTimeout) {
+				clearTimeout(bufferingTimeout);
+			}
+			bufferingTimeout = setTimeout(() => {
+				setBuffering(true);
+			}, 500);
+		};
+
+		// Safari can emit `stalled` while segments advance.
+		const handleSafariProgress = clearBuffering;
 
 		const handleDurationChange = () => {
 			if (!ref.current) {
@@ -85,10 +128,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		};
 
 		const handleCanPlay = async () => {
-			if (bufferingTimeout) {
-				clearTimeout(bufferingTimeout);
-			}
-			setBuffering(false);
+			clearBuffering();
 
 			if (!ref.current) {
 				return;
@@ -109,37 +149,9 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 			}
 		};
 
-		const handleCanPlayThrough = () => {
-			if (bufferingTimeout) {
-				clearTimeout(bufferingTimeout);
-			}
-			setBuffering(false);
-		};
-
-		const handleWaiting = () => {
-			if (bufferingTimeout) {
-				clearTimeout(bufferingTimeout);
-			}
-			bufferingTimeout = setTimeout(() => {
-				setBuffering(true);
-			}, 500); // Delay to avoid frequent buffering state changes
-		};
-
 		const handlePlaying = () => {
-			if (bufferingTimeout) {
-				clearTimeout(bufferingTimeout);
-			}
-			setBuffering(false);
+			clearBuffering();
 			setError(false);
-		};
-
-		const handleStalled = () => {
-			if (bufferingTimeout) {
-				clearTimeout(bufferingTimeout);
-			}
-			bufferingTimeout = setTimeout(() => {
-				setBuffering(true);
-			}, 500); // Delay to avoid frequent buffering state changes
 		};
 
 		const handleEnded = () => {
@@ -150,9 +162,11 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 
 		const abortController = new AbortController();
 
-		ref.current.addEventListener('timeupdate', handleTimeUpdate, {
-			signal: abortController.signal,
-		});
+		if (IS_SAFARI) {
+			ref.current.addEventListener('timeupdate', handleSafariProgress, {
+				signal: abortController.signal,
+			});
+		}
 		ref.current.addEventListener('durationchange', handleDurationChange, {
 			signal: abortController.signal,
 		});
@@ -171,16 +185,16 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		ref.current.addEventListener('canplay', () => void handleCanPlay(), {
 			signal: abortController.signal,
 		});
-		ref.current.addEventListener('canplaythrough', handleCanPlayThrough, {
+		ref.current.addEventListener('canplaythrough', clearBuffering, {
 			signal: abortController.signal,
 		});
-		ref.current.addEventListener('waiting', handleWaiting, {
+		ref.current.addEventListener('waiting', deferBuffering, {
 			signal: abortController.signal,
 		});
 		ref.current.addEventListener('playing', handlePlaying, {
 			signal: abortController.signal,
 		});
-		ref.current.addEventListener('stalled', handleStalled, {
+		ref.current.addEventListener('stalled', deferBuffering, {
 			signal: abortController.signal,
 		});
 		ref.current.addEventListener('ended', handleEnded, {
@@ -250,7 +264,6 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		pause,
 		togglePlayPause,
 		duration,
-		currentTime,
 		playing,
 		muted,
 		changeMuted,

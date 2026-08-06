@@ -7,14 +7,15 @@ import { useInputModality } from '#/lib/browser/input-modality';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Scrubber.css';
-import { formatTime } from './utils';
+import { formatTime, useVideoTime } from './utils';
 
 // match the video time precision.
 const SEEK_STEP = 0.01;
 
 export function Scrubber({
+	videoRef,
+	visible,
 	duration,
-	currentTime,
 	onSeek,
 	onSeekEnd,
 	onSeekStart,
@@ -22,8 +23,9 @@ export function Scrubber({
 	seekRight,
 	togglePlayPause,
 }: {
+	videoRef: React.RefObject<HTMLVideoElement | null>;
+	visible: boolean;
 	duration: number;
-	currentTime: number;
 	onSeek: (time: number) => void;
 	onSeekEnd: () => void;
 	onSeekStart: () => void;
@@ -31,6 +33,7 @@ export function Scrubber({
 	seekRight: () => void;
 	togglePlayPause: () => void;
 }) {
+	const currentTime = useVideoTime(videoRef, visible ? SEEK_STEP : 1);
 	const isTouch = useInputModality() === 'touch';
 	// keep drag updates smooth between `currentTime` events.
 	const [seekPosition, setSeekPosition] = useState<number>();
