@@ -2,6 +2,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExtern
 
 import { IS_SAFARI } from '#/lib/browser/platform';
 
+import { getVideoSpeed, subscribeVideoSpeed } from '#/components/Post/Embed/VideoEmbed/video-speed';
 import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 
 const TIME_EVENTS = ['timeupdate', 'seeking', 'seeked', 'loadedmetadata', 'emptied'] as const;
@@ -44,7 +45,10 @@ export const useVideoTime = (ref: RefObject<HTMLVideoElement | null>, precision:
 	);
 };
 
-export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
+export function useVideoElement(
+	ref: RefObject<HTMLVideoElement | null>,
+	{ speedControlled }: { speedControlled: boolean },
+) {
 	const [playing, setPlaying] = useState(false);
 	const [muted, setMuted] = useState(true);
 	const [duration, setDuration] = useState(0);
@@ -65,6 +69,22 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		applyVolume();
 		return subscribeVideoVolume(applyVolume);
 	}, [ref]);
+
+	useEffect(() => {
+		const element = ref.current;
+		if (!element || !speedControlled) {
+			return;
+		}
+
+		const applySpeed = () => {
+			// source changes reset playbackRate to defaultPlaybackRate.
+			element.defaultPlaybackRate = getVideoSpeed();
+			element.playbackRate = getVideoSpeed();
+		};
+
+		applySpeed();
+		return subscribeVideoSpeed(applySpeed);
+	}, [ref, speedControlled]);
 
 	useEffect(() => {
 		if (!ref.current) {

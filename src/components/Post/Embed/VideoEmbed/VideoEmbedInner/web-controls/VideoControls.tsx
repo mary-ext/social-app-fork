@@ -15,6 +15,7 @@ import ArrowsOutIcon from '#/icons/central/Expand45_round_outlined_radius1_strok
 import ArrowsInIcon from '#/icons/central/Minimize45_round_outlined_radius1_stroke2.svg';
 import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
+import SettingsGearIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { GifPresentationControls } from '../../GifPresentationControls';
@@ -73,7 +74,7 @@ export function Controls({
 	altText?: string;
 }) {
 	const { play, pause, playing, muted, changeMuted, togglePlayPause, duration, buffering, error } =
-		useVideoElement(videoRef);
+		useVideoElement(videoRef, { speedControlled: !isGif });
 	const isTouch = useInputModality() === 'touch';
 	const [touchChromeVisible, setTouchChromeVisible] = useState(false);
 	const [settingsOpen, setSettingsOpen] = useState(false);
@@ -414,6 +415,14 @@ export function Controls({
 						fullscreenContainer={portalContainer}
 					/>
 					<SettingsMenu
+						render={
+							<ControlButton
+								icon={SettingsGearIcon}
+								label={m['components.post.video.settings.label']()}
+								tooltip={false}
+							/>
+						}
+						tooltip={m['components.post.video.settings.label']()}
 						quality={quality}
 						subtitles={subtitles}
 						onOpenChange={onSettingsOpenChange}

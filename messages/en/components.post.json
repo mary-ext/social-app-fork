@@ -60,6 +60,7 @@
 	"components.post.video.a11y.player": "Embedded video player",
 	"components.post.video.a11y.seekSlider": "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause",
 	"components.post.video.a11y.showControls": "Show video controls",
+	"components.post.video.a11y.speed": "Playback speed. Use the arrow keys to speed up and slow down",
 	"components.post.video.a11y.timeProgress": "{currentTime} of {duration}",
 	"components.post.video.a11y.timeRemaining": [
 		{
@@ -84,5 +85,11 @@
 	"components.post.video.error.notFound": "Video not found.",
 	"components.post.video.error.unsupportedCodec": "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).",
 	"components.post.video.quality.label": "Quality",
-	"components.post.video.settings.label": "Video settings"
+	"components.post.video.settings.back": "Back to video settings",
+	"components.post.video.settings.label": "Video settings",
+	"components.post.video.speed.decrease": "Slow down",
+	"components.post.video.speed.increase": "Speed up",
+	"components.post.video.speed.label": "Playback speed",
+	"components.post.video.speed.normal": "Normal",
+	"components.post.video.speed.rate": "{rate}×"
 }
