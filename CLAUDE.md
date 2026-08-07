@@ -30,7 +30,7 @@ work that needs the logged-in account should pass `--restore` when opening a ses
 time, later commands may omit this flag. if you're still signed out, try going through the sign in
 flow anyway but if it asks for a credential, stop and report to the user.
 
-the daemon may close itself after some inactivity.
+the agent-browser daemon and subsequently the browsers may close itself after some inactivity.
 
 the first load of a page often comes up blank; reload once before you treat it as a bug. using curl
 tests nothing of value.
