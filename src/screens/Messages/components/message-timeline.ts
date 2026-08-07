@@ -11,16 +11,16 @@ import {
 	MESSAGE_GAP_THRESHOLD_MS,
 } from '#/components/dms/util';
 
-export type SystemMessageItem = Extract<ConvoItem, { type: 'system-message' }>;
+export type SystemMessageItem = Extract<ConvoItem, { type: 'systemMessage' }>;
 
 export type SystemMessageGroupItem = {
-	type: 'system-message-group';
+	type: 'systemMessageGroup';
 	key: string;
 	items: SystemMessageItem[];
 };
 
 export type SystemMessageDateDividerItem = {
-	type: 'system-message-date-divider';
+	type: 'systemMessageDateDivider';
 	key: string;
 	sentAt: string;
 };
@@ -30,9 +30,9 @@ export type SystemMessageDateDividerItem = {
  * at their siblings during render.
  */
 export type MessageListItem = {
-	type: 'message' | 'pending-message';
+	type: 'message' | 'pendingMessage';
 	key: string;
-	convoItem: Extract<ConvoItem, { type: 'message' | 'pending-message' }>;
+	convoItem: Extract<ConvoItem, { type: 'message' | 'pendingMessage' }>;
 	/** a date divider precedes this row (first of a new day/gap). */
 	hasLargeGapFromPrev: boolean;
 	/** first message of a same-sender cluster (gets top spacing + name/avatar anchors). */
@@ -46,7 +46,7 @@ export type MessageListItem = {
 };
 
 export type RenderItem =
-	| Extract<ConvoItem, { type: 'deleted-message' | 'error' | 'system-message' }>
+	| Extract<ConvoItem, { type: 'deletedMessage' | 'error' | 'systemMessage' }>
 	| MessageListItem
 	| SystemMessageDateDividerItem
 	| SystemMessageGroupItem;
@@ -58,9 +58,9 @@ type NeighborMessage = ChatBskyConvoDefs.DeletedMessageView | ChatBskyConvoDefs.
 function getSentAt(item: ConvoItem): string | null {
 	if (
 		item.type === 'message' ||
-		item.type === 'pending-message' ||
-		item.type === 'deleted-message' ||
-		item.type === 'system-message'
+		item.type === 'pendingMessage' ||
+		item.type === 'deletedMessage' ||
+		item.type === 'systemMessage'
 	) {
 		return item.message.sentAt;
 	}
@@ -115,8 +115,8 @@ function neighborMessage(items: BaseItem[], index: number): NeighborMessage {
 	}
 	if (
 		neighbor.type === 'message' ||
-		neighbor.type === 'pending-message' ||
-		neighbor.type === 'deleted-message'
+		neighbor.type === 'pendingMessage' ||
+		neighbor.type === 'deletedMessage'
 	) {
 		if (
 			neighbor.message.$type === 'chat.bsky.convo.defs#messageView' ||
@@ -147,7 +147,7 @@ function groupSystemMessages(items: ConvoItem[]): BaseItem[] {
 
 		if (hasLargeGap) {
 			result.push({
-				type: 'system-message-date-divider',
+				type: 'systemMessageDateDivider',
 				key: `system-message-date-divider:${run[0]!.key}`,
 				sentAt: firstSentAt,
 			});
@@ -164,7 +164,7 @@ function groupSystemMessages(items: ConvoItem[]): BaseItem[] {
 			// that extends the run backward, the first member changes and this
 			// group collapses.
 			result.push({
-				type: 'system-message-group',
+				type: 'systemMessageGroup',
 				key: `system-message-group:${run[0]!.key}`,
 				items: run,
 			});
@@ -173,7 +173,7 @@ function groupSystemMessages(items: ConvoItem[]): BaseItem[] {
 	};
 
 	for (const item of items) {
-		if (item.type === 'system-message') {
+		if (item.type === 'systemMessage') {
 			const day = localDateString(new Date(item.message.sentAt));
 			const lastDay = run.length > 0 ? localDateString(new Date(run[run.length - 1]!.message.sentAt)) : null;
 			if (lastDay !== null && lastDay !== day) {
@@ -216,7 +216,7 @@ export function buildMessageTimeline(
 	for (let i = 0; i < base.length; i++) {
 		const entry = base[i]!;
 
-		if (entry.type !== 'message' && entry.type !== 'pending-message') {
+		if (entry.type !== 'message' && entry.type !== 'pendingMessage') {
 			result.push(entry);
 			continue;
 		}

@@ -16,7 +16,7 @@ export function RecentQueryRow({
 	row,
 }: {
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
-	row: Extract<ListRow, { kind: 'recent-query' }>;
+	row: Extract<ListRow, { kind: 'recentQuery' }>;
 }) {
 	return (
 		<div className={styles.row}>

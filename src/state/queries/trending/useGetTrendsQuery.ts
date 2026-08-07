@@ -43,7 +43,7 @@ const labelFor = (link: AppLink, name: string): string => {
 		case 'search': {
 			return m['components.trendingTopics.a11y.browseAbout']({ name });
 		}
-		case 'starter-pack': {
+		case 'starterPack': {
 			return m['components.trendingTopics.a11y.browseStarterPack']({ name });
 		}
 		default: {

@@ -63,7 +63,7 @@ function DialogInner({
 	// optimistic reaction removals (e.g. "Tap to remove") reflect without reopening.
 	let message = snapshot;
 	for (const item of convo.items) {
-		if ((item.type === 'message' || item.type === 'pending-message') && item.message.id === snapshot.id) {
+		if ((item.type === 'message' || item.type === 'pendingMessage') && item.message.id === snapshot.id) {
 			message = item.message;
 			break;
 		}

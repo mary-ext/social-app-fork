@@ -188,7 +188,7 @@ export const ComposePost = ({
 	const dispatch = useCallback(
 		(postAction: PostAction) => {
 			composerDispatch({
-				type: 'update_post',
+				type: 'updatePost',
 				postId: activePost.id,
 				postAction,
 			});
@@ -200,10 +200,10 @@ export const ComposePost = ({
 		(postId: string, asset: VideoAsset) => {
 			const abortController = new AbortController();
 			composerDispatch({
-				type: 'update_post',
+				type: 'updatePost',
 				postId: postId,
 				postAction: {
-					type: 'embed_add_video',
+					type: 'embedAddVideo',
 					asset,
 					abortController,
 				},
@@ -215,10 +215,10 @@ export const ComposePost = ({
 				asset,
 				(videoAction) => {
 					composerDispatch({
-						type: 'update_post',
+						type: 'updatePost',
 						postId: postId,
 						postAction: {
-							type: 'embed_update_video',
+							type: 'embedUpdateVideo',
 							videoAction,
 						},
 					});
@@ -245,10 +245,10 @@ export const ComposePost = ({
 	const clearVideo = useCallback(
 		(postId: string) => {
 			composerDispatch({
-				type: 'update_post',
+				type: 'updatePost',
 				postId: postId,
 				postAction: {
-					type: 'embed_remove_video',
+					type: 'embedRemoveVideo',
 				},
 			});
 		},
@@ -270,10 +270,10 @@ export const ComposePost = ({
 				// Start video processing using existing flow
 				const abortController = new AbortController();
 				composerDispatch({
-					type: 'update_post',
+					type: 'updatePost',
 					postId,
 					postAction: {
-						type: 'embed_add_video',
+						type: 'embedAddVideo',
 						asset,
 						abortController,
 					},
@@ -282,12 +282,12 @@ export const ComposePost = ({
 				// Restore alt text immediately
 				if (videoInfo.altText) {
 					composerDispatch({
-						type: 'update_post',
+						type: 'updatePost',
 						postId,
 						postAction: {
-							type: 'embed_update_video',
+							type: 'embedUpdateVideo',
 							videoAction: {
-								type: 'update_alt_text',
+								type: 'updateAltText',
 								altText: videoInfo.altText,
 								signal: abortController.signal,
 							},
@@ -304,12 +304,12 @@ export const ComposePost = ({
 						}),
 					}));
 					composerDispatch({
-						type: 'update_post',
+						type: 'updatePost',
 						postId,
 						postAction: {
-							type: 'embed_update_video',
+							type: 'embedUpdateVideo',
 							videoAction: {
-								type: 'update_captions',
+								type: 'updateCaptions',
 								updater: () => captionTracks,
 								signal: abortController.signal,
 							},
@@ -325,10 +325,10 @@ export const ComposePost = ({
 					asset,
 					(videoAction) => {
 						composerDispatch({
-							type: 'update_post',
+							type: 'updatePost',
 							postId,
 							postAction: {
-								type: 'embed_update_video',
+								type: 'embedUpdateVideo',
 								videoAction,
 							},
 						});
@@ -358,7 +358,7 @@ export const ComposePost = ({
 
 			// Dispatch restore action (this also sets draftId in state)
 			composerDispatch({
-				type: 'restore_from_draft',
+				type: 'restoreFromDraft',
 				draftId: draftSummary.id,
 				posts,
 				threadgateAllow: draftSummary.draft.threadgateAllow,
@@ -412,7 +412,7 @@ export const ComposePost = ({
 				composerState,
 				existingDraftId: composerState.draftId,
 			});
-			composerDispatch({ type: 'mark_saved', draftId: result.draftId });
+			composerDispatch({ type: 'markSaved', draftId: result.draftId });
 
 			closeComposer();
 		} catch (e) {
@@ -434,7 +434,7 @@ export const ComposePost = ({
 				composerState,
 				existingDraftId: composerState.draftId,
 			});
-			composerDispatch({ type: 'mark_saved', draftId: result.draftId });
+			composerDispatch({ type: 'markSaved', draftId: result.draftId });
 			return { success: true };
 		} catch (e) {
 			setError(getDraftSaveError(e));
@@ -549,7 +549,7 @@ export const ComposePost = ({
 		);
 
 	const getFilteredThread = useCallback((): {
-		type: 'none' | 'trailing-only' | 'non-trailing';
+		type: 'none' | 'trailingOnly' | 'nonTrailing';
 		filteredThread: ThreadDraft;
 	} => {
 		const nonEmptyPosts = thread.posts.filter((post) => !isEmptyPost(post));
@@ -571,7 +571,7 @@ export const ComposePost = ({
 		const filteredThread: ThreadDraft = { ...thread, posts: nonEmptyPosts };
 
 		return {
-			type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
+			type: hasNonTrailingEmpty ? 'nonTrailing' : 'trailingOnly',
 			filteredThread,
 		};
 	}, [thread]);
@@ -587,7 +587,7 @@ export const ComposePost = ({
 
 		const { type: emptyType, filteredThread } = getFilteredThread();
 
-		if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
+		if (emptyType === 'nonTrailing' && !skipEmptyConfirmedRef.current) {
 			emptyPostsPromptHandle.open(null);
 			return;
 		}
@@ -881,7 +881,7 @@ export const ComposePost = ({
 				onSelectVideo={selectVideo}
 				onAddPost={() => {
 					composerDispatch({
-						type: 'add_post',
+						type: 'addPost',
 					});
 				}}
 				currentLanguages={currentLanguages}
@@ -1060,7 +1060,7 @@ const ComposerPost = memo(function ComposerPost({
 	const dispatchPost = useCallback(
 		(action: PostAction) => {
 			dispatch({
-				type: 'update_post',
+				type: 'updatePost',
 				postId: post.id,
 				postAction: action,
 			});
@@ -1076,7 +1076,7 @@ const ComposerPost = memo(function ComposerPost({
 
 	const onNewLink = useCallback(
 		(uri: string) => {
-			dispatchPost({ type: 'embed_add_uri', uri });
+			dispatchPost({ type: 'embedAddUri', uri });
 		},
 		[dispatchPost],
 	);
@@ -1133,11 +1133,11 @@ const ComposerPost = memo(function ComposerPost({
 						hasRightPadding={isPartOfThread}
 						isActive={isActive}
 						setText={(nextText) => {
-							dispatchPost({ type: 'update_text', text: nextText });
+							dispatchPost({ type: 'updateText', text: nextText });
 						}}
 						onFocus={() => {
 							dispatch({
-								type: 'focus_post',
+								type: 'focusPost',
 								postId: post.id,
 							});
 						}}
@@ -1170,7 +1170,7 @@ const ComposerPost = memo(function ComposerPost({
 										discardPromptHandle.open(null);
 									} else {
 										dispatch({
-											type: 'remove_post',
+											type: 'removePost',
 											postId: post.id,
 										});
 									}
@@ -1185,7 +1185,7 @@ const ComposerPost = memo(function ComposerPost({
 								description={m['view.composer.discard.message']()}
 								onConfirm={() => {
 									dispatch({
-										type: 'remove_post',
+										type: 'removePost',
 										postId: post.id,
 									});
 								}}
@@ -1232,12 +1232,12 @@ function ComposerEmbeds({
 			)}
 			{embed.media?.type === 'gif' && (
 				<div className={styles.gifContainer} key={embed.media.gif.url}>
-					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embed_remove_gif' })} />
+					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embedRemoveGif' })} />
 					<GifAltText
 						gif={embed.media.gif}
 						altText={embed.media.alt ?? ''}
 						onSubmit={(altText: string) => {
-							dispatch({ type: 'embed_update_gif', alt: altText });
+							dispatch({ type: 'embedUpdateGif', alt: altText });
 						}}
 					/>
 				</div>
@@ -1247,7 +1247,7 @@ function ComposerEmbeds({
 					<ExternalEmbedLink
 						uri={embed.link.uri}
 						hasQuote={!!embed.quote}
-						onRemove={() => dispatch({ type: 'embed_remove_link' })}
+						onRemove={() => dispatch({ type: 'embedRemoveLink' })}
 					/>
 				</div>
 			)}
@@ -1266,9 +1266,9 @@ function ComposerEmbeds({
 						defaultAltText={video.altText}
 						saveAltText={(altText) =>
 							dispatch({
-								type: 'embed_update_video',
+								type: 'embedUpdateVideo',
 								videoAction: {
-									type: 'update_alt_text',
+									type: 'updateAltText',
 									altText,
 									signal: video.abortController.signal,
 								},
@@ -1277,9 +1277,9 @@ function ComposerEmbeds({
 						captions={video.captions}
 						setCaptions={(updater) => {
 							dispatch({
-								type: 'embed_update_video',
+								type: 'embedUpdateVideo',
 								videoAction: {
-									type: 'update_captions',
+									type: 'updateCaptions',
 									updater,
 									signal: video.abortController.signal,
 								},
@@ -1294,7 +1294,7 @@ function ComposerEmbeds({
 						<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
 						{canRemoveQuote && (
 							<ExternalEmbedRemoveBtn
-								onRemove={() => dispatch({ type: 'embed_remove_quote' })}
+								onRemove={() => dispatch({ type: 'embedRemoveQuote' })}
 								className={styles.externalEmbedRemoveBtn}
 							/>
 						)}

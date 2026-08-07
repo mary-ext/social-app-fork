@@ -49,7 +49,7 @@ export function isConvoItemMessage(item: ConvoItem): item is ConvoItem & { type:
 	if (!item) {
 		return false;
 	}
-	return item.type === 'message' || item.type === 'deleted-message' || item.type === 'pending-message';
+	return item.type === 'message' || item.type === 'deletedMessage' || item.type === 'pendingMessage';
 }
 
 function toSystemMessageView(
@@ -590,7 +590,7 @@ export class Convo {
 	private applyFetchedConvo(convo: ChatBskyConvoDefs.ConvoView) {
 		const applied = this.setConvo(convo);
 		if (applied) {
-			this.emitter.emit({ type: 'convo-fetched', convo });
+			this.emitter.emit({ type: 'convoFetched', convo });
 		}
 		return applied;
 	}
@@ -1143,7 +1143,7 @@ export class Convo {
 				switch (e.description) {
 					case 'block between recipient and sender': {
 						this.emitter.emit({
-							type: 'invalidate-block-state',
+							type: 'invalidateBlockState',
 							accountDids: [this.senderUserDid, ...this.recipients!.map((r) => r.did)],
 						});
 						break;
@@ -1303,11 +1303,11 @@ export class Convo {
 				break;
 			}
 			case 'chat.bsky.convo.defs#deletedMessageView': {
-				item = { type: 'deleted-message', key: source.id, message: source };
+				item = { type: 'deletedMessage', key: source.id, message: source };
 				break;
 			}
 			case 'chat.bsky.convo.defs#systemMessageView': {
-				item = { type: 'system-message', key: source.id, message: source };
+				item = { type: 'systemMessage', key: source.id, message: source };
 				break;
 			}
 			default: {
@@ -1354,7 +1354,7 @@ export class Convo {
 					? toDeletedMessageView(m.optimisticReplyTo)
 					: m.optimisticReplyTo;
 			items.push({
-				type: 'pending-message',
+				type: 'pendingMessage',
 				key: m.id,
 				message: {
 					...m.message,

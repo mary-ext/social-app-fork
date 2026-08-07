@@ -136,9 +136,9 @@ export function WizardProfileCard({
 		}
 
 		if (!included) {
-			dispatch({ type: 'AddProfile', profile });
+			dispatch({ type: 'addProfile', profile });
 		} else {
-			dispatch({ type: 'RemoveProfile', profileDid: profile.did });
+			dispatch({ type: 'removeProfile', profileDid: profile.did });
 		}
 	};
 
@@ -183,9 +183,9 @@ export function WizardFeedCard({
 			return;
 		}
 		if (included) {
-			dispatch({ type: 'RemoveFeed', feedUri: generator.uri });
+			dispatch({ type: 'removeFeed', feedUri: generator.uri });
 		} else {
-			dispatch({ type: 'AddFeed', feed: generator });
+			dispatch({ type: 'addFeed', feed: generator });
 		}
 	};
 

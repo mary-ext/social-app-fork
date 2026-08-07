@@ -81,10 +81,10 @@ const SingleImage = ({
 				context={toAltTextContext([image], 0, text)}
 				image={image}
 				onChange={(next) => {
-					dispatch({ type: 'embed_update_image', image: next });
+					dispatch({ type: 'embedUpdateImage', image: next });
 				}}
 				onRemove={() => {
-					dispatch({ type: 'embed_remove_image', image });
+					dispatch({ type: 'embedRemoveImage', image });
 				}}
 			/>
 		</div>
@@ -158,10 +158,10 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 						image={image}
 						index={index}
 						onChange={(next) => {
-							dispatch({ type: 'embed_update_image', image: next });
+							dispatch({ type: 'embedUpdateImage', image: next });
 						}}
 						onRemove={() => {
-							dispatch({ type: 'embed_remove_image', image });
+							dispatch({ type: 'embedRemoveImage', image });
 						}}
 						onWidthChange={onWidthChange}
 					/>

@@ -87,16 +87,16 @@ const itemToStringValue = (item: InteractiveItem): string => {
 		case 'operator': {
 			return item.operator.name;
 		}
-		case 'operator-value': {
+		case 'operatorValue': {
 			return `${item.op}:${item.value}`;
 		}
 		case 'profile': {
 			return item.profile.handle;
 		}
-		case 'recent-profile': {
+		case 'recentProfile': {
 			return item.profile.handle;
 		}
-		case 'recent-query': {
+		case 'recentQuery': {
 			return item.query;
 		}
 		case 'search': {
@@ -509,7 +509,7 @@ function ActiveSearchAutocomplete({
 				replaceToken(`${item.operator.name}:`);
 				break;
 			}
-			case 'operator-value': {
+			case 'operatorValue': {
 				replaceToken(`${item.op}:${item.value} `);
 				break;
 			}
@@ -530,11 +530,11 @@ function ActiveSearchAutocomplete({
 				}
 				break;
 			}
-			case 'recent-profile': {
+			case 'recentProfile': {
 				selectProfile(item.profile);
 				break;
 			}
-			case 'recent-query': {
+			case 'recentQuery': {
 				submit(item.query);
 				break;
 			}

@@ -18,24 +18,24 @@ export const embedPlayerSources = [
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number];
 
 type EmbedPlayerType =
-	| 'youtube_video'
-	| 'youtube_short'
-	| 'twitch_video'
-	| 'spotify_album'
-	| 'spotify_playlist'
-	| 'spotify_song'
-	| 'soundcloud_track'
-	| 'soundcloud_set'
-	| 'apple_music_playlist'
-	| 'apple_music_album'
-	| 'apple_music_song'
-	| 'vimeo_video'
-	| 'giphy_gif'
-	| 'tenor_gif'
-	| 'klipy_gif'
-	| 'flickr_album'
-	| 'bandcamp_album'
-	| 'bandcamp_track';
+	| 'youtubeVideo'
+	| 'youtubeShort'
+	| 'twitchVideo'
+	| 'spotifyAlbum'
+	| 'spotifyPlaylist'
+	| 'spotifySong'
+	| 'soundcloudTrack'
+	| 'soundcloudSet'
+	| 'appleMusicPlaylist'
+	| 'appleMusicAlbum'
+	| 'appleMusicSong'
+	| 'vimeoVideo'
+	| 'giphyGif'
+	| 'tenorGif'
+	| 'klipyGif'
+	| 'flickrAlbum'
+	| 'bandcampAlbum'
+	| 'bandcampTrack';
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
 	youtube: 'YouTube',
@@ -89,7 +89,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 		if (videoId) {
 			return {
-				type: 'youtube_video',
+				type: 'youtubeVideo',
 				source: 'youtube',
 				playerUri: `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=1&rel=0&start=${seek}`,
 			};
@@ -111,7 +111,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 		if (videoId) {
 			return {
-				type: isShorts ? 'youtube_short' : 'youtube_video',
+				type: isShorts ? 'youtubeShort' : 'youtubeVideo',
 				source: isShorts ? 'youtubeShorts' : 'youtube',
 				hideDetails: isShorts ? true : undefined,
 				playerUri: `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=1&rel=0&start=${seek}`,
@@ -127,19 +127,19 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 		if (channelOrVideo === 'videos') {
 			return {
-				type: 'twitch_video',
+				type: 'twitchVideo',
 				source: 'twitch',
 				playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=${clipOrId}&parent=${parent}`,
 			};
 		} else if (clipOrId === 'clip') {
 			return {
-				type: 'twitch_video',
+				type: 'twitchVideo',
 				source: 'twitch',
 				playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=${id}&parent=${parent}`,
 			};
 		} else if (channelOrVideo) {
 			return {
-				type: 'twitch_video',
+				type: 'twitchVideo',
 				source: 'twitch',
 				playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${channelOrVideo}&parent=${parent}`,
 			};
@@ -153,35 +153,35 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		if (idOrType) {
 			if (typeOrLocale === 'playlist' || idOrType === 'playlist') {
 				return {
-					type: 'spotify_playlist',
+					type: 'spotifyPlaylist',
 					source: 'spotify',
 					playerUri: `https://open.spotify.com/embed/playlist/${id ?? idOrType}`,
 				};
 			}
 			if (typeOrLocale === 'album' || idOrType === 'album') {
 				return {
-					type: 'spotify_album',
+					type: 'spotifyAlbum',
 					source: 'spotify',
 					playerUri: `https://open.spotify.com/embed/album/${id ?? idOrType}`,
 				};
 			}
 			if (typeOrLocale === 'track' || idOrType === 'track') {
 				return {
-					type: 'spotify_song',
+					type: 'spotifySong',
 					source: 'spotify',
 					playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
 				};
 			}
 			if (typeOrLocale === 'episode' || idOrType === 'episode') {
 				return {
-					type: 'spotify_song',
+					type: 'spotifySong',
 					source: 'spotify',
 					playerUri: `https://open.spotify.com/embed/episode/${id ?? idOrType}`,
 				};
 			}
 			if (typeOrLocale === 'show' || idOrType === 'show') {
 				return {
-					type: 'spotify_song',
+					type: 'spotifySong',
 					source: 'spotify',
 					playerUri: `https://open.spotify.com/embed/show/${id ?? idOrType}`,
 				};
@@ -196,14 +196,14 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		if (user && trackOrSets) {
 			if (trackOrSets === 'sets' && set) {
 				return {
-					type: 'soundcloud_set',
+					type: 'soundcloudSet',
 					source: 'soundcloud',
 					playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
 				};
 			}
 
 			return {
-				type: 'soundcloud_track',
+				type: 'soundcloudTrack',
 				source: 'soundcloud',
 				playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
 			};
@@ -220,27 +220,27 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 			if (type === 'playlist') {
 				return {
-					type: 'apple_music_playlist',
+					type: 'appleMusicPlaylist',
 					source: 'appleMusic',
 					playerUri: embedUri,
 				};
 			} else if (type === 'album') {
 				if (songId) {
 					return {
-						type: 'apple_music_song',
+						type: 'appleMusicSong',
 						source: 'appleMusic',
 						playerUri: embedUri,
 					};
 				} else {
 					return {
-						type: 'apple_music_album',
+						type: 'appleMusicAlbum',
 						source: 'appleMusic',
 						playerUri: embedUri,
 					};
 				}
 			} else if (type === 'song') {
 				return {
-					type: 'apple_music_song',
+					type: 'appleMusicSong',
 					source: 'appleMusic',
 					playerUri: embedUri,
 				};
@@ -252,7 +252,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		const [__, videoId] = urlp.pathname.split('/');
 		if (videoId) {
 			return {
-				type: 'vimeo_video',
+				type: 'vimeoVideo',
 				source: 'vimeo',
 				playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
 			};
@@ -267,7 +267,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 
 			if (gifId) {
 				return {
-					type: 'giphy_gif',
+					type: 'giphyGif',
 					source: 'giphy',
 					isGif: true,
 					hideDetails: true,
@@ -284,7 +284,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		if (media === 'media') {
 			if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
 				return {
-					type: 'giphy_gif',
+					type: 'giphyGif',
 					source: 'giphy',
 					isGif: true,
 					hideDetails: true,
@@ -293,7 +293,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 				};
 			} else if (filename && gifFilenameRegex.test(filename)) {
 				return {
-					type: 'giphy_gif',
+					type: 'giphyGif',
 					source: 'giphy',
 					isGif: true,
 					hideDetails: true,
@@ -310,7 +310,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		if (mediaOrFilename === 'media' && filename) {
 			const gifId = filename.split('.')[0];
 			return {
-				type: 'giphy_gif',
+				type: 'giphyGif',
 				source: 'giphy',
 				isGif: true,
 				hideDetails: true,
@@ -320,7 +320,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		} else if (mediaOrFilename) {
 			const gifId = mediaOrFilename.split('.')[0];
 			return {
-				type: 'giphy_gif',
+				type: 'giphyGif',
 				source: 'giphy',
 				isGif: true,
 				hideDetails: true,
@@ -335,7 +335,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		const { playerUri, playerSources, dimensions } = tenorGif;
 
 		return {
-			type: 'tenor_gif',
+			type: 'tenorGif',
 			source: 'tenor',
 			isGif: true,
 			hideDetails: true,
@@ -350,7 +350,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		const { playerUri, playerSources, dimensions } = klipyGif;
 
 		return {
-			type: 'klipy_gif',
+			type: 'klipyGif',
 			source: 'klipy',
 			isGif: true,
 			hideDetails: true,
@@ -372,7 +372,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			const [photos, __, albums, id] = path_components;
 			if (photos === 'photos' && albums === 'albums') {
 				return {
-					type: 'flickr_album',
+					type: 'flickrAlbum',
 					source: 'flickr',
 					playerUri: `https://embedr.flickr.com/photosets/${id}`,
 				};
@@ -383,7 +383,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			const [groups, id, pool] = path_components;
 			if (groups === 'groups' && pool === 'pool') {
 				return {
-					type: 'flickr_album',
+					type: 'flickrAlbum',
 					source: 'flickr',
 					playerUri: `https://embedr.flickr.com/groups/${id}`,
 				};
@@ -412,7 +412,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			case 'go': {
 				const formattedGroupId = `${id}`;
 				return {
-					type: 'flickr_album',
+					type: 'flickrAlbum',
 					source: 'flickr',
 					playerUri: `https://embedr.flickr.com/groups/${formattedGroupId.slice(
 						0,
@@ -422,7 +422,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			}
 			case 's': {
 				return {
-					type: 'flickr_album',
+					type: 'flickrAlbum',
 					source: 'flickr',
 					playerUri: `https://embedr.flickr.com/photosets/${id}`,
 				};
@@ -440,7 +440,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		switch (pathComponents[1]) {
 			case 'album': {
 				return {
-					type: 'bandcamp_album',
+					type: 'bandcampAlbum',
 					source: 'bandcamp',
 					playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
 						urlp.href,
@@ -449,7 +449,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			}
 			case 'track': {
 				return {
-					type: 'bandcamp_track',
+					type: 'bandcampTrack',
 					source: 'bandcamp',
 					playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
 						urlp.href,
@@ -477,39 +477,39 @@ export function getPlayerAspect({
 	}
 
 	switch (type) {
-		case 'youtube_video':
-		case 'twitch_video':
-		case 'vimeo_video': {
+		case 'youtubeVideo':
+		case 'twitchVideo':
+		case 'vimeoVideo': {
 			return { aspectRatio: 16 / 9 };
 		}
-		case 'youtube_short': {
+		case 'youtubeShort': {
 			if (getViewportSize().height < 600) {
 				return { aspectRatio: (9 / 16) * 1.75 };
 			} else {
 				return { aspectRatio: (9 / 16) * 1.5 };
 			}
 		}
-		case 'spotify_album':
-		case 'apple_music_album':
-		case 'apple_music_playlist':
-		case 'spotify_playlist':
-		case 'soundcloud_set': {
+		case 'spotifyAlbum':
+		case 'appleMusicAlbum':
+		case 'appleMusicPlaylist':
+		case 'spotifyPlaylist':
+		case 'soundcloudSet': {
 			return { height: 380 };
 		}
-		case 'spotify_song': {
+		case 'spotifySong': {
 			if (width <= 300) {
 				return { height: 155 };
 			}
 			return { height: 232 };
 		}
-		case 'soundcloud_track': {
+		case 'soundcloudTrack': {
 			return { height: 165 };
 		}
-		case 'apple_music_song': {
+		case 'appleMusicSong': {
 			return { height: 150 };
 		}
-		case 'bandcamp_album':
-		case 'bandcamp_track': {
+		case 'bandcampAlbum':
+		case 'bandcampTrack': {
 			return { aspectRatio: 1 };
 		}
 		default: {
@@ -521,7 +521,7 @@ export function getPlayerAspect({
 export function getGiphyMetaUri(url: URL) {
 	if (giphyRegex.test(url.hostname) || url.hostname === 'i.giphy.com') {
 		const params = parseEmbedPlayerFromUrl(url.toString());
-		if (params && params.type === 'giphy_gif') {
+		if (params && params.type === 'giphyGif') {
 			return params.metaUri;
 		}
 	}

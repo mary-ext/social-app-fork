@@ -63,7 +63,7 @@ export function ServiceWorkerSection() {
 
 			break;
 		}
-		case 'update_installing': {
+		case 'updateInstalling': {
 			row = busyRow(
 				m['screens.settings.update.installingUpdateEllipsis'](),
 				m['screens.settings.update.installingUpdate'](),
@@ -71,7 +71,7 @@ export function ServiceWorkerSection() {
 
 			break;
 		}
-		case 'update_ready': {
+		case 'updateReady': {
 			row = (
 				<Settings.ButtonRow
 					label={m['screens.settings.update.reload']()}

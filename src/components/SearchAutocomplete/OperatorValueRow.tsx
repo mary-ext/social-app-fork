@@ -33,7 +33,7 @@ const valueLabel = (op: OperatorName, value: string): string | undefined => {
 };
 
 /** a completed `op:value` filter suggestion (e.g. `has:media`, `from:following`). */
-export function OperatorValueRow({ row }: { row: Extract<ListRow, { kind: 'operator-value' }> }) {
+export function OperatorValueRow({ row }: { row: Extract<ListRow, { kind: 'operatorValue' }> }) {
 	const label = valueLabel(row.op, row.value);
 
 	return (

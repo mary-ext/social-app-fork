@@ -112,7 +112,7 @@ const useExternalNav = (rawHref: string, action: LinkAction) => {
 
 		// a group-chat invite opens the join dialog in place rather than navigating to /chat/<code>.
 		const link = resolved?.link;
-		if (link?.kind === 'chat-invite') {
+		if (link?.kind === 'chatInvite') {
 			groupChatJoinHandle.openWithPayload({ code: link.code });
 			return;
 		}

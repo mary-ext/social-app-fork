@@ -54,7 +54,7 @@ const RECORD_PATHS: readonly { kind: Extract<AppLink, { rkey: RecordKey }>['kind
 	{ kind: 'feed', re: FEED_RE },
 	{ kind: 'list', re: LIST_RE },
 	{ kind: 'post', re: POST_RE },
-	{ kind: 'starter-pack', re: STARTER_PACK_RE },
+	{ kind: 'starterPack', re: STARTER_PACK_RE },
 ];
 
 /**
@@ -77,7 +77,7 @@ export const parseBlueskyPath = (url: URL): AppLink | undefined => {
 	const chatInviteMatch = CHAT_INVITE_RE.exec(path);
 	if (chatInviteMatch) {
 		const [, code] = chatInviteMatch;
-		return code ? { kind: 'chat-invite', code } : undefined;
+		return code ? { kind: 'chatInvite', code } : undefined;
 	}
 
 	const hashtagMatch = HASHTAG_RE.exec(path);

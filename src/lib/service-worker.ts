@@ -16,8 +16,8 @@ export type ServiceWorkerStatus =
 	| 'installed'
 	| 'installing'
 	| 'uninstalled'
-	| 'update_installing'
-	| 'update_ready';
+	| 'updateInstalling'
+	| 'updateReady';
 
 const events = new SimpleEventEmitter<[ServiceWorkerStatus]>();
 let status: ServiceWorkerStatus = 'uninstalled';
@@ -35,9 +35,9 @@ const setStatus = (next: ServiceWorkerStatus) => {
 const reconcile = () => {
 	const reg = registration;
 	if (reg?.waiting) {
-		setStatus('update_ready');
+		setStatus('updateReady');
 	} else if (reg?.installing) {
-		setStatus(reg.active ? 'update_installing' : 'installing');
+		setStatus(reg.active ? 'updateInstalling' : 'installing');
 	} else {
 		setStatus(reg?.active ? 'installed' : 'uninstalled');
 	}

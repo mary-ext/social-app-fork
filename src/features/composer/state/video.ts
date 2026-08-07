@@ -19,34 +19,34 @@ type CaptionsTrack = { lang: string; file: File };
 
 export type VideoAction =
 	| {
-			type: 'compressing_to_uploading';
+			type: 'compressingToUploading';
 			video: CompressedVideo;
 			signal: AbortSignal;
 	  }
 	| {
-			type: 'uploading_to_processing';
+			type: 'uploadingToProcessing';
 			jobId: string;
 			signal: AbortSignal;
 	  }
-	| { type: 'to_error'; error: string; signal: AbortSignal }
+	| { type: 'toError'; error: string; signal: AbortSignal }
 	| {
-			type: 'to_done';
+			type: 'toDone';
 			blobRef: AtpBlob;
 			signal: AbortSignal;
 	  }
-	| { type: 'update_progress'; progress: number; signal: AbortSignal }
+	| { type: 'updateProgress'; progress: number; signal: AbortSignal }
 	| {
-			type: 'update_alt_text';
+			type: 'updateAltText';
 			altText: string;
 			signal: AbortSignal;
 	  }
 	| {
-			type: 'update_captions';
+			type: 'updateCaptions';
 			updater: (prev: CaptionsTrack[]) => CaptionsTrack[];
 			signal: AbortSignal;
 	  }
 	| {
-			type: 'update_job_status';
+			type: 'updateJobStatus';
 			jobStatus: AppBskyVideoDefs.JobStatus;
 			signal: AbortSignal;
 	  };
@@ -148,7 +148,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 		// This action is stale and the process that spawned it is no longer relevant.
 		return state;
 	}
-	if (action.type === 'to_error') {
+	if (action.type === 'toError') {
 		return {
 			status: 'error',
 			progress: 100,
@@ -160,24 +160,24 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			altText: state.altText,
 			captions: state.captions,
 		};
-	} else if (action.type === 'update_progress') {
+	} else if (action.type === 'updateProgress') {
 		if (state.status === 'compressing' || state.status === 'uploading') {
 			return {
 				...state,
 				progress: action.progress,
 			};
 		}
-	} else if (action.type === 'update_alt_text') {
+	} else if (action.type === 'updateAltText') {
 		return {
 			...state,
 			altText: action.altText,
 		};
-	} else if (action.type === 'update_captions') {
+	} else if (action.type === 'updateCaptions') {
 		return {
 			...state,
 			captions: action.updater(state.captions),
 		};
-	} else if (action.type === 'compressing_to_uploading') {
+	} else if (action.type === 'compressingToUploading') {
 		if (state.status === 'compressing') {
 			return {
 				status: 'uploading',
@@ -190,7 +190,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			};
 		}
 		return state;
-	} else if (action.type === 'uploading_to_processing') {
+	} else if (action.type === 'uploadingToProcessing') {
 		if (state.status === 'uploading') {
 			return {
 				status: 'processing',
@@ -204,7 +204,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				captions: state.captions,
 			};
 		}
-	} else if (action.type === 'update_job_status') {
+	} else if (action.type === 'updateJobStatus') {
 		if (state.status === 'processing') {
 			return {
 				...state,
@@ -212,7 +212,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				progress: action.jobStatus.progress !== undefined ? action.jobStatus.progress / 100 : state.progress,
 			};
 		}
-	} else if (action.type === 'to_done') {
+	} else if (action.type === 'toDone') {
 		if (state.status === 'uploading' || state.status === 'processing') {
 			return {
 				status: 'done',
@@ -247,7 +247,7 @@ export async function processVideo(
 		const message = getCompressErrorMessage(e);
 		if (message !== null) {
 			dispatch({
-				type: 'to_error',
+				type: 'toError',
 				error: message,
 				signal,
 			});
@@ -255,7 +255,7 @@ export async function processVideo(
 		return;
 	}
 	dispatch({
-		type: 'compressing_to_uploading',
+		type: 'compressingToUploading',
 		video,
 		signal,
 	});
@@ -265,7 +265,7 @@ export async function processVideo(
 		if (pdsUrl.startsWith(LOCAL_DEV_SERVICE)) {
 			const blobRef = await uploadVideoBlobDirectly(pds, video, signal);
 			dispatch({
-				type: 'to_done',
+				type: 'toDone',
 				blobRef,
 				signal,
 			});
@@ -279,14 +279,14 @@ export async function processVideo(
 			did,
 			signal,
 			setProgress: (p) => {
-				dispatch({ type: 'update_progress', progress: p, signal });
+				dispatch({ type: 'updateProgress', progress: p, signal });
 			},
 		});
 	} catch (e) {
 		const message = getUploadErrorMessage(e);
 		if (message !== null) {
 			dispatch({
-				type: 'to_error',
+				type: 'toError',
 				error: message,
 				signal,
 			});
@@ -296,7 +296,7 @@ export async function processVideo(
 
 	const jobId = uploadResponse.jobId;
 	dispatch({
-		type: 'uploading_to_processing',
+		type: 'uploadingToProcessing',
 		jobId,
 		signal,
 	});
@@ -338,7 +338,7 @@ export async function processVideo(
 
 			console.error('Error processing video', e);
 			dispatch({
-				type: 'to_error',
+				type: 'toError',
 				error: getProcessingErrorMessage(status?.error),
 				signal,
 			});
@@ -347,13 +347,13 @@ export async function processVideo(
 
 		if (blob) {
 			dispatch({
-				type: 'to_done',
+				type: 'toDone',
 				blobRef: blob,
 				signal,
 			});
 		} else {
 			dispatch({
-				type: 'update_job_status',
+				type: 'updateJobStatus',
 				jobStatus: status,
 				signal,
 			});

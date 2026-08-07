@@ -75,7 +75,7 @@ export type ConvoItem =
 			message: ChatBskyConvoDefs.MessageView;
 	  }
 	| {
-			type: 'pending-message';
+			type: 'pendingMessage';
 			key: string;
 			message: ChatBskyConvoDefs.MessageView;
 			failed: boolean;
@@ -83,12 +83,12 @@ export type ConvoItem =
 			retry?: () => void;
 	  }
 	| {
-			type: 'deleted-message';
+			type: 'deletedMessage';
 			key: string;
 			message: ChatBskyConvoDefs.DeletedMessageView;
 	  }
 	| {
-			type: 'system-message';
+			type: 'systemMessage';
 			key: string;
 			message: ChatBskyConvoDefs.SystemMessageView;
 	  }
@@ -225,10 +225,10 @@ export type ConvoState =
 
 export type ConvoEvent =
 	| {
-			type: 'convo-fetched';
+			type: 'convoFetched';
 			convo: ChatBskyConvoDefs.ConvoView;
 	  }
 	| {
-			type: 'invalidate-block-state';
+			type: 'invalidateBlockState';
 			accountDids: string[];
 	  };

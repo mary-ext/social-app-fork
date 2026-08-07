@@ -64,24 +64,24 @@ export type PostDraft = {
 };
 
 export type PostAction =
-	| { type: 'update_text'; text: string }
-	| { type: 'update_labels'; labels: SelfLabel[] }
-	| { type: 'embed_add_images'; images: ComposerImage[] }
-	| { type: 'embed_update_image'; image: ComposerImage }
-	| { type: 'embed_remove_image'; image: ComposerImage }
+	| { type: 'updateText'; text: string }
+	| { type: 'updateLabels'; labels: SelfLabel[] }
+	| { type: 'embedAddImages'; images: ComposerImage[] }
+	| { type: 'embedUpdateImage'; image: ComposerImage }
+	| { type: 'embedRemoveImage'; image: ComposerImage }
 	| {
-			type: 'embed_add_video';
+			type: 'embedAddVideo';
 			asset: VideoAsset;
 			abortController: AbortController;
 	  }
-	| { type: 'embed_remove_video' }
-	| { type: 'embed_update_video'; videoAction: VideoAction }
-	| { type: 'embed_add_uri'; uri: string }
-	| { type: 'embed_remove_quote' }
-	| { type: 'embed_remove_link' }
-	| { type: 'embed_add_gif'; gif: Gif }
-	| { type: 'embed_update_gif'; alt: string }
-	| { type: 'embed_remove_gif' };
+	| { type: 'embedRemoveVideo' }
+	| { type: 'embedUpdateVideo'; videoAction: VideoAction }
+	| { type: 'embedAddUri'; uri: string }
+	| { type: 'embedRemoveQuote' }
+	| { type: 'embedRemoveLink' }
+	| { type: 'embedAddGif'; gif: Gif }
+	| { type: 'embedUpdateGif'; alt: string }
+	| { type: 'embedRemoveGif' };
 
 export type ThreadDraft = {
 	posts: PostDraft[];
@@ -108,26 +108,26 @@ export type ComposerState = {
 };
 
 export type ComposerAction =
-	| { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Main }
-	| { type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[] }
+	| { type: 'updatePostgate'; postgate: AppBskyFeedPostgate.Main }
+	| { type: 'updateThreadgate'; threadgate: ThreadgateAllowUISetting[] }
 	| {
-			type: 'update_post';
+			type: 'updatePost';
 			postId: string;
 			postAction: PostAction;
 	  }
 	| {
-			type: 'add_post';
+			type: 'addPost';
 	  }
 	| {
-			type: 'remove_post';
+			type: 'removePost';
 			postId: string;
 	  }
 	| {
-			type: 'focus_post';
+			type: 'focusPost';
 			postId: string;
 	  }
 	| {
-			type: 'restore_from_draft';
+			type: 'restoreFromDraft';
 			draftId: string;
 			posts: PostDraft[];
 			threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'];
@@ -143,7 +143,7 @@ export type ComposerAction =
 			initInteractionSettings: AppBskyActorDefs.PostInteractionSettingsPref | undefined;
 	  }
 	| {
-			type: 'mark_saved';
+			type: 'markSaved';
 			draftId: string;
 	  };
 
@@ -166,7 +166,7 @@ function imagesToMediaVariant(images: ComposerImage[]): ImagesMedia | GalleryMed
 
 export function composerReducer(state: ComposerState, action: ComposerAction): ComposerState {
 	switch (action.type) {
-		case 'update_postgate': {
+		case 'updatePostgate': {
 			return {
 				...state,
 				isDirty: true,
@@ -176,7 +176,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				},
 			};
 		}
-		case 'update_threadgate': {
+		case 'updateThreadgate': {
 			return {
 				...state,
 				isDirty: true,
@@ -186,7 +186,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				},
 			};
 		}
-		case 'update_post': {
+		case 'updatePost': {
 			let nextPosts = state.thread.posts;
 			const postIndex = state.thread.posts.findIndex((p) => p.id === action.postId);
 			if (postIndex !== -1) {
@@ -202,7 +202,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				},
 			};
 		}
-		case 'add_post': {
+		case 'addPost': {
 			const activePostIndex = state.activePostIndex;
 			const nextPosts = [...state.thread.posts];
 			nextPosts.splice(activePostIndex + 1, 0, {
@@ -225,7 +225,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				},
 			};
 		}
-		case 'remove_post': {
+		case 'removePost': {
 			if (state.thread.posts.length < 2) {
 				return state;
 			}
@@ -251,7 +251,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				},
 			};
 		}
-		case 'focus_post': {
+		case 'focusPost': {
 			const nextActivePostIndex = state.thread.posts.findIndex((p) => p.id === action.postId);
 			if (nextActivePostIndex === -1) {
 				return state;
@@ -261,7 +261,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				activePostIndex: nextActivePostIndex,
 			};
 		}
-		case 'restore_from_draft': {
+		case 'restoreFromDraft': {
 			const { draftId, posts, threadgateAllow, postgateEmbeddingRules, loadedMedia, originalLocalRefs } =
 				action;
 
@@ -295,7 +295,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				activePostFocusRequestId: state.activePostFocusRequestId,
 			};
 		}
-		case 'mark_saved': {
+		case 'markSaved': {
 			return {
 				...state,
 				isDirty: false,
@@ -307,20 +307,20 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 
 function postReducer(state: PostDraft, action: PostAction): PostDraft {
 	switch (action.type) {
-		case 'update_text': {
+		case 'updateText': {
 			return {
 				...state,
 				text: action.text,
 				shortenedGraphemeLength: getShortenedLength(action.text),
 			};
 		}
-		case 'update_labels': {
+		case 'updateLabels': {
 			return {
 				...state,
 				labels: action.labels,
 			};
 		}
-		case 'embed_add_images': {
+		case 'embedAddImages': {
 			if (action.images.length === 0) {
 				return state;
 			}
@@ -341,7 +341,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_update_image': {
+		case 'embedUpdateImage': {
 			const prevMedia = state.embed.media;
 			if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
 				const updatedImage = action.image;
@@ -364,7 +364,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			}
 			return state;
 		}
-		case 'embed_remove_image': {
+		case 'embedRemoveImage': {
 			const prevMedia = state.embed.media;
 			let nextLabels = state.labels;
 			if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
@@ -394,7 +394,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			}
 			return state;
 		}
-		case 'embed_add_video': {
+		case 'embedAddVideo': {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (!prevMedia) {
@@ -411,7 +411,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_update_video': {
+		case 'embedUpdateVideo': {
 			const videoAction = action.videoAction;
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
@@ -429,7 +429,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_remove_video': {
+		case 'embedRemoveVideo': {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (prevMedia?.type === 'video') {
@@ -449,7 +449,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_add_uri': {
+		case 'embedAddUri': {
 			const prevQuote = state.embed.quote;
 			const prevLink = state.embed.link;
 			let nextQuote = prevQuote;
@@ -478,7 +478,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_remove_link': {
+		case 'embedRemoveLink': {
 			let nextLabels = state.labels;
 			if (!state.embed.media) {
 				nextLabels = [];
@@ -492,7 +492,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_remove_quote': {
+		case 'embedRemoveQuote': {
 			return {
 				...state,
 				embed: {
@@ -501,7 +501,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_add_gif': {
+		case 'embedAddGif': {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (!prevMedia) {
@@ -519,7 +519,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_update_gif': {
+		case 'embedUpdateGif': {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (prevMedia?.type === 'gif') {
@@ -536,7 +536,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				},
 			};
 		}
-		case 'embed_remove_gif': {
+		case 'embedRemoveGif': {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (prevMedia?.type === 'gif') {

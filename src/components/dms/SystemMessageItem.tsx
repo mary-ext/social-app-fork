@@ -17,7 +17,7 @@ export function SystemMessageItem({
 	item,
 	relatedProfiles,
 }: {
-	item: ConvoItem & { type: 'system-message' };
+	item: ConvoItem & { type: 'systemMessage' };
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 }) {
 	const inviteLinkHandle = useInviteLinkDialog();

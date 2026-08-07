@@ -47,8 +47,7 @@ export function useModerationCauseDescription(
 		};
 	}
 
-	// fork-synthetic cause for replies hidden by the thread author (no @atcute equivalent)
-	if (cause.type === 'reply-hidden') {
+	if (cause.type === 'replyHidden') {
 		const isMe = currentAccount?.did === cause.source.did;
 		return {
 			icon: EyeSlash,

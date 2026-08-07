@@ -54,7 +54,7 @@ let MessageItem = ({
 	isFirstInCluster: boolean;
 	isGroupChat?: boolean;
 	isLastInCluster: boolean;
-	item: ConvoItem & { type: 'message' | 'pending-message' };
+	item: ConvoItem & { type: 'message' | 'pendingMessage' };
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 	squaredBottomCorner: boolean;
 	squaredTopCorner: boolean;
@@ -86,7 +86,7 @@ let MessageItem = ({
 			: undefined;
 	const onPressReplyTo = replyToMessageId ? () => scrollToMessage(replyToMessageId) : undefined;
 
-	const isPending = item.type === 'pending-message';
+	const isPending = item.type === 'pendingMessage';
 
 	const displayName = profile ? profileDisplayName(profile) : null;
 
@@ -339,18 +339,18 @@ function MessageItemMetadata({
 	item,
 	align,
 }: {
-	item: ConvoItem & { type: 'message' | 'pending-message' };
+	item: ConvoItem & { type: 'message' | 'pendingMessage' };
 	align: 'left' | 'right';
 }): React.ReactNode {
 	const handleRetry = (e: MouseEvent) => {
-		if (item.type === 'pending-message' && item.retry) {
+		if (item.type === 'pendingMessage' && item.retry) {
 			e.preventDefault();
 			item.retry();
 		}
 	};
 
 	switch (item.type) {
-		case 'pending-message': {
+		case 'pendingMessage': {
 			return item.failed ? (
 				<Text align={align} className={css.meta} color="negative_400" size="xs">
 					<Text color="negative_400" size="xs">

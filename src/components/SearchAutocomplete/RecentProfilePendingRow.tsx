@@ -13,7 +13,7 @@ export function RecentProfilePendingRow({
 	row,
 }: {
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
-	row: Extract<ListRow, { kind: 'recent-profile-pending' }>;
+	row: Extract<ListRow, { kind: 'recentProfilePending' }>;
 }) {
 	return (
 		<div className={styles.row}>

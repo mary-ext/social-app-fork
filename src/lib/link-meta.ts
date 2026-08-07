@@ -20,7 +20,7 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 	// starter pack links need metadata, including short links.
 	if (isClientUrl(url)) {
 		const kind = resolveUrlToLink(url)?.kind;
-		if (kind !== 'bsky-starter-pack-code' && kind !== 'starter-pack') {
+		if (kind !== 'bskyStarterPackCode' && kind !== 'starterPack') {
 			return { url };
 		}
 	}

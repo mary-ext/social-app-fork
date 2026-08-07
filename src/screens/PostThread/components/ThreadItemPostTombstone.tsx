@@ -7,7 +7,7 @@ import { m } from '#/paraglide/messages';
 import * as css from './ThreadItemPostTombstone.css';
 
 export type ThreadItemPostTombstoneProps = {
-	type: 'not-found' | 'blocked';
+	type: 'notFound' | 'blocked';
 };
 
 export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) {
@@ -19,7 +19,7 @@ export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) 
 			Icon = PersonXIcon;
 			break;
 		}
-		case 'not-found':
+		case 'notFound':
 		default: {
 			copy = m['screens.postThread.post.error.notFound']();
 			Icon = TrashIcon;

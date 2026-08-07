@@ -50,7 +50,7 @@ type ResolvedListRecord = {
 
 type ResolvedStarterPackRecord = {
 	type: 'record';
-	kind: 'starter-pack';
+	kind: 'starterPack';
 	record: ComAtprotoRepoStrongRef.Main;
 	view: AppBskyGraphDefs.StarterPackView;
 };
@@ -70,7 +70,7 @@ export class EmbeddingDisabledError extends Error {
 
 export async function resolveLink(appview: Client, uri: string): Promise<ResolvedLink> {
 	let link = resolveUrlToLink(uri);
-	if (link?.kind === 'bsky-starter-pack-code') {
+	if (link?.kind === 'bskyStarterPackCode') {
 		const expanded = await resolveShortLink(link.code);
 
 		if (expanded) {
@@ -126,7 +126,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 				view: post,
 			};
 		}
-		case 'starter-pack': {
+		case 'starterPack': {
 			const did = await fetchDid(link.actor);
 			const starterPack = makeRecordUri(did, 'app.bsky.graph.starterpack', link.rkey);
 			const res = await ok(
@@ -136,7 +136,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			);
 			return {
 				type: 'record',
-				kind: 'starter-pack',
+				kind: 'starterPack',
 				record: {
 					uri: res.starterPack.uri,
 					cid: res.starterPack.cid,

@@ -141,7 +141,7 @@ export const ExternalEmbedLink = ({
 					}}
 				/>
 			);
-		} else if (data.kind === 'starter-pack') {
+		} else if (data.kind === 'starterPack') {
 			linkComponent = <StarterPackEmbed starterPack={data.view} />;
 		}
 	}

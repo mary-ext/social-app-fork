@@ -12,7 +12,7 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 	const target = router.match(url.pathname + url.search);
 	switch (target?.name) {
 		case 'GroupChatJoin': {
-			return { kind: 'chat-invite', code: target.code };
+			return { kind: 'chatInvite', code: target.code };
 		}
 		case 'Hashtag': {
 			return { kind: 'hashtag', author: target.author, tag: target.tag };
@@ -33,10 +33,10 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 			return { kind: 'search', query: target.q };
 		}
 		case 'StarterPack': {
-			return { kind: 'starter-pack', actor: target.actor, rkey: target.rkey };
+			return { kind: 'starterPack', actor: target.actor, rkey: target.rkey };
 		}
 		case 'StarterPackShort': {
-			return { kind: 'bsky-starter-pack-code', code: target.code };
+			return { kind: 'bskyStarterPackCode', code: target.code };
 		}
 		case 'Topic': {
 			return { kind: 'topic', topic: target.topic };

@@ -93,7 +93,7 @@ function MediaEmbed({
 				);
 			}
 			const externalLink = resolveUrlToLink(media.external.uri);
-			const chatInviteCode = externalLink?.kind === 'chat-invite' ? externalLink.code : undefined;
+			const chatInviteCode = externalLink?.kind === 'chatInvite' ? externalLink.code : undefined;
 			if (chatInviteCode) {
 				return (
 					<ContentHider

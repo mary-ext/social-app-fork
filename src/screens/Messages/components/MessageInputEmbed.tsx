@@ -78,7 +78,7 @@ export function useMessageEmbed() {
 
 			const link = resolveUrlToLink(embedUrl);
 			switch (link?.kind) {
-				case 'chat-invite': {
+				case 'chatInvite': {
 					setEmbedState({ type: 'invite', code: link.code });
 					break;
 				}

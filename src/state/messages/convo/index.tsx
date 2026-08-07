@@ -123,12 +123,12 @@ function ConvoProviderInner({
 	useEffect(() => {
 		return convo.on((event) => {
 			switch (event.type) {
-				case 'convo-fetched': {
+				case 'convoFetched': {
 					// a deep-linked convo is fetched by the agent alone, leaving consumers to repeat it
 					precacheConvoQuery(queryClient, event.convo);
 					break;
 				}
-				case 'invalidate-block-state': {
+				case 'invalidateBlockState': {
 					for (const did of event.accountDids) {
 						void queryClient.invalidateQueries({
 							queryKey: createProfileQueryKey(did),

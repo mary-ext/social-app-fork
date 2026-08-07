@@ -10,15 +10,15 @@ import { safeUrlParse } from '#/lib/utils/url';
  * `#/lib/routes/app-links` maps these onto this app's routes.
  */
 export type AppLink =
-	| { kind: 'bsky-starter-pack-code'; code: string }
-	| { kind: 'chat-invite'; code: string }
+	| { kind: 'bskyStarterPackCode'; code: string }
+	| { kind: 'chatInvite'; code: string }
 	| { kind: 'feed'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'hashtag'; author: ActorIdentifier | undefined; tag: string }
 	| { kind: 'list'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'post'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'profile'; actor: ActorIdentifier }
 	| { kind: 'search'; query: string }
-	| { kind: 'starter-pack'; actor: ActorIdentifier; rkey: RecordKey }
+	| { kind: 'starterPack'; actor: ActorIdentifier; rkey: RecordKey }
 	| { kind: 'topic'; topic: string };
 
 // #region scheme registry

@@ -78,7 +78,7 @@ export function ComposerFooter({
 
 	const onSelectGif = useCallback(
 		(gif: Gif) => {
-			dispatch({ type: 'embed_add_gif', gif });
+			dispatch({ type: 'embedAddGif', gif });
 		},
 		[dispatch],
 	);

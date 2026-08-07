@@ -48,7 +48,7 @@ import { useRequestMessagePollInterval } from './use-request-poll-interval';
 const CHAT_ITEM_HEIGHT_ESTIMATE = 78;
 
 type ListItem = {
-	type: 'CONVERSATION';
+	type: 'conversation';
 	conversation: ChatBskyConvoDefs.ConvoView;
 	selected: boolean;
 };
@@ -149,7 +149,7 @@ export function ChatList({
 		? data.pages
 				.flatMap((page) => page.convos)
 				.map((convo) => ({
-					type: 'CONVERSATION',
+					type: 'conversation',
 					conversation: convo,
 					selected: convo.id === selectedChat,
 				}))

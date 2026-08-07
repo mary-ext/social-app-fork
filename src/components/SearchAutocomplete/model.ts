@@ -67,18 +67,18 @@ export type InteractiveItem =
 	| { kind: 'goto'; key: string; name: string; target: RouteTarget }
 	| { kind: 'link'; key: string; path: string }
 	| { kind: 'operator'; key: string; operator: SearchOperator }
-	| { kind: 'operator-value'; key: string; op: OperatorName; value: string }
+	| { kind: 'operatorValue'; key: string; op: OperatorName; value: string }
 	| { kind: 'profile'; key: string; op?: OperatorName; profile: AnyProfileView }
-	| { kind: 'recent-profile'; key: string; profile: AnyProfileView }
-	| { kind: 'recent-query'; key: string; query: string }
+	| { kind: 'recentProfile'; key: string; profile: AnyProfileView }
+	| { kind: 'recentQuery'; key: string; query: string }
 	| { kind: 'search'; key: string; query: string };
 
 /** a render-only list row. */
 export type ChromeRow =
 	| { kind: 'divider'; key: string }
 	| { kind: 'hero'; key: string }
-	| { kind: 'recent-profile-pending'; did: Did; key: string }
-	| { kind: 'section-label'; key: string; label: string };
+	| { kind: 'recentProfilePending'; did: Did; key: string }
+	| { kind: 'sectionLabel'; key: string; label: string };
 
 export type DateItem = Extract<InteractiveItem, { kind: 'date' }>;
 // date items only appear in the calendar.
@@ -115,14 +115,14 @@ const buildRecentRows = (
 			break;
 		}
 		if (entry.kind === 'query') {
-			rows.push({ kind: 'recent-query', key: `recent-query-${entry.query}`, query: entry.query });
+			rows.push({ kind: 'recentQuery', key: `recent-query-${entry.query}`, query: entry.query });
 		} else {
 			const profile = recentProfiles.get(entry.did);
 			if (profile) {
-				rows.push({ kind: 'recent-profile', key: `recent-profile-${entry.did}`, profile });
+				rows.push({ kind: 'recentProfile', key: `recent-profile-${entry.did}`, profile });
 			} else if (pending) {
 				rows.push({
-					kind: 'recent-profile-pending',
+					kind: 'recentProfilePending',
 					did: entry.did,
 					key: `recent-profile-pending-${entry.did}`,
 				});
@@ -135,8 +135,8 @@ const buildRecentRows = (
 const isInteractive = (row: ListRow): row is Exclude<InteractiveItem, { kind: 'date' }> =>
 	row.kind !== 'divider' &&
 	row.kind !== 'hero' &&
-	row.kind !== 'recent-profile-pending' &&
-	row.kind !== 'section-label';
+	row.kind !== 'recentProfilePending' &&
+	row.kind !== 'sectionLabel';
 
 /**
  * returns result items in highlight order, excluding list chrome.
@@ -243,11 +243,11 @@ export const buildResult = ({
 	switch (mode.kind) {
 		case 'actor': {
 			const rows: ListRow[] = [
-				{ kind: 'section-label', key: 'section-label', label: actorSectionLabel(mode.op) },
+				{ kind: 'sectionLabel', key: 'section-label', label: actorSectionLabel(mode.op) },
 			];
 			// offer `from:following` only in the `from:` picker.
 			if (mode.op === 'from' && !fromActive && 'following'.startsWith(mode.query)) {
-				rows.push({ kind: 'operator-value', key: 'from-following', op: 'from', value: 'following' });
+				rows.push({ kind: 'operatorValue', key: 'from-following', op: 'from', value: 'following' });
 			}
 			for (const profile of profiles) {
 				rows.push({ kind: 'profile', key: `actor-${profile.did}`, op: mode.op, profile });
@@ -291,7 +291,7 @@ export const buildResult = ({
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
 					rows.push(
-						{ kind: 'section-label', key: 'recent-label', label: m['components.web.search.recent.label']() },
+						{ kind: 'sectionLabel', key: 'recent-label', label: m['components.web.search.recent.label']() },
 						...recent,
 					);
 				}
@@ -300,9 +300,9 @@ export const buildResult = ({
 				!rows.some(
 					(row) =>
 						row.kind === 'profile' ||
-						row.kind === 'recent-profile' ||
-						row.kind === 'recent-profile-pending' ||
-						row.kind === 'recent-query' ||
+						row.kind === 'recentProfile' ||
+						row.kind === 'recentProfilePending' ||
+						row.kind === 'recentQuery' ||
 						row.kind === 'search',
 				)
 			) {
@@ -311,7 +311,7 @@ export const buildResult = ({
 			if (operators.length > 0) {
 				rows.push(
 					{ kind: 'divider', key: 'divider' },
-					{ kind: 'section-label', key: 'options-label', label: m['components.web.search.filter.label']() },
+					{ kind: 'sectionLabel', key: 'options-label', label: m['components.web.search.filter.label']() },
 				);
 				for (const operator of operators) {
 					rows.push({ kind: 'operator', key: `operator-${operator.name}`, operator });
@@ -323,7 +323,7 @@ export const buildResult = ({
 			const rows: ListRow[] = [];
 			for (const option of mode.options) {
 				if (option.startsWith(mode.query)) {
-					rows.push({ kind: 'operator-value', key: `enum-${mode.op}-${option}`, op: mode.op, value: option });
+					rows.push({ kind: 'operatorValue', key: `enum-${mode.op}-${option}`, op: mode.op, value: option });
 				}
 			}
 			return { kind: 'enum', rows };

@@ -112,7 +112,7 @@ export function MessageComposer({
 		const nextDetectedUris = new Map<string, LinkFacetMatch>();
 		for (const [uri, match] of detectLinks(nextText)) {
 			const kind = resolveUrlToLink(uri)?.kind;
-			if (kind === 'chat-invite' || kind === 'post') {
+			if (kind === 'chatInvite' || kind === 'post') {
 				nextDetectedUris.set(uri, match);
 			}
 		}

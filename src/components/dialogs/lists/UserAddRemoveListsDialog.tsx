@@ -46,7 +46,7 @@ export function UserAddRemoveListsDialog({
 
 type Item =
 	| { type: 'list'; item: ListWithMembership }
-	| { type: 'section-header'; key: string; title: string };
+	| { type: 'sectionHeader'; key: string; title: string };
 
 function keyExtractor(item: Item): string {
 	return item.type === 'list' ? item.item.list.uri : item.key;
@@ -72,13 +72,13 @@ function DialogInner({
 		const modLists = lists.filter((i) => i.list.purpose === 'app.bsky.graph.defs#modlist');
 		if (curateLists.length > 0) {
 			items.push(
-				{ type: 'section-header', key: 'curatelist', title: m['components.dialogs.list.userLists']() },
+				{ type: 'sectionHeader', key: 'curatelist', title: m['components.dialogs.list.userLists']() },
 				...curateLists.map((item): Item => ({ type: 'list', item })),
 			);
 		}
 		if (modLists.length > 0) {
 			items.push(
-				{ type: 'section-header', key: 'modlist', title: m['common.moderation.listsLabel']() },
+				{ type: 'sectionHeader', key: 'modlist', title: m['common.moderation.listsLabel']() },
 				...modLists.map((item): Item => ({ type: 'list', item })),
 			);
 		}
@@ -102,7 +102,7 @@ function DialogInner({
 
 	const renderItem = (item: Item, index: number) => {
 		switch (item.type) {
-			case 'section-header': {
+			case 'sectionHeader': {
 				return <ListHeader title={item.title} topBorder={index !== 0} />;
 			}
 			case 'list': {

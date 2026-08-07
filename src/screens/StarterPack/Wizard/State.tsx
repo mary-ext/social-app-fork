@@ -14,17 +14,17 @@ const steps = ['Details', 'Profiles', 'Feeds'] as const;
 type Step = (typeof steps)[number];
 
 type Action =
-	| { type: 'Next' }
-	| { type: 'Back' }
-	| { type: 'SetCanNext'; canNext: boolean }
-	| { type: 'SetName'; name: string }
-	| { type: 'SetDescription'; description: string }
-	| { type: 'AddProfile'; profile: AnyProfileView }
-	| { type: 'RemoveProfile'; profileDid: string }
-	| { type: 'AddFeed'; feed: AppBskyFeedDefs.GeneratorView }
-	| { type: 'RemoveFeed'; feedUri: string }
-	| { type: 'SetProcessing'; processing: boolean }
-	| { type: 'SetError'; error: string };
+	| { type: 'next' }
+	| { type: 'back' }
+	| { type: 'setCanNext'; canNext: boolean }
+	| { type: 'setName'; name: string }
+	| { type: 'setDescription'; description: string }
+	| { type: 'addProfile'; profile: AnyProfileView }
+	| { type: 'removeProfile'; profileDid: string }
+	| { type: 'addFeed'; feed: AppBskyFeedDefs.GeneratorView }
+	| { type: 'removeFeed'; feedUri: string }
+	| { type: 'setProcessing'; processing: boolean }
+	| { type: 'setError'; error: string };
 
 interface State {
 	canNext: boolean;
@@ -57,12 +57,12 @@ function reducer(state: State, action: Action): State {
 
 	// -- Navigation
 	const currentIndex = steps.indexOf(state.currentStep);
-	if (action.type === 'Next' && state.currentStep !== 'Feeds') {
+	if (action.type === 'next' && state.currentStep !== 'Feeds') {
 		updatedState = {
 			...state,
 			currentStep: steps[currentIndex + 1]!,
 		};
-	} else if (action.type === 'Back' && state.currentStep !== 'Details') {
+	} else if (action.type === 'back' && state.currentStep !== 'Details') {
 		updatedState = {
 			...state,
 			currentStep: steps[currentIndex - 1]!,
@@ -70,15 +70,15 @@ function reducer(state: State, action: Action): State {
 	}
 
 	switch (action.type) {
-		case 'SetName': {
+		case 'setName': {
 			updatedState = { ...state, name: action.name.slice(0, 50) };
 			break;
 		}
-		case 'SetDescription': {
+		case 'setDescription': {
 			updatedState = { ...state, description: action.description };
 			break;
 		}
-		case 'AddProfile': {
+		case 'addProfile': {
 			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
 				Toast.show(m['screens.starterPack.people.max']({ max: STARTER_PACK_MAX_SIZE }), {
 					type: 'info',
@@ -88,14 +88,14 @@ function reducer(state: State, action: Action): State {
 			}
 			break;
 		}
-		case 'RemoveProfile': {
+		case 'removeProfile': {
 			updatedState = {
 				...state,
 				profiles: state.profiles.filter((profile) => profile.did !== action.profileDid),
 			};
 			break;
 		}
-		case 'AddFeed': {
+		case 'addFeed': {
 			if (state.feeds.length >= STARTER_PACK_MAX_FEEDS) {
 				Toast.show(m['screens.starterPack.feeds.max']({ max: STARTER_PACK_MAX_FEEDS }), {
 					type: 'info',
@@ -105,14 +105,14 @@ function reducer(state: State, action: Action): State {
 			}
 			break;
 		}
-		case 'RemoveFeed': {
+		case 'removeFeed': {
 			updatedState = {
 				...state,
 				feeds: state.feeds.filter((f) => f.uri !== action.feedUri),
 			};
 			break;
 		}
-		case 'SetProcessing': {
+		case 'setProcessing': {
 			updatedState = { ...state, processing: action.processing };
 			break;
 		}

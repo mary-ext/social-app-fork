@@ -20,7 +20,7 @@ export function RecentProfileRow({
 	row,
 }: {
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
-	row: Extract<ListRow, { kind: 'recent-profile' }>;
+	row: Extract<ListRow, { kind: 'recentProfile' }>;
 }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts

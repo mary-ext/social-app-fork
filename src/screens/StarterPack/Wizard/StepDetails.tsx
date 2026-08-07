@@ -67,7 +67,7 @@ export function StepDetails() {
 							: m['screens.starterPack.name.default']()
 					}
 					maxLength={NAME_MAX_LENGTH}
-					onChangeText={(text) => dispatch({ type: 'SetName', name: text })}
+					onChangeText={(text) => dispatch({ type: 'setName', name: text })}
 					value={state.name ?? ''}
 				/>
 			</TextField.Root>
@@ -81,7 +81,7 @@ export function StepDetails() {
 					}
 					minRows={6}
 					multiline
-					onChangeText={(text) => dispatch({ type: 'SetDescription', description: text })}
+					onChangeText={(text) => dispatch({ type: 'setDescription', description: text })}
 					value={state.description ?? ''}
 				/>
 			</TextField.Root>

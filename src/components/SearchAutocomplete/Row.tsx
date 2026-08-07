@@ -45,25 +45,25 @@ export function Row({
 		case 'operator': {
 			return <OperatorRow row={row} />;
 		}
-		case 'operator-value': {
+		case 'operatorValue': {
 			return <OperatorValueRow row={row} />;
 		}
 		case 'profile': {
 			return <ProfileRow row={row} />;
 		}
-		case 'recent-profile': {
+		case 'recentProfile': {
 			return <RecentProfileRow onRemoveRecent={onRemoveRecent} row={row} />;
 		}
-		case 'recent-profile-pending': {
+		case 'recentProfilePending': {
 			return <RecentProfilePendingRow onRemoveRecent={onRemoveRecent} row={row} />;
 		}
-		case 'recent-query': {
+		case 'recentQuery': {
 			return <RecentQueryRow onRemoveRecent={onRemoveRecent} row={row} />;
 		}
 		case 'search': {
 			return <SearchRow row={row} />;
 		}
-		case 'section-label': {
+		case 'sectionLabel': {
 			return <SectionLabelRow row={row} />;
 		}
 	}

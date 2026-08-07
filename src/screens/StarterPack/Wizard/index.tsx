@@ -173,7 +173,7 @@ function WizardInner({
 	const onSuccessCreate = (data: { uri: string; cid: string }) => {
 		const rkey = parseCanonicalResourceUri(data.uri).rkey;
 		void prefetchImage(getStarterPackOgCard(currentProfile!.did, rkey));
-		dispatch({ type: 'SetProcessing', processing: false });
+		dispatch({ type: 'setProcessing', processing: false });
 
 		// hand control back to the dialog that launched us — it reopens itself once its screen is in view
 		// again. a wizard deep-linked with a `targetDid` has no such screen behind it, so it falls through
@@ -205,7 +205,7 @@ function WizardInner({
 		onSuccess: onSuccessCreate,
 		onError: (e) => {
 			console.error('Failed to create starter pack', e);
-			dispatch({ type: 'SetProcessing', processing: false });
+			dispatch({ type: 'setProcessing', processing: false });
 			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',
 			});
@@ -215,7 +215,7 @@ function WizardInner({
 		onSuccess: onSuccessEdit,
 		onError: (e) => {
 			console.error('Failed to edit starter pack', e);
-			dispatch({ type: 'SetProcessing', processing: false });
+			dispatch({ type: 'setProcessing', processing: false });
 			Toast.show(m['screens.starterPack.error.create'](), {
 				type: 'error',
 			});
@@ -223,7 +223,7 @@ function WizardInner({
 	});
 
 	const submit = () => {
-		dispatch({ type: 'SetProcessing', processing: true });
+		dispatch({ type: 'setProcessing', processing: true });
 		const name = state.name?.trim() || getDefaultName();
 		const description = trimText(state.description ?? '') || undefined;
 		if (currentStarterPack && currentListItems) {
@@ -250,7 +250,7 @@ function WizardInner({
 			submit();
 			return;
 		}
-		dispatch({ type: 'Next' });
+		dispatch({ type: 'next' });
 	};
 
 	const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds;
@@ -269,7 +269,7 @@ function WizardInner({
 					onClick={(evt) => {
 						if (state.currentStep !== 'Details') {
 							evt.preventDefault();
-							dispatch({ type: 'Back' });
+							dispatch({ type: 'back' });
 						}
 					}}
 				/>
@@ -297,7 +297,7 @@ function WizardInner({
 						color="primary"
 						size="large"
 						className={css.detailsNext}
-						onClick={() => dispatch({ type: 'Next' })}
+						onClick={() => dispatch({ type: 'next' })}
 					>
 						<ButtonText>{m['common.action.next']()}</ButtonText>
 					</Button>

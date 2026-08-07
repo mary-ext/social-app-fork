@@ -100,7 +100,7 @@ function stripEdgeToken(text: string, raw: string): string {
 function getLastMessageKey(items: RenderItem[]): string | undefined {
 	for (let i = items.length - 1; i >= 0; i--) {
 		const item = items[i]!;
-		if (item.type === 'message' || item.type === 'pending-message') {
+		if (item.type === 'message' || item.type === 'pendingMessage') {
 			return item.key;
 		}
 	}
@@ -269,7 +269,7 @@ export function MessagesList({
 					continue;
 				}
 				const link = resolveUrlToLink(segment.uri);
-				if (link?.kind !== 'chat-invite' || link.code !== code) {
+				if (link?.kind !== 'chatInvite' || link.code !== code) {
 					continue;
 				}
 				trimmedText = stripEdgeToken(trimmedText, segment.text);
@@ -316,7 +316,7 @@ export function MessagesList({
 	});
 
 	const renderItem = (item: RenderItem): React.ReactNode => {
-		if (item.type === 'message' || item.type === 'pending-message') {
+		if (item.type === 'message' || item.type === 'pendingMessage') {
 			return (
 				<MessageItem
 					hasLargeGapFromPrev={item.hasLargeGapFromPrev}
@@ -329,11 +329,11 @@ export function MessagesList({
 					squaredTopCorner={item.squaredTopCorner}
 				/>
 			);
-		} else if (item.type === 'deleted-message') {
+		} else if (item.type === 'deletedMessage') {
 			return <Text>Deleted message</Text>;
-		} else if (item.type === 'system-message') {
+		} else if (item.type === 'systemMessage') {
 			return <SystemMessageItem item={item} relatedProfiles={convoState.relatedProfiles} />;
-		} else if (item.type === 'system-message-group') {
+		} else if (item.type === 'systemMessageGroup') {
 			return (
 				<SystemMessageGroup
 					item={item}
@@ -342,7 +342,7 @@ export function MessagesList({
 					relatedProfiles={convoState.relatedProfiles}
 				/>
 			);
-		} else if (item.type === 'system-message-date-divider') {
+		} else if (item.type === 'systemMessageDateDivider') {
 			return <DateDivider date={item.sentAt} />;
 		} else if (item.type === 'error') {
 			return <MessageListError item={item} />;

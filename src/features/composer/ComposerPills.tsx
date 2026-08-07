@@ -31,12 +31,12 @@ export function ComposerPills({
 				<ThreadgateBtn
 					postgate={thread.postgate}
 					onChangePostgate={(nextPostgate) => {
-						dispatch({ type: 'update_postgate', postgate: nextPostgate });
+						dispatch({ type: 'updatePostgate', postgate: nextPostgate });
 					}}
 					threadgateAllowUISettings={thread.threadgate}
 					onChangeThreadgateAllowUISettings={(nextThreadgate) => {
 						dispatch({
-							type: 'update_threadgate',
+							type: 'updateThreadgate',
 							threadgate: nextThreadgate,
 						});
 					}}
@@ -47,10 +47,10 @@ export function ComposerPills({
 					labels={post.labels}
 					onChange={(nextLabels) => {
 						dispatch({
-							type: 'update_post',
+							type: 'updatePost',
 							postId: post.id,
 							postAction: {
-								type: 'update_labels',
+								type: 'updateLabels',
 								labels: nextLabels,
 							},
 						});

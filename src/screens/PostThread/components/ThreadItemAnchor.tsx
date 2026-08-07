@@ -169,7 +169,7 @@ function ThreadItemAnchorInner({
 		if (isControlledByViewer && isPostHiddenByThreadgate) {
 			additionalPostAlerts = [
 				{
-					type: 'reply-hidden',
+					type: 'replyHidden',
 					source: { type: 'user', did: currentAccount?.did },
 					priority: 6,
 				},

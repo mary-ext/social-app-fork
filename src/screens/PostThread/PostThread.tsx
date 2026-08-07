@@ -369,7 +369,7 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		} else if (item.type === 'threadPostBlocked') {
 			return <ThreadItemPostTombstone type="blocked" />;
 		} else if (item.type === 'threadPostNotFound') {
-			return <ThreadItemPostTombstone type="not-found" />;
+			return <ThreadItemPostTombstone type="notFound" />;
 		} else if (item.type === 'replyComposer') {
 			if (gtMobile) {
 				return <ThreadComposePrompt onPressCompose={onReplyToAnchor} />;

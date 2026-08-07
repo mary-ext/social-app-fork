@@ -51,7 +51,7 @@ export function useAddImagesWithCap(currentCount: number, dispatchPostAction: (a
 				);
 			}
 			dispatchPostAction({
-				type: 'embed_add_images',
+				type: 'embedAddImages',
 				images: result.accepted,
 			});
 		},

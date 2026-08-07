@@ -16,5 +16,5 @@ export const parseBlueskyShortPath = (url: URL): AppLink | undefined => {
 	}
 
 	const [, code] = match;
-	return code ? { kind: 'bsky-starter-pack-code', code } : undefined;
+	return code ? { kind: 'bskyStarterPackCode', code } : undefined;
 };

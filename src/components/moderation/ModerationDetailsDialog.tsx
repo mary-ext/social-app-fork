@@ -68,7 +68,7 @@ function ModerationDetailsDialogInner({ handle, modcause }: ModerationDetailsDia
 	if (!modcause) {
 		name = m['common.moderation.contentWarning']();
 		description = m['common.moderation.generalWarning']();
-	} else if (modcause.type === 'reply-hidden') {
+	} else if (modcause.type === 'replyHidden') {
 		const isYou = currentAccount?.did === modcause.source.did;
 		name = isYou ? m['common.thread.replyHiddenByYou']() : m['common.thread.replyHiddenByAuthor']();
 		description = isYou ? m['common.thread.youHidReply']() : m['common.thread.authorHiddenReply']();

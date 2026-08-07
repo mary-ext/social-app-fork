@@ -8,7 +8,7 @@ import {
 export type AppModerationCause =
 	| ModerationCause
 	| {
-			type: 'reply-hidden';
+			type: 'replyHidden';
 			source: { type: 'user'; did: string };
 			priority: 6;
 			downgraded?: boolean;
@@ -16,7 +16,7 @@ export type AppModerationCause =
 
 function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {
 	switch (cause.type) {
-		case 'reply-hidden': {
+		case 'replyHidden': {
 			return cause.source.did;
 		}
 		case ModerationCauseType.Label: {
