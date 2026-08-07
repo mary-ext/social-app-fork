@@ -1,9 +1,5 @@
 # `@base-ui/react` patch notes
 
-rationale for each hunk in `@base-ui__react.patch`. keep this in sync when the patch changes, and
-re-evaluate every hunk on an `@base-ui/react` upgrade — line offsets and the surrounding code may
-have shifted, and upstream may have fixed the issue.
-
 ## `utils/InternalBackdrop.mjs` — drop the `cutout` clip-path
 
 removes the branch that punches a polygon hole in the internal backdrop around a `cutout` element.
@@ -41,8 +37,7 @@ Base UI Autocomplete owns the highlighted index and exposes no controlled/impera
 search calendar (`src/components/SearchAutocomplete`) needs to drive it: open with today (or the
 first of a partially-typed month) highlighted, and roll the highlight across months at the grid
 edges via sentinel cells. the store already has `setIndices`; this just surfaces it through the
-`actionsRef` the consumer already passes. re-check on upgrade — if upstream adds a first-class
-highlighted-index API, drop this hunk for it.
+`actionsRef` the consumer already passes.
 
 ## `dialog/root/useRenderDialogRoot.mjs` + `popover/root/PopoverRoot.mjs` + `drawer/root/DrawerRoot.mjs` — `CloseWatcher` for the Android back gesture
 
@@ -55,8 +50,7 @@ upstream shipped this only in the drawer (`DrawerProviderReporter`); we moved it
 `useRenderDialogRoot` — the shared path for `Dialog.Root`, `AlertDialog.Root`, and `Drawer.Root` —
 and deleted the drawer's copy. topmost is `nestedOpenDialogCount === 0`. popovers have no
 nested-open count, so `PopoverRoot` gates on `!nested` (only a root popover registers). no `.d.mts`
-changes. re-check on upgrade — if upstream generalizes the drawer's `CloseWatcher` to the other
-roots, drop these hunks.
+changes.
 
 ## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts` — add an `autoUnmount` opt-out
 
@@ -74,5 +68,25 @@ the contract to call `actions.unmount()` after its own exit animation. the right
 unmount timing — without this, the popup's `mounted` never flips false and the suggestions linger in
 the DOM after every blur/escape/outside-press. `autoUnmount` restores the automatic unmount (which
 already awaits the close transition via `useAnimationsFinished`, so a future CSS exit animation
-still works) while keeping the imperative handle. re-check on upgrade — if upstream decouples the
-auto-unmount from `actionsRef`, drop this hunk for it.
+still works) while keeping the imperative handle.
+
+## `slider/control/SliderControl.mjs` — make touch gestures commit
+
+two ways a touch gesture ends without `onValueCommitted`. `handleTouchEnd` is its only caller, and
+it commits only when `currentInteractionValueRef` is set.
+
+**a tap.** `pointerdown` and the native `touchstart` handler both fire on touch and both run
+`startPressing`, which nulls that ref; the second one's `setValue` is then a no-op, because
+`pointerdown` already applied the value, so the ref stays null. `handleTouchStart` now bails when
+the ref is already set. drags escape this because later moves re-set the ref, and a mouse escapes it
+because there is no `touchstart`.
+
+**a cancelled gesture.** `handleTouchEnd` is bound to `pointerup`/`touchend` only, so a
+`pointercancel`/`touchcancel` — Android Chrome collapsing the url bar mid-drag, long-press, palm
+rejection — leaves the slider mid-drag, with `dragging` stuck true and the document move listeners
+attached. upstream's net in `handleTouchMove` (a later `pointermove` with `buttons === 0`) needs a
+move that a cancelled finger never sends. both cancel events are now bound, and unbound in
+`stopListening`.
+
+either one froze the video seekbar at the press position while playback continued, since
+`Scrubber.tsx` only clears `seekPosition` from `onValueCommitted`.

@@ -220,6 +220,48 @@ index b08725a5171a602851f805efeadfd1c6eee46df8..dca12d19e87792bb2e1008be69901a1a
    const handleImperativeClose = React.useCallback(() => {
      store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
    }, [store]);
+diff --git a/slider/control/SliderControl.mjs b/slider/control/SliderControl.mjs
+index db79a9da9b8feccae0c67c87fb5fc6d3c615b48a..01b7a494ee94225c7ff1ca48a8579a8f32647773 100644
+--- a/slider/control/SliderControl.mjs
++++ b/slider/control/SliderControl.mjs
+@@ -326,7 +326,7 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+       touchIdRef.current = touch.identifier;
+     }
+     const fingerCoords = getFingerCoords(nativeEvent, touchIdRef);
+-    if (fingerCoords != null) {
++    if (fingerCoords != null && currentInteractionValueRef.current == null) {
+       startPressing(fingerCoords);
+       const finger = getFingerState(fingerCoords);
+       if (finger == null) {
+@@ -346,13 +346,18 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+     doc.addEventListener('touchend', handleTouchEnd, {
+       passive: true
+     });
++    doc.addEventListener('touchcancel', handleTouchEnd, {
++      passive: true
++    });
+   });
+   const stopListening = useStableCallback(() => {
+     const doc = ownerDocument(controlRef.current);
+     doc.removeEventListener('pointermove', handleTouchMove);
+     doc.removeEventListener('pointerup', handleTouchEnd);
++    doc.removeEventListener('pointercancel', handleTouchEnd);
+     doc.removeEventListener('touchmove', handleTouchMove);
+     doc.removeEventListener('touchend', handleTouchEnd);
++    doc.removeEventListener('touchcancel', handleTouchEnd);
+     pressedValuesRef.current = null;
+     currentInteractionValueRef.current = null;
+   });
+@@ -428,6 +433,9 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+         doc.addEventListener('pointerup', handleTouchEnd, {
+           once: true
+         });
++        doc.addEventListener('pointercancel', handleTouchEnd, {
++          once: true
++        });
+       }
+     }, elementProps],
+     stateAttributesMapping: sliderStateAttributesMapping
 diff --git a/utils/InternalBackdrop.mjs b/utils/InternalBackdrop.mjs
 index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
 --- a/utils/InternalBackdrop.mjs
