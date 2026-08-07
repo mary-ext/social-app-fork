@@ -409,7 +409,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 		}
 
 		switch (type) {
-			case 'go':
+			case 'go': {
 				const formattedGroupId = `${id}`;
 				return {
 					type: 'flickr_album',
@@ -419,14 +419,17 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 						-2,
 					)}@N${formattedGroupId.slice(-2)}`,
 				};
-			case 's':
+			}
+			case 's': {
 				return {
 					type: 'flickr_album',
 					source: 'flickr',
 					playerUri: `https://embedr.flickr.com/photosets/${id}`,
 				};
-			default:
+			}
+			default: {
 				return undefined;
+			}
 		}
 	}
 
@@ -435,7 +438,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 	if (bandcampRegex.test(urlp.hostname)) {
 		const pathComponents = urlp.pathname.split('/');
 		switch (pathComponents[1]) {
-			case 'album':
+			case 'album': {
 				return {
 					type: 'bandcamp_album',
 					source: 'bandcamp',
@@ -443,7 +446,8 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 						urlp.href,
 					)}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
 				};
-			case 'track':
+			}
+			case 'track': {
 				return {
 					type: 'bandcamp_track',
 					source: 'bandcamp',
@@ -451,8 +455,10 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 						urlp.href,
 					)}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
 				};
-			default:
+			}
+			default: {
 				return undefined;
+			}
 		}
 	}
 }
@@ -473,34 +479,42 @@ export function getPlayerAspect({
 	switch (type) {
 		case 'youtube_video':
 		case 'twitch_video':
-		case 'vimeo_video':
+		case 'vimeo_video': {
 			return { aspectRatio: 16 / 9 };
-		case 'youtube_short':
+		}
+		case 'youtube_short': {
 			if (getViewportSize().height < 600) {
 				return { aspectRatio: (9 / 16) * 1.75 };
 			} else {
 				return { aspectRatio: (9 / 16) * 1.5 };
 			}
+		}
 		case 'spotify_album':
 		case 'apple_music_album':
 		case 'apple_music_playlist':
 		case 'spotify_playlist':
-		case 'soundcloud_set':
+		case 'soundcloud_set': {
 			return { height: 380 };
-		case 'spotify_song':
+		}
+		case 'spotify_song': {
 			if (width <= 300) {
 				return { height: 155 };
 			}
 			return { height: 232 };
-		case 'soundcloud_track':
+		}
+		case 'soundcloud_track': {
 			return { height: 165 };
-		case 'apple_music_song':
+		}
+		case 'apple_music_song': {
 			return { height: 150 };
+		}
 		case 'bandcamp_album':
-		case 'bandcamp_track':
+		case 'bandcamp_track': {
 			return { aspectRatio: 1 };
-		default:
+		}
+		default: {
 			return { aspectRatio: 16 / 9 };
+		}
 	}
 }
 

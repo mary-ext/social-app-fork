@@ -18,28 +18,38 @@ import { type RouteTarget, router } from '#/routes';
  */
 export const appLinkToTarget = (link: AppLink): RouteTarget => {
 	switch (link.kind) {
-		case 'bsky-starter-pack-code':
+		case 'bsky-starter-pack-code': {
 			return { name: 'StarterPackShort', code: link.code };
+		}
 		// a chat invite has a route so the link keeps anchor semantics (opening in a new tab lands on the join
 		// screen), but a plain click is intercepted into the join dialog instead.
-		case 'chat-invite':
+		case 'chat-invite': {
 			return { name: 'GroupChatJoin', code: link.code };
-		case 'feed':
+		}
+		case 'feed': {
 			return feedTarget(link.actor, link.rkey);
-		case 'hashtag':
+		}
+		case 'hashtag': {
 			return { name: 'Hashtag', author: link.author, tag: link.tag };
-		case 'list':
+		}
+		case 'list': {
 			return listTarget(link.actor, link.rkey);
-		case 'post':
+		}
+		case 'post': {
 			return postTarget(link.actor, link.rkey);
-		case 'profile':
+		}
+		case 'profile': {
 			return profileTarget(link.actor);
-		case 'search':
+		}
+		case 'search': {
 			return { name: 'Search', q: link.query };
-		case 'starter-pack':
+		}
+		case 'starter-pack': {
 			return starterPackTarget(link.actor, link.rkey);
-		case 'topic':
+		}
+		case 'topic': {
 			return { name: 'Topic', topic: link.topic };
+		}
 	}
 };
 
@@ -64,12 +74,15 @@ type ResolvedUrl = {
 export const resolveUrl = (url: string): ResolvedUrl | undefined => {
 	const target = describeUrl(url);
 	switch (target?.kind) {
-		case 'client':
+		case 'client': {
 			return { link: target.link, path: router.href(appLinkToTarget(target.link)) };
-		case 'own':
+		}
+		case 'own': {
 			return { link: target.link, path: target.path };
-		default:
+		}
+		default: {
 			return undefined;
+		}
 	}
 };
 

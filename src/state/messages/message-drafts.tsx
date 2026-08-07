@@ -55,12 +55,15 @@ type Actions = { type: 'set'; convoId: string; draft: string } | { type: 'clear'
 
 function reducer(state: State, action: Actions): State {
 	switch (action.type) {
-		case 'set':
+		case 'set': {
 			return { ...state, [action.convoId]: action.draft };
-		case 'clear':
+		}
+		case 'clear': {
 			return { ...state, [action.convoId]: '' };
-		default:
+		}
+		default: {
 			return state;
+		}
 	}
 }
 

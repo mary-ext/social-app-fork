@@ -20,33 +20,42 @@ export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000;
 
 export function canBeMessaged(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowIncoming) {
-		case 'none':
+		case 'none': {
 			return false;
-		case 'all':
+		}
+		case 'all': {
 			return true;
+		}
 		// if unset, treat as following
 		case 'following':
-		case undefined:
+		case undefined: {
 			return !!profile.viewer?.followedBy;
+		}
 		// any other values are invalid according to the lexicon, so
 		// let's treat as false to be safe
-		default:
+		default: {
 			return false;
+		}
 	}
 }
 
 export function canBeAddedToGroup(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowGroupInvites) {
-		case 'none':
+		case 'none': {
 			return false;
-		case 'all':
+		}
+		case 'all': {
 			return true;
-		case 'following':
+		}
+		case 'following': {
 			return !!profile.viewer?.followedBy;
-		case undefined:
+		}
+		case undefined: {
 			return canBeMessaged(profile);
-		default:
+		}
+		default: {
 			return false;
+		}
 	}
 }
 

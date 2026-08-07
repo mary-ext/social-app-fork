@@ -62,12 +62,15 @@ export function Autocomplete({
 						<BaseAutocomplete.List>
 							{items.map((item) => {
 								switch (item.type) {
-									case 'emoji':
+									case 'emoji': {
 										return <EmojiItem key={item.key} item={item} onSelect={onSelect} />;
-									case 'profile':
+									}
+									case 'profile': {
 										return <ProfileItem key={item.key} item={item} onSelect={onSelect} />;
-									default:
+									}
+									default: {
 										return null;
+									}
 								}
 							})}
 						</BaseAutocomplete.List>

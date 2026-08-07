@@ -214,8 +214,9 @@ export class MessagesEventBus {
 				}
 				break;
 			}
-			default:
+			default: {
 				break;
+			}
 		}
 	}
 
@@ -304,8 +305,9 @@ export class MessagesEventBus {
 			case MessagesEventBusStatus.Backgrounded: {
 				return BACKGROUND_POLL_INTERVAL;
 			}
-			default:
+			default: {
 				return DEFAULT_POLL_INTERVAL;
+			}
 		}
 	}
 

@@ -168,11 +168,13 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 
 	const renderItem = ({ item }: ListRenderItemInfo<Slice>) => {
 		switch (item.type) {
-			case 'about':
+			case 'about': {
 				return <AboutSection />;
-			case 'emptyDropZone':
+			}
+			case 'emptyDropZone': {
 				return <EmptyDropZone dnd={dnd} icon={item.icon} message={item.message} section={item.section} />;
-			case 'feed':
+			}
+			case 'feed': {
 				return (
 					<FeedRow
 						dnd={dnd}
@@ -189,9 +191,11 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						section={item.section}
 					/>
 				);
-			case 'header':
+			}
+			case 'header': {
 				return <SectionHeader>{item.title}</SectionHeader>;
-			case 'noFollowingFeed':
+			}
+			case 'noFollowingFeed': {
 				return (
 					<div className={css.borderedSection}>
 						<NoFollowingFeed
@@ -201,7 +205,8 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						/>
 					</div>
 				);
-			case 'noSavedFeeds':
+			}
+			case 'noSavedFeeds': {
 				return (
 					<div className={css.borderedSection}>
 						<NoSavedFeedsOfAnyType
@@ -217,6 +222,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						/>
 					</div>
 				);
+			}
 		}
 	};
 

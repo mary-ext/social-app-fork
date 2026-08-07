@@ -40,14 +40,18 @@ export function threadgateRecordToAllowUISetting(
 
 	return mapDefined(threadgate.allow, (allow): ThreadgateAllowUISetting | undefined => {
 		switch (allow.$type) {
-			case 'app.bsky.feed.threadgate#followerRule':
+			case 'app.bsky.feed.threadgate#followerRule': {
 				return { type: 'followers' };
-			case 'app.bsky.feed.threadgate#followingRule':
+			}
+			case 'app.bsky.feed.threadgate#followingRule': {
 				return { type: 'following' };
-			case 'app.bsky.feed.threadgate#listRule':
+			}
+			case 'app.bsky.feed.threadgate#listRule': {
 				return { type: 'list', list: allow.list };
-			case 'app.bsky.feed.threadgate#mentionRule':
+			}
+			case 'app.bsky.feed.threadgate#mentionRule': {
 				return { type: 'mention' };
+			}
 		}
 	});
 }

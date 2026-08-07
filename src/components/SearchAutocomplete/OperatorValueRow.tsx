@@ -11,18 +11,24 @@ import type { OperatorName } from './query-syntax';
 /** the human-readable description for a fixed `op:value` filter (`has:media`, `from:following`). */
 const valueLabel = (op: OperatorName, value: string): string | undefined => {
 	switch (`${op}:${value}`) {
-		case 'from:following':
+		case 'from:following': {
 			return m['components.web.search.operator.following']();
-		case 'has:media':
+		}
+		case 'has:media': {
 			return m['components.web.search.operator.media']();
-		case 'has:video':
+		}
+		case 'has:video': {
 			return m['components.web.search.operator.video']();
-		case 'replies:none':
+		}
+		case 'replies:none': {
 			return m['components.web.search.operator.repliesNone']();
-		case 'replies:only':
+		}
+		case 'replies:only': {
 			return m['components.web.search.operator.repliesOnly']();
-		default:
+		}
+		default: {
 			return undefined;
+		}
 	}
 };
 

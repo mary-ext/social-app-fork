@@ -14,15 +14,17 @@ export function ThreadItemPostTombstone({ type }: ThreadItemPostTombstoneProps) 
 	let copy: string;
 	let Icon: typeof PersonXIcon;
 	switch (type) {
-		case 'blocked':
+		case 'blocked': {
 			copy = m['screens.postThread.post.error.blocked']();
 			Icon = PersonXIcon;
 			break;
+		}
 		case 'not-found':
-		default:
+		default: {
 			copy = m['screens.postThread.post.error.notFound']();
 			Icon = TrashIcon;
 			break;
+		}
 	}
 
 	return (

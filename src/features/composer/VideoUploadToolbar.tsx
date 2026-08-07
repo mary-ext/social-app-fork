@@ -17,22 +17,27 @@ export function VideoUploadToolbar({ state }: { state: VideoState }) {
 	const isGif = state.video?.mimeType === 'image/gif';
 
 	switch (state.status) {
-		case 'compressing':
+		case 'compressing': {
 			text = isGif ? m['view.composer.gif.compressing']() : m['view.composer.video.compressing']();
 			break;
-		case 'uploading':
+		}
+		case 'uploading': {
 			text = isGif ? m['view.composer.gif.uploading']() : m['view.composer.video.uploading']();
 			break;
-		case 'processing':
+		}
+		case 'processing': {
 			text = isGif ? m['view.composer.gif.processing']() : m['view.composer.video.processing']();
 			break;
-		case 'error':
+		}
+		case 'error': {
 			text = m['common.error.heading']();
 			wheelProgress = 100;
 			break;
-		case 'done':
+		}
+		case 'done': {
 			text = isGif ? m['view.composer.gif.uploaded']() : m['view.composer.video.uploaded']();
 			break;
+		}
 	}
 
 	return (

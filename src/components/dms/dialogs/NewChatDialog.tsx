@@ -140,16 +140,21 @@ function ChatRow({
 	row: ChatListRow;
 }) {
 	switch (row.kind) {
-		case 'empty':
+		case 'empty': {
 			return <Empty message={row.message} />;
-		case 'label':
+		}
+		case 'label': {
 			return <SectionLabel message={row.message} />;
-		case 'newGroupChat':
+		}
+		case 'newGroupChat': {
 			return <NewGroupChatRow dimmed={!canCreateGroups} onClick={onStartGroup} />;
-		case 'placeholder':
+		}
+		case 'placeholder': {
 			return <ProfileCard.LoadingPlaceholder count={10} />;
-		case 'profile':
+		}
+		case 'profile': {
 			return <ProfilePickerRow moderationOpts={moderationOpts} onSelect={onSelectRecipient} row={row} />;
+		}
 	}
 }
 

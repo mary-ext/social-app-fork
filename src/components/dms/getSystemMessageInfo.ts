@@ -104,13 +104,16 @@ export function getSystemMessageInfo(
 				action: action ?? undefined,
 			};
 		}
-		case 'chat.bsky.convo.defs#systemMessageDataLockConvo':
+		case 'chat.bsky.convo.defs#systemMessageDataLockConvo': {
 			return { Icon: LockIcon, message: m['components.dms.update.chatLocked']() };
-		case 'chat.bsky.convo.defs#systemMessageDataUnlockConvo':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataUnlockConvo': {
 			return { Icon: UnlockIcon, message: m['components.dms.update.chatUnlocked']() };
-		case 'chat.bsky.convo.defs#systemMessageDataLockConvoPermanently':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataLockConvoPermanently': {
 			return { Icon: LockIcon, message: m['components.dms.update.chatEnded']() };
-		case 'chat.bsky.convo.defs#systemMessageDataEditGroup':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataEditGroup': {
 			return {
 				Icon: PencilIcon,
 				message:
@@ -118,30 +121,35 @@ export function getSystemMessageInfo(
 						? m['components.dms.update.titleChangedTo']({ name: data.newName })
 						: m['components.dms.update.titleChanged'](),
 			};
-		case 'chat.bsky.convo.defs#systemMessageDataCreateJoinLink':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataCreateJoinLink': {
 			return {
 				Icon: ChainLinkIcon,
 				message: m['components.dms.invite.created'](),
 				action: { kind: 'inviteLink' },
 			};
-		case 'chat.bsky.convo.defs#systemMessageDataEditJoinLink':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataEditJoinLink': {
 			return {
 				Icon: ChainLinkIcon,
 				message: m['components.dms.invite.edited'](),
 				action: { kind: 'inviteLink' },
 			};
-		case 'chat.bsky.convo.defs#systemMessageDataEnableJoinLink':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataEnableJoinLink': {
 			return {
 				Icon: ChainLinkIcon,
 				message: m['components.dms.invite.enabled'](),
 				action: { kind: 'inviteLink' },
 			};
-		case 'chat.bsky.convo.defs#systemMessageDataDisableJoinLink':
+		}
+		case 'chat.bsky.convo.defs#systemMessageDataDisableJoinLink': {
 			return {
 				Icon: ChainLinkBrokenIcon,
 				message: m['common.chat.inviteLinkDisabled'](),
 				action: { kind: 'inviteLink' },
 			};
+		}
 	}
 	return null;
 }

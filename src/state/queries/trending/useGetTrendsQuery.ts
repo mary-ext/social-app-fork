@@ -37,14 +37,18 @@ interface QueryProps {
 
 const labelFor = (link: AppLink, name: string): string => {
 	switch (link.kind) {
-		case 'hashtag':
+		case 'hashtag': {
 			return m['components.trendingTopics.a11y.browseTag']({ name });
-		case 'search':
+		}
+		case 'search': {
 			return m['components.trendingTopics.a11y.browseAbout']({ name });
-		case 'starter-pack':
+		}
+		case 'starter-pack': {
 			return m['components.trendingTopics.a11y.browseStarterPack']({ name });
-		default:
+		}
+		default: {
 			return m['components.trendingTopics.a11y.browseTopic']({ name });
+		}
 	}
 };
 

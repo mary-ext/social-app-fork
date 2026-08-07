@@ -107,31 +107,37 @@ export function ProfileHeaderActions() {
 	let subscriptionsAllowed: boolean;
 	switch (profile.associated?.activitySubscription?.allowSubscriptions) {
 		case 'followers':
-		case undefined:
+		case undefined: {
 			subscriptionsAllowed = !!profile.viewer?.following;
 			break;
-		case 'mutuals':
+		}
+		case 'mutuals': {
 			subscriptionsAllowed = !!profile.viewer?.following && !!profile.viewer.followedBy;
 			break;
+		}
 		case 'none':
-		default:
+		default: {
 			subscriptionsAllowed = false;
 			break;
+		}
 	}
 
 	let relationshipActions: React.ReactNode = null;
 	switch (relationship) {
-		case 'self':
+		case 'self': {
 			relationshipActions = <EditProfileButton />;
 			break;
-		case 'blocking':
+		}
+		case 'blocking': {
 			relationshipActions = <UnblockButton />;
 			break;
+		}
 		case 'blocked-by':
-		case 'blocking-by-list':
+		case 'blocking-by-list': {
 			relationshipActions = null;
 			break;
-		case 'default':
+		}
+		case 'default': {
 			relationshipActions = (
 				<>
 					{hasSession && (
@@ -146,6 +152,7 @@ export function ProfileHeaderActions() {
 				</>
 			);
 			break;
+		}
 	}
 
 	return (

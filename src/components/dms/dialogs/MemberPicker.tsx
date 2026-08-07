@@ -190,12 +190,15 @@ function MemberRow({
 	row: MemberListRow;
 }) {
 	switch (row.kind) {
-		case 'empty':
+		case 'empty': {
 			return <Empty message={row.message} />;
-		case 'label':
+		}
+		case 'label': {
 			return <SectionLabel message={row.message} />;
-		case 'placeholder':
+		}
+		case 'placeholder': {
 			return <ProfileCard.LoadingPlaceholder count={10} />;
+		}
 		case 'profile': {
 			if (!moderationOpts) {
 				return null;

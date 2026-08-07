@@ -55,10 +55,12 @@ const shareItemToStringValue = (item: ShareTargetItem): string => {
 			const { convo } = item;
 			return convo.kind === 'group' ? convo.details.name : convo.primaryMember.handle;
 		}
-		case 'newGroupChat':
+		case 'newGroupChat': {
 			return m['components.dms.group.title']();
-		case 'profile':
+		}
+		case 'profile': {
 			return item.profile.handle;
+		}
 	}
 };
 
@@ -215,18 +217,23 @@ function ShareRow({
 	row: ShareTargetRow;
 }) {
 	switch (row.kind) {
-		case 'empty':
+		case 'empty': {
 			return <Empty message={row.message} />;
-		case 'existingChat':
+		}
+		case 'existingChat': {
 			return moderationOpts ? (
 				<ExistingChatRow moderationOpts={moderationOpts} onSelect={onSelectConversation} row={row} />
 			) : null;
-		case 'newGroupChat':
+		}
+		case 'newGroupChat': {
 			return <NewGroupChatRow dimmed={!canCreateGroups} onClick={onStartGroup} />;
-		case 'placeholder':
+		}
+		case 'placeholder': {
 			return <ProfileCard.LoadingPlaceholder count={10} />;
-		case 'profile':
+		}
+		case 'profile': {
 			return <ProfilePickerRow moderationOpts={moderationOpts} onSelect={onSelectRecipient} row={row} />;
+		}
 	}
 }
 

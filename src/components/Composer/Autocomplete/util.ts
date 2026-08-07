@@ -1,12 +1,16 @@
 export function parseAutocompleteItemType(type: string) {
 	switch (type) {
-		case 'mention':
+		case 'mention': {
 			return 'profile';
-		case 'tag':
+		}
+		case 'tag': {
 			return 'tag';
-		case 'emoji':
+		}
+		case 'emoji': {
 			return 'emoji';
-		default:
+		}
+		default: {
 			throw new Error(`Unknown autocomplete item type: ${type}`);
+		}
 	}
 }

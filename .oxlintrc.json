@@ -115,7 +115,8 @@
 			{
 				"ignoreStatic": true
 			}
-		]
+		],
+		"unicorn/switch-case-braces": ["warn", "always"]
 	},
 	"overrides": [
 		{

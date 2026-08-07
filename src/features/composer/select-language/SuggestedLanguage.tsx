@@ -292,16 +292,20 @@ function sanitizeTextForDetection(text: string): string {
 		switch (token.type) {
 			case 'mention':
 			case 'autolink':
-			case 'link':
+			case 'link': {
 				break;
-			case 'topic':
+			}
+			case 'topic': {
 				sanitized += token.name;
 				break;
-			case 'text':
+			}
+			case 'text': {
 				sanitized += token.content;
 				break;
-			default:
+			}
+			default: {
 				sanitized += token.raw;
+			}
 		}
 	}
 	return sanitized.trim();

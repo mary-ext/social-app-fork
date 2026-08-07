@@ -32,9 +32,10 @@ const randomAspect = () => (weightedIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : 
  */
 export function randomShape(): Shape | null {
 	switch (weightedIndex(EMBED_KIND_WEIGHTS)) {
-		case 1:
+		case 1: {
 			return { type: 'single', aspect: randomAspect() };
-		case 2:
+		}
+		case 2: {
 			return {
 				type: 'carousel',
 				// draw raw aspects (the tiles clamp their own width): the first two drive the row height, and
@@ -42,8 +43,10 @@ export function randomShape(): Shape | null {
 				// peg every placeholder to the tallest bucket.
 				tiles: Array.from({ length: 2 + weightedIndex(CAROUSEL_COUNT_WEIGHTS) }, randomAspect),
 			};
-		default:
+		}
+		default: {
 			return null;
+		}
 	}
 }
 

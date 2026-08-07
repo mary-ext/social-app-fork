@@ -70,13 +70,15 @@ function reducer(state: State, action: Action): State {
 	}
 
 	switch (action.type) {
-		case 'SetName':
+		case 'SetName': {
 			updatedState = { ...state, name: action.name.slice(0, 50) };
 			break;
-		case 'SetDescription':
+		}
+		case 'SetDescription': {
 			updatedState = { ...state, description: action.description };
 			break;
-		case 'AddProfile':
+		}
+		case 'AddProfile': {
 			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
 				Toast.show(m['screens.starterPack.people.max']({ max: STARTER_PACK_MAX_SIZE }), {
 					type: 'info',
@@ -85,13 +87,15 @@ function reducer(state: State, action: Action): State {
 				updatedState = { ...state, profiles: [...state.profiles, action.profile] };
 			}
 			break;
-		case 'RemoveProfile':
+		}
+		case 'RemoveProfile': {
 			updatedState = {
 				...state,
 				profiles: state.profiles.filter((profile) => profile.did !== action.profileDid),
 			};
 			break;
-		case 'AddFeed':
+		}
+		case 'AddFeed': {
 			if (state.feeds.length >= STARTER_PACK_MAX_FEEDS) {
 				Toast.show(m['screens.starterPack.feeds.max']({ max: STARTER_PACK_MAX_FEEDS }), {
 					type: 'info',
@@ -100,15 +104,18 @@ function reducer(state: State, action: Action): State {
 				updatedState = { ...state, feeds: [...state.feeds, action.feed] };
 			}
 			break;
-		case 'RemoveFeed':
+		}
+		case 'RemoveFeed': {
 			updatedState = {
 				...state,
 				feeds: state.feeds.filter((f) => f.uri !== action.feedUri),
 			};
 			break;
-		case 'SetProcessing':
+		}
+		case 'SetProcessing': {
 			updatedState = { ...state, processing: action.processing };
 			break;
+		}
 	}
 
 	return updatedState;

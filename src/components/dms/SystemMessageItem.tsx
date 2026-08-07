@@ -40,13 +40,14 @@ export function SystemMessageItem({
 	);
 
 	switch (action?.kind) {
-		case 'profile':
+		case 'profile': {
 			return (
 				<Link className={css.link} label={text} to={profileTarget(action.profile.did)}>
 					{row}
 				</Link>
 			);
-		case 'inviteLink':
+		}
+		case 'inviteLink': {
 			if (!inviteLinkHandle) {
 				return row;
 			}
@@ -55,7 +56,9 @@ export function SystemMessageItem({
 					{row}
 				</Dialog.Trigger>
 			);
-		default:
+		}
+		default: {
 			return row;
+		}
 	}
 }

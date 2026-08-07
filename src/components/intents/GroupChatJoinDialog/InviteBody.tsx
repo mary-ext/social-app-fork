@@ -57,7 +57,7 @@ export function InviteBody({
 	const { mutate: joinGroupChat, isPending: isJoinPending } = useRequestJoinGroupChat({
 		onSuccess: (result) => {
 			switch (result.status) {
-				case 'pending':
+				case 'pending': {
 					// Optimistically mark the link as requested so any invite cards backed by the preview cache
 					// (e.g. the DM embed) flip to "Requested" right away, rather than waiting on a server refetch
 					// that can lag behind the write.
@@ -67,6 +67,7 @@ export function InviteBody({
 					handle.close();
 					Toast.show(m['components.intents.accessRequest.success']());
 					break;
+				}
 				case 'joined': {
 					// Membership changed — refetch any cached previews of this link (e.g. a DM embed) so
 					// their viewer state reflects that the viewer is now a member.
@@ -88,24 +89,30 @@ export function InviteBody({
 				errorMessage = m['common.error.connection']();
 			} else if (err instanceof ClientResponseError) {
 				switch (err.error) {
-					case 'ConvoLocked':
+					case 'ConvoLocked': {
 						errorMessage = m['components.intents.join.error.conversationLocked']();
 						break;
-					case 'FollowRequired':
+					}
+					case 'FollowRequired': {
 						errorMessage = m['components.intents.permission.followersOnly']();
 						break;
-					case 'InvalidCode':
+					}
+					case 'InvalidCode': {
 						errorMessage = m['components.intents.inviteLink.error.invalidCode']();
 						break;
-					case 'LinkDisabled':
+					}
+					case 'LinkDisabled': {
 						errorMessage = m['components.intents.inviteLink.error.disabled']();
 						break;
-					case 'MemberLimitReached':
+					}
+					case 'MemberLimitReached': {
 						errorMessage = m['common.chat.error.memberLimit']();
 						break;
-					case 'UserKicked':
+					}
+					case 'UserKicked': {
 						errorMessage = m['components.intents.join.error.previouslyRemoved']();
 						break;
+					}
 				}
 			}
 			Toast.show(errorMessage);

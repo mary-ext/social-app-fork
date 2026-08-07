@@ -67,10 +67,12 @@ function toSystemMessageView(
 		case 'chat.bsky.convo.defs#logCreateJoinLink':
 		case 'chat.bsky.convo.defs#logEditJoinLink':
 		case 'chat.bsky.convo.defs#logEnableJoinLink':
-		case 'chat.bsky.convo.defs#logDisableJoinLink':
+		case 'chat.bsky.convo.defs#logDisableJoinLink': {
 			return ev.message;
-		default:
+		}
+		default: {
 			return null;
+		}
 	}
 }
 
@@ -498,8 +500,9 @@ export class Convo {
 			case ConvoStatus.Disabled: {
 				break;
 			}
-			default:
+			default: {
 				break;
+			}
 		}
 
 		this.updateLastActiveTimestamp();
@@ -1138,23 +1141,27 @@ export class Convo {
 				this.pendingMessageFailure = 'unrecoverable';
 
 				switch (e.description) {
-					case 'block between recipient and sender':
+					case 'block between recipient and sender': {
 						this.emitter.emit({
 							type: 'invalidate-block-state',
 							accountDids: [this.senderUserDid, ...this.recipients!.map((r) => r.did)],
 						});
 						break;
-					case 'Account is disabled':
+					}
+					case 'Account is disabled': {
 						this.dispatch({ event: ConvoDispatchEvent.Disable });
 						break;
+					}
 					case 'Convo not found':
 					case 'Account does not exist':
 					case 'recipient does not exist':
 					case 'recipient requires incoming messages to come from someone they follow':
-					case 'recipient has disabled incoming messages':
+					case 'recipient has disabled incoming messages': {
 						break;
-					default:
+					}
+					default: {
 						break;
+					}
 				}
 			}
 		} else if (isNetworkError(e)) {
@@ -1291,17 +1298,21 @@ export class Convo {
 
 		let item: ConvoItem;
 		switch (source.$type) {
-			case 'chat.bsky.convo.defs#messageView':
+			case 'chat.bsky.convo.defs#messageView': {
 				item = { type: 'message', key: source.id, message: this.tombstoneDeletedReplyTo(source) };
 				break;
-			case 'chat.bsky.convo.defs#deletedMessageView':
+			}
+			case 'chat.bsky.convo.defs#deletedMessageView': {
 				item = { type: 'deleted-message', key: source.id, message: source };
 				break;
-			case 'chat.bsky.convo.defs#systemMessageView':
+			}
+			case 'chat.bsky.convo.defs#systemMessageView': {
 				item = { type: 'system-message', key: source.id, message: source };
 				break;
-			default:
+			}
+			default: {
 				return null;
+			}
 		}
 
 		this.itemCache.set(source.id, { item, source });

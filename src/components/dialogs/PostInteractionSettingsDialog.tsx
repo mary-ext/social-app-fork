@@ -266,23 +266,29 @@ export function PostInteractionSettingsForm({
 		for (const setting of threadgateAllowUISettings) {
 			switch (setting.type) {
 				case 'everybody':
-				case 'nobody':
+				case 'nobody': {
 					// no granularity, early return with nothing
 					return [];
-				case 'followers':
+				}
+				case 'followers': {
 					values.push('followers');
 					break;
-				case 'following':
+				}
+				case 'following': {
 					values.push('following');
 					break;
-				case 'mention':
+				}
+				case 'mention': {
 					values.push('mention');
 					break;
-				case 'list':
+				}
+				case 'list': {
 					values.push(`list:${setting.list}`);
 					break;
-				default:
+				}
+				default: {
 					break;
+				}
 			}
 		}
 		return values;

@@ -127,16 +127,21 @@ export const recordUriToTarget = (uri: string): RouteTarget | undefined => {
 	}
 
 	switch (collection) {
-		case 'app.bsky.feed.generator':
+		case 'app.bsky.feed.generator': {
 			return feedTarget(repo, rkey);
-		case 'app.bsky.feed.post':
+		}
+		case 'app.bsky.feed.post': {
 			return postTarget(repo, rkey);
-		case 'app.bsky.graph.list':
+		}
+		case 'app.bsky.graph.list': {
 			return listTarget(repo, rkey);
-		case 'app.bsky.graph.starterpack':
+		}
+		case 'app.bsky.graph.starterpack': {
 			return starterPackTarget(repo, rkey);
-		default:
+		}
+		default: {
 			return undefined;
+		}
 	}
 };
 

@@ -45,12 +45,15 @@ export function stepFor(state: ReportState): ReportStep {
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
 	switch (action.type) {
-		case 'clearCategory':
+		case 'clearCategory': {
 			return { ...state, category: undefined, labeler: undefined, reason: undefined };
-		case 'clearError':
+		}
+		case 'clearError': {
 			return { ...state, error: undefined };
-		case 'clearReason':
+		}
+		case 'clearReason': {
 			return { ...state, labeler: undefined, reason: undefined };
+		}
 		case 'selectCategory': {
 			// `other` has no reason list of its own — commit its single reason and land on the form.
 			const isOther = action.category.key === 'other';
@@ -61,13 +64,17 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
 				reason: isOther ? action.otherOption : undefined,
 			};
 		}
-		case 'selectLabeler':
+		case 'selectLabeler': {
 			return { ...state, labeler: action.labeler };
-		case 'selectReason':
+		}
+		case 'selectReason': {
 			return { ...state, labeler: undefined, reason: action.reason };
-		case 'setDetails':
+		}
+		case 'setDetails': {
 			return { ...state, details: action.details };
-		case 'setError':
+		}
+		case 'setError': {
 			return { ...state, error: action.error };
+		}
 	}
 }

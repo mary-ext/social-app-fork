@@ -350,7 +350,7 @@ function MessageItemMetadata({
 	};
 
 	switch (item.type) {
-		case 'pending-message':
+		case 'pending-message': {
 			return item.failed ? (
 				<Text align={align} className={css.meta} color="negative_400" size="xs">
 					<Text color="negative_400" size="xs">
@@ -372,8 +372,10 @@ function MessageItemMetadata({
 					)}
 				</Text>
 			) : null;
-		default:
+		}
+		default: {
 			return null;
+		}
 	}
 }
 export { MessageItemMetadata };

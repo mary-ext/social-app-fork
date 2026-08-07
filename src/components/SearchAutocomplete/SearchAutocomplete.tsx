@@ -75,24 +75,33 @@ const defaultProfileQuery = (tokens: Token[]): string => {
 /** turns a suggestion into the plain string Base UI uses for its accessible value. */
 const itemToStringValue = (item: InteractiveItem): string => {
 	switch (item.kind) {
-		case 'date':
+		case 'date': {
 			return item.iso;
-		case 'goto':
+		}
+		case 'goto': {
 			return item.name;
-		case 'link':
+		}
+		case 'link': {
 			return item.path;
-		case 'operator':
+		}
+		case 'operator': {
 			return item.operator.name;
-		case 'operator-value':
+		}
+		case 'operator-value': {
 			return `${item.op}:${item.value}`;
-		case 'profile':
+		}
+		case 'profile': {
 			return item.profile.handle;
-		case 'recent-profile':
+		}
+		case 'recent-profile': {
 			return item.profile.handle;
-		case 'recent-query':
+		}
+		case 'recent-query': {
 			return item.query;
-		case 'search':
+		}
+		case 'search': {
 			return item.query;
+		}
 	}
 };
 
@@ -484,21 +493,26 @@ function ActiveSearchAutocomplete({
 	// route item-press actions through the highlighted item.
 	const commit = (item: InteractiveItem) => {
 		switch (item.kind) {
-			case 'date':
+			case 'date': {
 				replaceToken(`${item.op}:${item.iso} `);
 				break;
-			case 'goto':
+			}
+			case 'goto': {
 				navigate(router.href(item.target));
 				break;
-			case 'link':
+			}
+			case 'link': {
 				navigate(item.path);
 				break;
-			case 'operator':
+			}
+			case 'operator': {
 				replaceToken(`${item.operator.name}:`);
 				break;
-			case 'operator-value':
+			}
+			case 'operator-value': {
 				replaceToken(`${item.op}:${item.value} `);
 				break;
+			}
 			case 'profile': {
 				if (item.op) {
 					// use `me` for the current account and DID for invalid handles.
@@ -516,15 +530,18 @@ function ActiveSearchAutocomplete({
 				}
 				break;
 			}
-			case 'recent-profile':
+			case 'recent-profile': {
 				selectProfile(item.profile);
 				break;
-			case 'recent-query':
+			}
+			case 'recent-query': {
 				submit(item.query);
 				break;
-			case 'search':
+			}
+			case 'search': {
 				submit(item.query);
 				break;
+			}
 		}
 	};
 

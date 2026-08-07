@@ -110,9 +110,10 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 				keyExtractor={keyExtractor}
 				renderItem={(item, index) => {
 					switch (item.type) {
-						case 'create':
+						case 'create': {
 							return <CreateRow onStartWizard={onStartWizard} topBorder={index !== 0} />;
-						case 'pack':
+						}
+						case 'pack': {
 							return (
 								<StarterPackItem
 									starterPackWithMembership={item.pack}
@@ -121,6 +122,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 									topBorder={index !== 0}
 								/>
 							);
+						}
 					}
 				}}
 				onEndReached={onEndReached}

@@ -256,9 +256,10 @@ export function FeedsScreen() {
 
 	const renderItem = ({ index, item }: ListRenderItemInfo<FlatlistSlice>) => {
 		switch (item.type) {
-			case 'error':
+			case 'error': {
 				return <ErrorMessage message={item.error} />;
-			case 'savedFeedsHeader':
+			}
+			case 'savedFeedsHeader': {
 				return (
 					<SectionHeader
 						bottomBorder
@@ -267,7 +268,8 @@ export function FeedsScreen() {
 						title={m['view.feeds.saved.title']()}
 					/>
 				);
-			case 'savedFeedNoResults':
+			}
+			case 'savedFeedNoResults': {
 				return (
 					<div className={css.borderedSection}>
 						<NoSavedFeedsOfAnyType
@@ -276,11 +278,14 @@ export function FeedsScreen() {
 						/>
 					</div>
 				);
-			case 'savedFeedPlaceholder':
+			}
+			case 'savedFeedPlaceholder': {
 				return <SavedFeedPlaceholder />;
-			case 'savedFeed':
+			}
+			case 'savedFeed': {
 				return <FeedOrFollowing savedFeed={item.savedFeed} />;
-			case 'popularFeedsHeader':
+			}
+			case 'popularFeedsHeader': {
 				return (
 					<>
 						<SectionHeader
@@ -300,11 +305,14 @@ export function FeedsScreen() {
 						</div>
 					</>
 				);
-			case 'popularFeedsLoading':
+			}
+			case 'popularFeedsLoading': {
 				return <FeedCard.LoadingPlaceholder count={POPULAR_FEEDS_LOADING_COUNT} />;
-			case 'popularFeed':
+			}
+			case 'popularFeed': {
 				return <FeedCard.Default topBorder={index !== firstPopularFeedIndex} view={item.feed} />;
-			case 'popularFeedsNoResults':
+			}
+			case 'popularFeedsNoResults': {
 				return (
 					<div className={css.noResults}>
 						<Text color="textContrastMedium" size="lg">
@@ -312,12 +320,14 @@ export function FeedsScreen() {
 						</Text>
 					</div>
 				);
-			case 'noFollowingFeed':
+			}
+			case 'noFollowingFeed': {
 				return (
 					<div className={css.borderedSection}>
 						<NoFollowingFeed />
 					</div>
 				);
+			}
 		}
 	};
 

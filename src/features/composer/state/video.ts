@@ -382,14 +382,18 @@ async function uploadVideoBlobDirectly(
 
 function getProcessingErrorMessage(error: string | undefined): string {
 	switch (error) {
-		case 'bad_aspect_ratio':
+		case 'bad_aspect_ratio': {
 			return m['view.composer.video.error.processAspectRatio']();
-		case 'unsupported_codec':
+		}
+		case 'unsupported_codec': {
 			return m['view.composer.video.error.processCodec']();
-		case 'video_too_long':
+		}
+		case 'video_too_long': {
 			return m['view.composer.video.error.processTooLong']();
-		default:
+		}
+		default: {
 			return m['view.composer.video.error.processFailed']();
+		}
 	}
 }
 
@@ -411,22 +415,30 @@ function getUploadErrorMessage(e: unknown): string | null {
 	if (e instanceof ServerError || e instanceof UploadLimitError) {
 		// https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
 		switch (e.message) {
-			case 'User is not allowed to upload videos':
+			case 'User is not allowed to upload videos': {
 				return m['view.composer.video.error.notAllowed']();
-			case 'Uploading is disabled at the moment':
+			}
+			case 'Uploading is disabled at the moment': {
 				return m['view.composer.video.error.waitlist']();
-			case "Failed to get user's upload stats":
+			}
+			case "Failed to get user's upload stats": {
 				return m['view.composer.video.error.permCheckFailed']();
-			case 'User has exceeded daily upload bytes limit':
+			}
+			case 'User has exceeded daily upload bytes limit': {
 				return m['view.composer.video.error.dailyLimitBytes']();
-			case 'User has exceeded daily upload videos limit':
+			}
+			case 'User has exceeded daily upload videos limit': {
 				return m['view.composer.video.error.dailyLimitCount']();
-			case 'Account is not old enough to upload videos':
+			}
+			case 'Account is not old enough to upload videos': {
 				return m['view.composer.video.error.accountTooYoung']();
-			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
+			}
+			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)': {
 				return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
-			case 'Confirm your email address to upload videos':
+			}
+			case 'Confirm your email address to upload videos': {
 				return m['view.composer.video.error.emailConfirmRequired']();
+			}
 		}
 	}
 

@@ -464,13 +464,17 @@ function ConversationFooter({
 		typeof children === 'function' ? children({ loading }) : children;
 
 	switch (footerState) {
-		case 'loading':
+		case 'loading': {
 			return renderChildren(true);
-		case 'new-chat':
+		}
+		case 'new-chat': {
 			return renderChildren();
-		case 'request':
+		}
+		case 'request': {
 			return <ChatStatusInfo convoState={convoState} />;
-		case 'standard':
+		}
+		case 'standard': {
 			return renderChildren();
+		}
 	}
 }

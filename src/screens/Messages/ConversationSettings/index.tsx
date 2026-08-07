@@ -222,7 +222,7 @@ function GroupSettings({
 
 	function renderItem({ item }: { item: Item }) {
 		switch (item.type) {
-			case 'membersAndRequests':
+			case 'membersAndRequests': {
 				return (
 					<MembersAndRequests
 						convo={convo}
@@ -231,14 +231,19 @@ function GroupSettings({
 						isOwner={isOwner}
 					/>
 				);
-			case 'addMembersLink':
+			}
+			case 'addMembersLink': {
 				return <AddMembersLink convo={convo} />;
-			case 'chatMember':
+			}
+			case 'chatMember': {
 				return <Member convo={convo} profile={item.profile} status={item.status} isOwner={isOwner} />;
-			case 'chatMemberPlaceholder':
+			}
+			case 'chatMemberPlaceholder': {
 				return <MemberPlaceholder />;
-			default:
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 

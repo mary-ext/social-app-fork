@@ -133,13 +133,16 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 		return m['screens.settings.preferences.error.loading']();
 	}
 	switch (value) {
-		case 'mutuals':
+		case 'mutuals': {
 			return m['screens.settings.audience.onlyFollowersIFollow']();
-		case 'none':
+		}
+		case 'none': {
 			return m['screens.settings.audience.noOne']();
+		}
 		case 'followers':
-		default:
+		default: {
 			return m['screens.settings.audience.anyoneWhoFollowsMe']();
+		}
 	}
 }
 

@@ -102,10 +102,12 @@ function DialogInner({
 
 	const renderItem = (item: Item, index: number) => {
 		switch (item.type) {
-			case 'section-header':
+			case 'section-header': {
 				return <ListHeader title={item.title} topBorder={index !== 0} />;
-			case 'list':
+			}
+			case 'list': {
 				return <ListRow item={item.item} onChange={onChange} profile={profile} />;
+			}
 		}
 	};
 

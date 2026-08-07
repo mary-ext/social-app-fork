@@ -108,12 +108,15 @@ export function useThreadPreferences({ save }: { save?: boolean } = {}): ThreadP
 /** Migrates user thread preferences from the old sort values to V2 */
 export function normalizeSort(sort: string): ThreadSortOption {
 	switch (sort) {
-		case 'oldest':
+		case 'oldest': {
 			return 'oldest';
-		case 'newest':
+		}
+		case 'newest': {
 			return 'newest';
-		default:
+		}
+		default: {
 			return 'top';
+		}
 	}
 }
 

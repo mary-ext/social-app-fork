@@ -98,19 +98,25 @@ export function formatTimeAgo(earlier: number | string | Date, later: number | s
 		return asDate();
 	}
 	switch (diff.unit) {
-		case 'now':
+		case 'now': {
 			return m['lib.time.now']();
-		case 'second':
+		}
+		case 'second': {
 			return compact.second.format(diff.value);
-		case 'minute':
+		}
+		case 'minute': {
 			return compact.minute.format(diff.value);
-		case 'hour':
+		}
+		case 'hour': {
 			return compact.hour.format(diff.value);
-		case 'day':
+		}
+		case 'day': {
 			return compact.day.format(diff.value);
+		}
 		// 'month' can't reach here — `isWeekOrOlder` already returned — but the switch stays exhaustive.
-		case 'month':
+		case 'month': {
 			return asDate();
+		}
 	}
 }
 

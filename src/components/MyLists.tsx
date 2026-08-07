@@ -48,12 +48,15 @@ export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode 
 
 	const emptyText = (() => {
 		switch (filter) {
-			case 'curate':
+			case 'curate': {
 				return m['common.list.description']();
-			case 'mod':
+			}
+			case 'mod': {
 				return m['common.list.moderation.description']();
-			default:
+			}
+			default: {
 				return m['common.list.empty']();
+			}
 		}
 	})();
 

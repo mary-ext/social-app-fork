@@ -23,10 +23,12 @@ const resolveAllowIncoming = (allowIncoming: string | undefined): AllowIncoming 
 	switch (allowIncoming) {
 		case 'all':
 		case 'following':
-		case 'none':
+		case 'none': {
 			return allowIncoming;
-		default:
+		}
+		default: {
 			return 'following';
+		}
 	}
 };
 

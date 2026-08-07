@@ -29,20 +29,24 @@ type RichtextSegment =
 
 const toSegment = (token: Token): RichtextSegment => {
 	switch (token.type) {
-		case 'mention':
+		case 'mention': {
 			if (!isHandle(token.handle)) {
 				return { type: 'text', text: token.raw };
 			}
 
 			return { type: 'unresolvedMention', text: token.raw, handle: token.handle };
-		case 'topic':
+		}
+		case 'topic': {
 			return { type: 'tag', text: token.raw, tag: token.name };
-		case 'autolink':
+		}
+		case 'autolink': {
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the parser only emits `autolink` for `http(s)://` runs
 			return { type: 'link', text: token.raw, uri: token.url as GenericUri };
-		default:
+		}
+		default: {
 			// unsupported facets stay literal; `content` can omit merged or invalid syntax
 			return { type: 'text', text: token.raw };
+		}
 	}
 };
 
@@ -81,12 +85,15 @@ export function segmentizeRichtext({ text, facets }: Richtext): RichtextSegment[
 		// use the first supported feature in wire order
 		for (const feature of segment.features ?? []) {
 			switch (feature.$type) {
-				case 'app.bsky.richtext.facet#link':
+				case 'app.bsky.richtext.facet#link': {
 					return { type: 'link', text: segment.text, uri: feature.uri };
-				case 'app.bsky.richtext.facet#mention':
+				}
+				case 'app.bsky.richtext.facet#mention': {
 					return { type: 'mention', text: segment.text, did: feature.did };
-				case 'app.bsky.richtext.facet#tag':
+				}
+				case 'app.bsky.richtext.facet#tag': {
 					return { type: 'tag', text: segment.text, tag: feature.tag };
+				}
 			}
 		}
 		return { type: 'text', text: segment.text };
@@ -164,17 +171,21 @@ export function bakeRichtext(segments: RichtextSegment[]): Richtext {
 	const builder = new RichtextBuilder();
 	for (const segment of segments) {
 		switch (segment.type) {
-			case 'link':
+			case 'link': {
 				builder.addLink(segment.text, segment.uri);
 				break;
-			case 'mention':
+			}
+			case 'mention': {
 				builder.addMention(segment.text, segment.did);
 				break;
-			case 'tag':
+			}
+			case 'tag': {
 				builder.addTag(segment.text, segment.tag);
 				break;
-			default:
+			}
+			default: {
 				builder.addText(segment.text);
+			}
 		}
 	}
 	return builder.build();

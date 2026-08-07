@@ -30,29 +30,41 @@ export function Row({
 	row: ListRow;
 }) {
 	switch (row.kind) {
-		case 'divider':
+		case 'divider': {
 			return <DividerRow />;
-		case 'goto':
+		}
+		case 'goto': {
 			return <GotoRow row={row} />;
-		case 'hero':
+		}
+		case 'hero': {
 			return <HeroRow />;
-		case 'link':
+		}
+		case 'link': {
 			return <LinkRow row={row} />;
-		case 'operator':
+		}
+		case 'operator': {
 			return <OperatorRow row={row} />;
-		case 'operator-value':
+		}
+		case 'operator-value': {
 			return <OperatorValueRow row={row} />;
-		case 'profile':
+		}
+		case 'profile': {
 			return <ProfileRow row={row} />;
-		case 'recent-profile':
+		}
+		case 'recent-profile': {
 			return <RecentProfileRow onRemoveRecent={onRemoveRecent} row={row} />;
-		case 'recent-profile-pending':
+		}
+		case 'recent-profile-pending': {
 			return <RecentProfilePendingRow onRemoveRecent={onRemoveRecent} row={row} />;
-		case 'recent-query':
+		}
+		case 'recent-query': {
 			return <RecentQueryRow onRemoveRecent={onRemoveRecent} row={row} />;
-		case 'search':
+		}
+		case 'search': {
 			return <SearchRow row={row} />;
-		case 'section-label':
+		}
+		case 'section-label': {
 			return <SectionLabelRow row={row} />;
+		}
 	}
 }

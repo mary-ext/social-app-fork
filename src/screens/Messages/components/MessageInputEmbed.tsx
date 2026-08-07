@@ -108,10 +108,12 @@ export function MessageInputEmbed({
 	}
 
 	switch (embed.type) {
-		case 'post':
+		case 'post': {
 			return <MessageInputPostEmbed uri={embed.uri} onRemove={onRemove} />;
-		case 'invite':
+		}
+		case 'invite': {
 			return <MessageInputInviteEmbed code={embed.code} onRemove={onRemove} />;
+		}
 	}
 }
 
@@ -134,13 +136,14 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 	})();
 
 	switch (status) {
-		case 'pending':
+		case 'pending': {
 			return (
 				<SimpleContainer onRemove={onRemove}>
 					<Spinner color="default" label={m['common.status.loading']()} />
 				</SimpleContainer>
 			);
-		case 'error':
+		}
+		case 'error': {
 			return (
 				<SimpleContainer onRemove={onRemove}>
 					<Text align="center" className={css.italic} color="textContrastMedium">
@@ -148,7 +151,8 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 					</Text>
 				</SimpleContainer>
 			);
-		case 'success':
+		}
+		case 'success': {
 			const itemTarget = postUriToTarget(post.uri);
 
 			if (!post || !moderation || !rt || !record) {
@@ -190,6 +194,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: ResourceUri; onRemove: 
 					</ContentHider>
 				</div>
 			);
+		}
 	}
 }
 

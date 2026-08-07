@@ -71,16 +71,21 @@ const BOOKMARK_ITEM_HEIGHT_ESTIMATE = 300;
 
 function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 	switch (item.type) {
-		case 'loading':
+		case 'loading': {
 			return <PostFeedLoadingPlaceholder />;
-		case 'empty':
+		}
+		case 'empty': {
 			return <BookmarksEmpty />;
-		case 'bookmark':
+		}
+		case 'bookmark': {
 			return <BookmarkItem item={item} hideTopBorder={index === 0} />;
-		case 'bookmarkNotFound':
+		}
+		case 'bookmarkNotFound': {
 			return <BookmarkNotFound post={item.bookmark.item} hideTopBorder={index === 0} />;
-		default:
+		}
+		default: {
 			return null;
+		}
 	}
 }
 

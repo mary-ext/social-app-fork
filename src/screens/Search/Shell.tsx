@@ -18,17 +18,22 @@ import * as css from './Shell.css';
 // Map tab parameter to tab id
 function getTabId(tabParam?: TabParam): SearchTabId {
 	switch (tabParam) {
-		case 'feed':
+		case 'feed': {
 			return 'feeds';
-		case 'latest':
+		}
+		case 'latest': {
 			return 'latest';
+		}
 		case 'profile':
-		case 'user':
+		case 'user': {
 			return 'people';
-		case 'starterpack':
+		}
+		case 'starterpack': {
 			return 'starterPacks';
-		default:
+		}
+		default: {
 			return 'top';
+		}
 	}
 }
 

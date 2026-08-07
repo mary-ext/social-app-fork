@@ -33,17 +33,23 @@ export function createVideoClient(token?: string): Client {
 
 export function mimeToExt(mimeType: VideoUploadMimeType | (string & {})) {
 	switch (mimeType) {
-		case 'video/mp4':
+		case 'video/mp4': {
 			return 'mp4';
-		case 'video/webm':
+		}
+		case 'video/webm': {
 			return 'webm';
-		case 'video/mpeg':
+		}
+		case 'video/mpeg': {
 			return 'mpeg';
-		case 'video/quicktime':
+		}
+		case 'video/quicktime': {
 			return 'mov';
-		case 'image/gif':
+		}
+		case 'image/gif': {
 			return 'gif';
-		default:
+		}
+		default: {
 			throw new Error(`Unsupported mime type: ${mimeType}`);
+		}
 	}
 }

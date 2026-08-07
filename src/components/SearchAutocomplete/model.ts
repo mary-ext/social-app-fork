@@ -149,10 +149,12 @@ export const interactiveItems = (result: AutocompleteResult): InteractiveItem[] 
 
 const actorSectionLabel = (op: OperatorName): string => {
 	switch (op) {
-		case 'mentions':
+		case 'mentions': {
 			return m['components.web.search.filter.mention']();
-		default:
+		}
+		default: {
 			return m['components.web.search.filter.from']();
+		}
 	}
 };
 

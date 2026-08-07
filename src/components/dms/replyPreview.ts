@@ -23,17 +23,21 @@ export function getReplyPreviewText(message: ChatBskyConvoDefs.MessageView): {
 	if (message.embed?.$type === 'chat.bsky.embed.joinLink#view') {
 		const { joinLinkPreview } = message.embed;
 		switch (joinLinkPreview.$type) {
-			case 'chat.bsky.group.defs#joinLinkPreviewView':
+			case 'chat.bsky.group.defs#joinLinkPreviewView': {
 				return {
 					subtle: true,
 					text: targetToShareUrl({ name: 'GroupChatJoin', code: joinLinkPreview.code }),
 				};
-			case 'chat.bsky.group.defs#disabledJoinLinkPreviewView':
+			}
+			case 'chat.bsky.group.defs#disabledJoinLinkPreviewView': {
 				return { subtle: true, text: m['common.chat.inviteLinkDisabled']() };
-			case 'chat.bsky.group.defs#invalidJoinLinkPreviewView':
+			}
+			case 'chat.bsky.group.defs#invalidJoinLinkPreviewView': {
 				return { subtle: true, text: m['common.chat.inviteLinkInvalid']() };
-			default:
+			}
+			default: {
 				return { subtle: true, text: m['common.chat.inviteLink']() };
+			}
 		}
 	}
 

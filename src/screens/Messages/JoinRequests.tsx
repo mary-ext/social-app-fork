@@ -171,15 +171,18 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
-						case 'InvalidConvo':
+						case 'InvalidConvo': {
 							errorMessage = m['common.chat.error.notFound']();
 							break;
-						case 'InsufficientRole':
+						}
+						case 'InsufficientRole': {
 							errorMessage = m['screens.messages.requests.acceptJoin.adminOnly']();
 							break;
-						case 'MemberLimitReached':
+						}
+						case 'MemberLimitReached': {
 							errorMessage = m['common.chat.error.memberLimit']();
 							break;
+						}
 					}
 				}
 				Toast.show(errorMessage, { type: 'error' });
@@ -206,12 +209,14 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					errorMessage = m['common.error.network']();
 				} else if (error instanceof ClientResponseError) {
 					switch (error.error) {
-						case 'InvalidConvo':
+						case 'InvalidConvo': {
 							errorMessage = m['common.chat.error.notFound']();
 							break;
-						case 'InsufficientRole':
+						}
+						case 'InsufficientRole': {
 							errorMessage = m['screens.messages.requests.rejectJoin.adminOnly']();
 							break;
+						}
 					}
 				}
 				Toast.show(errorMessage, { type: 'error' });

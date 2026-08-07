@@ -16,17 +16,22 @@ export type AppModerationCause =
 
 function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {
 	switch (cause.type) {
-		case 'reply-hidden':
+		case 'reply-hidden': {
 			return cause.source.did;
-		case ModerationCauseType.Label:
+		}
+		case ModerationCauseType.Label: {
 			return cause.source ?? 'user';
+		}
 		case ModerationCauseType.Blocking:
-		case ModerationCauseType.MutedPermanent:
+		case ModerationCauseType.MutedPermanent: {
 			return cause.source?.uri ?? 'user';
-		case ModerationCauseType.MutedKeyword:
+		}
+		case ModerationCauseType.MutedKeyword: {
 			return cause.source.id ?? 'mute-word';
-		default:
+		}
+		default: {
 			return 'user';
+		}
 	}
 }
 
