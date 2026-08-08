@@ -40,7 +40,7 @@ import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_str
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import Flag from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
-import List from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
+import ListAdd from '#/icons/central/ListAdd_round_outlined_radius1_stroke2.svg';
 import LiveIcon from '#/icons/central/LiveFull_round_outlined_radius1_stroke2.svg';
 import SearchIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
@@ -267,7 +267,7 @@ function ProfileMenu({
 									onClick={() => addToListsDialogHandle.open(null)}
 								>
 									<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={List} />
+									<Menu.ItemIcon icon={ListAdd} />
 								</Menu.Item>
 								{isSelf && canGoLive && (
 									<Menu.Item
