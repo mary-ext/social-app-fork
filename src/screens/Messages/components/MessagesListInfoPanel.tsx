@@ -43,7 +43,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 
 	return (
 		<div className={css.root}>
-			<UserAvatar avatar={profile.avatar} size={88} type="user" />
+			<UserAvatar avatar={profile.avatar} size={88} type={profile.associated?.labeler ? 'labeler' : 'user'} />
 			<div className={css.nameRow}>
 				<Text color="text" size="_2xl" weight="bold">
 					{displayName}
