@@ -1,12 +1,42 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useInputModality } from '#/lib/browser/input-modality';
+import type { InteractionType } from '@base-ui/utils/useEnhancedClickHandler';
+
+import { type InputModality, useInputModality } from '#/lib/browser/input-modality';
+import { useConstant } from '#/lib/hooks/use-constant';
 
 const MENU_ROW = 'data-menu-row';
-
 const ACTIVE_MENU_ROW = 'data-menu-row-active';
-
 const MENU_ROW_SELECTOR = `[${MENU_ROW}]`;
+const ACTIVE_MENU_ROW_SELECTOR = `[${ACTIVE_MENU_ROW}]`;
+
+type PanelEntry = 'panel' | 'popup' | 'row';
+
+const canHover = (modality: InputModality) => modality === 'mouse' || modality === 'pen';
+
+const resolvePanelEntry = (navigated: boolean, modality: InputModality): PanelEntry => {
+	if (!navigated) {
+		return 'popup';
+	}
+
+	// touch cannot clear a focused row through pointer-out.
+	if (modality === 'touch') {
+		return 'panel';
+	}
+
+	return 'row';
+};
+
+const findEntryRow = (panel: HTMLElement | null) => {
+	if (!panel) {
+		return null;
+	}
+
+	return (
+		panel.querySelector<HTMLElement>(ACTIVE_MENU_ROW_SELECTOR) ??
+		panel.querySelector<HTMLElement>(MENU_ROW_SELECTOR)
+	);
+};
 
 /**
  * creates menu-row attributes.
@@ -20,30 +50,55 @@ export const menuRowProps = (active: boolean) => ({
 });
 
 /**
+ * gets the initial focus target for an opening menu.
+ *
+ * @param panel panel element
+ * @param openType how the popup was opened
+ * @returns the entry row for keyboard opens, otherwise the panel
+ */
+export const menuInitialFocus = (panel: HTMLElement | null, openType: InteractionType) => {
+	if (openType !== 'keyboard') {
+		return panel;
+	}
+
+	return findEntryRow(panel) ?? panel;
+};
+
+/**
  * controls focus and highlighting in a menu panel.
  *
  * @param ref panel element
- * @param options panel navigation state
- * @returns composite state and props
+ * @param options initial panel navigation state
+ * @returns composite and panel props
  */
 export function useMenuNavigation(
 	ref: React.RefObject<HTMLElement | null>,
 	{ navigated }: { navigated: boolean },
 ) {
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
-	const [rowsReady, setRowsReady] = useState(false);
+	const [entryRowReady, setEntryRowReady] = useState(false);
 	const rows = useRef<HTMLElement[]>([]);
 	const modality = useInputModality();
 
-	// wait for composite item indices before focusing a row.
-	useEffect(() => {
-		if (!rowsReady) {
-			return;
-		}
+	const panelEntry = useConstant(() => resolvePanelEntry(navigated, modality));
 
-		const active = rows.current.find((row) => row.hasAttribute(ACTIVE_MENU_ROW));
-		(active ?? rows.current[0])?.focus();
-	}, [rowsReady]);
+	useEffect(() => {
+		switch (panelEntry) {
+			case 'panel': {
+				ref.current?.focus({ preventScroll: true });
+				break;
+			}
+			case 'popup': {
+				break;
+			}
+			case 'row': {
+				if (entryRowReady) {
+					findEntryRow(ref.current)?.focus();
+				}
+				break;
+			}
+		}
+	}, [entryRowReady, panelEntry, ref]);
 
 	const clearHighlight = () => {
 		const container = ref.current;
@@ -61,8 +116,10 @@ export function useMenuNavigation(
 
 	const onMapChange = (map: Map<Node, unknown>) => {
 		rows.current = Array.from(map.keys()).filter((row) => row instanceof HTMLElement);
-		if (navigated && rows.current.length > 0) {
-			setRowsReady(true);
+
+		// wait until the composite assigns item indices.
+		if (panelEntry === 'row' && rows.current.length > 0) {
+			setEntryRowReady(true);
 		}
 	};
 
@@ -80,7 +137,7 @@ export function useMenuNavigation(
 		},
 		onPointerOut: (event: React.PointerEvent) => {
 			// ignore pointer movement caused by panel resizing.
-			if (modality !== 'mouse' && modality !== 'pen') {
+			if (!canHover(modality)) {
 				return;
 			}
 			const related = event.relatedTarget;
@@ -92,5 +149,13 @@ export function useMenuNavigation(
 		},
 	};
 
-	return { highlightedIndex, onHighlightedIndexChange: setHighlightedIndex, onMapChange, rootProps };
+	return {
+		compositeProps: {
+			highlightItemOnHover: canHover(modality),
+			highlightedIndex,
+			onHighlightedIndexChange: setHighlightedIndex,
+			onMapChange,
+		},
+		rootProps,
+	};
 }

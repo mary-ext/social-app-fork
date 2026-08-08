@@ -31,7 +31,7 @@ import QualityIcon from '#/icons/central/SettingsSliderVer_round_outlined_radius
 import SpeedIcon from '#/icons/central/SpeedHigh_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { menuRowProps, useMenuNavigation } from './menu-navigation';
+import { menuInitialFocus, menuRowProps, useMenuNavigation } from './menu-navigation';
 import { formatSpeedName, PlaybackSpeedPanel } from './PlaybackSpeedPanel';
 import * as styles from './SettingsMenu.css';
 
@@ -230,8 +230,7 @@ export function SettingsMenu({
 					<Popover.Popup
 						className={styles.popup}
 						aria-label={label}
-						// focus the composite before a row is highlighted.
-						initialFocus={() => panelRef.current}
+						initialFocus={(openType) => menuInitialFocus(panelRef.current, openType)}
 					>
 						<PanelViewport>
 							<Panel key={`${openId}:${panel.id}`} ref={panelRef} direction={panel.direction}>
@@ -297,7 +296,7 @@ function Panel({
 	direction?: PanelDirection;
 	children: ReactNode;
 }) {
-	const { highlightedIndex, onHighlightedIndexChange, onMapChange, rootProps } = useMenuNavigation(ref, {
+	const { compositeProps, rootProps } = useMenuNavigation(ref, {
 		navigated: direction !== undefined,
 	});
 
@@ -307,11 +306,8 @@ function Panel({
 			orientation="vertical"
 			loopFocus
 			enableHomeAndEndKeys
-			highlightItemOnHover
-			highlightedIndex={highlightedIndex}
-			onHighlightedIndexChange={onHighlightedIndexChange}
+			{...compositeProps}
 			rootRef={ref}
-			onMapChange={onMapChange}
 			props={[rootProps, { 'data-direction': direction }]}
 		>
 			{children}
