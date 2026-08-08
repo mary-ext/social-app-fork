@@ -141,7 +141,7 @@ const DialogInner = ({ handle, inputModalities, model, onSave, titleText }: Prop
 						</Text>
 					)
 				}
-				renderItem={(entry, index) => (
+				renderItem={({ index, item: entry }) => (
 					<Toggle.RadioItem
 						className={clsx(styles.item, index !== visible.length - 1 && styles.itemBorder)}
 						label={entry.name}

@@ -174,8 +174,8 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 				data={listData}
 				keyExtractor={(entry) => (entry.type === 'header' ? `header-${entry.label}` : langCode(entry.lang))}
 				ListEmptyComponent={<Empty message={m['common.list.noResults']()} />}
-				renderItem={(entry, index) => {
-					if (entry.type === 'header') {
+				renderItem={({ index, item }) => {
+					if (item.type === 'header') {
 						return (
 							<Text
 								className={styles.sectionHeader({ topPadded: index !== 0 })}
@@ -183,18 +183,18 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 								size="md_sub"
 								weight="semiBold"
 							>
-								{entry.label}
+								{item.label}
 							</Text>
 						);
 					}
 
-					const name = languageName(entry.lang, LOCALE);
+					const name = languageName(item.lang, LOCALE);
 
 					return (
 						<Toggle.Item
 							className={clsx(styles.item, index !== listData.length - 1 && styles.itemBorder)}
 							label={name}
-							name={langCode(entry.lang)}
+							name={langCode(item.lang)}
 						>
 							<Text className={styles.itemLabel} color="textContrastHigh" numberOfLines={1} weight="semiBold">
 								{name}

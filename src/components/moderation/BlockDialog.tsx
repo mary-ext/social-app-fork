@@ -126,7 +126,7 @@ function BlockDialogInner({
 			<Dialog.List
 				data={items}
 				keyExtractor={(item) => item.id}
-				renderItem={(item) => (
+				renderItem={({ item }) => (
 					<MutualGroupChat
 						currentConvoId={currentConvoId}
 						onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}

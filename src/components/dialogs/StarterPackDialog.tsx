@@ -108,7 +108,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 			<Dialog.List
 				data={items}
 				keyExtractor={keyExtractor}
-				renderItem={(item, index) => {
+				renderItem={({ index, item }) => {
 					switch (item.type) {
 						case 'create': {
 							return <CreateRow onStartWizard={onStartWizard} topBorder={index !== 0} />;

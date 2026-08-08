@@ -100,7 +100,7 @@ function DialogInner({
 		return <NoLists />;
 	})();
 
-	const renderItem = (item: Item, index: number) => {
+	const renderItem = ({ index, item }: Dialog.ListRenderItemInfo<Item>) => {
 		switch (item.type) {
 			case 'sectionHeader': {
 				return <ListHeader title={item.title} topBorder={index !== 0} />;

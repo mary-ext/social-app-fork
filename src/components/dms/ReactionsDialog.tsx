@@ -137,7 +137,7 @@ function DialogInner({
 				className={css.list}
 				data={filteredReactions}
 				keyExtractor={(reaction) => reaction.sender.did + '-' + reaction.value}
-				renderItem={(reaction) => {
+				renderItem={({ item: reaction }) => {
 					const sender = convo.relatedProfiles.get(reaction.sender.did);
 					if (!sender || !moderationOpts) {
 						return null;

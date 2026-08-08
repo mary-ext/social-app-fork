@@ -128,7 +128,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		setSearchText('');
 	};
 
-	const renderItem = (profile: AnyProfileView, index: number) =>
+	const renderItem = ({ index, item: profile }: Dialog.ListRenderItemInfo<AnyProfileView>) =>
 		moderationOpts ? (
 			<ProfileCard.Default
 				descriptionLines={2}

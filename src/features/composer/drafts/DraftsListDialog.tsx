@@ -71,7 +71,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 				className={styles.list}
 				data={drafts}
 				keyExtractor={(draft) => draft.id}
-				renderItem={(draft) => (
+				renderItem={({ item: draft }) => (
 					<div className={styles.itemWrap}>
 						<DraftItem draft={draft} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
 					</div>

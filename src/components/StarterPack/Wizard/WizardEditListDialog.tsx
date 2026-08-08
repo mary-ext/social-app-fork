@@ -35,10 +35,10 @@ export function WizardEditListDialog({
 			? state.feeds
 			: [profile, ...state.profiles.filter((p) => p.did !== profile.did)];
 
-	const renderItem = (item: ListItem) =>
-		'handle' in item ? (
+	const renderItem = ({ item: view }: Dialog.ListRenderItemInfo<ListItem>) =>
+		'handle' in view ? (
 			<WizardProfileCard
-				profile={item}
+				profile={view}
 				btnType="remove"
 				state={state}
 				dispatch={dispatch}
@@ -46,7 +46,7 @@ export function WizardEditListDialog({
 			/>
 		) : (
 			<WizardFeedCard
-				generator={item}
+				generator={view}
 				btnType="remove"
 				state={state}
 				dispatch={dispatch}

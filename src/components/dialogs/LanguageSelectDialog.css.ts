@@ -78,6 +78,7 @@ export const sectionHeader = recipe(
 
 export const item = style({
 	boxSizing: 'border-box',
+	outlineOffset: -2,
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
 	width: '100%',

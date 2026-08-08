@@ -22,4 +22,4 @@ export {
 
 /** Sticky header slot for a `body`-scroll Popup: `Outer`/`Content`/`Slot`/`TitleText` (like `Layout.Header`). */
 export * as Header from '#/components/Dialog/Header';
-export { List, type ListProps } from '#/components/Dialog/List';
+export { List, type ListProps, type ListRenderItem, type ListRenderItemInfo } from '#/components/Dialog/List';
