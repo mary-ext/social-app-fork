@@ -301,23 +301,24 @@ function ProfileMenu({
 										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
 											<>
 												{/* a full mute already hides the reposts, so the narrower scope has nothing left to offer */}
-												{!profile.viewer?.muted && (
-													<Menu.Item
-														label={
-															profile.viewer?.mutedOnlyReposts
-																? m['common.mute.action.showReposts']()
-																: m['common.mute.action.hideReposts']()
-														}
-														onClick={() => void onPressMuteReposts()}
-													>
-														<Menu.ItemText>
-															{profile.viewer?.mutedOnlyReposts
-																? m['common.mute.action.showReposts']()
-																: m['common.mute.action.hideReposts']()}
-														</Menu.ItemText>
-														<Menu.ItemIcon icon={profile.viewer?.mutedOnlyReposts ? Repost : RepostOff} />
-													</Menu.Item>
-												)}
+												{!profile.viewer?.muted &&
+													(profile.viewer?.following || profile.viewer?.mutedOnlyReposts) && (
+														<Menu.Item
+															label={
+																profile.viewer?.mutedOnlyReposts
+																	? m['common.mute.action.showReposts']()
+																	: m['common.mute.action.hideReposts']()
+															}
+															onClick={() => void onPressMuteReposts()}
+														>
+															<Menu.ItemText>
+																{profile.viewer?.mutedOnlyReposts
+																	? m['common.mute.action.showReposts']()
+																	: m['common.mute.action.hideReposts']()}
+															</Menu.ItemText>
+															<Menu.ItemIcon icon={profile.viewer?.mutedOnlyReposts ? Repost : RepostOff} />
+														</Menu.Item>
+													)}
 												<Menu.Item
 													label={
 														profile.viewer?.muted
