@@ -17,7 +17,7 @@ import { useTitle } from '#/state/use-title';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 
-import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
+import { CustomFeedHeader, CustomFeedHeaderSkeleton } from '#/screens/CustomFeed/components/CustomFeedHeader';
 
 import { EmptyState } from '#/components/EmptyState';
 import { ErrorScreen } from '#/components/ErrorScreen';
@@ -33,8 +33,8 @@ import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stro
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams } from '#/routes';
 
-export function ProfileFeedScreen() {
-	const [{ rkey, actor: handleOrDid }] = useParams('ProfileFeed');
+export function CustomFeedScreen() {
+	const [{ rkey, actor: handleOrDid }] = useParams('CustomFeed');
 	const uri = makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey);
 	// the appview looks feed generators up by their canonical at-uri, so a handle-based one won't match
 	const { error, data: resolvedUri, refetch, isRefetching } = useResolveUriQuery(uri);
@@ -56,10 +56,10 @@ export function ProfileFeedScreen() {
 	return (
 		<Layout.Screen>
 			{info && isFeedSourceFeedInfo(info) ? (
-				<ProfileFeedScreenInner feedInfo={info} />
+				<CustomFeedScreenInner feedInfo={info} />
 			) : (
 				<>
-					<ProfileFeedHeaderSkeleton />
+					<CustomFeedHeaderSkeleton />
 					<Layout.Content>
 						<PostFeedLoadingPlaceholder />
 					</Layout.Content>
@@ -73,7 +73,7 @@ function renderPostsEmpty() {
 	return <EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />;
 }
 
-function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
+function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
 	const { openComposer } = useOpenComposer();
 
@@ -102,7 +102,7 @@ function ProfileFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) 
 
 	return (
 		<>
-			<ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
+			<CustomFeedHeader info={feedInfo} isTrending={isTrending} />
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
 					description={isTrending ? feedInfo.description : undefined}

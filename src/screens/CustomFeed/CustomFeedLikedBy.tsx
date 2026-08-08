@@ -8,10 +8,10 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/routes';
 
-export const ProfileFeedLikedByScreen = () => {
+export const CustomFeedLikedByScreen = () => {
 	useTitle(m['navigation.likedBy.title']());
 
-	const [{ actor, rkey }] = useParams('ProfileFeedLikedBy');
+	const [{ actor, rkey }] = useParams('CustomFeedLikedBy');
 	const uri = makeRecordUri(actor, 'app.bsky.feed.generator', rkey);
 
 	return (

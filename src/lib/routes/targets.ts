@@ -28,7 +28,7 @@ export const conversationTarget = (conversation: Tid): RouteTarget => {
  * @returns the feed route target
  */
 export const feedTarget = (actor: ActorIdentifier, rkey: RecordKey): RouteTarget => {
-	return { name: 'ProfileFeed', actor, rkey };
+	return { name: 'CustomFeed', actor, rkey };
 };
 
 /**

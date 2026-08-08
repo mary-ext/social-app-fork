@@ -45,9 +45,9 @@ import Pin from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import * as css from './ProfileFeedHeader.css';
+import * as css from './CustomFeedHeader.css';
 
-export function ProfileFeedHeaderSkeleton() {
+export function CustomFeedHeaderSkeleton() {
 	return (
 		<Layout.Header.Outer>
 			<Layout.Header.BackButton />
@@ -63,7 +63,7 @@ export function ProfileFeedHeaderSkeleton() {
 	);
 }
 
-export function ProfileFeedHeader({ info, isTrending }: { info: FeedSourceFeedInfo; isTrending: boolean }) {
+export function CustomFeedHeader({ info, isTrending }: { info: FeedSourceFeedInfo; isTrending: boolean }) {
 	const { hasSession } = useSession();
 	const infoHandle = Dialog.useDialogHandle();
 	const reportDialogHandle = Dialog.useDialogHandle();
@@ -378,7 +378,7 @@ function DialogInner({
 				<div className={css.dialogLikedByRow}>
 					<InlineLinkText
 						label={m['screens.profile.feed.action.viewLikes']()}
-						to={{ name: 'ProfileFeedLikedBy', actor: creatorDid, rkey: feedRkey }}
+						to={{ name: 'CustomFeedLikedBy', actor: creatorDid, rkey: feedRkey }}
 						size="md_sub"
 						color="textContrastMedium"
 						onPress={closeDialog}

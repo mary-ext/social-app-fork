@@ -58,6 +58,12 @@ const ContentAndMediaSettingsScreen = lazy(() =>
 		default: mod.ContentAndMediaSettingsScreen,
 	})),
 );
+const CustomFeedLikedByScreen = lazy(() =>
+	import('#/screens/CustomFeed/CustomFeedLikedBy').then((mod) => ({ default: mod.CustomFeedLikedByScreen })),
+);
+const CustomFeedScreen = lazy(() =>
+	import('#/screens/CustomFeed').then((mod) => ({ default: mod.CustomFeedScreen })),
+);
 const ExploreScreen = lazy(() => import('#/screens/Explore').then((mod) => ({ default: mod.ExploreScreen })));
 const ExternalMediaPreferencesScreen = lazy(() =>
 	import('#/screens/Settings/ExternalMediaPreferences').then((mod) => ({
@@ -161,12 +167,6 @@ const PostThreadScreen = lazy(() =>
 );
 const ProfileCompatScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.ProfileCompatScreen })),
-);
-const ProfileFeedLikedByScreen = lazy(() =>
-	import('#/screens/Profile/ProfileFeedLikedBy').then((mod) => ({ default: mod.ProfileFeedLikedByScreen })),
-);
-const ProfileFeedScreen = lazy(() =>
-	import('#/screens/Profile/ProfileFeed').then((mod) => ({ default: mod.ProfileFeedScreen })),
 );
 const ProfileFollowersScreen = lazy(() =>
 	import('#/screens/Profile/ProfileFollowers').then((mod) => ({ default: mod.ProfileFollowersScreen })),
@@ -414,13 +414,13 @@ export const routes = defineRoutes({
 				params: { actor: actorIdentifier() },
 				path: '/:actor/search',
 			}),
-			ProfileFeed: route({
-				component: ProfileFeedScreen,
+			CustomFeed: route({
+				component: CustomFeedScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/feed/:rkey',
 			}),
-			ProfileFeedLikedBy: route({
-				component: ProfileFeedLikedByScreen,
+			CustomFeedLikedBy: route({
+				component: CustomFeedLikedByScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/feed/:rkey/likes',
 			}),

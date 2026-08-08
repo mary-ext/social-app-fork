@@ -11,6 +11,9 @@ import { router } from '#/routes';
 export const parseOwnPath = (url: URL): AppLink | undefined => {
 	const target = router.match(url.pathname + url.search);
 	switch (target?.name) {
+		case 'CustomFeed': {
+			return { kind: 'feed', actor: target.actor, rkey: target.rkey };
+		}
 		case 'GroupChatJoin': {
 			return { kind: 'chatInvite', code: target.code };
 		}
@@ -22,9 +25,6 @@ export const parseOwnPath = (url: URL): AppLink | undefined => {
 		}
 		case 'Profile': {
 			return { kind: 'profile', actor: target.actor };
-		}
-		case 'ProfileFeed': {
-			return { kind: 'feed', actor: target.actor, rkey: target.rkey };
 		}
 		case 'ProfileList': {
 			return { kind: 'list', actor: target.actor, rkey: target.rkey };
