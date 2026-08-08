@@ -13,6 +13,7 @@ import {
 	useProfileBlockMutationQueue,
 	useProfileFollowMutationQueue,
 	useProfileMuteMutationQueue,
+	useProfileMuteRepostsMutationQueue,
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
@@ -33,6 +34,8 @@ import { shareText, shareUrl } from '#/components/sharing';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
+import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
+import RepostOff from '#/icons/central/ArrowsRepeatRightLeftOff_round_outlined_radius1_stroke2.svg';
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
 import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
@@ -68,6 +71,7 @@ function ProfileMenu({
 	const status = useActorStatus(profile);
 
 	const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile);
+	const [queueMuteReposts, queueUnmuteReposts] = useProfileMuteRepostsMutationQueue(profile);
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 	const [, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
@@ -112,6 +116,32 @@ function ProfileMenu({
 			try {
 				await queueMute();
 				Toast.show(m['common.mute.mutedToast']());
+			} catch (e) {
+				if (!isAbortError(e)) {
+					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
+						type: 'error',
+					});
+				}
+			}
+		}
+	};
+
+	const onPressMuteReposts = async () => {
+		if (profile.viewer?.mutedOnlyReposts) {
+			try {
+				await queueUnmuteReposts();
+				Toast.show(m['common.mute.repostsShownToast']());
+			} catch (e) {
+				if (!isAbortError(e)) {
+					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
+						type: 'error',
+					});
+				}
+			}
+		} else {
+			try {
+				await queueMuteReposts();
+				Toast.show(m['common.mute.repostsHiddenToast']());
 			} catch (e) {
 				if (!isAbortError(e)) {
 					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
@@ -269,21 +299,41 @@ function ProfileMenu({
 								{!isSelf && (
 									<>
 										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
-											<Menu.Item
-												label={
-													profile.viewer?.muted
-														? m['common.mute.action.unmuteAccount']()
-														: m['common.mute.action.muteAccount']()
-												}
-												onClick={() => mutePromptHandle.open(null)}
-											>
-												<Menu.ItemText>
-													{profile.viewer?.muted
-														? m['common.mute.action.unmuteAccount']()
-														: m['common.mute.action.muteAccount']()}
-												</Menu.ItemText>
-												<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
-											</Menu.Item>
+											<>
+												{/* a full mute already hides the reposts, so the narrower scope has nothing left to offer */}
+												{!profile.viewer?.muted && (
+													<Menu.Item
+														label={
+															profile.viewer?.mutedOnlyReposts
+																? m['common.mute.action.showReposts']()
+																: m['common.mute.action.hideReposts']()
+														}
+														onClick={() => void onPressMuteReposts()}
+													>
+														<Menu.ItemText>
+															{profile.viewer?.mutedOnlyReposts
+																? m['common.mute.action.showReposts']()
+																: m['common.mute.action.hideReposts']()}
+														</Menu.ItemText>
+														<Menu.ItemIcon icon={profile.viewer?.mutedOnlyReposts ? Repost : RepostOff} />
+													</Menu.Item>
+												)}
+												<Menu.Item
+													label={
+														profile.viewer?.muted
+															? m['common.mute.action.unmuteAccount']()
+															: m['common.mute.action.muteAccount']()
+													}
+													onClick={() => mutePromptHandle.open(null)}
+												>
+													<Menu.ItemText>
+														{profile.viewer?.muted
+															? m['common.mute.action.unmuteAccount']()
+															: m['common.mute.action.muteAccount']()}
+													</Menu.ItemText>
+													<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
+												</Menu.Item>
+											</>
 										)}
 										{!profile.viewer?.blockingByList && (
 											<Menu.Item

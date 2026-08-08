@@ -15,6 +15,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import * as styles from '#/components/web/Pills.css';
 
+import RepostOffIcon from '#/icons/central/ArrowsRepeatRightLeftOff_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export type { AppModerationCause };
@@ -81,6 +82,27 @@ export function Label({ cause, disableDetailsDialog, noBg, size = 'sm' }: LabelP
 			</Dialog.Trigger>
 			<ModerationDetailsDialog handle={handle} modcause={cause} />
 		</>
+	);
+}
+
+/** A static pill marking a profile whose reposts the signed-in user has muted. */
+export function MutedOnlyReposts({ size = 'sm' }: CommonProps) {
+	// the glyph tracks the pill's text size rather than an icon token, matching {@link Label}.
+	const glyphSize = size === 'lg' ? 16 : 12;
+
+	return (
+		<div className={styles.pill({ size })}>
+			<RepostOffIcon height={glyphSize} width={glyphSize} />
+			<Text
+				className={styles.pillText}
+				color="textContrastMedium"
+				numberOfLines={1}
+				size={size === 'lg' ? 'sm' : 'xs'}
+				weight="semiBold"
+			>
+				{m['common.mute.repostsHidden']()}
+			</Text>
+		</div>
 	);
 }
 

@@ -333,8 +333,9 @@ export function Labels({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileList);
 	const followedBy = profile.viewer?.followedBy;
+	const mutedOnlyReposts = profile.viewer?.mutedOnlyReposts;
 
-	if (!followedBy && modui.alerts.length === 0 && modui.informs.length === 0) {
+	if (!followedBy && !mutedOnlyReposts && modui.alerts.length === 0 && modui.informs.length === 0) {
 		return null;
 	}
 
@@ -347,6 +348,7 @@ export function Labels({
 			{modui.informs.map((inform) => (
 				<Pills.Label cause={inform} key={getModerationCauseKey(inform)} />
 			))}
+			{mutedOnlyReposts && <Pills.MutedOnlyReposts />}
 		</Pills.Row>
 	);
 }

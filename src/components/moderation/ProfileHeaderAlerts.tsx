@@ -1,3 +1,4 @@
+import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { uniqueBy } from '@mary/array-fns';
@@ -9,12 +10,16 @@ import * as Pills from '#/components/web/Pills';
 export function ProfileHeaderAlerts({
 	className,
 	moderation,
+	profile,
 }: {
 	className?: string;
 	moderation: ModerationDecision;
+	profile: AnyProfileView;
 }) {
 	const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileView);
-	if (modui.alerts.length === 0 && modui.informs.length === 0) {
+	const mutedOnlyReposts = profile.viewer?.mutedOnlyReposts;
+
+	if (!mutedOnlyReposts && modui.alerts.length === 0 && modui.informs.length === 0) {
 		return null;
 	}
 
@@ -26,6 +31,7 @@ export function ProfileHeaderAlerts({
 			{uniqueBy(modui.informs, getModerationCauseKey).map((cause) => (
 				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} size="lg" />
 			))}
+			{mutedOnlyReposts && <Pills.MutedOnlyReposts size="lg" />}
 		</Pills.Row>
 	);
 }

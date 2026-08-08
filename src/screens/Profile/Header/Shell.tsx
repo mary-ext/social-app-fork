@@ -124,7 +124,7 @@ export function ProfileHeaderShell({ children }: { children: React.ReactNode }):
 				(isMe ? (
 					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
 				) : (
-					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
+					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} profile={profile} />
 				))}
 			{live.isActive &&
 				live.embed?.$type === 'app.bsky.embed.external#view' &&
