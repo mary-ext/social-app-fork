@@ -339,7 +339,7 @@ export async function processVideo(
 			console.error('Error processing video', e);
 			dispatch({
 				type: 'toError',
-				error: getProcessingErrorMessage(status?.error),
+				error: getProcessingErrorMessage(status?.failureCode, status?.error),
 				signal,
 			});
 			return; // Exit async loop
@@ -380,19 +380,39 @@ async function uploadVideoBlobDirectly(
 	return uploadBlob(pds, video.blob, video.mimeType);
 }
 
-function getProcessingErrorMessage(error: string | undefined): string {
+function getProcessingErrorMessage(failureCode: string | undefined, error: string | undefined): string {
+	switch (failureCode) {
+		case 'encoding_failure': {
+			return m['view.composer.video.error.processEncoding']();
+		}
+		case 'pds_upload_failure': {
+			return m['view.composer.video.error.processHostUpload']();
+		}
+		case 'pds_upload_unsupported_blob_size': {
+			return m['view.composer.video.error.processHostBlobSize']();
+		}
+		case 'validation_failure': {
+			return getValidationErrorMessage(error) ?? m['view.composer.video.error.processInvalid']();
+		}
+		default: {
+			return m['view.composer.video.error.processFailed']();
+		}
+	}
+}
+
+function getValidationErrorMessage(error: string | undefined): string | undefined {
 	switch (error) {
 		case 'bad_aspect_ratio': {
 			return m['view.composer.video.error.processAspectRatio']();
+		}
+		case 'encoded_video_too_large': {
+			return m['view.composer.video.error.processEncodedTooLarge']();
 		}
 		case 'unsupported_codec': {
 			return m['view.composer.video.error.processCodec']();
 		}
 		case 'video_too_long': {
 			return m['view.composer.video.error.processTooLong']();
-		}
-		default: {
-			return m['view.composer.video.error.processFailed']();
 		}
 	}
 }
