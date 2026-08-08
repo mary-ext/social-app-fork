@@ -1,5 +1,5 @@
 diff --git a/autocomplete/root/AutocompleteRoot.d.mts b/autocomplete/root/AutocompleteRoot.d.mts
-index 356d2952138041c49fa50375a5747a079a40dc40..b02dbba4c08e6f79143b3ea2ae2ba08e5ec18603 100644
+index 2f18bd5480a2844d3d0ca11adccf560393fcf122..d62c3239e81e66df21698945e58920550d576478 100644
 --- a/autocomplete/root/AutocompleteRoot.d.mts
 +++ b/autocomplete/root/AutocompleteRoot.d.mts
 @@ -25,6 +25,8 @@ export declare function AutocompleteRoot<ItemValue>(props: Omit<AutocompleteRoot
@@ -12,10 +12,10 @@ index 356d2952138041c49fa50375a5747a079a40dc40..b02dbba4c08e6f79143b3ea2ae2ba08e
  export type AutocompleteRootChangeEventReason = AriaCombobox.ChangeEventReason;
  export type AutocompleteRootChangeEventDetails = AriaCombobox.ChangeEventDetails;
 diff --git a/combobox/root/AriaCombobox.d.mts b/combobox/root/AriaCombobox.d.mts
-index 4d021fc2379be9d70c2e517c82d8b8e0cc4b3778..0ca590dfee651031a91f8f5db70b9fdbf517e0a4 100644
+index 1f1cde93d49c29f946684e180f751512057f6d77..ac34e4656d3f0957688ddedc31145fc7bd6ba52e 100644
 --- a/combobox/root/AriaCombobox.d.mts
 +++ b/combobox/root/AriaCombobox.d.mts
-@@ -113,6 +113,13 @@ interface ComboboxRootProps<ItemValue> {
+@@ -107,6 +107,13 @@ interface ComboboxRootProps<ItemValue> {
     * Call this after any externally controlled closing animation finishes.
     */
    actionsRef?: React.RefObject<AriaCombobox.Actions | null> | undefined;
@@ -30,10 +30,10 @@ index 4d021fc2379be9d70c2e517c82d8b8e0cc4b3778..0ca590dfee651031a91f8f5db70b9fdb
     * Callback fired when an item is highlighted or unhighlighted.
     * Receives the highlighted item value (or `undefined` if no item is highlighted) and event details with a `reason` property describing why the highlight changed.
 diff --git a/combobox/root/AriaCombobox.mjs b/combobox/root/AriaCombobox.mjs
-index e05fa9fcb6a4a3315def8cf7f48c11e273441f96..bd080834a1115a889908fb380df23de3da5e996e 100644
+index 3864151c6b12fa4cf223c37c9bc6efe2c0dd832b..8559d14e643ebd3f09b6d06a6f0eb920a7e3986c 100644
 --- a/combobox/root/AriaCombobox.mjs
 +++ b/combobox/root/AriaCombobox.mjs
-@@ -625,7 +625,7 @@ export function AriaCombobox(props) {
+@@ -658,7 +658,7 @@ export function AriaCombobox(props) {
      return popupRef;
    }, [inline, positionerElement]);
    useOpenChangeComplete({
@@ -42,7 +42,7 @@ index e05fa9fcb6a4a3315def8cf7f48c11e273441f96..bd080834a1115a889908fb380df23de3
      open,
      ref: resolvedPopupRef,
      onComplete() {
-@@ -635,8 +635,12 @@ export function AriaCombobox(props) {
+@@ -668,8 +668,12 @@ export function AriaCombobox(props) {
      }
    });
    React.useImperativeHandle(props.actionsRef, () => ({
@@ -54,43 +54,33 @@ index e05fa9fcb6a4a3315def8cf7f48c11e273441f96..bd080834a1115a889908fb380df23de3
 +      type: 'none'
 +    })
 +  }), [handleUnmount, setIndices]);
-   useIsoLayoutEffect(function syncSelectedIndex() {
-     if (open || selectionMode === 'none') {
+   useIsoLayoutEffect(function syncClosedState() {
+     if (open) {
        return;
 diff --git a/dialog/root/useRenderDialogRoot.mjs b/dialog/root/useRenderDialogRoot.mjs
-index 4578c1c630cd419fca5b770fed071bb3c0571db4..bd27e9758f5721f455d6a194a33fbb17e600ea85 100644
+index 49111df0463159391d3ade4c2cd767715695a7e4..177ff3ab835fda54a4ed412b078bc5182acd4a1a 100644
 --- a/dialog/root/useRenderDialogRoot.mjs
 +++ b/dialog/root/useRenderDialogRoot.mjs
-@@ -1,10 +1,15 @@
+@@ -1,6 +1,9 @@
  'use client';
  
  import * as React from 'react';
 +import { addEventListener } from '@base-ui/utils/addEventListener';
 +import { ownerWindow } from '@base-ui/utils/owner';
 +import { platform } from '@base-ui/utils/platform';
- import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
- import { DialogInteractions, useDialogRoot } from "./useDialogRoot.mjs";
- import { DialogRootContext, IsDrawerContext, useDialogRootContext } from "./DialogRootContext.mjs";
+ import { DialogInteractions } from "./useDialogRoot.mjs";
+ import { DialogRootContext, useDialogRootContext } from "./DialogRootContext.mjs";
  import { DialogStore } from "../store/DialogStore.mjs";
-+import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
-+import { REASONS } from "../../internals/reasons.mjs";
- import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
- export function useRenderDialogRoot(props, mode = 'dialog') {
-   const {
-@@ -65,10 +70,37 @@ export function useRenderDialogRoot(props, mode = 'dialog') {
+@@ -55,8 +58,33 @@ export function useRenderDialogRoot(mode, props) {
    const open = store.useState('open');
    const mounted = store.useState('mounted');
    const payload = store.useState('payload');
 +  const popupElement = store.useState('popupElement');
 +  const nestedOpenDialogCount = store.useState('nestedOpenDialogCount');
 +  const isTopmost = nestedOpenDialogCount === 0;
-   useDialogRoot({
-     store,
-     actionsRef
-   });
+   usePopupRootSync(store, open);
+   useImplicitActiveTrigger(store);
 +  React.useEffect(() => {
-+    // CloseWatcher enables the Android back gesture (Chromium-only).
-+    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
 +    if (!open || !isTopmost || !platform.os.android) {
 +      return undefined;
 +    }
@@ -112,39 +102,40 @@ index 4578c1c630cd419fca5b770fed071bb3c0571db4..bd27e9758f5721f455d6a194a33fbb17
 +      closeWatcher.destroy();
 +    };
 +  }, [store, isTopmost, open, popupElement]);
-   const shouldRenderInteractions = open || mounted;
-   const contextValue = React.useMemo(() => ({
-     store
+   const {
+     forceUnmount
+   } = useOpenStateTransitions(open, store);
 diff --git a/drawer/root/DrawerRoot.mjs b/drawer/root/DrawerRoot.mjs
-index 7f4559b75769ed9bf4f1bde29fd061755a09735d..34bf5f429b610652ddb7dbc36342290b19602ad8 100644
+index 4ffbea97c607d334e5e1cb71251f94abb30f1b4c..dbe9b6c48f635e333efe770bce8ce4547df39db2 100644
 --- a/drawer/root/DrawerRoot.mjs
 +++ b/drawer/root/DrawerRoot.mjs
-@@ -2,11 +2,8 @@
+@@ -2,12 +2,9 @@
  
  var _DrawerProviderReport, _DrawerProviderReport2;
  import * as React from 'react';
 -import { addEventListener } from '@base-ui/utils/addEventListener';
  import { useControlled } from '@base-ui/utils/useControlled';
+ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
  import { useStableCallback } from '@base-ui/utils/useStableCallback';
 -import { ownerWindow } from '@base-ui/utils/owner';
 -import { platform } from '@base-ui/utils/platform';
- import { useId } from '@base-ui/utils/useId';
  import { DrawerRootContext, useDrawerRootContext } from "./DrawerRootContext.mjs";
- import { Dialog } from "../../dialog/index.mjs";
-@@ -193,9 +190,6 @@ function DrawerProviderReporter() {
-     store
-   } = useDialogRootContext(false);
+ import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
+ import { REASONS } from "../../internals/reasons.mjs";
+@@ -192,9 +189,6 @@ function DrawerProviderReporter() {
+   const setDrawerOpen = providerContext?.setDrawerOpen;
+   const removeDrawer = providerContext?.removeDrawer;
    const open = store.useState('open');
 -  const nestedOpenDialogCount = store.useState('nestedOpenDialogCount');
 -  const popupElement = store.useState('popupElement');
 -  const isTopmost = nestedOpenDialogCount === 0;
-   React.useEffect(() => {
-     if (!providerContext || drawerId == null) {
+   useIsoLayoutEffect(() => {
+     if (!removeDrawer) {
        return undefined;
-@@ -210,29 +204,5 @@ function DrawerProviderReporter() {
-     }
-     providerContext?.setDrawerOpen(drawerId, open);
-   }, [drawerId, open, providerContext]);
+@@ -206,29 +200,5 @@ function DrawerProviderReporter() {
+   useIsoLayoutEffect(() => {
+     setDrawerOpen?.(store, open);
+   }, [open, setDrawerOpen, store]);
 -  React.useEffect(() => {
 -    // CloseWatcher enables the Android back gesture (Chromium-only).
 -    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
@@ -173,29 +164,28 @@ index 7f4559b75769ed9bf4f1bde29fd061755a09735d..34bf5f429b610652ddb7dbc36342290b
  }
 \ No newline at end of file
 diff --git a/popover/root/PopoverRoot.mjs b/popover/root/PopoverRoot.mjs
-index b08725a5171a602851f805efeadfd1c6eee46df8..dca12d19e87792bb2e1008be69901a1aaf46ceb8 100644
+index 35d6486593fc60272bf993c3839e8eff8c93b6b4..c76193970fc8b18a38fe6ef402361bb06ea5f340 100644
 --- a/popover/root/PopoverRoot.mjs
 +++ b/popover/root/PopoverRoot.mjs
 @@ -1,7 +1,10 @@
  'use client';
  
  import * as React from 'react';
+-import { useDismiss, FloatingTree } from "../../floating-ui-react/index.mjs";
 +import { addEventListener } from '@base-ui/utils/addEventListener';
- import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 +import { ownerWindow } from '@base-ui/utils/owner';
 +import { platform } from '@base-ui/utils/platform';
- import { useDismiss, FloatingTree, useFloatingParentNodeId } from "../../floating-ui-react/index.mjs";
++import { useDismiss, FloatingTree, useFloatingParentNodeId } from "../../floating-ui-react/index.mjs";
  import { PopoverRootContext, usePopoverRootContext } from "./PopoverRootContext.mjs";
  import { PopoverStore } from "../store/PopoverStore.mjs";
-@@ -59,6 +62,32 @@ function PopoverRootComponent({
+ import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
+@@ -54,6 +57,30 @@ function PopoverRootComponent({
        store.context.stickIfOpenTimeout.clear();
      }
    }, [store, open]);
++  const nested = useFloatingParentNodeId() != null;
 +  const popupElement = store.useState('popupElement');
 +  React.useEffect(() => {
-+    // CloseWatcher enables the Android back gesture (Chromium-only).
-+    // Keep this Android-only for now to avoid interfering with Escape/nesting semantics on desktop due to `useDismiss`.
-+    // Only the root popover registers; a nested popover leaves the back gesture to its ancestor.
 +    if (!open || nested || !platform.os.android) {
 +      return undefined;
 +    }
@@ -217,23 +207,36 @@ index b08725a5171a602851f805efeadfd1c6eee46df8..dca12d19e87792bb2e1008be69901a1a
 +      closeWatcher.destroy();
 +    };
 +  }, [store, nested, open, popupElement]);
-   const handleImperativeClose = React.useCallback(() => {
-     store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
-   }, [store]);
+   React.useImperativeHandle(props.actionsRef, () => ({
+     unmount: forceUnmount,
+     close: () => store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction))
 diff --git a/slider/control/SliderControl.mjs b/slider/control/SliderControl.mjs
-index db79a9da9b8feccae0c67c87fb5fc6d3c615b48a..01b7a494ee94225c7ff1ca48a8579a8f32647773 100644
+index 6a2b200873be9c7f2f91858dd22659bc6f5f1292..52860b24049801617f46f8a5e7a4f32d647e3344 100644
 --- a/slider/control/SliderControl.mjs
 +++ b/slider/control/SliderControl.mjs
-@@ -326,7 +326,7 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
-       touchIdRef.current = touch.identifier;
+@@ -316,13 +316,15 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+       x: touch.clientX,
+       y: touch.clientY
+     };
+-    startPressing(fingerCoords);
+-    const finger = getFingerState(fingerCoords);
+-    if (finger == null) {
+-      return;
++    if (currentInteractionValueRef.current == null) {
++      startPressing(fingerCoords);
++      const finger = getFingerState(fingerCoords);
++      if (finger == null) {
++        return;
++      }
++      focusThumb(finger.thumbIndex);
++      setValueFromPointer(finger, REASONS.trackPress, nativeEvent);
      }
-     const fingerCoords = getFingerCoords(nativeEvent, touchIdRef);
--    if (fingerCoords != null) {
-+    if (fingerCoords != null && currentInteractionValueRef.current == null) {
-       startPressing(fingerCoords);
-       const finger = getFingerState(fingerCoords);
-       if (finger == null) {
-@@ -346,13 +346,18 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+-    focusThumb(finger.thumbIndex);
+-    setValueFromPointer(finger, REASONS.trackPress, nativeEvent);
+     moveCountRef.current = 0;
+     const doc = ownerDocument(controlRef.current);
+     doc.addEventListener('touchmove', handleTouchMove, {
+@@ -331,13 +333,18 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
      doc.addEventListener('touchend', handleTouchEnd, {
        passive: true
      });
@@ -252,7 +255,7 @@ index db79a9da9b8feccae0c67c87fb5fc6d3c615b48a..01b7a494ee94225c7ff1ca48a8579a8f
      pressedValuesRef.current = null;
      currentInteractionValueRef.current = null;
    });
-@@ -428,6 +433,9 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
+@@ -411,6 +418,9 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
          doc.addEventListener('pointerup', handleTouchEnd, {
            once: true
          });
@@ -278,10 +281,10 @@ index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1
      ref: ref,
      role: "presentation"
 diff --git a/utils/popups/popupStoreUtils.mjs b/utils/popups/popupStoreUtils.mjs
-index 0db5db997495b974c5a777fcf0edec6fef5c0e28..87a82bede538e725cfb5c96630bbc1be672e111d 100644
+index b762f793723159dd4bd42669dd34a0527bace60e..05b08cdfd4a3f030cb4d152aef2133a4225eff7c 100644
 --- a/utils/popups/popupStoreUtils.mjs
 +++ b/utils/popups/popupStoreUtils.mjs
-@@ -195,16 +195,6 @@ export function useTriggerDataForwarding(triggerId, triggerElementRef, store, st
+@@ -211,16 +211,6 @@ export function useTriggerDataForwarding(triggerId, triggerElementRef, store, st
        });
        return;
      }
@@ -296,5 +299,5 @@ index 0db5db997495b974c5a777fcf0edec6fef5c0e28..87a82bede538e725cfb5c96630bbc1be
 -      });
 -    }
    });
-   useIsoLayoutEffect(() => {
-     if (isMountedByThisTrigger) {
+ 
+   // Intentionally NOT stable. Its identity is derived from `baseRegisterTrigger`, which is keyed on

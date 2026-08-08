@@ -48,9 +48,15 @@ reason. Android-only (`platform.os.android`) to avoid clashing with the desktop 
 
 upstream shipped this only in the drawer (`DrawerProviderReporter`); we moved it to
 `useRenderDialogRoot` — the shared path for `Dialog.Root`, `AlertDialog.Root`, and `Drawer.Root` —
-and deleted the drawer's copy. topmost is `nestedOpenDialogCount === 0`. popovers have no
-nested-open count, so `PopoverRoot` gates on `!nested` (only a root popover registers). no `.d.mts`
-changes.
+and deleted the drawer's copy, along with the three imports and the `nestedOpenDialogCount` /
+`popupElement` reads that only it used. topmost is `nestedOpenDialogCount === 0`.
+
+popovers have no nested-open count, so `PopoverRoot` gates on `!nested` (only a root popover
+registers). `PopoverRoot` no longer derives `nested` itself — the value now goes into `PopoverStore`
+at construction and is not readable from state — so the patch restores the
+`useFloatingParentNodeId() != null` call that used to live there.
+
+no `.d.mts` changes.
 
 ## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts` — add an `autoUnmount` opt-out
 
@@ -77,9 +83,9 @@ it commits only when `currentInteractionValueRef` is set.
 
 **a tap.** `pointerdown` and the native `touchstart` handler both fire on touch and both run
 `startPressing`, which nulls that ref; the second one's `setValue` is then a no-op, because
-`pointerdown` already applied the value, so the ref stays null. `handleTouchStart` now bails when
-the ref is already set. drags escape this because later moves re-set the ref, and a mouse escapes it
-because there is no `touchstart`.
+`pointerdown` already applied the value, so the ref stays null. `handleTouchStart` now skips the
+press when the ref is already set, while still attaching the document listeners. drags escape this
+because later moves re-set the ref, and a mouse escapes it because there is no `touchstart`.
 
 **a cancelled gesture.** `handleTouchEnd` is bound to `pointerup`/`touchend` only, so a
 `pointercancel`/`touchcancel` — Android Chrome collapsing the url bar mid-drag, long-press, palm
