@@ -3,7 +3,7 @@ use React Native.
 
 ## development notes
 
-this project uses React Compiler.
+this project uses React Compiler, `@base-ui/react` and Paraglide.
 
 ### project management
 
