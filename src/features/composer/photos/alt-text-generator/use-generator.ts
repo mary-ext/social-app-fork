@@ -1,8 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react';
 
-import { ClientResponseError } from '@atcute/client';
-
-import { OpenRouterError } from '#/lib/ai/openrouter-error';
+import { describeAiFailure } from '#/lib/ai/openrouter-error';
 
 import { m } from '#/paraglide/messages';
 
@@ -239,33 +237,12 @@ export const useAltTextGenerator = ({ blob, context, onGenerated, text }: Option
 	};
 };
 
-const describeFailure = (error: unknown): string => {
-	if (error instanceof OpenRouterError) {
-		switch (error.status) {
-			case 401:
-			case 403: {
-				return m['view.composer.altText.generate.error.openRouterKey']();
-			}
-			case 402: {
-				return m['view.composer.altText.generate.error.openRouterCredits']();
-			}
-			case 429: {
-				return m['view.composer.altText.generate.error.openRouterRateLimited']();
-			}
-			default: {
-				return m['view.composer.altText.generate.error.openRouterUnavailable']();
-			}
-		}
-	}
-
-	// our own endpoint meters each account, and the PDS relays the 429 as-is on its way back through the
-	// proxy. it is worth telling apart from an outage: waiting fixes one and not the other
-	if (error instanceof ClientResponseError && error.status === 429) {
-		return m['view.composer.altText.generate.error.rateLimited']();
-	}
-
-	return m['view.composer.altText.generate.error.unavailable']();
-};
+const describeFailure = (error: unknown): string =>
+	describeAiFailure({
+		error,
+		rateLimited: m['view.composer.altText.generate.error.rateLimited'],
+		unavailable: m['view.composer.altText.generate.error.unavailable'],
+	});
 
 const sealLastRound = (rounds: AltTextRound[], edited: string | undefined): AltTextRound[] => {
 	const last = rounds.at(-1);

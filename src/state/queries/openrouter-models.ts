@@ -20,7 +20,7 @@ const responseSchema = v.object({
 	data: v.array(openrouterModel),
 });
 
-type Modality = 'audio' | 'image' | 'text' | 'video';
+export type Modality = 'audio' | 'image' | 'text' | 'video';
 
 type ParsedModelId = {
 	author: string;
@@ -66,9 +66,9 @@ const compareModelIds = (a: string, b: string) => {
 
 type Options = {
 	/** A model is listed only when it accepts every one of these input modalities, e.g. `image`. */
-	inputModalities: Modality[];
+	inputModalities: readonly Modality[];
 	/** A model is listed only when it emits every one of these output modalities, e.g. `text`. */
-	outputModalities: Modality[];
+	outputModalities: readonly Modality[];
 };
 
 const RQKEY_ROOT = 'openrouter-models';

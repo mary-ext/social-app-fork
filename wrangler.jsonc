@@ -11,8 +11,9 @@
 		"binding": "AI",
 	},
 	"ratelimits": [
+		// shared per-account AI budget.
 		{
-			"name": "ALT_TEXT_LIMITER",
+			"name": "AI_LIMITER",
 			"namespace_id": "1001",
 			"simple": { "limit": 20, "period": 60 },
 		},

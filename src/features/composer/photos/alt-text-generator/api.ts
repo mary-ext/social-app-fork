@@ -1,14 +1,11 @@
-import { type Client, ok } from '@atcute/client';
+import { ok } from '@atcute/client';
 import { toBase64Pad } from '@atcute/multibase';
 
-import { internalClient } from '#/lib/api/internal-client';
 import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
 import { compressAltTextImage } from '#/lib/media/compress-image';
 
+import { getInternalServiceClient } from '#/state/internal-service-client';
 import { getImageDescriptionConfig } from '#/state/preferences/openrouter';
-import { getClients } from '#/state/session';
-
-import { INTERNAL_PROXY_AUDIENCE } from '#/env';
 
 import type { AltTextContext, AltTextDraft, AltTextImage, AltTextRound } from './types';
 
@@ -47,24 +44,11 @@ export const generateAltText = async ({ context, image, rounds, signal }: Option
 	}
 
 	return await ok(
-		createDescriptionClient().post('internal.app.generateAltText', {
+		getInternalServiceClient().post('internal.app.generateAltText', {
 			signal: signal,
 			input: input,
 		}),
 	);
-};
-
-const createDescriptionClient = (): Client => {
-	if (import.meta.env.DEV) {
-		return internalClient;
-	}
-
-	const { pds } = getClients();
-	if (pds === null) {
-		throw new Error('cannot generate alt text while logged out');
-	}
-
-	return pds.clone({ proxy: INTERNAL_PROXY_AUDIENCE });
 };
 
 const isAcceptedType = (type: string): type is AltTextImage['mimeType'] => {

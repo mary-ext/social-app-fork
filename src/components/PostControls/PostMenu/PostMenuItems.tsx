@@ -14,6 +14,7 @@ import { type Richtext, richTextToCopyableText } from '#/lib/rich-text';
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
+import { usePrimaryLanguage } from '#/state/preferences/languages';
 import { usePinnedPostMutation } from '#/state/queries/pinned-post';
 import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
 import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
@@ -27,6 +28,8 @@ import {
 } from '#/state/queries/threadgate';
 import { useRequireAuth, useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
+
+import { isPostInLanguage } from '#/locale/helpers';
 
 import * as Dialog from '#/components/Dialog';
 import {
@@ -51,6 +54,7 @@ import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import Gear from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
+import Translate from '#/icons/central/Translate_round_outlined_radius1_stroke2.svg';
 import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -80,6 +84,7 @@ function PostMenuItems({
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
 	const requireSignIn = useRequireAuth();
 	const feedFeedback = useFeedFeedbackContext();
+	const primaryLanguage = usePrimaryLanguage();
 	const router = useRouter();
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
@@ -233,6 +238,7 @@ function PostMenuItems({
 
 	const canHideReplyForEveryone = !isAuthor && isRootPostAuthor && isReply;
 	const canDetachQuote = quoteEmbed !== undefined && quoteEmbed.isOwnedByViewer;
+	const canTranslate = hasSession && record.text !== '' && !isPostInLanguage(post, [primaryLanguage]);
 
 	const onToggleReplyVisibility = async () => {
 		// TODO no threadgate?
@@ -349,6 +355,18 @@ function PostMenuItems({
 				<Menu.Group>
 					{!hideInPWI || hasSession ? (
 						<>
+							{canTranslate && (
+								<Menu.Item
+									label={m['components.post.translate.action.translate']()}
+									onClick={() => {
+										const { repo, rkey } = parseCanonicalResourceUri(postUri);
+										router.navigate({ to: { name: 'PostThread', actor: repo, rkey, translate: true } });
+									}}
+								>
+									<Menu.ItemText>{m['components.post.translate.action.translate']()}</Menu.ItemText>
+									<Menu.ItemIcon icon={Translate} position="right" />
+								</Menu.Item>
+							)}
 							<Menu.Item label={m['components.postControls.copy.text']()} onClick={onCopyPostText}>
 								<Menu.ItemText>{m['components.postControls.copy.text']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ClipboardIcon} position="right" />

@@ -36,6 +36,8 @@ export type Device = {
 	openrouterApiKey?: string;
 	/** OpenRouter model slug used to draft image descriptions, e.g. `google/gemini-2.5-flash`. */
 	openrouterImageDescriptionModel?: string;
+	/** OpenRouter model slug used to translate posts, e.g. `google/gemini-2.5-flash`. */
+	openrouterTranslationModel?: string;
 	pdsAddressHistory?: string[];
 	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */
 	postLanguage?: string;

@@ -10,8 +10,8 @@ const SEARCH_HEIGHT = 42;
 const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING - 1);
 
 export const popup = style({
-	maxWidth: 500,
 	height: 600,
+	maxWidth: 500,
 });
 
 export const group = style({
@@ -56,9 +56,9 @@ export const list = style({
 
 export const item = style({
 	boxSizing: 'border-box',
+	width: '100%',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
-	width: '100%',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
 	},
@@ -80,8 +80,8 @@ export const itemText = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	gap: space._2xs,
 	minWidth: 0,
+	gap: space._2xs,
 });
 
 export const status = style({
@@ -93,8 +93,8 @@ export const status = style({
 export const empty = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: space.md,
 	alignItems: 'center',
+	gap: space.md,
 	paddingBlock: 20,
 	paddingInline: DIALOG_PADDING,
 });

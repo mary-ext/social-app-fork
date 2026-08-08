@@ -41,6 +41,7 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
+import { TranslatedPost } from '#/components/Post/Translated';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
@@ -57,7 +58,7 @@ import { WhoCanReply } from '#/components/WhoCanReply';
 import CalendarClockIcon from '#/icons/central/CalendarClock_round_outlined_radius1_stroke2.svg';
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import { type RouteTarget, useParams } from '#/routes';
 
 import * as css from './ThreadItemAnchor.css';
 
@@ -141,6 +142,7 @@ function ThreadItemAnchorInner({
 	const { openComposer } = useOpenComposer();
 	const { currentAccount, hasSession } = useSession();
 	const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession);
+	const [{ translate }, replaceParams] = useParams('PostThread');
 
 	const post = postShadow;
 	const record = item.value.post.record;
@@ -311,6 +313,13 @@ function ThreadItemAnchorInner({
 									authorHandle={post.author.handle}
 								/>
 							) : undefined}
+							<TranslatedPost
+								post={post}
+								onHide={() => replaceParams({ translate: undefined })}
+								onShow={() => replaceParams({ translate: true })}
+								shown={translate === true}
+								textSize="lg"
+							/>
 							{post.embed && (
 								<div className={richText?.text ? css.embedPad : undefined}>
 									<Embed

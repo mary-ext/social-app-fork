@@ -3,6 +3,7 @@ import * as v from '@atcute/lexicons/validations';
 import { MAX_ALT_TEXT } from '../constants/composer';
 import { altTextDraftSchema, type generateAltText } from '../lexicons';
 import type { ChatContentPart, ChatMessage, ChatResponseSchema, CompleteChat } from './chat';
+import { extractJsonObject } from './json';
 
 export type AltTextInput = v.InferOutput<(typeof generateAltText)['input']['schema']>;
 
@@ -213,12 +214,8 @@ const formatReply = ({
 	return sections.join('\n\n');
 };
 
-/**
- * the response schema should make this a plain `JSON.parse`, but the model is free to ignore it — and does
- * when it decides to explain itself first — so the object is dug out of whatever came back.
- */
 const parseDraft = (reply: string): Draft | undefined => {
-	const json = extractObject(reply);
+	const json = extractJsonObject(reply);
 	if (json === undefined) {
 		return undefined;
 	}
@@ -247,59 +244,4 @@ const parseDraft = (reply: string): Draft | undefined => {
 			.filter((question) => question !== '')
 			.slice(0, MAX_QUESTIONS),
 	};
-};
-
-/** returns the first brace-balanced object in the reply, ignoring braces inside strings. */
-const extractObject = (reply: string): string | undefined => {
-	const start = reply.indexOf('{');
-	if (start === -1) {
-		return undefined;
-	}
-
-	let depth = 0;
-	let inString = false;
-	let escaped = false;
-
-	for (let idx = start; idx < reply.length; idx++) {
-		const char = reply[idx];
-
-		if (escaped) {
-			escaped = false;
-			continue;
-		}
-
-		if (inString) {
-			switch (char) {
-				case '"': {
-					inString = false;
-					break;
-				}
-				case '\\': {
-					escaped = true;
-					break;
-				}
-			}
-			continue;
-		}
-
-		switch (char) {
-			case '"': {
-				inString = true;
-				break;
-			}
-			case '{': {
-				depth++;
-				break;
-			}
-			case '}': {
-				if (--depth === 0) {
-					return reply.slice(start, idx + 1);
-				}
-				break;
-			}
-		}
-	}
-
-	// unbalanced: the reply was cut off mid-object, most likely by the token cap
-	return undefined;
 };

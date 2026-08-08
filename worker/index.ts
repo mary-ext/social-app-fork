@@ -2,11 +2,18 @@ import { env } from 'cloudflare:workers';
 
 import { ForbiddenError, InvalidRequestError, json, XRPCRouter } from '@atcute/xrpc-server';
 
-import { extractLinkMeta, generateAltText, getClientAssertion, getLinkImage } from '../src/lib/lexicons';
+import {
+	extractLinkMeta,
+	generateAltText,
+	getClientAssertion,
+	getLinkImage,
+	translateText,
+} from '../src/lib/lexicons';
 import { generateAltTextDraft } from './alt-text';
 import { issueClientAssertion, serveClientMetadata } from './client-assertion';
 import { resolveLinkMeta } from './resolve';
 import { authorizeServiceCall, serveDidDocument } from './service-auth';
+import { translatePostText } from './translate';
 
 const CLIENT_METADATA_PATH = '/oauth-client-metadata.json';
 
@@ -29,7 +36,7 @@ const router = new XRPCRouter({
 
 router.addProcedure(generateAltText, {
 	async handler({ input, request }) {
-		await authorizeServiceCall(request, { limiter: env.ALT_TEXT_LIMITER, lxm: generateAltText.nsid });
+		await authorizeServiceCall(request, { limiter: env.AI_LIMITER, lxm: generateAltText.nsid });
 
 		return json(await generateAltTextDraft(input));
 	},
@@ -39,6 +46,14 @@ router.addProcedure(getClientAssertion, {
 	handler({ input, request }) {
 		requireSameOrigin(request);
 		return issueClientAssertion({ aud: input.aud, dpopProof: request.headers.get('dpop') });
+	},
+});
+
+router.addProcedure(translateText, {
+	async handler({ input, request }) {
+		await authorizeServiceCall(request, { limiter: env.AI_LIMITER, lxm: translateText.nsid });
+
+		return json(await translatePostText(input));
 	},
 });
 

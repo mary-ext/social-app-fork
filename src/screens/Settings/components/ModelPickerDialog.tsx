@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { setImageDescriptionModel } from '#/state/preferences/openrouter';
-import { useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
+import { type Modality, useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
 
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
@@ -14,7 +13,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import * as styles from './ImageDescriptionModelDialog.css';
+import * as styles from './ModelPickerDialog.css';
 
 const NONE = 'none';
 
@@ -25,27 +24,41 @@ type Entry = {
 
 type Props = {
 	handle: Dialog.DialogHandle;
-	/** The currently saved model id, or undefined when image description is off. */
+	inputModalities: readonly Modality[];
 	model: string | undefined;
+	onSave: (model: string | undefined) => void;
+	titleText: string;
 };
 
-export function ImageDescriptionModelDialog({ handle, model }: Props) {
+/**
+ * renders an OpenRouter model picker.
+ *
+ * @param props dialog state and model requirements
+ * @returns the model picker dialog
+ */
+export const ModelPickerDialog = ({ handle, inputModalities, model, onSave, titleText }: Props) => {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} scroll="body" label={m['screens.settings.ai.model.label']()}>
-				<DialogInner handle={handle} model={model} />
+			<Dialog.Popup className={styles.popup} scroll="body" label={titleText}>
+				<DialogInner
+					handle={handle}
+					inputModalities={inputModalities}
+					model={model}
+					onSave={onSave}
+					titleText={titleText}
+				/>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
-}
+};
 
-function DialogInner({ handle, model }: Props) {
+const DialogInner = ({ handle, inputModalities, model, onSave, titleText }: Props) => {
 	const {
 		data: models,
 		error,
 		isPending,
 	} = useOpenRouterModelsQuery({
-		inputModalities: ['image', 'text'],
+		inputModalities: inputModalities,
 		outputModalities: ['text'],
 	});
 
@@ -53,7 +66,7 @@ function DialogInner({ handle, model }: Props) {
 	const [search, setSearch] = useState('');
 
 	const onClose = () => {
-		setImageDescriptionModel(selected === NONE ? undefined : selected);
+		onSave(selected === NONE ? undefined : selected);
 		handle.close();
 	};
 
@@ -61,7 +74,7 @@ function DialogInner({ handle, model }: Props) {
 		{ id: NONE, name: m['screens.settings.ai.model.none']() },
 		...(models ?? []).map((entry) => ({ id: entry.id, name: entry.name })),
 	];
-	// a saved model stays visible and pickable even when the list failed to load or no longer carries it
+	// keep the saved model available when the model list omits it.
 	if (model !== undefined && !entries.some((entry) => entry.id === model)) {
 		entries.splice(1, 0, { id: model, name: model });
 	}
@@ -81,14 +94,14 @@ function DialogInner({ handle, model }: Props) {
 	return (
 		<Toggle.Group
 			className={styles.group}
-			label={m['screens.settings.ai.model.label']()}
+			label={titleText}
 			onChange={(values) => setSelected(values[0] ?? NONE)}
 			type="radio"
 			values={[selected]}
 		>
 			<div className={styles.header}>
 				<Text className={styles.title} size="lg" weight="semiBold" numberOfLines={1}>
-					{m['screens.settings.ai.model.label']()}
+					{titleText}
 				</Text>
 
 				<Button
@@ -162,9 +175,9 @@ function DialogInner({ handle, model }: Props) {
 			</Dialog.Footer>
 		</Toggle.Group>
 	);
-}
+};
 
-function Empty({ message }: { message: string }) {
+const Empty = ({ message }: { message: string }) => {
 	return (
 		<div className={styles.empty}>
 			<Text className={styles.emptyMessage} color="textContrastHigh" size="sm">
@@ -175,4 +188,4 @@ function Empty({ message }: { message: string }) {
 			</Text>
 		</div>
 	);
-}
+};

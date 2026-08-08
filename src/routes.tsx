@@ -446,6 +446,7 @@ export const routes = defineRoutes({
 				component: PostThreadScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/:rkey',
+				query: { translate: optional(boolean()) },
 			}),
 			PostLikedBy: route({
 				component: PostLikedByScreen,

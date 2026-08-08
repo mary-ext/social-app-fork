@@ -3,6 +3,7 @@ import * as v from '@atcute/lexicons/validations';
 import { type AltTextInput, runAltTextRound } from '#/lib/ai/alt-text';
 import type { CompleteChat } from '#/lib/ai/chat';
 import { OpenRouterError } from '#/lib/ai/openrouter-error';
+import { runTranslation, type TranslationInput } from '#/lib/ai/translate';
 
 /**
  * runs chat completions against the user's own OpenRouter account, straight from the browser — their key
@@ -52,6 +53,25 @@ export const runOpenRouterAltTextRound = ({
 	...config
 }: OpenRouterConfig & { input: AltTextInput; signal: AbortSignal }) => {
 	return runAltTextRound({
+		complete: createOpenRouterCompletion({ ...config, signal: signal }),
+		input: input,
+	});
+};
+
+/**
+ * translates text with the configured OpenRouter model.
+ *
+ * @param options request configuration and translation input
+ * @returns the translation and detected source language
+ * @throws {OpenRouterError} when OpenRouter fails
+ * @throws {UnreadableTranslationError} when the reply is invalid
+ */
+export const runOpenRouterTranslation = ({
+	input,
+	signal,
+	...config
+}: OpenRouterConfig & { input: TranslationInput; signal: AbortSignal }) => {
+	return runTranslation({
 		complete: createOpenRouterCompletion({ ...config, signal: signal }),
 		input: input,
 	});

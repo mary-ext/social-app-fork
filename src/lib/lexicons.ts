@@ -138,10 +138,33 @@ export const getLinkImage = v.query('internal.app.getLinkImage', {
 	},
 });
 
+const MAX_TRANSLATION_CHARS = 3000;
+
+export const translationSchema = v.object({
+	sourceLanguage: v.string(),
+	translation: v.string(),
+});
+
+export const translateText = v.procedure('internal.app.translateText', {
+	params: null,
+	input: {
+		type: 'lex',
+		schema: v.object({
+			targetLanguage: v.string(),
+			text: v.constrain(v.string(), [v.stringLength(1, MAX_TRANSLATION_CHARS)]),
+		}),
+	},
+	output: {
+		type: 'lex',
+		schema: translationSchema,
+	},
+});
+
 declare module '@atcute/lexicons/ambient' {
 	interface XRPCProcedures {
 		'internal.app.generateAltText': typeof generateAltText;
 		'internal.app.getClientAssertion': typeof getClientAssertion;
+		'internal.app.translateText': typeof translateText;
 	}
 
 	interface XRPCQueries {
