@@ -136,6 +136,19 @@ export function isNetworkError(e: unknown) {
 const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504, 522, 524]);
 
 /**
+ * checks whether an HTTP status is one a retry could clear.
+ *
+ * most callers hold the error rather than a bare status and want {@link shouldRetryError}; this exists for the
+ * ones that recover a status from somewhere else, like a relayed upstream failure.
+ *
+ * @param status the HTTP status code to check
+ * @returns true if a request that failed this way is worth retrying
+ */
+export function isRetryableHttpStatus(status: number) {
+	return RETRYABLE_STATUSES.has(status);
+}
+
+/**
  * checks whether an error is likely to clear on its own, so callers can decide whether to suggest retrying.
  *
  * network failures are not covered here — pair this with {@link isNetworkError} when both should count.
@@ -144,7 +157,7 @@ const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504, 522, 524]
  * @returns true if the request is worth retrying
  */
 export function shouldRetryError(e: unknown) {
-	return e instanceof ClientResponseError && RETRYABLE_STATUSES.has(e.status);
+	return e instanceof ClientResponseError && isRetryableHttpStatus(e.status);
 }
 
 /**

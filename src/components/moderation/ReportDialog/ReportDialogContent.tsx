@@ -32,6 +32,7 @@ import {
 	NEW_TO_OLD_REASONS_MAP,
 } from './const';
 import { useCopyForSubject } from './copy';
+import { reportErrorMessage } from './errors';
 import * as styles from './index.css';
 import { initialState, reducer, stepFor } from './state';
 import type { ParsedReportSubject, ReportSubject } from './types';
@@ -178,7 +179,7 @@ function Inner({
 			close();
 		} catch (e) {
 			console.error('Failed to submit report', e);
-			dispatch({ type: 'setError', error: m['common.error.generic']() });
+			dispatch({ type: 'setError', error: reportErrorMessage(e) ?? m['common.error.generic']() });
 		} finally {
 			setIsPending(false);
 		}
