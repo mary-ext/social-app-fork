@@ -23,6 +23,8 @@ import { space } from '#/styles/tokens.css';
 
 import * as css from './ReactionsDialog.css';
 
+const REACTION_ITEM_HEIGHT_ESTIMATE = 64;
+
 type Reaction = {
 	key: string;
 	value: string;
@@ -136,6 +138,7 @@ function DialogInner({
 			<Dialog.List
 				className={css.list}
 				data={filteredReactions}
+				estimateHeight={REACTION_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(reaction) => reaction.sender.did + '-' + reaction.value}
 				renderItem={({ item: reaction }) => {
 					const sender = convo.relatedProfiles.get(reaction.sender.did);

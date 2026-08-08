@@ -51,6 +51,8 @@ export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps)
 	);
 }
 
+const STARTER_PACK_ITEM_HEIGHT_ESTIMATE = 74;
+
 type Item = { type: 'pack'; pack: StarterPackWithMembership } | { type: 'create' };
 
 function keyExtractor(item: Item): string {
@@ -107,6 +109,7 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 			</div>
 			<Dialog.List
 				data={items}
+				estimateHeight={STARTER_PACK_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={keyExtractor}
 				renderItem={({ index, item }) => {
 					switch (item.type) {

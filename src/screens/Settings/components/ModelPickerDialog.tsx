@@ -17,6 +17,8 @@ import * as styles from './ModelPickerDialog.css';
 
 const NONE = 'none';
 
+const MODEL_ITEM_HEIGHT_ESTIMATE = 66;
+
 type Entry = {
 	id: string;
 	name: string;
@@ -132,6 +134,7 @@ const DialogInner = ({ handle, inputModalities, model, onSave, titleText }: Prop
 			<Dialog.List
 				className={styles.list}
 				data={visible}
+				estimateHeight={MODEL_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(entry) => entry.id}
 				ListEmptyComponent={<Empty message={m['screens.settings.ai.model.noMatches']()} />}
 				ListHeaderComponent={

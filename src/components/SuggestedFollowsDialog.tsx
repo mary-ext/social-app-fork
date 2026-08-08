@@ -23,6 +23,8 @@ import { m } from '#/paraglide/messages';
 
 const FOR_YOU_TAB = 'all';
 
+const PROFILE_ITEM_HEIGHT_ESTIMATE = 97;
+
 // persisted across opens so reopening the dialog restores the last tab/search the user left it on
 let lastSelectedInterest = '';
 let lastSearchText = '';
@@ -175,6 +177,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			<Dialog.List
 				className={css.list}
 				data={profiles}
+				estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 				key={hasSearchText ? searchText : selectedInterest}
 				keyExtractor={(profile) => profile.did}
 				ListEmptyComponent={listEmpty}

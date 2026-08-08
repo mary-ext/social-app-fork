@@ -22,6 +22,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
+const LANGUAGE_ITEM_HEIGHT_ESTIMATE = 48;
+
 type ListEntry =
 	| {
 			type: 'header';
@@ -172,6 +174,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 			<Dialog.List
 				className={styles.list}
 				data={listData}
+				estimateHeight={LANGUAGE_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(entry) => (entry.type === 'header' ? `header-${entry.label}` : langCode(entry.lang))}
 				ListEmptyComponent={<Empty message={m['common.list.noResults']()} />}
 				renderItem={({ index, item }) => {

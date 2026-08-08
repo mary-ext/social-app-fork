@@ -11,6 +11,8 @@ import * as styles from './DraftsListDialog.css';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
 import type { DraftSummary } from './state/schema';
 
+const DRAFT_ITEM_HEIGHT_ESTIMATE = 102;
+
 type DraftsListDialogProps = {
 	handle: Dialog.DialogHandle;
 	onSelectDraft: (draft: DraftSummary) => void;
@@ -70,6 +72,7 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 			<Dialog.List
 				className={styles.list}
 				data={drafts}
+				estimateHeight={DRAFT_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(draft) => draft.id}
 				renderItem={({ item: draft }) => (
 					<div className={styles.itemWrap}>

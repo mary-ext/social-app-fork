@@ -44,6 +44,8 @@ export function UserAddRemoveListsDialog({
 	);
 }
 
+const LIST_ITEM_HEIGHT_ESTIMATE = 65;
+
 type Item =
 	| { type: 'list'; item: ListWithMembership }
 	| { type: 'sectionHeader'; key: string; title: string };
@@ -133,6 +135,7 @@ function DialogInner({
 
 			<Dialog.List
 				data={items}
+				estimateHeight={LIST_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={keyExtractor}
 				ListEmptyComponent={listEmpty}
 				renderItem={renderItem}

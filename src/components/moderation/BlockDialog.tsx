@@ -30,6 +30,8 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './BlockDialog.css';
 
+const GROUP_ITEM_HEIGHT_ESTIMATE = 56;
+
 type Item = ChatBskyConvoDefs.ConvoView;
 
 type BlockDialogProps = {
@@ -125,6 +127,7 @@ function BlockDialogInner({
 
 			<Dialog.List
 				data={items}
+				estimateHeight={GROUP_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => (
 					<MutualGroupChat

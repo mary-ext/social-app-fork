@@ -11,6 +11,8 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './WizardEditListDialog.css';
 
+const WIZARD_ITEM_HEIGHT_ESTIMATE = 67;
+
 type ListItem = AnyProfileView | AppBskyFeedDefs.GeneratorView;
 
 function keyExtractor(item: ListItem, index: number) {
@@ -79,7 +81,13 @@ export function WizardEditListDialog({
 						</Button>
 					</Dialog.Header.Slot>
 				</Dialog.Header.Outer>
-				<Dialog.List data={data} keyExtractor={keyExtractor} renderItem={renderItem} className={css.list} />
+				<Dialog.List
+					data={data}
+					estimateHeight={WIZARD_ITEM_HEIGHT_ESTIMATE}
+					keyExtractor={keyExtractor}
+					renderItem={renderItem}
+					className={css.list}
+				/>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
