@@ -1,8 +1,8 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { boostInterests, interestDisplayNames, popularInterests } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
@@ -44,24 +44,19 @@ export function SuggestedFollowsDialog({ handle }: { handle: Dialog.DialogHandle
 }
 
 function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
-	const rawInterestsDisplayNames = useInterestsDisplayNames();
 	const { data: preferences } = usePreferencesQuery();
 	const personalizedInterests = preferences?.interests?.tags;
-	// kept memoized: read from InterestTabs' own useEffect dep arrays.
-	const interests = useMemo(
-		() => [
-			FOR_YOU_TAB,
-			...Object.keys(rawInterestsDisplayNames)
-				// oxlint-disable-next-line unicorn/no-array-sort -- our own array of keys, and stable sorts compose:
-				.sort(boostInterests(popularInterests))
-				// oxlint-disable-next-line unicorn/no-array-sort -- personalized boosts outrank popular ones
-				.sort(boostInterests(personalizedInterests)),
-		],
-		[rawInterestsDisplayNames, personalizedInterests],
-	);
+	const interests = [
+		FOR_YOU_TAB,
+		...Object.keys(interestDisplayNames)
+			// oxlint-disable-next-line unicorn/no-array-sort -- our own array of keys, and stable sorts compose:
+			.sort(boostInterests(popularInterests))
+			// oxlint-disable-next-line unicorn/no-array-sort -- personalized boosts outrank popular ones
+			.sort(boostInterests(personalizedInterests)),
+	];
 	const interestsDisplayNames = {
-		[FOR_YOU_TAB]: m['common.feeds.forYou'](),
-		...rawInterestsDisplayNames,
+		[FOR_YOU_TAB]: m['common.feeds.forYou'],
+		...interestDisplayNames,
 	};
 
 	const [selectedInterest, setSelectedInterest] = useState(() => lastSelectedInterest || FOR_YOU_TAB);

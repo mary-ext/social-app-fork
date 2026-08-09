@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier, ResourceUri } from '@atcute/lexicons';
@@ -57,60 +55,54 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 export function useGetPost() {
 	const queryClient = useQueryClient();
 	const { appview } = getClients();
-	return useCallback(
-		async ({ uri }: { uri: ResourceUri }) => {
-			return queryClient.fetchQuery({
-				queryKey: RQKEY(uri || ''),
-				async queryFn() {
-					const urip = parseResourceUri(uri);
+	return async ({ uri }: { uri: ResourceUri }) => {
+		return queryClient.fetchQuery({
+			queryKey: RQKEY(uri || ''),
+			async queryFn() {
+				const urip = parseResourceUri(uri);
 
-					let repo: ActorIdentifier = urip.repo;
-					if (!isDid(repo)) {
-						const resolved = await ok(
-							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: repo },
-							}),
-						);
-						repo = resolved.did;
-					}
-
-					const { posts } = await ok(
-						appview.get('app.bsky.feed.getPosts', {
-							params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
+				let repo: ActorIdentifier = urip.repo;
+				if (!isDid(repo)) {
+					const resolved = await ok(
+						appview.get('com.atproto.identity.resolveHandle', {
+							params: { handle: repo },
 						}),
 					);
+					repo = resolved.did;
+				}
 
-					if (posts[0]) {
-						return posts[0];
-					}
+				const { posts } = await ok(
+					appview.get('app.bsky.feed.getPosts', {
+						params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
+					}),
+				);
 
-					throw new Error('useGetPost: post not found');
-				},
-			});
-		},
-		[queryClient, appview],
-	);
+				if (posts[0]) {
+					return posts[0];
+				}
+
+				throw new Error('useGetPost: post not found');
+			},
+		});
+	};
 }
 
 export function useGetPosts() {
 	const queryClient = useQueryClient();
 	const { appview } = getClients();
-	return useCallback(
-		async ({ uris }: { uris: ResourceUri[] }) => {
-			return queryClient.fetchQuery({
-				queryKey: RQKEY(uris.join(',') || ''),
-				async queryFn() {
-					const { posts } = await ok(
-						appview.get('app.bsky.feed.getPosts', {
-							params: { uris },
-						}),
-					);
-					return posts;
-				},
-			});
-		},
-		[queryClient, appview],
-	);
+	return async ({ uris }: { uris: ResourceUri[] }) => {
+		return queryClient.fetchQuery({
+			queryKey: RQKEY(uris.join(',') || ''),
+			async queryFn() {
+				const { posts } = await ok(
+					appview.get('app.bsky.feed.getPosts', {
+						params: { uris },
+					}),
+				);
+				return posts;
+			},
+		});
+	};
 }
 
 export function usePostLikeMutationQueue(
@@ -152,21 +144,21 @@ export function usePostLikeMutationQueue(
 		},
 	});
 
-	const queueLike = useCallback(() => {
+	const queueLike = () => {
 		// optimistically update
 		updatePostShadow(queryClient, postUri, {
 			likeUri: 'pending',
 		});
 		return queueToggle(true);
-	}, [queryClient, postUri, queueToggle]);
+	};
 
-	const queueUnlike = useCallback(() => {
+	const queueUnlike = () => {
 		// optimistically update
 		updatePostShadow(queryClient, postUri, {
 			likeUri: undefined,
 		});
 		return queueToggle(false);
-	}, [queryClient, postUri, queueToggle]);
+	};
 
 	return [queueLike, queueUnlike] as const;
 }
@@ -247,21 +239,21 @@ export function usePostRepostMutationQueue(
 		},
 	});
 
-	const queueRepost = useCallback(() => {
+	const queueRepost = () => {
 		// optimistically update
 		updatePostShadow(queryClient, postUri, {
 			repostUri: 'pending',
 		});
 		return queueToggle(true);
-	}, [queryClient, postUri, queueToggle]);
+	};
 
-	const queueUnrepost = useCallback(() => {
+	const queueUnrepost = () => {
 		// optimistically update
 		updatePostShadow(queryClient, postUri, {
 			repostUri: undefined,
 		});
 		return queueToggle(false);
-	}, [queryClient, postUri, queueToggle]);
+	};
 
 	return [queueRepost, queueUnrepost] as const;
 }
@@ -347,17 +339,17 @@ export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView
 		},
 	});
 
-	const queueMuteThread = useCallback(() => {
+	const queueMuteThread = () => {
 		// optimistically update
 		setThreadMute(rootUri, true);
 		return queueToggle(true);
-	}, [rootUri, queueToggle]);
+	};
 
-	const queueUnmuteThread = useCallback(() => {
+	const queueUnmuteThread = () => {
 		// optimistically update
 		setThreadMute(rootUri, false);
 		return queueToggle(false);
-	}, [rootUri, queueToggle]);
+	};
 
 	return [isThreadMuted, queueMuteThread, queueUnmuteThread] as const;
 }

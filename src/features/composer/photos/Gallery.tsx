@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -116,20 +116,20 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
 	const currentIndexRef = useRef(0);
 
-	const getScrollEl = useCallback(() => scrollRef.current, []);
-	const scrollTo = useCallback((offset: number) => {
+	const getScrollEl = () => scrollRef.current;
+	const scrollTo = (offset: number) => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollLeft = offset;
 		}
-	}, []);
+	};
 	// Tiles aren't the focus target here (each holds its own controls), so settling only tracks the index for
 	// the pager's drag math — it must not steal focus the way the read-only carousel does.
-	const onSettle = useCallback((index: number) => {
+	const onSettle = (index: number) => {
 		currentIndexRef.current = index;
-	}, []);
-	const onWidthChange = useCallback((index: number, w: number) => {
+	};
+	const onWidthChange = (index: number, w: number) => {
 		itemWidthsRef.current.set(index, w);
-	}, []);
+	};
 
 	usePointerHandlers({
 		currentIndexRef,

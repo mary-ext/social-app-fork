@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
@@ -75,7 +75,7 @@ function DialogInner({
 		error: linkMetaError,
 	} = useLiveLinkMetaQuery(debouncedUrl);
 
-	const record = useMemo(() => getValidLiveStatusRecord(status.record), [status]);
+	const record = getValidLiveStatusRecord(status.record);
 
 	const {
 		mutate: goLive,

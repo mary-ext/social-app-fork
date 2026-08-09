@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 
@@ -70,19 +70,14 @@ export function TextInput({
 		}
 	};
 
-	const onEmojiInserted = useCallback(
-		(emoji: Emoji) => {
-			apiRef.current?.insert(emoji.native);
-		},
-		[apiRef],
-	);
-
 	useEffect(() => {
 		if (!isActive) {
 			return;
 		}
-		return emojiInserted.subscribe(onEmojiInserted);
-	}, [isActive, onEmojiInserted]);
+		return emojiInserted.subscribe((emoji: Emoji) => {
+			apiRef.current?.insert(emoji.native);
+		});
+	}, [isActive, apiRef]);
 
 	useEffect(() => {
 		if (!isActive) {

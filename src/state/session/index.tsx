@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
+import { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
 
 import { sessionDropped } from '#/state/events';
 import type { SessionStateContext } from '#/state/session/types';
@@ -43,16 +43,13 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		return sessionDropped.subscribe(() => dropToGuest());
 	}, [snapshot.currentDid, snapshot.status]);
 
-	const stateContext = useMemo<SessionStateContext>(
-		() => ({
-			accounts: snapshot.accounts,
-			currentAccount: snapshot.accounts.find((a) => a.did === snapshot.currentDid),
-			hasSession: !!snapshot.currentDid,
-			isSessionResuming: snapshot.status === 'resuming',
-			sessionResumeFailed: snapshot.status === 'failed',
-		}),
-		[snapshot],
-	);
+	const stateContext = {
+		accounts: snapshot.accounts,
+		currentAccount: snapshot.accounts.find((a) => a.did === snapshot.currentDid),
+		hasSession: !!snapshot.currentDid,
+		isSessionResuming: snapshot.status === 'resuming',
+		sessionResumeFailed: snapshot.status === 'failed',
+	};
 
 	return <StateContext.Provider value={stateContext}>{children}</StateContext.Provider>;
 }
@@ -64,14 +61,11 @@ export function useSession() {
 export function useRequireAuth() {
 	const { hasSession } = useSession();
 
-	return useCallback(
-		(fn: () => unknown) => {
-			if (hasSession) {
-				fn();
-			} else {
-				signinDialogHandle.openWithPayload({});
-			}
-		},
-		[hasSession],
-	);
+	return (fn: () => unknown) => {
+		if (hasSession) {
+			fn();
+		} else {
+			signinDialogHandle.openWithPayload({});
+		}
+	};
 }

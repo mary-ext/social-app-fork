@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import type {
 	AppBskyActorDefs,
@@ -229,14 +229,11 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const moderationOpts = useModerationOpts();
 
 	// keep the selector stable unless one of its inputs changes.
-	const selectArgs = useMemo(
-		() => ({
-			hasSession,
-			savedFeeds: preferences?.savedFeeds || [],
-			moderationOpts,
-		}),
-		[hasSession, preferences?.savedFeeds, moderationOpts],
-	);
+	const selectArgs = {
+		hasSession,
+		savedFeeds: preferences?.savedFeeds || [],
+		moderationOpts,
+	};
 	const lastPageCountRef = useRef(0);
 
 	const query = useInfiniteQuery({
@@ -258,34 +255,31 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 		},
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		select: useCallback(
-			(data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.$output>) => {
-				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
-				const { savedFeeds, hasSession: hasSessionInner, moderationOpts } = selectArgs;
-				return {
-					...data,
-					pages: data.pages.map((page) => {
-						return {
-							...page,
-							feeds: page.feeds.filter((feed) => {
-								if (!hasSessionInner && KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)) {
-									return false;
-								}
-								const alreadySaved = !!savedFeeds?.find((f) => {
-									return f.value === feed.uri;
-								});
-								const decision = moderateFeedGenerator(feed, moderationOpts!);
-								return (
-									!alreadySaved &&
-									getDisplayRestrictions(decision, DisplayContext.ContentList).filters.length === 0
-								);
-							}),
-						};
-					}),
-				};
-			},
-			[selectArgs],
-		),
+		select: (data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.$output>) => {
+			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
+			const { savedFeeds, hasSession: hasSessionInner, moderationOpts } = selectArgs;
+			return {
+				...data,
+				pages: data.pages.map((page) => {
+					return {
+						...page,
+						feeds: page.feeds.filter((feed) => {
+							if (!hasSessionInner && KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)) {
+								return false;
+							}
+							const alreadySaved = !!savedFeeds?.find((f) => {
+								return f.value === feed.uri;
+							});
+							const decision = moderateFeedGenerator(feed, moderationOpts!);
+							return (
+								!alreadySaved &&
+								getDisplayRestrictions(decision, DisplayContext.ContentList).filters.length === 0
+							);
+						}),
+					};
+				}),
+			};
+		},
 	});
 
 	useEffect(() => {

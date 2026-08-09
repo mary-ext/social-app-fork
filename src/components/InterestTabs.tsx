@@ -16,7 +16,7 @@ export function InterestTabs({
 	selectedInterest,
 }: {
 	interests: string[];
-	interestsDisplayNames: Record<string, string>;
+	interestsDisplayNames: Record<string, () => string>;
 	onSelectTab: (tab: string) => void;
 	selectedInterest: string;
 }) {
@@ -24,7 +24,7 @@ export function InterestTabs({
 		<TabScroller.Root activeKey={selectedInterest} gutterWidth={space.lg}>
 			{interests.map((interest) => {
 				const active = interest === selectedInterest;
-				const displayName = interestsDisplayNames[interest]!;
+				const displayName = interestsDisplayNames[interest]!();
 				return (
 					<TabScroller.Tab
 						active={active}

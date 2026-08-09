@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import type {
 	AppBskyActorDefs,
@@ -136,14 +136,11 @@ export function usePostFeedQuery(
 	const fetchLimit = MIN_POSTS;
 
 	// keep the selector stable unless one of its inputs changes.
-	const selectArgs = useMemo(
-		() => ({
-			feedTuners,
-			moderationOpts,
-			ignoreFilterFor: opts?.ignoreFilterFor,
-		}),
-		[feedTuners, moderationOpts, opts?.ignoreFilterFor],
-	);
+	const selectArgs = {
+		feedTuners,
+		moderationOpts,
+		ignoreFilterFor: opts?.ignoreFilterFor,
+	};
 
 	const query = useInfiniteQuery<FeedPageUnselected, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
 		queryKey: RQKEY(feedDesc),
@@ -187,101 +184,98 @@ export function usePostFeedQuery(
 						cursor: lastPage.cursor,
 					}
 				: undefined,
-		select: useCallback(
-			(data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
-				// read selector inputs from the stable object to avoid stale closures.
-				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
-				const { feedTuners, moderationOpts, ignoreFilterFor } = selectArgs;
+		select: (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
+			// read selector inputs from the stable object to avoid stale closures.
+			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
+			const { feedTuners, moderationOpts, ignoreFilterFor } = selectArgs;
 
-				const tuner = new FeedTuner(feedTuners);
+			const tuner = new FeedTuner(feedTuners);
 
-				const reusedPages: FeedPage[] = [];
-				if (lastRun.current) {
-					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
-					let canReuse = true;
-					for (const key of typedKeys(selectArgs)) {
-						if (selectArgs[key] !== lastArgs[key]) {
-							// reuse is only safe when every selector input is unchanged.
-							canReuse = false;
-							break;
-						}
-					}
-					if (canReuse) {
-						for (let i = 0; i < data.pages.length; i++) {
-							if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-								reusedPages.push(lastResult.pages[i]!);
-								// keep tuning state aligned with reused pages.
-								tuner.tune(lastData.pages[i]!.feed);
-								continue;
-							}
-							break;
-						}
+			const reusedPages: FeedPage[] = [];
+			if (lastRun.current) {
+				const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
+				let canReuse = true;
+				for (const key of typedKeys(selectArgs)) {
+					if (selectArgs[key] !== lastArgs[key]) {
+						// reuse is only safe when every selector input is unchanged.
+						canReuse = false;
+						break;
 					}
 				}
+				if (canReuse) {
+					for (let i = 0; i < data.pages.length; i++) {
+						if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
+							reusedPages.push(lastResult.pages[i]!);
+							// keep tuning state aligned with reused pages.
+							tuner.tune(lastData.pages[i]!.feed);
+							continue;
+						}
+						break;
+					}
+				}
+			}
 
-				const result = {
-					pageParams: data.pageParams,
-					pages: [
-						...reusedPages,
-						...data.pages.slice(reusedPages.length).map((page) => ({
-							api: page.api,
-							tuner,
-							cursor: page.cursor,
-							fetchedAt: page.fetchedAt,
-							slices: mapDefined(tuner.tune(page.feed), (slice) => {
-								const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
+			const result = {
+				pageParams: data.pageParams,
+				pages: [
+					...reusedPages,
+					...data.pages.slice(reusedPages.length).map((page) => ({
+						api: page.api,
+						tuner,
+						cursor: page.cursor,
+						fetchedAt: page.fetchedAt,
+						slices: mapDefined(tuner.tune(page.feed), (slice) => {
+							const moderations = slice.items.map((item) => moderatePost(item.post, moderationOpts!));
 
-								for (let i = 0; i < slice.items.length; i++) {
-									const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
+							for (let i = 0; i < slice.items.length; i++) {
+								const isProfileOwnerPost = slice.items[i]!.post.author.did === ignoreFilterFor;
 
-									// profile mutes do not hide content surfaced by the profile owner.
-									if (ignoreFilterFor) {
-										moderations[i]!.causes = moderations[i]!.causes.filter(
-											(cause) =>
-												cause.type !== ModerationCauseType.MutedPermanent &&
-												cause.type !== ModerationCauseType.MutedTemporary,
-										);
-									}
-									if (
-										!isProfileOwnerPost &&
-										getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
-									) {
-										return;
-									}
+								// profile mutes do not hide content surfaced by the profile owner.
+								if (ignoreFilterFor) {
+									moderations[i]!.causes = moderations[i]!.causes.filter(
+										(cause) =>
+											cause.type !== ModerationCauseType.MutedPermanent &&
+											cause.type !== ModerationCauseType.MutedTemporary,
+									);
 								}
+								if (
+									!isProfileOwnerPost &&
+									getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
+								) {
+									return;
+								}
+							}
 
-								const feedPostSlice: FeedPostSlice = {
-									_reactKey: slice._reactKey,
-									_isFeedPostSlice: true,
-									isIncompleteThread: slice.isIncompleteThread,
-									feedContext: slice.feedContext,
-									reqId: slice.reqId,
-									reason: slice.reason,
-									feedPostUri: slice.feedPostUri,
-									items: slice.items.map((item, i) => {
-										const feedPostSliceItem: FeedPostSliceItem = {
-											_reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-											uri: item.post.uri,
-											post: item.post,
-											record: item.record,
-											moderation: moderations[i]!,
-											parentAuthor: item.parentAuthor,
-											isParentBlocked: item.isParentBlocked,
-											isParentNotFound: item.isParentNotFound,
-										};
-										return feedPostSliceItem;
-									}),
-								};
-								return feedPostSlice;
-							}),
-						})),
-					],
-				};
-				lastRun.current = { data, result, args: selectArgs };
-				return result;
-			},
-			[selectArgs],
-		),
+							const feedPostSlice: FeedPostSlice = {
+								_reactKey: slice._reactKey,
+								_isFeedPostSlice: true,
+								isIncompleteThread: slice.isIncompleteThread,
+								feedContext: slice.feedContext,
+								reqId: slice.reqId,
+								reason: slice.reason,
+								feedPostUri: slice.feedPostUri,
+								items: slice.items.map((item, i) => {
+									const feedPostSliceItem: FeedPostSliceItem = {
+										_reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+										uri: item.post.uri,
+										post: item.post,
+										record: item.record,
+										moderation: moderations[i]!,
+										parentAuthor: item.parentAuthor,
+										isParentBlocked: item.isParentBlocked,
+										isParentNotFound: item.isParentNotFound,
+									};
+									return feedPostSliceItem;
+								}),
+							};
+							return feedPostSlice;
+						}),
+					})),
+				],
+			};
+			lastRun.current = { data, result, args: selectArgs };
+			return result;
+		},
 	});
 
 	// fetch more pages when filtering leaves fewer items than requested.

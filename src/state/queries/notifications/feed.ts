@@ -5,7 +5,7 @@
  * true})` to immediately sync latest results.
  */
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
@@ -52,12 +52,10 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	const filter = opts.filter;
 	const hiddenReplyUris = useHiddenReplyUris();
 
-	const selectArgs = useMemo(() => {
-		return {
-			moderationOpts,
-			hiddenReplyUris,
-		};
-	}, [moderationOpts, hiddenReplyUris]);
+	const selectArgs = {
+		moderationOpts,
+		hiddenReplyUris,
+	};
 	const lastRun = useRef<{
 		data: InfiniteData<FeedPage>;
 		args: typeof selectArgs;
@@ -100,85 +98,82 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		select: useCallback(
-			(data: InfiniteData<FeedPage>) => {
-				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
-				const { moderationOpts, hiddenReplyUris } = selectArgs;
+		select: (data: InfiniteData<FeedPage>) => {
+			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
+			const { moderationOpts, hiddenReplyUris } = selectArgs;
 
-				const reusedPages: FeedPage[] = [];
-				if (lastRun.current) {
-					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
-					let canReuse = true;
-					for (const key of typedKeys(selectArgs)) {
-						if (selectArgs[key] !== lastArgs[key]) {
-							// reuse is only safe when every selector input is unchanged.
-							canReuse = false;
-							break;
-						}
-					}
-					if (canReuse) {
-						for (let i = 0; i < data.pages.length; i++) {
-							if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-								reusedPages.push(lastResult.pages[i]!);
-								continue;
-							}
-							break;
-						}
+			const reusedPages: FeedPage[] = [];
+			if (lastRun.current) {
+				const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
+				let canReuse = true;
+				for (const key of typedKeys(selectArgs)) {
+					if (selectArgs[key] !== lastArgs[key]) {
+						// reuse is only safe when every selector input is unchanged.
+						canReuse = false;
+						break;
 					}
 				}
-
-				// the first page's seenAt prevents markAllRead from affecting later pages.
-				const seenAt = data.pages[0]?.seenAt || new Date();
-				for (const page of data.pages) {
-					for (const item of page.items) {
-						item.notification.isRead = seenAt > new Date(item.notification.indexedAt);
+				if (canReuse) {
+					for (let i = 0; i < data.pages.length; i++) {
+						if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
+							reusedPages.push(lastResult.pages[i]!);
+							continue;
+						}
+						break;
 					}
 				}
+			}
 
-				const result = {
-					...data,
-					pages: [
-						...reusedPages,
-						// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate react-query's cache
-						...data.pages.slice(reusedPages.length).map((page) => {
-							return {
-								...page,
-								items: page.items
-									.filter((item) => {
-										const isHiddenReply =
-											item.type === 'reply' && item.subjectUri && hiddenReplyUris.has(item.subjectUri);
-										return !isHiddenReply;
-									})
-									.filter((item) => {
-										if (item.type === 'reply' || item.type === 'mention' || item.type === 'quote') {
-											/*
-											 * The `isPostView` check will fail here bc we don't have
-											 * a `$type` field on the `subject`. But if the nested
-											 * `record` is a post, we know it's a post view.
-											 */
-											// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the `$type` check below confirms it
-											const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
-											if (record?.$type === 'app.bsky.feed.post') {
-												// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above: a post record on the subject means the subject is a post view
-												const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
-												if (getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length > 0) {
-													return false;
-												}
+			// the first page's seenAt prevents markAllRead from affecting later pages.
+			const seenAt = data.pages[0]?.seenAt || new Date();
+			for (const page of data.pages) {
+				for (const item of page.items) {
+					item.notification.isRead = seenAt > new Date(item.notification.indexedAt);
+				}
+			}
+
+			const result = {
+				...data,
+				pages: [
+					...reusedPages,
+					// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate react-query's cache
+					...data.pages.slice(reusedPages.length).map((page) => {
+						return {
+							...page,
+							items: page.items
+								.filter((item) => {
+									const isHiddenReply =
+										item.type === 'reply' && item.subjectUri && hiddenReplyUris.has(item.subjectUri);
+									return !isHiddenReply;
+								})
+								.filter((item) => {
+									if (item.type === 'reply' || item.type === 'mention' || item.type === 'quote') {
+										/*
+										 * The `isPostView` check will fail here bc we don't have
+										 * a `$type` field on the `subject`. But if the nested
+										 * `record` is a post, we know it's a post view.
+										 */
+										// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- view defs type `record` as `unknown`; the `$type` check below confirms it
+										const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
+										if (record?.$type === 'app.bsky.feed.post') {
+											// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- see above: a post record on the subject means the subject is a post view
+											const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
+											if (getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length > 0) {
+												return false;
 											}
 										}
-										return true;
-									}),
-							};
-						}),
-					],
-				};
+									}
+									return true;
+								}),
+						};
+					}),
+				],
+			};
 
-				lastRun.current = { data, result, args: selectArgs };
+			lastRun.current = { data, result, args: selectArgs };
 
-				return result;
-			},
-			[selectArgs],
-		),
+			return result;
+		},
 	});
 
 	// fetch more pages when filtering leaves fewer items than requested.

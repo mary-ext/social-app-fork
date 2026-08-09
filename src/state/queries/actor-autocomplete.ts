@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -53,16 +51,13 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 			return data.actors;
 		},
 		placeholderData: maintainData ? keepPreviousData : undefined,
-		select: useCallback(
-			(data: AppBskyActorDefs.ProfileViewBasic[]) => {
-				return computeSuggestions({
-					q: normalizedPrefix,
-					searched: data,
-					moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
-				});
-			},
-			[normalizedPrefix, moderationOpts],
-		),
+		select: (data: AppBskyActorDefs.ProfileViewBasic[]) => {
+			return computeSuggestions({
+				q: normalizedPrefix,
+				searched: data,
+				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+			});
+		},
 	});
 }
 
@@ -107,15 +102,12 @@ export function useSearchActorAutocompleteQuery({
 			return data.actors;
 		},
 		placeholderData: keepPreviousData,
-		select: useCallback(
-			(data: AnyProfileView[]) =>
-				computeSuggestions({
-					q: normalizedPrefix,
-					searched: data,
-					moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
-				}),
-			[normalizedPrefix, moderationOpts],
-		),
+		select: (data: AnyProfileView[]) =>
+			computeSuggestions({
+				q: normalizedPrefix,
+				searched: data,
+				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+			}),
 	});
 }
 

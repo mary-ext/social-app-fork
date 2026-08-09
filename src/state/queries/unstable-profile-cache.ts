@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
@@ -30,11 +28,8 @@ export function unstableCacheProfileView(queryClient: QueryClient, profile: AnyP
  */
 export function useUnstableProfileViewCache() {
 	const qc = useQueryClient();
-	const getUnstableProfile = useCallback(
-		(didOrHandle: string) => {
-			return qc.getQueryData<AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
-		},
-		[qc],
-	);
+	const getUnstableProfile = (didOrHandle: string) => {
+		return qc.getQueryData<AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
+	};
 	return { getUnstableProfile };
 }

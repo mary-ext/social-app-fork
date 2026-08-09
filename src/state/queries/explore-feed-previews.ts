@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import type { AppBskyFeedDefs as AtcAppBskyFeedDefs, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -107,10 +105,7 @@ export function useFeedPreviews(
 	feedsMaybeWithDuplicates: AtcAppBskyFeedDefs.GeneratorView[],
 	isEnabled: boolean = true,
 ) {
-	const feeds = useMemo(
-		() => feedsMaybeWithDuplicates.filter((f, i, a) => i === a.findIndex((f2) => f.uri === f2.uri)),
-		[feedsMaybeWithDuplicates],
-	);
+	const feeds = feedsMaybeWithDuplicates.filter((f, i, a) => i === a.findIndex((f2) => f.uri === f2.uri));
 
 	const uris = feeds.map((feed) => feed.uri);
 	const { appview } = getClients();
@@ -158,188 +153,183 @@ export function useFeedPreviews(
 	});
 
 	const { data, isFetched, isError, isPending, error } = query;
+	const items: FeedPreviewItem[] = [];
+
+	if (enabled) {
+		// scope the cache to the current moderationOpts; dropping entries built under stale opts so we
+		// don't serve items filtered/hidden under outdated moderation settings.
+		let pageCache = processedPageCache.get(moderationOpts);
+		if (!pageCache) {
+			processedPageCache.clear();
+			pageCache = new Map();
+			processedPageCache.set(moderationOpts, pageCache);
+		}
+
+		items.push({
+			type: 'preview:spacer',
+			key: 'spacer',
+		});
+
+		const isEmpty = !isPending && !data?.pages?.some((page) => page.posts.length);
+
+		if (isFetched) {
+			if (isError && isEmpty) {
+				items.push({
+					type: 'preview:error',
+					key: 'error',
+					message: m['state.feeds.error.fetch'](),
+					error: cleanError(error),
+				});
+			} else if (isEmpty) {
+				items.push({
+					type: 'preview:empty',
+					key: 'empty',
+				});
+			} else if (data) {
+				for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
+					const page = data.pages[pageIndex]!;
+
+					const cachedPage = pageCache.get(page);
+					if (cachedPage) {
+						items.push(...cachedPage);
+						continue;
+					}
+
+					// default feed tuner - we just want it to slice up the feed
+					const tuner = new FeedTuner([]);
+					const slices: FeedPreviewItem[] = [];
+
+					let rowIndex = 0;
+					for (const item of tuner.tune(page.posts)) {
+						const moderations = item.items.map((child) => moderatePost(child.post, moderationOpts!));
+
+						// apply moderation filters
+						item.items = item.items.filter((_, i) => {
+							const modui =
+								moderations[i] && getDisplayRestrictions(moderations[i], DisplayContext.ContentList);
+							return !modui || modui.filters.length === 0;
+						});
+
+						const slice = {
+							_reactKey: page.feed.uri + item._reactKey,
+							_isFeedPostSlice: true,
+							isIncompleteThread: item.isIncompleteThread,
+							feedContext: item.feedContext,
+							reqId: item.reqId,
+							reason: item.reason,
+							feedPostUri: item.feedPostUri,
+							items: item.items
+								.slice(0, 6)
+								.filter((subItem) => {
+									return !PINNED_POST_URIS[subItem.post.uri];
+								})
+								.map((subItem, i) => {
+									const feedPostSliceItem: FeedPostSliceItem = {
+										_reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
+										uri: subItem.post.uri,
+										post: subItem.post,
+										record: subItem.record,
+										moderation: moderations[i]!,
+										parentAuthor: subItem.parentAuthor,
+										isParentBlocked: subItem.isParentBlocked,
+										isParentNotFound: subItem.isParentNotFound,
+									};
+									return feedPostSliceItem;
+								}),
+						};
+						if (slice.isIncompleteThread && slice.items.length >= 3) {
+							const beforeLast = slice.items.length - 2;
+							const last = slice.items.length - 1;
+							slices.push({
+								type: 'preview:sliceItem',
+								key: slice.items[0]!._reactKey,
+								slice: slice,
+								indexInSlice: 0,
+								feed: page.feed,
+								showReplyTo: false,
+								hideTopBorder: rowIndex === 0,
+							});
+							slices.push({
+								type: 'preview:sliceViewFullThread',
+								key: slice._reactKey + '-viewFullThread',
+								uri: slice.items[0]!.uri,
+							});
+							slices.push({
+								type: 'preview:sliceItem',
+								key: slice.items[beforeLast]!._reactKey,
+								slice: slice,
+								indexInSlice: beforeLast,
+								feed: page.feed,
+								showReplyTo:
+									slice.items[beforeLast]!.parentAuthor?.did !== slice.items[beforeLast]!.post.author.did,
+								hideTopBorder: false,
+							});
+							slices.push({
+								type: 'preview:sliceItem',
+								key: slice.items[last]!._reactKey,
+								slice: slice,
+								indexInSlice: last,
+								feed: page.feed,
+								showReplyTo: false,
+								hideTopBorder: false,
+							});
+						} else {
+							for (let i = 0; i < slice.items.length; i++) {
+								const sliceItem = slice.items[i]!;
+								slices.push({
+									type: 'preview:sliceItem',
+									key: sliceItem._reactKey,
+									slice: slice,
+									indexInSlice: i,
+									feed: page.feed,
+									showReplyTo: i === 0,
+									hideTopBorder: i === 0 && rowIndex === 0,
+								});
+							}
+						}
+
+						rowIndex++;
+					}
+
+					let processedPage: FeedPreviewItem[];
+
+					if (slices.length > 0) {
+						processedPage = [
+							{
+								type: 'preview:header',
+								key: `header-${page.feed.uri}`,
+								feed: page.feed,
+							},
+							...slices,
+							{
+								type: 'preview:footer',
+								key: `footer-${page.feed.uri}`,
+							},
+						];
+					} else {
+						processedPage = [];
+					}
+
+					pageCache.set(page, processedPage);
+					items.push(...processedPage);
+				}
+			} else if (isError && !isEmpty) {
+				items.push({
+					type: 'preview:loadMoreError',
+					key: 'loadMoreError',
+				});
+			}
+		} else {
+			items.push({
+				type: 'preview:loading',
+				key: 'loading',
+			});
+		}
+	}
 
 	return {
 		query,
-		data: useMemo<FeedPreviewItem[]>(() => {
-			const items: FeedPreviewItem[] = [];
-
-			if (!enabled) {
-				return items;
-			}
-
-			// scope the cache to the current moderationOpts; dropping entries built under stale opts so we
-			// don't serve items filtered/hidden under outdated moderation settings.
-			let pageCache = processedPageCache.get(moderationOpts);
-			if (!pageCache) {
-				processedPageCache.clear();
-				pageCache = new Map();
-				processedPageCache.set(moderationOpts, pageCache);
-			}
-
-			items.push({
-				type: 'preview:spacer',
-				key: 'spacer',
-			});
-
-			const isEmpty = !isPending && !data?.pages?.some((page) => page.posts.length);
-
-			if (isFetched) {
-				if (isError && isEmpty) {
-					items.push({
-						type: 'preview:error',
-						key: 'error',
-						message: m['state.feeds.error.fetch'](),
-						error: cleanError(error),
-					});
-				} else if (isEmpty) {
-					items.push({
-						type: 'preview:empty',
-						key: 'empty',
-					});
-				} else if (data) {
-					for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
-						const page = data.pages[pageIndex]!;
-
-						const cachedPage = pageCache.get(page);
-						if (cachedPage) {
-							items.push(...cachedPage);
-							continue;
-						}
-
-						// default feed tuner - we just want it to slice up the feed
-						const tuner = new FeedTuner([]);
-						const slices: FeedPreviewItem[] = [];
-
-						let rowIndex = 0;
-						for (const item of tuner.tune(page.posts)) {
-							const moderations = item.items.map((child) => moderatePost(child.post, moderationOpts!));
-
-							// apply moderation filters
-							item.items = item.items.filter((_, i) => {
-								const modui =
-									moderations[i] && getDisplayRestrictions(moderations[i], DisplayContext.ContentList);
-								return !modui || modui.filters.length === 0;
-							});
-
-							const slice = {
-								_reactKey: page.feed.uri + item._reactKey,
-								_isFeedPostSlice: true,
-								isIncompleteThread: item.isIncompleteThread,
-								feedContext: item.feedContext,
-								reqId: item.reqId,
-								reason: item.reason,
-								feedPostUri: item.feedPostUri,
-								items: item.items
-									.slice(0, 6)
-									.filter((subItem) => {
-										return !PINNED_POST_URIS[subItem.post.uri];
-									})
-									.map((subItem, i) => {
-										const feedPostSliceItem: FeedPostSliceItem = {
-											_reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
-											uri: subItem.post.uri,
-											post: subItem.post,
-											record: subItem.record,
-											moderation: moderations[i]!,
-											parentAuthor: subItem.parentAuthor,
-											isParentBlocked: subItem.isParentBlocked,
-											isParentNotFound: subItem.isParentNotFound,
-										};
-										return feedPostSliceItem;
-									}),
-							};
-							if (slice.isIncompleteThread && slice.items.length >= 3) {
-								const beforeLast = slice.items.length - 2;
-								const last = slice.items.length - 1;
-								slices.push({
-									type: 'preview:sliceItem',
-									key: slice.items[0]!._reactKey,
-									slice: slice,
-									indexInSlice: 0,
-									feed: page.feed,
-									showReplyTo: false,
-									hideTopBorder: rowIndex === 0,
-								});
-								slices.push({
-									type: 'preview:sliceViewFullThread',
-									key: slice._reactKey + '-viewFullThread',
-									uri: slice.items[0]!.uri,
-								});
-								slices.push({
-									type: 'preview:sliceItem',
-									key: slice.items[beforeLast]!._reactKey,
-									slice: slice,
-									indexInSlice: beforeLast,
-									feed: page.feed,
-									showReplyTo:
-										slice.items[beforeLast]!.parentAuthor?.did !== slice.items[beforeLast]!.post.author.did,
-									hideTopBorder: false,
-								});
-								slices.push({
-									type: 'preview:sliceItem',
-									key: slice.items[last]!._reactKey,
-									slice: slice,
-									indexInSlice: last,
-									feed: page.feed,
-									showReplyTo: false,
-									hideTopBorder: false,
-								});
-							} else {
-								for (let i = 0; i < slice.items.length; i++) {
-									const sliceItem = slice.items[i]!;
-									slices.push({
-										type: 'preview:sliceItem',
-										key: sliceItem._reactKey,
-										slice: slice,
-										indexInSlice: i,
-										feed: page.feed,
-										showReplyTo: i === 0,
-										hideTopBorder: i === 0 && rowIndex === 0,
-									});
-								}
-							}
-
-							rowIndex++;
-						}
-
-						let processedPage: FeedPreviewItem[];
-
-						if (slices.length > 0) {
-							processedPage = [
-								{
-									type: 'preview:header',
-									key: `header-${page.feed.uri}`,
-									feed: page.feed,
-								},
-								...slices,
-								{
-									type: 'preview:footer',
-									key: `footer-${page.feed.uri}`,
-								},
-							];
-						} else {
-							processedPage = [];
-						}
-
-						pageCache.set(page, processedPage);
-						items.push(...processedPage);
-					}
-				} else if (isError && !isEmpty) {
-					items.push({
-						type: 'preview:loadMoreError',
-						key: 'loadMoreError',
-					});
-				}
-			} else {
-				items.push({
-					type: 'preview:loading',
-					key: 'loading',
-				});
-			}
-
-			return items;
-		}, [enabled, data, isFetched, isError, isPending, moderationOpts, error, processedPageCache]),
+		data: items,
 	};
 }
 

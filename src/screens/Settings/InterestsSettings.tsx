@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
-import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { interestDisplayNames, interests as allInterests } from '#/lib/interests';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { setInterestsPref } from '#/state/queries/preferences/agent';
@@ -74,8 +74,7 @@ function Inner({
 }) {
 	const { pds } = getClients();
 	const qc = useQueryClient();
-	const interestsDisplayNames = useInterestsDisplayNames();
-	const preselectedInterests = useMemo(() => preferences.interests.tags || [], [preferences.interests.tags]);
+	const preselectedInterests = preferences.interests.tags || [];
 	const [interests, setInterests] = useState<string[]>(preselectedInterests);
 
 	// persist the edit even if the user leaves before the window closes
@@ -146,10 +145,7 @@ function Inner({
 				value={interests}
 			>
 				{allInterests.map((interest) => {
-					const name = interestsDisplayNames[interest];
-					if (!name) {
-						return null;
-					}
+					const name = interestDisplayNames[interest]!();
 					return (
 						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} name={interest}>
 							<Text className={styles.chipText} selectable={false} size="md_sub" weight="semiBold">

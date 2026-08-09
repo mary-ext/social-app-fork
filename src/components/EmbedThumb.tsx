@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -31,11 +31,11 @@ function Thumb({ frameClassName, src }: EmbedThumbProps) {
 
 	// a cached image can finish loading before React wires up `onLoad`, leaving the status stuck on
 	// 'loading'; settle it from the element's own state when the ref attaches.
-	const measure = useCallback((node: HTMLImageElement | null) => {
+	const measure = (node: HTMLImageElement | null) => {
 		if (node?.complete) {
 			setStatus(node.naturalWidth > 0 ? 'loaded' : 'error');
 		}
-	}, []);
+	};
 
 	return (
 		<div className={clsx(styles.frame, frameClassName ?? styles.cardFrame)}>

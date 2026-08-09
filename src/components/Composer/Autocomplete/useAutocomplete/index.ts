@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -87,35 +85,32 @@ export function useAutocomplete({
 			return [];
 		},
 		placeholderData: keepPreviousData,
-		select: useCallback(
-			(items: AutocompleteItem[]) => {
-				const seen = new Set<string>();
-				const results: AutocompleteItem[] = [];
+		select: (items: AutocompleteItem[]) => {
+			const seen = new Set<string>();
+			const results: AutocompleteItem[] = [];
 
-				for (const item of items) {
-					if (seen.has(item.key)) {
-						continue;
-					}
-					seen.add(item.key);
-
-					if (item.type === 'profile') {
-						const moderated = moderateProfileItem({
-							query: profileQuery,
-							item,
-							moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
-						});
-						if (moderated) {
-							results.push(moderated);
-						}
-					} else {
-						results.push(item);
-					}
+			for (const item of items) {
+				if (seen.has(item.key)) {
+					continue;
 				}
+				seen.add(item.key);
 
-				return results;
-			},
-			[profileQuery, moderationOpts],
-		),
+				if (item.type === 'profile') {
+					const moderated = moderateProfileItem({
+						query: profileQuery,
+						item,
+						moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+					});
+					if (moderated) {
+						results.push(moderated);
+					}
+				} else {
+					results.push(item);
+				}
+			}
+
+			return results;
+		},
 	});
 
 	let items: AutocompleteItem[] = [];

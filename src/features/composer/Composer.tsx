@@ -1,7 +1,6 @@
 import {
 	Fragment,
 	memo,
-	useCallback,
 	useEffect,
 	useEffectEvent,
 	useImperativeHandle,
@@ -82,7 +81,7 @@ import {
 	useSaveDraftMutation,
 } from './drafts/state/queries';
 import type { DraftSummary } from './drafts/state/schema';
-import { useAddImagesWithCap } from './gallery-cap';
+import { createAddImagesWithCap } from './gallery-cap';
 import {
 	type ComposerAction,
 	composerReducer,
@@ -97,6 +96,13 @@ import type { TextInputRef } from './text-input/TextInput.types';
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
 const NUDGE_COOLDOWN_MS = 10_000;
+
+const getDraftSaveError = (error: unknown): string => {
+	if (error instanceof ClientResponseError && error.error === 'DraftLimitReached') {
+		return m['view.composer.drafts.error.max']();
+	}
+	return m['view.composer.drafts.error.save']();
+};
 
 type Props = ComposerOpts;
 export const ComposePost = ({
@@ -142,10 +148,9 @@ export const ComposePost = ({
 	 * The currently selected languages of the post. Prefer local temporary language suggestion over global lang
 	 * prefs, if available.
 	 */
-	const currentLanguages = useMemo(
-		() => (acceptedLanguageSuggestion ? [acceptedLanguageSuggestion] : toPostLanguages(postLanguage)),
-		[acceptedLanguageSuggestion, postLanguage],
-	);
+	const currentLanguages = acceptedLanguageSuggestion
+		? [acceptedLanguageSuggestion]
+		: toPostLanguages(postLanguage);
 
 	/**
 	 * clear temporary and suggested languages when the user selects a language from the composer language
@@ -185,52 +190,46 @@ export const ComposePost = ({
 
 	const activePost = thread.posts[composerState.activePostIndex]!;
 	const nextPost: PostDraft | undefined = thread.posts[composerState.activePostIndex + 1];
-	const dispatch = useCallback(
-		(postAction: PostAction) => {
-			composerDispatch({
-				type: 'updatePost',
-				postId: activePost.id,
-				postAction,
-			});
-		},
-		[activePost.id],
-	);
+	const dispatch = (postAction: PostAction) => {
+		composerDispatch({
+			type: 'updatePost',
+			postId: activePost.id,
+			postAction,
+		});
+	};
 
-	const selectVideo = useCallback(
-		(postId: string, asset: VideoAsset) => {
-			const abortController = new AbortController();
-			composerDispatch({
-				type: 'updatePost',
-				postId: postId,
-				postAction: {
-					type: 'embedAddVideo',
-					asset,
-					abortController,
-				},
-			});
-			if (!pds || !pdsUrl) {
-				return;
-			}
-			void processVideo(
+	const selectVideo = (postId: string, asset: VideoAsset) => {
+		const abortController = new AbortController();
+		composerDispatch({
+			type: 'updatePost',
+			postId: postId,
+			postAction: {
+				type: 'embedAddVideo',
 				asset,
-				(videoAction) => {
-					composerDispatch({
-						type: 'updatePost',
-						postId: postId,
-						postAction: {
-							type: 'embedUpdateVideo',
-							videoAction,
-						},
-					});
-				},
-				pdsUrl,
-				pds,
-				currentDid,
-				abortController.signal,
-			);
-		},
-		[pds, pdsUrl, currentDid, composerDispatch],
-	);
+				abortController,
+			},
+		});
+		if (!pds || !pdsUrl) {
+			return;
+		}
+		void processVideo(
+			asset,
+			(videoAction) => {
+				composerDispatch({
+					type: 'updatePost',
+					postId: postId,
+					postAction: {
+						type: 'embedUpdateVideo',
+						videoAction,
+					},
+				});
+			},
+			pdsUrl,
+			pds,
+			currentDid,
+			abortController.signal,
+		);
+	};
 
 	const onInitVideo = useEffectEvent(() => {
 		if (initVideoUri) {
@@ -242,140 +241,131 @@ export const ComposePost = ({
 		onInitVideo();
 	}, []);
 
-	const clearVideo = useCallback(
-		(postId: string) => {
+	const clearVideo = (postId: string) => {
+		composerDispatch({
+			type: 'updatePost',
+			postId: postId,
+			postAction: {
+				type: 'embedRemoveVideo',
+			},
+		});
+	};
+
+	const restoreVideo = async (postId: string, videoInfo: RestoredVideo) => {
+		try {
+			const meta = await getVideoMetadata(videoInfo.blob);
+			const asset: VideoAsset = {
+				blob: videoInfo.blob,
+				width: meta.width,
+				height: meta.height,
+				mimeType: videoInfo.mimeType,
+				duration: meta.duration,
+			};
+
+			// Start video processing using existing flow
+			const abortController = new AbortController();
 			composerDispatch({
 				type: 'updatePost',
-				postId: postId,
+				postId,
 				postAction: {
-					type: 'embedRemoveVideo',
+					type: 'embedAddVideo',
+					asset,
+					abortController,
 				},
 			});
-		},
-		[composerDispatch],
-	);
 
-	const restoreVideo = useCallback(
-		async (postId: string, videoInfo: RestoredVideo) => {
-			try {
-				const meta = await getVideoMetadata(videoInfo.blob);
-				const asset: VideoAsset = {
-					blob: videoInfo.blob,
-					width: meta.width,
-					height: meta.height,
-					mimeType: videoInfo.mimeType,
-					duration: meta.duration,
-				};
-
-				// Start video processing using existing flow
-				const abortController = new AbortController();
+			// Restore alt text immediately
+			if (videoInfo.altText) {
 				composerDispatch({
 					type: 'updatePost',
 					postId,
 					postAction: {
-						type: 'embedAddVideo',
-						asset,
-						abortController,
+						type: 'embedUpdateVideo',
+						videoAction: {
+							type: 'updateAltText',
+							altText: videoInfo.altText,
+							signal: abortController.signal,
+						},
 					},
 				});
+			}
 
-				// Restore alt text immediately
-				if (videoInfo.altText) {
-					composerDispatch({
-						type: 'updatePost',
-						postId,
-						postAction: {
-							type: 'embedUpdateVideo',
-							videoAction: {
-								type: 'updateAltText',
-								altText: videoInfo.altText,
-								signal: abortController.signal,
-							},
+			// Restore captions (web only - captions use File objects)
+			if (videoInfo.captions.length > 0) {
+				const captionTracks = videoInfo.captions.map((c) => ({
+					lang: c.lang,
+					file: new File([c.content], `caption-${c.lang}.vtt`, {
+						type: 'text/vtt',
+					}),
+				}));
+				composerDispatch({
+					type: 'updatePost',
+					postId,
+					postAction: {
+						type: 'embedUpdateVideo',
+						videoAction: {
+							type: 'updateCaptions',
+							updater: () => captionTracks,
+							signal: abortController.signal,
 						},
-					});
-				}
-
-				// Restore captions (web only - captions use File objects)
-				if (videoInfo.captions.length > 0) {
-					const captionTracks = videoInfo.captions.map((c) => ({
-						lang: c.lang,
-						file: new File([c.content], `caption-${c.lang}.vtt`, {
-							type: 'text/vtt',
-						}),
-					}));
-					composerDispatch({
-						type: 'updatePost',
-						postId,
-						postAction: {
-							type: 'embedUpdateVideo',
-							videoAction: {
-								type: 'updateCaptions',
-								updater: () => captionTracks,
-								signal: abortController.signal,
-							},
-						},
-					});
-				}
-
-				// Start video compression and upload
-				if (!pds || !pdsUrl) {
-					return;
-				}
-				void processVideo(
-					asset,
-					(videoAction) => {
-						composerDispatch({
-							type: 'updatePost',
-							postId,
-							postAction: {
-								type: 'embedUpdateVideo',
-								videoAction,
-							},
-						});
 					},
-					pdsUrl,
-					pds,
-					currentDid,
-					abortController.signal,
-				);
-			} catch (e) {
-				console.error('Failed to restore video from draft', postId, e);
+				});
 			}
-		},
-		[pds, pdsUrl, currentDid, composerDispatch],
-	);
 
-	const handleSelectDraft = useCallback(
-		async (draftSummary: DraftSummary) => {
-			// Load local media files for the draft
-			const { loadedMedia } = await loadDraftMedia(draftSummary.draft);
-
-			// Extract original localRefs for orphan detection on save
-			const originalLocalRefs = extractLocalRefs(draftSummary.draft);
-
-			// Convert server draft to composer posts (videos returned separately)
-			const { posts, restoredVideos } = await draftToComposerPosts(draftSummary.draft, loadedMedia);
-
-			// Dispatch restore action (this also sets draftId in state)
-			composerDispatch({
-				type: 'restoreFromDraft',
-				draftId: draftSummary.id,
-				posts,
-				threadgateAllow: draftSummary.draft.threadgateAllow,
-				postgateEmbeddingRules: draftSummary.draft.postgateEmbeddingRules,
-				loadedMedia,
-				originalLocalRefs,
-			});
-
-			// Initiate video processing for any restored videos
-			// This is async but we don't await - videos process in the background
-			for (const [postIndex, videoInfo] of restoredVideos) {
-				const postId = posts[postIndex]!.id;
-				void restoreVideo(postId, videoInfo);
+			// Start video compression and upload
+			if (!pds || !pdsUrl) {
+				return;
 			}
-		},
-		[composerDispatch, restoreVideo],
-	);
+			void processVideo(
+				asset,
+				(videoAction) => {
+					composerDispatch({
+						type: 'updatePost',
+						postId,
+						postAction: {
+							type: 'embedUpdateVideo',
+							videoAction,
+						},
+					});
+				},
+				pdsUrl,
+				pds,
+				currentDid,
+				abortController.signal,
+			);
+		} catch (e) {
+			console.error('Failed to restore video from draft', postId, e);
+		}
+	};
+
+	const handleSelectDraft = async (draftSummary: DraftSummary) => {
+		// Load local media files for the draft
+		const { loadedMedia } = await loadDraftMedia(draftSummary.draft);
+
+		// Extract original localRefs for orphan detection on save
+		const originalLocalRefs = extractLocalRefs(draftSummary.draft);
+
+		// Convert server draft to composer posts (videos returned separately)
+		const { posts, restoredVideos } = await draftToComposerPosts(draftSummary.draft, loadedMedia);
+
+		// Dispatch restore action (this also sets draftId in state)
+		composerDispatch({
+			type: 'restoreFromDraft',
+			draftId: draftSummary.id,
+			posts,
+			threadgateAllow: draftSummary.draft.threadgateAllow,
+			postgateEmbeddingRules: draftSummary.draft.postgateEmbeddingRules,
+			loadedMedia,
+			originalLocalRefs,
+		});
+
+		// Initiate video processing for any restored videos
+		// This is async but we don't await - videos process in the background
+		for (const [postIndex, videoInfo] of restoredVideos) {
+			const postId = posts[postIndex]!.id;
+			void restoreVideo(postId, videoInfo);
+		}
+	};
 
 	const [publishOnUpload, setPublishOnUpload] = useState(false);
 	// monotonic token bumped (during render) when a publish queued on upload completion is ready to fire.
@@ -384,14 +374,7 @@ export const ComposePost = ({
 	const [uploadCompletionPublishRequest, setUploadCompletionPublishRequest] = useState(0);
 	const handledUploadCompletionPublishRequestRef = useRef(0);
 
-	const getDraftSaveError = useCallback((e: unknown): string => {
-		if (e instanceof ClientResponseError && e.error === 'DraftLimitReached') {
-			return m['view.composer.drafts.error.max']();
-		}
-		return m['view.composer.drafts.error.save']();
-	}, []);
-
-	const validateDraftTextOrError = useCallback((): boolean => {
+	const validateDraftTextOrError = (): boolean => {
 		const tooLong = composerState.thread.posts.some(
 			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
 		);
@@ -400,9 +383,9 @@ export const ComposePost = ({
 			return false;
 		}
 		return true;
-	}, [composerState.thread.posts]);
+	};
 
-	const handleSaveDraft = useCallback(async () => {
+	const handleSaveDraft = async () => {
 		setError('');
 		if (!validateDraftTextOrError()) {
 			return;
@@ -419,10 +402,10 @@ export const ComposePost = ({
 			console.error('Failed to save draft', e);
 			setError(getDraftSaveError(e));
 		}
-	}, [saveDraft, composerState, composerDispatch, validateDraftTextOrError, getDraftSaveError]);
+	};
 
 	// Save without closing - for use by DraftsButton
-	const saveCurrentDraft = useCallback(async (): Promise<{
+	const saveCurrentDraft = async (): Promise<{
 		success: boolean;
 	}> => {
 		setError('');
@@ -440,43 +423,24 @@ export const ComposePost = ({
 			setError(getDraftSaveError(e));
 			return { success: false };
 		}
-	}, [saveDraft, composerState, composerDispatch, validateDraftTextOrError, getDraftSaveError]);
+	};
 
 	// Check if composer is empty (no content to save)
-	const isComposerEmpty = useMemo(() => {
-		// Has multiple posts means it's not empty
-		if (thread.posts.length > 1) {
-			return false;
-		}
-
-		const firstPost = thread.posts[0]!;
-		// Has text
-		if (firstPost.text.trim().length > 0) {
-			return false;
-		}
-		// Has media
-		if (firstPost.embed.media) {
-			return false;
-		}
-		// Has quote
-		if (firstPost.embed.quote) {
-			return false;
-		}
-		// Has link
-		if (firstPost.embed.link) {
-			return false;
-		}
-
-		return true;
-	}, [thread.posts]);
+	const firstPost = thread.posts[0]!;
+	const isComposerEmpty =
+		thread.posts.length === 1 &&
+		firstPost.text.trim().length === 0 &&
+		!firstPost.embed.link &&
+		!firstPost.embed.media &&
+		!firstPost.embed.quote;
 
 	// Clear the composer (discard current content)
-	const handleClearComposer = useCallback(() => {
+	const handleClearComposer = () => {
 		composerDispatch({
 			type: 'clear',
 			initInteractionSettings: preferences?.postInteractionSettings,
 		});
-	}, [composerDispatch, preferences?.postInteractionSettings]);
+	};
 
 	/**
 	 * decides how to handle a cancel request (Cancel button, Escape, backdrop press).
@@ -484,7 +448,7 @@ export const ComposePost = ({
 	 * @returns true if the composer should stay open (e.g., a sub-popup was closed or discard prompt shown), or
 	 *   false if the caller should close the composer.
 	 */
-	const onPressCancel = useCallback((): boolean => {
+	const onPressCancel = (): boolean => {
 		if (textInputRef.current?.maybeClosePopup()) {
 			return true;
 		}
@@ -507,16 +471,16 @@ export const ComposePost = ({
 			return true;
 		}
 		return false;
-	}, [thread, composerState.draftId, composerState.isDirty, discardPromptHandle]);
+	};
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
 
 	// The Cancel button drives the close itself (the dialog's `onOpenChange` does it for Escape/backdrop).
-	const onRequestClose = useCallback(() => {
+	const onRequestClose = () => {
 		if (!onPressCancel()) {
 			closeComposer();
 		}
-	}, [onPressCancel]);
+	};
 
 	const missingAltError = ((): string | undefined => {
 		if (!requireAltTextEnabled) {
@@ -548,7 +512,7 @@ export const ComposePost = ({
 					!(post.embed.media?.type === 'video' && post.embed.media.video.status === 'error')),
 		);
 
-	const getFilteredThread = useCallback((): {
+	const getFilteredThread = (): {
 		type: 'none' | 'trailingOnly' | 'nonTrailing';
 		filteredThread: ThreadDraft;
 	} => {
@@ -574,9 +538,9 @@ export const ComposePost = ({
 			type: hasNonTrailingEmpty ? 'nonTrailing' : 'trailingOnly',
 			filteredThread,
 		};
-	}, [thread]);
+	};
 
-	const onPressPublish = useCallback(async () => {
+	const onPressPublish = async () => {
 		if (isPublishing) {
 			return;
 		}
@@ -719,25 +683,7 @@ export const ComposePost = ({
 				},
 			);
 		}, 500);
-	}, [
-		appview,
-		canPost,
-		cleanupPublishedDraft,
-		composerState.draftId,
-		composerState.originalLocalRefs,
-		currentDid,
-		currentLanguages,
-		emptyPostsPromptHandle,
-		getFilteredThread,
-		initQuote,
-		isPublishing,
-		router,
-		onPost,
-		onPostSuccess,
-		pds,
-		queryClient,
-		replyTo,
-	]);
+	};
 
 	const handleConfirmSkipEmpty = () => {
 		skipEmptyConfirmedRef.current = true;
@@ -1057,61 +1003,52 @@ const ComposerPost = memo(function ComposerPost({
 		: m['common.compose.placeholder']();
 	const discardPromptHandle = Prompt.usePromptHandle();
 
-	const dispatchPost = useCallback(
-		(action: PostAction) => {
-			dispatch({
-				type: 'updatePost',
-				postId: post.id,
-				postAction: action,
-			});
-		},
-		[dispatch, post.id],
-	);
+	const dispatchPost = (action: PostAction) => {
+		dispatch({
+			type: 'updatePost',
+			postId: post.id,
+			postAction: action,
+		});
+	};
 
 	const postImagesCount =
 		post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
 			? post.embed.media.images.length
 			: 0;
-	const onImageAdd = useAddImagesWithCap(postImagesCount, dispatchPost);
+	const onImageAdd = createAddImagesWithCap(postImagesCount, dispatchPost);
 
-	const onNewLink = useCallback(
-		(uri: string) => {
-			dispatchPost({ type: 'embedAddUri', uri });
-		},
-		[dispatchPost],
-	);
+	const onNewLink = (uri: string) => {
+		dispatchPost({ type: 'embedAddUri', uri });
+	};
 
-	const onPhotoPasted = useCallback(
-		async (blob: Blob) => {
-			const mimeType = blob.type;
-			if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
-				if (!VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType)) {
-					Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
-						type: 'error',
-					});
-					return;
-				}
-				if (mimeType === 'image/gif') {
-					const { width, height } = await getImageDimensions(blob);
-					onSelectVideo(post.id, { blob, width, height, mimeType, duration: null });
-				} else {
-					const { width, height, duration } = await getVideoMetadata(blob);
-					onSelectVideo(post.id, { blob, width, height, mimeType, duration });
-				}
-			} else {
-				let image: ComposerImage;
-				try {
-					image = await createComposerImage(blob);
-				} catch (e) {
-					console.error('createComposerImage failed', blob.type, blob.size, e);
-					onError(m['view.composer.gallery.error.paste']());
-					return;
-				}
-				onImageAdd([image]);
+	const onPhotoPasted = async (blob: Blob) => {
+		const mimeType = blob.type;
+		if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
+			if (!VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType)) {
+				Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
+					type: 'error',
+				});
+				return;
 			}
-		},
-		[post.id, onSelectVideo, onImageAdd, onError],
-	);
+			if (mimeType === 'image/gif') {
+				const { width, height } = await getImageDimensions(blob);
+				onSelectVideo(post.id, { blob, width, height, mimeType, duration: null });
+			} else {
+				const { width, height, duration } = await getVideoMetadata(blob);
+				onSelectVideo(post.id, { blob, width, height, mimeType, duration });
+			}
+		} else {
+			let image: ComposerImage;
+			try {
+				image = await createComposerImage(blob);
+			} catch (e) {
+				console.error('createComposerImage failed', blob.type, blob.size, e);
+				onError(m['view.composer.gallery.error.paste']());
+				return;
+			}
+			onImageAdd([image]);
+		}
+	};
 
 	return (
 		<GalleryBleed>
@@ -1317,7 +1254,7 @@ function useScrollTracker({
 	const scrollViewHeight = useRef(Infinity);
 	const contentHeight = useRef(0);
 
-	const scrollHandler = useCallback((event: React.UIEvent<HTMLDivElement>) => {
+	const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
 		const el = event.currentTarget;
 		contentOffset.current = Math.floor(el.scrollTop);
 		contentHeight.current = Math.floor(el.scrollHeight);
@@ -1330,7 +1267,7 @@ function useScrollTracker({
 			}
 			return prev;
 		});
-	}, []);
+	};
 
 	useEffect(() => {
 		const el = scrollViewRef.current;

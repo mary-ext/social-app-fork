@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
@@ -50,13 +50,10 @@ export function usePostShadow(
 		return emitter.subscribe(post.uri, onUpdate);
 	}, [post, setShadow]);
 
-	return useMemo(() => {
-		if (shadow) {
-			return mergeShadow(post, shadow);
-		} else {
-			return castAsShadow(post);
-		}
-	}, [post, shadow]);
+	if (shadow) {
+		return mergeShadow(post, shadow);
+	}
+	return castAsShadow(post);
 }
 
 function mergeShadow(

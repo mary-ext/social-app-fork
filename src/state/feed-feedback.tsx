@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
@@ -59,7 +59,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
 	>(new WeakSet());
 
-	const sendToFeedNoDelay = useCallback(() => {
+	const sendToFeedNoDelay = () => {
 		const interactions = Array.from(queue.current).map(toInteraction);
 		queue.current.clear();
 
@@ -78,7 +78,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 				input: { interactions: interactionsToSend, feed: feed?.uri as ResourceUri | undefined },
 			}),
 		).catch(() => {}); // ignore upstream errors
-	}, [appview, proxyDid, enabled, feed]);
+	};
 
 	// queued interactions are still worth reporting after teardown
 	const sendToFeed = useThrottledCallback(sendToFeedNoDelay, 10e3, {
@@ -97,52 +97,44 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		});
 	}, [enabled, sendToFeed]);
 
-	const onItemSeen = useCallback(
-		(feedItem: PostFeed.FeedRow) => {
-			if (!enabled) {
-				return;
-			}
-			const items = PostFeed.getItemsForFeedback(feedItem);
-			for (const { item: postItem, feedContext, reqId } of items) {
-				if (!history.current.has(postItem)) {
-					history.current.add(postItem);
-					queue.current.add(
-						toString({
-							item: postItem.post.uri,
-							event: 'app.bsky.feed.defs#interactionSeen',
-							feedContext,
-							reqId,
-						}),
-					);
-					sendToFeed();
-				}
-			}
-		},
-		[enabled, sendToFeed],
-	);
-
-	const sendInteraction = useCallback(
-		(interaction: AppBskyFeedDefs.Interaction) => {
-			if (!enabled) {
-				return;
-			}
-			if (!history.current.has(interaction)) {
-				history.current.add(interaction);
-				queue.current.add(toString(interaction));
+	const onItemSeen = (feedItem: PostFeed.FeedRow) => {
+		if (!enabled) {
+			return;
+		}
+		const items = PostFeed.getItemsForFeedback(feedItem);
+		for (const { item: postItem, feedContext, reqId } of items) {
+			if (!history.current.has(postItem)) {
+				history.current.add(postItem);
+				queue.current.add(
+					toString({
+						item: postItem.post.uri,
+						event: 'app.bsky.feed.defs#interactionSeen',
+						feedContext,
+						reqId,
+					}),
+				);
 				sendToFeed();
 			}
-		},
-		[enabled, sendToFeed],
-	);
+		}
+	};
 
-	return useMemo(() => {
-		return {
-			enabled,
-			onItemSeen,
-			sendInteraction,
-			feedSourceInfo: typeof feed === 'object' ? feed : undefined,
-		};
-	}, [enabled, onItemSeen, sendInteraction, feed]);
+	const sendInteraction = (interaction: AppBskyFeedDefs.Interaction) => {
+		if (!enabled) {
+			return;
+		}
+		if (!history.current.has(interaction)) {
+			history.current.add(interaction);
+			queue.current.add(toString(interaction));
+			sendToFeed();
+		}
+	};
+
+	return {
+		enabled,
+		onItemSeen,
+		sendInteraction,
+		feedSourceInfo: typeof feed === 'object' ? feed : undefined,
+	};
 }
 
 export const FeedFeedbackProvider = stateContext.Provider;

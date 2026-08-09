@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -40,7 +40,7 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 
 	useFocusEffect(() => softReset.subscribe(onScrollToTop));
 
-	const renderPostsEmpty = useCallback(() => {
+	const renderPostsEmpty = () => {
 		return (
 			<div className={css.emptyState}>
 				<EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />
@@ -57,7 +57,7 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 				)}
 			</div>
 		);
-	}, [isOwner, onPressAddUser]);
+	};
 
 	return (
 		<div>

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -54,14 +54,11 @@ export function NotificationsScreen() {
 	};
 
 	const queryClient = useQueryClient();
-	const checkUnreadMentions = useCallback(
-		async ({ invalidate }: { invalidate: boolean }) => {
-			if (invalidate) {
-				return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'));
-			}
-		},
-		[queryClient],
-	);
+	const checkUnreadMentions = async ({ invalidate }: { invalidate: boolean }) => {
+		if (invalidate) {
+			return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'));
+		}
+	};
 
 	const sections: Section<'all' | 'mentions'>[] = [
 		{

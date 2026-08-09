@@ -1,6 +1,6 @@
 /** A kind of companion API to ./feed.ts. See that file for more info. */
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 import { ok } from '@atcute/client';
 
@@ -74,96 +74,94 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const isFetchingRef = useRef(false);
 
 	// create API
-	const api = useMemo<ApiContext>(() => {
-		return {
-			async markAllRead() {
-				// update server
-				await ok(
-					appview.post('app.bsky.notification.updateSeen', {
-						as: null,
-						input: { seenAt: cacheRef.current.syncedAt.toISOString() },
-					}),
-				);
+	const api: ApiContext = {
+		async markAllRead() {
+			// update server
+			await ok(
+				appview.post('app.bsky.notification.updateSeen', {
+					as: null,
+					input: { seenAt: cacheRef.current.syncedAt.toISOString() },
+				}),
+			);
+
+			// update & broadcast
+			setNumUnread('');
+			// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
+			broadcast.postMessage({ event: '' });
+		},
+
+		async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
+			if (!hasSession) {
+				return;
+			}
+			if (!isDocumentVisible()) {
+				return;
+			}
+
+			// reduce polling if unread count is set
+			if (isPoll && cacheRef.current?.unreadCount !== 0) {
+				// if hit 30+ then don't poll, otherwise reduce polling by 50%
+				if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+					return;
+				}
+			}
+
+			if (isFetchingRef.current) {
+				return;
+			}
+
+			// single-flight guard: taken here past every early return, released on both the success and error
+			// paths below so a re-fire can't clear another request's in-flight lock.
+			isFetchingRef.current = true;
+			try {
+				// count
+				const { page, indexedAt: lastIndexed } = await fetchPage({
+					appview,
+					cursor: undefined,
+					limit: 40,
+					queryClient,
+					moderationOpts,
+					reasons: [],
+
+					// only fetch subjects when the page is going to be used
+					// in the notifications query, otherwise skip it
+					fetchAdditionalData: !!invalidate,
+				});
+				const unreadCount = countUnread(page);
+				const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
+
+				// track last sync
+				const now = new Date();
+				const lastIndexedDate = lastIndexed ? new Date(lastIndexed) : undefined;
+				cacheRef.current = {
+					usableInFeed: !!invalidate, // will be used immediately
+					data: page,
+					syncedAt: !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
+					unreadCount,
+				};
 
 				// update & broadcast
-				setNumUnread('');
+				setNumUnread(unreadCountStr);
+				if (invalidate) {
+					void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
+					void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
+				}
 				// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
-				broadcast.postMessage({ event: '' });
-			},
-
-			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
-				if (!hasSession) {
-					return;
-				}
-				if (!isDocumentVisible()) {
-					return;
-				}
-
-				// reduce polling if unread count is set
-				if (isPoll && cacheRef.current?.unreadCount !== 0) {
-					// if hit 30+ then don't poll, otherwise reduce polling by 50%
-					if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
-						return;
-					}
-				}
-
-				if (isFetchingRef.current) {
-					return;
-				}
-
-				// single-flight guard: taken here past every early return, released on both the success and error
-				// paths below so a re-fire can't clear another request's in-flight lock.
-				isFetchingRef.current = true;
-				try {
-					// count
-					const { page, indexedAt: lastIndexed } = await fetchPage({
-						appview,
-						cursor: undefined,
-						limit: 40,
-						queryClient,
-						moderationOpts,
-						reasons: [],
-
-						// only fetch subjects when the page is going to be used
-						// in the notifications query, otherwise skip it
-						fetchAdditionalData: !!invalidate,
-					});
-					const unreadCount = countUnread(page);
-					const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
-
-					// track last sync
-					const now = new Date();
-					const lastIndexedDate = lastIndexed ? new Date(lastIndexed) : undefined;
-					cacheRef.current = {
-						usableInFeed: !!invalidate, // will be used immediately
-						data: page,
-						syncedAt: !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
-						unreadCount,
-					};
-
-					// update & broadcast
-					setNumUnread(unreadCountStr);
-					if (invalidate) {
-						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
-						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
-					}
-					// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
-					broadcast.postMessage({ event: unreadCountStr });
-				} catch (err) {
-					isFetchingRef.current = false;
-					throw err;
-				}
+				broadcast.postMessage({ event: unreadCountStr });
+			} catch (err) {
 				isFetchingRef.current = false;
-			},
+				throw err;
+			}
+			isFetchingRef.current = false;
+		},
 
-			getCachedUnreadPage() {
-				// return cached page if it's marked as fresh enough
-				if (cacheRef.current.usableInFeed) {
-					return cacheRef.current.data;
-				}
-			},
-		};
-	}, [appview, hasSession, moderationOpts, queryClient]);
+		getCachedUnreadPage() {
+			// return cached page if it's marked as fresh enough
+			if (cacheRef.current.usableInFeed) {
+				return cacheRef.current.data;
+			}
+		},
+	};
 
 	// periodic sync. depends on api (not a ref bridge) so a fresh mount with hasSession has the callback in
 	// hand when this effect first runs — effect order is no longer load-bearing.
@@ -174,6 +172,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		void api.checkUnread(); // fire on init
 		const interval = setInterval(() => void api.checkUnread({ isPoll: true }), UPDATE_INTERVAL);
 		return () => clearInterval(interval);
+		// oxlint-disable-next-line react-hooks/exhaustive-deps -- React Compiler stabilizes the API object
 	}, [hasSession, api]);
 
 	return (

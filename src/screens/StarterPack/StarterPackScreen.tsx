@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -155,16 +155,17 @@ function StarterPackScreenLoaded({
 
 	const link = targetToShareUrl(starterPackTarget(starterPack.creator.did, routeParams.rkey));
 
-	const onOpenShareDialog = useCallback(() => {
+	const onOpenShareDialog = () => {
 		void prefetchImage(getStarterPackOgCard(starterPack));
 		shareDialogHandle.open(null);
-	}, [shareDialogHandle, starterPack]);
+	};
 
 	useEffect(() => {
 		if (routeParams.new) {
-			onOpenShareDialog();
+			void prefetchImage(getStarterPackOgCard(starterPack));
+			shareDialogHandle.open(null);
 		}
-	}, [onOpenShareDialog, routeParams.new]);
+	}, [routeParams.new, shareDialogHandle, starterPack]);
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useRef } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedSearchPostsV2 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
@@ -44,22 +44,17 @@ export function useSearchPostsQuery({
 	const moderationOpts = useModerationOpts();
 	const viewerDid = currentAccount?.did;
 
-	const lifted = useMemo(() => liftSearchQuery(query, { viewerDid }), [query, viewerDid]);
-	const authors = useMemo(() => {
-		const base = lifted.filters.authors ?? [];
-		if (!author) {
-			return base.length ? base : undefined;
-		}
-		return [...new Set<ActorIdentifier>([...base, author])];
-	}, [lifted, author]);
+	const lifted = liftSearchQuery(query, { viewerDid });
+	const baseAuthors = lifted.filters.authors ?? [];
+	let authors: ActorIdentifier[] | undefined = baseAuthors.length ? baseAuthors : undefined;
+	if (author) {
+		authors = [...new Set<ActorIdentifier>([...baseAuthors, author])];
+	}
 
-	const selectArgs = useMemo(
-		() => ({
-			isSearchingSpecificUser: (authors?.length ?? 0) > 0,
-			moderationOpts,
-		}),
-		[authors, moderationOpts],
-	);
+	const selectArgs = {
+		isSearchingSpecificUser: (authors?.length ?? 0) > 0,
+		moderationOpts,
+	};
 	const lastRun = useRef<{
 		data: InfiniteData<AppBskyFeedSearchPostsV2.$output>;
 		args: typeof selectArgs;
@@ -92,61 +87,58 @@ export function useSearchPostsQuery({
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		select: useCallback(
-			(data: InfiniteData<AppBskyFeedSearchPostsV2.$output>) => {
-				// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
-				const { moderationOpts, isSearchingSpecificUser } = selectArgs;
+		select: (data: InfiniteData<AppBskyFeedSearchPostsV2.$output>) => {
+			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
+			const { moderationOpts, isSearchingSpecificUser } = selectArgs;
 
-				// profile searches already scope results to the requested account.
-				if (isSearchingSpecificUser) {
-					return data;
-				}
+			// profile searches already scope results to the requested account.
+			if (isSearchingSpecificUser) {
+				return data;
+			}
 
-				const reusedPages: AppBskyFeedSearchPostsV2.$output[] = [];
-				if (lastRun.current) {
-					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
-					let canReuse = true;
-					for (const key of typedKeys(selectArgs)) {
-						if (selectArgs[key] !== lastArgs[key]) {
-							// reuse is only safe when every selector input is unchanged.
-							canReuse = false;
-							break;
-						}
-					}
-					if (canReuse) {
-						for (let i = 0; i < data.pages.length; i++) {
-							if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-								reusedPages.push(lastResult.pages[i]!);
-								continue;
-							}
-							break;
-						}
+			const reusedPages: AppBskyFeedSearchPostsV2.$output[] = [];
+			if (lastRun.current) {
+				const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
+				let canReuse = true;
+				for (const key of typedKeys(selectArgs)) {
+					if (selectArgs[key] !== lastArgs[key]) {
+						// reuse is only safe when every selector input is unchanged.
+						canReuse = false;
+						break;
 					}
 				}
+				if (canReuse) {
+					for (let i = 0; i < data.pages.length; i++) {
+						if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
+							reusedPages.push(lastResult.pages[i]!);
+							continue;
+						}
+						break;
+					}
+				}
+			}
 
-				const result = {
-					...data,
-					pages: [
-						...reusedPages,
-						// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate react-query's cache
-						...data.pages.slice(reusedPages.length).map((page) => {
-							return {
-								...page,
-								posts: page.posts.filter((post) => {
-									const mod = moderatePost(post, moderationOpts!);
-									return getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length === 0;
-								}),
-							};
-						}),
-					],
-				};
+			const result = {
+				...data,
+				pages: [
+					...reusedPages,
+					// oxlint-disable-next-line oxc/no-map-spread -- `Object.assign` would mutate react-query's cache
+					...data.pages.slice(reusedPages.length).map((page) => {
+						return {
+							...page,
+							posts: page.posts.filter((post) => {
+								const mod = moderatePost(post, moderationOpts!);
+								return getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length === 0;
+							}),
+						};
+					}),
+				],
+			};
 
-				lastRun.current = { data, result, args: selectArgs };
+			lastRun.current = { data, result, args: selectArgs };
 
-				return result;
-			},
-			[selectArgs],
-		),
+			return result;
+		},
 	});
 }
 

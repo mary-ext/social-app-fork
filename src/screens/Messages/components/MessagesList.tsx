@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
@@ -136,10 +136,7 @@ export function MessagesList({
 		});
 	};
 
-	const renderItems = useMemo(
-		() => buildMessageTimeline(convoState.items, convoState.relatedProfiles),
-		[convoState.items, convoState.relatedProfiles],
-	);
+	const renderItems = buildMessageTimeline(convoState.items, convoState.relatedProfiles);
 
 	const [showPill, setShowPill] = useState(false);
 

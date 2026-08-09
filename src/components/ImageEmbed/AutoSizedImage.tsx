@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 
@@ -33,11 +33,11 @@ export function AutoSizedImage({ image, crop = 'constrained', payload, onPressIn
 	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
 	const largeAlt = useLargeAltBadgeEnabled();
 
-	const measure = useCallback((node: HTMLImageElement | null) => {
+	const measure = (node: HTMLImageElement | null) => {
 		if (node?.complete) {
 			setStatus(node.naturalWidth > 0 ? 'loaded' : 'error');
 		}
-	}, []);
+	};
 	// Old images, or images from other clients, can lack an aspect ratio; those fall back to a square box.
 	const aspectRatio = getAspectRatio(image.aspectRatio);
 

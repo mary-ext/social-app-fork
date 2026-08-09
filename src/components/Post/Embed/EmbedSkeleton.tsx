@@ -26,7 +26,7 @@ const randomAspect = () => (weightedIndex([9, 1]) === 1 ? logAspect(1 / 5, 7) : 
 
 /**
  * returns a randomly selected embed shape (single-image, carousel, or null) to simulate a realistic feed
- * placeholder. freeze the result (e.g., using `useMemo`) to prevent reshuffling on re-renders.
+ * placeholder. freeze the result with a lazy state initializer to prevent reshuffling on re-renders.
  *
  * @returns a shape type, or null approximately 60% of the time.
  */

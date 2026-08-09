@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
 	type LightboxImage,
@@ -69,7 +69,7 @@ export function LightboxContents({
 		},
 		[],
 	);
-	const onTap = useCallback((info: LightboxTapInfo) => {
+	const onTap = (info: LightboxTapInfo) => {
 		// only taps on the image toggle the chrome — backdrop/chrome taps keep their own behaviour (mouse
 		// backdrop-click closes, the controls handle their own clicks).
 		if (!info.onImage) {
@@ -87,7 +87,7 @@ export function LightboxContents({
 			toggleTimer.current = null;
 			setChromeVisible((v) => !v);
 		}, DOUBLE_TAP_MS);
-	}, []);
+	};
 
 	return (
 		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>

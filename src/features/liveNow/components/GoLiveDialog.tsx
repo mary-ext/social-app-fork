@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
@@ -61,9 +61,9 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		return clock.format(date);
 	};
 
-	const onChangeDuration = useCallback((newDuration: string) => {
+	const onChangeDuration = (newDuration: string) => {
 		setDuration(Number(newDuration));
-	}, []);
+	};
 
 	// Possible durations: max 4 hours, 5 minute intervals
 	const durationItems = Array.from({ length: (4 * 60) / 5 }, (_, i) => {

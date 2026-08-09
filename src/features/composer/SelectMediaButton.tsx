@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
@@ -221,7 +219,7 @@ export function SelectMediaButton({
 }: SelectMediaButtonProps) {
 	const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount;
 
-	const onPressSelectMedia = useCallback(async () => {
+	const onPressSelectMedia = async () => {
 		const files = await openMediaPicker();
 		if (files.length === 0) {
 			return;
@@ -249,7 +247,7 @@ export function SelectMediaButton({
 		});
 
 		void onSelectAssets({ type, images, video, errors });
-	}, [onSelectAssets, selectionCountRemaining, allowedAssetTypes]);
+	};
 
 	return (
 		<ComposerToolbarButton

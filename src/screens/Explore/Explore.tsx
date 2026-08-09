@@ -3,7 +3,7 @@ import { type ComponentType, type SVGProps, useState } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
-import { useInterestsDisplayNames } from '#/lib/interests';
+import { interestDisplayNames } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';
@@ -137,7 +137,6 @@ export function Explore({
 	const moderationOpts = useModerationOpts();
 	const [selectedInterest, setSelectedInterest] = useState<string | null>(null);
 
-	const interestsDisplayNames = useInterestsDisplayNames();
 	const {
 		data: suggestedUsers,
 		isLoading: suggestedUsersIsLoading,
@@ -457,7 +456,7 @@ export function Explore({
 						<Admonition>
 							{selectedInterest
 								? m['screens.search.account.emptyInterest']({
-										interest: interestsDisplayNames[selectedInterest] ?? '',
+										interest: interestDisplayNames[selectedInterest]?.() ?? '',
 									})
 								: m['common.search.empty']()}
 						</Admonition>

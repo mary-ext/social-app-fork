@@ -1,7 +1,6 @@
 import {
 	type KeyboardEvent,
 	type PointerEvent,
-	useCallback,
 	useEffect,
 	useLayoutEffect,
 	useMemo,
@@ -103,6 +102,20 @@ const itemToStringValue = (item: InteractiveItem): string => {
 			return item.query;
 		}
 	}
+};
+
+const clampToConstraints = (date: Date, constraints: ReturnType<typeof getDateConstraints> | null): Date => {
+	if (!constraints) {
+		return date;
+	}
+	const { max, min } = constraints;
+	if (min !== undefined && isBeforeDate(startOfDay(date), startOfDay(min))) {
+		return startOfDay(min);
+	}
+	if (max !== undefined && isAfterDate(startOfDay(date), startOfDay(max))) {
+		return startOfDay(max);
+	}
+	return date;
 };
 
 /** start/end offsets of the active token within the whole query. */
@@ -275,29 +288,11 @@ function ActiveSearchAutocomplete({
 		);
 	};
 
-	// clamp a date to day-granular picker bounds.
-	const clampToConstraints = useCallback(
-		(date: Date): Date => {
-			if (!dateConstraints) {
-				return date;
-			}
-			const { max, min } = dateConstraints;
-			if (min !== undefined && isBeforeDate(startOfDay(date), startOfDay(min))) {
-				return startOfDay(min);
-			}
-			if (max !== undefined && isAfterDate(startOfDay(date), startOfDay(max))) {
-				return startOfDay(max);
-			}
-			return date;
-		},
-		[dateConstraints],
-	);
-
 	// open the calendar on the typed month or the nearest selectable month.
 	let snapDate: Date | null = null;
 	let snapKey: string | null = null;
 	if (mode.kind === 'date') {
-		snapDate = parseStartDate(mode.query) ?? clampToConstraints(today);
+		snapDate = parseStartDate(mode.query) ?? clampToConstraints(today, dateConstraints);
 		snapKey = `${mode.op}:${snapDate.getFullYear()}-${snapDate.getMonth()}`;
 	}
 	if (snapKey !== trackedSnapKey) {
@@ -357,14 +352,14 @@ function ActiveSearchAutocomplete({
 			const preferred =
 				!isPartialDate && isSameCalendarMonth(visibleMonth, today) ? today : startOfMonth(visibleMonth);
 			// keep the initial highlight selectable.
-			const target = clampToConstraints(preferred);
+			const target = clampToConstraints(preferred, dateConstraints);
 			targetIndex = differenceInCalendarDays(target, startOfWeek(startOfMonth(visibleMonth)));
 		}
 
 		if (targetIndex >= 0 && targetIndex < CALENDAR_DAY_COUNT) {
 			actions.setActiveIndex(targetIndex);
 		}
-	}, [mode.kind, open, visibleMonth, isPartialDate, today, clampToConstraints]);
+	}, [dateConstraints, isPartialDate, mode.kind, open, today, visibleMonth]);
 
 	const syncCaret = () => {
 		const el = inputRef.current;

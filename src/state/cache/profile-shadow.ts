@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
 
@@ -58,13 +58,10 @@ export function useProfileShadow<TProfileView extends AnyProfileView>(
 		return emitter.subscribe(profile.did, onUpdate);
 	}, [profile]);
 
-	return useMemo(() => {
-		if (shadow) {
-			return mergeShadow(profile, shadow);
-		} else {
-			return castAsShadow(profile);
-		}
-	}, [profile, shadow]);
+	if (shadow) {
+		return mergeShadow(profile, shadow);
+	}
+	return castAsShadow(profile);
 }
 
 /**
@@ -94,16 +91,13 @@ export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
 		return emitter.subscribe(profile.did, onUpdate);
 	}, [profile]);
 
-	return useMemo(() => {
-		if (!profile) {
-			return undefined;
-		}
-		if (shadow) {
-			return mergeShadow(profile, shadow);
-		} else {
-			return castAsShadow(profile);
-		}
-	}, [profile, shadow]);
+	if (!profile) {
+		return undefined;
+	}
+	if (shadow) {
+		return mergeShadow(profile, shadow);
+	}
+	return castAsShadow(profile);
 }
 
 /**
@@ -154,17 +148,13 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
 		};
 	}, []);
 
-	return useMemo(() => {
-		const dids: Array<string> = [];
-
-		for (const [did, value] of authors.entries()) {
-			if (value.blocked || value.muted) {
-				dids.push(did);
-			}
+	const dids: Array<string> = [];
+	for (const [did, value] of authors.entries()) {
+		if (value.blocked || value.muted) {
+			dids.push(did);
 		}
-
-		return dids;
-	}, [authors]);
+	}
+	return dids;
 }
 
 export function updateProfileShadow(queryClient: QueryClient, did: string, value: Partial<ProfileShadow>) {

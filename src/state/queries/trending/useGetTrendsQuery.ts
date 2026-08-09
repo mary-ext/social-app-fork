@@ -1,5 +1,3 @@
-import { useCallback, useMemo } from 'react';
-
 import type { AppBskyUnspeccedDefs, AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
@@ -89,9 +87,9 @@ export function useGetTrendsQuery({
 }: QueryProps = {}) {
 	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
-	const keywordFilters = useMemo(() => {
-		return (preferences?.moderationPrefs?.mutedWords || []).map((word) => interpretMutedWordPreference(word));
-	}, [preferences?.moderationPrefs]);
+	const keywordFilters = (preferences?.moderationPrefs?.mutedWords || []).map((word) =>
+		interpretMutedWordPreference(word),
+	);
 
 	return useQuery({
 		queryKey: createGetTrendsQueryKey({ limit }),
@@ -110,23 +108,18 @@ export function useGetTrendsQuery({
 				}),
 			);
 		},
-		select: useCallback(
-			(data: AppBskyUnspeccedGetTrends.$output) => {
-				const trends = mapDefined(data.trends ?? [], (trend) => {
-					const text = definite([trend.topic, trend.displayName, trend.category, trend.description]).join(
-						' ',
-					);
+		select: (data: AppBskyUnspeccedGetTrends.$output) => {
+			const trends = mapDefined(data.trends ?? [], (trend) => {
+				const text = definite([trend.topic, trend.displayName, trend.category, trend.description]).join(' ');
 
-					if (hasMutedWord({ keywordFilters, text })) {
-						return undefined;
-					}
+				if (hasMutedWord({ keywordFilters, text })) {
+					return undefined;
+				}
 
-					return resolveTopic(trend);
-				});
+				return resolveTopic(trend);
+			});
 
-				return { trends: dedupeByLink(trends) };
-			},
-			[keywordFilters],
-		),
+			return { trends: dedupeByLink(trends) };
+		},
 	});
 }

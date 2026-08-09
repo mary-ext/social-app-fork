@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -131,16 +129,13 @@ export function useProfilesQuery({ dids }: { dids: Did[] }) {
 
 export function usePrefetchProfileQuery() {
 	const queryClient = useQueryClient();
-	const prefetchProfileQuery = useCallback(
-		async (did: Did) => {
-			await queryClient.prefetchQuery({
-				staleTime: STALE.SECONDS.THIRTY,
-				queryKey: RQKEY(did),
-				queryFn: ({ signal }) => fetchProfile(did, signal),
-			});
-		},
-		[queryClient],
-	);
+	const prefetchProfileQuery = async (did: Did) => {
+		await queryClient.prefetchQuery({
+			staleTime: STALE.SECONDS.THIRTY,
+			queryKey: RQKEY(did),
+			queryFn: ({ signal }) => fetchProfile(did, signal),
+		});
+	};
 	return prefetchProfileQuery;
 }
 
@@ -307,21 +302,21 @@ export function useProfileFollowMutationQueue(profile: Shadow<AnyProfileView>) {
 		},
 	});
 
-	const queueFollow = useCallback(() => {
+	const queueFollow = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			followingUri: 'pending',
 		});
 		return queueToggle(true);
-	}, [queryClient, did, queueToggle]);
+	};
 
-	const queueUnfollow = useCallback(() => {
+	const queueUnfollow = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			followingUri: undefined,
 		});
 		return queueToggle(false);
-	}, [queryClient, did, queueToggle]);
+	};
 
 	return [queueFollow, queueUnfollow] as const;
 }
@@ -387,23 +382,23 @@ export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 		},
 	});
 
-	const queueMute = useCallback(() => {
+	const queueMute = () => {
 		// optimistically update. a full mute replaces any stored repost-only scope on the server, so clear it here too
 		updateProfileShadow(queryClient, did, {
 			muted: true,
 			mutedOnlyReposts: false,
 		});
 		return queueToggle(true);
-	}, [queryClient, did, queueToggle]);
+	};
 
-	const queueUnmute = useCallback(() => {
+	const queueUnmute = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			muted: false,
 			mutedOnlyReposts: false,
 		});
 		return queueToggle(false);
-	}, [queryClient, did, queueToggle]);
+	};
 
 	return [queueMute, queueUnmute] as const;
 }
@@ -443,21 +438,21 @@ export function useProfileMuteRepostsMutationQueue(profile: Shadow<AnyProfileVie
 		},
 	});
 
-	const queueMuteReposts = useCallback(() => {
+	const queueMuteReposts = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			mutedOnlyReposts: true,
 		});
 		return queueToggle(true);
-	}, [queryClient, did, queueToggle]);
+	};
 
-	const queueUnmuteReposts = useCallback(() => {
+	const queueUnmuteReposts = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			mutedOnlyReposts: false,
 		});
 		return queueToggle(false);
-	}, [queryClient, did, queueToggle]);
+	};
 
 	return [queueMuteReposts, queueUnmuteReposts] as const;
 }
@@ -554,21 +549,21 @@ export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 		},
 	});
 
-	const queueBlock = useCallback(() => {
+	const queueBlock = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			blockingUri: 'pending',
 		});
 		return queueToggle(true);
-	}, [queryClient, did, queueToggle]);
+	};
 
-	const queueUnblock = useCallback(() => {
+	const queueUnblock = () => {
 		// optimistically update
 		updateProfileShadow(queryClient, did, {
 			blockingUri: undefined,
 		});
 		return queueToggle(false);
-	}, [queryClient, did, queueToggle]);
+	};
 
 	return [queueBlock, queueUnblock] as const;
 }

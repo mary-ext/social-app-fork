@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
@@ -61,21 +61,16 @@ export const useHiddenReplyUris = (
 ): ReadonlySet<ResourceUri> => {
 	const hidden = useSyncExternalStore(subscribe, getHiddenUris);
 
-	// `hidden` stands in for the store's version here: it is replaced on every write, so reading
-	// `overrides` inside the memo can't go stale.
-	return useMemo(() => {
-		const recorded = threadgateRecord?.hiddenReplies;
-		if (!recorded?.length) {
-			return hidden;
-		}
+	const recorded = threadgateRecord?.hiddenReplies;
+	if (!recorded?.length) {
+		return hidden;
+	}
 
-		const merged = new Set(hidden);
-		for (const uri of recorded) {
-			if (overrides.get(uri) !== false) {
-				merged.add(uri);
-			}
+	const merged = new Set(hidden);
+	for (const uri of recorded) {
+		if (overrides.get(uri) !== false) {
+			merged.add(uri);
 		}
-
-		return merged;
-	}, [hidden, threadgateRecord]);
+	}
+	return merged;
 };

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -16,7 +16,7 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerFooter.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
-import { useAddImagesWithCap } from './gallery-cap';
+import { createAddImagesWithCap } from './gallery-cap';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
@@ -74,14 +74,11 @@ export function ComposerFooter({
 		isMediaSelectionDisabled = !!media;
 	}
 
-	const onImageAdd = useAddImagesWithCap(images.length, dispatch);
+	const onImageAdd = createAddImagesWithCap(images.length, dispatch);
 
-	const onSelectGif = useCallback(
-		(gif: Gif) => {
-			dispatch({ type: 'embedAddGif', gif });
-		},
-		[dispatch],
-	);
+	const onSelectGif = (gif: Gif) => {
+		dispatch({ type: 'embedAddGif', gif });
+	};
 
 	/*
 	 * Reset if the user clears any selected media
@@ -90,44 +87,46 @@ export function ComposerFooter({
 		setSelectedAssetsType(undefined);
 	}
 
-	const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
-		async ({ type, images: assetImages, video: assetVideo, errors }) => {
-			setSelectedAssetsType(type);
+	const onSelectAssets: SelectMediaButtonProps['onSelectAssets'] = async ({
+		type,
+		images: assetImages,
+		video: assetVideo,
+		errors,
+	}) => {
+		setSelectedAssetsType(type);
 
-			if (type === 'image' && assetImages.length) {
-				const results = await Promise.allSettled(assetImages.map((image) => createComposerImage(image)));
+		if (type === 'image' && assetImages.length) {
+			const results = await Promise.allSettled(assetImages.map((image) => createComposerImage(image)));
 
-				const selectedImages: ComposerImage[] = [];
-				let failed = 0;
+			const selectedImages: ComposerImage[] = [];
+			let failed = 0;
 
-				for (const [index, result] of results.entries()) {
-					if (result.status === 'fulfilled') {
-						selectedImages.push(result.value);
-					} else {
-						failed++;
-						const file = assetImages[index]!;
-						console.error('createComposerImage failed', file.type, file.size, result.reason);
-					}
+			for (const [index, result] of results.entries()) {
+				if (result.status === 'fulfilled') {
+					selectedImages.push(result.value);
+				} else {
+					failed++;
+					const file = assetImages[index]!;
+					console.error('createComposerImage failed', file.type, file.size, result.reason);
 				}
-
-				if (selectedImages.length) {
-					onImageAdd(selectedImages);
-				}
-				if (failed > 0) {
-					onError(m['view.composer.gallery.error.notAdded']({ failed }));
-				}
-			} else if ((type === 'video' || type === 'gif') && assetVideo) {
-				onSelectVideo(post.id, assetVideo);
 			}
 
-			errors.map((error) => {
-				Toast.show(error, {
-					type: 'warning',
-				});
+			if (selectedImages.length) {
+				onImageAdd(selectedImages);
+			}
+			if (failed > 0) {
+				onError(m['view.composer.gallery.error.notAdded']({ failed }));
+			}
+		} else if ((type === 'video' || type === 'gif') && assetVideo) {
+			onSelectVideo(post.id, assetVideo);
+		}
+
+		errors.map((error) => {
+			Toast.show(error, {
+				type: 'warning',
 			});
-		},
-		[post.id, onSelectVideo, onImageAdd, onError],
-	);
+		});
+	};
 
 	return (
 		<div className={styles.footer}>

@@ -1,7 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { boostInterests, popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { boostInterests, interestDisplayNames, popularInterests } from '#/lib/interests';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 
@@ -17,10 +17,9 @@ export function SuggestedAccountsTabBar({
 	onSelectInterest: (interest: string | null) => void;
 	selectedInterest: string | null;
 }) {
-	const interestsDisplayNames = useInterestsDisplayNames();
 	const { data: preferences } = usePreferencesQuery();
 	const personalizedInterests = preferences?.interests?.tags;
-	const interests = Object.keys(interestsDisplayNames)
+	const interests = Object.keys(interestDisplayNames)
 		// oxlint-disable-next-line unicorn/no-array-sort -- our own array of keys, and stable sorts compose:
 		.sort(boostInterests(popularInterests))
 		// oxlint-disable-next-line unicorn/no-array-sort -- personalized boosts outrank popular ones
@@ -30,8 +29,8 @@ export function SuggestedAccountsTabBar({
 		<InterestTabs
 			interests={['all', ...interests]}
 			interestsDisplayNames={{
-				all: m['common.feeds.forYou'](),
-				...interestsDisplayNames,
+				all: m['common.feeds.forYou'],
+				...interestDisplayNames,
 			}}
 			onSelectTab={(tab) => {
 				onSelectInterest(tab === 'all' ? null : tab);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 
@@ -60,25 +60,25 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 	const itemRefsRef = useRef<Map<number, HTMLElement>>(new Map());
 	const currentIndexRef = useRef(0);
 
-	const getScrollEl = useCallback(() => scrollRef.current, []);
-	const scrollTo = useCallback((offset: number) => {
+	const getScrollEl = () => scrollRef.current;
+	const scrollTo = (offset: number) => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollLeft = offset;
 		}
-	}, []);
+	};
 
-	const onSettle = useCallback((index: number) => {
+	const onSettle = (index: number) => {
 		currentIndexRef.current = index;
 		// Only the active image is tab-focusable
 		itemRefsRef.current.forEach((node, i) => {
 			node.tabIndex = i === index ? 0 : -1;
 		});
 		itemRefsRef.current.get(index)?.focus({ preventScroll: true });
-	}, []);
+	};
 
-	const onWidthChange = useCallback((index: number, w: number) => {
+	const onWidthChange = (index: number, w: number) => {
 		itemWidthsRef.current.set(index, w);
-	}, []);
+	};
 
 	const setItemRef = (index: number, node: HTMLElement | null) => {
 		if (node) {
@@ -158,11 +158,11 @@ function GalleryImage({
 }) {
 	const [status, setStatus] = useState<'error' | 'loaded' | 'loading'>(image.thumbnail ? 'loading' : 'error');
 
-	const measure = useCallback((node: HTMLImageElement | null) => {
+	const measure = (node: HTMLImageElement | null) => {
 		if (node?.complete) {
 			setStatus(node.naturalWidth > 0 ? 'loaded' : 'error');
 		}
-	}, []);
+	};
 
 	// Size from the declared aspect ratio only (a missing one defaults to square). The shared row height was
 	// derived against these same metadata ratios, so adopting an image's true ratio post-load could push a

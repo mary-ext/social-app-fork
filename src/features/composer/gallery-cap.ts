@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { ComposerImage } from '#/lib/media/composer-image';
 
 import * as Toast from '#/components/Toast';
@@ -30,31 +28,37 @@ export function applyGalleryCap(
 	return { status: 'ok', accepted: incoming };
 }
 
-/** Returns an adder that applies the gallery cap, toasting when the batch is fully or partially rejected. */
-export function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: PostAction) => void) {
-	return useCallback(
-		(next: ComposerImage[]) => {
-			const result = applyGalleryCap(currentCount, next);
-			if (result.status === 'full') {
-				Toast.show(m['view.composer.gallery.error.maxAdd']({ max: MAX_GALLERY_IMAGES }), { type: 'warning' });
-				return;
-			}
-			if (result.status === 'partial') {
-				Toast.show(
-					m['view.composer.gallery.error.limit']({
-						accepted: result.accepted.length,
-						count: next.length,
-						total: next.length,
-						max: MAX_GALLERY_IMAGES,
-					}),
-					{ type: 'warning' },
-				);
-			}
-			dispatchPostAction({
-				type: 'embedAddImages',
-				images: result.accepted,
-			});
-		},
-		[currentCount, dispatchPostAction],
-	);
+/**
+ * returns an adder that applies the gallery cap, toasting when the batch is fully or partially rejected.
+ *
+ * @param currentCount the number of images already in the gallery
+ * @param dispatchPostAction dispatches accepted images to the composer
+ * @returns an image-adder callback constrained by the remaining gallery capacity
+ */
+export function createAddImagesWithCap(
+	currentCount: number,
+	dispatchPostAction: (action: PostAction) => void,
+) {
+	return (next: ComposerImage[]) => {
+		const result = applyGalleryCap(currentCount, next);
+		if (result.status === 'full') {
+			Toast.show(m['view.composer.gallery.error.maxAdd']({ max: MAX_GALLERY_IMAGES }), { type: 'warning' });
+			return;
+		}
+		if (result.status === 'partial') {
+			Toast.show(
+				m['view.composer.gallery.error.limit']({
+					accepted: result.accepted.length,
+					count: next.length,
+					total: next.length,
+					max: MAX_GALLERY_IMAGES,
+				}),
+				{ type: 'warning' },
+			);
+		}
+		dispatchPostAction({
+			type: 'embedAddImages',
+			images: result.accepted,
+		});
+	};
 }

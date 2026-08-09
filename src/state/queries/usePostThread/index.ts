@@ -172,7 +172,7 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 
 	const { threadItems, otherThreadItems } = useMemo(() => {
 		return sortAndAnnotateThreadItems(thread, {
-			view: view,
+			view,
 			threadgateHiddenReplies,
 			moderationOpts: moderationOpts!,
 		});

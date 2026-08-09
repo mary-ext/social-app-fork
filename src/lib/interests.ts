@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { m } from '#/paraglide/messages';
 
 export const interests = [
@@ -43,37 +41,33 @@ export const popularInterests = [
 	'news',
 ] satisfies Interest[];
 
-export function useInterestsDisplayNames() {
-	return useMemo<Record<string, string>>(() => {
-		return {
-			// Keep this alphabetized
-			animals: m['lib.interest.animals'](),
-			art: m['lib.interest.art'](),
-			books: m['lib.interest.books'](),
-			comedy: m['lib.interest.comedy'](),
-			comics: m['lib.interest.comics'](),
-			culture: m['lib.interest.culture'](),
-			dev: m['lib.interest.softwareDev'](),
-			education: m['lib.interest.education'](),
-			finance: m['lib.interest.finance'](),
-			food: m['lib.interest.food'](),
-			gaming: m['common.interest.videoGames'](),
-			journalism: m['lib.interest.journalism'](),
-			movies: m['lib.interest.movies'](),
-			music: m['lib.interest.music'](),
-			nature: m['lib.interest.nature'](),
-			news: m['common.interest.news'](),
-			pets: m['lib.interest.pets'](),
-			photography: m['lib.interest.photography'](),
-			politics: m['common.interest.politics'](),
-			science: m['lib.interest.science'](),
-			sports: m['common.interest.sports'](),
-			tech: m['lib.interest.tech'](),
-			tv: m['lib.interest.tv'](),
-			writers: m['lib.interest.writers'](),
-		} satisfies Record<Interest, string>;
-	}, []);
-}
+export const interestDisplayNames: Record<string, () => string> = {
+	// Keep this alphabetized
+	animals: m['lib.interest.animals'],
+	art: m['lib.interest.art'],
+	books: m['lib.interest.books'],
+	comedy: m['lib.interest.comedy'],
+	comics: m['lib.interest.comics'],
+	culture: m['lib.interest.culture'],
+	dev: m['lib.interest.softwareDev'],
+	education: m['lib.interest.education'],
+	finance: m['lib.interest.finance'],
+	food: m['lib.interest.food'],
+	gaming: m['common.interest.videoGames'],
+	journalism: m['lib.interest.journalism'],
+	movies: m['lib.interest.movies'],
+	music: m['lib.interest.music'],
+	nature: m['lib.interest.nature'],
+	news: m['common.interest.news'],
+	pets: m['lib.interest.pets'],
+	photography: m['lib.interest.photography'],
+	politics: m['common.interest.politics'],
+	science: m['lib.interest.science'],
+	sports: m['common.interest.sports'],
+	tech: m['lib.interest.tech'],
+	tv: m['lib.interest.tv'],
+	writers: m['lib.interest.writers'],
+};
 
 /** Sort comparator that floats `boosts` (in their given order) to the front; other items keep their order. */
 export function boostInterests(boosts?: string[]) {

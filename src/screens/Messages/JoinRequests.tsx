@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { AnyProfileView, ChatBskyGroupListJoinRequests } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
@@ -123,7 +123,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	// the footer floats over the bottom of the list; measure it so the list can reserve space below.
 	const [footerHeight, setFooterHeight] = useState(0);
 	const footerObserver = useRef<ResizeObserver | null>(null);
-	const footerRef = useCallback((node: HTMLDivElement | null) => {
+	const footerRef = (node: HTMLDivElement | null) => {
 		footerObserver.current?.disconnect();
 		if (node) {
 			const observer = new ResizeObserver(() => setFooterHeight(node.offsetHeight));
@@ -131,7 +131,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			footerObserver.current = observer;
 			setFooterHeight(node.offsetHeight);
 		}
-	}, []);
+	};
 
 	const owner = convo.primaryMember;
 	const isOwner = !!owner && owner.did === currentAccount?.did;

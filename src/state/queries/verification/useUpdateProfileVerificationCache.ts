@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import type { AnyProfileView } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
@@ -13,21 +11,18 @@ export function useUpdateProfileVerificationCache() {
 	const qc = useQueryClient();
 	const { appview } = getClients();
 
-	return useCallback(
-		async ({ profile }: { profile: AnyProfileView }) => {
-			try {
-				const updated = await ok(
-					appview.get('app.bsky.actor.getProfile', {
-						params: { actor: profile.did ?? '' },
-					}),
-				);
-				updateProfileShadow(qc, profile.did, {
-					verification: updated.verification,
-				});
-			} catch (e) {
-				console.error('useUpdateProfileVerificationCache failed', e);
-			}
-		},
-		[appview, qc],
-	);
+	return async ({ profile }: { profile: AnyProfileView }) => {
+		try {
+			const updated = await ok(
+				appview.get('app.bsky.actor.getProfile', {
+					params: { actor: profile.did ?? '' },
+				}),
+			);
+			updateProfileShadow(qc, profile.did, {
+				verification: updated.verification,
+			});
+		} catch (e) {
+			console.error('useUpdateProfileVerificationCache failed', e);
+		}
+	};
 }

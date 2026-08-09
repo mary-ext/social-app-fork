@@ -1,4 +1,4 @@
-import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { type RefObject, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { IS_SAFARI } from '#/lib/browser/platform';
 
@@ -227,7 +227,7 @@ export function useVideoElement(
 		};
 	}, [ref]);
 
-	const play = useCallback(() => {
+	const play = () => {
 		if (!ref.current) {
 			return;
 		}
@@ -244,18 +244,18 @@ export function useVideoElement(
 				promise.catch(() => {});
 			}
 		}
-	}, [ref]);
+	};
 
-	const pause = useCallback(() => {
+	const pause = () => {
 		if (!ref.current) {
 			return;
 		}
 
 		ref.current.pause();
 		playWhenReadyRef.current = false;
-	}, [ref]);
+	};
 
-	const togglePlayPause = useCallback(() => {
+	const togglePlayPause = () => {
 		if (!ref.current) {
 			return;
 		}
@@ -265,19 +265,16 @@ export function useVideoElement(
 		} else {
 			pause();
 		}
-	}, [ref, play, pause]);
+	};
 
-	const changeMuted = useCallback(
-		(newMuted: boolean | ((prev: boolean) => boolean)) => {
-			if (!ref.current) {
-				return;
-			}
+	const changeMuted = (newMuted: boolean | ((prev: boolean) => boolean)) => {
+		if (!ref.current) {
+			return;
+		}
 
-			const value = typeof newMuted === 'function' ? newMuted(ref.current.muted) : newMuted;
-			ref.current.muted = value;
-		},
-		[ref],
-	);
+		const value = typeof newMuted === 'function' ? newMuted(ref.current.muted) : newMuted;
+		ref.current.muted = value;
+	};
 
 	return {
 		play,
