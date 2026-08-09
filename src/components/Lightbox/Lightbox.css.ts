@@ -175,14 +175,7 @@ export const slideSpinner = style({
 
 export const srOnly = style({
 	position: 'absolute',
-	margin: -1,
-	border: 0,
-	clip: 'rect(0, 0, 0, 0)',
-	padding: 0,
-	width: 1,
-	height: 1,
-	overflow: 'hidden',
-	whiteSpace: 'nowrap',
+	transform: 'scale(0)',
 });
 
 export const controlIcon = style({
