@@ -243,6 +243,7 @@ export function SettingsMenu({
 								{renderPanel()}
 							</Panel>
 						</PanelViewport>
+						<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
 					</Popover.Popup>
 				</Popover.Positioner>
 			</Popover.Portal>

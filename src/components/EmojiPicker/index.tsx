@@ -8,6 +8,8 @@ import { emojiInserted } from '#/components/EmojiPicker/emoji-inserted';
 import { useEmojiPreload } from '#/components/EmojiPicker/preload';
 import type { Emoji } from '#/components/EmojiPicker/types';
 
+import { m } from '#/paraglide/messages';
+
 import { EmojiPanel } from './EmojiPanel';
 import * as styles from './EmojiPicker.css';
 
@@ -107,6 +109,7 @@ export function Picker() {
 							}
 						}}
 					/>
+					<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
 				</Popover.Popup>
 			</Popover.Positioner>
 		</Popover.Portal>
