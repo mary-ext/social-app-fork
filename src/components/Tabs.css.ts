@@ -70,7 +70,7 @@ export const tabLabel = style({
 		content: '""',
 	},
 	selectors: {
-		'[data-active] &::after': { backgroundColor: vars.palette.primary_500 },
+		[`${tab}[data-active] &::after`]: { backgroundColor: vars.palette.primary_500 },
 	},
 });
 

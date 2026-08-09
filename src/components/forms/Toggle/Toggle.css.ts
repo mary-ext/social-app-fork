@@ -40,23 +40,27 @@ export const panelGroup = style(
 	}),
 );
 
+const panelBase = style(
+	layered(components, {
+		boxSizing: 'border-box',
+		display: 'flex',
+		flexDirection: 'row',
+		gap: 8,
+		alignItems: 'center',
+		backgroundColor: vars.palette.contrast_50,
+		paddingBlock: 12,
+		paddingInline: 12,
+		width: '100%',
+		minHeight: 48,
+		selectors: {
+			[`${itemReset}[data-checked] &`]: { backgroundColor: vars.palette.primary_50 },
+		},
+	}),
+);
+
 export const panel = recipe(
 	{
-		base: {
-			boxSizing: 'border-box',
-			display: 'flex',
-			flexDirection: 'row',
-			gap: 8,
-			alignItems: 'center',
-			backgroundColor: vars.palette.contrast_50,
-			paddingBlock: 12,
-			paddingInline: 12,
-			width: '100%',
-			minHeight: 48,
-			selectors: {
-				'[data-checked] &': { backgroundColor: vars.palette.primary_50 },
-			},
-		},
+		base: [panelBase],
 		defaultVariants: { active: false, adjacent: 'none', size: 'default' },
 		variants: {
 			active: {
@@ -124,12 +128,12 @@ export const panelText = style(
 		color: vars.palette.contrast_700,
 		fontSize: fontSize.md,
 		selectors: {
-			'[data-checked] &, [data-active] &': {
+			[`${itemReset}[data-checked] &, ${panelBase}[data-active] &`]: {
 				color: vars.palette.contrast_1000,
 				fontWeight: 500,
 			},
-			'[data-disabled] &': { color: vars.palette.contrast_500 },
-			'[data-checked][data-disabled] &': { color: vars.palette.contrast_600 },
+			[`${itemReset}[data-disabled] &`]: { color: vars.palette.contrast_500 },
+			[`${itemReset}[data-checked][data-disabled] &`]: { color: vars.palette.contrast_600 },
 			'[data-size="small"] &': {
 				lineHeight: roundToPx(`calc(${fontSize.md_sub} * 1.3)`),
 				fontSize: fontSize.md_sub,
@@ -145,7 +149,9 @@ export const panelIcon = style(
 		height: iconSize.lg,
 		color: vars.palette.contrast_700,
 		selectors: {
-			'[data-checked] &, [data-active] &': { color: vars.palette.contrast_1000 },
+			[`${itemReset}[data-checked] &, ${panelBase}[data-active] &`]: {
+				color: vars.palette.contrast_1000,
+			},
 			'[data-size="small"] &': { width: 16, height: 16 },
 		},
 	}),
@@ -165,15 +171,15 @@ const indicatorBase = style(
 		width: 24,
 		height: 24,
 		selectors: {
-			'[data-checked] &': {
+			[`${itemReset}[data-checked] &`]: {
 				borderColor: vars.palette.primary_500,
 				backgroundColor: vars.palette.primary_500,
 			},
-			'[data-disabled] &': {
+			[`${itemReset}[data-disabled] &`]: {
 				borderColor: vars.palette.contrast_400,
 				backgroundColor: vars.palette.contrast_100,
 			},
-			'[data-checked][data-disabled] &': {
+			[`${itemReset}[data-checked][data-disabled] &`]: {
 				borderColor: vars.palette.contrast_400,
 				backgroundColor: vars.palette.primary_100,
 			},
@@ -190,7 +196,7 @@ export const dot = style(
 		width: 12,
 		height: 12,
 		selectors: {
-			'[data-disabled] &': { backgroundColor: vars.palette.contrast_600 },
+			[`${itemReset}[data-disabled] &`]: { backgroundColor: vars.palette.contrast_600 },
 		},
 	}),
 );
@@ -222,7 +228,7 @@ export const switchTrack = style(
 		width: 48,
 		height: 28,
 		selectors: {
-			'[data-checked] &': { backgroundColor: vars.palette.primary_500 },
+			[`${itemReset}[data-checked] &`]: { backgroundColor: vars.palette.primary_500 },
 		},
 	}),
 );
@@ -237,7 +243,7 @@ export const switchThumb = style(
 		width: 22,
 		height: 22,
 		selectors: {
-			'[data-checked] &': { transform: 'translateX(20px)' },
+			[`${itemReset}[data-checked] &`]: { transform: 'translateX(20px)' },
 		},
 	}),
 );

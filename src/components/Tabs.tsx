@@ -105,7 +105,7 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 	// scrollLeft to its range, so the first/last tabs rest against the edge instead of over-scrolling.
 	useEffect(() => {
 		const list = listRef.current;
-		const tab = list?.querySelector('[data-active]');
+		const tab = list?.querySelector(`.${styles.tab}[data-active]`);
 		if (!list || !tab) {
 			return;
 		}
