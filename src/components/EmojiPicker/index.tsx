@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, type RefObject, useContext, useRef } from 'react';
+import { createContext, type ReactNode, type RefObject, useContext } from 'react';
 
 import { Popover } from '@base-ui/react/popover';
 
@@ -58,22 +58,19 @@ export function useEmojiPickerHandle(): EmojiPickerHandle {
  */
 export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProps) {
 	useEmojiPreload({ immediate: true });
-	// close via the Root's own actions; `handle.close()` only affects popovers opened through `handle.open()`,
-	// not ones opened by clicking the Trigger.
-	const actionsRef = useRef<{ close: () => void; unmount: () => void }>(null);
 
 	const value = {
 		onEmojiSelect: (emoji: Emoji) => {
 			emojiInserted.emit(emoji);
 			onEmojiSelect?.(emoji);
 		},
-		close: () => actionsRef.current?.close(),
+		close: () => handle.close(),
 		nextFocusRef,
 	};
 
 	return (
 		<EmojiPickerContext value={value}>
-			<Popover.Root handle={handle} actionsRef={actionsRef} modal={true}>
+			<Popover.Root handle={handle} modal={true}>
 				{children}
 			</Popover.Root>
 		</EmojiPickerContext>

@@ -638,11 +638,7 @@ function ActiveSearchAutocomplete({
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align="end" anchor={fieldRef} className={styles.positioner} sideOffset={6}>
 					<Autocomplete.Popup className={styles.popup} ref={popupRef}>
-						<Autocomplete.List
-							className={styles.list}
-							onPointerDown={onListPointerDown}
-							role={result.kind === 'date' ? 'grid' : 'listbox'}
-						>
+						<Autocomplete.List className={styles.list} onPointerDown={onListPointerDown}>
 							{result.kind === 'date' ? (
 								<CalendarBody days={result.days} onGoToMonth={goToMonth} visibleMonth={result.visibleMonth} />
 							) : (
