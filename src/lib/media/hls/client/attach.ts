@@ -5,7 +5,15 @@ import {
 	type Rendition,
 	type WorkerToMain,
 } from '../shared/protocol';
-import { applySubtitles, type SubtitleTrack } from './subtitles';
+import {
+	addSubtitleCues,
+	announceSubtitles,
+	resetSubtitleTrack,
+	setSubtitleCueLine,
+	showSubtitleTrack,
+	type ManagedSubtitleTrack,
+	type SubtitleTrack,
+} from './subtitles';
 
 declare const ManagedMediaSource: typeof MediaSource | undefined;
 
@@ -90,8 +98,12 @@ export type PlayerHandle = {
 	setBufferAhead: (ahead: number) => void;
 	/** registers a listener and emits loaded renditions. */
 	onRenditions: (fn: (renditions: Rendition[], selected: number) => void) => void;
-	/** registers a listener and emits loaded subtitles. */
+	/** registers a listener and emits available subtitle tracks. */
 	onSubtitles: (fn: (tracks: SubtitleTrack[]) => void) => void;
+	/** selects and loads a subtitle track, or disables subtitles with `null`. */
+	selectSubtitle: (id: string | null) => void;
+	/** sets the vertical position for subtitle cues. */
+	setCueLine: (line: number) => void;
 	/** registers an unrecoverable error listener. */
 	onError: (fn: (error: PlayerError) => void) => void;
 	/** registers a listener and emits the current status. */
@@ -147,7 +159,9 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	let onRenditions: ((r: Rendition[], selected: number) => void) | undefined;
 
 	let onSubtitles: ((tracks: SubtitleTrack[]) => void) | undefined;
-	let subtitles: SubtitleTrack[] | undefined;
+	let subtitles: ManagedSubtitleTrack[] = [];
+	let selectedSubtitle: string | null = null;
+	let cueLine: number | undefined;
 
 	let onError: ((error: PlayerError) => void) | undefined;
 
@@ -454,6 +468,15 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	};
 
 	const handleMessage = async (message: WorkerToMain) => {
+		// subtitle streams use track IDs instead of video epochs.
+		if (message.type === 'cues') {
+			const target = subtitles.find((track) => track.id === message.id);
+			if (target) {
+				addSubtitleCues(target.track, message.cues, cueLine);
+			}
+
+			return;
+		}
 		if (message.epoch !== epoch) {
 			return;
 		}
@@ -471,6 +494,15 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				}
 
 				loaded = true;
+
+				if (message.subtitles.length > 0 || subtitles.length > 0) {
+					subtitles = announceSubtitles(video, message.subtitles);
+					onSubtitles?.(subtitles);
+					if (selectedSubtitle !== null) {
+						showSubtitleTrack(subtitles, selectedSubtitle);
+						send({ type: 'subtitle', id: selectedSubtitle });
+					}
+				}
 
 				await openPromise;
 
@@ -537,12 +569,6 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				setStatus('ok');
 				queue.push({ type: 'append', data: message.data });
 				pump();
-
-				break;
-			}
-			case 'subtitles': {
-				subtitles = applySubtitles(video, message.renditions);
-				onSubtitles?.(subtitles);
 
 				break;
 			}
@@ -636,8 +662,33 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		},
 		onSubtitles: (fn) => {
 			onSubtitles = fn;
-			if (subtitles) {
+			if (subtitles.length > 0) {
 				fn(subtitles);
+			}
+		},
+		selectSubtitle: (id) => {
+			if (id === selectedSubtitle) {
+				return;
+			}
+
+			selectedSubtitle = id;
+			// subtitle streams restart from their first segment.
+			const target = subtitles.find((track) => track.id === id);
+			if (target) {
+				resetSubtitleTrack(target.track);
+			}
+			showSubtitleTrack(subtitles, id);
+
+			send({ type: 'subtitle', id });
+		},
+		setCueLine: (line) => {
+			if (line === cueLine) {
+				return;
+			}
+
+			cueLine = line;
+			for (const { track } of subtitles) {
+				setSubtitleCueLine(track, line);
 			}
 		},
 		onError: (fn) => {
@@ -668,7 +719,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			clearInterval(watchdog);
 			onRenditions = onSubtitles = onError = onStatus = undefined;
 			teardown.abort();
-			for (const track of subtitles ?? []) {
+			for (const track of subtitles) {
 				track.track.mode = 'disabled';
 			}
 			// do not reuse a worker that reported a fatal error.

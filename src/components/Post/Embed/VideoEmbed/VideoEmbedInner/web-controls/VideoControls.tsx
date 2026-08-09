@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { useInputModality } from '#/lib/browser/input-modality';
@@ -299,28 +299,15 @@ export function Controls({
 			: ((focused || autoplayDisabled) && !playing) || (interactingViaKeypress ? hasFocus : hovered));
 
 	// percentage positions make multiline cues grow away from the controls.
-	const subtitleTrackCount = subtitles.tracks.length;
+	const setCueLine = useEffectEvent(subtitles.setCueLine);
+	const hasSubtitles = subtitles.tracks.length > 0;
 	useEffect(() => {
-		const video = videoRef.current;
-		if (!video) {
+		if (!hasSubtitles) {
 			return;
 		}
-		const line = showControls ? CUE_LINE.withControls : CUE_LINE.bare;
-		for (const track of video.textTracks) {
-			for (const cue of track.cues ?? []) {
-				if (cue instanceof VTTCue) {
-					// oxlint-disable-next-line react/react-compiler -- mutates live DOM VTTCues from a ref prop
-					cue.snapToLines = false;
-					cue.line = line;
-				}
-			}
-			// force the browser to lay out the active cue again.
-			if (track.mode === 'showing') {
-				track.mode = 'hidden';
-				track.mode = 'showing';
-			}
-		}
-	}, [showControls, subtitleTrackCount, videoRef]);
+
+		setCueLine(showControls ? CUE_LINE.withControls : CUE_LINE.bare);
+	}, [hasSubtitles, showControls]);
 
 	if (isGif) {
 		return (

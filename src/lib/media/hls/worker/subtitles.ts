@@ -1,52 +1,57 @@
 import { decodeUtf8From } from '@atcute/uint8array';
 
-import { limitConcurrency } from '#/lib/utils/task';
-
-import type { SubtitleRenditionCues } from '../shared/protocol';
+import type { SubtitleCue } from '../shared/protocol';
 import type { Fetch } from './network';
 import { parseSubtitleMedia, type SubtitleRendition } from './playlist';
 import { parseWebVtt } from './webvtt';
 
-const MAX_CONCURRENT_SEGMENTS = 4;
+type SubtitleStreamOptions = {
+	rendition: SubtitleRendition;
+	fetchResource: Fetch;
+	signal: AbortSignal;
+	emit: (cues: SubtitleCue[]) => void;
+};
 
 /**
- * loads subtitle cues without failing playback.
+ * streams cues from a subtitle rendition.
  *
- * @param renditions subtitle renditions
- * @param fetchResource resource fetcher
- * @param signal abort signal
- * @returns loaded cues in rendition order
+ * failed segments are skipped.
+ *
+ * @param options subtitle stream configuration
+ * @returns promise that resolves when all segments are processed
+ * @throws when the rendition playlist cannot be loaded
  */
-export const loadSubtitleCues = async (
-	renditions: SubtitleRendition[],
-	fetchResource: Fetch,
-	signal: AbortSignal,
-): Promise<SubtitleRenditionCues[]> => {
-	const fetchSegment = limitConcurrency(MAX_CONCURRENT_SEGMENTS, async (url: string) => {
+export const streamSubtitleCues = async ({
+	rendition,
+	fetchResource,
+	signal,
+	emit,
+}: SubtitleStreamOptions): Promise<void> => {
+	const { segments } = parseSubtitleMedia(await fetchResource('subtitle', rendition.url, signal));
+
+	// process segments in order to preserve the timestamp-map anchor.
+	let anchor: number | undefined;
+
+	for (const segment of segments) {
+		let document: string;
 		try {
-			return decodeUtf8From((await fetchResource('subtitle', url, signal)).bytes);
+			document = decodeUtf8From((await fetchResource('subtitle', segment.url, signal)).bytes);
 		} catch {
-			return '';
-		}
-	});
-
-	const loaded = await Promise.all(
-		renditions.map(async ({ label, language, url }) => {
-			let segments: string[];
-
-			try {
-				segments = parseSubtitleMedia(await fetchResource('subtitle', url, signal));
-			} catch {
-				return null;
-			}
-			const documents = await Promise.all(segments.map(fetchSegment));
 			if (signal.aborted) {
-				return null;
+				return;
 			}
 
-			return { id: url, label, language, cues: parseWebVtt(documents) };
-		}),
-	);
+			// do not replace a missing first anchor with a later segment's map.
+			anchor ??= 0;
+			continue;
+		}
+		if (signal.aborted) {
+			return;
+		}
 
-	return loaded.filter((entry) => entry !== null);
+		const parsed = parseWebVtt(document, anchor);
+
+		anchor = parsed.anchor;
+		emit(parsed.cues);
+	}
 };

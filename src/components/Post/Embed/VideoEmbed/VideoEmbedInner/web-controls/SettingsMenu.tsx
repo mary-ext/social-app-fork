@@ -59,6 +59,12 @@ export type VideoSubtitles = {
 	 * @param track track index, or `-1` to disable subtitles
 	 */
 	selectTrack: (track: number) => void;
+	/**
+	 * sets the vertical position for subtitle cues.
+	 *
+	 * @param line position as a percentage of the video height
+	 */
+	setCueLine: (line: number) => void;
 };
 
 type PanelId = 'main' | 'captions' | 'quality' | 'speed';

@@ -198,9 +198,7 @@ function useHlsPlayer({
 
 	const activeSubtitleTrack = subtitlesEnabled && subtitleTracks.length > 0 ? preferredSubtitleTrack : -1;
 	useEffect(() => {
-		for (const [index, { track }] of subtitleTracks.entries()) {
-			track.mode = index === activeSubtitleTrack ? 'showing' : 'hidden';
-		}
+		playerRef.current?.selectSubtitle(subtitleTracks[activeSubtitleTrack]?.id ?? null);
 	}, [activeSubtitleTrack, subtitleTracks]);
 
 	return {
@@ -210,6 +208,7 @@ function useHlsPlayer({
 			tracks: subtitleTracks,
 			selectedTrack: activeSubtitleTrack,
 			selectTrack: selectSubtitleTrack,
+			setCueLine: (line: number) => playerRef.current?.setCueLine(line),
 		} satisfies VideoSubtitles,
 	};
 }

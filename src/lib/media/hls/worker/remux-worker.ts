@@ -12,7 +12,7 @@ import {
 	type SubtitleRendition,
 	type VideoVariant,
 } from './playlist';
-import { loadSubtitleCues } from './subtitles';
+import { streamSubtitleCues } from './subtitles';
 
 const PROGRESS_INTERVAL_MS = 1000;
 
@@ -46,7 +46,6 @@ let fetchResource: Fetch | undefined;
 let activeRequest: AbortController | undefined;
 let parked: (() => void)[] = [];
 
-let subtitlesStarted = false;
 let subtitleRequest: AbortController | undefined;
 
 // #endregion
@@ -95,25 +94,33 @@ const samplesFor = (content: DemuxedMpegTs, base: number) => {
 	return { audio, video };
 };
 
-// defer subtitles until playback starts.
-const startSubtitles = (fetch: Fetch) => {
-	const request = subtitleRequest;
-	if (subtitlesStarted || !request || subtitleRenditions.length === 0) {
+const selectSubtitles = (id: string | null) => {
+	subtitleRequest?.abort();
+	subtitleRequest = undefined;
+
+	const rendition = subtitleRenditions.find((candidate) => candidate.url === id);
+	const fetch = fetchResource;
+	if (!rendition || !fetch) {
 		return;
 	}
 
-	subtitlesStarted = true;
-	loadSubtitleCues(subtitleRenditions, fetch, request.signal)
-		.then((renditions) => {
-			if (!request.signal.aborted && renditions.length > 0) {
-				post({ type: 'subtitles', epoch, renditions });
+	const controller = new AbortController();
+
+	subtitleRequest = controller;
+	streamSubtitleCues({
+		rendition,
+		fetchResource: fetch,
+		signal: controller.signal,
+		emit: (cues) => {
+			if (cues.length > 0) {
+				post({ type: 'cues', id: rendition.url, cues });
 			}
-		})
-		.catch((error: unknown) => {
-			if (!request.signal.aborted) {
-				console.warn('[hls] subtitles unavailable', error);
-			}
-		});
+		},
+	}).catch((error: unknown) => {
+		if (!controller.signal.aborted) {
+			console.warn('[hls] subtitles unavailable', error);
+		}
+	});
 };
 
 const mediaPlaylist = async (variant: VideoVariant, fetch: Fetch, signal: AbortSignal) => {
@@ -202,7 +209,6 @@ const streamFrom = async (index: number, startTime: number, myEpoch: number) => 
 			postChunk(createMp4InitSegment(variant, avc, content.audioConfig), myEpoch);
 		}
 		postChunk(createMp4MediaSegment(sequence++, samples.video, samples.audio), myEpoch);
-		startSubtitles(fetch);
 	}
 	post({ type: 'done', epoch: myEpoch });
 };
@@ -224,10 +230,9 @@ const load = async (playlist: string, myEpoch: number) => {
 	});
 
 	durationReported = false;
-	subtitlesStarted = false;
 	playlists.clear();
 	subtitleRequest?.abort();
-	subtitleRequest = new AbortController();
+	subtitleRequest = undefined;
 	activeRequest = controller;
 	fetchResource = fetch;
 
@@ -252,6 +257,7 @@ const load = async (playlist: string, myEpoch: number) => {
 			bitrate,
 			mimeType,
 		})),
+		subtitles: subtitleRenditions.map(({ url, label, language }) => ({ id: url, label, language })),
 	});
 };
 
@@ -303,6 +309,11 @@ self.addEventListener('message', (event) => {
 			wakeParked();
 			return;
 		}
+		// subtitle selection does not change the video epoch.
+		case 'subtitle': {
+			selectSubtitles(message.id);
+			return;
+		}
 	}
 
 	activeRequest?.abort();
@@ -320,7 +331,6 @@ self.addEventListener('message', (event) => {
 			fetchResource = undefined;
 			variants = [];
 			subtitleRenditions = [];
-			subtitlesStarted = false;
 			playlists.clear();
 			bufferAhead = BUFFER_AHEAD.background;
 			durationReported = false;

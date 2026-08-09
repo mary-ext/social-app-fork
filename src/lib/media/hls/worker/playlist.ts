@@ -7,7 +7,7 @@ import type { Resource } from './network';
 
 export type VideoVariant = Rendition & { url: string; width: number };
 
-type VideoSegment = {
+type MediaSegment = {
 	duration: number;
 	start: number;
 	url: string;
@@ -15,7 +15,7 @@ type VideoSegment = {
 
 export type MediaPlaylist = {
 	duration: number;
-	segments: VideoSegment[];
+	segments: MediaSegment[];
 };
 
 export type SubtitleRendition = {
@@ -116,6 +116,30 @@ export const parseSubtitleMaster = (resource: Resource): SubtitleRendition[] => 
 	});
 };
 
+const parseMedia = ({ text, url }: { text: string; url: string }): MediaPlaylist => {
+	const lines = linesOf(text);
+	const segments: MediaSegment[] = [];
+	let start = 0;
+
+	for (const [lineIndex, line] of lines.entries()) {
+		if (!line.startsWith('#EXTINF:')) {
+			continue;
+		}
+		const duration = Number.parseFloat(line.slice(8));
+		const uri = uriAfter(lines, lineIndex);
+		if (!Number.isFinite(duration) || !uri) {
+			throw new Error('invalid HLS media playlist');
+		}
+		segments.push({ duration, start, url: new URL(uri, url).href });
+		start += duration;
+	}
+	if (segments.length === 0) {
+		throw new Error('empty HLS media playlist');
+	}
+
+	return { duration: start, segments };
+};
+
 /**
  * parses a video media playlist.
  *
@@ -132,39 +156,16 @@ export const parseVideoMedia = (resource: Resource): MediaPlaylist => {
 		throw new UnsupportedPlaylistError('encrypted and byte-range HLS segments are unsupported');
 	}
 
-	const lines = linesOf(text);
-	const segments: VideoSegment[] = [];
-	let start = 0;
-
-	for (const [lineIndex, line] of lines.entries()) {
-		if (!line.startsWith('#EXTINF:')) {
-			continue;
-		}
-		const duration = Number.parseFloat(line.slice(8));
-		const uri = uriAfter(lines, lineIndex);
-		if (!Number.isFinite(duration) || !uri) {
-			throw new Error('invalid HLS media playlist');
-		}
-		segments.push({ duration, start, url: new URL(uri, resource.url).href });
-		start += duration;
-	}
-	if (segments.length === 0) {
-		throw new Error('empty HLS media playlist');
-	}
-
-	return { duration: start, segments };
+	return parseMedia({ text, url: resource.url });
 };
 
 /**
- * parses subtitle segment URLs.
+ * parses a subtitle media playlist.
  *
  * @param resource subtitle playlist
- * @returns segment URLs in playlist order
+ * @returns duration and segments
+ * @throws when the playlist holds no segments
  */
-export const parseSubtitleMedia = (resource: Resource): string[] => {
-	return mapDefined(linesOf(decodeUtf8From(resource.bytes)), (line) => {
-		if (line !== '' && !line.startsWith('#')) {
-			return new URL(line, resource.url).href;
-		}
-	});
+export const parseSubtitleMedia = (resource: Resource): MediaPlaylist => {
+	return parseMedia({ text: decodeUtf8From(resource.bytes), url: resource.url });
 };

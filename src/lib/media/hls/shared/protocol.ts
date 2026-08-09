@@ -21,11 +21,10 @@ export type SubtitleCue = {
 	size?: number;
 };
 
-export type SubtitleRenditionCues = {
+export type SubtitleRenditionInfo = {
 	id: string;
 	label: string;
 	language: string;
-	cues: SubtitleCue[];
 };
 
 type PlayerErrorCode = 'not_found' | 'network' | 'unsupported' | 'demux' | 'media';
@@ -43,14 +42,16 @@ export type MainToWorker =
 	| { type: 'seek'; epoch: number; time: number }
 	| { type: 'stop'; epoch: number }
 	| { type: 'time'; time: number }
-	| { type: 'buffer'; ahead: number };
+	| { type: 'buffer'; ahead: number }
+	// subtitle streams are independent of video epochs.
+	| { type: 'subtitle'; id: string | null };
 
 export type WorkerToMain =
-	| { type: 'renditions'; epoch: number; renditions: Rendition[] }
+	| { type: 'renditions'; epoch: number; renditions: Rendition[]; subtitles: SubtitleRenditionInfo[] }
 	| { type: 'init'; epoch: number; mimeType: string }
 	| { type: 'duration'; epoch: number; duration: number }
 	| { type: 'chunk'; epoch: number; data: Uint8Array<ArrayBuffer> }
-	| { type: 'subtitles'; epoch: number; renditions: SubtitleRenditionCues[] }
+	| { type: 'cues'; id: string; cues: SubtitleCue[] }
 	| { type: 'done'; epoch: number }
 	| { type: 'retrying'; epoch: number; failures: number }
 	| { type: 'progress'; epoch: number }

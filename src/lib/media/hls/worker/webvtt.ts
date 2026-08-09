@@ -92,15 +92,19 @@ const parseCues = (blocks: string[], offset: number) => {
 };
 
 /**
- * parses segmented WebVTT cues.
+ * parses one WebVTT segment.
  *
- * @param documents segments in playlist order
- * @returns cues relative to the first timestamp map
+ * @param document segment text
+ * @param anchor timestamp-map offset from the first segment
+ * @returns timestamp-map anchor and parsed cues
  */
-export const parseWebVtt = (documents: string[]): SubtitleCue[] => {
-	const blocks = documents.map((document) => document.split(BLANK_LINE));
-	const maps = blocks.map((segment) => readTimestampMap(segment[0] ?? ''));
-	const base = maps.find((map) => map !== null) ?? 0;
+export const parseWebVtt = (
+	document: string,
+	anchor: number | undefined,
+): { anchor: number; cues: SubtitleCue[] } => {
+	const blocks = document.split(BLANK_LINE);
+	const map = readTimestampMap(blocks[0] ?? '');
+	const base = anchor ?? map ?? 0;
 
-	return blocks.flatMap((segment, index) => parseCues(segment, (maps[index] ?? base) - base));
+	return { anchor: base, cues: parseCues(blocks, (map ?? base) - base) };
 };
