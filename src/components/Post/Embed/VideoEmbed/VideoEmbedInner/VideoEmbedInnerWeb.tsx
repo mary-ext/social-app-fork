@@ -9,9 +9,9 @@ import {
 	isHlsPlayerSupported,
 	type PlayerHandle,
 	type PlayerStatus,
-} from '#/lib/media/hls/attach';
-import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/protocol';
-import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
+} from '#/lib/media/hls/client/attach';
+import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
+import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/shared/protocol';
 
 import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';
 

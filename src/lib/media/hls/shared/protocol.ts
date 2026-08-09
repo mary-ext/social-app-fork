@@ -1,4 +1,4 @@
-/** read-ahead limits in seconds. */
+/** worker buffer limits in seconds. */
 export const BUFFER_AHEAD = { focused: 30, background: 10 };
 
 export type Rendition = {
@@ -10,6 +10,22 @@ export type Rendition = {
 	bitrate: number | null;
 	/** MediaSource MIME type. */
 	mimeType: string;
+};
+
+export type SubtitleCue = {
+	start: number;
+	end: number;
+	text: string;
+	align?: 'start' | 'center' | 'end' | 'left' | 'right';
+	position?: number;
+	size?: number;
+};
+
+export type SubtitleRenditionCues = {
+	id: string;
+	label: string;
+	language: string;
+	cues: SubtitleCue[];
 };
 
 type PlayerErrorCode = 'not_found' | 'network' | 'unsupported' | 'demux' | 'media';
@@ -34,6 +50,7 @@ export type WorkerToMain =
 	| { type: 'init'; epoch: number; mimeType: string }
 	| { type: 'duration'; epoch: number; duration: number }
 	| { type: 'chunk'; epoch: number; data: ArrayBuffer }
+	| { type: 'subtitles'; epoch: number; renditions: SubtitleRenditionCues[] }
 	| { type: 'done'; epoch: number }
 	| { type: 'retrying'; epoch: number; failures: number }
 	| { type: 'progress'; epoch: number }

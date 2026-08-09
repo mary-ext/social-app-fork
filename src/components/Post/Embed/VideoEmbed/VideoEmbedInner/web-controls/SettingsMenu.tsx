@@ -14,8 +14,8 @@ import { Popover } from '@base-ui/react/popover';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getReducedMotion } from '#/lib/browser/reduced-motion';
-import type { Rendition } from '#/lib/media/hls/protocol';
-import type { SubtitleTrack } from '#/lib/media/hls/subtitles';
+import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
+import type { Rendition } from '#/lib/media/hls/shared/protocol';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

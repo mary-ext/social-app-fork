@@ -4,8 +4,8 @@ import {
 	type PlayerError,
 	type Rendition,
 	type WorkerToMain,
-} from './protocol';
-import { loadSubtitles, type SubtitleTrack } from './subtitles';
+} from '../shared/protocol';
+import { applySubtitles, type SubtitleTrack } from './subtitles';
 
 declare const ManagedMediaSource: typeof MediaSource | undefined;
 
@@ -64,7 +64,7 @@ const acquireWorker = () => {
 	spareWorker = undefined;
 	return (
 		spare ??
-		new Worker(new URL('./remux-worker.ts', import.meta.url), {
+		new Worker(new URL('../worker/remux-worker.ts', import.meta.url), {
 			type: 'module',
 			name: 'remux-worker',
 		})
@@ -136,25 +136,43 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 
 	const send = (message: MainToWorker) => worker.postMessage(message, []);
 	const nextEpoch = () => (epoch = ++epochCounter);
+	const attachedAt = performance.now();
+	const queue: Operation[] = [];
 
 	let sourceBuffer: SourceBuffer | undefined;
+	let sourceMimeType: string | undefined;
+
 	let renditions: Rendition[] = [];
 	let selectedRendition = -1;
 	let onRenditions: ((r: Rendition[], selected: number) => void) | undefined;
+
 	let onSubtitles: ((tracks: SubtitleTrack[]) => void) | undefined;
-	let onError: ((error: PlayerError) => void) | undefined;
 	let subtitles: SubtitleTrack[] | undefined;
+
+	let onError: ((error: PlayerError) => void) | undefined;
+
 	let epoch = epochCounter;
 	let loaded = false;
 	let recoveries = 0;
 	let stopped = false;
 	let destroyed = false;
+
 	let requestedAhead = BUFFER_AHEAD.background;
 	let sated = false;
+	let forwardBuffer = BUFFER_AHEAD.background + FORWARD_SLACK;
+
 	let status: PlayerStatus = 'loading';
 	let onStatus: ((status: PlayerStatus) => void) | undefined;
-	let forwardBuffer = BUFFER_AHEAD.background + FORWARD_SLACK;
+
+	let lastRestart = 0;
+	let deferredRestart: ReturnType<typeof setTimeout> | undefined;
+	let recoveredAt = 0;
+	let lastDelivery = performance.now();
 	let lastTimeReport = 0;
+
+	let attempted: { start: number; end: number } | undefined;
+
+	let opened = false;
 
 	const setStatus = (next: PlayerStatus) => {
 		if (status === next) {
@@ -163,15 +181,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		status = next;
 		onStatus?.(next);
 	};
-	let lastRestart = 0;
-	let deferredRestart: ReturnType<typeof setTimeout> | undefined;
-	let recoveredAt = 0;
-	let attempted: { start: number; end: number } | undefined;
-	let lastDelivery = performance.now();
-	const attachedAt = performance.now();
-	const queue: Operation[] = [];
 
-	let opened = false;
 	const openPromise = new Promise<void>((resolve) => {
 		mediaSource.addEventListener(
 			'sourceopen',
@@ -211,7 +221,6 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		}
 		stopped = true;
 		clearTimeout(deferredRestart);
-		// stop mediabunny's internal retry loop.
 		loaded = false;
 		queue.length = 0;
 		send({ type: 'stop', epoch: nextEpoch() });
@@ -265,6 +274,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 							fail({ code: 'media', message: String(error), fatal: true });
 							break;
 						}
+
 						// keep the chunk and retry after emergency eviction.
 						if (!nextEviction(PANIC_BUFFER)) {
 							fail({
@@ -274,9 +284,11 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 							});
 							break;
 						}
+
 						queue.unshift({ type: 'evict', ...PANIC_BUFFER });
 						continue;
 					}
+
 					queue.shift();
 					return;
 				}
@@ -287,6 +299,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 						fail({ code: 'unsupported', message: String(error), fatal: true });
 						return;
 					}
+
 					break;
 				}
 				case 'duration': {
@@ -300,6 +313,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 							console.warn('[hls] could not set duration', error);
 						}
 					}
+
 					break;
 				}
 				case 'evict': {
@@ -309,6 +323,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 						attempted = undefined;
 						break;
 					}
+
 					attempted = range;
 					try {
 						sourceBuffer.remove(range.start, range.end);
@@ -316,6 +331,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 						fail({ code: 'media', message: String(error), fatal: true });
 						return;
 					}
+
 					return;
 				}
 				case 'end': {
@@ -327,6 +343,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 							return;
 						}
 					}
+
 					break;
 				}
 			}
@@ -338,6 +355,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		if (queue.some((operation) => operation.type === 'evict')) {
 			return;
 		}
+
 		queue.push({ type: 'evict', back: BACK_BUFFER, forward: forwardBuffer, minimum: MIN_EVICTION });
 		pump();
 	};
@@ -358,15 +376,18 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			deferredRestart = setTimeout(() => restartAt(time), RESTART_INTERVAL_MS - sinceRestart);
 			return false;
 		}
+
 		lastRestart = performance.now();
 		// give the restarted request a new silence budget.
 		lastDelivery = performance.now();
 		recoveredAt = time;
 		queue.length = 0;
+
 		if (!loaded) {
 			send({ type: 'load', epoch: nextEpoch(), playlist });
 			return true;
 		}
+
 		send({ type: 'seek', epoch: nextEpoch(), time });
 		return true;
 	};
@@ -379,6 +400,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			fail(exhausted);
 			return;
 		}
+
 		// charge deferred restarts so repeated failures cannot bypass the budget.
 		recoveries++;
 		restartAt(time);
@@ -393,16 +415,20 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 					fatal: true,
 				});
 			}
+
 			return;
 		}
+
 		const time = video.currentTime;
 		if (bufferedAhead(time) > STALL_MARGIN || video.duration - time < STALL_MARGIN) {
 			return;
 		}
+
 		// do not abort a slow request that is still delivering data.
 		if (performance.now() - lastDelivery < STALL_SILENCE_MS) {
 			return;
 		}
+
 		recover(time, {
 			code: 'media',
 			message: `nothing delivered for ${STALL_SILENCE_MS / 1000}s at ${time.toFixed(1)}s`,
@@ -415,32 +441,11 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		if (video.readyState >= video.HAVE_FUTURE_DATA) {
 			return;
 		}
+
 		onWaiting();
 	}, STALL_CHECK_MS);
 
 	// #endregion
-
-	// Mediabunny needs a separate subtitle request; defer it to prioritize playback segments.
-	let subtitlesStarted = false;
-	const startSubtitles = () => {
-		if (subtitlesStarted || destroyed) {
-			return;
-		}
-		subtitlesStarted = true;
-		loadSubtitles(video, playlist, signal)
-			.then((tracks) => {
-				if (destroyed) {
-					return;
-				}
-				subtitles = tracks;
-				onSubtitles?.(tracks);
-			})
-			.catch((error: unknown) => {
-				if (!signal.aborted) {
-					console.warn('[hls] subtitles unavailable', error);
-				}
-			});
-	};
 
 	const selectRendition = (index: number, time: number) => {
 		selectedRendition = index;
@@ -464,14 +469,19 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 					});
 					break;
 				}
+
 				loaded = true;
+
 				await openPromise;
+
 				if (message.epoch !== epoch || destroyed) {
 					break;
 				}
-				const tallest = renditions.reduce((best, rendition) =>
-					rendition.height > best.height ? rendition : best,
-				);
+
+				const tallest = renditions.reduce((best, rendition) => {
+					return rendition.height > best.height ? rendition : best;
+				});
+
 				onRenditions?.(renditions, tallest.index);
 				selectRendition(tallest.index, 0);
 				break;
@@ -479,14 +489,20 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 			case 'duration': {
 				queue.push({ type: 'duration', duration: message.duration });
 				pump();
+
 				break;
 			}
 			case 'init': {
 				lastDelivery = performance.now();
 				await openPromise;
+
 				if (message.epoch !== epoch || destroyed) {
 					break;
 				}
+				if (message.mimeType === sourceMimeType) {
+					break;
+				}
+
 				if (!sourceBuffer) {
 					if (!canPlayMimeType(message.mimeType)) {
 						fail({
@@ -494,8 +510,11 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 							message: `MediaSource cannot play ${message.mimeType}`,
 							fatal: true,
 						});
+
 						break;
 					}
+
+					sourceMimeType = message.mimeType;
 					sourceBuffer = mediaSource.addSourceBuffer(message.mimeType);
 					sourceBuffer.addEventListener('updateend', pump, { signal });
 					sourceBuffer.addEventListener(
@@ -506,8 +525,10 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 						{ signal },
 					);
 				} else {
+					sourceMimeType = message.mimeType;
 					queue.push({ type: 'changeType', mimeType: message.mimeType });
 				}
+
 				pump();
 				break;
 			}
@@ -516,20 +537,29 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				setStatus('ok');
 				queue.push({ type: 'append', data: message.data });
 				pump();
-				startSubtitles();
+
+				break;
+			}
+			case 'subtitles': {
+				subtitles = applySubtitles(video, message.renditions);
+				onSubtitles?.(subtitles);
+
 				break;
 			}
 			case 'retrying': {
 				setStatus('retrying');
+
 				break;
 			}
 			case 'progress': {
 				lastDelivery = performance.now();
+
 				break;
 			}
 			case 'done': {
 				queue.push({ type: 'end' });
 				pump();
+
 				break;
 			}
 			case 'error': {
@@ -537,6 +567,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 					fail(message);
 					break;
 				}
+
 				console.warn('[hls] recovering from', message.code, message.message);
 				recover(video.currentTime, { ...message, fatal: true });
 				break;
@@ -551,6 +582,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		},
 		{ signal },
 	);
+
 	const onWorkerBroken = (what: string) => () => {
 		fail({ code: 'demux', message: `remux worker ${what}`, fatal: true });
 	};
@@ -562,12 +594,15 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 		if (now - lastTimeReport < TIME_REPORT_MS) {
 			return;
 		}
+
 		lastTimeReport = now;
 		send({ type: 'time', time: video.currentTime });
+
 		// only playhead progress confirms that recovery succeeded.
 		if (video.currentTime > recoveredAt + PROGRESS_AFTER_RECOVERY) {
 			recoveries = 0;
 		}
+
 		evict();
 	};
 	video.addEventListener('timeupdate', onTime, { signal });
@@ -577,10 +612,12 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	const onSeeking = () => {
 		recoveries = 0;
 		stopped = false;
+
 		if (bufferedAhead(video.currentTime) > STALL_MARGIN) {
 			setStatus('ok');
 			return;
 		}
+
 		setStatus('loading');
 		restartAt(video.currentTime);
 	};

@@ -99,9 +99,6 @@ export default defineConfig(({ envMode }) => {
 				if (config.optimization.splitChunks !== false) {
 					config.optimization.splitChunks ??= {};
 
-					// keep the remux worker's dependencies inside its own chunk.
-					config.optimization.splitChunks.chunks = (chunk) => chunk.name !== 'remux-worker';
-
 					// hoist CSS shared by two or more chunks.
 					config.optimization.splitChunks.cacheGroups ??= {};
 					config.optimization.splitChunks.cacheGroups.sharedStyles = {

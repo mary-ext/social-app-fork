@@ -10,7 +10,6 @@ overrides:
 patchedDependencies:
   '@base-ui/react': 31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513
   '@vanilla-extract/css': 7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5
-  mediabunny: f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4
 
 importers:
 
@@ -73,6 +72,9 @@ importers:
       '@atcute/tid':
         specifier: ^1.1.4
         version: 1.1.4
+      '@atcute/uint8array':
+        specifier: ^1.1.5
+        version: 1.1.5
       '@atcute/util-text':
         specifier: ^1.3.4
         version: 1.3.4
@@ -145,9 +147,6 @@ importers:
       idb-keyval:
         specifier: ^6.3.0
         version: 6.3.0
-      mediabunny:
-        specifier: ^1.52.3
-        version: 1.52.3(patch_hash=f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4)
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -1514,15 +1513,6 @@ packages:
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
 
-  '@types/dom-mediacapture-transform@0.1.12':
-    resolution: {integrity: sha512-d7/QsLRwF864A5mgIM/YrfiglHoYn7zgCcAoJgW404r+2DwnNr7EBbLnCWpmOMgH8y0te73L1AV6H1bmauaWFw==}
-
-  '@types/dom-webcodecs@0.1.13':
-    resolution: {integrity: sha512-O5hkiFIcjjszPIYyUSyvScyvrBoV3NOEEZx/pMlsu44TKzWNkLVBBxnxJz42in5n3QIolYOcBYFCPZZ0h8SkwQ==}
-
-  '@types/dom-webcodecs@0.1.18':
-    resolution: {integrity: sha512-vAvE8C9DGWR+tkb19xyjk1TSUlJ7RUzzp4a9Anu7mwBT+fpyePWK1UxmH14tMO5zHmrnrRIMg5NutnnDztLxgg==}
-
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
@@ -2245,9 +2235,6 @@ packages:
 
   media-query-parser@2.0.2:
     resolution: {integrity: sha512-1N4qp+jE0pL5Xv4uEcwVUhIkwdUO3S/9gML90nqKA7v7FcOS5vUtatfzok9S9U1EJU8dHWlcv95WLnKmmxZI9w==}
-
-  mediabunny@1.52.3:
-    resolution: {integrity: sha512-rMGwH5fykDCSA55LG9aWkE433wwHrycq3J5mRf+djBnHBZzmJGvIwg6Qfcfr4rRkzkmrdmewxQozLkOM1H1C6Q==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -3838,14 +3825,6 @@ snapshots:
     dependencies:
       '@types/node': 26.1.2
 
-  '@types/dom-mediacapture-transform@0.1.12':
-    dependencies:
-      '@types/dom-webcodecs': 0.1.18
-
-  '@types/dom-webcodecs@0.1.13': {}
-
-  '@types/dom-webcodecs@0.1.18': {}
-
   '@types/estree@1.0.6': {}
 
   '@types/json-schema@7.0.15': {}
@@ -4492,11 +4471,6 @@ snapshots:
   media-query-parser@2.0.2:
     dependencies:
       '@babel/runtime': 7.29.7
-
-  mediabunny@1.52.3(patch_hash=f1a3c84facb64e3e5c8d3a5a9e765798f10128cf44bf00bfb16f61a4538aded4):
-    dependencies:
-      '@types/dom-mediacapture-transform': 0.1.12
-      '@types/dom-webcodecs': 0.1.13
 
   merge-stream@2.0.0: {}
 
