@@ -1,7 +1,6 @@
 import type { Did, Handle } from '@atcute/lexicons';
 
 import type { Gif } from '#/lib/gif';
-import type { EmbedPlayerSource } from '#/lib/media/embed-player';
 
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 
@@ -28,7 +27,6 @@ export type Device = {
 	disableAutoplay?: boolean;
 	/** selected emoji skin tone. */
 	emojiSkinTone?: SkinTone;
-	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	largeAltBadgeEnabled?: boolean;

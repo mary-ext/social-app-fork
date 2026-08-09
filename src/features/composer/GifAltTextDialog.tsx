@@ -3,7 +3,7 @@ import { useId, useState } from 'react';
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import type { Gif } from '#/lib/gif';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
-import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/media/embed-player';
+import { type GifEmbedParams, parseGifEmbedFromUrl } from '#/lib/media/gif-embed';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 import { trimText } from '#/lib/utils/text';
 
@@ -39,7 +39,7 @@ export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): Rea
 function DialogInner({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
 	const { data } = useResolveGifQuery(gif);
 	const thumb = getBlobUrl(data?.thumb?.source.blob);
-	const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined;
+	const params = data ? parseGifEmbedFromUrl(data.uri) : undefined;
 	const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt;
 
 	if (!params) {
@@ -62,7 +62,7 @@ type GifAltTextFormProps = {
 	handle: Dialog.DialogHandle;
 	initialAlt: string;
 	onSubmit: (alt: string) => void;
-	params: EmbedPlayerParams;
+	params: GifEmbedParams;
 	thumb: string | null;
 	vendorAltText: string;
 };

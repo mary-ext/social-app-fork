@@ -1,7 +1,5 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"components.post.external.a11y.play": "Play {title}",
-	"components.post.external.a11y.player": "Embedded player",
 	"components.post.image.a11y.carousel": "carousel",
 	"components.post.image.a11y.gallery": [
 		{

@@ -3,7 +3,6 @@ import { ok } from '@atcute/client';
 
 import { internalClient } from '#/lib/api/internal-client';
 import { isClientUrl, resolveUrlToLink } from '#/lib/links/app-url';
-import { getGiphyMetaUri } from '#/lib/media/embed-player';
 
 export interface LinkMeta {
 	/** standard.site record refs resolved from the page. */
@@ -25,17 +24,8 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 		}
 	}
 
-	let urlp;
-	try {
-		urlp = new URL(url);
-	} catch {
+	if (!URL.canParse(url)) {
 		return { url };
-	}
-
-	// resolve Giphy URLs to their canonical metadata page.
-	const giphyMetaUri = getGiphyMetaUri(urlp);
-	if (giphyMetaUri) {
-		url = giphyMetaUri;
 	}
 
 	const meta: LinkMeta = { url };

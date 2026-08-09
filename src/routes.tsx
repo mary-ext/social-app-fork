@@ -65,11 +65,6 @@ const CustomFeedScreen = lazy(() =>
 	import('#/screens/CustomFeed').then((mod) => ({ default: mod.CustomFeedScreen })),
 );
 const ExploreScreen = lazy(() => import('#/screens/Explore').then((mod) => ({ default: mod.ExploreScreen })));
-const ExternalMediaPreferencesScreen = lazy(() =>
-	import('#/screens/Settings/ExternalMediaPreferences').then((mod) => ({
-		default: mod.ExternalMediaPreferencesScreen,
-	})),
-);
 const FeedsScreen = lazy(() => import('#/screens/Feeds').then((mod) => ({ default: mod.FeedsScreen })));
 const GroupChatJoinScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.GroupChatJoinScreen })),
@@ -285,11 +280,6 @@ export const routes = defineRoutes({
 				component: LanguageSettingsScreen,
 				meta: { requireAuth: true },
 				path: '/settings/language',
-			}),
-			PreferencesExternalEmbeds: route({
-				component: ExternalMediaPreferencesScreen,
-				meta: { requireAuth: true },
-				path: '/settings/external-embeds',
 			}),
 			AccessibilitySettings: route({
 				component: AccessibilitySettingsScreen,

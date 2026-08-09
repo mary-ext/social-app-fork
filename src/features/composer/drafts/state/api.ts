@@ -7,6 +7,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 import { resolveLink } from '#/lib/api/resolve';
 import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
+import { gifUrlParams, klipyHostname, stripGifUrlParams, tenorHostname } from '#/lib/media/gif-embed';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/client';
 import { getShortenedLength } from '#/lib/rich-text';
@@ -21,9 +22,6 @@ import type { VideoState } from '#/features/composer/state/video';
 
 import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';
-
-const TENOR_HOSTNAME = 'media.tenor.com';
-const KLIPY_HOSTNAME = 'static.klipy.com';
 
 /**
  * Video data from a draft that needs to be restored by re-processing. Contains the local file blob, alt text,
@@ -276,8 +274,8 @@ function serializeGif(gifMedia: {
 	// Build URL with dimensions and alt text in query params
 	const url = new URL(gifFormat.url);
 	if (gifFormat.dims) {
-		url.searchParams.set('ww', String(gifFormat.dims[0]));
-		url.searchParams.set('hh', String(gifFormat.dims[1]));
+		url.searchParams.set(gifUrlParams.width, String(gifFormat.dims[0]));
+		url.searchParams.set(gifUrlParams.height, String(gifFormat.dims[1]));
 	}
 	// Store alt text if present
 	if (gifMedia.alt) {
@@ -389,27 +387,23 @@ function parseGifFromUrl(
 ): { url: string; width: number; height: number; alt: string } | undefined {
 	try {
 		const url = new URL(uri);
-		if (url.hostname !== TENOR_HOSTNAME && url.hostname !== KLIPY_HOSTNAME) {
+		if (url.hostname !== tenorHostname && url.hostname !== klipyHostname) {
 			return undefined;
 		}
 
-		const height = parseInt(url.searchParams.get('hh') || '', 10);
-		const width = parseInt(url.searchParams.get('ww') || '', 10);
+		const height = parseInt(url.searchParams.get(gifUrlParams.height) || '', 10);
+		const width = parseInt(url.searchParams.get(gifUrlParams.width) || '', 10);
 		const alt = url.searchParams.get('alt') || '';
 
 		if (!height || !width) {
 			return undefined;
 		}
 
-		// Strip our custom params to get clean base URL
-		// This prevents double query strings when resolveGif() adds params again
-		url.searchParams.delete('ww');
-		url.searchParams.delete('hh');
-		url.searchParams.delete('alt');
-		url.searchParams.delete('mp4');
-		url.searchParams.delete('webm');
+		// remove record metadata before resolving the GIF again.
+		const base = stripGifUrlParams(url);
+		base.searchParams.delete('alt');
 
-		return { url: url.toString(), width, height, alt };
+		return { url: base.toString(), width, height, alt };
 	} catch {
 		return undefined;
 	}

@@ -17,7 +17,6 @@ import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke
 import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import TreeIcon from '#/icons/central/CodeTree_round_outlined_radius1_stroke2.svg';
 import HashtagIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
-import MacintoshIcon from '#/icons/central/Macintosh_round_outlined_radius1_stroke2.svg';
 import PlayIcon from '#/icons/central/Play_round_outlined_radius1_stroke2.svg';
 import Graph from '#/icons/central/Trending2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -58,13 +57,6 @@ export function ContentAndMediaSettingsScreen() {
 					</Settings.Section>
 
 					<Settings.Section titleText={m['common.media.label']()}>
-						<Settings.LinkRow
-							label={m['screens.settings.media.externalTitle']()}
-							to={{ name: 'PreferencesExternalEmbeds' }}
-						>
-							<Settings.Icon icon={MacintoshIcon} />
-							<Settings.Label titleText={m['screens.settings.media.externalTitle']()} />
-						</Settings.LinkRow>
 						<Settings.SwitchRow
 							label={m['screens.settings.media.autoplay']()}
 							onChange={(value) => setAutoplayDisabled(!value)}

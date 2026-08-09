@@ -147,8 +147,6 @@
 	"common.error.serverContact": "There was an issue contacting the server",
 	"common.error.unexpected": "There was an unexpected issue in the application. Please let us know if this happened to you!",
 	"common.error.whoops": "Whoops!",
-	"common.externalMedia.hint": "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button.",
-	"common.externalMedia.preferencesTitle": "External media preferences",
 	"common.feeds.action.add": "Add this feed to your feeds",
 	"common.feeds.action.applyRecommended": "Apply default recommended feeds",
 	"common.feeds.action.edit": "Edit my feeds",

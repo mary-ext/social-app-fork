@@ -12,6 +12,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/compress-image';
+import { gifUrlParams, klipyHostname } from '#/lib/media/gif-embed';
 
 type ResolvedExternalLink = {
 	type: 'external';
@@ -178,23 +179,20 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
 	const gifUrl = gif.media_formats.gif.url;
 	const params = new URLSearchParams();
-	params.set('hh', String(gif.media_formats.gif.dims[1]));
-	params.set('ww', String(gif.media_formats.gif.dims[0]));
+	params.set(gifUrlParams.height, String(gif.media_formats.gif.dims[1]));
+	params.set(gifUrlParams.width, String(gif.media_formats.gif.dims[0]));
 
-	// For Klipy GIFs, embed video format slugs so parseKlipyGif can
-	// swap to the right format per platform at render time. Klipy uses
-	// different filename slugs per format (unlike Tenor where format is
-	// encoded in the URL ID), so this info must travel with the URL.
+	// Klipy uses a different filename for each video format.
 	try {
 		const url = new URL(gifUrl);
-		if (url.hostname === 'static.klipy.com') {
+		if (url.hostname === klipyHostname) {
 			const mp4Slug = getFileSlug(gif.media_formats.mp4?.url);
 			const webmSlug = getFileSlug(gif.media_formats.webm?.url);
 			if (mp4Slug) {
-				params.set('mp4', mp4Slug);
+				params.set(gifUrlParams.mp4, mp4Slug);
 			}
 			if (webmSlug) {
-				params.set('webm', webmSlug);
+				params.set(gifUrlParams.webm, webmSlug);
 			}
 		}
 	} catch {}

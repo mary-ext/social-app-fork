@@ -25,7 +25,7 @@ export const card = recipe(
 			textDecoration: 'none',
 			color: 'inherit',
 			selectors: {
-				'&:focus-visible, &:has(a:focus-visible)': {
+				'&:focus-visible': {
 					outline: `2px solid ${vars.palette.primary_500}`,
 					outlineOffset: -2,
 				},
@@ -55,14 +55,6 @@ export const body = style({
 	flexGrow: 1,
 	gap: 3,
 	paddingTop: space.sm,
-});
-
-export const bodyLink = style({
-	textDecoration: 'none',
-	color: 'inherit',
-	selectors: {
-		'&:focus-visible': { outline: 'none' },
-	},
 });
 
 export const bodyWithMedia = style({

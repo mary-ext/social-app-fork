@@ -4,7 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import type { EmbedPlayerParams } from '#/lib/media/embed-player';
+import type { GifEmbedParams } from '#/lib/media/gif-embed';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 
@@ -18,7 +18,7 @@ import { m } from '#/paraglide/messages';
 import * as styles from './GifEmbed.css';
 
 export type GifEmbedProps = {
-	params: EmbedPlayerParams;
+	params: GifEmbedParams;
 	thumb: string | null;
 	altText: string;
 	isPreferredAltText: boolean;
@@ -55,15 +55,7 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 		}
 	};
 
-	let aspectRatio = 1;
-	if (params.dimensions) {
-		const ratio = params.dimensions.width / params.dimensions.height;
-		if (!Number.isNaN(ratio)) {
-			aspectRatio = ratio;
-		}
-	}
-
-	const useSources = !!params.playerSources && params.playerSources.length > 0;
+	const aspectRatio = params.dimensions.width / params.dimensions.height;
 	const resolvedAlt = !hideAlt && isPreferredAltText ? altText : undefined;
 
 	return (
@@ -92,7 +84,6 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 					<video
 						ref={videoRef}
 						className={styles.video}
-						src={useSources ? undefined : params.playerUri}
 						poster={thumb ?? undefined}
 						autoPlay={!autoplayDisabled ? true : undefined}
 						preload={!autoplayDisabled ? 'auto' : undefined}
@@ -104,11 +95,9 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt, 
 						onPlay={() => setIsPlaying(true)}
 						onPause={() => setIsPlaying(false)}
 					>
-						{useSources
-							? params.playerSources!.map((source) => (
-									<source key={source.src} src={source.src} type={source.type} />
-								))
-							: null}
+						{params.playerSources.map((source) => (
+							<source key={source.src} src={source.src} type={source.type} />
+						))}
 					</video>
 					{!isPlaying && <div aria-hidden className={styles.dimOuter} />}
 				</div>
