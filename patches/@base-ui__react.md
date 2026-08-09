@@ -3,8 +3,13 @@
 ## `utils/InternalBackdrop.mjs` — drop the `cutout` clip-path
 
 removes the branch that punches a polygon hole in the internal backdrop around a `cutout` element.
-the fork does not use the cutout feature, and the per-frame `getBoundingClientRect` + `clipPath`
-recompute is dead cost.
+the hole keeps a trigger hoverable while its own popup is open, which no other headless library
+does; the trigger still closes the popup, the press just dismisses instead of toggling. the
+`getBoundingClientRect` + `clipPath` recompute per backdrop render goes with it.
+
+`cutout` is set by the positioners, not by app code, so this covers every root `Menu` (`modal`
+defaults to true), every `Select`, a modal `Combobox`, and a modal `Popover`. `Dialog` renders the
+backdrop without a cutout and is unaffected.
 
 ## `utils/popups/popupStoreUtils.mjs` — drop the mid-registration trigger claim
 
