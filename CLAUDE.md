@@ -26,9 +26,9 @@ this project uses React Compiler, `@base-ui/react` and Paraglide.
 `agent-browser session` for the assigned name and `agent-browser session list` to see if the browser
 is already running or not.
 
-work that needs the logged-in account should pass `--restore` when opening a session for the first
-time, later commands may omit this flag. if you're still signed out, try going through the sign in
-flow anyway but if it asks for a credential, stop and report to the user.
+work that needs authentication should pass `--restore` when opening a session for the first time,
+later commands may omit this flag. if you're still signed out, try going through the sign in flow
+anyway but if it asks for a credential, stop and report to the user.
 
 the agent-browser daemon and subsequently the browsers may close itself after some inactivity.
 
