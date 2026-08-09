@@ -323,8 +323,7 @@ export function Controls({
 	return (
 		<div
 			className={styles.controls}
-			onClick={(evt) => {
-				evt.stopPropagation();
+			onClick={() => {
 				setInteractingViaKeypress(false);
 			}}
 			onPointerMove={(evt) => {

@@ -10,12 +10,6 @@ import { Text } from '#/components/Text';
 import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-// the portalled backdrop/viewport are rendered into `document.body`, but React still routes their
-// events up the *component* tree — so a click would bubble into whatever owns the dialog (e.g. the
-// `Link` wrapping an external embed) and trigger it. stop it at the portal boundary.
-//
-// TODO: revisit when we redo router/navigation — the leak stems from a `Link`/`<a>` press handler
-// sitting above the portal on the component tree, and this guard may become unnecessary.
 const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
 type CardProps = {

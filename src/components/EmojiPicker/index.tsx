@@ -98,8 +98,6 @@ export function Picker() {
 							return false;
 						}
 					}}
-					// keep the picker's internal scroll from bubbling to the dialog behind it
-					onWheel={(e) => e.stopPropagation()}
 				>
 					<EmojiPanel
 						onEmojiSelect={(emoji, shiftHeld) => {
