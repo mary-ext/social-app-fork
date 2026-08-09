@@ -1,13 +1,13 @@
 import { allocUnsafe, encodeUtf8Into, getUtf8Length } from '@atcute/uint8array';
 
-/** a growable byte writer. */
+/** a fixed-capacity byte writer. */
 export class ByteWriter {
 	#bytes: Uint8Array<ArrayBuffer>;
 	#view: DataView;
 	#offset = 0;
 
-	/** @param capacity initial capacity */
-	constructor(capacity = 4096) {
+	/** @param capacity upper bound on the bytes that will be written */
+	constructor(capacity: number) {
 		this.#bytes = allocUnsafe(capacity);
 		this.#view = new DataView(this.#bytes.buffer);
 	}
@@ -22,19 +22,10 @@ export class ByteWriter {
 		const end = at + size;
 
 		if (end > this.#bytes.length) {
-			let capacity = this.#bytes.length * 2;
-
-			while (capacity < end) {
-				capacity *= 2;
-			}
-			const grown = allocUnsafe(capacity);
-
-			grown.set(this.#bytes.subarray(0, at));
-			this.#bytes = grown;
-			this.#view = new DataView(grown.buffer);
+			throw new RangeError(`byte writer overflow: ${end} exceeds a capacity of ${this.#bytes.length}`);
 		}
-		this.#offset = end;
 
+		this.#offset = end;
 		return at;
 	}
 
@@ -86,12 +77,12 @@ export class ByteWriter {
 
 	/** @returns written bytes */
 	take(): Uint8Array<ArrayBuffer> {
-		const buffer = this.#bytes.buffer.transfer(this.#offset);
+		const written = this.#bytes.subarray(0, this.#offset);
 
 		this.#bytes = allocUnsafe(0);
 		this.#view = new DataView(this.#bytes.buffer);
 		this.#offset = 0;
 
-		return new Uint8Array(buffer);
+		return written;
 	}
 }

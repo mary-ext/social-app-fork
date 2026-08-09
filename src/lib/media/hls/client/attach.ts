@@ -101,7 +101,7 @@ export type PlayerHandle = {
 };
 
 type Operation =
-	| { type: 'append'; data: ArrayBuffer }
+	| { type: 'append'; data: Uint8Array<ArrayBuffer> }
 	| { type: 'changeType'; mimeType: string }
 	| { type: 'duration'; duration: number }
 	| ({ type: 'evict' } & BufferWindow)

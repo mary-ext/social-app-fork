@@ -49,7 +49,7 @@ export type WorkerToMain =
 	| { type: 'renditions'; epoch: number; renditions: Rendition[] }
 	| { type: 'init'; epoch: number; mimeType: string }
 	| { type: 'duration'; epoch: number; duration: number }
-	| { type: 'chunk'; epoch: number; data: ArrayBuffer }
+	| { type: 'chunk'; epoch: number; data: Uint8Array<ArrayBuffer> }
 	| { type: 'subtitles'; epoch: number; renditions: SubtitleRenditionCues[] }
 	| { type: 'done'; epoch: number }
 	| { type: 'retrying'; epoch: number; failures: number }

@@ -246,7 +246,7 @@ const writeTrackExtends = (writer: ByteWriter, id: number) => {
  * @returns initialization bytes
  */
 export const createMp4InitSegment = (size: TrackSize, avc: AvcConfig, audio: AudioConfig | undefined) => {
-	const writer = new ByteWriter(1024);
+	const writer = new ByteWriter(768 + avc.sps.byteLength + avc.pps.byteLength + (audio ? 512 : 0));
 
 	const ftyp = openBox(writer, 'ftyp');
 
@@ -355,6 +355,10 @@ const payloadLength = (samples: MuxSample[]) =>
 export const createMp4MediaSegment = (sequence: number, video: MuxSample[], audio: MuxSample[]) => {
 	const videoLength = payloadLength(video);
 	const mdatLength = 8 + videoLength + payloadLength(audio);
+	// the boxes around `mdat` come to 152 bytes plus one `trun` entry per sample -- 16 bytes for a
+	// video sample, 8 for an audio one. 512 rounds that up, leaving 360 bytes of headroom (424
+	// without an audio track); adding a box bigger than that means raising it, or the writer
+	// throws. slack itself costs nothing; `take()` trims it away.
 	const writer = new ByteWriter(mdatLength + 16 * video.length + 8 * audio.length + 512);
 
 	const moof = openBox(writer, 'moof');

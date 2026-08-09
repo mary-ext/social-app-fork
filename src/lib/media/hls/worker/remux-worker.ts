@@ -27,7 +27,7 @@ const post = (message: WorkerToMain, transfer: Transferable[] = []) => {
 };
 
 const postChunk = (data: Uint8Array<ArrayBuffer>, myEpoch: number) => {
-	post({ type: 'chunk', epoch: myEpoch, data: data.buffer }, [data.buffer]);
+	post({ type: 'chunk', epoch: myEpoch, data }, [data.buffer]);
 };
 
 // #region player state
