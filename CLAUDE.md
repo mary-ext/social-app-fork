@@ -23,8 +23,8 @@ this project uses React Compiler, `@base-ui/react` and Paraglide.
 ### browser automation
 
 `mise.toml` preconfigures /agent-browser skill with a namespace and a session name. check
-`agent-browser session` for the assigned name and `agent-browser session list` to see if the browser
-is already running or not.
+`agent-browser session list` to see the assigned name and whether the browser is already running for
+that particular session.
 
 work that needs authentication should pass `--restore` when opening a session for the first time,
 later commands may omit this flag. if you're still signed out, try going through the sign in flow
