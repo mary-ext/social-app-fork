@@ -1,0 +1,10 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.editImageDialog.aspectRatio.label": "Aspect ratio",
+	"components.editImageDialog.aspectRatio.original": "Original",
+	"components.editImageDialog.rotate.left": "Rotate left",
+	"components.editImageDialog.rotate.right": "Rotate right",
+	"components.editImageDialog.zoom.in": "Zoom in",
+	"components.editImageDialog.zoom.label": "Zoom",
+	"components.editImageDialog.zoom.out": "Zoom out"
+}

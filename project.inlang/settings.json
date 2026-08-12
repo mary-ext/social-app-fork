@@ -14,6 +14,7 @@
 			"./messages/{locale}/components.dms.json",
 			"./messages/{locale}/components.editableBanner.json",
 			"./messages/{locale}/components.editableUserAvatar.json",
+			"./messages/{locale}/components.editImageDialog.json",
 			"./messages/{locale}/components.emojiPicker.json",
 			"./messages/{locale}/components.feedInterstitials.json",
 			"./messages/{locale}/components.intents.json",

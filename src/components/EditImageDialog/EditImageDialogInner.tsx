@@ -1,10 +1,15 @@
-import 'react-image-crop/dist/ReactCrop.css';
+import { useImperativeHandle, useRef, useState } from 'react';
 
-import { type CSSProperties, useImperativeHandle, useRef, useState } from 'react';
+import { Cropper, type CropperConfig, type CropValue } from '@oomfware/cropper';
 
-import { ReactCrop, type PercentCrop } from 'react-image-crop';
+import { clsx } from 'clsx';
 
-import { type ImageSource, type ImageTransformation, manipulateImage } from '#/lib/media/composer-image';
+import {
+	type ImageCrop,
+	type ImageSource,
+	type ImageTransformation,
+	manipulateImage,
+} from '#/lib/media/composer-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
@@ -13,8 +18,13 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
+import { type AspectRatio, AspectRatioSelect, CropToolbar } from './CropToolbar';
 import type { EditImageDialogProps } from './EditImageDialog';
 import * as styles from './EditImageDialogInner.css';
+
+const CROPPER_CONFIG: Partial<CropperConfig> = {
+	insets: { top: 16, right: 16, bottom: 16, left: 16 },
+};
 
 export function EditImageDialogInner({
 	handle,
@@ -65,19 +75,17 @@ export function EditImageDialogInner({
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>
 
-			<Dialog.Body>
-				{image && (
-					<EditImageInner
-						aspectRatio={aspectRatio}
-						circularCrop={circularCrop}
-						handle={handle}
-						image={image}
-						key={image.source.id}
-						onChange={onChange}
-						saveRef={ref}
-					/>
-				)}
-			</Dialog.Body>
+			{image && (
+				<EditImageInner
+					aspectRatio={aspectRatio}
+					circularCrop={circularCrop}
+					handle={handle}
+					image={image}
+					key={image.source.id}
+					onChange={onChange}
+					saveRef={ref}
+				/>
+			)}
 		</>
 	);
 }
@@ -96,8 +104,11 @@ function EditImageInner({
 	const source = image.source;
 	const sourceUrl = getBlobUrl(source.blob);
 
-	const initialCrop = getInitialCrop(source, image.manips);
-	const [crop, setCrop] = useState(initialCrop);
+	const ratioIsFixed = aspectRatio !== undefined;
+	const initialCrop = getInitialCrop(image.manips);
+	const [ratio, setRatio] = useState<AspectRatio>(() => aspectRatio ?? image.manips?.ratio ?? null);
+
+	const cropRef = useRef(initialCrop);
 	const sourceDimensions =
 		source.width > 0 && source.height > 0
 			? {
@@ -109,68 +120,71 @@ function EditImageInner({
 	useImperativeHandle(
 		saveRef,
 		() => ({
-			save: async () => {
-				const result = await manipulateImage(image, {
-					crop:
-						crop && (crop.width || crop.height) !== 0
-							? {
-									originX: (crop.x * source.width) / 100,
-									originY: (crop.y * source.height) / 100,
-									width: (crop.width * source.width) / 100,
-									height: (crop.height * source.height) / 100,
-								}
-							: undefined,
-				});
+			async save() {
+				const crop = cropRef.current && toImageCrop(cropRef.current, source);
+				const result = await manipulateImage(image, { crop, ratio });
 
 				onChange(result);
 				handle.close();
 			},
 		}),
-		[crop, image, source, handle, onChange],
+		[ratio, image, source, handle, onChange],
 	);
 
 	return (
-		<div className={styles.imageBox}>
-			<div className={styles.cropArea}>
-				<ReactCrop
-					aspect={aspectRatio}
-					circularCrop={circularCrop}
-					className="ReactCrop--no-animate"
-					crop={crop}
-					onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
-				>
-					<img alt="" src={sourceUrl} {...sourceDimensions} style={imageStyle} />
-				</ReactCrop>
-			</div>
-		</div>
+		<Cropper.Root
+			aspectRatio={ratio ?? undefined}
+			config={CROPPER_CONFIG}
+			defaultValue={initialCrop}
+			onValueChange={(value) => {
+				cropRef.current = value;
+			}}
+		>
+			<Dialog.Body className={styles.body}>
+				<Cropper.Viewport className={styles.viewport}>
+					<Cropper.Image alt="" src={sourceUrl} {...sourceDimensions} />
+					<Cropper.Window className={clsx(styles.cropWindow, circularCrop && styles.roundCropWindow)}>
+						<div className={styles.grid} />
+					</Cropper.Window>
+				</Cropper.Viewport>
+			</Dialog.Body>
+			<Dialog.Footer>
+				<CropToolbar>
+					{!ratioIsFixed && <AspectRatioSelect value={ratio} onValueChange={setRatio} />}
+				</CropToolbar>
+			</Dialog.Footer>
+		</Cropper.Root>
 	);
 }
 
-// cap the image to the square frame (the `cropArea` query container), so the cropper hugs the image rather
-// than letting the crop overlay extend into the letterbox. `width`/`height: auto` override the intrinsic-size
-// attributes (spread from `sourceDimensions`) so the two `max-*` constraints preserve aspect ratio instead of
-// clamping each axis independently into a square
-const imageStyle = {
-	display: 'block',
-	height: 'auto',
-	maxHeight: '100cqh',
-	maxWidth: '100cqw',
-	width: 'auto',
-} satisfies CSSProperties;
-
-const getInitialCrop = (
-	source: ImageSource,
-	manips: ImageTransformation | undefined,
-): PercentCrop | undefined => {
-	const initialArea = manips?.crop;
-
-	if (initialArea) {
-		return {
-			unit: '%',
-			x: (initialArea.originX / source.width) * 100,
-			y: (initialArea.originY / source.height) * 100,
-			width: (initialArea.width / source.width) * 100,
-			height: (initialArea.height / source.height) * 100,
-		};
+const getInitialCrop = (manips: ImageTransformation | undefined): CropValue | undefined => {
+	const crop = manips?.crop;
+	if (!crop) {
+		return undefined;
 	}
+
+	return {
+		rotation: crop.rotation,
+		x: crop.originX,
+		y: crop.originY,
+		width: crop.width,
+		height: crop.height,
+	};
+};
+
+const toImageCrop = (value: CropValue, source: ImageSource): ImageCrop | undefined => {
+	const originX = Math.round(value.x);
+	const originY = Math.round(value.y);
+	const width = Math.round(value.x + value.width) - originX;
+	const height = Math.round(value.y + value.height) - originY;
+
+	if (width === 0 || height === 0) {
+		return undefined;
+	}
+
+	if (value.rotation === 0 && width === source.width && height === source.height) {
+		return undefined;
+	}
+
+	return { rotation: value.rotation, height, originX, originY, width };
 };

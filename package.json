@@ -51,6 +51,7 @@
 		"@mary/date-fns": "jsr:^0.1.4",
 		"@mary/exif-rm": "jsr:^0.2.2",
 		"@mary/keybinds": "jsr:^0.1.2",
+		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@oomfware/lightbox": "^0.1.8",
 		"@oomfware/stacker": "^0.2.1",
@@ -65,7 +66,6 @@
 		"idb-keyval": "^6.3.0",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
-		"react-image-crop": "^11.1.2",
 		"tldts": "^7.4.10",
 		"valibot": "^1.4.2"
 	},

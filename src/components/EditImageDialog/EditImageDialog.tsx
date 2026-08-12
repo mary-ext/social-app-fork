@@ -17,9 +17,6 @@ export type EditImageDialogProps = {
 	circularCrop?: boolean;
 };
 
-// react-image-crop (plus its stylesheet) is a sizable dependency only needed once someone actually crops
-// an image, so the cropper body loads on first open rather than riding along in every composer/profile-edit
-// chunk that mounts this dialog.
 const EditImageDialogInner = lazy(() =>
 	import('./EditImageDialogInner').then((mod) => ({ default: mod.EditImageDialogInner })),
 );

@@ -111,6 +111,9 @@ importers:
       '@mary/keybinds':
         specifier: jsr:^0.1.2
         version: '@jsr/mary__keybinds@0.1.2'
+      '@oomfware/cropper':
+        specifier: ^0.1.0
+        version: 0.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@oomfware/lang-detect':
         specifier: ^0.2.1
         version: 0.2.1
@@ -153,9 +156,6 @@ importers:
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
-      react-image-crop:
-        specifier: ^11.1.2
-        version: 11.1.2(react@19.2.8)
       tldts:
         specifier: ^7.4.10
         version: 7.4.10
@@ -940,6 +940,12 @@ packages:
 
   '@noble/secp256k1@3.1.0':
     resolution: {integrity: sha512-+F7iS7tUMaNGXcc9X3PjmjvuQnXEuSjCRNzVVA2xAcKXgCaP0dHYz4SFyt4FKNHef7sOP//xihowcySSS7PK9g==}
+
+  '@oomfware/cropper@0.1.0':
+    resolution: {integrity: sha512-15ORvKbD7kVtCZGhTklufDGKaGyBTR3zP5A6tROzVjPmERWZJoLUCWOjbzDAroIeHKGWgTLCXqKpbdoGwpqZZg==}
+    peerDependencies:
+      react: '>=19.2'
+      react-dom: '>=19.2'
 
   '@oomfware/lang-detect@0.2.1':
     resolution: {integrity: sha512-ZVs+CYEIuDXV7GDib6LGCBvE4bglnCO9UMJRj/PeB/9W0az3sdkXNr4VIKfvprYyTZGhynhy13FVNV3ysDuNog==}
@@ -2358,11 +2364,6 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
-  react-image-crop@11.1.2:
-    resolution: {integrity: sha512-+0Pc2fxpwKL4u4oLmdKBw8XSwUceFbXbKEHvFOlsl/MGB1OVNic4uBlAPmEHGXYgoJIq+b63xHbc/aJMG0AVkA==}
-    peerDependencies:
-      react: '>=16.13.1'
-
   react-refresh@0.18.0:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
@@ -3354,6 +3355,11 @@ snapshots:
     optional: true
 
   '@noble/secp256k1@3.1.0': {}
+
+  '@oomfware/cropper@0.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   '@oomfware/lang-detect@0.2.1': {}
 
@@ -4607,10 +4613,6 @@ snapshots:
     dependencies:
       react: 19.2.8
       scheduler: 0.27.0
-
-  react-image-crop@11.1.2(react@19.2.8):
-    dependencies:
-      react: 19.2.8
 
   react-refresh@0.18.0: {}
 
