@@ -34,6 +34,11 @@ export const image = style({
 	objectFit: 'cover',
 });
 
+export const blurred = style({
+	transform: 'scale(1.2)',
+	filter: 'blur(12px)',
+});
+
 export const overlay = style({
 	display: 'flex',
 	position: 'absolute',

@@ -10,6 +10,7 @@ import type {
 import {
 	DisplayContext,
 	getDisplayRestrictions,
+	moderatePost,
 	moderateProfile,
 	type ModerationDecision,
 	type ModerationOptions,
@@ -533,7 +534,7 @@ let NotificationFeedItem = ({
 				item.type === 'repost-via-repost' ||
 				item.type === 'subscribed-post' ? (
 					<div className={css.additionalWrap}>
-						<AdditionalPostText post={item.subject} />
+						<AdditionalPostText post={item.subject} moderationOpts={moderationOpts} />
 					</div>
 				) : null}
 
@@ -849,7 +850,13 @@ function ExpandedAuthorProfileCard({
 	);
 }
 
-function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
+function AdditionalPostText({
+	post,
+	moderationOpts,
+}: {
+	post?: AppBskyFeedDefs.PostView;
+	moderationOpts: ModerationOptions;
+}) {
 	if (!post) {
 		return null;
 	}
@@ -864,7 +871,11 @@ function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 				</Text>
 			)}
 
-			<MediaPreview.Embed embed={post.embed} className={css.additionalPostEmbed} />
+			<MediaPreview.Embed
+				embed={post.embed}
+				moderation={getDisplayRestrictions(moderatePost(post, moderationOpts), DisplayContext.ContentMedia)}
+				className={css.additionalPostEmbed}
+			/>
 		</>
 	);
 }

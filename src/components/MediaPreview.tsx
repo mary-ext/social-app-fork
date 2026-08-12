@@ -1,4 +1,5 @@
 import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
@@ -11,16 +12,14 @@ import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
-/**
- * Streamlined media preview that renders a post's images, gifs, and videos as a compact inline strip of
- * square thumbnails.
- */
 export function Embed({
 	className,
 	embed,
+	moderation,
 }: {
 	className?: string;
 	embed: AppBskyFeedDefs.PostView['embed'];
+	moderation?: DisplayRestrictions;
 }) {
 	const { media } = unwrapEmbed(embed);
 
@@ -28,12 +27,14 @@ export function Embed({
 		return null;
 	}
 
+	const blurred = !!moderation?.blurs.length;
+
 	switch (media.$type) {
 		case 'app.bsky.embed.images#view': {
 			return (
 				<Outer className={className}>
 					{media.images.map((image) => (
-						<ImageItem key={image.thumb} thumbnail={image.thumb} alt={image.alt} />
+						<ImageItem key={image.thumb} thumbnail={image.thumb} alt={image.alt} blurred={blurred} />
 					))}
 				</Outer>
 			);
@@ -43,7 +44,7 @@ export function Embed({
 			return (
 				<Outer className={className}>
 					{media.items.slice(0, 4).map((image) => (
-						<ImageItem key={image.thumbnail} thumbnail={image.thumbnail} alt={image.alt} />
+						<ImageItem key={image.thumbnail} thumbnail={image.thumbnail} alt={image.alt} blurred={blurred} />
 					))}
 				</Outer>
 			);
@@ -54,7 +55,7 @@ export function Embed({
 			}
 			return (
 				<Outer className={className}>
-					<GifItem thumbnail={media.external.thumb} alt={media.external.title} />
+					<GifItem thumbnail={media.external.thumb} alt={media.external.title} blurred={blurred} />
 				</Outer>
 			);
 		}
@@ -62,9 +63,9 @@ export function Embed({
 			return (
 				<Outer className={className}>
 					{media.presentation === 'gif' ? (
-						<GifItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} />
+						<GifItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} blurred={blurred} />
 					) : (
-						<VideoItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} />
+						<VideoItem thumbnail={videoThumbnailUrl(media)} alt={media.alt} blurred={blurred} />
 					)}
 				</Outer>
 			);
@@ -82,10 +83,12 @@ function Outer({ children, className }: { children?: React.ReactNode; className?
 function ImageItem({
 	thumbnail,
 	alt,
+	blurred,
 	children,
 }: {
 	thumbnail?: string;
 	alt?: string;
+	blurred?: boolean;
 	children?: React.ReactNode;
 }) {
 	return (
@@ -93,15 +96,17 @@ function ImageItem({
 			className={clsx(styles.tile, !thumbnail && styles.tileEmpty)}
 			aria-label={thumbnail ? undefined : alt}
 		>
-			{thumbnail && <img className={styles.image} src={thumbnail} alt={alt} />}
+			{thumbnail && (
+				<img className={clsx(styles.image, blurred && styles.blurred)} src={thumbnail} alt={alt} />
+			)}
 			{children}
 		</div>
 	);
 }
 
-function GifItem({ thumbnail, alt }: { thumbnail?: string; alt?: string }) {
+function GifItem({ thumbnail, alt, blurred }: { thumbnail?: string; alt?: string; blurred?: boolean }) {
 	return (
-		<ImageItem thumbnail={thumbnail} alt={alt}>
+		<ImageItem thumbnail={thumbnail} alt={alt} blurred={blurred}>
 			<div className={styles.overlay} aria-hidden>
 				<PlayButtonIcon size={24} />
 			</div>
@@ -112,9 +117,9 @@ function GifItem({ thumbnail, alt }: { thumbnail?: string; alt?: string }) {
 	);
 }
 
-function VideoItem({ thumbnail, alt }: { thumbnail?: string; alt?: string }) {
+function VideoItem({ thumbnail, alt, blurred }: { thumbnail?: string; alt?: string; blurred?: boolean }) {
 	return (
-		<ImageItem thumbnail={thumbnail} alt={alt}>
+		<ImageItem thumbnail={thumbnail} alt={alt} blurred={blurred}>
 			<div className={styles.overlay} aria-hidden>
 				<PlayButtonIcon size={24} />
 			</div>

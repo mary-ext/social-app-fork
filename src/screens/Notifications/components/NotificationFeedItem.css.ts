@@ -155,8 +155,7 @@ export const additionalWrap = style({
 });
 
 export const additionalPostEmbed = style({
-	marginTop: 5,
-	marginLeft: 2,
+	marginTop: 6,
 	opacity: 0.8,
 });
 
