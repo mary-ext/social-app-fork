@@ -54,7 +54,7 @@
 		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@oomfware/lightbox": "^0.1.8",
-		"@oomfware/scion": "^0.1.1",
+		"@oomfware/scion": "^0.1.2",
 		"@oomfware/stacker": "^0.2.2",
 		"@oomfware/tug": "^0.2.0",
 		"@tanstack/query-async-storage-persister": "^5.101.4",

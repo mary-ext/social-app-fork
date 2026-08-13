@@ -121,8 +121,8 @@ importers:
         specifier: ^0.1.8
         version: 0.1.8(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@oomfware/scion':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.1.2
+        version: 0.1.2
       '@oomfware/stacker':
         specifier: ^0.2.2
         version: 0.2.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1107,8 +1107,8 @@ packages:
       react:
         optional: true
 
-  '@oomfware/scion@0.1.1':
-    resolution: {integrity: sha512-ZEKaWxTQvkQnL+c+1YoCA9i9967bA5tUO5J4DFrAoidZ/Qv+htL+QEQkYAwfqyImgVfuvf2nPuvPwuo4XlRDqg==}
+  '@oomfware/scion@0.1.2':
+    resolution: {integrity: sha512-qis+29bz4GJNGsYp4ayzLxwduyi1JpB/C0+JAZvkSzqIyU7nj3751XWffK9IUwqj/wtR+vP8E1MnqpKTSNqKVQ==}
 
   '@oomfware/stacker@0.2.2':
     resolution: {integrity: sha512-4Y8GYwKj0+VcDu3VSWLzgnk1K2SGuIzyTcw42aVRk6Cq0rhhtf1KjE5ZTDfLZgxFC8jFT7ukchYol/dEfwSk3Q==}
@@ -3594,7 +3594,7 @@ snapshots:
     optionalDependencies:
       react: 19.2.8
 
-  '@oomfware/scion@0.1.1':
+  '@oomfware/scion@0.1.2':
     dependencies:
       csstype: 3.2.3
       esm-env: 1.2.2
