@@ -100,6 +100,8 @@ export function Composer({
 	onBlur,
 }: ComposerProps) {
 	const [text, setText] = useState(defaultValue ?? '');
+	// keep uncommitted IME text visible while Base UI defers value changes.
+	const [composingText, setComposingText] = useState<string | null>(null);
 	// the collapsed-selection caret drives completion detection; a range selection has no active completion.
 	const [selection, setSelection] = useState(() => {
 		const end = defaultValue?.length ?? 0;
@@ -113,7 +115,7 @@ export function Composer({
 	// store the overlay in state so the anchor is created after mount.
 	const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
 
-	const spans = buildSpans(text);
+	const spans = buildSpans(composingText ?? text);
 	const completion = selection.start === selection.end ? findCompletion(text, selection.end) : null;
 	// require at least one character after the trigger (`@m`, not a bare `@`) before querying/opening.
 	const hasQuery = !!completion && completion.query.length > 0;
@@ -177,6 +179,7 @@ export function Composer({
 			},
 			clear: () => {
 				setText('');
+				setComposingText(null);
 				setSelection({ start: 0, end: 0 });
 			},
 			insert: (str: string) => {
@@ -273,7 +276,17 @@ export function Composer({
 					aria-label={accessibilityLabel}
 					aria-description={accessibilityHint}
 					autoFocus={autoFocus}
-					onSelect={(e) => syncSelection(e.currentTarget)}
+					// composition selection offsets do not match the committed text.
+					onSelect={(e) => {
+						if (!isComposing.current) {
+							syncSelection(e.currentTarget);
+						}
+					}}
+					onChange={(e) => {
+						if (isComposing.current) {
+							setComposingText(e.currentTarget.value);
+						}
+					}}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
 							// Base UI's Home/End caret handling runs ahead of its own IME guard, so suppress the
@@ -323,11 +336,13 @@ export function Composer({
 						onBlur?.();
 						setDismissedCompletion(completionKey);
 					}}
-					onCompositionStart={() => {
+					onCompositionStart={(e) => {
 						isComposing.current = true;
+						setComposingText(e.currentTarget.value);
 					}}
 					onCompositionEnd={() => {
 						isComposing.current = false;
+						setComposingText(null);
 					}}
 				/>
 			</div>
