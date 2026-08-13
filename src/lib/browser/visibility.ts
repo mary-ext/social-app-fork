@@ -30,5 +30,5 @@ const subscribe = (onStoreChange: () => void) => onVisibilityChange(() => onStor
  * @returns `true` when the document is visible.
  */
 export function useIsDocumentVisible() {
-	return useSyncExternalStore(subscribe, isDocumentVisible, () => true);
+	return useSyncExternalStore(subscribe, isDocumentVisible);
 }

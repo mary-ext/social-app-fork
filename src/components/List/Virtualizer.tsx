@@ -738,7 +738,7 @@ export function Virtualizer<ItemT>({
 	const store = useConstant(
 		() => new VirtualizerStore({ data, enabled, estimateHeight, keyExtractor, overscanCount, scrollRoot }),
 	);
-	const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+	const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
 	useImperativeHandle(
 		ref,
