@@ -19,7 +19,7 @@ export type SubmitRequest = {
 	nativeEvent: KeyboardEvent;
 };
 
-/** Padding shared by the textarea and the preview overlay so their glyphs line up. */
+/** shared textarea and overlay padding. */
 export type ContentPadding = {
 	bottom: number;
 	left: number;
@@ -27,10 +27,7 @@ export type ContentPadding = {
 	top: number;
 };
 
-/**
- * Imperative API exposed via `internalApiRef` for parents that drive the composer programmatically (clear,
- * insert at cursor).
- */
+/** composer controls exposed through `internalApiRef`. */
 export type ComposerInternalApi = {
 	input?: {
 		element: HTMLTextAreaElement | null;
@@ -50,16 +47,12 @@ export type ComposerProps = {
 	defaultValue?: string;
 	autoFocus?: boolean;
 	disabled?: boolean;
-	/** Text size for both the textarea and the preview overlay; they must share one size to stay registered. */
+	/** shared textarea and overlay font size. */
 	fontSize?: 'lg' | 'md';
 	minRows?: number;
-	/**
-	 * caps the editor's visible height at this many rows, after which the composer scrolls. omit to let it grow
-	 * unbounded.
-	 */
+	/** row limit before scrolling. */
 	maxRows?: number;
 	contentPadding?: ContentPadding;
-	/** Layout for the editor box within its row (the consumer owns positioning). */
 	className?: string;
 	autocompletePlacement?: Placement;
 	internalApiRef?: Ref<ComposerInternalApi>;
@@ -77,7 +70,6 @@ const NO_PADDING: ContentPadding = { bottom: 0, left: 0, right: 0, top: 0 };
 
 const noop = () => {};
 
-/** Web-native rich composer input with inline autocomplete for mentions, hashtags, and emoji. */
 export function Composer({
 	placeholder,
 	defaultValue,
@@ -100,27 +92,25 @@ export function Composer({
 	onBlur,
 }: ComposerProps) {
 	const [text, setText] = useState(defaultValue ?? '');
-	// keep uncommitted IME text visible while Base UI defers value changes.
+
+	// Base UI defers value changes during IME composition.
 	const [composingText, setComposingText] = useState<string | null>(null);
-	// the collapsed-selection caret drives completion detection; a range selection has no active completion.
 	const [selection, setSelection] = useState(() => {
 		const end = defaultValue?.length ?? 0;
 		return { start: end, end };
 	});
-	// the completion the user explicitly dismissed (Escape/blur); cleared implicitly when the active
-	// completion's identity changes (moving the caret elsewhere, or typing — which grows the query).
+
+	// suppress only the dismissed completion.
 	const [dismissedCompletion, setDismissedCompletion] = useState<string | null>(null);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	// store the overlay in state so the anchor is created after mount.
 	const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
 
 	const spans = buildSpans(composingText ?? text);
 	const completion = selection.start === selection.end ? findCompletion(text, selection.end) : null;
-	// require at least one character after the trigger (`@m`, not a bare `@`) before querying/opening.
 	const hasQuery = !!completion && completion.query.length > 0;
-	// the query is part of the identity so a dismissal doesn't outlive an edit: dismissing on `@alic`
-	// must not suppress the popup when the caret later re-enters the committed `@alice.bsky.social`.
+
+	// include the query so edits clear a dismissal.
 	const completionKey = completion
 		? `${completion.type}:${completion.range.start}:${completion.query}`
 		: null;
@@ -129,14 +119,13 @@ export function Composer({
 		type: completion ? parseAutocompleteItemType(completion.type) : 'profile',
 		query: hasQuery ? completion.query : '',
 	});
-	// keep the popup open while results load so the spinner has somewhere to show.
+
+	// open during fetch to show the spinner.
 	const autocompleteOpen =
 		hasQuery && completionKey !== dismissedCompletion && (items.length > 0 || isFetching);
-	// the popup is only navigable when it actually holds rows; a spinner-only popup has nothing for
-	// the arrow keys to move through, so they should still drive the textarea caret.
 	const hasNavigableAutocomplete = autocompleteOpen && items.length > 0;
 
-	// recompute the range because the overlay text nodes change on edit.
+	// overlay text nodes change on each edit.
 	const anchor = completion &&
 		overlay && {
 			contextElement: overlay,
@@ -150,19 +139,17 @@ export function Composer({
 		setSelection({ start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 });
 	};
 
-	// splice the picked suggestion over the completion range via execCommand so it joins the native undo stack.
+	// execCommand preserves the native undo stack.
 	const selectItem = (item: AutocompleteItem) => {
 		const el = textareaRef.current;
 		if (!completion || !el) {
 			return;
 		}
-		// reuse a space already after the completion rather than adding a second one.
 		const spaceFollows = text[completion.range.end] === ' ';
 		el.focus();
 		el.setSelectionRange(completion.range.start, completion.range.end);
 		document.execCommand('insertText', false, spaceFollows ? item.value : item.value + ' ');
 		if (spaceFollows) {
-			// step the caret over the reused space so the next keystroke lands after it.
 			const caret = completion.range.start + item.value.length + 1;
 			el.setSelectionRange(caret, caret);
 			syncSelection(el);
@@ -194,7 +181,7 @@ export function Composer({
 		[],
 	);
 
-	// fire onChange after mount (parent already knows the initial value).
+	// the parent supplied the initial value.
 	const emitChange = useEffectEvent(onChange);
 	const isFirstRender = useRef(true);
 	useEffect(() => {
@@ -205,7 +192,6 @@ export function Composer({
 		emitChange(text);
 	}, [text]);
 
-	// notify the consumer as the active completion changes.
 	const emitCompletion = useEffectEvent(onActiveCompletion);
 	useEffect(() => {
 		emitCompletion(completion);
@@ -213,9 +199,7 @@ export function Composer({
 
 	const isComposing = useRef(false);
 
-	// feed the per-instance layout inputs to the CSS via vars on `root`; the padding/min-height/max-height
-	// declarations (and the row→height formula) live in Composer.css. `maxRowsVar` is only consumed by the
-	// `capped` class, applied below when `maxRows` is set.
+	// Composer.css calculates dimensions from these values.
 	const layoutVars = assignInlineVars({
 		[styles.minRowsVar]: String(minRows),
 		[styles.paddingBottomVar]: `${contentPadding.bottom}px`,
@@ -229,13 +213,11 @@ export function Composer({
 		<BaseAutocomplete.Root
 			autoHighlight
 			items={items}
-			// the textarea holds the whole post; the completion substring is the query, so Base UI must not
-			// filter or rewrite the value — we drive both ourselves.
+			// the composer owns filtering and value updates.
 			mode="none"
 			open={autocompleteOpen}
 			onOpenChange={(open, details) => {
-				// only a deliberate dismissal should stick; picking a row or arrow-keying through the list
-				// also closes the popup, but must not suppress it from reappearing on the same completion.
+				// selection can also close the popup, but is not a dismissal.
 				if (!open && (details.reason === 'escape-key' || details.reason === 'outside-press')) {
 					setDismissedCompletion(completionKey);
 				}
@@ -243,9 +225,7 @@ export function Composer({
 			openOnInputClick={false}
 			value={text}
 			onValueChange={(value, details) => {
-				// route the user's own edits (typing, paste, clear) into our state; ignore value changes Base
-				// UI emits from picking a row (`item-press`), which we handle via the item's onClick to splice
-				// into the completion instead.
+				// selectItem handles item presses.
 				if (details.reason === 'input-change' || details.reason === 'input-clear') {
 					setText(value);
 					const el = textareaRef.current;
@@ -261,14 +241,13 @@ export function Composer({
 			>
 				<div className={styles.overlay} ref={setOverlay} aria-hidden inert>
 					{spans.map((span, i) => (
-						// oxlint-disable-next-line react/no-array-index-key -- inert highlight overlay, positional
+						// oxlint-disable-next-line react/no-array-index-key -- positional overlay
 						<span key={i} className={span.facet ? styles.facet : undefined}>
 							{span.raw}
 						</span>
 					))}
 				</div>
 				<BaseAutocomplete.Input
-					// `rows` and the ref are textarea-only, so they ride on the render element; Base UI merges refs
 					render={<textarea rows={1} ref={textareaRef} />}
 					className={styles.textarea}
 					placeholder={placeholder}
@@ -276,7 +255,7 @@ export function Composer({
 					aria-label={accessibilityLabel}
 					aria-description={accessibilityHint}
 					autoFocus={autoFocus}
-					// composition selection offsets do not match the committed text.
+					// composition offsets do not match committed text.
 					onSelect={(e) => {
 						if (!isComposing.current) {
 							syncSelection(e.currentTarget);
@@ -289,45 +268,48 @@ export function Composer({
 					}}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
-							// Base UI's Home/End caret handling runs ahead of its own IME guard, so suppress the
-							// whole combobox handler to keep every key native while composing.
+							// Base UI handles Home and End before its IME guard.
 							e.preventBaseUIHandler();
+
 							return;
 						}
-						// Base UI's combobox input claims Arrow/Home/End for list navigation — correct for a
-						// single-line <input>, but it preventDefaults them and so breaks caret movement in our
-						// multi-line <textarea>. Hand each key back to native textarea behavior unless Base UI
-						// genuinely needs it to drive the suggestion list.
+
+						// preserve native textarea navigation when the list does not need the key.
 						switch (e.key) {
 							case 'End':
 							case 'Home': {
-								// Base UI only ever jumps to the whole value's start/end, never line start/end, so
-								// these should stay native even while the popup is open.
 								e.preventBaseUIHandler();
+
 								break;
 							}
+
 							case 'ArrowDown':
 							case 'ArrowUp': {
 								if (!hasNavigableAutocomplete) {
 									e.preventBaseUIHandler();
 								}
+
 								break;
 							}
-						}
-						// Safari fires a final IME-commit "Enter" with keyCode 229; ignore it.
-						if (e.key === 'Enter' && e.keyCode === 229) {
-							return;
-						}
-						// when the popup has rows, Base UI consumes Enter to pick the highlighted one; our
-						// handler runs first, so we can't rely on e.defaultPrevented to detect that — gate on the
-						// autocomplete state directly, or a pick would also submit the post/message.
-						if (e.key === 'Enter' && !hasNavigableAutocomplete) {
-							onRequestSubmit?.({
-								platform: 'web',
-								shiftKey: e.shiftKey,
-								metaKey: e.metaKey,
-								nativeEvent: e.nativeEvent,
-							});
+
+							case 'Enter': {
+								// Safari reports IME commit as Enter with keyCode 229.
+								if (e.keyCode === 229) {
+									return;
+								}
+
+								// this handler runs before Base UI consumes Enter for selection.
+								if (!hasNavigableAutocomplete) {
+									onRequestSubmit?.({
+										platform: 'web',
+										shiftKey: e.shiftKey,
+										metaKey: e.metaKey,
+										nativeEvent: e.nativeEvent,
+									});
+								}
+
+								break;
+							}
 						}
 					}}
 					onPaste={(e) => onPaste?.(e.nativeEvent)}
@@ -346,6 +328,7 @@ export function Composer({
 					}}
 				/>
 			</div>
+
 			{autocompleteOpen && (
 				<Autocomplete anchor={anchor} items={items} placement={autocompletePlacement} onSelect={selectItem} />
 			)}
