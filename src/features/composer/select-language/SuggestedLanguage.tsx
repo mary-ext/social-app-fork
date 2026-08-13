@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 
@@ -237,7 +237,7 @@ function LanguageSuggestionButton({
 	onAccept,
 	onDecline,
 }: {
-	label: React.ReactNode;
+	label: ReactNode;
 	value: string;
 	onAccept: (language: string | null) => void;
 	onDecline: () => void;

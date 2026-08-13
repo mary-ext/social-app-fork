@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { clsx } from 'clsx';
 
 import { profileDisplayName } from '#/lib/display-names';
@@ -50,7 +52,7 @@ export function MessagesListGroupInfoPanel({
 
 	const members = (convo.members ?? []).filter((profile) => profile.did !== currentAccount?.did);
 
-	let names: React.ReactNode = null;
+	let names: ReactNode = null;
 	if (members.length === 1) {
 		names = m['screens.messages.newChat.one']({ name: profileDisplayName(members[0]!) });
 	} else if (members.length === 2) {

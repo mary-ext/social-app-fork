@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, type ReactNode } from 'react';
 
 import { addDays } from '@mary/date-fns';
 
@@ -11,7 +11,7 @@ import { m } from '#/paraglide/messages';
 import * as css from './DateDivider.css';
 import { localDateString } from './util';
 
-let DateDivider = ({ date: dateStr }: { date: string }): React.ReactNode => {
+let DateDivider = ({ date: dateStr }: { date: string }): ReactNode => {
 	let date: string;
 	const time = clockNumeric.format(new Date(dateStr));
 

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
@@ -131,7 +133,7 @@ function FeedgenErrorMessage({
 		}
 	};
 
-	let cta: React.ReactNode;
+	let cta: ReactNode;
 	switch (knownError) {
 		case KnownError.FeedSignedInOnly: {
 			cta = null;

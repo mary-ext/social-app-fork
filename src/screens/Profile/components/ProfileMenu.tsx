@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -52,11 +54,7 @@ import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/routes';
 
-function ProfileMenu({
-	profile,
-}: {
-	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
-}): React.ReactNode {
+function ProfileMenu({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }): ReactNode {
 	const { currentAccount, hasSession } = useSession();
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const addToListsDialogHandle = Dialog.useDialogHandle();

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
@@ -27,7 +29,7 @@ const isMyListSentinel = (item: MyListItem): item is MyListSentinel => {
 };
 
 /** Renders the viewer's own lists, one {@link ListCard.Default} row per list. */
-export function MyLists({ filter }: { filter: MyListsFilter }): React.ReactNode {
+export function MyLists({ filter }: { filter: MyListsFilter }): ReactNode {
 	const { data, isPending, isError, error, refetch } = useMyListsQuery(filter);
 	const isEmpty = !isPending && !data?.length;
 

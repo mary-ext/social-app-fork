@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import type { MouseEvent, ReactNode, Ref } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -24,9 +24,9 @@ export function Outer({
 	ref,
 	sticky = true,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	noBottomBorder?: boolean;
-	ref?: React.Ref<HTMLDivElement>;
+	ref?: Ref<HTMLDivElement>;
 	sticky?: boolean;
 }) {
 	return (
@@ -48,7 +48,7 @@ export function Outer({
  * @param banner element painted behind the header (e.g. an image or a placeholder)
  * @param children header slots ({@link BackButton}, {@link Content}, {@link Slot}, …)
  */
-export function OuterOnBanner({ banner, children }: { banner: React.ReactNode; children: React.ReactNode }) {
+export function OuterOnBanner({ banner, children }: { banner: ReactNode; children: ReactNode }) {
 	return (
 		<div className={styles.bannerOuter}>
 			{/* header before banner in source so its controls tab first; z-index keeps it painted on top */}
@@ -58,15 +58,15 @@ export function OuterOnBanner({ banner, children }: { banner: React.ReactNode; c
 	);
 }
 
-export function Content({ children }: { children?: React.ReactNode }) {
+export function Content({ children }: { children?: ReactNode }) {
 	return <div className={styles.content}>{children}</div>;
 }
 
-export function Slot({ children }: { children?: React.ReactNode }) {
+export function Slot({ children }: { children?: ReactNode }) {
 	return <div className={styles.slot}>{children}</div>;
 }
 
-export function TitleText({ children }: { children: React.ReactNode }) {
+export function TitleText({ children }: { children: ReactNode }) {
 	return (
 		<Text size="lg" weight="semiBold" numberOfLines={2}>
 			{children}
@@ -74,7 +74,7 @@ export function TitleText({ children }: { children: React.ReactNode }) {
 	);
 }
 
-export function SubtitleText({ children }: { children: React.ReactNode }) {
+export function SubtitleText({ children }: { children: ReactNode }) {
 	return (
 		<Text size="sm" color="textContrastMedium" numberOfLines={2}>
 			{children}

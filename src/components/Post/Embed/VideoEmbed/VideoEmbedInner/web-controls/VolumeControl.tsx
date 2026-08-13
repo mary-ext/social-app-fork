@@ -1,3 +1,5 @@
+import type { FocusEvent, KeyboardEvent, RefObject } from 'react';
+
 import { Popover } from '@base-ui/react/popover';
 import { Slider } from '@base-ui/react/slider';
 
@@ -28,7 +30,7 @@ export function VolumeControl({
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	drawFocus: () => void;
-	fullscreenContainer?: React.RefObject<HTMLElement | null>;
+	fullscreenContainer?: RefObject<HTMLElement | null>;
 }) {
 	const volume = useVideoVolume();
 	const isTouch = useInputModality() === 'touch';
@@ -63,13 +65,13 @@ export function VolumeControl({
 		changeMuted(vol === 0);
 	};
 
-	const onTriggerFocus = (evt: React.FocusEvent<HTMLButtonElement>) => {
+	const onTriggerFocus = (evt: FocusEvent<HTMLButtonElement>) => {
 		if (evt.target.matches(':focus-visible')) {
 			onOpenChange(true);
 		}
 	};
 
-	const onTriggerKeyDown = (evt: React.KeyboardEvent<HTMLButtonElement>) => {
+	const onTriggerKeyDown = (evt: KeyboardEvent<HTMLButtonElement>) => {
 		switch (evt.key) {
 			case 'ArrowUp': {
 				evt.preventDefault();

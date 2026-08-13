@@ -3,6 +3,7 @@ import {
 	type ComponentType,
 	type ReactElement,
 	type ReactNode,
+	type RefObject,
 	type SVGProps,
 	useLayoutEffect,
 	useRef,
@@ -93,7 +94,7 @@ export function SettingsMenu({
 	subtitles: VideoSubtitles;
 	onOpenChange: (open: boolean) => void;
 	/** portal target while fullscreen. */
-	fullscreenContainer?: React.RefObject<HTMLElement | null>;
+	fullscreenContainer?: RefObject<HTMLElement | null>;
 }) {
 	const [panel, setPanel] = useState(INITIAL_PANEL);
 	// remount the panel when a closing popup reopens.
@@ -299,7 +300,7 @@ function Panel({
 	direction,
 	children,
 }: {
-	ref: React.RefObject<HTMLElement | null>;
+	ref: RefObject<HTMLElement | null>;
 	direction?: PanelDirection;
 	children: ReactNode;
 }) {

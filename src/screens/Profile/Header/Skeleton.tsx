@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useConstant } from '#/lib/hooks/use-constant';
 
@@ -5,7 +7,7 @@ import * as Skele from '#/components/web/Skeleton';
 
 import * as css from './Skeleton.css';
 
-export function ProfileHeaderSkeleton(_props: {}): React.ReactNode {
+export function ProfileHeaderSkeleton(_props: {}): ReactNode {
 	const { gtMobile } = useBreakpoints();
 	// freeze the bio line count for the component's lifetime so the placeholder doesn't reshuffle.
 	const bioLines = useConstant(() => Math.floor(Math.random() * 5));

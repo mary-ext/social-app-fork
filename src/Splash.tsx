@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 import { getReducedMotion } from '#/lib/browser/reduced-motion';
 
@@ -7,7 +7,7 @@ import * as styles from '#/Splash.css';
 export function Splash({
 	isReady,
 	children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
 	isReady: boolean;
 }>) {
 	const [isAnimationComplete, setIsAnimationComplete] = useState(false);

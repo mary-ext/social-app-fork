@@ -252,7 +252,7 @@ const JOINED_COUNT_WEIGHT = [9, 1];
  *
  * @param count number of placeholder rows.
  */
-export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
+export function LoadingPlaceholder({ count }: { count?: number }): ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// starter pack descriptions are often empty or short; weight toward 0–1 lines with a tail toward 2–3.

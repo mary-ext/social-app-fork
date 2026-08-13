@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
@@ -44,7 +46,7 @@ interface ProfileFeedgensProps {
 	feedCount?: number;
 }
 
-export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React.ReactNode {
+export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileFeedgensQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;

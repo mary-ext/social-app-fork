@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { Gif } from '#/lib/gif';
 
 import { GifAltTextDialog } from '#/features/composer/GifAltTextDialog';
@@ -18,7 +20,7 @@ type Props = {
 	onSubmit: (alt: string) => void;
 };
 
-export function GifAltText({ altText, gif, onSubmit }: Props): React.ReactNode {
+export function GifAltText({ altText, gif, onSubmit }: Props): ReactNode {
 	const handle = Dialog.useDialogHandle();
 
 	return (

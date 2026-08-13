@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useSyncExternalStore } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
@@ -60,10 +60,7 @@ export function useConvoActive() {
 	return ctx;
 }
 
-export function ConvoProvider({
-	children,
-	convoId,
-}: Pick<ConvoParams, 'convoId'> & { children: React.ReactNode }) {
+export function ConvoProvider({ children, convoId }: Pick<ConvoParams, 'convoId'> & { children: ReactNode }) {
 	const { chat } = getClients();
 	const { currentAccount } = useSession();
 	if (!chat || !currentAccount) {
@@ -82,7 +79,7 @@ function ConvoProviderInner({
 	convoId,
 	currentDid,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	chat: Client;
 	convoId: string;
 	currentDid: Did;

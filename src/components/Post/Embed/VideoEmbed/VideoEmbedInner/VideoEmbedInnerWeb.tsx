@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { type RefObject, useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
@@ -35,7 +35,7 @@ export function VideoEmbedInnerWeb({
 	setActive: () => void;
 	onScreen: boolean;
 	canLoad: boolean;
-	lastKnownTime: React.RefObject<number | undefined>;
+	lastKnownTime: RefObject<number | undefined>;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -127,7 +127,7 @@ function useHlsPlayer({
 }: {
 	playlist: string;
 	setError: (v: Error | null) => void;
-	videoRef: React.RefObject<HTMLVideoElement | null>;
+	videoRef: RefObject<HTMLVideoElement | null>;
 	focused: boolean;
 	canLoad: boolean;
 }) {

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
@@ -88,7 +90,7 @@ function DialogInner({
 
 	// drives the empty slot: a spinner until lists (and moderation prefs) arrive, then a network error or the
 	// friendly "no lists" prompt.
-	const listEmpty = ((): React.ReactNode => {
+	const listEmpty = ((): ReactNode => {
 		if (isLoading || !moderationOpts) {
 			return (
 				<div className={css.loading}>

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -75,7 +77,7 @@ export function PostFeedItem({
 	post: AppBskyFeedDefs.PostView;
 	rootPost: AppBskyFeedDefs.PostView;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-}): React.ReactNode {
+}): ReactNode {
 	const postShadowed = usePostShadow(post);
 	const richText: Richtext = {
 		text: record.text,
@@ -133,7 +135,7 @@ function FeedItemInner({
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	rootPost: AppBskyFeedDefs.PostView;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-}): React.ReactNode {
+}): ReactNode {
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();

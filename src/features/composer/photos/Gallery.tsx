@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { type FocusEvent, useEffect, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -93,7 +93,7 @@ const SingleImage = ({
 
 // Tabbing lands on a control button inside a tile; bring the whole tile into view rather than leaving the
 // browser to reveal just the focused corner.
-const onFocus = (evt: React.FocusEvent<HTMLDivElement>) => {
+const onFocus = (evt: FocusEvent<HTMLDivElement>) => {
 	const tile = (evt.target as HTMLElement).closest('[data-composer-image]');
 	tile?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 };

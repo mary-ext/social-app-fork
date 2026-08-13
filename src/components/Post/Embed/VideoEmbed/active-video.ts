@@ -1,4 +1,4 @@
-import { useEffect, useId, useSyncExternalStore } from 'react';
+import { type RefObject, useEffect, useId, useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
@@ -266,7 +266,7 @@ const subscribe = (onStoreChange: () => void) => emitter.subscribe(onStoreChange
  * @param ref a stable ref to the view element
  * @returns the view state and a function that activates it immediately
  */
-export function useActiveVideo(ref: React.RefObject<Element | null>) {
+export function useActiveVideo(ref: RefObject<Element | null>) {
 	const id = useId();
 
 	useEffect(() => {

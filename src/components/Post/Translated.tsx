@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent } from 'react';
+import { type ReactNode, useEffect, useEffectEvent } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -36,7 +36,7 @@ type Props = {
  * @param props post and display options
  * @returns translation controls, or `null` when translation is unavailable
  */
-export const TranslatedPost = ({ post, onHide, onShow, shown, textSize }: Props): React.ReactNode => {
+export const TranslatedPost = ({ post, onHide, onShow, shown, textSize }: Props): ReactNode => {
 	const { hasSession } = useSession();
 
 	if (!hasSession || getPostRecord(post).text === '') {
@@ -48,7 +48,7 @@ export const TranslatedPost = ({ post, onHide, onShow, shown, textSize }: Props)
 	);
 };
 
-const TranslatedPostInner = ({ post, onHide, onShow, shown, textSize }: Props): React.ReactNode => {
+const TranslatedPostInner = ({ post, onHide, onShow, shown, textSize }: Props): ReactNode => {
 	const { state, targetLanguage, translate } = usePostTranslation(post);
 	const startTranslation = useEffectEvent(translate);
 
@@ -117,13 +117,7 @@ const TranslatedPostInner = ({ post, onHide, onShow, shown, textSize }: Props): 
 	}
 };
 
-const LanguagePair = ({
-	source,
-	target,
-}: {
-	source: string | undefined;
-	target: string;
-}): React.ReactNode => {
+const LanguagePair = ({ source, target }: { source: string | undefined; target: string }): ReactNode => {
 	if (source === undefined) {
 		return (
 			<Text color="textContrastMedium" leading="snug" size="xs">
@@ -145,7 +139,7 @@ const LanguagePair = ({
 	);
 };
 
-const DismissButton = ({ onClick }: { onClick: () => void }): React.ReactNode => {
+const DismissButton = ({ onClick }: { onClick: () => void }): ReactNode => {
 	return (
 		<Button
 			className={css.dismiss}

@@ -1,6 +1,8 @@
 import {
 	Fragment,
 	memo,
+	type RefObject,
+	type UIEvent,
 	useEffect,
 	useEffectEvent,
 	useImperativeHandle,
@@ -115,7 +117,7 @@ export const ComposePost = ({
 	videoUri: initVideoUri,
 	cancelRef,
 }: Props & {
-	cancelRef?: React.RefObject<CancelRef | null>;
+	cancelRef?: RefObject<CancelRef | null>;
 }) => {
 	const { currentAccount } = useSession();
 	const { appview, pds, pdsUrl } = getClients();
@@ -977,7 +979,7 @@ const ComposerPost = memo(function ComposerPost({
 }: {
 	post: PostDraft;
 	dispatch: (action: ComposerAction) => void;
-	textInputRef: React.RefObject<TextInputRef | null> | null;
+	textInputRef: RefObject<TextInputRef | null> | null;
 	isActive: boolean;
 	isReply: boolean;
 	isFirstPost: boolean;
@@ -1246,7 +1248,7 @@ function useScrollTracker({
 	scrollViewRef,
 	stickyBottom,
 }: {
-	scrollViewRef: React.RefObject<HTMLDivElement | null>;
+	scrollViewRef: RefObject<HTMLDivElement | null>;
 	stickyBottom: boolean;
 }) {
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -1254,7 +1256,7 @@ function useScrollTracker({
 	const scrollViewHeight = useRef(Infinity);
 	const contentHeight = useRef(0);
 
-	const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
+	const scrollHandler = (event: UIEvent<HTMLDivElement>) => {
 		const el = event.currentTarget;
 		contentOffset.current = Math.floor(el.scrollTop);
 		contentHeight.current = Math.floor(el.scrollHeight);

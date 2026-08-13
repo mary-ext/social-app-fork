@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { type ChangeEvent, useRef } from 'react';
 
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -21,7 +21,7 @@ export function SubtitleFilePicker({
 		ref.current?.click();
 	};
 
-	const handlePick = (evt: React.ChangeEvent<HTMLInputElement>) => {
+	const handlePick = (evt: ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = evt.target.files?.[0];
 		if (selectedFile) {
 			if (

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type ReactNode, useContext } from 'react';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
@@ -19,7 +19,7 @@ export function InviteLinkDialogProvider({
 	children,
 }: {
 	convo: ConvoWithDetails | undefined;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	if (convo?.kind !== 'group') {
 		return <>{children}</>;
@@ -32,7 +32,7 @@ function GroupInviteLinkDialogProvider({
 	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	const { currentAccount } = useSession();
 	const handle = Dialog.useDialogHandle();

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyEmbedRecord } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
@@ -18,7 +20,7 @@ function MessageItemEmbed({
 	isFromSelf: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
-}): React.ReactNode {
+}): ReactNode {
 	return (
 		<MessageContextProvider>
 			<div className={css.outer}>

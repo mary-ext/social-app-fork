@@ -1,4 +1,4 @@
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, type ReactNode, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -24,7 +24,7 @@ export const ShareMenu = ({
 	tooltip: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	onShare: () => void;
-}): React.ReactNode => {
+}): ReactNode => {
 	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
 

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, useLayoutEffect, useRef, useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -15,7 +15,7 @@ export function CountWheel({
 	count: number;
 	isToggled: boolean;
 	hasBeenToggled: boolean;
-	renderCount: (props: { count: number }) => React.ReactNode;
+	renderCount: (props: { count: number }) => ReactNode;
 }) {
 	const reducedMotion = useReducedMotion();
 	const shouldAnimate = hasBeenToggled && !reducedMotion;

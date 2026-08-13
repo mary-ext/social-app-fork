@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query';
 import {
@@ -120,7 +122,7 @@ export function QueryProvider({
 	children,
 	currentDid,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	currentDid: string | undefined;
 }) {
 	return (
@@ -138,7 +140,7 @@ function QueryProviderInner({
 	children,
 	currentDid,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	currentDid: string | undefined;
 }) {
 	// keep a mount-time snapshot for the account invariant.

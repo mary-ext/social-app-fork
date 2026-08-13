@@ -2,6 +2,7 @@ import {
 	memo,
 	type ReactNode,
 	type Ref,
+	type RefObject,
 	use,
 	useEffect,
 	useImperativeHandle,
@@ -43,7 +44,7 @@ type VirtualizerOptions<ItemT> = {
 	estimateHeight: number;
 	keyExtractor: (item: ItemT, index: number) => string;
 	overscanCount: number;
-	scrollRoot: React.RefObject<HTMLElement | null> | undefined;
+	scrollRoot: RefObject<HTMLElement | null> | undefined;
 };
 
 type VirtualizerProps<ItemT> = VirtualizerOptions<ItemT> & {
@@ -219,7 +220,7 @@ const readViewport = ({
 	scrollRoot,
 }: {
 	container: HTMLElement;
-	scrollRoot: React.RefObject<HTMLElement | null> | undefined;
+	scrollRoot: RefObject<HTMLElement | null> | undefined;
 }): Viewport => {
 	const containerRect = container.getBoundingClientRect();
 	const root = scrollRoot?.current ?? null;
@@ -248,7 +249,7 @@ const scrollBy = ({
 	scrollRoot,
 }: {
 	offset: number;
-	scrollRoot: React.RefObject<HTMLElement | null> | undefined;
+	scrollRoot: RefObject<HTMLElement | null> | undefined;
 }) => {
 	const root = scrollRoot?.current;
 	// 'instant' so compensation scrolls never animate, even under an ancestor `scroll-behavior: smooth`.

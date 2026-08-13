@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type RefObject, useState } from 'react';
 
 import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -45,7 +45,7 @@ export function ComposerFooter({
 	currentLanguages: string[];
 	onSelectLanguage?: (language: string) => void;
 	languageNudgeAt: number;
-	textInputRef: React.RefObject<TextInputRef | null>;
+	textInputRef: RefObject<TextInputRef | null>;
 }) {
 	const { gtPhone } = useBreakpoints();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();

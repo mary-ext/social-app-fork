@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
@@ -76,7 +78,7 @@ export function Embed({
 	}
 }
 
-function Outer({ children, className }: { children?: React.ReactNode; className?: string }) {
+function Outer({ children, className }: { children?: ReactNode; className?: string }) {
 	return <div className={clsx(styles.outer, className)}>{children}</div>;
 }
 
@@ -89,7 +91,7 @@ function ImageItem({
 	thumbnail?: string;
 	alt?: string;
 	blurred?: boolean;
-	children?: React.ReactNode;
+	children?: ReactNode;
 }) {
 	return (
 		<div

@@ -90,7 +90,7 @@ function AnchorPostControls({
 	onPressReply,
 	onPostReply,
 	viaRepost,
-}: PostControlsProps): React.ReactNode {
+}: PostControlsProps): ReactNode {
 	const {
 		hasLikeIconBeenToggled,
 		onPressToggleLike,

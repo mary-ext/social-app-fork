@@ -1,6 +1,6 @@
 /** A kind of companion API to ./feed.ts. See that file for more info. */
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, type PropsWithChildren, useContext, useEffect, useRef, useState } from 'react';
 
 import { ok } from '@atcute/client';
 
@@ -38,7 +38,7 @@ const apiContext = createContext<ApiContext>({
 });
 apiContext.displayName = 'NotificationsUnreadApiContext';
 
-export function Provider({ children }: React.PropsWithChildren<{}>) {
+export function Provider({ children }: PropsWithChildren<{}>) {
 	const { hasSession } = useSession();
 	const { appview } = getClients();
 	const queryClient = useQueryClient();

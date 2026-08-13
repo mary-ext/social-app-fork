@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
@@ -20,7 +22,7 @@ function MessageItemInviteEmbed({
 	isFromSelf: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
-}): React.ReactNode {
+}): ReactNode {
 	const convo = useConvoActive();
 	const { status, preview, action } = ChatInvite.useChatInvite({
 		code: embed.joinLinkPreview.code,

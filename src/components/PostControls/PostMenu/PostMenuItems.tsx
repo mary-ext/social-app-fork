@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 import type {
 	AnyProfileView,
@@ -78,7 +78,7 @@ function PostMenuItems({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-}): React.ReactNode {
+}): ReactNode {
 	const { hasSession, currentAccount } = useSession();
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();

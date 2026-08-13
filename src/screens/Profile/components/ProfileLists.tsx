@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
@@ -44,7 +46,7 @@ interface ProfileListsProps {
 	listCount?: number;
 }
 
-export function ProfileLists({ did, listCount }: ProfileListsProps): React.ReactNode {
+export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileListsQuery(did);
 	const isEmpty = !isPending && !data?.pages[0]?.lists.length;

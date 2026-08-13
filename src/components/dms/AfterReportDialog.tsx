@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -43,7 +43,7 @@ export function AfterReportDialog({
 	params: ReportDialogParams;
 	currentScreen: 'list' | 'conversation';
 	onClose?: () => void;
-}): React.ReactNode {
+}): ReactNode {
 	return (
 		<Dialog.Root
 			handle={handle}

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import * as TextField from '#/components/TextField';
 
 import { m } from '#/paraglide/messages';
@@ -11,7 +13,7 @@ type Props = {
 	question: string;
 };
 
-export const QuestionField = ({ answer, disabled, onAnswer, question }: Props): React.ReactNode => {
+export const QuestionField = ({ answer, disabled, onAnswer, question }: Props): ReactNode => {
 	return (
 		<TextField.Root>
 			<TextField.LabelText>{question}</TextField.LabelText>

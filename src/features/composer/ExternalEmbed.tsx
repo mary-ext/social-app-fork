@@ -1,3 +1,5 @@
+import type { CSSProperties, ReactNode } from 'react';
+
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
@@ -39,7 +41,7 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 		} as AppBskyEmbedExternal.ViewExternal;
 	}
 
-	const loadingStyle: React.CSSProperties = {
+	const loadingStyle: CSSProperties = {
 		aspectRatio: (() => {
 			const dims = gif.media_formats.gif?.dims;
 			if (dims && dims[0] > 0 && dims[1] > 0) {
@@ -86,7 +88,7 @@ export const ExternalEmbedLink = ({
 }) => {
 	const { data, error } = useResolveLinkQuery(uri);
 	const thumbUrl = getBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
-	let linkComponent: React.ReactNode;
+	let linkComponent: ReactNode;
 	if (data) {
 		if (data.type === 'external') {
 			const external = data.view?.external;
@@ -183,9 +185,9 @@ function Container({
 	className,
 	children,
 }: {
-	style?: React.CSSProperties;
+	style?: CSSProperties;
 	className?: string;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	return (
 		<div className={clsx(styles.contentContainer, className)} style={style}>

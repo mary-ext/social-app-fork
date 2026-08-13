@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, type ReactNode, useContext, useReducer } from 'react';
 
 import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 
@@ -130,7 +130,7 @@ export function Provider({
 	starterPack?: AppBskyGraphDefs.StarterPackView;
 	listItems?: AppBskyGraphDefs.ListItemView[];
 	targetProfile: AnyProfileView;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	const createInitialState = (): State => {
 		const targetDid = targetProfile?.did;

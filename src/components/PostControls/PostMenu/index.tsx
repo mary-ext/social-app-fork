@@ -1,4 +1,4 @@
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, type ReactNode, useState } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
@@ -36,7 +36,7 @@ export const PostOverflowMenu = ({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-}): React.ReactNode => {
+}): ReactNode => {
 	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
 

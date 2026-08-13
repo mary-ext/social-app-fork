@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import type { Gif } from '#/lib/gif';
@@ -26,7 +26,7 @@ type Props = {
 	onSubmit: (alt: string) => void;
 };
 
-export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
+export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): ReactNode {
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
 			<Dialog.Popup scroll="body">
@@ -36,7 +36,7 @@ export function GifAltTextDialog({ altText, gif, handle, onSubmit }: Props): Rea
 	);
 }
 
-function DialogInner({ altText, gif, handle, onSubmit }: Props): React.ReactNode {
+function DialogInner({ altText, gif, handle, onSubmit }: Props): ReactNode {
 	const { data } = useResolveGifQuery(gif);
 	const thumb = getBlobUrl(data?.thumb?.source.blob);
 	const params = data ? parseGifEmbedFromUrl(data.uri) : undefined;
@@ -74,7 +74,7 @@ const GifAltTextForm = ({
 	params,
 	thumb,
 	vendorAltText,
-}: GifAltTextFormProps): React.ReactNode => {
+}: GifAltTextFormProps): ReactNode => {
 	const [altText, setAltText] = useState(initialAlt);
 	const counterId = useId();
 

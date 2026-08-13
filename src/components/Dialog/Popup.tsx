@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode, Ref } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
@@ -91,8 +91,8 @@ export function Body({
 }: {
 	children: ReactNode;
 	className?: string;
-	ref?: React.Ref<HTMLDivElement>;
-} & React.HTMLAttributes<HTMLDivElement>) {
+	ref?: Ref<HTMLDivElement>;
+} & HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div ref={ref} className={clsx(styles.body, className)} {...props}>
 			{children}

@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 
@@ -36,7 +36,7 @@ export function EmojiGrid({
 	onSelect,
 	ref,
 	skinTone,
-}: EmojiGridProps & { ref?: React.Ref<EmojiGridHandle> }) {
+}: EmojiGridProps & { ref?: Ref<EmojiGridHandle> }) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [scrollTop, setScrollTop] = useState(0);
 

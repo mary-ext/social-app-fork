@@ -1,4 +1,4 @@
-import { memo, type MouseEvent, useEffect, useRef } from 'react';
+import { memo, type MouseEvent, type ReactNode, useEffect, useRef } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -58,7 +58,7 @@ let MessageItem = ({
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 	squaredBottomCorner: boolean;
 	squaredTopCorner: boolean;
-}): React.ReactNode => {
+}): ReactNode => {
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	const queryClient = useQueryClient();
@@ -341,7 +341,7 @@ function MessageItemMetadata({
 }: {
 	item: ConvoItem & { type: 'message' | 'pendingMessage' };
 	align: 'left' | 'right';
-}): React.ReactNode {
+}): ReactNode {
 	const handleRetry = (e: MouseEvent) => {
 		if (item.type === 'pendingMessage' && item.retry) {
 			e.preventDefault();

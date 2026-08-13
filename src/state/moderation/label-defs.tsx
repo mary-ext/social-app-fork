@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type PropsWithChildren, useContext } from 'react';
 
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { InterpretedLabelMapping } from '@atcute/bluesky-moderation';
@@ -16,7 +16,7 @@ const stateContext = createContext<StateContext>({
 });
 stateContext.displayName = 'LabelDefsStateContext';
 
-export function Provider({ children }: React.PropsWithChildren<{}>) {
+export function Provider({ children }: PropsWithChildren<{}>) {
 	const state = useLabelDefinitionsQuery();
 	return <stateContext.Provider value={state}>{children}</stateContext.Provider>;
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 import { IS_SAFARI } from '#/lib/browser/platform';
 
@@ -56,8 +56,8 @@ export function usePointerHandlers({
 	imageCount,
 }: {
 	getScrollEl: () => HTMLElement | null;
-	itemWidthsRef: React.RefObject<Map<number, number>>;
-	currentIndexRef: React.RefObject<number>;
+	itemWidthsRef: RefObject<Map<number, number>>;
+	currentIndexRef: RefObject<number>;
 	scrollTo: (offset: number) => void;
 	onSettle: (index: number) => void;
 	imageCount: number;

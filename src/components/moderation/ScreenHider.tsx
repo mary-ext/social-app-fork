@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 
@@ -20,7 +20,7 @@ export function ScreenHider({
 	modui,
 	className,
 	children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
 	screenDescription: string;
 	modui: DisplayRestrictions;
 	className?: string;

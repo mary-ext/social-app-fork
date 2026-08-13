@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type ReactNode, useContext } from 'react';
 
 import type {
 	createPostThreadOtherQueryKey,
@@ -22,7 +22,7 @@ export function PostThreadContextProvider({
 	children,
 	context,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	context?: PostThreadContextType;
 }) {
 	return <PostThreadContext.Provider value={context}>{children}</PostThreadContext.Provider>;

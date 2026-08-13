@@ -1,4 +1,12 @@
-import { type ReactNode, type Ref, startTransition, useEffect, useImperativeHandle, useRef } from 'react';
+import {
+	type ReactNode,
+	type Ref,
+	type RefObject,
+	startTransition,
+	useEffect,
+	useImperativeHandle,
+	useRef,
+} from 'react';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
@@ -30,7 +38,7 @@ export type ListMethods = {
 	scrollToTop: () => void;
 };
 
-export type ListRef = React.RefObject<ListMethods | null>;
+export type ListRef = RefObject<ListMethods | null>;
 
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
@@ -67,7 +75,7 @@ export type ListProps<ItemT> = {
 	 * to the viewport (document scroll); pass a bounded `overflow` container's ref (e.g. a split-view column)
 	 * to scroll within it instead.
 	 */
-	scrollRoot?: React.RefObject<HTMLElement | null>;
+	scrollRoot?: RefObject<HTMLElement | null>;
 };
 
 /**
@@ -256,7 +264,7 @@ function Visibility({
 	className?: string;
 	enabled: boolean;
 	onVisibleChange: (isVisible: boolean) => void;
-	root?: React.RefObject<Element | null>;
+	root?: RefObject<Element | null>;
 	topMargin?: string;
 }) {
 	const isIntersecting = useRef<boolean | undefined>(undefined);

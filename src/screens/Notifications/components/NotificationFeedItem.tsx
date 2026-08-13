@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, type ReactElement, type ReactNode, useState } from 'react';
 
 import type {
 	AnyProfileView,
@@ -84,7 +84,7 @@ interface Author {
 	moderation: ModerationDecision;
 }
 
-const othersCountMarkup = ({ children }: { children?: React.ReactNode }) => (
+const othersCountMarkup = ({ children }: { children?: ReactNode }) => (
 	<Text weight="semiBold">{children}</Text>
 );
 
@@ -98,7 +98,7 @@ let NotificationFeedItem = ({
 	moderationOpts: ModerationOptions;
 	highlightUnread: boolean;
 	hideTopBorder?: boolean;
-}): React.ReactNode => {
+}): ReactNode => {
 	const queryClient = useQueryClient();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
 	let itemTarget: RouteTarget | undefined;
@@ -217,7 +217,7 @@ let NotificationFeedItem = ({
 		);
 	}
 
-	const authorLinkMarkup = ({ children }: { children?: React.ReactNode }) => (
+	const authorLinkMarkup = ({ children }: { children?: ReactNode }) => (
 		<ProfileHoverCard actor={firstAuthor.profile.did}>
 			<InlineLinkText
 				key={firstAuthor.profile.did}
@@ -248,7 +248,7 @@ let NotificationFeedItem = ({
 			: undefined;
 
 	let a11yLabel = '';
-	let notificationContent: React.ReactElement;
+	let notificationContent: ReactElement;
 	let icon = <HeartIconFilled className={css.likeIcon} />;
 
 	if (item.type === 'post-like') {

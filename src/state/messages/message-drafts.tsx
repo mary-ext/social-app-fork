@@ -1,10 +1,18 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import {
+	createContext,
+	type Dispatch,
+	type ReactNode,
+	useContext,
+	useEffect,
+	useReducer,
+	useRef,
+} from 'react';
 
 import { useCurrentConvoId } from './current-convo-id';
 
 const MessageDraftsContext = createContext<{
 	state: State;
-	dispatch: React.Dispatch<Actions>;
+	dispatch: Dispatch<Actions>;
 } | null>(null);
 MessageDraftsContext.displayName = 'MessageDraftsContext';
 
@@ -67,7 +75,7 @@ function reducer(state: State, action: Actions): State {
 	}
 }
 
-export function MessageDraftsProvider({ children }: { children: React.ReactNode }) {
+export function MessageDraftsProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(reducer, {});
 
 	const ctx = { state, dispatch };

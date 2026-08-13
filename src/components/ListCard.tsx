@@ -212,7 +212,7 @@ const MAX_LOADING_ROW_COUNT = 10;
  * @param count number of placeholder rows. defaults to a small value and is capped to prevent rendering
  *   excessive rows.
  */
-export function LoadingPlaceholder({ count }: { count?: number }): React.ReactNode {
+export function LoadingPlaceholder({ count }: { count?: number }): ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// list descriptions are often empty or short; weight toward 0–1 lines with a tail toward 2–3.

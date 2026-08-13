@@ -1,3 +1,5 @@
+import type { Ref, RefCallback } from 'react';
+
 import { mapDefined } from '@mary/array-fns';
 
 /**
@@ -6,7 +8,7 @@ import { mapDefined } from '@mary/array-fns';
  * @param refs array of React refs to be merged
  * @returns ref callback that updates all provided refs
  */
-export function mergeRefs<T = unknown>(refs: Array<React.Ref<T> | undefined>): React.RefCallback<T> {
+export function mergeRefs<T = unknown>(refs: Array<Ref<T> | undefined>): RefCallback<T> {
 	return (value) => {
 		if (value === null) {
 			throw new Error(`unexpected null value`);

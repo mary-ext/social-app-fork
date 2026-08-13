@@ -1,3 +1,5 @@
+import type { ReactElement, ReactNode } from 'react';
+
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
@@ -49,7 +51,7 @@ interface ProfileStarterPacksProps {
 	starterPackCount?: number;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
-	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
+	emptyStateIcon?: EmptyStateIcon | ReactElement;
 }
 
 export function ProfileStarterPacks({
@@ -59,7 +61,7 @@ export function ProfileStarterPacks({
 	emptyStateMessage,
 	emptyStateButton,
 	emptyStateIcon,
-}: ProfileStarterPacksProps): React.ReactNode {
+}: ProfileStarterPacksProps): ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useActorStarterPacksQuery({ did });
 	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;

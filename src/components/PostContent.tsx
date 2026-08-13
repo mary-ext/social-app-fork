@@ -1,3 +1,5 @@
+import type { CSSProperties, ReactNode } from 'react';
+
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
@@ -36,8 +38,8 @@ function PostContent({
 	ignoreMute?: boolean;
 	onOpenEmbed?: () => void;
 	/** Style applied to the embed wrapper div. */
-	embedStyle?: React.CSSProperties;
-}): React.ReactNode {
+	embedStyle?: CSSProperties;
+}): ReactNode {
 	const listModui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 	const bodyModui =
 		displayContext === 'view' ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : listModui;

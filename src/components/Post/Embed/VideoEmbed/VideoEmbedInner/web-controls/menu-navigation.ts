@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, type PointerEvent, type RefObject, useEffect, useRef, useState } from 'react';
 
 import type { InteractionType } from '@base-ui/utils/useEnhancedClickHandler';
 
@@ -71,10 +71,7 @@ export const menuInitialFocus = (panel: HTMLElement | null, openType: Interactio
  * @param options initial panel navigation state
  * @returns composite and panel props
  */
-export function useMenuNavigation(
-	ref: React.RefObject<HTMLElement | null>,
-	{ navigated }: { navigated: boolean },
-) {
+export function useMenuNavigation(ref: RefObject<HTMLElement | null>, { navigated }: { navigated: boolean }) {
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
 	const [entryRowReady, setEntryRowReady] = useState(false);
 	const rows = useRef<HTMLElement[]>([]);
@@ -125,7 +122,7 @@ export function useMenuNavigation(
 
 	const rootProps = {
 		tabIndex: -1,
-		onKeyDown: (event: React.KeyboardEvent) => {
+		onKeyDown: (event: KeyboardEvent) => {
 			// the composite does not wrap from -1.
 			if (event.key === 'ArrowUp' && highlightedIndex === -1) {
 				const last = rows.current.at(-1);
@@ -135,7 +132,7 @@ export function useMenuNavigation(
 				}
 			}
 		},
-		onPointerOut: (event: React.PointerEvent) => {
+		onPointerOut: (event: PointerEvent) => {
 			// ignore pointer movement caused by panel resizing.
 			if (!canHover(modality)) {
 				return;

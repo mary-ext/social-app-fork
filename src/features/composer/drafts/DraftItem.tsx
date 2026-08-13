@@ -1,4 +1,4 @@
-import { type ComponentType, type SVGProps, useEffect, useState } from 'react';
+import { type ComponentType, type ReactNode, type SVGProps, useEffect, useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -224,15 +224,7 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 	);
 }
 
-function MediaTile({
-	thumbnail,
-	alt,
-	children,
-}: {
-	thumbnail?: string;
-	alt?: string;
-	children?: React.ReactNode;
-}) {
+function MediaTile({ thumbnail, alt, children }: { thumbnail?: string; alt?: string; children?: ReactNode }) {
 	return (
 		<div className={clsx(styles.square, !thumbnail && styles.squareEmpty)}>
 			{thumbnail && <img className={styles.image} src={thumbnail} alt={alt} />}

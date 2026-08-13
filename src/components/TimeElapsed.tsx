@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactElement, useState } from 'react';
 
 import { useTick } from '#/state/tick';
 
@@ -8,7 +8,7 @@ export function TimeElapsed({
 	children,
 	timestamp,
 }: {
-	children: ({ timeElapsed }: { timeElapsed: string }) => React.ReactElement;
+	children: ({ timeElapsed }: { timeElapsed: string }) => ReactElement;
 	timestamp: string;
 }) {
 	const tick = useTick();

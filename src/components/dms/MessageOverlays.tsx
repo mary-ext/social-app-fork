@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -36,7 +36,7 @@ export function useMessageDialogs() {
 	return ctx;
 }
 
-export function MessageOverlays({ children }: { children: React.ReactNode }) {
+export function MessageOverlays({ children }: { children: ReactNode }) {
 	const queryClient = useQueryClient();
 	const convo = useConvoActive();
 

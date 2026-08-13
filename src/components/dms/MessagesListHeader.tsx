@@ -1,3 +1,5 @@
+import type { Ref } from 'react';
+
 import {
 	type BlockingModerationCause,
 	DisplayContext,
@@ -39,7 +41,7 @@ export function MessagesListHeader({
 	ref,
 }: {
 	convo?: ConvoWithDetails | null;
-	ref?: React.Ref<HTMLDivElement>;
+	ref?: Ref<HTMLDivElement>;
 }) {
 	const moderationOpts = useModerationOpts();
 	const { isWithinSplitView } = useIsWithinSplitView();

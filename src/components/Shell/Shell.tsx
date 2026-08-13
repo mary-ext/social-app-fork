@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, type ReactNode, Suspense, useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -22,7 +22,7 @@ const Drawer = lazy(() => import('#/components/Shell/Drawer').then((m) => ({ def
 export type ShellProps = {
 	/** whether the route asks for the bottom bar, from its `bottomBar` meta. */
 	bottomBar: boolean;
-	children: React.ReactNode;
+	children: ReactNode;
 	routeName: string;
 };
 

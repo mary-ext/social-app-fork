@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { targetToShareUrl } from '#/lib/routes/app-links';
@@ -28,7 +30,7 @@ interface ShareMenuItemsProps {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 }
 
-function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode {
+function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): ReactNode {
 	const { hasSession } = useSession();
 	const router = useRouter();
 	const sendViaChatHandle = Dialog.useDialogHandle();

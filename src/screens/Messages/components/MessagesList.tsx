@@ -1,4 +1,12 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+	Fragment,
+	type ReactNode,
+	type RefObject,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react';
 
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
@@ -65,7 +73,7 @@ function IntersectionSentinel({
 	rootMargin,
 }: {
 	onChange: (isIntersecting: boolean) => void;
-	root: React.RefObject<HTMLElement | null>;
+	root: RefObject<HTMLElement | null>;
 	rootMargin?: string;
 }) {
 	const nodeRef = useRef<HTMLDivElement | null>(null);
@@ -111,7 +119,7 @@ export function MessagesList({
 	footer,
 	hasAcceptOverride,
 }: {
-	footer?: React.ReactNode;
+	footer?: ReactNode;
 	hasAcceptOverride?: boolean;
 }) {
 	const convoState = useConvoActive();
@@ -312,7 +320,7 @@ export function MessagesList({
 		return true;
 	});
 
-	const renderItem = (item: RenderItem): React.ReactNode => {
+	const renderItem = (item: RenderItem): ReactNode => {
 		if (item.type === 'message' || item.type === 'pendingMessage') {
 			return (
 				<MessageItem
@@ -450,7 +458,7 @@ function ConversationFooter({
 }: {
 	convoState: ConvoState;
 	hasAcceptOverride?: boolean;
-	children?: ((props: { loading?: boolean }) => React.ReactNode) | React.ReactNode;
+	children?: ((props: { loading?: boolean }) => ReactNode) | ReactNode;
 }) {
 	if (!isConvoActive(convoState)) {
 		return null;

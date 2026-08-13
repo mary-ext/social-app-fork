@@ -1,4 +1,13 @@
-import { cloneElement, createContext, isValidElement, use, useState } from 'react';
+import {
+	cloneElement,
+	createContext,
+	type CSSProperties,
+	isValidElement,
+	type ReactNode,
+	type Ref,
+	use,
+	useState,
+} from 'react';
 
 import { clsx } from 'clsx';
 
@@ -14,7 +23,7 @@ const BleedContext = createContext<HTMLElement | null>(null);
 
 type GalleryBleedChildProps = {
 	className?: string;
-	ref?: React.Ref<HTMLElement>;
+	ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -24,7 +33,7 @@ type GalleryBleedChildProps = {
  * @param props
  * @param props.children single child that must be a DOM element.
  */
-export function GalleryBleed({ children }: { children: React.ReactNode }) {
+export function GalleryBleed({ children }: { children: ReactNode }) {
 	const [bleedEl, setBleedEl] = useState<HTMLElement | null>(null);
 
 	if (!isValidElement<GalleryBleedChildProps>(children)) {
@@ -45,7 +54,7 @@ export function GalleryBleed({ children }: { children: React.ReactNode }) {
 
 type GalleryBleedStrip = {
 	/** apply to the strip's overflowing child; sets no width of its own. */
-	bleedStyle: React.CSSProperties;
+	bleedStyle: CSSProperties;
 	bleedWidth: number;
 	insetLeft: number;
 	ref: (el: HTMLElement | null) => void;

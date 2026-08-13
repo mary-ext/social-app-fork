@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons/syntax';
@@ -227,7 +227,7 @@ function MessageInputInviteEmbedBody({
 	return <ChatInvite.Card preview={preview} />;
 }
 
-function SimpleContainer({ children, onRemove }: { children: React.ReactNode; onRemove?: () => void }) {
+function SimpleContainer({ children, onRemove }: { children: ReactNode; onRemove?: () => void }) {
 	return (
 		<div className={css.simpleContainer}>
 			{children}

@@ -11,7 +11,7 @@ type Props = {
 	imageUrl: string;
 };
 
-export const CompactLayout = ({ children, imageUrl }: Props): React.ReactNode => {
+export const CompactLayout = ({ children, imageUrl }: Props): ReactNode => {
 	const [fullHeight, setFullHeight] = useState(0);
 
 	const scrollAway = fullHeight * (1 - styles.COLLAPSED_SCALE);

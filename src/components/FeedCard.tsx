@@ -283,7 +283,7 @@ export function LoadingPlaceholder({
 }: {
 	count?: number;
 	topBorder?: boolean;
-}): React.ReactNode {
+}): ReactNode {
 	const rowCount = Math.min(count ?? DEFAULT_LOADING_ROW_COUNT, MAX_LOADING_ROW_COUNT);
 	const rows = Array.from({ length: rowCount }, () => ({
 		// ~5% of feeds carry no description; the rest cluster around 1 line with a long tail.

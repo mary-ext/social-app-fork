@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 import { tween } from '#/components/ImageEmbed/carousel/tween';
 import { getOffsetForIndex } from '#/components/ImageEmbed/carousel/utils';
@@ -19,8 +19,8 @@ export function useKeyboardHandlers({
 	imageCount,
 }: {
 	getScrollEl: () => HTMLElement | null;
-	itemWidthsRef: React.RefObject<Map<number, number>>;
-	currentIndexRef: React.RefObject<number>;
+	itemWidthsRef: RefObject<Map<number, number>>;
+	currentIndexRef: RefObject<number>;
 	scrollTo: (offset: number) => void;
 	onSettle: (index: number) => void;
 	imageCount: number;

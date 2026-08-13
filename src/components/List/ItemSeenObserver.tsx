@@ -1,4 +1,4 @@
-import { createContext, useEffect, type ReactNode } from 'react';
+import { createContext, type ReactNode, type RefObject, useEffect } from 'react';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
@@ -20,7 +20,7 @@ export function ItemSeenObserver<ItemT>({
 	children: ReactNode;
 	enabled: boolean;
 	onItemSeen: (item: ItemT) => void;
-	root: React.RefObject<HTMLElement | null> | undefined;
+	root: RefObject<HTMLElement | null> | undefined;
 }) {
 	const reportSeen = useNonReactiveCallback(onItemSeen);
 

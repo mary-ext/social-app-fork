@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -94,7 +96,7 @@ function ThreadItemTreePostOuterWrapper({
 	children,
 }: {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	const indents = Math.max(0, item.ui.indent - 1);
 
@@ -117,7 +119,7 @@ function ThreadItemTreePostInnerWrapper({
 	children,
 }: {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
-	children: React.ReactNode;
+	children: ReactNode;
 }) {
 	return (
 		<div className={clsx(css.innerWrapper, showsTopBorder(item) && css.innerWrapperBordered)}>
@@ -141,7 +143,7 @@ function ThreadItemTreePostInner({
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
-}): React.ReactNode {
+}): ReactNode {
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 

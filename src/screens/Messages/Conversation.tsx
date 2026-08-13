@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
@@ -127,7 +127,7 @@ function InnerReady({
 
 	const header = <MessagesListHeader convo={convo} ref={headerRef} />;
 
-	let footer: React.ReactNode = null;
+	let footer: ReactNode = null;
 	if (isDisabled) {
 		footer = <ChatDisabled />;
 	} else if (

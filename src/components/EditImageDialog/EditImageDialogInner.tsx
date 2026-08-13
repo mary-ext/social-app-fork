@@ -1,4 +1,4 @@
-import { useImperativeHandle, useRef, useState } from 'react';
+import { type RefObject, useImperativeHandle, useRef, useState } from 'react';
 
 import { Cropper, type CropperConfig, type CropValue } from '@oomfware/cropper';
 
@@ -99,7 +99,7 @@ function EditImageInner({
 	aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
 	Omit<EditImageDialogProps, 'image'> & {
-		saveRef: React.RefObject<{ save: () => Promise<void> } | null>;
+		saveRef: RefObject<{ save: () => Promise<void> } | null>;
 	}) {
 	const source = image.source;
 	const sourceUrl = getBlobUrl(source.blob);

@@ -1,4 +1,4 @@
-import { createContext, use } from 'react';
+import { createContext, type ReactNode, use } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
@@ -84,7 +84,7 @@ export function ProfileHeaderProvider({
 	onFollowChange,
 	profile: profileUnshadowed,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	isPlaceholderProfile?: boolean;
 	moderationOpts: ModerationOptions;
 	/** Called after a successful follow/unfollow with the new following state. */

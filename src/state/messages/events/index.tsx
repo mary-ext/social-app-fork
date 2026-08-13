@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, type ReactNode, useContext, useEffect } from 'react';
 
 import type { Client } from '@atcute/client';
 
@@ -19,7 +19,7 @@ export function useMessagesEventBus() {
 	return ctx;
 }
 
-export function MessagesEventBusProvider({ children }: { children: React.ReactNode }) {
+export function MessagesEventBusProvider({ children }: { children: ReactNode }) {
 	const { currentAccount } = useSession();
 	const { chat } = getClients();
 
@@ -30,7 +30,7 @@ export function MessagesEventBusProvider({ children }: { children: React.ReactNo
 	return <MessagesEventBusProviderInner chat={chat}>{children}</MessagesEventBusProviderInner>;
 }
 
-function MessagesEventBusProviderInner({ chat, children }: { chat: Client; children: React.ReactNode }) {
+function MessagesEventBusProviderInner({ chat, children }: { chat: Client; children: ReactNode }) {
 	const bus = useConstant(() => new MessagesEventBus({ chat }));
 
 	useEffect(() => {

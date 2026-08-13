@@ -1,4 +1,4 @@
-import type { ComponentType, SVGProps } from 'react';
+import type { ComponentType, PropsWithChildren, SVGProps } from 'react';
 
 import { Text } from '#/components/Text';
 
@@ -9,7 +9,7 @@ export function ChatFooter({
 	heading,
 	subheading,
 	icon: Icon,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
 	heading: string;
 	subheading?: string;
 	icon: ComponentType<SVGProps<SVGSVGElement>>;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -186,7 +186,7 @@ function ReactionRow({
 	profile: AnyProfileView;
 	reaction: ChatBskyConvoDefs.ReactionView;
 	selected: string;
-	setSelected: React.Dispatch<React.SetStateAction<string>>;
+	setSelected: Dispatch<SetStateAction<string>>;
 }) {
 	const isFromSelf = currentAccount?.did === profile.did;
 

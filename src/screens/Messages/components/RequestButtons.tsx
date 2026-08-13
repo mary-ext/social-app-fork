@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -218,7 +220,7 @@ export function AcceptChatButton({
 		acceptConvo();
 	};
 
-	let Icon: React.ReactNode = null;
+	let Icon: ReactNode = null;
 	if (isPending) {
 		Icon = (
 			<Spinner

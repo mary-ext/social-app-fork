@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type ReactNode, useContext } from 'react';
 
 const SplitViewContext = createContext<{
 	isWithinSplitView: boolean;
@@ -8,7 +8,7 @@ const SplitViewContext = createContext<{
 	isWithinLeftPanel: false,
 });
 
-export function SplitViewProvider({ children, side }: { children: React.ReactNode; side: 'left' | 'right' }) {
+export function SplitViewProvider({ children, side }: { children: ReactNode; side: 'left' | 'right' }) {
 	const value = {
 		isWithinSplitView: true,
 		isWithinLeftPanel: side === 'left',

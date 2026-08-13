@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { useGoBack } from '#/lib/hooks/use-go-back';
 
 import { Text } from '#/components/Text';
@@ -7,7 +9,7 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './ErrorScreen.css';
 
-export function ErrorScreen({ error }: { error: React.ReactNode }) {
+export function ErrorScreen({ error }: { error: ReactNode }) {
 	const onPressBack = useGoBack();
 
 	return (

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, type PropsWithChildren, type ReactNode, useContext, useState } from 'react';
 
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
@@ -24,7 +24,7 @@ export function Outer({
 	isContentVisibleInitialState,
 	allowOverride,
 	children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
 	isContentVisibleInitialState?: boolean;
 	allowOverride?: boolean;
 	modui: DisplayRestrictions | undefined;
@@ -48,12 +48,12 @@ export function Outer({
 	return <Context.Provider value={ctx}>{children}</Context.Provider>;
 }
 
-export function Content({ children }: { children: React.ReactNode }) {
+export function Content({ children }: { children: ReactNode }) {
 	const ctx = useHider();
 	return ctx.isContentVisible ? children : null;
 }
 
-export function Mask({ children }: { children: React.ReactNode }) {
+export function Mask({ children }: { children: ReactNode }) {
 	const ctx = useHider();
 	return ctx.isContentVisible ? null : children;
 }

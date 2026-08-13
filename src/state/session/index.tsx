@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
+import { createContext, type PropsWithChildren, useContext, useEffect, useSyncExternalStore } from 'react';
 
 import { sessionDropped } from '#/state/events';
 import type { SessionStateContext } from '#/state/session/types';
@@ -28,7 +28,7 @@ const StateContext = createContext<SessionStateContext>({
 });
 StateContext.displayName = 'SessionStateContext';
 
-export function Provider({ children }: React.PropsWithChildren<{}>) {
+export function Provider({ children }: PropsWithChildren<{}>) {
 	const snapshot = useSyncExternalStore(subscribe, getSnapshot);
 
 	// boot and cross-tab handling live in store.ts; this provider handles live session drops.

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { Text as TextPrimitive } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
@@ -6,11 +8,11 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './VideoFallback.css';
 
-export function Container({ children }: { children: React.ReactNode }) {
+export function Container({ children }: { children: ReactNode }) {
 	return <div className={styles.container}>{children}</div>;
 }
 
-export function Text({ children }: { children: React.ReactNode }) {
+export function Text({ children }: { children: ReactNode }) {
 	return (
 		<TextPrimitive size="md" align="center" className={styles.text}>
 			{children}

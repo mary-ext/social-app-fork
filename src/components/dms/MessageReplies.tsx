@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -39,7 +39,7 @@ export function MessageRepliesProvider({
 	children,
 	scrollToMessage: scrollToMessageRaw,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	/**
 	 * scrolls to the message if loaded.
 	 *

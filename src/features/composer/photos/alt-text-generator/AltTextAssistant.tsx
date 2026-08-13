@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -10,7 +12,7 @@ import * as styles from './AltTextAssistant.css';
 import { QuestionField } from './QuestionField';
 import type { Generator } from './use-generator';
 
-const Action = ({ generator }: { generator: Generator }): React.ReactNode => {
+const Action = ({ generator }: { generator: Generator }): ReactNode => {
 	const { answeredCount, hasEdits, phase } = generator;
 
 	switch (phase) {
@@ -84,7 +86,7 @@ type Props = {
 	generator: Generator;
 };
 
-export const AltTextAssistant = ({ generator }: Props): React.ReactNode => {
+export const AltTextAssistant = ({ generator }: Props): ReactNode => {
 	const { additionalContext, draft, error, hasEdits, phase, questions } = generator;
 	const isThinking = phase === 'thinking';
 

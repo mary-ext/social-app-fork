@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -41,7 +41,7 @@ export function AfterReportConversationDialog({
 	handle: Dialog.DialogHandle;
 	params: ReportDialogParams;
 	currentScreen: 'list' | 'conversation';
-}): React.ReactNode {
+}): ReactNode {
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup label={m['components.dms.block.orLeave.prompt']()} size="narrow">

@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { type PointerEvent, type RefObject, useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { useInputModality } from '#/lib/browser/input-modality';
@@ -27,13 +27,13 @@ import { formatTime, useVideoElement, useVideoTime } from './utils';
 import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
 
-const isHoverPointer = (evt: React.PointerEvent) => evt.pointerType !== 'touch';
+const isHoverPointer = (evt: PointerEvent) => evt.pointerType !== 'touch';
 
 function ElapsedText({
 	videoRef,
 	duration,
 }: {
-	videoRef: React.RefObject<HTMLVideoElement | null>;
+	videoRef: RefObject<HTMLVideoElement | null>;
 	duration: number;
 }) {
 	const currentTime = useVideoTime(videoRef, 1);
@@ -60,13 +60,13 @@ export function Controls({
 	isGif,
 	altText,
 }: {
-	videoRef: React.RefObject<HTMLVideoElement | null>;
+	videoRef: RefObject<HTMLVideoElement | null>;
 	active: boolean;
 	setActive: () => void;
 	focused: boolean;
 	setFocused: (focused: boolean) => void;
 	onScreen: boolean;
-	fullscreenRef: React.RefObject<HTMLDivElement | null>;
+	fullscreenRef: RefObject<HTMLDivElement | null>;
 	playerLoading: boolean;
 	quality: VideoQuality;
 	subtitles: VideoSubtitles;
@@ -264,7 +264,7 @@ export function Controls({
 
 	const [showCursor, setShowCursor] = useState(true);
 	const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-	const onPointerMoveEmptySpace = (evt: React.PointerEvent<HTMLButtonElement>) => {
+	const onPointerMoveEmptySpace = (evt: PointerEvent<HTMLButtonElement>) => {
 		if (!isHoverPointer(evt)) {
 			return;
 		}
@@ -277,7 +277,7 @@ export function Controls({
 			setHovered(false);
 		}, 2000);
 	};
-	const onPointerLeaveEmptySpace = (evt: React.PointerEvent<HTMLButtonElement>) => {
+	const onPointerLeaveEmptySpace = (evt: PointerEvent<HTMLButtonElement>) => {
 		if (!isHoverPointer(evt)) {
 			return;
 		}

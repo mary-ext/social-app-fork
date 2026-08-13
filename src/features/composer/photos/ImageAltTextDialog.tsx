@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+import { type ReactNode, useId, useRef, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -28,7 +28,7 @@ type Props = {
 	onChange: (next: ComposerImage) => void;
 };
 
-export const ImageAltTextDialog = ({ context, handle, image, onChange }: Props): React.ReactNode => {
+export const ImageAltTextDialog = ({ context, handle, image, onChange }: Props): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 
 	return (
@@ -40,7 +40,7 @@ export const ImageAltTextDialog = ({ context, handle, image, onChange }: Props):
 	);
 };
 
-const DialogInner = ({ context, handle, image, onChange }: Props): React.ReactNode => {
+const DialogInner = ({ context, handle, image, onChange }: Props): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 	const [alt, setAlt] = useState(image.alt);
 	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);

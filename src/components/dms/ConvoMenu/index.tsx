@@ -1,4 +1,4 @@
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, type ReactNode, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
@@ -30,7 +30,7 @@ export function ConvoMenu({
 	currentScreen: 'list' | 'conversation';
 	showMarkAsRead?: boolean;
 	blockInfo: BlockInfo;
-}): React.ReactNode {
+}): ReactNode {
 	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
 

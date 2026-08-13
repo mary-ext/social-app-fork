@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
 
 import * as Menu from '#/components/Menu';
@@ -11,7 +13,7 @@ export function HeaderDropdown({
 	view,
 	setSort,
 	setView,
-}: Pick<ThreadPreferences, 'sort' | 'setSort' | 'view' | 'setView'>): React.ReactNode {
+}: Pick<ThreadPreferences, 'sort' | 'setSort' | 'view' | 'setView'>): ReactNode {
 	return (
 		<Menu.Root>
 			<Menu.Trigger

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
 
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
@@ -122,7 +124,7 @@ export function ProfileHeaderActions() {
 		}
 	}
 
-	let relationshipActions: React.ReactNode = null;
+	let relationshipActions: ReactNode = null;
 	switch (relationship) {
 		case 'self': {
 			relationshipActions = <EditProfileButton />;

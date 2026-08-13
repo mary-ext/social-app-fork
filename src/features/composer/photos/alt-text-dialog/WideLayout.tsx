@@ -14,7 +14,7 @@ type Props = {
  * Desktop layout: the image takes a column of its own and never has to give ground, so nothing here shrinks
  * on scroll. The editor column scrolls by itself beside it.
  */
-export const WideLayout = ({ children, imageUrl }: Props): React.ReactNode => {
+export const WideLayout = ({ children, imageUrl }: Props): ReactNode => {
 	return (
 		<Dialog.Body>
 			<div className={styles.grid}>

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { Text } from '#/components/Text';
@@ -10,7 +12,7 @@ import { m } from '#/paraglide/messages';
 import * as styles from './NavSignInCard.css';
 
 /** Card shown in the left navigation sidebar and drawer when the user is signed out. */
-export function NavSignInCard(): React.ReactNode {
+export function NavSignInCard(): ReactNode {
 	return (
 		<div className={styles.root}>
 			<Link label="Bluesky - Home" to={{ name: 'Home' }}>

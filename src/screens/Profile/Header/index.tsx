@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -72,7 +72,7 @@ function ProfileHeaderBody() {
 }
 
 /** Profile header for an account; labeler accounts additionally get a link to the labels they publish. */
-export function ProfileHeader({ isPlaceholderProfile, moderationOpts, profile }: Props): React.ReactNode {
+export function ProfileHeader({ isPlaceholderProfile, moderationOpts, profile }: Props): ReactNode {
 	const [showSuggestedFollows, setShowSuggestedFollows] = useState(false);
 	const [hasSeenAllSuggestedFollows, setHasSeenAllSuggestedFollows] = useState(false);
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { type KeyboardEvent, type RefObject, useRef, useState } from 'react';
 
 import { Slider } from '@base-ui/react/slider';
 
@@ -23,7 +23,7 @@ export function Scrubber({
 	seekRight,
 	togglePlayPause,
 }: {
-	videoRef: React.RefObject<HTMLVideoElement | null>;
+	videoRef: RefObject<HTMLVideoElement | null>;
 	visible: boolean;
 	duration: number;
 	onSeek: (time: number) => void;
@@ -64,7 +64,7 @@ export function Scrubber({
 		onSeekEnd();
 	};
 
-	const onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+	const onKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
 		// use the player keyboard shortcuts.
 		switch (evt.key) {
 			case ' ': {

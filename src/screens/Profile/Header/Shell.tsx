@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
@@ -26,7 +28,7 @@ import * as css from './Shell.css';
  *
  * @param children header body
  */
-export function ProfileHeaderShell({ children }: { children: React.ReactNode }): React.ReactNode {
+export function ProfileHeaderShell({ children }: { children: ReactNode }): ReactNode {
 	const {
 		meta: { isMe, isPlaceholderProfile, live },
 		state: { moderation, profile },

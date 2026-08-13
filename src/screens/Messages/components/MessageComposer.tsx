@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
@@ -37,7 +37,7 @@ export function MessageComposer({
 	onSendMessage: (message: string, replyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>) => void;
 	hasEmbed: boolean;
 	setEmbed: (embedUrl: string | undefined) => void;
-	children?: React.ReactNode;
+	children?: ReactNode;
 	loading?: boolean;
 }) {
 	const { getDraft, clearDraft } = useMessageDraft();
@@ -224,6 +224,6 @@ function SubmitButton({
 	);
 }
 
-function ComposerContainer({ children }: { children: React.ReactNode }) {
+function ComposerContainer({ children }: { children: ReactNode }) {
 	return <div className={styles.container}>{children}</div>;
 }

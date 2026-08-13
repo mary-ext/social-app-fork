@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type PropsWithChildren, useContext } from 'react';
 
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
@@ -18,7 +18,7 @@ export function useModerationOpts() {
 	return useContext(moderationOptsContext);
 }
 
-export function Provider({ children }: React.PropsWithChildren<{}>) {
+export function Provider({ children }: PropsWithChildren<{}>) {
 	const { currentAccount } = useSession();
 	const prefs = usePreferencesQuery();
 	const { labelDefs } = useLabelDefinitions();

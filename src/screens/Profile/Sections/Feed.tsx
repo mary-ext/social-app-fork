@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { type ReactElement, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -20,7 +20,7 @@ interface FeedSectionProps {
 	ignoreFilterFor?: string;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
-	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
+	emptyStateIcon?: EmptyStateIcon | ReactElement;
 }
 
 export function ProfileFeedSection({

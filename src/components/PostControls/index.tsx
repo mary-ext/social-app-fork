@@ -121,7 +121,7 @@ export function PostControls({
 	onPressReply,
 	onPostReply,
 	viaRepost,
-}: PostControlsProps): React.ReactNode {
+}: PostControlsProps): ReactNode {
 	const {
 		hasLikeIconBeenToggled,
 		onPressToggleLike,

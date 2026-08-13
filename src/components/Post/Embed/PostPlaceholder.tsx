@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react';
+
 import { Text } from '#/components/Text';
 
 import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 
 import * as css from './PostPlaceholder.css';
 
-export function PostPlaceholder({ children }: { children: React.ReactNode }) {
+export function PostPlaceholder({ children }: { children: ReactNode }) {
 	return (
 		<div className={css.outer}>
 			<CircleInfoIcon className={css.icon} />

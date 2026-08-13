@@ -1,3 +1,5 @@
+import type { RefObject } from 'react';
+
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -9,7 +11,7 @@ export function TimeIndicator({
 	videoRef,
 	duration,
 }: {
-	videoRef: React.RefObject<HTMLVideoElement | null>;
+	videoRef: RefObject<HTMLVideoElement | null>;
 	duration: number;
 }) {
 	const remaining = Math.floor(duration - useVideoTime(videoRef, 1));

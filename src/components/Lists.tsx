@@ -1,3 +1,5 @@
+import type { ReactElement, ReactNode } from 'react';
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { cleanError } from '#/lib/errors';
@@ -85,10 +87,10 @@ function ListMaybePlaceholder({
 	emptyType?: 'page' | 'results';
 	onRetry?: () => Promise<unknown>;
 	topBorder?: boolean;
-	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
+	emptyStateIcon?: EmptyStateIcon | ReactElement;
 	emptyStateButton?: EmptyStateButtonProps;
 	useEmptyState?: boolean;
-}): React.ReactNode {
+}): ReactNode {
 	if (isLoading) {
 		return (
 			<div className={css.placeholderLoading({ topBorder })}>

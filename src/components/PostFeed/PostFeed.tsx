@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactElement, type ReactNode, useEffect, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -130,9 +130,9 @@ function PostFeed({
 	scrollElRef?: ListRef;
 	onHasNew?: (v: boolean) => void;
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
-	renderEmptyState: () => React.ReactElement;
+	renderEmptyState: () => ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
-}): React.ReactNode {
+}): ReactNode {
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
 
 	const queryClient = useQueryClient();

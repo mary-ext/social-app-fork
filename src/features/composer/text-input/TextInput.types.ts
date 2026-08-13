@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 export type TextInputRef = {
 	focus: () => void;
 	blur: () => void;
@@ -12,7 +13,7 @@ export type TextInputRef = {
 };
 
 export type TextInputProps = {
-	ref: React.Ref<TextInputRef>;
+	ref: Ref<TextInputRef>;
 	text: string;
 	forceMinHeight: boolean;
 	hasRightPadding: boolean;
