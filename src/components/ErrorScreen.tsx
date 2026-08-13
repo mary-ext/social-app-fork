@@ -1,3 +1,5 @@
+'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';

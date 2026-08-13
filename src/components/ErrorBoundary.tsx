@@ -1,3 +1,5 @@
+'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+
 import type { ReactNode } from 'react';
 
 import { ErrorBoundary as ScionErrorBoundary } from '@oomfware/scion';

@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import type { ComponentType, MouseEvent, ReactNode, SVGProps } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';

@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import type { ComponentPropsWithoutRef, Ref } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';

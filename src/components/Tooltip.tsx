@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import type { ReactElement, RefObject } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';

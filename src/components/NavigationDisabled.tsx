@@ -1,3 +1,5 @@
+'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+
 import { createContext, type ReactNode, use } from 'react';
 
 const NavigationDisabledContext = createContext(false);

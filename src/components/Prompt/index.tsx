@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import { type ComponentType, type ReactNode, type SVGProps, useId } from 'react';
 
 import { AlertDialog } from '@base-ui/react/alert-dialog';

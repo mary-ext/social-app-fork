@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import type { ReactNode } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';

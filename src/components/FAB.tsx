@@ -1,3 +1,5 @@
+'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+
 import type { ComponentPropsWithRef, ComponentType, SVGProps } from 'react';
 
 import { clsx } from 'clsx';

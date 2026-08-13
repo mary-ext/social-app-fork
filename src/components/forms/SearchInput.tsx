@@ -1,3 +1,5 @@
+'use no memo'; // controlled input updates usually invalidate the generated caches
+
 import type { FocusEventHandler, KeyboardEventHandler, Ref } from 'react';
 
 import * as SearchField from '#/components/forms/SearchField';
