@@ -172,6 +172,8 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 		void api.checkUnread(); // fire on init
 		const interval = setInterval(() => void api.checkUnread({ isPoll: true }), UPDATE_INTERVAL);
 		return () => clearInterval(interval);
+
+		// oxlint-disable-next-line react/react-compiler
 		// oxlint-disable-next-line react-hooks/exhaustive-deps -- React Compiler stabilizes the API object
 	}, [hasSession, api]);
 
