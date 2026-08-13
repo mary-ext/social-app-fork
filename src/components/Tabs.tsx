@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import {
 	type ComponentPropsWithoutRef,
 	createContext,

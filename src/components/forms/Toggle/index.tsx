@@ -1,3 +1,5 @@
+'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+
 import { type ComponentType, createContext, type ReactNode, type SVGProps, useContext } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';

@@ -1,3 +1,5 @@
+'use no memo'; // controlled input updates usually invalidate the generated caches
+
 import {
 	type ChangeEvent,
 	type ComponentPropsWithoutRef,

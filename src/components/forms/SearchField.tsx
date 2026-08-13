@@ -1,3 +1,5 @@
+'use no memo'; // controlled input updates usually invalidate the generated caches
+
 import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, type Ref, useRef } from 'react';
 
 import { clsx } from 'clsx';

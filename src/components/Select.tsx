@@ -1,3 +1,5 @@
+'use no memo'; // composition props usually invalidate the generated wrapper caches
+
 import { createContext, Fragment, type ReactElement, type ReactNode, useContext } from 'react';
 
 import { Select as BaseSelect } from '@base-ui/react/select';
