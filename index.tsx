@@ -1,5 +1,3 @@
-import { StrictMode } from 'react';
-
 import { createRoot } from 'react-dom/client';
 
 import { initServiceWorker } from '#/lib/service-worker';
@@ -30,11 +28,7 @@ if (import.meta.env.DEV && window.location.hostname === 'localhost') {
 	url.hostname = '127.0.0.1';
 	window.location.replace(url);
 } else {
-	createRoot(rootEl).render(
-		<StrictMode>
-			<App />
-		</StrictMode>,
-	);
+	createRoot(rootEl).render(<App />);
 	// track an already-installed worker (opt-in install lives in Settings); only production builds emit
 	// the worker (see ServiceWorkerPrecachePlugin)
 	if (import.meta.env.PROD) {

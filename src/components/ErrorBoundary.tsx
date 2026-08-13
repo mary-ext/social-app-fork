@@ -1,4 +1,6 @@
-import { Component, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+
+import { ErrorBoundary as ScionErrorBoundary } from '@oomfware/scion';
 
 import { m } from '#/paraglide/messages';
 
@@ -10,36 +12,20 @@ interface Props {
 	renderError?: (error: unknown) => ReactNode;
 }
 
-interface State {
-	hasError: boolean;
-	error: unknown;
-}
-
-export class ErrorBoundary extends Component<Props, State> {
-	public state: State = {
-		hasError: false,
-		error: undefined,
-	};
-
-	public static getDerivedStateFromError(error: unknown): State {
-		return { hasError: true, error };
-	}
-
-	public render() {
-		if (this.state.hasError) {
-			if (this.props.renderError) {
-				return this.props.renderError(this.state.error);
-			}
-
-			return (
-				<div className={css.fill}>
-					<TranslatedErrorScreen details={String(this.state.error)} />
-				</div>
-			);
+export function ErrorBoundary({ children, renderError }: Props) {
+	const fallback = (error: unknown) => {
+		if (renderError) {
+			return renderError(error);
 		}
 
-		return this.props.children;
-	}
+		return (
+			<div className={css.fill}>
+				<TranslatedErrorScreen details={String(error)} />
+			</div>
+		);
+	};
+
+	return <ScionErrorBoundary fallback={fallback}>{children}</ScionErrorBoundary>;
 }
 
 function TranslatedErrorScreen({ details }: { details?: string }) {

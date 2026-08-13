@@ -54,6 +54,7 @@
 		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@oomfware/lightbox": "^0.1.8",
+		"@oomfware/scion": "^0.1.0",
 		"@oomfware/stacker": "^0.2.1",
 		"@oomfware/tug": "^0.2.0",
 		"@tanstack/query-async-storage-persister": "^5.101.4",
@@ -64,8 +65,6 @@
 		"clsx": "^2.1.1",
 		"dequal": "^2.0.3",
 		"idb-keyval": "^6.3.0",
-		"react": "^19.2.8",
-		"react-dom": "^19.2.8",
 		"tldts": "^7.4.10",
 		"valibot": "^1.4.2"
 	},

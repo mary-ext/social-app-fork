@@ -120,6 +120,9 @@ importers:
       '@oomfware/lightbox':
         specifier: ^0.1.8
         version: 0.1.8(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@oomfware/scion':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@oomfware/stacker':
         specifier: ^0.2.1
         version: 0.2.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -150,12 +153,6 @@ importers:
       idb-keyval:
         specifier: ^6.3.0
         version: 6.3.0
-      react:
-        specifier: ^19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.2.8
-        version: 19.2.8(react@19.2.8)
       tldts:
         specifier: ^7.4.10
         version: 7.4.10
@@ -968,6 +965,9 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@oomfware/scion@0.1.0':
+    resolution: {integrity: sha512-s6fHFk05PvBb9cRZjTln8dO9ZM1Okrl4F0gnoiAGAi2ncRvGRBuCv8gZNeRz9WeMTjzlNysedVNQiYr3mLkVVw==}
 
   '@oomfware/stacker@0.2.1':
     resolution: {integrity: sha512-eUwpwb9g2zU8xIFi7S10dZZR4CHlu7emYvxjPwCu04qKBqEcIU5Fr7JJ3I+Hog9oZ4rOUkTHhE0Bi/hVDNRJQw==}
@@ -3378,6 +3378,11 @@ snapshots:
       svgo: 4.0.2
     optionalDependencies:
       react: 19.2.8
+
+  '@oomfware/scion@0.1.0':
+    dependencies:
+      csstype: 3.2.3
+      esm-env: 1.2.2
 
   '@oomfware/stacker@0.2.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:

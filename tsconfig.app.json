@@ -23,7 +23,17 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"paths": {
-			"#/*": ["./src/*"]
+			"#/*": ["./src/*"],
+			"react": ["./node_modules/@oomfware/scion/types/react.d.ts"],
+			"react/compiler-runtime": ["./node_modules/@oomfware/scion/types/compiler-runtime.d.ts"],
+			"react/jsx-dev-runtime": ["./node_modules/@oomfware/scion/types/jsx-runtime.d.ts"],
+			"react/jsx-runtime": ["./node_modules/@oomfware/scion/types/jsx-runtime.d.ts"],
+			"react-dom": ["./node_modules/@oomfware/scion/types/react-dom.d.ts"],
+			"react-dom/client": ["./node_modules/@oomfware/scion/types/react-dom-client.d.ts"],
+			"scheduler": ["./node_modules/@oomfware/scion/types/scheduler.d.ts"],
+			"use-sync-external-store/shim": [
+				"./node_modules/@oomfware/scion/types/use-sync-external-store-shim.d.ts"
+			]
 		}
 	},
 	"include": ["index.tsx", "src"]

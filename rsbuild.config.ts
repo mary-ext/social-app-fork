@@ -48,6 +48,14 @@ export default defineConfig(({ envMode }) => {
 		resolve: {
 			alias: {
 				'#': path.resolve(root, 'src'),
+				'react/compiler-runtime$': '@oomfware/scion/compiler-runtime',
+				'react/jsx-dev-runtime$': '@oomfware/scion/jsx-runtime',
+				'react/jsx-runtime$': '@oomfware/scion/jsx-runtime',
+				react$: '@oomfware/scion/react',
+				'react-dom/client$': '@oomfware/scion/react-dom-client',
+				'react-dom$': '@oomfware/scion/react-dom',
+				scheduler$: '@oomfware/scion/scheduler',
+				'use-sync-external-store/shim$': '@oomfware/scion/use-sync-external-store-shim',
 			},
 			aliasStrategy: 'prefer-alias',
 			extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.json'],
