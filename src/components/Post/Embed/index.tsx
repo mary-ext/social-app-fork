@@ -25,6 +25,7 @@ import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCa
 
 import { m } from '#/paraglide/messages';
 
+import { BlockedEmbed } from './BlockedEmbed';
 import { ChatInviteEmbed } from './ChatInviteEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
 import * as css from './index.css';
@@ -188,7 +189,7 @@ function RecordEmbed({
 			return <PostPlaceholderText>{m['components.post.state.deleted']()}</PostPlaceholderText>;
 		}
 		case 'app.bsky.embed.record#viewBlocked': {
-			return <PostPlaceholderText>{m['components.post.state.blocked']()}</PostPlaceholderText>;
+			return <BlockedEmbed embed={record} postAuthorDid={rest.postAuthorDid} />;
 		}
 		case 'app.bsky.embed.record#viewDetached': {
 			return <PostDetachedEmbed embed={record} />;
@@ -280,6 +281,7 @@ export function QuoteEmbed({
 				<Embed
 					embed={quote.embed}
 					moderation={moderation}
+					postAuthorDid={quote.author.did}
 					viewContext={viewContext}
 					isWithinQuote={parentIsWithinQuote ?? true}
 					// already within quote? override nested

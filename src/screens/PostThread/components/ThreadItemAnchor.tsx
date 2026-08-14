@@ -325,6 +325,7 @@ function ThreadItemAnchorInner({
 									<Embed
 										embed={post.embed}
 										moderation={moderation}
+										postAuthorDid={post.author.did}
 										viewContext={PostEmbedViewContext.ThreadHighlighted}
 										onOpen={onOpenEmbed}
 									/>

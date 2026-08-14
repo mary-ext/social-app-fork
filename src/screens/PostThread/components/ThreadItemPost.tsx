@@ -230,7 +230,12 @@ function ThreadItemPostInner({
 						) : undefined}
 						{post.embed && (
 							<div style={galleryOffsetStyles?.embed}>
-								<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
+								<Embed
+									embed={post.embed}
+									moderation={moderation}
+									postAuthorDid={post.author.did}
+									viewContext={PostEmbedViewContext.Feed}
+								/>
 							</div>
 						)}
 						<PostControls post={postShadow} onPressReply={onPressReply} />

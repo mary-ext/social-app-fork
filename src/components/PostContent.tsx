@@ -54,6 +54,7 @@ function PostContent({
 						embed={post.embed}
 						moderation={moderation}
 						onOpen={onOpenEmbed}
+						postAuthorDid={post.author.did}
 						viewContext={PostEmbedViewContext.Feed}
 					/>
 				</div>

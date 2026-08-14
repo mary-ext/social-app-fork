@@ -1,5 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 export enum PostEmbedViewContext {
 	ChatMessage = 'ChatMessage',
@@ -12,6 +13,7 @@ export type CommonProps = {
 	isWithinQuote?: boolean;
 	moderation?: ModerationDecision;
 	onOpen?: () => void;
+	postAuthorDid?: Did;
 	viewContext?: PostEmbedViewContext;
 };
 

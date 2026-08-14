@@ -22,3 +22,8 @@ export const icon = style({
 	color: colors.textContrastMedium,
 	flexShrink: 0,
 });
+
+export const trailing = style({
+	marginLeft: 'auto',
+	flexShrink: 0,
+});

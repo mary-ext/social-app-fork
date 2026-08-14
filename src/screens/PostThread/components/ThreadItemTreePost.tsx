@@ -233,6 +233,7 @@ function ThreadItemTreePostInner({
 										<Embed
 											embed={post.embed}
 											moderation={moderation}
+											postAuthorDid={post.author.did}
 											viewContext={PostEmbedViewContext.Feed}
 										/>
 									)}
