@@ -22,12 +22,12 @@ const getViewerBlockLabel = (author: AppBskyEmbedRecord.ViewBlocked['author']) =
 	return undefined;
 };
 
-const getPosterBlockLabel = (relationship: AppBskyGraphDefs.Relationship | undefined) => {
+const getPostAuthorBlockLabel = (relationship: AppBskyGraphDefs.Relationship | undefined) => {
 	if (relationship?.blocking || relationship?.blockingByList) {
-		return m['components.post.state.blockedByPoster']();
+		return m['components.post.state.blockedByPostAuthor']();
 	}
 	if (relationship?.blockedBy || relationship?.blockedByList) {
-		return m['components.post.state.blocksPoster']();
+		return m['components.post.state.blocksPostAuthor']();
 	}
 
 	return m['components.post.state.blocked']();
@@ -62,7 +62,7 @@ export function BlockedEmbed({
 				)
 			}
 		>
-			{viewerLabel ?? getPosterBlockLabel(relationship)}
+			{viewerLabel ?? getPostAuthorBlockLabel(relationship)}
 		</PostPlaceholder>
 	);
 }
