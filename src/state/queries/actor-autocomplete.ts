@@ -39,12 +39,13 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 	return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
 		queryKey: RQKEY(normalizedPrefix || ''),
 		staleTime: STALE.MINUTES.ONE,
-		async queryFn() {
+		async queryFn({ signal }) {
 			if (!normalizedPrefix) {
 				return [];
 			}
 			const data = await ok(
 				appview.get('app.bsky.actor.searchActorsTypeahead', {
+					signal,
 					params: { limit: limit || 8, q: normalizedPrefix },
 				}),
 			);
@@ -90,12 +91,13 @@ export function useSearchActorAutocompleteQuery({
 	return useQuery<AnyProfileView[]>({
 		queryKey: [RQKEY_ROOT, 'search', self?.did ?? null, normalizedPrefix],
 		staleTime: STALE.MINUTES.ONE,
-		async queryFn() {
+		async queryFn({ signal }) {
 			if (!normalizedPrefix) {
 				return self ? [self] : [];
 			}
 			const data = await ok(
 				appview.get('app.bsky.actor.searchActorsTypeahead', {
+					signal,
 					params: { limit, q: normalizedPrefix },
 				}),
 			);

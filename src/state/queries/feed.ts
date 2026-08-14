@@ -170,7 +170,7 @@ export function useFeedSourceInfoQuery({ uri }: { uri: string | undefined }) {
 		queryKey: feedSourceInfoQueryKey({ uri: uri ?? '' }),
 		staleTime: STALE.INFINITY,
 		enabled: !!uri,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			// `enabled` gates the query on `uri`, so this only fires if that gate is ever removed
 			if (!uri) {
 				throw new Error('getFeedSourceInfo: query ran without a uri');
@@ -181,6 +181,7 @@ export function useFeedSourceInfoQuery({ uri }: { uri: string | undefined }) {
 			if (getFeedTypeFromUri(uri) === 'feed') {
 				const data = await ok(
 					appview.get('app.bsky.feed.getFeedGenerator', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `FeedSourceInfo.uri` widens to `string` only for the Following pseudo-feed
 						params: { feed: uri as ResourceUri },
 					}),
@@ -189,6 +190,7 @@ export function useFeedSourceInfoQuery({ uri }: { uri: string | undefined }) {
 			} else {
 				const data = await ok(
 					appview.get('app.bsky.graph.getList', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `FeedSourceInfo.uri` widens to `string` only for the Following pseudo-feed
 						params: { list: uri as ResourceUri, limit: 1 },
 					}),
@@ -239,9 +241,10 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 	const query = useInfiniteQuery({
 		queryKey: createGetPopularFeedsQueryKey(options),
 		enabled: !!moderationOpts && options?.enabled !== false,
-		queryFn: async ({ pageParam }) => {
+		queryFn: async ({ pageParam, signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
+					signal,
 					params: { limit, cursor: pageParam },
 				}),
 			);
@@ -342,9 +345,10 @@ export function usePopularFeedsSearch({ query, enabled }: { query: string; enabl
 	return useQuery({
 		queryKey: createPopularFeedsSearchQueryKey(query),
 		enabled: enabledInner,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
+					signal,
 					params: { limit: 15, query: query },
 				}),
 			);
@@ -414,7 +418,7 @@ export function usePinnedFeedsInfos() {
 		enabled: !isLoadingPrefs,
 		staleTime: STALE.MINUTES.FIFTEEN,
 		gcTime: GCTIME.INFINITY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!hasSession) {
 				return [PWI_DISCOVER_FEED_STUB];
 			}
@@ -427,6 +431,7 @@ export function usePinnedFeedsInfos() {
 			if (pinnedFeeds.length > 0) {
 				feedsPromise = ok(
 					appview.get('app.bsky.feed.getFeedGenerators', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
 						params: { feeds: pinnedFeeds.map((f) => f.value as ResourceUri) },
 					}),
@@ -443,6 +448,7 @@ export function usePinnedFeedsInfos() {
 			const listsPromises = pinnedLists.map((list) =>
 				ok(
 					appview.get('app.bsky.graph.getList', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
 						params: { list: list.value as ResourceUri, limit: 1 },
 					}),
@@ -518,7 +524,7 @@ export function useSavedFeeds() {
 		enabled: !isLoadingPrefs,
 		staleTime: STALE.INFINITY,
 		gcTime: GCTIME.INFINITY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>();
 			const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>();
 
@@ -529,6 +535,7 @@ export function useSavedFeeds() {
 			if (savedFeeds.length > 0) {
 				feedsPromise = ok(
 					appview.get('app.bsky.feed.getFeedGenerators', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
 						params: { feeds: savedFeeds.map((f) => f.value as ResourceUri) },
 					}),
@@ -542,6 +549,7 @@ export function useSavedFeeds() {
 			const listsPromises = savedLists.map((list) =>
 				ok(
 					appview.get('app.bsky.graph.getList', {
+						signal,
 						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
 						params: { list: list.value as ResourceUri, limit: 1 },
 					}),

@@ -27,12 +27,13 @@ export function useUnreadCountsQuery() {
 		queryKey: RQKEY(includeGroupChats),
 		enabled: hasSession,
 		staleTime: STALE.SECONDS.FIFTEEN,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.getUnreadCounts', {
+					signal,
 					params: { includeGroupChats },
 				}),
 			);

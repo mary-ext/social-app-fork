@@ -27,7 +27,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 	return useQuery({
 		queryKey: ['link-meta', url],
 		enabled: !!url,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!url) {
 				return undefined;
 			}
@@ -36,7 +36,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 				throw new Error(m['features.liveNow.service.unsupported']({ formatted }));
 			}
 
-			return await getLinkMeta(url);
+			return await getLinkMeta(url, { signal });
 		},
 	});
 }

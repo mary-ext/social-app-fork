@@ -146,7 +146,7 @@ export function usePostFeedQuery(
 		queryKey: RQKEY(feedDesc),
 		enabled,
 		staleTime: STALE.INFINITY,
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			const { api, cursor } = pageParam
 				? pageParam
 				: {
@@ -159,7 +159,7 @@ export function usePostFeedQuery(
 						cursor: undefined,
 					};
 
-			const res = await api.fetch({ cursor, limit: fetchLimit });
+			const res = await api.fetch({ cursor, limit: fetchLimit, signal });
 
 			// public feeds must contain at least one post allowed by moderation.
 			if (!hasSession) {

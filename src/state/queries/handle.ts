@@ -18,9 +18,10 @@ export function useFetchHandle() {
 			const res = await queryClient.fetchQuery({
 				staleTime: STALE.MINUTES.FIVE,
 				queryKey: fetchHandleQueryKey(handleOrDid),
-				queryFn: () =>
+				queryFn: ({ signal }) =>
 					ok(
 						appview.get('app.bsky.actor.getProfile', {
+							signal,
 							params: { actor: handleOrDid },
 						}),
 					),

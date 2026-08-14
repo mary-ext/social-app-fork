@@ -24,9 +24,10 @@ export function useProfileKnownFollowersQuery(did: Did | undefined) {
 	>({
 		queryKey: RQKEY(did || ''),
 		enabled: !!did,
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			return await ok(
 				appview.get('app.bsky.graph.getKnownFollowers', {
+					signal,
 					params: {
 						actor: did!,
 						cursor: pageParam,

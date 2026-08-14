@@ -70,9 +70,10 @@ export function useSearchPostsQuery({
 	>({
 		queryKey: searchPostsQueryKey({ author, query, sort, viewerDid }),
 		enabled: !!moderationOpts,
-		queryFn: ({ pageParam }) =>
+		queryFn: ({ pageParam, signal }) =>
 			ok(
 				appview.get('app.bsky.feed.searchPostsV2', {
+					signal,
 					params: {
 						...lifted.filters,
 						allTime: true,

@@ -66,7 +66,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 		queryKey: RQKEY(filter),
 		enabled,
 		staleTime: STALE.INFINITY,
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			let page;
 			if (filter === 'all' && !pageParam) {
 				// prefer the unread checker's cached first page.
@@ -81,6 +81,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 					appview,
 					limit: PAGE_SIZE,
 					cursor: pageParam,
+					signal,
 					queryClient,
 					moderationOpts,
 					fetchAdditionalData: true,

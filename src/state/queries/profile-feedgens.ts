@@ -34,9 +34,10 @@ export function useProfileFeedgensQuery(did: Did) {
 	>({
 		queryKey: RQKEY(did),
 		enabled,
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			const data = await ok(
 				appview.get('app.bsky.feed.getActorFeeds', {
+					signal,
 					params: { actor: did, cursor: pageParam, limit: PAGE_SIZE },
 				}),
 			);

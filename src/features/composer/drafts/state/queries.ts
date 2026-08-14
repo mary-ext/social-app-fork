@@ -19,10 +19,12 @@ export function useDraftsQuery() {
 
 	return useInfiniteQuery({
 		queryKey: DRAFTS_QUERY_KEY,
-		queryFn: async ({ pageParam }) => {
+		queryFn: async ({ pageParam, signal }) => {
 			// Ensure media cache is populated before checking which media exists
 			await storage.ensureMediaCachePopulated();
-			const res = await ok(appview.get('app.bsky.draft.getDrafts', { params: { cursor: pageParam } }));
+			const res = await ok(
+				appview.get('app.bsky.draft.getDrafts', { signal, params: { cursor: pageParam } }),
+			);
 			return {
 				cursor: res.cursor,
 				drafts: res.drafts.map((view) =>

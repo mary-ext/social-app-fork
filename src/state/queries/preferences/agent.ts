@@ -191,9 +191,14 @@ async function updatePreferences(
  *
  * @param pds the PDS client.
  * @param appLabelers the app-level labeler DIDs to seed `moderationPrefs.labelers` with.
+ * @param signal aborts the preferences request.
  * @returns the derived, `@atproto`-shaped preferences.
  */
-export async function getPreferences(pds: Client, appLabelers: readonly Did[]): Promise<BskyPreferences> {
+export async function getPreferences(
+	pds: Client,
+	appLabelers: readonly Did[],
+	signal: AbortSignal,
+): Promise<BskyPreferences> {
 	const prefs: BskyPreferences = {
 		feedViewPrefs: {
 			home: { ...FEED_VIEW_PREF_DEFAULTS },
@@ -222,7 +227,7 @@ export async function getPreferences(pds: Client, appLabelers: readonly Did[]): 
 		},
 	};
 
-	const { preferences } = await ok(pds.get('app.bsky.actor.getPreferences', { params: {} }));
+	const { preferences } = await ok(pds.get('app.bsky.actor.getPreferences', { signal, params: {} }));
 	const labelPrefs: AppBskyActorDefs.ContentLabelPref[] = [];
 
 	for (const pref of preferences) {

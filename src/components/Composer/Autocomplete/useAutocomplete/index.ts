@@ -58,7 +58,7 @@ export function useAutocomplete({
 			},
 		],
 		staleTime: STALE.MINUTES.ONE,
-		async queryFn() {
+		async queryFn({ signal }) {
 			if (type === 'profile') {
 				// TODO return recents
 				if (!q) {
@@ -68,6 +68,7 @@ export function useAutocomplete({
 				// Going from "foo" to "foo." should not clear matches.
 				const data = await ok(
 					appview.get('app.bsky.actor.searchActorsTypeahead', {
+						signal,
 						params: { limit: limit || 8, q: profileQuery },
 					}),
 				);

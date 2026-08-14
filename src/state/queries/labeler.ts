@@ -31,9 +31,10 @@ export function useLabelerInfoQuery({ did }: { did?: Did }) {
 		queryKey: labelerInfoQueryKey(did ?? ''),
 		enabled: !!did,
 		staleTime: STALE.MINUTES.ONE,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
+					signal,
 					params: { detailed: true, dids: [did!] },
 				}),
 			);
@@ -52,9 +53,10 @@ export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 		enabled: !!dids.length,
 		staleTime: STALE.MINUTES.ONE,
 		gcTime: GCTIME.INFINITY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {
+					signal,
 					params: { detailed: true, dids },
 				}),
 			);

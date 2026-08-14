@@ -58,9 +58,10 @@ export function useProfileFollowsQuery(
 		queryKey: RQKEY(did || '', sort),
 		enabled: !!did,
 		staleTime: STALE.MINUTES.ONE,
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			return await ok(
 				appview.get('app.bsky.graph.getFollows', {
+					signal,
 					params: {
 						actor: did!,
 						cursor: pageParam,

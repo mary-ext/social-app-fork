@@ -524,7 +524,8 @@ export function usePrefetchPostInteractionSettings({
 			await Promise.all([
 				queryClient.prefetchQuery({
 					queryKey: createPostgateQueryKey(postUri),
-					queryFn: () => getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null),
+					queryFn: ({ signal }) =>
+						getPostgateRecord({ appview, pds: pds!, postUri, signal }).then((res) => res ?? null),
 					staleTime: STALE.SECONDS.THIRTY,
 				}),
 				queryClient.prefetchQuery({

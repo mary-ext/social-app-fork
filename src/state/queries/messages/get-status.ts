@@ -15,11 +15,11 @@ export function useChatActorStatusQuery() {
 		queryKey: chatActorStatusQueryKey(),
 		staleTime: STALE.SECONDS.FIFTEEN,
 		gcTime: GCTIME.INFINITY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
-			return await ok(chat.get('chat.bsky.actor.getStatus', {}));
+			return await ok(chat.get('chat.bsky.actor.getStatus', { signal }));
 		},
 	});
 }

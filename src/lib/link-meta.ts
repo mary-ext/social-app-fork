@@ -15,7 +15,10 @@ export interface LinkMeta {
 	view?: AppBskyEmbedExternal.View;
 }
 
-export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta> {
+export async function getLinkMeta(
+	url: string,
+	{ signal, timeout = 15e3 }: { signal?: AbortSignal; timeout?: number } = {},
+): Promise<LinkMeta> {
 	// starter pack links need metadata, including short links.
 	if (isClientUrl(url)) {
 		const kind = resolveUrlToLink(url)?.kind;
@@ -31,9 +34,10 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 	const meta: LinkMeta = { url };
 
 	try {
+		const timeoutSignal = AbortSignal.timeout(timeout);
 		const data = await ok(
 			internalClient.get('internal.app.extractLinkMeta', {
-				signal: AbortSignal.timeout(timeout),
+				signal: signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal,
 				params: { url },
 			}),
 		);
@@ -47,6 +51,7 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 			meta.url = data.url;
 		}
 	} catch (e) {
+		signal?.throwIfAborted();
 		console.error(e);
 	}
 

@@ -43,6 +43,7 @@ export async function fetchPage({
 	appview,
 	cursor,
 	limit,
+	signal,
 	queryClient,
 	moderationOpts,
 	fetchAdditionalData,
@@ -51,6 +52,7 @@ export async function fetchPage({
 	appview: Client;
 	cursor: string | undefined;
 	limit: number;
+	signal?: AbortSignal;
 	queryClient: QueryClient;
 	moderationOpts: ModerationOptions | undefined;
 	fetchAdditionalData: boolean;
@@ -61,6 +63,7 @@ export async function fetchPage({
 }> {
 	const data = await ok(
 		appview.get('app.bsky.notification.listNotifications', {
+			signal,
 			params: {
 				limit,
 				cursor,
@@ -80,7 +83,7 @@ export async function fetchPage({
 	// we fetch subjects of notifications (usually posts) now instead of lazily
 	// in the UI to avoid relayouts
 	if (fetchAdditionalData) {
-		const subjects = await fetchSubjects(appview, notifsGrouped);
+		const subjects = await fetchSubjects(appview, notifsGrouped, signal);
 		for (const notif of notifsGrouped) {
 			if (notif.subjectUri) {
 				if (notif.type === 'starterpack-joined' && notif.notification.reasonSubject) {
@@ -207,6 +210,7 @@ export function groupNotifications(
 async function fetchSubjects(
 	appview: Client,
 	groupedNotifs: FeedNotification[],
+	signal?: AbortSignal,
 ): Promise<{
 	posts: Map<string, AppBskyFeedDefs.PostView>;
 	starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>;
@@ -224,12 +228,12 @@ async function fetchSubjects(
 	const packUriChunks = chunked(Array.from(packUris), 25);
 	const postsChunks = await Promise.all(
 		postUriChunks.map((uris) =>
-			ok(appview.get('app.bsky.feed.getPosts', { params: { uris } })).then((data) => data.posts),
+			ok(appview.get('app.bsky.feed.getPosts', { signal, params: { uris } })).then((data) => data.posts),
 		),
 	);
 	const packsChunks = await Promise.all(
 		packUriChunks.map((uris) =>
-			ok(appview.get('app.bsky.graph.getStarterPacks', { params: { uris } })).then(
+			ok(appview.get('app.bsky.graph.getStarterPacks', { signal, params: { uris } })).then(
 				(data) => data.starterPacks,
 			),
 		),

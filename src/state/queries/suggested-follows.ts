@@ -31,9 +31,10 @@ export function useSuggestedFollowsByActorQuery({
 		queryKey: suggestedFollowsByActorQueryKey(did),
 		enabled,
 		staleTime,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
+					signal,
 					params: { actor: did },
 				}),
 			);

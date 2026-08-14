@@ -44,9 +44,10 @@ export function useActivitySubscriptionsQuery() {
 		string | undefined
 	>({
 		queryKey: RQKEY_getActivitySubscriptions,
-		queryFn: ({ pageParam }) =>
+		queryFn: ({ pageParam, signal }) =>
 			ok(
 				appview.get('app.bsky.notification.listActivitySubscriptions', {
+					signal,
 					params: { cursor: pageParam, limit: PAGE_SIZE },
 				}),
 			),
@@ -60,9 +61,10 @@ export function useNotificationDeclarationQuery() {
 	const { currentAccount } = useSession();
 	return useQuery({
 		queryKey: RQKEY_getNotificationDeclaration,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			try {
 				return await getRecord(pds!, {
+					signal,
 					repo: currentAccount!.did,
 					collection: 'app.bsky.notification.declaration',
 					rkey: 'self',

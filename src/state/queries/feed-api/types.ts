@@ -5,7 +5,14 @@ export interface FeedAPIResponse {
 	feed: AppBskyFeedDefs.FeedViewPost[];
 }
 
+/** inputs for fetching one page from a feed source. */
+export interface FeedFetchOptions {
+	cursor: string | undefined;
+	limit: number;
+	signal: AbortSignal;
+}
+
 export interface FeedAPI {
 	peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost>;
-	fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse>;
+	fetch(options: FeedFetchOptions): Promise<FeedAPIResponse>;
 }

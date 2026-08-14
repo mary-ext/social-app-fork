@@ -135,14 +135,14 @@ export function useFeedPreviews(
 	const query = useInfiniteQuery({
 		queryKey: RQKEY(uris),
 		enabled,
-		queryFn: async ({ pageParam }) => {
+		queryFn: async ({ pageParam, signal }) => {
 			const feed = feeds[pageParam]!;
 			const api = new CustomFeedAPI({
 				appview,
 				feedParams: { feed: feed.uri },
 				userInterests,
 			});
-			const data = await api.fetch({ cursor: undefined, limit: LIMIT });
+			const data = await api.fetch({ cursor: undefined, limit: LIMIT, signal });
 			return {
 				feed,
 				posts: data.feed,

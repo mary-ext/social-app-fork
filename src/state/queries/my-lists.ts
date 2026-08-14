@@ -20,12 +20,13 @@ export function useMyListsQuery(filter: MyListsFilter) {
 		queryKey: RQKEY(filter),
 		enabled: !!currentAccount,
 		staleTime: STALE.MINUTES.ONE,
-		async queryFn() {
+		async queryFn({ signal }) {
 			const lists: AppBskyGraphDefs.ListView[] = [];
 			const promises: Promise<AppBskyGraphDefs.ListView[]>[] = [
 				accumulate((cursor) =>
 					ok(
 						appview.get('app.bsky.graph.getLists', {
+							signal,
 							params: { actor: currentAccount!.did, cursor, limit: 50 },
 						}),
 					).then((data) => ({ cursor: data.cursor, items: data.lists })),
@@ -34,7 +35,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
 			if (filter === 'all-including-subscribed' || filter === 'mod') {
 				promises.push(
 					accumulate((cursor) =>
-						ok(appview.get('app.bsky.graph.getListMutes', { params: { cursor, limit: 50 } })).then(
+						ok(appview.get('app.bsky.graph.getListMutes', { signal, params: { cursor, limit: 50 } })).then(
 							(data) => ({
 								cursor: data.cursor,
 								items: data.lists,
@@ -44,7 +45,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
 				);
 				promises.push(
 					accumulate((cursor) =>
-						ok(appview.get('app.bsky.graph.getListBlocks', { params: { cursor, limit: 50 } })).then(
+						ok(appview.get('app.bsky.graph.getListBlocks', { signal, params: { cursor, limit: 50 } })).then(
 							(data) => ({ cursor: data.cursor, items: data.lists }),
 						),
 					),

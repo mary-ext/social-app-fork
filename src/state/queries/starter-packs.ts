@@ -56,7 +56,7 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
 		enabled: !!uri || !!(did && rkey),
 		staleTime: STALE.MINUTES.FIVE,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const resolvedUri = !uri
 				? `at://${did}/app.bsky.graph.starterpack/${rkey}`
 				: uri.startsWith('at://')
@@ -65,6 +65,7 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 
 			const data = await ok(
 				appview.get('app.bsky.graph.getStarterPack', {
+					signal,
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- built from the route params `enabled` gates this query on
 					params: { starterPack: resolvedUri as ResourceUri },
 				}),

@@ -17,12 +17,13 @@ export function useGetConvoAvailabilityQuery(did: Did, { enabled = true }: { ena
 		queryKey: RQKEY(did),
 		enabled,
 		staleTime: STALE.INFINITY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.getConvoAvailability', {
+					signal,
 					params: { members: [did] },
 				}),
 			);

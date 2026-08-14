@@ -61,9 +61,10 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const query = useQuery<UsePostThreadQueryResult>({
 		queryKey: postThreadQueryKey,
 		enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
-		async queryFn() {
+		async queryFn({ signal }) {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadV2', {
+					signal,
 					params: {
 						anchor: anchor!,
 						branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
@@ -125,9 +126,10 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	const additionalItemsQuery = useQuery({
 		queryKey: postThreadOtherQueryKey,
 		enabled: additionalQueryEnabled,
-		async queryFn() {
+		async queryFn({ signal }) {
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getPostThreadOtherV2', {
+					signal,
 					params: { anchor: anchor! },
 				}),
 			);

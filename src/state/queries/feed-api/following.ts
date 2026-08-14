@@ -1,7 +1,7 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
-import type { FeedAPI, FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse, FeedFetchOptions } from './types';
 
 export class FollowingFeedAPI implements FeedAPI {
 	appview: Client;
@@ -19,9 +19,10 @@ export class FollowingFeedAPI implements FeedAPI {
 		return data.feed[0]!;
 	}
 
-	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
+	async fetch({ cursor, limit, signal }: FeedFetchOptions): Promise<FeedAPIResponse> {
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getTimeline', {
+				signal,
 				params: { cursor, limit },
 			}),
 		);

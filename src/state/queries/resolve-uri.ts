@@ -21,7 +21,7 @@ const resolvedDidQueryOptions = (
 	queryOptions({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY(didOrHandle ?? ''),
-		queryFn: async (): Promise<Did> => {
+		queryFn: async ({ signal }): Promise<Did> => {
 			// `enabled` gates the query on `didOrHandle`, so this only fires if that gate is ever removed
 			if (!didOrHandle) {
 				throw new Error('resolved-did: query ran without an identifier');
@@ -33,6 +33,7 @@ const resolvedDidQueryOptions = (
 
 			const res = await ok(
 				appview.get('com.atproto.identity.resolveHandle', {
+					signal,
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `did:` check above leaves the handle branch; the appview rejects bad handles
 					params: { handle: didOrHandle as Handle },
 				}),

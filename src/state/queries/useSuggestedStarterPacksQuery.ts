@@ -28,9 +28,10 @@ export function useSuggestedStarterPacksQuery({
 		queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
 		enabled: !!preferences && enabled !== false,
 		staleTime: STALE.MINUTES.THREE,
-		queryFn: () =>
+		queryFn: ({ signal }) =>
 			ok(
 				appview.get('app.bsky.unspecced.getSuggestedStarterPacks', {
+					signal,
 					headers: {
 						...createBskyTopicsHeader(
 							overrideInterests ? overrideInterests.join(',') : joinInterestTags(preferences),

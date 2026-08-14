@@ -26,7 +26,7 @@ export function useListConvoMembersQuery({
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),
 		staleTime: STALE.MINUTES.THIRTY,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
@@ -36,6 +36,7 @@ export function useListConvoMembersQuery({
 			do {
 				const data = await ok(
 					chat.get('chat.bsky.convo.getConvoMembers', {
+						signal,
 						params: { convoId, cursor, limit: LIMIT },
 					}),
 				);

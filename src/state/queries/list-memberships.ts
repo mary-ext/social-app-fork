@@ -43,10 +43,11 @@ export function listsWithMembershipQueryOptions({
 	return queryOptions<ListWithMembership[]>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_WITH_MEMBERSHIP(actor),
-		queryFn: () =>
+		queryFn: ({ signal }) =>
 			accumulate((cursor) =>
 				ok(
 					appview.get('app.bsky.graph.getListsWithMembership', {
+						signal,
 						params: { actor: actor!, cursor, limit: 50 },
 					}),
 				).then((data) => ({ cursor: data.cursor, items: data.listsWithMembership })),

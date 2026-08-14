@@ -69,10 +69,10 @@ export class EmbeddingDisabledError extends Error {
 	}
 }
 
-export async function resolveLink(appview: Client, uri: string): Promise<ResolvedLink> {
+export async function resolveLink(appview: Client, uri: string, signal?: AbortSignal): Promise<ResolvedLink> {
 	let link = resolveUrlToLink(uri);
 	if (link?.kind === 'bskyStarterPackCode') {
-		const expanded = await resolveShortLink(link.code);
+		const expanded = await resolveShortLink(link.code, signal);
 
 		if (expanded) {
 			uri = expanded;
@@ -86,7 +86,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		case 'feed': {
 			const did = await fetchDid(link.actor);
 			const feed = makeRecordUri(did, 'app.bsky.feed.generator', link.rkey);
-			const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { params: { feed } }));
+			const res = await ok(appview.get('app.bsky.feed.getFeedGenerator', { signal, params: { feed } }));
 			return {
 				type: 'record',
 				kind: 'feed',
@@ -100,7 +100,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		case 'list': {
 			const did = await fetchDid(link.actor);
 			const list = makeRecordUri(did, 'app.bsky.graph.list', link.rkey);
-			const res = await ok(appview.get('app.bsky.graph.getList', { params: { list } }));
+			const res = await ok(appview.get('app.bsky.graph.getList', { signal, params: { list } }));
 			return {
 				type: 'record',
 				kind: 'list',
@@ -132,6 +132,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			const starterPack = makeRecordUri(did, 'app.bsky.graph.starterpack', link.rkey);
 			const res = await ok(
 				appview.get('app.bsky.graph.getStarterPack', {
+					signal,
 					params: { starterPack },
 				}),
 			);
@@ -153,6 +154,7 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 		const repo = await fetchDid(urip.repo);
 		const res = await ok(
 			appview.get('app.bsky.feed.getPosts', {
+				signal,
 				params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 			}),
 		);
@@ -168,15 +170,15 @@ export async function resolveLink(appview: Client, uri: string): Promise<Resolve
 			return handleOrDid;
 		}
 		const res = await ok(
-			appview.get('com.atproto.identity.resolveHandle', { params: { handle: handleOrDid } }),
+			appview.get('com.atproto.identity.resolveHandle', { signal, params: { handle: handleOrDid } }),
 		);
 		return res.did;
 	}
 
-	return resolveExternal(uri);
+	return resolveExternal(uri, signal);
 }
 
-export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
+export async function resolveGif(gif: Gif, signal: AbortSignal): Promise<ResolvedExternalLink> {
 	const gifUrl = gif.media_formats.gif.url;
 	const params = new URLSearchParams();
 	params.set(gifUrlParams.height, String(gif.media_formats.gif.dims[1]));
@@ -204,7 +206,7 @@ export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
 		uri,
 		title: altText,
 		description: createGIFDescription(altText),
-		thumb: await imageToThumb(gif.media_formats.preview.url),
+		thumb: await imageToThumb(gif.media_formats.preview.url, signal),
 	};
 }
 
@@ -220,14 +222,14 @@ function getFileSlug(url: string | undefined): string | undefined {
 	return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined;
 }
 
-async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
-	const result = await getLinkMeta(uri);
+async function resolveExternal(uri: string, signal?: AbortSignal): Promise<ResolvedExternalLink> {
+	const result = await getLinkMeta(uri, { signal });
 	return {
 		type: 'external',
 		uri: result.url,
 		title: result.title ?? '',
 		description: result.description ?? '',
-		thumb: result.image ? await imageToThumb(result.image) : undefined,
+		thumb: result.image ? await imageToThumb(result.image, signal) : undefined,
 		// standard.site fields the worker hydrates via the appview; the rest come from the page's opengraph/twitter
 		// meta tags.
 		associatedRefs: result.associatedRefs,
@@ -235,20 +237,22 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
 	};
 }
 
-export async function imageToThumb(imageUri: string): Promise<ComposerImage | undefined> {
+export async function imageToThumb(
+	imageUri: string,
+	signal?: AbortSignal,
+): Promise<ComposerImage | undefined> {
 	try {
-		const controller = new AbortController();
-		const timeout = setTimeout(() => controller.abort(), 15e3);
-
-		let source: Blob;
-		try {
-			const res = await fetch(imageUri, { signal: controller.signal });
-			source = await res.blob();
-		} finally {
-			clearTimeout(timeout);
-		}
+		const timeoutSignal = AbortSignal.timeout(15e3);
+		const requestSignal = signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
+		const res = await fetch(imageUri, { signal: requestSignal });
+		const source = await res.blob();
 
 		const { blob } = await compressLinkThumbImage(source);
-		return await createComposerImage(blob);
-	} catch {}
+		signal?.throwIfAborted();
+		const image = await createComposerImage(blob);
+		signal?.throwIfAborted();
+		return image;
+	} catch {
+		signal?.throwIfAborted();
+	}
 }

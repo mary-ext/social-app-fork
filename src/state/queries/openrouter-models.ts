@@ -78,8 +78,8 @@ export function useOpenRouterModelsQuery({ inputModalities, outputModalities }: 
 	return useQuery({
 		queryKey: RQKEY(),
 		staleTime: STALE.HOURS.ONE,
-		async queryFn(): Promise<OpenRouterModel[]> {
-			const response = await fetch(MODELS_URL, { headers: { accept: 'application/json' } });
+		async queryFn({ signal }): Promise<OpenRouterModel[]> {
+			const response = await fetch(MODELS_URL, { signal, headers: { accept: 'application/json' } });
 			if (!response.ok) {
 				throw new Error(`openrouter model list returned ${response.status}`);
 			}

@@ -96,10 +96,11 @@ export function useGetTrendsQuery({
 		enabled: enabled && !!preferences,
 		staleTime: STALE.MINUTES.THREE,
 		refetchOnWindowFocus,
-		queryFn: () => {
+		queryFn: ({ signal }) => {
 			const contentLangs = getContentLanguages().join(',');
 			return ok(
 				appview.get('app.bsky.unspecced.getTrends', {
+					signal,
 					headers: {
 						...createBskyTopicsHeader(joinInterestTags(preferences)),
 						'Accept-Language': contentLangs,

@@ -56,10 +56,12 @@ export async function getThreadgateRecord({
 	appview,
 	pds,
 	postUri,
+	signal,
 }: {
 	appview: Client;
 	pds: Client;
 	postUri: ResourceUri;
+	signal?: AbortSignal;
 }): Promise<AppBskyFeedThreadgate.Main | null> {
 	const urip = parseResourceUri(postUri);
 
@@ -68,6 +70,7 @@ export async function getThreadgateRecord({
 		: (
 				await ok(
 					appview.get('com.atproto.identity.resolveHandle', {
+						signal,
 						params: { handle: urip.repo },
 					}),
 				)
@@ -77,6 +80,7 @@ export async function getThreadgateRecord({
 		const data = await retry(
 			2,
 			(e) => {
+				signal?.throwIfAborted();
 				/*
 				 * If the record doesn't exist, we want to return null instead of
 				 * throwing an error. NB: This will also catch reference errors, such as
@@ -89,6 +93,7 @@ export async function getThreadgateRecord({
 			},
 			() =>
 				getRecord(pds, {
+					signal,
 					repo,
 					collection: 'app.bsky.feed.threadgate',
 					rkey: urip.rkey!,

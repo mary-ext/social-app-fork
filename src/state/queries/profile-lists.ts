@@ -33,9 +33,10 @@ export function useProfileListsQuery(did: Did) {
 	>({
 		queryKey: RQKEY(did),
 		enabled,
-		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+		queryFn: ({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) =>
 			ok(
 				appview.get('app.bsky.graph.getLists', {
+					signal,
 					params: { actor: did, cursor: pageParam, limit: PAGE_SIZE },
 				}),
 			),

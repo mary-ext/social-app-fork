@@ -14,8 +14,8 @@ export function useResolvedStarterPackShortLink({ code }: { code: string }) {
 		enabled: !!code,
 		staleTime: STALE.HOURS.ONE,
 		retry: 1,
-		queryFn: async () => {
-			const res = await resolveShortLink(code);
+		queryFn: async ({ signal }) => {
+			const res = await resolveShortLink(code, signal);
 			return parseStarterPackUri(res);
 		},
 	});

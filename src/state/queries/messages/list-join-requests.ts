@@ -60,12 +60,13 @@ export function useListJoinRequestsQuery({
 		queryKey: createListJoinRequestsQueryKey({ convoId: convoId ?? '' }),
 		enabled: isEnabled,
 		staleTime: STALE.MINUTES.ONE,
-		queryFn: async ({ pageParam }) => {
+		queryFn: async ({ pageParam, signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
 			const data = await ok(
 				chat.get('chat.bsky.group.listJoinRequests', {
+					signal,
 					params: { convoId: convoId!, cursor: pageParam, limit: JOIN_REQUESTS_THRESHOLD },
 				}),
 			);

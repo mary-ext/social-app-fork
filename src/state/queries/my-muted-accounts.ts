@@ -20,9 +20,10 @@ export function useMyMutedAccountsQuery() {
 		RQPageParam
 	>({
 		queryKey: RQKEY(),
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
 			return await ok(
 				appview.get('app.bsky.graph.getMutes', {
+					signal,
 					params: { cursor: pageParam, limit: 30 },
 				}),
 			);

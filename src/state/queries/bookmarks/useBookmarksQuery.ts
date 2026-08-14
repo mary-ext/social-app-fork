@@ -22,9 +22,10 @@ export function useBookmarksQuery() {
 		string | undefined
 	>({
 		queryKey: createBookmarksQueryKey(),
-		queryFn: ({ pageParam }) =>
+		queryFn: ({ pageParam, signal }) =>
 			ok(
 				appview.get('app.bsky.bookmark.getBookmarks', {
+					signal,
 					params: { cursor: pageParam },
 				}),
 			),

@@ -25,9 +25,10 @@ export function useLikedByQuery(resolvedUri: ResourceUri | undefined) {
 	>({
 		queryKey: RQKEY(resolvedUri || ''),
 		enabled: !!resolvedUri,
-		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+		queryFn: ({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) =>
 			ok(
 				appview.get('app.bsky.feed.getLikes', {
+					signal,
 					params: {
 						cursor: pageParam,
 						limit: PAGE_SIZE,

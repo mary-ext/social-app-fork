@@ -21,10 +21,11 @@ export function useGetSuggestedFeedsQuery({ enabled }: { enabled?: boolean }) {
 		queryKey: createGetSuggestedFeedsQueryKey(),
 		enabled: !!preferences && enabled !== false,
 		staleTime: STALE.MINUTES.THREE,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const contentLangs = getContentLanguages().join(',');
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getSuggestedFeeds', {
+					signal,
 					headers: {
 						...createBskyTopicsHeader(joinInterestTags(preferences)),
 						'Accept-Language': contentLangs,

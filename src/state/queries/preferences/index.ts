@@ -56,11 +56,11 @@ export function usePreferencesQuery() {
 		staleTime: STALE.MINUTES.FIVE,
 		gcTime: GCTIME.INFINITY,
 		refetchOnWindowFocus: true,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!pds || !currentAccount) {
 				return DEFAULT_LOGGED_OUT_PREFERENCES;
 			} else {
-				const res = await getPreferences(pds, APP_LABELERS);
+				const res = await getPreferences(pds, APP_LABELERS, signal);
 
 				saveSubscribedLabelers(
 					currentAccount.did,

@@ -20,7 +20,7 @@ export function useFeaturedGifsQuery(options?: { enabled?: boolean }) {
 		// picker closes so every reopen issues a fresh request instead of showing
 		// stale results while a background refetch runs.
 		gcTime: 0,
-		queryFn: ({ pageParam }) => getTrendingGifs({ pos: pageParam }),
+		queryFn: ({ pageParam, signal }) => getTrendingGifs({ pos: pageParam }, signal),
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (lastPage) => lastPage.next,
 	});
@@ -30,7 +30,7 @@ export function useGifSearchQuery(query: string, options?: { enabled?: boolean }
 	return useInfiniteQuery({
 		queryKey: RQKEY_SEARCH(query),
 		enabled: !!query && options?.enabled !== false,
-		queryFn: ({ pageParam }) => searchGifs({ q: query, pos: pageParam }),
+		queryFn: ({ pageParam, signal }) => searchGifs({ q: query, pos: pageParam }, signal),
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (lastPage) => lastPage.next,
 	});
@@ -39,11 +39,14 @@ export function useGifSearchQuery(query: string, options?: { enabled?: boolean }
 // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- `Input` types the returned function, so callers supply it explicitly (see `searchGifs`)
 function createKlipyApi<Input extends object>(
 	urlFn: (params: string) => string,
-): (input: Input & { pos?: string }) => Promise<{
+): (
+	input: Input & { pos?: string },
+	signal: AbortSignal,
+) => Promise<{
 	next: string;
 	results: Gif[];
 }> {
-	return async (input) => {
+	return async (input, signal) => {
 		const params = new URLSearchParams();
 
 		params.set('client_key', 'bluesky-web');
@@ -67,6 +70,7 @@ function createKlipyApi<Input extends object>(
 		}
 
 		const res = await fetch(urlFn(params.toString()), {
+			signal,
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

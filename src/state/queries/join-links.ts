@@ -67,11 +67,19 @@ export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, con
 	});
 }
 
-async function fetchJoinLinkPreviews({ chat, codes }: { chat: Client | null; codes: string[] }) {
+async function fetchJoinLinkPreviews({
+	chat,
+	codes,
+	signal,
+}: {
+	chat: Client | null;
+	codes: string[];
+	signal: AbortSignal;
+}) {
 	if (!chat) {
 		throw new Error('Not signed in');
 	}
-	return await ok(chat.get('chat.bsky.group.getJoinLinkPreviews', { params: { codes } }));
+	return await ok(chat.get('chat.bsky.group.getJoinLinkPreviews', { signal, params: { codes } }));
 }
 
 export function useJoinLinkPreviewsQuery({
@@ -95,11 +103,11 @@ export function useJoinLinkPreviewsQuery({
 		queryKey: createJoinLinkPreviewQueryKey({ codes: codes ?? [], hasSession }),
 		enabled: codes != null && codes.length > 0,
 		staleTime,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!codes) {
 				throw new Error('No invite code');
 			}
-			return fetchJoinLinkPreviews({ chat, codes });
+			return fetchJoinLinkPreviews({ chat, codes, signal });
 		},
 		initialData,
 	});
@@ -125,7 +133,7 @@ export function useGetJoinLinkPreview() {
 		try {
 			const data = await queryClient.fetchQuery({
 				queryKey: createJoinLinkPreviewQueryKey({ codes: [code], hasSession }),
-				queryFn: () => fetchJoinLinkPreviews({ chat, codes: [code] }),
+				queryFn: ({ signal }) => fetchJoinLinkPreviews({ chat, codes: [code], signal }),
 				staleTime: STALE.SECONDS.FIFTEEN,
 			});
 			return data.joinLinkPreviews[0];

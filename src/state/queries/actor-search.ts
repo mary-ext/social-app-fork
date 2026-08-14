@@ -38,9 +38,10 @@ export function useActorSearch({
 		queryKey: RQKEY(query, limit),
 		enabled: (enabled ?? true) && !!query,
 		staleTime: STALE.MINUTES.FIVE,
-		queryFn: ({ pageParam }) =>
+		queryFn: ({ pageParam, signal }) =>
 			ok(
 				appview.get('app.bsky.actor.searchActors', {
+					signal,
 					params: { cursor: pageParam, limit, q: query },
 				}),
 			),

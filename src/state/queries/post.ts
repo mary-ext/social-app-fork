@@ -21,7 +21,7 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
 		enabled: !!uri,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!uri) {
 				throw new Error('[unreachable] No URI provided');
 			}
@@ -32,6 +32,7 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 			if (!isDid(repo)) {
 				const resolved = await ok(
 					appview.get('com.atproto.identity.resolveHandle', {
+						signal,
 						params: { handle: repo },
 					}),
 				);
@@ -40,6 +41,7 @@ export function usePostQuery(uri: ResourceUri | undefined) {
 
 			const { posts } = await ok(
 				appview.get('app.bsky.feed.getPosts', {
+					signal,
 					params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 				}),
 			);
@@ -58,13 +60,14 @@ export function useGetPost() {
 	return async ({ uri }: { uri: ResourceUri }) => {
 		return queryClient.fetchQuery({
 			queryKey: RQKEY(uri || ''),
-			async queryFn() {
+			async queryFn({ signal }) {
 				const urip = parseResourceUri(uri);
 
 				let repo: ActorIdentifier = urip.repo;
 				if (!isDid(repo)) {
 					const resolved = await ok(
 						appview.get('com.atproto.identity.resolveHandle', {
+							signal,
 							params: { handle: repo },
 						}),
 					);
@@ -73,6 +76,7 @@ export function useGetPost() {
 
 				const { posts } = await ok(
 					appview.get('app.bsky.feed.getPosts', {
+						signal,
 						params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}`] },
 					}),
 				);
@@ -93,9 +97,10 @@ export function useGetPosts() {
 	return async ({ uris }: { uris: ResourceUri[] }) => {
 		return queryClient.fetchQuery({
 			queryKey: RQKEY(uris.join(',') || ''),
-			async queryFn() {
+			async queryFn({ signal }) {
 				const { posts } = await ok(
 					appview.get('app.bsky.feed.getPosts', {
+						signal,
 						params: { uris },
 					}),
 				);

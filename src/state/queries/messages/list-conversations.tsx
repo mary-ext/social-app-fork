@@ -124,12 +124,13 @@ export function useListConvosQuery({
 	return useInfiniteQuery({
 		queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
 		enabled,
-		queryFn: async ({ pageParam }) => {
+		queryFn: async ({ pageParam, signal }) => {
 			if (!chat) {
 				throw new Error('Not signed in');
 			}
 			const data = await ok(
 				chat.get('chat.bsky.convo.listConvos', {
+					signal,
 					params: {
 						limit,
 						cursor: pageParam,

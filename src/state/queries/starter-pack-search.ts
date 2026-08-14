@@ -31,9 +31,10 @@ export function useStarterPackSearch({
 		queryKey: RQKEY(query, limit),
 		enabled: (enabled ?? true) && !!query,
 		staleTime: STALE.MINUTES.FIVE,
-		queryFn: ({ pageParam }) =>
+		queryFn: ({ pageParam, signal }) =>
 			ok(
 				appview.get('app.bsky.graph.searchStarterPacksV2', {
+					signal,
 					params: { cursor: pageParam, limit, q: query },
 				}),
 			),

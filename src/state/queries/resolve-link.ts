@@ -20,8 +20,8 @@ export function useResolveLinkQuery(url: string) {
 	return useQuery({
 		queryKey: RQKEY_LINK(url),
 		staleTime: STALE.HOURS.ONE,
-		queryFn: async () => {
-			return await resolveLink(appview, url);
+		queryFn: async ({ signal }) => {
+			return await resolveLink(appview, url, signal);
 		},
 	});
 }
@@ -29,8 +29,8 @@ export function fetchResolveLinkQuery(queryClient: QueryClient, appview: Client,
 	return queryClient.fetchQuery({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_LINK(url),
-		queryFn: async () => {
-			return await resolveLink(appview, url);
+		queryFn: async ({ signal }) => {
+			return await resolveLink(appview, url, signal);
 		},
 	});
 }
@@ -42,8 +42,8 @@ export function useResolveGifQuery(gif: Gif) {
 	return useQuery({
 		queryKey: RQKEY_GIF(gif.url),
 		staleTime: STALE.HOURS.ONE,
-		queryFn: async () => {
-			return await resolveGif(gif);
+		queryFn: async ({ signal }) => {
+			return await resolveGif(gif, signal);
 		},
 	});
 }
@@ -51,8 +51,8 @@ export function fetchResolveGifQuery(queryClient: QueryClient, gif: Gif) {
 	return queryClient.fetchQuery({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_GIF(gif.url),
-		queryFn: async () => {
-			return await resolveGif(gif);
+		queryFn: async ({ signal }) => {
+			return await resolveGif(gif, signal);
 		},
 	});
 }

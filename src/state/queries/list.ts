@@ -37,12 +37,13 @@ export function useListQuery(uri?: ResourceUri) {
 		queryKey: RQKEY(uri || ''),
 		enabled: !!uri,
 		staleTime: STALE.MINUTES.ONE,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			if (!uri) {
 				throw new Error('URI not provided');
 			}
 			const data = await ok(
 				appview.get('app.bsky.graph.getList', {
+					signal,
 					params: { limit: 1, list: uri },
 				}),
 			);

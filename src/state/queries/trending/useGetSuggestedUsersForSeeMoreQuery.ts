@@ -33,12 +33,13 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
 		}),
 		enabled: props.enabled ?? true,
 		staleTime: STALE.MINUTES.THREE,
-		queryFn: async () => {
+		queryFn: async ({ signal }) => {
 			const contentLangs = getContentLanguages().join(',');
 			const userInterests = joinInterestTags(preferences);
 
 			const data = await ok(
 				appview.get('app.bsky.unspecced.getSuggestedUsersForSeeMore', {
+					signal,
 					headers: {
 						...createBskyTopicsHeader(userInterests),
 						'Accept-Language': contentLangs,

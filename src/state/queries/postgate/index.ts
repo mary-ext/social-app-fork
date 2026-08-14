@@ -25,10 +25,12 @@ export async function getPostgateRecord({
 	appview,
 	pds,
 	postUri,
+	signal,
 }: {
 	appview: Client;
 	pds: Client;
 	postUri: ResourceUri;
+	signal?: AbortSignal;
 }): Promise<AppBskyFeedPostgate.Main | undefined> {
 	const urip = parseResourceUri(postUri);
 
@@ -37,6 +39,7 @@ export async function getPostgateRecord({
 		: (
 				await ok(
 					appview.get('com.atproto.identity.resolveHandle', {
+						signal,
 						params: { handle: urip.repo },
 					}),
 				)
@@ -46,6 +49,7 @@ export async function getPostgateRecord({
 		const data = await retry(
 			2,
 			(e) => {
+				signal?.throwIfAborted();
 				/*
 				 * If the record doesn't exist, we want to return null instead of
 				 * throwing an error. NB: This will also catch reference errors, such as
@@ -58,6 +62,7 @@ export async function getPostgateRecord({
 			},
 			() =>
 				getRecord(pds, {
+					signal,
 					repo,
 					collection: POSTGATE_COLLECTION,
 					rkey: urip.rkey!,
@@ -141,8 +146,8 @@ export function usePostgateQuery({ postUri }: { postUri: ResourceUri }) {
 	return useQuery({
 		queryKey: createPostgateQueryKey(postUri),
 		staleTime: STALE.SECONDS.THIRTY,
-		async queryFn() {
-			return await getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null);
+		async queryFn({ signal }) {
+			return await getPostgateRecord({ appview, pds: pds!, postUri, signal }).then((res) => res ?? null);
 		},
 	});
 }
