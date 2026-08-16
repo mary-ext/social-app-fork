@@ -1,8 +1,8 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
-import Leaflet from '#/icons/original/Leaflet.svg';
-import Offprint from '#/icons/original/Offprint.svg';
-import Pckt from '#/icons/original/Pckt.svg';
+import Leaflet from '#/icons/brands/Leaflet.svg';
+import Offprint from '#/icons/brands/Offprint.svg';
+import Pckt from '#/icons/brands/Pckt.svg';
 
 export type StandardSitePublisher = {
 	host: string;

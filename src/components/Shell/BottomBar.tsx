@@ -10,6 +10,8 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { isModifiedClick, Link } from '#/components/web/Link';
 
+import Logo from '#/icons/brands/Bluesky.svg';
+import Logotype from '#/icons/brands/BlueskyLogotype.svg';
 import BellFilled from '#/icons/central/Bell_round_filled_radius1_stroke2.svg';
 import Bell from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
 import MessageFilled from '#/icons/central/BubbleAnnotation3_round_filled_radius1_stroke2.svg';
@@ -18,8 +20,6 @@ import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.sv
 import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
 import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
-import Logo from '#/icons/original/Logo.svg';
-import Logotype from '#/icons/original/Logotype.svg';
 import { m } from '#/paraglide/messages';
 import { type RouteTarget, useRouter, useTarget } from '#/routes';
 

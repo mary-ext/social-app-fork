@@ -10,8 +10,8 @@ import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import LogoSky from '#/icons/original/LogoSky.svg';
-import Logotype from '#/icons/original/Logotype.svg';
+import Logotype from '#/icons/brands/BlueskyLogotype.svg';
+import LogoSky from '#/icons/brands/BlueskySky.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './LoggedOut.css';

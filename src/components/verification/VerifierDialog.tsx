@@ -12,7 +12,7 @@ import { Text } from '#/components/Text';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 
-import Logo from '#/icons/original/Logo.svg';
+import Logo from '#/icons/brands/Bluesky.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import VerifierCheck from '#/icons/original/VerifierCheck.svg';
 import { m } from '#/paraglide/messages';

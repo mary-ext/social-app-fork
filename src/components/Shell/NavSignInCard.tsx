@@ -6,7 +6,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 
-import Logo from '#/icons/original/Logo.svg';
+import Logo from '#/icons/brands/Bluesky.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './NavSignInCard.css';

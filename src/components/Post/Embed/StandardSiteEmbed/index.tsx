@@ -25,9 +25,9 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { ExternalLink, ExternalLinkButton } from '#/components/web/Link';
 
+import StandardSite from '#/icons/brands/StandardSite.svg';
 import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
 import Clock from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
-import StandardSite from '#/icons/original/StandardSite.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
