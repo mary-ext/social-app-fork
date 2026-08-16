@@ -20,7 +20,12 @@ import {
 } from '#/components/ImageEmbed/carousel/const';
 import { useKeyboardHandlers } from '#/components/ImageEmbed/carousel/useKeyboardHandlers';
 import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerHandlers';
-import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
+import {
+	computeDims,
+	deriveCarouselHeight,
+	getAspectRatio,
+	getTrailingPad,
+} from '#/components/ImageEmbed/carousel/utils';
 import * as styles from '#/components/ImageEmbed/Gallery.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
@@ -39,11 +44,11 @@ export type GalleryProps = {
 export function Gallery({ images, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const largeAltBadge = useLargeAltBadgeEnabled();
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
-	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
+	const { bleedStyle, bleedWidth, insetLeft, insetRight, ref: bleedRef } = useGalleryBleed();
 
-	// every snapped tile sits `insetLeft` in from the strip's left edge, so the room to the right viewport edge
-	// is `bleedWidth - insetLeft`; reserve the gap plus a sliver of the next image so it peeks.
-	const maxItemWidth = Math.max(0, bleedWidth - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
+	// leave room for the gap and next-image peek
+	const snapRoom = bleedWidth - insetLeft;
+	const maxItemWidth = Math.max(0, snapRoom - ITEM_GAP - CAROUSEL_PEEK);
 
 	// One row height for the whole strip: an orientation base from the first two images (chat bubbles map onto
 	// a more compact range), shrunk so the widest tile fits `maxItemWidth` uncropped and the next peeks. Items
@@ -54,6 +59,13 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 		min: isWithinChat ? CAROUSEL_CHAT_MIN_HEIGHT : CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.aspectRatio)),
 	});
+
+	// let the last tile reach the same snap position as the others
+	const lastItemDims = computeDims({
+		aspectRatio: getAspectRatio(images.at(-1)?.aspectRatio),
+		height: contentHeight,
+	});
+	const paddingRight = getTrailingPad({ insetRight, lastItemWidth: lastItemDims.width, snapRoom });
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
@@ -113,7 +125,7 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 				aria-roledescription={m['components.post.image.a11y.carousel']()}
 				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
 				className={styles.scroll}
-				style={bleedStyle}
+				style={{ ...bleedStyle, paddingRight }}
 			>
 				{images.map((image, index) => (
 					<GalleryImage

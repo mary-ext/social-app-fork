@@ -8,6 +8,26 @@ export function getOffsetForIndex(itemWidths: Map<number, number>, index: number
 	return offset;
 }
 
+/**
+ * calculate the right padding needed to align the last carousel tile.
+ *
+ * @param insetRight right gutter in px
+ * @param lastItemWidth last tile width in px
+ * @param snapRoom available width after the snap position in px
+ * @returns right padding in px
+ */
+export function getTrailingPad({
+	insetRight,
+	lastItemWidth,
+	snapRoom,
+}: {
+	insetRight: number;
+	lastItemWidth: number;
+	snapRoom: number;
+}): number {
+	return Math.max(insetRight, snapRoom - lastItemWidth);
+}
+
 export function getAspectRatio({ width, height }: { width?: number; height?: number } = {}) {
 	if (width && width > 0 && height && height > 0) {
 		return width / height;

@@ -57,6 +57,7 @@ type GalleryBleedStrip = {
 	bleedStyle: CSSProperties;
 	bleedWidth: number;
 	insetLeft: number;
+	insetRight: number;
 	ref: (el: HTMLElement | null) => void;
 };
 
@@ -121,6 +122,7 @@ export function useGalleryBleed(): GalleryBleedStrip {
 		},
 		bleedWidth,
 		insetLeft,
+		insetRight,
 		ref,
 	};
 }
