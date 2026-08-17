@@ -17,19 +17,6 @@ export const cluster = styleVariants({
 	large: [clusterBase, { gap: 4 }],
 });
 
-const countClusterBase = style({
-	display: 'flex',
-	position: 'absolute',
-	top: 4,
-	right: 4,
-	flexDirection: 'row',
-});
-
-export const countCluster = styleVariants({
-	regular: [countClusterBase],
-	large: [countClusterBase],
-});
-
 const boxBase = style({
 	boxSizing: 'border-box',
 	display: 'flex',

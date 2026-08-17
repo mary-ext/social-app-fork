@@ -165,14 +165,7 @@ function GalleryImage({
 					ref={measure}
 				/>
 			)}
-			<MediaBadges
-				variant="gallery"
-				hasAlt={hasAlt}
-				cropped={isCropped}
-				large={largeAltBadge}
-				count={imageCount}
-				index={index}
-			/>
+			<MediaBadges variant="gallery" hasAlt={hasAlt} cropped={isCropped} large={largeAltBadge} />
 		</Dialog.Trigger>
 	);
 }
