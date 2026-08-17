@@ -53,7 +53,7 @@ export function GalleryBleed({ children }: { children: ReactNode }) {
 }
 
 type GalleryBleedStrip = {
-	/** apply to the strip's overflowing child; sets no width of its own. */
+	/** styles that extend the strip to the host's edges. */
 	bleedStyle: CSSProperties;
 	bleedWidth: number;
 	insetLeft: number;
@@ -113,12 +113,11 @@ export function useGalleryBleed(): GalleryBleedStrip {
 	const { bleedWidth, insetLeft, insetRight } = insets;
 
 	return {
-		// a block-level child with both margins pulled out already resolves to `bleedWidth`
 		bleedStyle: {
 			marginLeft: -insetLeft,
 			marginRight: -insetRight,
 			paddingLeft: insetLeft,
-			paddingRight: insetRight,
+			scrollPaddingLeft: insetLeft,
 		},
 		bleedWidth,
 		insetLeft,

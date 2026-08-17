@@ -24,6 +24,7 @@ export const scroll = style({
 	overflowX: 'scroll',
 	overflowY: 'hidden',
 	overscrollBehaviorX: 'contain',
+	scrollSnapType: 'x mandatory',
 	scrollbarWidth: 'none',
 	selectors: {
 		'&::-webkit-scrollbar': { display: 'none' },
@@ -35,6 +36,7 @@ export const item = style([
 	{
 		position: 'relative',
 		flex: '0 0 auto',
+		scrollSnapAlign: 'start',
 		borderRadius: borderRadius.md,
 		background: vars.palette.contrast_25,
 		overflow: 'hidden',

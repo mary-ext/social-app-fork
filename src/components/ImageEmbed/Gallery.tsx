@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { AppBskyEmbedGallery } from '@atcute/bluesky';
 
@@ -15,17 +15,9 @@ import {
 	CAROUSEL_CHAT_MIN_HEIGHT,
 	CAROUSEL_MAX_HEIGHT,
 	CAROUSEL_MIN_HEIGHT,
-	CAROUSEL_PEEK,
-	ITEM_GAP,
 } from '#/components/ImageEmbed/carousel/const';
 import { useKeyboardHandlers } from '#/components/ImageEmbed/carousel/useKeyboardHandlers';
-import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerHandlers';
-import {
-	computeDims,
-	deriveCarouselHeight,
-	getAspectRatio,
-	getTrailingPad,
-} from '#/components/ImageEmbed/carousel/utils';
+import { computeDims, getAspectRatio, getCarouselMetrics } from '#/components/ImageEmbed/carousel/utils';
 import * as styles from '#/components/ImageEmbed/Gallery.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
@@ -46,50 +38,23 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
 	const { bleedStyle, bleedWidth, insetLeft, insetRight, ref: bleedRef } = useGalleryBleed();
 
-	// leave room for the gap and next-image peek
-	const snapRoom = bleedWidth - insetLeft;
-	const maxItemWidth = Math.max(0, snapRoom - ITEM_GAP - CAROUSEL_PEEK);
-
-	// One row height for the whole strip: an orientation base from the first two images (chat bubbles map onto
-	// a more compact range), shrunk so the widest tile fits `maxItemWidth` uncropped and the next peeks. Items
-	// then take their own clamped width within it.
-	const contentHeight = deriveCarouselHeight({
+	const { contentHeight, paddingRight } = getCarouselMetrics({
+		bleedWidth,
+		insetLeft,
+		insetRight,
 		max: isWithinChat ? CAROUSEL_CHAT_MAX_HEIGHT : CAROUSEL_MAX_HEIGHT,
-		maxWidth: maxItemWidth,
 		min: isWithinChat ? CAROUSEL_CHAT_MIN_HEIGHT : CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.aspectRatio)),
 	});
 
-	// let the last tile reach the same snap position as the others
-	const lastItemDims = computeDims({
-		aspectRatio: getAspectRatio(images.at(-1)?.aspectRatio),
-		height: contentHeight,
-	});
-	const paddingRight = getTrailingPad({ insetRight, lastItemWidth: lastItemDims.width, snapRoom });
-
 	const scrollRef = useRef<HTMLDivElement>(null);
-	const itemWidthsRef = useRef<Map<number, number>>(new Map());
 	const itemRefsRef = useRef<Map<number, HTMLElement>>(new Map());
-	const currentIndexRef = useRef(0);
 
-	const getScrollEl = () => scrollRef.current;
-	const scrollTo = (offset: number) => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollLeft = offset;
-		}
-	};
-
-	const onSettle = (index: number) => {
-		currentIndexRef.current = index;
-		// Only the active image is tab-focusable
+	const onActivate = (index: number) => {
 		itemRefsRef.current.forEach((node, i) => {
 			node.tabIndex = i === index ? 0 : -1;
 		});
 		itemRefsRef.current.get(index)?.focus({ preventScroll: true });
-	};
-
-	const onWidthChange = (index: number, w: number) => {
-		itemWidthsRef.current.set(index, w);
 	};
 
 	const setItemRef = (index: number, node: HTMLElement | null) => {
@@ -100,22 +65,7 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 		}
 	};
 
-	useKeyboardHandlers({
-		getScrollEl,
-		itemWidthsRef,
-		currentIndexRef,
-		scrollTo,
-		onSettle,
-		imageCount: images.length,
-	});
-	usePointerHandlers({
-		getScrollEl,
-		itemWidthsRef,
-		currentIndexRef,
-		scrollTo,
-		onSettle,
-		imageCount: images.length,
-	});
+	useKeyboardHandlers({ itemRefsRef, onActivate, scrollPaddingLeft: insetLeft, scrollRef });
 
 	return (
 		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
@@ -136,7 +86,6 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 						imageCount={images.length}
 						contentHeight={contentHeight}
 						largeAltBadge={largeAltBadge}
-						onWidthChange={onWidthChange}
 						setItemRef={setItemRef}
 						lightboxImages={lightboxImages}
 						onPressIn={onPressIn}
@@ -153,7 +102,6 @@ function GalleryImage({
 	imageCount,
 	contentHeight,
 	largeAltBadge,
-	onWidthChange,
 	setItemRef,
 	lightboxImages,
 	onPressIn,
@@ -163,7 +111,6 @@ function GalleryImage({
 	imageCount: number;
 	contentHeight: number;
 	largeAltBadge: boolean;
-	onWidthChange: (index: number, width: number) => void;
 	setItemRef: (index: number, node: HTMLElement | null) => void;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
@@ -176,19 +123,12 @@ function GalleryImage({
 		}
 	};
 
-	// Size from the declared aspect ratio only (a missing one defaults to square). The shared row height was
-	// derived against these same metadata ratios, so adopting an image's true ratio post-load could push a
-	// metadata-less tile past the width budget and swallow the peek — better a square placeholder.
+	// keep dimensions stable when ratio metadata is missing
 	const aspectRatio = getAspectRatio(image.aspectRatio);
 	const { isCropped, ...dims } = computeDims({ aspectRatio, height: contentHeight });
 	const hasAlt = !!image.alt;
-	// With a known ratio the tile matches it (cover fills cleanly; a clamped panorama is intentionally cropped,
-	// flagged by `isCropped`). With an unknown ratio the tile is a blind square, so letterbox rather than chop.
+	// letterbox images with unknown ratios instead of cropping them to the square fallback
 	const isContain = aspectRatio === undefined;
-
-	useEffect(() => {
-		onWidthChange(index, dims.width);
-	}, [index, dims.width, onWidthChange]);
 
 	return (
 		<Dialog.Trigger
@@ -197,9 +137,7 @@ function GalleryImage({
 			type="button"
 			ref={(node: HTMLElement | null) => setItemRef(index, node)}
 			className={styles.item}
-			// Size the tile itself (border-box) so its on-screen width matches `dims.width` — the value the pager
-			// sums for snap offsets. Letting the image's intrinsic width drive it instead leaves the tile a
-			// border-width wider than `dims.width`, drifting the snap anchor by that much per image.
+			// size the border box to preserve the reserved peek
 			style={{ height: dims.height, width: dims.width }}
 			tabIndex={index === 0 ? 0 : -1}
 			aria-roledescription={m['components.post.image.a11y.slide']()}

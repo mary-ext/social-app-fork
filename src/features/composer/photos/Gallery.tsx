@@ -1,4 +1,4 @@
-import { type FocusEvent, useEffect, useRef } from 'react';
+import type { FocusEvent } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -7,14 +7,8 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
-import {
-	CAROUSEL_MAX_HEIGHT,
-	CAROUSEL_MIN_HEIGHT,
-	CAROUSEL_PEEK,
-	ITEM_GAP,
-} from '#/components/ImageEmbed/carousel/const';
-import { usePointerHandlers } from '#/components/ImageEmbed/carousel/usePointerHandlers';
-import { computeDims, deriveCarouselHeight, getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
+import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
+import { computeDims, getAspectRatio, getCarouselMetrics } from '#/components/ImageEmbed/carousel/utils';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { Text } from '#/components/Text';
 
@@ -63,7 +57,6 @@ export function Gallery({ dispatch, images, text }: GalleryProps) {
 	);
 }
 
-/** A lone composer image: no scroller, no bleed — it sizes to the content column at its own aspect ratio. */
 const SingleImage = ({
 	dispatch,
 	image,
@@ -91,64 +84,32 @@ const SingleImage = ({
 	);
 };
 
-// Tabbing lands on a control button inside a tile; bring the whole tile into view rather than leaving the
-// browser to reveal just the focused corner.
+// keep the full tile visible when focus moves between its controls
 const onFocus = (evt: FocusEvent<HTMLDivElement>) => {
 	const tile = (evt.target as HTMLElement).closest('[data-composer-image]');
 	tile?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 };
 
 const Carousel = ({ dispatch, images, text }: GalleryProps) => {
-	const { bleedStyle, bleedWidth, insetLeft, ref: bleedRef } = useGalleryBleed();
+	const { bleedStyle, bleedWidth, insetLeft, insetRight, ref: bleedRef } = useGalleryBleed();
 
-	// every tile sits `insetLeft` in from the strip's left edge; reserve the gap plus a sliver of the next so it
-	// peeks.
-	const maxItemWidth = Math.max(0, bleedWidth - insetLeft - ITEM_GAP - CAROUSEL_PEEK);
-	// One shared row height for the whole strip, shrunk so the widest tile fits `maxItemWidth` uncropped.
-	const contentHeight = deriveCarouselHeight({
+	const { contentHeight, paddingRight } = getCarouselMetrics({
+		bleedWidth,
+		insetLeft,
+		insetRight,
 		max: CAROUSEL_MAX_HEIGHT,
-		maxWidth: maxItemWidth,
 		min: CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.transformed ?? image.source)),
-	});
-
-	const scrollRef = useRef<HTMLDivElement>(null);
-	const itemWidthsRef = useRef<Map<number, number>>(new Map());
-	const currentIndexRef = useRef(0);
-
-	const getScrollEl = () => scrollRef.current;
-	const scrollTo = (offset: number) => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollLeft = offset;
-		}
-	};
-	// Tiles aren't the focus target here (each holds its own controls), so settling only tracks the index for
-	// the pager's drag math — it must not steal focus the way the read-only carousel does.
-	const onSettle = (index: number) => {
-		currentIndexRef.current = index;
-	};
-	const onWidthChange = (index: number, w: number) => {
-		itemWidthsRef.current.set(index, w);
-	};
-
-	usePointerHandlers({
-		currentIndexRef,
-		getScrollEl,
-		imageCount: images.length,
-		itemWidthsRef,
-		onSettle,
-		scrollTo,
 	});
 
 	return (
 		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
 			<div
-				ref={scrollRef}
 				className={styles.scroll}
 				onFocus={onFocus}
 				role="group"
 				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
-				style={bleedStyle}
+				style={{ ...bleedStyle, paddingRight }}
 			>
 				{images.map((image, index) => (
 					<GalleryItem
@@ -156,14 +117,12 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 						contentHeight={contentHeight}
 						context={toAltTextContext(images, index, text)}
 						image={image}
-						index={index}
 						onChange={(next) => {
 							dispatch({ type: 'embedUpdateImage', image: next });
 						}}
 						onRemove={() => {
 							dispatch({ type: 'embedRemoveImage', image });
 						}}
-						onWidthChange={onWidthChange}
 					/>
 				))}
 			</div>
@@ -171,7 +130,6 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 	);
 };
 
-/** what the description assistant is told about the image beyond the pixels: the post, and its siblings. */
 const toAltTextContext = (images: ComposerImage[], index: number, text: string): AltTextContext => ({
 	siblingAlts: images.filter((_, idx) => idx !== index).map((sibling) => sibling.alt),
 	text: text,
@@ -181,27 +139,13 @@ type GalleryItemProps = {
 	contentHeight: number;
 	context: AltTextContext;
 	image: ComposerImage;
-	index: number;
 	onChange: (next: ComposerImage) => void;
 	onRemove: () => void;
-	onWidthChange: (index: number, width: number) => void;
 };
 
-const GalleryItem = ({
-	contentHeight,
-	context,
-	image,
-	index,
-	onChange,
-	onRemove,
-	onWidthChange,
-}: GalleryItemProps) => {
+const GalleryItem = ({ contentHeight, context, image, onChange, onRemove }: GalleryItemProps) => {
 	const aspectRatio = getAspectRatio(image.transformed ?? image.source);
 	const dims = computeDims({ aspectRatio, height: contentHeight });
-
-	useEffect(() => {
-		onWidthChange(index, dims.width);
-	}, [index, dims.width, onWidthChange]);
 
 	return (
 		<div className={styles.item} data-composer-image style={{ height: dims.height, width: dims.width }}>
@@ -217,7 +161,6 @@ type ItemChromeProps = {
 	onRemove: () => void;
 };
 
-/** The image plus its editing overlay (ALT badge, edit/remove controls) and the dialogs those open. */
 const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => {
 	const imageUrl = getBlobUrl((image.transformed ?? image.source).blob);
 

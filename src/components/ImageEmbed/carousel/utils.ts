@@ -1,32 +1,9 @@
-import { ITEM_GAP, MAX_ASPECT_RATIO, MIN_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
-
-export function getOffsetForIndex(itemWidths: Map<number, number>, index: number): number {
-	let offset = 0;
-	for (let i = 0; i < index; i++) {
-		offset += (itemWidths.get(i) ?? 0) + ITEM_GAP;
-	}
-	return offset;
-}
-
-/**
- * calculate the right padding needed to align the last carousel tile.
- *
- * @param insetRight right gutter in px
- * @param lastItemWidth last tile width in px
- * @param snapRoom available width after the snap position in px
- * @returns right padding in px
- */
-export function getTrailingPad({
-	insetRight,
-	lastItemWidth,
-	snapRoom,
-}: {
-	insetRight: number;
-	lastItemWidth: number;
-	snapRoom: number;
-}): number {
-	return Math.max(insetRight, snapRoom - lastItemWidth);
-}
+import {
+	CAROUSEL_PEEK,
+	ITEM_GAP,
+	MAX_ASPECT_RATIO,
+	MIN_ASPECT_RATIO,
+} from '#/components/ImageEmbed/carousel/const';
 
 export function getAspectRatio({ width, height }: { width?: number; height?: number } = {}) {
 	if (width && width > 0 && height && height > 0) {
@@ -67,12 +44,10 @@ export function deriveCarouselHeight({
 	min: number;
 	ratios: (number | undefined)[];
 }): number {
-	// Orientation base: both ratios are clamped, so their average — and thus `t` — stays within [0, 1].
 	const avg = (clampAspectRatio(ratios[0]) + clampAspectRatio(ratios[1])) / 2;
 	const t = (avg - MIN_ASPECT_RATIO) / (MAX_ASPECT_RATIO - MIN_ASPECT_RATIO);
 	const base = max + t * (min - max);
-	// Fit: keep the widest tile (height * widest ratio) within the budget so it leaves a peek instead of
-	// overflowing — uncropped, just shorter.
+	// reduce the height when the widest tile would hide the next-image peek
 	const widest = Math.max(...ratios.map((ratio) => clampAspectRatio(ratio)));
 	return Math.round(Math.min(base, maxWidth / widest));
 }
@@ -88,4 +63,45 @@ export function computeDims({ aspectRatio, height }: { aspectRatio?: number; hei
 	const clamped = clampAspectRatio(aspectRatio);
 	const width = Math.floor(height * clamped);
 	return { height, isCropped: (aspectRatio ?? 1) !== clamped, width };
+}
+
+/**
+ * sizes a snapping carousel for its bleed host.
+ *
+ * @param bleedWidth width of the bleed host in px
+ * @param insetLeft left gutter in px
+ * @param insetRight right gutter in px
+ * @param max maximum row height in px
+ * @param min minimum row height in px
+ * @param ratios tile aspect ratios in strip order
+ * @returns shared row height and right padding
+ */
+export function getCarouselMetrics({
+	bleedWidth,
+	insetLeft,
+	insetRight,
+	max,
+	min,
+	ratios,
+}: {
+	bleedWidth: number;
+	insetLeft: number;
+	insetRight: number;
+	max: number;
+	min: number;
+	ratios: (number | undefined)[];
+}) {
+	// reserve the gap and next-image peek after the widest tile
+	const snapRoom = bleedWidth - insetLeft;
+	const contentHeight = deriveCarouselHeight({
+		max,
+		maxWidth: Math.max(0, snapRoom - ITEM_GAP - CAROUSEL_PEEK),
+		min,
+		ratios,
+	});
+
+	// let the last tile snap without reducing the trailing gutter
+	const lastItemWidth = computeDims({ aspectRatio: ratios.at(-1), height: contentHeight }).width;
+
+	return { contentHeight, paddingRight: Math.max(insetRight, snapRoom - lastItemWidth) };
 }

@@ -1,93 +1,78 @@
 import { type RefObject, useEffect } from 'react';
 
-import { tween } from '#/components/ImageEmbed/carousel/tween';
-import { getOffsetForIndex } from '#/components/ImageEmbed/carousel/utils';
-
-const SETTLE_DURATION = 700;
+import { getReducedMotion } from '#/lib/browser/reduced-motion';
 
 /**
- * enables arrow-key paging for the carousel. tweens to the neighboring item and reports the settled index.
+ * adds arrow-key paging to a scroll-snapping carousel.
  *
- * @param getScrollEl function that returns the scrollable element
+ * @param itemRefsRef tiles by index
+ * @param onActivate called before scrolling to an index
+ * @param scrollPaddingLeft left scroll padding in px
+ * @param scrollRef scrollable tile container
  */
 export function useKeyboardHandlers({
-	getScrollEl,
-	itemWidthsRef,
-	currentIndexRef,
-	scrollTo,
-	onSettle,
-	imageCount,
+	itemRefsRef,
+	onActivate,
+	scrollPaddingLeft,
+	scrollRef,
 }: {
-	getScrollEl: () => HTMLElement | null;
-	itemWidthsRef: RefObject<Map<number, number>>;
-	currentIndexRef: RefObject<number>;
-	scrollTo: (offset: number) => void;
-	onSettle: (index: number) => void;
-	imageCount: number;
+	itemRefsRef: RefObject<Map<number, HTMLElement>>;
+	onActivate: (index: number) => void;
+	scrollPaddingLeft: number;
+	scrollRef: RefObject<HTMLElement | null>;
 }) {
 	useEffect(() => {
-		if (imageCount <= 1) {
+		const el = scrollRef.current;
+		if (!el) {
 			return;
 		}
 
-		let stopTween: (() => void) | null = null;
-		let pendingIndex: number | null = null;
-
 		const onKeyDown = (e: KeyboardEvent) => {
-			const el = getScrollEl();
-			if (!el || !el.contains(document.activeElement)) {
+			let step: number;
+			switch (e.key) {
+				case 'ArrowLeft': {
+					step = -1;
+					break;
+				}
+				case 'ArrowRight': {
+					step = 1;
+					break;
+				}
+				default: {
+					return;
+				}
+			}
+
+			// focus is the source of truth because pointer scrolling does not update an index.
+			let current: number | undefined;
+			for (const [index, node] of itemRefsRef.current) {
+				if (node.contains(document.activeElement)) {
+					current = index;
+					break;
+				}
+			}
+			if (current === undefined) {
 				return;
 			}
 
-			const current = pendingIndex ?? currentIndexRef.current;
-			let targetIndex: number | undefined;
-
-			if (e.key === 'ArrowRight') {
-				if (current < imageCount - 1) {
-					targetIndex = current + 1;
-				}
-			} else if (e.key === 'ArrowLeft') {
-				if (current > 0) {
-					targetIndex = current - 1;
-				}
+			const targetIndex = current + step;
+			const target = itemRefsRef.current.get(targetIndex);
+			if (!target) {
+				return;
 			}
 
-			if (targetIndex != null) {
-				e.preventDefault();
+			e.preventDefault();
 
-				if (stopTween) {
-					stopTween();
-					stopTween = null;
-				}
+			// account for the strip's left scroll padding.
+			const left = target.offsetLeft - scrollPaddingLeft;
 
-				pendingIndex = targetIndex;
-				const from = el.scrollLeft;
-				const to = getOffsetForIndex(itemWidthsRef.current, targetIndex);
-				const idx = targetIndex;
-
-				stopTween = tween(
-					from,
-					to,
-					SETTLE_DURATION,
-				)(
-					(v) => {
-						scrollTo(v);
-					},
-					() => {
-						stopTween = null;
-						pendingIndex = null;
-						onSettle(idx);
-					},
-				);
-			}
+			onActivate(targetIndex);
+			el.scrollTo({ behavior: getReducedMotion() ? 'instant' : 'smooth', left });
 		};
 
-		window.addEventListener('keydown', onKeyDown);
+		el.addEventListener('keydown', onKeyDown);
 		return () => {
-			window.removeEventListener('keydown', onKeyDown);
-			if (stopTween) {
-				stopTween();
-			}
+			el.removeEventListener('keydown', onKeyDown);
 		};
-	}, [getScrollEl, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount]);
+	}, [itemRefsRef, onActivate, scrollPaddingLeft, scrollRef]);
 }
