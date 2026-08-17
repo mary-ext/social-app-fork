@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
 import { SvgSpritesPlugin } from '@oomfware/rspack-plugin-svg-sprites';
@@ -13,6 +14,19 @@ import { ServiceWorkerPrecachePlugin } from './scripts/sw-precache-plugin';
 const root = process.cwd();
 const serverHost = '127.0.0.1';
 const serverPort = 19006;
+
+const resolveCommitHash = (): string => {
+	const injected = process.env.WORKERS_CI_COMMIT_SHA;
+	if (injected) {
+		return injected.slice(0, 7);
+	}
+
+	try {
+		return execFileSync('git', ['rev-parse', '--short=7', 'HEAD'], { encoding: 'utf8' }).trim();
+	} catch {
+		return '';
+	}
+};
 
 export default defineConfig(({ envMode }) => {
 	const oauthScope = process.env.PUBLIC_OAUTH_SCOPE || oauthMetadata.scope;
@@ -31,7 +45,9 @@ export default defineConfig(({ envMode }) => {
 		plugins: [pluginReact({ reactCompiler: { panicThreshold: 'none' } })],
 		source: {
 			define: {
-				'import.meta.env.PUBLIC_GIT_COMMIT_HASH': JSON.stringify(process.env.GIT_COMMIT_HASH ?? ''),
+				'import.meta.env.PUBLIC_GIT_COMMIT_HASH': JSON.stringify(
+					envMode === 'production' ? resolveCommitHash() : '',
+				),
 				'import.meta.env.PUBLIC_OAUTH_CLIENT_ID': JSON.stringify(oauthClientId),
 				'import.meta.env.PUBLIC_OAUTH_REDIRECT_URI': JSON.stringify(oauthRedirectUri),
 				'import.meta.env.PUBLIC_OAUTH_SCOPE': JSON.stringify(oauthScope),
