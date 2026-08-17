@@ -3,5 +3,6 @@
 	"screens.home.action.addRecommendedFeeds": "Add recommended feeds",
 	"screens.home.action.browseOtherFeeds": "Browse other feeds",
 	"screens.home.empty": "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄",
+	"screens.home.error.load": "We couldn't load your feeds. Please try again.",
 	"screens.home.feedSwitcher.label": "Switch feed"
 }

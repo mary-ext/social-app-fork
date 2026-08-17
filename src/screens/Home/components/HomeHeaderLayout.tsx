@@ -6,6 +6,7 @@ import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton, useInternalLink } from '#/components/web/Link';
+import * as Skele from '#/components/web/Skeleton';
 
 import ChevronBottom from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import FeedsIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
@@ -19,14 +20,19 @@ type HomeFeed = {
 	label: string;
 };
 
-type HomeHeaderLayoutProps = {
-	activeFeed: HomeFeed | undefined;
+type FeedSwitcherProps = {
+	activeFeed: HomeFeed;
 	feeds: HomeFeed[];
 	onSelectFeed: (id: FeedDescriptor) => void;
 };
 
+type HomeHeaderLayoutProps = {
+	feedSwitcher: FeedSwitcherProps | undefined;
+	pending: boolean;
+};
+
 /** The home screen's sticky header. */
-export function HomeHeaderLayout({ activeFeed, feeds, onSelectFeed }: HomeHeaderLayoutProps) {
+export function HomeHeaderLayout({ feedSwitcher, pending }: HomeHeaderLayoutProps) {
 	const { hasSession } = useSession();
 
 	return (
@@ -34,11 +40,7 @@ export function HomeHeaderLayout({ activeFeed, feeds, onSelectFeed }: HomeHeader
 			<Layout.Header.MenuButton />
 
 			<Layout.Header.Content>
-				{activeFeed ? (
-					<FeedSwitcher activeFeed={activeFeed} feeds={feeds} onSelectFeed={onSelectFeed} />
-				) : (
-					<Layout.Header.TitleText>{m['common.nav.home']()}</Layout.Header.TitleText>
-				)}
+				<HeaderContent feedSwitcher={feedSwitcher} pending={pending} />
 			</Layout.Header.Content>
 
 			<Layout.Header.Slot>
@@ -59,7 +61,19 @@ export function HomeHeaderLayout({ activeFeed, feeds, onSelectFeed }: HomeHeader
 	);
 }
 
-function FeedSwitcher({ activeFeed, feeds, onSelectFeed }: HomeHeaderLayoutProps & { activeFeed: HomeFeed }) {
+function HeaderContent({ feedSwitcher, pending }: HomeHeaderLayoutProps) {
+	if (feedSwitcher) {
+		return <FeedSwitcher {...feedSwitcher} />;
+	}
+
+	if (pending) {
+		return <Skele.Text size="lg" width={74} />;
+	}
+
+	return <Layout.Header.TitleText>{m['common.nav.home']()}</Layout.Header.TitleText>;
+}
+
+function FeedSwitcher({ activeFeed, feeds, onSelectFeed }: FeedSwitcherProps) {
 	const browseFeeds = useInternalLink({ to: { name: 'Feeds' } });
 
 	return (

@@ -1,11 +1,12 @@
+import type { ReactNode } from 'react';
+
 import { bskyFeedUri } from '#/lib/constants/feeds';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
-import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
+import { usePinnedFeedsInfos } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
@@ -16,47 +17,28 @@ import { HomeHeaderLayout } from '#/screens/Home/components/HomeHeaderLayout';
 import { NoFeedsPinned } from '#/screens/Home/components/NoFeedsPinned';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { Error } from '#/components/Error';
 import type { Section } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
-export function HomeScreen() {
-	const { data: preferences } = usePreferencesQuery();
-	const { data: pinnedFeedInfos } = usePinnedFeedsInfos();
-
-	if (!preferences || !pinnedFeedInfos) {
-		return (
-			<Layout.Screen>
-				<CenteredSpinner fill label={m['common.status.loading']()} size="_2xl" />
-			</Layout.Screen>
-		);
-	}
-
-	return (
-		<Layout.Screen>
-			<HomeScreenReady pinnedFeedInfos={pinnedFeedInfos} preferences={preferences} />
-		</Layout.Screen>
-	);
-}
-
 const renderFollowingEmptyState = () => <FollowingEmptyState />;
 const renderCustomFeedEmptyState = () => <CustomFeedEmptyState />;
 
-function HomeScreenReady({
-	pinnedFeedInfos,
-	preferences,
-}: {
-	pinnedFeedInfos: SavedFeedSourceInfo[];
-	preferences: UsePreferencesQueryResponse;
-}) {
+export function HomeScreen() {
 	const { hasSession } = useSession();
 	const selectedFeed = useSelectedFeed();
+	const preferences = usePreferencesQuery();
+	const pinnedFeeds = usePinnedFeedsInfos();
 
 	const whatsHotFeed: FeedDescriptor = `feedgen|${bskyFeedUri('whats-hot')}`;
 
+	// keep header navigation available while feeds load or fail
 	let sections: Section<FeedDescriptor>[];
-	if (!hasSession) {
+	if (!preferences.data || !pinnedFeeds.data) {
+		sections = [];
+	} else if (!hasSession) {
 		sections = [
 			{
 				id: whatsHotFeed,
@@ -64,14 +46,14 @@ function HomeScreenReady({
 				children: (
 					<FeedPage
 						feed={whatsHotFeed}
-						feedInfo={pinnedFeedInfos[0]!}
+						feedInfo={pinnedFeeds.data[0]!}
 						renderEmptyState={renderCustomFeedEmptyState}
 					/>
 				),
 			},
 		];
 	} else {
-		sections = pinnedFeedInfos.map((feedInfo) => {
+		sections = pinnedFeeds.data.map((feedInfo) => {
 			const feed = feedInfo.feedDescriptor;
 			return {
 				id: feed,
@@ -103,6 +85,7 @@ function HomeScreenReady({
 	);
 	const active = sections[activeIndex];
 	const feeds = sections.map(({ id, label }) => ({ id, label }));
+	const activeFeed = feeds[activeIndex];
 	useTitle(active?.label ?? m['common.nav.home']());
 
 	const onSelectFeed = (feed: FeedDescriptor) => {
@@ -116,14 +99,35 @@ function HomeScreenReady({
 		setSelectedFeed(feed);
 	};
 
+	let pending = false;
+	let body: ReactNode;
+	if (preferences.data && pinnedFeeds.data) {
+		if (hasSession && pinnedFeeds.data.length === 0) {
+			body = <NoFeedsPinned preferences={preferences.data} />;
+		} else {
+			body = active?.children;
+		}
+	} else if (preferences.isError || pinnedFeeds.isError) {
+		body = (
+			<Error
+				hideBackButton
+				message={m['screens.home.error.load']()}
+				onRetry={() => Promise.all([preferences.refetch(), pinnedFeeds.refetch()])}
+				title={m['common.error.oops']()}
+			/>
+		);
+	} else {
+		pending = true;
+		body = <CenteredSpinner fill label={m['common.status.loading']()} size="_2xl" />;
+	}
+
 	return (
-		<>
-			<HomeHeaderLayout activeFeed={feeds[activeIndex]} feeds={feeds} onSelectFeed={onSelectFeed} />
-			{hasSession && pinnedFeedInfos.length === 0 ? (
-				<NoFeedsPinned preferences={preferences} />
-			) : (
-				active?.children
-			)}
-		</>
+		<Layout.Screen>
+			<HomeHeaderLayout
+				feedSwitcher={activeFeed && { activeFeed, feeds, onSelectFeed }}
+				pending={pending && hasSession}
+			/>
+			{body}
+		</Layout.Screen>
 	);
 }
