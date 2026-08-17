@@ -15,14 +15,19 @@ import {
 	parseCanonicalResourceUri,
 } from '@atcute/lexicons/syntax';
 
+import { mapDefined } from '@mary/array-fns';
+import { createBatchedFetch, ResourceMissingError } from '@mary/batch-fetch';
+
 import {
 	type InfiniteData,
 	keepPreviousData,
 	type QueryClient,
 	useInfiniteQuery,
 	useMutation,
+	useQueries,
 	useQuery,
 	useQueryClient,
+	type UseQueryResult,
 } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants/feeds';
@@ -390,13 +395,42 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	contentMode: undefined,
 };
 
+const createFollowingFeedInfo = (savedFeed: AppBskyActorDefs.SavedFeed): SavedFeedSourceInfo => ({
+	type: 'feed',
+	displayName: 'Following',
+	uri: savedFeed.value,
+	feedDescriptor: 'following',
+	target: { name: 'Home' },
+	cid: '',
+	avatar: '',
+	description: undefined,
+	creatorDid: undefined,
+	creatorHandle: '',
+	likeCount: 0,
+	likeUri: '',
+	savedFeed,
+	contentMode: undefined,
+});
+
 export const FEED_INFO_RQKEY_ROOT = 'feed-info';
 
-const createPinnedFeedInfosQueryKey = (kind: 'pinned' | 'saved', feedUris: string[]) =>
+const createPinnedFeedInfoQueryKey = (uri: string) =>
 	createQueryKey(
 		FEED_INFO_RQKEY_ROOT,
 		{
-			kind,
+			kind: 'pinned',
+			uri,
+		},
+		{
+			persistedVersion: 1,
+		},
+	);
+
+const createSavedFeedInfosQueryKey = (feedUris: string[]) =>
+	createQueryKey(
+		FEED_INFO_RQKEY_ROOT,
+		{
+			kind: 'saved',
 			feedUris,
 		},
 		{
@@ -404,93 +438,106 @@ const createPinnedFeedInfosQueryKey = (kind: 'pinned' | 'saved', feedUris: strin
 		},
 	);
 
+const fetchFeedGenerator = createBatchedFetch<ResourceUri, AppBskyFeedDefs.GeneratorView>({
+	limit: 50,
+	timeout: 0,
+	fetch: async (feeds, signal) => {
+		const { appview } = getClients();
+		const data = await ok(appview.get('app.bsky.feed.getFeedGenerators', { signal, params: { feeds } }));
+		return data.feeds;
+	},
+	idFromResource: (feed) => feed.uri,
+});
+
+const fetchPinnedFeedInfo = async (
+	savedFeed: AppBskyActorDefs.SavedFeed,
+	signal: AbortSignal,
+): Promise<FeedSourceInfo | null> => {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- validated by `validateSavedFeed`
+	const uri = savedFeed.value as ResourceUri;
+
+	if (savedFeed.type === 'feed') {
+		try {
+			return hydrateFeedGenerator(await fetchFeedGenerator(uri, signal));
+		} catch (err) {
+			// omitted generators are unavailable, not request failures.
+			if (err instanceof ResourceMissingError) {
+				return null;
+			}
+			throw err;
+		}
+	}
+
+	const { appview } = getClients();
+	const data = await ok(appview.get('app.bsky.graph.getList', { signal, params: { list: uri, limit: 1 } }));
+	return hydrateList(data.list);
+};
+
 export function usePinnedFeedsInfos() {
 	const { hasSession } = useSession();
-	const { appview } = getClients();
+	const queryClient = useQueryClient();
 	const { data: preferences, isLoading: isLoadingPrefs } = usePreferencesQuery();
 	const pinnedItems = preferences?.savedFeeds.filter((feed) => feed.pinned) ?? [];
+	const fetchedItems = hasSession ? pinnedItems.filter((item) => item.type !== 'timeline') : [];
 
-	return useQuery({
-		queryKey: createPinnedFeedInfosQueryKey(
-			'pinned',
-			pinnedItems.map((f) => f.value),
-		),
-		enabled: !isLoadingPrefs,
-		staleTime: STALE.MINUTES.FIFTEEN,
-		gcTime: GCTIME.INFINITY,
-		queryFn: async ({ signal }) => {
-			if (!hasSession) {
-				return [PWI_DISCOVER_FEED_STUB];
-			}
-
-			const resolved = new Map<string, FeedSourceInfo>();
-
-			// feeds support a batch request.
-			const pinnedFeeds = pinnedItems.filter((feed) => feed.type === 'feed');
-			let feedsPromise = Promise.resolve();
-			if (pinnedFeeds.length > 0) {
-				feedsPromise = ok(
-					appview.get('app.bsky.feed.getFeedGenerators', {
-						signal,
-						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
-						params: { feeds: pinnedFeeds.map((f) => f.value as ResourceUri) },
-					}),
-				).then((data) => {
-					for (let i = 0; i < data.feeds.length; i++) {
-						const feedView = data.feeds[i]!;
-						resolved.set(feedView.uri, hydrateFeedGenerator(feedView));
-					}
-				});
-			}
-
-			// lists require individual requests.
-			const pinnedLists = pinnedItems.filter((feed) => feed.type === 'list');
-			const listsPromises = pinnedLists.map((list) =>
-				ok(
-					appview.get('app.bsky.graph.getList', {
-						signal,
-						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `validateSavedFeed` enforces a matching at-uri
-						params: { list: list.value as ResourceUri, limit: 1 },
-					}),
-				).then((data) => {
-					const listView = data.list;
-					resolved.set(listView.uri, hydrateList(listView));
-				}),
-			);
-
-			await feedsPromise; // fail the whole query if the batch fails.
-			await Promise.allSettled(listsPromises); // ignore individual list failures.
-
-			const result: SavedFeedSourceInfo[] = [];
-			for (const pinnedItem of pinnedItems) {
-				const feedInfo = resolved.get(pinnedItem.value);
-				if (feedInfo) {
-					result.push({
-						...feedInfo,
-						savedFeed: pinnedItem,
-					});
-				} else if (pinnedItem.type === 'timeline') {
-					result.push({
-						type: 'feed',
-						displayName: 'Following',
-						uri: pinnedItem.value,
-						feedDescriptor: 'following',
-						target: { name: 'Home' },
-						cid: '',
-						avatar: '',
-						description: undefined,
-						creatorDid: undefined,
-						creatorHandle: '',
-						likeCount: 0,
-						likeUri: '',
-						savedFeed: pinnedItem,
-						contentMode: undefined,
-					});
-				}
-			}
-			return result;
+	const { resolved, error, isLoading, isPending, isError } = useQueries({
+		queries: fetchedItems.map((item) => ({
+			queryKey: createPinnedFeedInfoQueryKey(item.value),
+			staleTime: STALE.MINUTES.FIFTEEN,
+			gcTime: GCTIME.INFINITY,
+			queryFn({ signal }) {
+				return fetchPinnedFeedInfo(item, signal);
+			},
+		})),
+		combine(results: UseQueryResult<FeedSourceInfo | null>[]) {
+			return {
+				resolved: mapDefined(results, (result) => result.data ?? undefined),
+				error: results.find((result) => result.error)?.error ?? null,
+				isLoading: results.some((result) => result.isLoading),
+				// includes queries paused while offline.
+				isPending: results.some((result) => result.isPending),
+				// individual failures only remove their feed.
+				isError: results.length > 0 && results.every((result) => result.isError),
+			};
 		},
 	});
+
+	const refetch = async () => {
+		await Promise.all(
+			fetchedItems.map((item) => {
+				return queryClient.refetchQueries({
+					queryKey: createPinnedFeedInfoQueryKey(item.value),
+				});
+			}),
+		);
+	};
+
+	if (isLoadingPrefs) {
+		return { data: undefined, error: null, isError: false, isLoading: true, refetch };
+	}
+
+	if (!hasSession) {
+		return { data: [PWI_DISCOVER_FEED_STUB], error: null, isError: false, isLoading: false, refetch };
+	}
+
+	const byUri = new Map(resolved.map((feedInfo) => [feedInfo.uri, feedInfo]));
+	const data = mapDefined(pinnedItems, (item): SavedFeedSourceInfo | undefined => {
+		if (item.type === 'timeline') {
+			return createFollowingFeedInfo(item);
+		}
+
+		const feedInfo = byUri.get(item.value);
+		return feedInfo && { ...feedInfo, savedFeed: item };
+	});
+
+	return {
+		// prevent home tabs from reordering while queries settle.
+		data: isPending || isError ? undefined : data,
+		error: isError ? error : null,
+		isError,
+		isLoading,
+		refetch,
+	};
 }
 
 export type SavedFeedItem =
@@ -517,10 +564,7 @@ export function useSavedFeeds() {
 	const queryClient = useQueryClient();
 
 	return useQuery({
-		queryKey: createPinnedFeedInfosQueryKey(
-			'saved',
-			savedItems.map((f) => f.value),
-		),
+		queryKey: createSavedFeedInfosQueryKey(savedItems.map((f) => f.value)),
 		enabled: !isLoadingPrefs,
 		staleTime: STALE.INFINITY,
 		gcTime: GCTIME.INFINITY,
