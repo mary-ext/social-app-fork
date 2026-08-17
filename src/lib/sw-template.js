@@ -1,17 +1,16 @@
-/* global CACHE, PRECACHE */
-// build-time template; the precache plugin prepends `CACHE` and `PRECACHE`.
+/* global ASSETS, CACHE, PRECACHE */
 
-// cache the SPA shell under `/`; redirected responses cannot satisfy navigations.
 const SHELL = '/';
 
 self.addEventListener('install', (event) => {
-	event.waitUntil(self.caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)));
+	event.waitUntil(
+		self.caches.open(CACHE).then((cache) => Promise.all([cache.add(SHELL), cache.addAll(PRECACHE)])),
+	);
 });
 
 self.addEventListener('activate', (event) => {
 	event.waitUntil(
 		(async () => {
-			// remove older precaches.
 			const keys = await self.caches.keys();
 			await Promise.all(keys.filter((key) => key !== CACHE).map((key) => self.caches.delete(key)));
 			await self.clients.claim();
@@ -31,6 +30,7 @@ self.addEventListener('fetch', (event) => {
 	if (request.method !== 'GET') {
 		return;
 	}
+
 	const url = new URL(request.url);
 	if (url.origin !== self.location.origin) {
 		return;
@@ -41,21 +41,15 @@ self.addEventListener('fetch', (event) => {
 		return;
 	}
 
-	// serve content-hashed assets cache-first; mutable root files stay network-driven.
-	if (url.pathname.startsWith('/static/')) {
+	// serve content-hashed assets cache-first.
+	if (url.pathname.startsWith(ASSETS)) {
 		event.respondWith(
 			self.caches.open(CACHE).then(async (cache) => {
 				const cached = await cache.match(request);
-				if (cached) {
-					return cached;
-				}
-				const response = await fetch(request);
-				if (response.ok && response.type === 'basic') {
-					cache.put(request, response.clone());
-				}
-				return response;
+				return cached ?? fetch(request);
 			}),
 		);
+
 		return;
 	}
 
@@ -64,5 +58,7 @@ self.addEventListener('fetch', (event) => {
 		event.respondWith(
 			self.caches.match(SHELL).then((cached) => (cached && !cached.redirected ? cached : fetch(request))),
 		);
+
+		return;
 	}
 });

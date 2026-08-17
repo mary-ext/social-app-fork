@@ -130,7 +130,7 @@
 			}
 		},
 		{
-			"files": ["**/eslint/**", "**/rsbuild.config.ts", "**/scripts/**"],
+			"files": ["**/eslint/**", "**/scripts/**", "**/vite.config.ts"],
 			"env": {
 				"browser": false,
 				"node": true

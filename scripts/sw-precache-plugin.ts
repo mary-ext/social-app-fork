@@ -1,59 +1,54 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
-import type { Rspack } from '@rsbuild/core';
+import { minifySync, type Plugin } from 'vite';
 
-// precache every content-hashed asset so the whole app is available offline.
-const PRECACHE_FILE = /\.(?:css|gif|ico|jpe?g|js|png|svg|webp|woff2?)$/;
+const PRECACHE_EXCLUDE = /\.map$/;
 
-/** emits `sw.js` with the content-hashed asset manifest. */
-export class ServiceWorkerPrecachePlugin {
-	readonly #templatePath: string;
+export const serviceWorkerPrecache = (templatePath: string): Plugin => {
+	let assetsDir = 'assets';
 
-	/**
-	 * @param templatePath absolute path to the service worker template; its source is prefixed with the
-	 *   injected `CACHE` and `PRECACHE` declarations
-	 */
-	constructor(templatePath: string) {
-		this.#templatePath = templatePath;
-	}
-
-	apply(compiler: Rspack.Compiler) {
-		const { Compilation, sources } = compiler.rspack;
-		compiler.hooks.thisCompilation.tap('ServiceWorkerPrecachePlugin', (compilation) => {
-			compilation.hooks.processAssets.tap(
-				{
-					name: 'ServiceWorkerPrecachePlugin',
-					// wait for finalized filenames.
-					stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
-				},
-				() => {
-					const files = new Set<string>();
-					for (const asset of compilation.getAssets()) {
-						// root files are mutable and stay network-driven.
-						if (asset.name.startsWith('static/') && PRECACHE_FILE.test(asset.name)) {
-							files.add(asset.name);
-						}
+	return {
+		name: 'service-worker-precache',
+		apply: 'build',
+		configResolved(config) {
+			assetsDir = config.build.assetsDir;
+		},
+		generateBundle: {
+			// wait for `vite:build-html` to emit the shell, whose bytes go into the cache version.
+			order: 'post',
+			handler(_options, bundle) {
+				const files = new Set<string>();
+				for (const fileName of Object.keys(bundle)) {
+					if (fileName.startsWith(`${assetsDir}/`) && !PRECACHE_EXCLUDE.test(fileName)) {
+						files.add(fileName);
 					}
-					// cache the SPA shell under `/`; redirected responses cannot satisfy navigations.
-					// oxlint-disable-next-line unicorn/no-array-sort -- sorting our own copy of `files`
-					const manifest = ['/', ...[...files].sort().map((file) => `/${file}`)];
-					// include shell bytes in the version because `/` is not content-hashed.
-					const indexHtml = compilation.getAsset('index.html')?.source.source() ?? '';
-					const version = createHash('sha256')
-						.update(manifest.join('\n'))
-						.update('\0')
-						.update(indexHtml)
-						.digest('hex')
-						.slice(0, 16);
-					const template = readFileSync(this.#templatePath, 'utf8');
-					const source =
-						`const CACHE = ${JSON.stringify(`app-${version}`)};\n` +
-						`const PRECACHE = ${JSON.stringify(manifest)};\n` +
-						template;
-					compilation.emitAsset('sw.js', new sources.RawSource(source));
-				},
-			);
-		});
-	}
-}
+				}
+
+				// oxlint-disable-next-line unicorn/no-array-sort -- sorting our own copy of `files`
+				const manifest = Array.from(files, (file) => `/${file}`).sort();
+
+				const shell = bundle['index.html'];
+				const indexHtml = shell?.type === 'asset' ? shell.source.toString() : '';
+
+				const version = createHash('sha256')
+					.update(manifest.join('\n'))
+					.update('\0')
+					.update(indexHtml)
+					.digest('hex')
+					.slice(0, 16);
+
+				const template = readFileSync(templatePath, 'utf8');
+				const source =
+					`const ASSETS = ${JSON.stringify(`/${assetsDir}/`)};\n` +
+					`const CACHE = ${JSON.stringify(`app-${version}`)};\n` +
+					`const PRECACHE = ${JSON.stringify(manifest)};\n` +
+					template;
+
+				const minified = minifySync(templatePath, source);
+
+				this.emitFile({ type: 'asset', fileName: 'sw.js', source: minified.code });
+			},
+		},
+	};
+};

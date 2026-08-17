@@ -2,7 +2,7 @@
 	"version": "0.0.1",
 	"configurations": [
 		{
-			"name": "web (rsbuild dev)",
+			"name": "web (vite dev)",
 			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["dev"],
 			"port": 19006

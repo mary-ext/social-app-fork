@@ -8,13 +8,13 @@ this project uses React Compiler, `@base-ui/react` and Paraglide.
 ### project management
 
 - Node.js and pnpm are managed by mise
-- start the dev server with `pnpm dev` (rsbuild)
+- start the dev server with `pnpm dev` (vite)
   - always at http://127.0.0.1:19006
   - if it's already running, use it as-is
   - if port is used by another program: stop and report
   - if you need to stop a server you did not spawn for any reason, like stale HMR issues, confirm
     with the user.
-- build with `pnpm build` (rsbuild)
+- build with `pnpm build` (vite)
 - format with `pnpm format` (oxfmt)
 - lint and typecheck with `pnpm lint` (oxlint)
   - oxlint is configured to run the type checker, AVOID running `tsc`

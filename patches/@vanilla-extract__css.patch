@@ -1,8 +1,8 @@
-diff --git a/dist/vanilla-extract-css.cjs.prod.js b/dist/vanilla-extract-css.cjs.prod.js
-index 339da27ee2f5984cdecb50805e0f03fe35fab399..65b487b5ad543993f225430460c326ec1afdb160 100644
---- a/dist/vanilla-extract-css.cjs.prod.js
-+++ b/dist/vanilla-extract-css.cjs.prod.js
-@@ -134,7 +134,16 @@ function getDevPrefix(_ref) {
+diff --git a/dist/vanilla-extract-css.esm.js b/dist/vanilla-extract-css.esm.js
+index 37e8e83bc47dc12d761f9347cfa3cd7bba15814b..6385831bff191c9c48ceec274cbda5b09f3ff8bb 100644
+--- a/dist/vanilla-extract-css.esm.js
++++ b/dist/vanilla-extract-css.esm.js
+@@ -126,7 +126,16 @@ function getDevPrefix(_ref) {
    return parts.join('_');
  }
  function normalizeIdentifier(identifier) {
@@ -19,20 +19,20 @@ index 339da27ee2f5984cdecb50805e0f03fe35fab399..65b487b5ad543993f225430460c326ec
 +  return result;
  }
  function generateIdentifier(arg) {
-   var identOption = adapter_dist_vanillaExtractCssAdapter.getIdentOption();
-@@ -145,13 +154,12 @@ function generateIdentifier(arg) {
+   var identOption = getIdentOption();
+@@ -137,13 +146,12 @@ function generateIdentifier(arg) {
      debugId: arg
    } : null), typeof arg === 'object' ? arg : null);
  
 -  // Convert ref count to base 36 for optimal hash lengths
--  var refCount = fileScope_dist_vanillaExtractCssFileScope.getAndIncrementRefCounter().toString(36);
-+  var refCount = toBase64(fileScope_dist_vanillaExtractCssFileScope.getAndIncrementRefCounter());
+-  var refCount = getAndIncrementRefCounter().toString(36);
++  var refCount = toBase64(getAndIncrementRefCounter());
    var {
      filePath,
      packageName
-   } = fileScope_dist_vanillaExtractCssFileScope.getFileScope();
--  var fileScopeHash = hash__default["default"](packageName ? "".concat(packageName).concat(filePath) : filePath);
-+  var fileScopeHash = toBase64(parseInt(hash__default["default"](packageName ? "".concat(packageName).concat(filePath) : filePath), 36));
+   } = getFileScope();
+-  var fileScopeHash = hash(packageName ? "".concat(packageName).concat(filePath) : filePath);
++  var fileScopeHash = toBase64(parseInt(hash(packageName ? "".concat(packageName).concat(filePath) : filePath), 36));
    var identifier = "".concat(fileScopeHash).concat(refCount);
    if (identOption === 'debug') {
      var devPrefix = getDevPrefix({
