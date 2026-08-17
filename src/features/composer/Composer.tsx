@@ -12,8 +12,7 @@ import {
 	useState,
 } from 'react';
 
-import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
-import { type Client, ClientResponseError, ok } from '@atcute/client';
+import { ClientResponseError, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { isGraphemeLengthInRange } from '@atcute/util-text';
 
@@ -30,7 +29,6 @@ import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
-import { until } from '#/lib/utils/until';
 
 import { postCreated } from '#/state/events';
 import { useRequireAltTextEnabled } from '#/state/preferences/alt-text';
@@ -575,7 +573,6 @@ export const ComposePost = ({
 		setIsPublishing(true);
 
 		let postUri: ResourceUri | undefined;
-		let postSuccessData: OnPostSuccessData;
 		try {
 			postUri = (
 				await publishThread({ appview, did: currentDid, pds: pds! }, queryClient, {
@@ -584,43 +581,6 @@ export const ComposePost = ({
 					langs: currentLanguages,
 				})
 			).uris[0];
-
-			/*
-			 * Wait for app view to have received the post(s). If this fails, it's
-			 * ok, because the post _was_ actually published above.
-			 */
-			try {
-				if (postUri) {
-					const posts = await retry(
-						5,
-						(_e) => true,
-						async () => {
-							const data = await ok(
-								appview.get('app.bsky.unspecced.getPostThreadV2', {
-									params: {
-										anchor: postUri!,
-										above: false,
-										below: filteredThread.posts.length - 1,
-										branchingFactor: 1,
-									},
-								}),
-							);
-							if (data.thread.length !== filteredThread.posts.length) {
-								throw new Error(`composer: app view is not ready`);
-							}
-							if (!data.thread.every((p) => p.value.$type === 'app.bsky.unspecced.defs#threadItemPost')) {
-								throw new Error(`composer: app view returned non-post items`);
-							}
-							return data.thread;
-						},
-						1e3,
-					);
-					postSuccessData = {
-						replyToUri: replyTo?.uri,
-						posts,
-					};
-				}
-			} catch {}
 		} catch (e: unknown) {
 			console.error('Composer: create post failed', e);
 			let err = cleanError(e);
@@ -636,7 +596,6 @@ export const ComposePost = ({
 		if (postUri && !replyTo) {
 			postCreated.emit();
 		}
-		// Clean up draft and its media after successful publish
 		if (composerState.draftId && composerState.originalLocalRefs) {
 			cleanupPublishedDraft({
 				draftId: composerState.draftId,
@@ -644,30 +603,54 @@ export const ComposePost = ({
 			});
 		}
 		savePostLanguageToHistory();
-		if (initQuote) {
-			// We want to wait for the quote count to update before we call `onPost`, which will refetch data
-			void whenAppViewReady(appview, initQuote.uri, (res) => {
-				const anchor = res.thread.at(0);
-				if (
-					anchor?.value.$type === 'app.bsky.unspecced.defs#threadItemPost' &&
-					anchor.value.post.quoteCount !== initQuote.quoteCount
-				) {
-					onPost?.(postUri);
-					// false positive: `postUri`/`postSuccessData` are locals captured by this async closure, misread as deps.
-					// oxlint-disable-next-line react/react-compiler
-					onPostSuccess?.(postSuccessData);
-					return true;
+
+		// avoid retaining draft media while the app view catches up
+		const postCount = filteredThread.posts.length;
+		void (async () => {
+			let postSuccessData: OnPostSuccessData;
+			try {
+				if (postUri) {
+					const posts = await retry(
+						5,
+						(_e) => true,
+						async () => {
+							const data = await ok(
+								appview.get('app.bsky.unspecced.getPostThreadV2', {
+									params: {
+										anchor: postUri,
+										above: false,
+										below: postCount - 1,
+										branchingFactor: 1,
+									},
+								}),
+							);
+							if (data.thread.length !== postCount) {
+								throw new Error(`composer: app view is not ready`);
+							}
+							if (!data.thread.every((p) => p.value.$type === 'app.bsky.unspecced.defs#threadItemPost')) {
+								throw new Error(`composer: app view returned non-post items`);
+							}
+							return data.thread;
+						},
+						1e3,
+					);
+					postSuccessData = {
+						replyToUri: replyTo?.uri,
+						posts,
+					};
 				}
-				return false;
-			});
-		} else {
+			} catch {}
+
 			onPost?.(postUri);
 			onPostSuccess?.(postSuccessData);
-		}
+		})().catch((e: unknown) => {
+			console.error('Composer: post-publish notify failed', e);
+		});
+
 		closeComposer();
 		setTimeout(() => {
 			Toast.show(
-				filteredThread.posts.length > 1
+				postCount > 1
 					? m['view.composer.publish.postsSent']()
 					: replyTo
 						? m['view.composer.publish.replySent']()
@@ -1311,29 +1294,6 @@ function useScrollTracker({
 		scrollHandler,
 		isScrolled,
 	};
-}
-
-async function whenAppViewReady(
-	appview: Client,
-	uri: ResourceUri,
-	fn: (res: AppBskyUnspeccedGetPostThreadV2.$output) => boolean,
-) {
-	await until(
-		5, // 5 tries
-		1e3, // 1s delay between tries
-		fn,
-		() =>
-			ok(
-				appview.get('app.bsky.unspecced.getPostThreadV2', {
-					params: {
-						anchor: uri,
-						above: false,
-						below: 0,
-						branchingFactor: 0,
-					},
-				}),
-			),
-	);
 }
 
 function isEmptyPost(post: PostDraft) {
