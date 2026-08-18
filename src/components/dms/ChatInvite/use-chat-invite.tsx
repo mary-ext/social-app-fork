@@ -17,7 +17,7 @@ import LinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import HandIcon from '#/icons/central/RaisingHand4Finger_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 

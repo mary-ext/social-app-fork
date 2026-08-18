@@ -6,7 +6,7 @@ import {
 	type Tid,
 } from '@atcute/lexicons/syntax';
 
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 // #region record targets
 

@@ -29,7 +29,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 import { borderRadius } from '#/styles/tokens.css';
 
 import * as css from './ListCard.css';

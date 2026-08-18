@@ -19,7 +19,7 @@ import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
 import { LoggedOut } from '#/components/Shell/LoggedOut';
 import { Shell } from '#/components/Shell/Shell';
 
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { ComposerDialog } from './ComposerDialog';
 

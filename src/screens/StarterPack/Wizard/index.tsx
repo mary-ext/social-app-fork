@@ -41,7 +41,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { Provider } from './State';
 import * as css from './Wizard.css';

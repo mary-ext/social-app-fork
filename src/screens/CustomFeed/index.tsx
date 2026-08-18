@@ -31,7 +31,7 @@ import * as Layout from '#/components/web/Layout';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useParams } from '#/routes';
+import { useFocusEffect, useParams } from '#/router';
 
 export function CustomFeedScreen() {
 	const [{ rkey, actor: handleOrDid }] = useParams('CustomFeed');

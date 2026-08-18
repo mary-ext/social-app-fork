@@ -17,7 +17,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import PeopleRemoveIcon from '#/icons/central/PeopleRemove_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/router';
 
 export const ProfileFollowsScreen = () => {
 	const [{ actor }] = useParams('ProfileFollows');

@@ -1,4 +1,4 @@
-import { useTarget } from '#/routes';
+import { useTarget } from '#/router';
 
 export function useNavigationTabState() {
 	const { name } = useTarget();

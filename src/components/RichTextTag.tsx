@@ -25,7 +25,7 @@ import Search from '#/icons/central/MagnifyingGlass_round_outlined_radius1_strok
 import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import Person from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 const preventDefault = (e: MouseEvent) => e.preventDefault();
 

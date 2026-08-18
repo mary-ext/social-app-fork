@@ -10,7 +10,7 @@ import { makeSearchQuery, parseSearchQuery, type TabParam } from '#/screens/Sear
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/router';
 
 import { SearchResults, type SearchTabId } from './SearchResults';
 import * as css from './Shell.css';

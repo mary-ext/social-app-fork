@@ -1,6 +1,6 @@
 import type { AppLink } from '#/lib/links/app-url';
 
-import { router } from '#/routes';
+import { getRouter } from '#/router';
 
 /**
  * reads a URL on this app's own origin.
@@ -9,7 +9,7 @@ import { router } from '#/routes';
  * @returns what the URL names, or undefined for a route naming nothing outside this app
  */
 export const parseOwnPath = (url: URL): AppLink | undefined => {
-	const target = router.match(url.pathname + url.search);
+	const target = getRouter().match(url.pathname + url.search);
 	switch (target?.name) {
 		case 'CustomFeed': {
 			return { kind: 'feed', actor: target.actor, rkey: target.rkey };

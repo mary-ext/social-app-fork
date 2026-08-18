@@ -71,7 +71,7 @@ import StarterPack from '#/icons/original/StarterPack.svg';
 import StarterPackSky from '#/icons/original/StarterPackSky.svg';
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, useRouter } from '#/routes';
+import { type RouteTarget, useRouter } from '#/router';
 import { colors } from '#/styles/colors';
 
 import * as css from './NotificationFeedItem.css';

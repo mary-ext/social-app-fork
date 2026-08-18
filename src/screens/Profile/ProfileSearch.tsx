@@ -8,7 +8,7 @@ import { SearchHeader } from '#/screens/Search/SearchHeader';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 // a launch point only: it renders the search header and hands actual queries off to the Search screen, with
 // the profile baked in as a `from:` filter.

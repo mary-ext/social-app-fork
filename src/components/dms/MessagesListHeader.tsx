@@ -29,7 +29,7 @@ import * as Skeleton from '#/components/web/Skeleton';
 import BellOffIcon from '#/icons/central/BellOff_round_filled_radius1_stroke2.svg';
 import DotsHorizontalIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 import * as css from './MessagesListHeader.css';
 import type { ConvoWithDetails } from './util';

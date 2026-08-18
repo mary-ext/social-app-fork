@@ -17,7 +17,7 @@ import { Post } from '#/components/Post/Post';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export const PostQuotesScreen = () => {
 	const [{ actor, rkey }] = useParams('PostQuotes');

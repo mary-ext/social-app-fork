@@ -23,7 +23,7 @@ import { Tooltip } from '#/components/Tooltip';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 import * as css from './PostMeta.css';
 import { TimeElapsed } from './TimeElapsed';

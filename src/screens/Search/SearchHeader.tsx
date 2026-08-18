@@ -12,7 +12,7 @@ import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutoco
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 /**
  * the search chrome shared by the Explore, Search, and ProfileSearch screens: a sticky header wrapping the

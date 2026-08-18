@@ -12,7 +12,7 @@ import { TimeElapsed } from '#/components/TimeElapsed';
 import { Link as WebLink } from '#/components/web/Link';
 
 import BellStroke from '#/icons/central/BellOff_round_filled_radius1_stroke2.svg';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 import * as css from './ChatRow.css';
 

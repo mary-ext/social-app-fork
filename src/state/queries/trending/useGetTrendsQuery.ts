@@ -18,7 +18,7 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 export const DEFAULT_LIMIT = 5;
 

@@ -16,7 +16,7 @@ import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 type ReportDialogParams = {
 	convoId: string;

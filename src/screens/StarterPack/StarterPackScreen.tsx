@@ -39,7 +39,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { type RouteParams, useParams, useRouter } from '#/routes';
+import { type RouteParams, useParams, useRouter } from '#/router';
 
 import { OverflowMenu } from './OverflowMenu';
 import { StarterPackHeader } from './StarterPackHeader';

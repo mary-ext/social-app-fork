@@ -58,7 +58,7 @@ import { WhoCanReply } from '#/components/WhoCanReply';
 import CalendarClockIcon from '#/icons/central/CalendarClock_round_outlined_radius1_stroke2.svg';
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, useParams } from '#/routes';
+import { type RouteTarget, useParams } from '#/router';
 
 import * as css from './ThreadItemAnchor.css';
 

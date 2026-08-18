@@ -8,7 +8,7 @@ import {
 	starterPackTarget,
 } from '#/lib/routes/targets';
 
-import { type RouteTarget, router } from '#/routes';
+import { type RouteTarget, getRouter } from '#/router';
 
 /**
  * maps a link parsed out of a client's URL onto the route that renders it here.
@@ -75,7 +75,7 @@ export const resolveUrl = (url: string): ResolvedUrl | undefined => {
 	const target = describeUrl(url);
 	switch (target?.kind) {
 		case 'client': {
-			return { link: target.link, path: router.href(appLinkToTarget(target.link)) };
+			return { link: target.link, path: getRouter().href(appLinkToTarget(target.link)) };
 		}
 		case 'own': {
 			return { link: target.link, path: target.path };
@@ -97,7 +97,7 @@ export const resolveUrl = (url: string): ResolvedUrl | undefined => {
  * @returns the absolute URL on this app's own origin
  */
 export const targetToShareUrl = (target: RouteTarget): string => {
-	return new URL(router.href(target), location.origin).toString();
+	return new URL(getRouter().href(target), location.origin).toString();
 };
 
 /**

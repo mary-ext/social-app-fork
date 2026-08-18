@@ -1,6 +1,5 @@
 import {
 	boolean,
-	createRouterHooks,
 	defineRoutes,
 	enumOf,
 	layout,
@@ -8,11 +7,8 @@ import {
 	NavigationHistory,
 	nonEmpty,
 	optional,
-	type ParamsOf,
 	Router,
 	route,
-	type RouteName,
-	type RouteTarget as StackerRouteTarget,
 	string,
 } from '@oomfware/stacker';
 
@@ -25,6 +21,8 @@ import {
 import { searchTabs } from '#/screens/Search/utils';
 
 import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
+
+import { installRouter } from '#/router';
 
 declare module '@oomfware/stacker' {
 	interface RouteMeta {
@@ -553,9 +551,12 @@ export const routes = defineRoutes({
 
 // #endregion
 
-// #region router instance + typed hooks
+// #region router instance
 
-// imperative navigation from outside the component tree (state models) goes through this instance.
+/** the compiled route registry. */
+export type AppRoutes = typeof routes;
+
+/** the app router itself. */
 export const router = new Router({
 	defaultFallback: <RouteLoadingScreen />,
 	history: new NavigationHistory(),
@@ -563,15 +564,6 @@ export const router = new Router({
 	routes,
 });
 
-/** an in-app navigation destination: a route name plus the parameters that route needs. */
-export type RouteTarget = StackerRouteTarget<typeof routes>;
-
-/** the decoded path and query parameters a route receives, keyed by route name. */
-export type RouteParams<K extends RouteName<typeof routes>> = ParamsOf<typeof routes, K>;
-
-// oxlint-disable-next-line typescript/unbound-method
-export const { useParams, useRouter, useTarget } = createRouterHooks(routes);
-
-export { useFocusEffect, useIsFocused, useLocation } from '@oomfware/stacker';
+installRouter(router);
 
 // #endregion

@@ -29,7 +29,7 @@ import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
-import { useLocation, useRouter } from '#/routes';
+import { useLocation, useRouter } from '#/router';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
 

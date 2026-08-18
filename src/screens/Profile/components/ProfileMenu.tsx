@@ -52,7 +52,7 @@ import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2
 import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 function ProfileMenu({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }): ReactNode {
 	const { currentAccount, hasSession } = useSession();

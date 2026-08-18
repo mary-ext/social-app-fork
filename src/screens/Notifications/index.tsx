@@ -28,7 +28,7 @@ import { InlineLinkText, LinkButton } from '#/components/web/Link';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused } from '#/routes';
+import { useFocusEffect, useIsFocused } from '#/router';
 
 import * as css from './index.css';
 

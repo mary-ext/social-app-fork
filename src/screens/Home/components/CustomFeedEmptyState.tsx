@@ -3,7 +3,7 @@ import { EmptyState } from '#/components/EmptyState';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function CustomFeedEmptyState() {
 	const router = useRouter();

@@ -20,7 +20,7 @@ import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 
 const POLL_FREQ = 60e3; // 60sec
 

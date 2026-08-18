@@ -9,7 +9,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import RobotIcon from '#/icons/central/Robot_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function BotAccountAlert({
 	handle,

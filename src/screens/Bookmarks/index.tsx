@@ -22,7 +22,7 @@ import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke
 import BookmarkDeleteLarge from '#/icons/central/BookmarkDelete_round_outlined_radius3_stroke1.svg';
 import QuestionIcon from '#/icons/central/CircleQuestionmark_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as css from './Bookmarks.css';
 

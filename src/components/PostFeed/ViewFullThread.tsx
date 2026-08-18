@@ -6,7 +6,7 @@ import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 import * as css from './ViewFullThread.css';
 

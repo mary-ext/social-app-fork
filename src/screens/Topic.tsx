@@ -17,7 +17,7 @@ import * as Layout from '#/components/web/Layout';
 
 import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export default function TopicScreen() {
 	const [{ topic }] = useParams('Topic');

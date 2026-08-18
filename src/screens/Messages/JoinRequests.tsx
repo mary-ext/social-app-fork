@@ -33,7 +33,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 import ErrorIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/router';
 
 import { InviteLinkDialog } from './components/InviteLinkDialog';
 import { useIsWithinSplitView } from './components/splitView/context';

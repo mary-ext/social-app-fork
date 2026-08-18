@@ -43,7 +43,7 @@ import { useSession } from '#/state/session';
 import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
-import { router } from '#/routes';
+import { getRouter } from '#/router';
 
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
@@ -493,7 +493,7 @@ function ActiveSearchAutocomplete({
 				break;
 			}
 			case 'goto': {
-				navigate(router.href(item.target));
+				navigate(getRouter().href(item.target));
 				break;
 			}
 			case 'link': {

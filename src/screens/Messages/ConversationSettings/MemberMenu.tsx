@@ -24,7 +24,7 @@ import PersonIcon from '#/icons/central/People_round_outlined_radius1_stroke2.sv
 import PersonCheck from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
 import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { RemoveMemberPrompt } from './prompts';
 

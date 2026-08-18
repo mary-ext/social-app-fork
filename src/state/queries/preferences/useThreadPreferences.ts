@@ -7,7 +7,7 @@ import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 import { usePreferencesQuery, useSetThreadViewPreferencesMutation } from '#/state/queries/preferences';
 import type { ThreadViewPreferences } from '#/state/queries/preferences/types';
 
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 import type { Literal } from '#/types/utils';
 
 export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.$params['sort']>;

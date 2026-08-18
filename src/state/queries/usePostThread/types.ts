@@ -9,7 +9,7 @@ import type {
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem

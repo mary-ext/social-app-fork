@@ -8,7 +8,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function LeaveConvoPrompt({
 	handle,

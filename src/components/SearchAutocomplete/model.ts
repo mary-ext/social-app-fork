@@ -17,7 +17,7 @@ import { resolveUrl } from '#/lib/routes/app-links';
 import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';
 
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, router } from '#/routes';
+import { type RouteTarget, getRouter } from '#/router';
 import type { SearchHistoryEntry } from '#/storage';
 
 import {
@@ -40,7 +40,7 @@ const resolveInAppUrl = (query: string): string | null => {
 
 	if (trimmed.startsWith('at://')) {
 		const target = recordUriToTarget(trimmed);
-		return target ? router.href(target) : null;
+		return target ? getRouter().href(target) : null;
 	}
 
 	return resolveUrl(trimmed)?.path ?? null;

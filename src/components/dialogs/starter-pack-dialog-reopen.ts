@@ -1,6 +1,6 @@
 import type { DialogHandle } from '#/components/Dialog';
 
-import { useFocusEffect, useLocation } from '#/routes';
+import { useFocusEffect, useLocation } from '#/router';
 
 /**
  * the starter pack wizard is a route, not a dialog, so by the time a pack is created the dialog that launched

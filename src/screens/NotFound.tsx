@@ -3,7 +3,7 @@ import * as Layout from '#/components/web/Layout';
 
 import PageCrossTextIcon from '#/icons/central/PageCrossText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export const NotFoundScreen = () => {
 	const router = useRouter();

@@ -13,7 +13,7 @@ import * as Skeleton from '#/components/web/Skeleton';
 import FilterTimeline from '#/icons/central/FilterTimeline_round_outlined_radius1_stroke2.svg';
 import Plus from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter, useTarget } from '#/routes';
+import { useRouter, useTarget } from '#/router';
 
 import * as css from './Feeds.css';
 

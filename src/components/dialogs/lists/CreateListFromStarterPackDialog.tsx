@@ -16,7 +16,7 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 

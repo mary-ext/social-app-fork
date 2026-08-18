@@ -12,7 +12,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import * as css from '#/components/List/List.css';
 
-import { useIsFocused } from '#/routes';
+import { useIsFocused } from '#/router';
 
 import { ItemSeenObserver } from './ItemSeenObserver';
 import { Row } from './Row';

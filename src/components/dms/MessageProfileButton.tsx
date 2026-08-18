@@ -12,7 +12,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 
 import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 /** Round button that opens (or starts) a DM with the profile, when the viewer is allowed to message them. */
 export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.ProfileViewDetailed }) {

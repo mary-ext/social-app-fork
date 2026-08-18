@@ -14,7 +14,7 @@ import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
 
-import { type RouteTarget, useRouter } from '#/routes';
+import { type RouteTarget, useRouter } from '#/router';
 
 type AppRouter = ReturnType<typeof useRouter>;
 

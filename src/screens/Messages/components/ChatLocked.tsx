@@ -11,7 +11,7 @@ import * as Toast from '#/components/Toast';
 
 import LockIcon from '#/icons/central/Lock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { LeaveChatPrompt } from '../ConversationSettings/prompts';
 import { ChatFooter } from './ChatFooter';

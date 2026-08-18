@@ -6,7 +6,7 @@ import { useComposeIntent } from '#/features/composer/compose-intent';
 
 import { groupChatJoinHandle } from '#/components/dialogs/handles';
 
-import { useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/router';
 
 /**
  * `/chat/:code` has no screen: it replaces to Home and opens the join dialog. the replace keeps the entry so

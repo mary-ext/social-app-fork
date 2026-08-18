@@ -33,7 +33,7 @@ import CircleXIcon from '#/icons/central/CircleX_round_outlined_radius1_stroke2.
 import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
 import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function RejectMenu({
 	convo,

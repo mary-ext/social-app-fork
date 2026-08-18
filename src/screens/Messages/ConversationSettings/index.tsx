@@ -40,7 +40,7 @@ import EditIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg
 import FlagIcon from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
 import LockIcon from '#/icons/central/Lock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/routes';
+import { useParams, useRouter } from '#/router';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { useIsWithinSplitView } from '../components/splitView/context';

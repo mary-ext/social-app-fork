@@ -31,7 +31,7 @@ import SaveIcon from '#/icons/central/FloppyDisk1_round_outlined_radius1_stroke2
 import ListSparkleIcon from '#/icons/central/ListSparkle_round_outlined_radius1_stroke2.svg';
 import PinIcon from '#/icons/central/Thumbtack_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { FeedRow } from './components/FeedRow';
 import { moveWithinSection, removeFeed, reorderSavedFeeds, togglePin } from './operations';

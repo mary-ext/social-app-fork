@@ -21,7 +21,7 @@ import ListSparkle from '#/icons/central/ListSparkle_round_outlined_radius1_stro
 import Pencil from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import Trash from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteParams, useRouter } from '#/routes';
+import { type RouteParams, useRouter } from '#/router';
 
 import * as css from './StarterPackScreen.css';
 

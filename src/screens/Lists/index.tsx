@@ -12,7 +12,7 @@ import * as Layout from '#/components/web/Layout';
 
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function ListsScreen() {
 	useTitle(m['common.list.label']());

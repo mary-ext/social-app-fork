@@ -6,7 +6,7 @@ import { LikedByList } from '#/components/LikedByList';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export function ProfileLabelerLikedByScreen() {
 	const [{ actor: handleOrDid }] = useParams('ProfileLabelerLikedBy');

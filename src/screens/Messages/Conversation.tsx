@@ -22,7 +22,7 @@ import { Error } from '#/components/Error';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused, useParams, useRouter } from '#/routes';
+import { useFocusEffect, useIsFocused, useParams, useRouter } from '#/router';
 
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';

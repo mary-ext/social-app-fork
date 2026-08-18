@@ -31,7 +31,7 @@ import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadin
 import { RichText } from '#/components/RichText';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
 
-import { useFocusEffect, useIsFocused } from '#/routes';
+import { useFocusEffect, useIsFocused } from '#/router';
 
 import { FeedShutdownMsg } from './FeedShutdownMsg';
 import * as css from './PostFeed.css';

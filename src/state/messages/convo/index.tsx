@@ -22,7 +22,7 @@ import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/l
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
 
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 
 export * from '#/state/messages/convo/util';
 

@@ -52,7 +52,7 @@ import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.s
 import SettingsFilledIcon from '#/icons/central/SettingsGear2_round_filled_radius1_stroke2.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, useRouter, useTarget } from '#/routes';
+import { type RouteTarget, useRouter, useTarget } from '#/router';
 
 import { LARGE_ELEMENT_SIZE } from './constants';
 import * as css from './LeftNav.css';

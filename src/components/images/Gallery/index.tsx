@@ -13,7 +13,7 @@ import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/utils/merge-refs';
 
-import { useIsFocused } from '#/routes';
+import { useIsFocused } from '#/router';
 
 import * as css from './index.css';
 

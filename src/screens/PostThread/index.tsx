@@ -8,7 +8,7 @@ import { PostThread } from '#/screens/PostThread/PostThread';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export function PostThreadScreen() {
 	const [{ actor, rkey }] = useParams('PostThread');

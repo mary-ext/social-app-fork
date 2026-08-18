@@ -14,7 +14,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 
 import * as css from './FeedSection.css';
 

@@ -15,7 +15,7 @@ import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export const PostRepostedByScreen = () => {
 	const [{ actor, rkey }] = useParams('PostRepostedBy');

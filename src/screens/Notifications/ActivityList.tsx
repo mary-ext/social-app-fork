@@ -6,7 +6,7 @@ import * as Layout from '#/components/web/Layout';
 
 import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export function NotificationsActivityListScreen() {
 	const [{ posts }] = useParams('NotificationsActivityList');

@@ -26,7 +26,7 @@ import { InlineButton } from '#/components/web/Link';
 
 import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 export default function HashtagScreen() {
 	useTitle(m['navigation.hashtag.title']());

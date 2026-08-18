@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 
 export function useRefreshOnFocus<T>(refetch: () => Promise<T>) {
 	const firstTimeRef = useRef(true);

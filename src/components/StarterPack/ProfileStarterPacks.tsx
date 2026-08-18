@@ -20,7 +20,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as css from './ProfileStarterPacks.css';
 

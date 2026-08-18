@@ -67,7 +67,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as styles from './Composer.css';
 import * as ComposerError from './ComposerError';

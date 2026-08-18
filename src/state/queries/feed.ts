@@ -42,7 +42,7 @@ import { createQueryKey } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
-import type { RouteTarget } from '#/routes';
+import type { RouteTarget } from '#/router';
 
 import { useModerationOpts } from '../moderation/moderation-opts';
 import type { FeedDescriptor } from './post-feed';

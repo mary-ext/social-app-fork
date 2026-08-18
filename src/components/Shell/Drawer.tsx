@@ -43,7 +43,7 @@ import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stro
 import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import Settings from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 const SWITCHER_AVATAR_SIZE = 24;
 const SWITCHER_ACCOUNT_LIMIT = 2;

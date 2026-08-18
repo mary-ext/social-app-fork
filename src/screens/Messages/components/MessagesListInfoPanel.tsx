@@ -15,7 +15,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import PersonIcon from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as css from './MessagesListInfoPanel.css';
 

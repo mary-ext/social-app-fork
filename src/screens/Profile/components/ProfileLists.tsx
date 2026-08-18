@@ -18,7 +18,7 @@ import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const LIST_ITEM_HEIGHT_ESTIMATE = 120;

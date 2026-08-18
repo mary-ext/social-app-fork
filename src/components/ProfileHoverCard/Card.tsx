@@ -39,7 +39,7 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 import Check from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as css from './ProfileHoverCard.css';
 

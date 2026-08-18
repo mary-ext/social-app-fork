@@ -5,7 +5,7 @@ import { profileTarget } from '#/lib/routes/targets';
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import { useNavigateToPath } from '#/components/web/Link';
 
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function DesktopSearch() {
 	const router = useRouter();

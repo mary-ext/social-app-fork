@@ -32,7 +32,7 @@ import PersonCheck from '#/icons/central/PeopleAdded_round_outlined_radius1_stro
 import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export type BlockInfo = {
 	listBlocks: BlockingModerationCause[];

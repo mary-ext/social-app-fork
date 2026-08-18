@@ -20,7 +20,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import * as css from './PostFeedErrorMessage.css';
 

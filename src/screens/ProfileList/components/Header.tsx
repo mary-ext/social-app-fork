@@ -15,7 +15,7 @@ import * as Layout from '#/components/web/Layout';
 
 import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { ListHeader } from './ListHeader';
 import { MoreOptionsMenu } from './MoreOptionsMenu';

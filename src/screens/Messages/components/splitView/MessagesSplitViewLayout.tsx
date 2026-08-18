@@ -9,7 +9,7 @@ import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
 import { LockScroll } from '#/components/LockScroll';
 
-import { useRouter, useTarget } from '#/routes';
+import { useRouter, useTarget } from '#/router';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';

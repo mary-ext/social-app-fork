@@ -1,6 +1,6 @@
 import { useTitle } from '#/state/use-title';
 
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 import { SearchScreenShell } from './Shell';
 

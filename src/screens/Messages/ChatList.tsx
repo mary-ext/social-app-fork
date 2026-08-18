@@ -34,7 +34,7 @@ import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_st
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import BubbleSmileIcon from '#/icons/original/BubbleSmile.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useRouter } from '#/routes';
+import { useFocusEffect, useRouter } from '#/router';
 
 import * as css from './ChatList.css';
 import { ChatDisabled } from './components/ChatDisabled';

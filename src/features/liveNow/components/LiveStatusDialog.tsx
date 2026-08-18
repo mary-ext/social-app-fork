@@ -26,7 +26,7 @@ import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_st
 import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
 import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 /**
  * A touch-only dialog that surfaces a live status (no hover affordance on touch devices). Open it

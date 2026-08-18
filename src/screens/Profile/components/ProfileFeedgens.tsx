@@ -18,7 +18,7 @@ import { LoadMoreRetryBtn } from '#/components/LoadMoreRetryBtn';
 
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 // only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;

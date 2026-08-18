@@ -47,7 +47,7 @@ import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke1.sv
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useParams, useRouter } from '#/routes';
+import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import * as css from './index.css';
 

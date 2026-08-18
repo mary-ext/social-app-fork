@@ -26,7 +26,7 @@ import InboxLargeIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';

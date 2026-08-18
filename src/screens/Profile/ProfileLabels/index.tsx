@@ -43,7 +43,7 @@ import HeartFilled from '#/icons/central/Heart2_round_filled_radius1_stroke2.svg
 import Heart from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
 import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useParams } from '#/routes';
+import { useParams } from '#/router';
 
 import * as css from './index.css';
 

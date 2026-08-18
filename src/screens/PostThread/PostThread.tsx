@@ -37,7 +37,7 @@ import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect } from '#/routes';
+import { useFocusEffect } from '#/router';
 
 const PARENT_CHUNK_SIZE = 20;
 const CHILDREN_CHUNK_SIZE = 50;

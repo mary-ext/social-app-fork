@@ -21,7 +21,7 @@ import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_str
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
 import Send from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 import { useBookmark } from '../useBookmark';
 

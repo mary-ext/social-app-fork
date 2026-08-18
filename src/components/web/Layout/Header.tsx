@@ -18,7 +18,7 @@ import * as styles from '#/components/web/Layout/Header.css';
 import ArrowLeft from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import Menu from '#/icons/central/BarsThree_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/routes';
+import { useRouter } from '#/router';
 
 export function Outer({
 	children,

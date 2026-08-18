@@ -21,7 +21,7 @@ import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
 import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, useRouter, useTarget } from '#/routes';
+import { type RouteTarget, useRouter, useTarget } from '#/router';
 
 import * as css from './BottomBar.css';
 
