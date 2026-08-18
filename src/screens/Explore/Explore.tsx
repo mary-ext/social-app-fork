@@ -148,7 +148,7 @@ export function Explore({
 
 	const {
 		data: suggestedSPs,
-		isLoading: isLoadingSuggestedSPs,
+		isPending: isPendingSuggestedSPs,
 		error: suggestedSPsError,
 		isRefetching: isRefetchingSuggestedSPs,
 	} = useSuggestedStarterPacksQuery({});
@@ -360,7 +360,7 @@ export function Explore({
 			iconSize: 'xl',
 		});
 
-		if (isLoadingSuggestedSPs || isRefetchingSuggestedSPs) {
+		if (isPendingSuggestedSPs || isRefetchingSuggestedSPs) {
 			Array.from({ length: 3 }).forEach((__, index) => {
 				i.push({
 					type: 'starterPackSkeleton',

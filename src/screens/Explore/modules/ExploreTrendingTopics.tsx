@@ -30,10 +30,10 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
-	const { data: trending, error, isLoading, isRefetching } = useGetTrendsQuery();
-	const noTopics = !isLoading && !error && !trending?.trends?.length;
+	const { data: trending, error, isPending, isRefetching } = useGetTrendsQuery();
+	const noTopics = !isPending && !error && !trending?.trends?.length;
 
-	if (isLoading || isRefetching) {
+	if (isPending || isRefetching) {
 		return (
 			<>
 				{Array.from({ length: TOPIC_COUNT }).map((_, i) => (

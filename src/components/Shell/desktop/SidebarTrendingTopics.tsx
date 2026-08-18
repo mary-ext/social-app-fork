@@ -22,8 +22,8 @@ export function SidebarTrendingTopics() {
 
 function Inner() {
 	const trendingPrompt = Prompt.usePromptHandle();
-	const { data: trending, error, isLoading } = useGetTrendsQuery({ refetchOnWindowFocus: true });
-	const noTopics = !isLoading && !error && !trending?.trends?.length;
+	const { data: trending, error, isPending } = useGetTrendsQuery({ refetchOnWindowFocus: true });
+	const noTopics = !isPending && !error && !trending?.trends?.length;
 
 	if (error || noTopics) {
 		return null;
@@ -51,7 +51,7 @@ function Inner() {
 				</div>
 
 				<div className={css.body}>
-					{isLoading
+					{isPending
 						? Array.from({ length: TRENDING_LIMIT }, (_, i) => (
 								<Skeleton.Row key={i} align="center" gap="xs">
 									<Text size="sm" className={css.index}>

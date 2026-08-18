@@ -29,16 +29,16 @@ export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): 
 	const {
 		data: trending,
 		error,
-		isLoading,
+		isPending,
 	} = useGetTrendsQuery({ enabled: eligible, limit: TRENDING_LIMIT, refetchOnWindowFocus: true });
-	const noTopics = !isLoading && !error && !trending?.trends?.length;
+	const noTopics = !isPending && !error && !trending?.trends?.length;
 
 	return eligible && !error && !noTopics;
 }
 
 export function TrendingInterstitial() {
 	const trendingPrompt = Prompt.usePromptHandle();
-	const { data: trending, isLoading } = useGetTrendsQuery({
+	const { data: trending, isPending } = useGetTrendsQuery({
 		limit: TRENDING_LIMIT,
 		refetchOnWindowFocus: true,
 	});
@@ -47,7 +47,7 @@ export function TrendingInterstitial() {
 		<>
 			<div className={css.root}>
 				<TrendingIcon className={css.icon} />
-				{isLoading
+				{isPending
 					? SKELETON_WIDTHS.map((width, i) => (
 							// oxlint-disable-next-line react/no-array-index-key -- static skeleton
 							<div key={i} className={css.topic}>
@@ -55,7 +55,7 @@ export function TrendingInterstitial() {
 							</div>
 						))
 					: trending?.trends.map((topic) => <TopicLink key={topic.link} topic={topic} />)}
-				{!isLoading && (
+				{!isPending && (
 					<Button
 						variant="ghost"
 						size="tiny"
