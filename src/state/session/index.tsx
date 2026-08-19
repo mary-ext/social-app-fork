@@ -10,6 +10,7 @@ import { dropToGuest, getSnapshot, subscribe } from './store';
 export type { SessionAccount } from '#/state/session/types';
 export {
 	completeOAuthCallback,
+	getAccountProfileView,
 	getClients,
 	getCurrentDid,
 	login,
@@ -17,6 +18,7 @@ export {
 	logoutEveryAccount,
 	removeAccount,
 	switchAccount,
+	updateAccountProfile,
 } from './store';
 
 const StateContext = createContext<SessionStateContext>({

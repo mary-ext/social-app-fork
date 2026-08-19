@@ -38,7 +38,7 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { getClients, useSession } from '#/state/session';
+import { getAccountProfileView, getClients, useSession } from '#/state/session';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
@@ -48,8 +48,20 @@ export * from '#/state/queries/unstable-profile-cache';
 /** @deprecated use {@link unstableCacheProfileView} instead */
 export const precacheProfile = unstableCacheProfileView;
 
-const RQKEY_ROOT = 'profile';
+export const RQKEY_ROOT = 'profile';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];
+
+function getProfilePlaceholder(
+	getUnstableProfile: (didOrHandle: string) => AnyProfileView | undefined,
+	did: Did | undefined,
+): AppBskyActorDefs.ProfileViewDetailed | undefined {
+	if (!did) {
+		return;
+	}
+	const placeholder = getUnstableProfile(did) ?? getAccountProfileView(did);
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- consumers gate detailed fields with isPlaceholderData
+	return placeholder as AppBskyActorDefs.ProfileViewDetailed | undefined;
+}
 
 const fetchProfile = createBatchedFetch<Did, AppBskyActorDefs.ProfileViewDetailed>({
 	limit: 25, // getProfiles caps `actors` at 25
@@ -92,13 +104,7 @@ export function useProfileQuery({
 							params: { actor: did! },
 						}),
 					),
-		placeholderData: () => {
-			if (!did) {
-				return;
-			}
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder only; the detailed-only fields stay absent until the query resolves
-			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
-		},
+		placeholderData: () => getProfilePlaceholder(getUnstableProfile, did),
 	});
 }
 export function useCurrentAccountProfile() {
@@ -115,12 +121,14 @@ const combineProfiles = (results: UseQueryResult<AppBskyActorDefs.ProfileViewDet
 });
 
 export function useProfilesQuery({ dids }: { dids: Did[] }) {
+	const { getUnstableProfile } = useUnstableProfileViewCache();
 	return useQueries({
 		queries: dids.map((did) => ({
 			enabled: !!did,
 			staleTime: STALE.MINUTES.FIVE,
 			queryKey: RQKEY(did),
 			queryFn: ({ signal }: { signal: AbortSignal }) => fetchProfile(did, signal),
+			placeholderData: () => getProfilePlaceholder(getUnstableProfile, did),
 		})),
 		// each did is its own cache entry, so changing the `dids` set never blanks the already-resolved ones.
 		combine: combineProfiles,

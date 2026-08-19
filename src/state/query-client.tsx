@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 
+import type { AnyProfileView } from '@atcute/bluesky';
+
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query';
+import { focusManager, onlineManager, type Query, QueryCache, QueryClient } from '@tanstack/react-query';
 import {
 	type PersistQueryClientOptions,
 	PersistQueryClientProvider,
@@ -13,7 +15,9 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { networkConfirmed, networkLost } from '#/state/events';
+import { RQKEY_ROOT as PROFILE_RQKEY_ROOT } from '#/state/queries/profile';
 import { isQueryPersisted } from '#/state/queries/util';
+import { updateAccountProfile } from '#/state/session';
 
 declare global {
 	interface Window {
@@ -97,8 +101,22 @@ focusManager.setEventListener((onFocus) => {
 	}
 });
 
+const onQuerySuccess = (data: unknown, query: Query<unknown, unknown>) => {
+	if (query.queryKey[0] !== PROFILE_RQKEY_ROOT) {
+		return;
+	}
+	if (isProfileView(data)) {
+		updateAccountProfile(data);
+	}
+};
+
+const isProfileView = (data: unknown): data is AnyProfileView => {
+	return typeof data === 'object' && data !== null && 'did' in data && 'handle' in data;
+};
+
 const createQueryClient = () =>
 	new QueryClient({
+		queryCache: new QueryCache({ onSuccess: onQuerySuccess }),
 		defaultOptions: {
 			queries: {
 				// feeds opt in to refetching on focus when needed.

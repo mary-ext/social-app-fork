@@ -155,12 +155,12 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: boolean; value: string }) {
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
-	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+	const { data: profile, isPlaceholderData } = useProfileQuery({ did: currentAccount?.did });
 	const updateProfile = useProfileUpdateMutation();
 
 	const enabled = profile?.labels?.some((l) => l.val === value && l.src === profile.did) ?? false;
 	const loading = updateProfile.isPending;
-	const canToggle = !!profile && !loading;
+	const canToggle = !!profile && !isPlaceholderData && !loading;
 
 	const toggle = () => {
 		if (!profile) {

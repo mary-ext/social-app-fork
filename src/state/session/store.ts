@@ -1,10 +1,14 @@
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import type { ActorIdentifier, Did } from '@atcute/lexicons';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
+import { dequal } from 'dequal/lite';
+
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { sessionDropped } from '#/state/events';
+import { accountProfileView, toAccountProfile } from '#/state/session/account-profile';
 import type { SessionAccount } from '#/state/session/types';
 
 import { auth } from '#/storage';
@@ -38,6 +42,7 @@ export type SessionSnapshot = {
 };
 
 let isWritingSession = false;
+let isReloading = false;
 let snapshot: SessionSnapshot;
 
 const emitter = new SimpleEventEmitter<[]>();
@@ -56,6 +61,11 @@ function setSnapshot(patch: Partial<SessionSnapshot>): void {
 }
 
 function persistSnapshot(patch: Partial<SessionSnapshot>): void {
+	if (isReloading) {
+		// do not restore stale session state while another tab reloads after sign-out.
+		return;
+	}
+
 	const next = { ...snapshot, ...patch };
 	isWritingSession = true;
 	try {
@@ -72,8 +82,21 @@ function persistSnapshot(patch: Partial<SessionSnapshot>): void {
 
 // #region helpers
 
+function mergeAccount(accounts: readonly SessionAccount[], account: SessionAccount): SessionAccount {
+	if (account.profile) {
+		return account;
+	}
+	const existing = accounts.find((a) => a.did === account.did);
+	return existing?.profile ? { ...account, profile: existing.profile } : account;
+}
+
 function prependAccount(accounts: readonly SessionAccount[], account: SessionAccount): SessionAccount[] {
-	return [account, ...accounts.filter((a) => a.did !== account.did)];
+	return [mergeAccount(accounts, account), ...accounts.filter((a) => a.did !== account.did)];
+}
+
+function replaceAccount(accounts: readonly SessionAccount[], account: SessionAccount): SessionAccount[] {
+	const next = mergeAccount(accounts, account);
+	return accounts.map((a) => (a.did === next.did ? next : a));
 }
 
 function isFatalSessionError(e: unknown): boolean {
@@ -125,11 +148,10 @@ export async function completeOAuthCallback(params: URLSearchParams) {
 }
 
 export async function switchAccount(account: SessionAccount) {
-	// validate the session before committing the switch.
-	await resumeOAuthSession(account);
+	const { account: validated } = await resumeOAuthSession(account);
 	persistSnapshot({
-		accounts: prependAccount(snapshot.accounts, account),
-		currentAccountDid: account.did,
+		accounts: prependAccount(snapshot.accounts, validated),
+		currentAccountDid: validated.did,
 	});
 	history.pushState(null, '', '/');
 	window.location.reload();
@@ -141,6 +163,28 @@ export function logoutCurrentAccount() {
 
 export function logoutEveryAccount() {
 	signOut({ accounts: snapshot.accounts, clearDids: snapshot.accounts.map((a) => a.did) });
+}
+
+/**
+ * stores a resolved profile snapshot for a saved account.
+ *
+ * @param profile the resolved profile view
+ */
+export function updateAccountProfile(profile: AnyProfileView): void {
+	const existing = getAccount(profile.did);
+	if (!existing) {
+		return;
+	}
+
+	// getSession is authoritative; appview can lag handle changes.
+	const nextProfile = toAccountProfile(profile);
+	if (dequal(existing.profile, nextProfile)) {
+		return;
+	}
+
+	persistSnapshot({
+		accounts: replaceAccount(snapshot.accounts, { ...existing, profile: nextProfile }),
+	});
 }
 
 export function removeAccount(account: SessionAccount) {
@@ -163,6 +207,21 @@ export function getClients() {
 
 export function getCurrentDid() {
 	return snapshot.currentDid;
+}
+
+function getAccount(did: Did): SessionAccount | undefined {
+	return snapshot.accounts.find((a) => a.did === did);
+}
+
+/**
+ * gets cached placeholder profile data for a saved account.
+ *
+ * @param did the account's did
+ * @returns the basic profile view, if cached
+ */
+export function getAccountProfileView(did: Did): AppBskyActorDefs.ProfileViewBasic | undefined {
+	const account = getAccount(did);
+	return account && accountProfileView(account);
 }
 
 {
@@ -211,7 +270,10 @@ export function getCurrentDid() {
 			// handle live drops locally until validation settles.
 			const unlistenDropped = sessionDropped.subscribe(failResume);
 			try {
-				await resumed.validate();
+				const validated = await resumed.validate();
+				if (validated.handle !== account.handle) {
+					persistSnapshot({ accounts: replaceAccount(snapshot.accounts, validated) });
+				}
 			} catch (validationError) {
 				if (isFatalSessionError(validationError)) {
 					failResume();
@@ -239,12 +301,14 @@ auth.onScopeChange(['session'], () => {
 
 	const next = auth.get(['session']);
 
-	const accountChanged = next?.currentAccountDid !== snapshot.currentDid;
+	// profile writes can occur before currentDid resolves.
+	const accountChanged = next?.currentAccountDid !== snapshot.currentAccountDid;
 	const accountRemoved =
-		snapshot.currentDid !== undefined &&
-		!(next?.accounts.some((a) => a.did === snapshot.currentDid) ?? false);
+		snapshot.currentAccountDid !== undefined &&
+		!(next?.accounts.some((a) => a.did === snapshot.currentAccountDid) ?? false);
 
 	if (accountChanged || accountRemoved) {
+		isReloading = true;
 		window.location.reload();
 	}
 });

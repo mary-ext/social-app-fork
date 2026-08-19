@@ -11,6 +11,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
+import { accountProfileView } from '#/state/session/account-profile';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 
 import { AvatarStack } from '#/components/AvatarStack';
@@ -171,7 +172,7 @@ function OtherAccountRow({
 }) {
 	const removePromptHandle = Prompt.usePromptHandle();
 
-	const profileView = profile ?? account;
+	const profileView = profile ?? accountProfileView(account);
 
 	return (
 		<div className={styles.accountRow}>

@@ -1,4 +1,5 @@
-import type { Did, Handle } from '@atcute/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 
 import type { Gif } from '#/lib/gif';
 
@@ -79,4 +80,18 @@ export type AuthSession = {
 export type AuthAccount = {
 	did: Did;
 	handle: Handle;
+	/** cached display data. */
+	profile?: AuthAccountProfile;
+};
+
+/** profile fields cached for account UI. */
+export type AuthAccountProfile = {
+	/** labeler flag used for avatar shape. */
+	associated?: Pick<AppBskyActorDefs.ProfileAssociated, 'labeler'>;
+	/** avatar URI. */
+	avatar?: GenericUri;
+	/** display name. */
+	displayName?: string;
+	/** statuses used by verification badges. */
+	verification?: Pick<AppBskyActorDefs.VerificationState, 'trustedVerifierStatus' | 'verifiedStatus'>;
 };

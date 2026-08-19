@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
+import { accountProfileView } from '#/state/session/account-profile';
 
 import * as css from '#/components/AccountList.css';
 import { Text } from '#/components/Text';
@@ -88,7 +89,7 @@ function AccountItem({
 		);
 	}
 
-	const profileView = profile ?? account;
+	const profileView = profile ?? accountProfileView(account);
 
 	// every row is one of the viewer's own accounts, so moderate each as its own viewer. this dialog also
 	// opens signed out, where an absent viewer would otherwise let `!no-unauthenticated` blank the row out.
