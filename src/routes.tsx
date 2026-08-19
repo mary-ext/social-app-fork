@@ -14,7 +14,6 @@ import {
 
 import { actorIdentifier, did, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
 
-import { historyTabs } from '#/screens/History/utils';
 import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
@@ -369,7 +368,7 @@ export const routes = defineRoutes({
 				component: HistoryScreen,
 				meta: { requireAuth: true },
 				path: '/history',
-				query: { tab: optional(enumOf(historyTabs)) },
+				query: { tab: optional(enumOf(['likes', 'saved'])) },
 			}),
 
 			Profile: route({

@@ -2,7 +2,6 @@ import { useTitle } from '#/state/use-title';
 
 import { BookmarksTab } from '#/screens/History/Bookmarks';
 import { LikesTab } from '#/screens/History/Likes';
-import type { HistoryTabId } from '#/screens/History/utils';
 
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
@@ -17,7 +16,7 @@ export function HistoryScreen() {
 
 	const [{ tab }, replaceParams] = useParams('History');
 
-	const sections: Section<HistoryTabId>[] = [
+	const sections: Section<'likes' | 'saved'>[] = [
 		{
 			id: 'saved',
 			icon: BookmarkIcon,
