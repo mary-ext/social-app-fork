@@ -4,7 +4,14 @@
 		"target": "es2023",
 		"lib": ["ESNext", "DOM"],
 		"module": "esnext",
-		"types": ["@atcute/atproto", "@atcute/bluesky", "@atcute/germ", "@atcute/microcosm", "@atcute/ozone"],
+		"types": [
+			"@atcute/atproto",
+			"@atcute/bluesky",
+			"@atcute/germ",
+			"@atcute/microcosm",
+			"@atcute/ozone",
+			"wicg-file-system-access"
+		],
 		"skipLibCheck": true,
 
 		/* Bundler mode */

@@ -1,7 +1,6 @@
 export * from '@atcute/oauth-browser-client';
 
-import { Client, ok, simpleFetchHandler } from '@atcute/client';
-import type { ActorResolver } from '@atcute/identity-resolver';
+import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
 import {
 	type ClientAssertionFetcher,
@@ -10,9 +9,10 @@ import {
 } from '@atcute/oauth-browser-client';
 
 import { internalClient } from '#/lib/api/internal-client';
+import { resolveMiniDoc } from '#/lib/api/slingshot-client';
 import { sleep } from '#/lib/utils/sleep';
 
-import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE, SLINGSHOT_SERVICE_URL } from '#/env';
+import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE } from '#/env';
 
 export const OAUTH_CALLBACK_PATH = '/oauth/callback';
 export const IS_OAUTH_CALLBACK = window.location.pathname === OAUTH_CALLBACK_PATH;
@@ -35,32 +35,13 @@ const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, createDpopPro
 	};
 };
 
-class SlingshotActorResolver implements ActorResolver {
-	private client = new Client({
-		handler: simpleFetchHandler({ service: SLINGSHOT_SERVICE_URL }),
-	});
-
-	async resolve(actor: ActorIdentifier, options?: { signal?: AbortSignal }) {
-		const resolved = await ok(
-			this.client.get('blue.microcosm.identity.resolveMiniDoc', {
-				signal: options?.signal,
-				params: {
-					identifier: actor,
-				},
-			}),
-		);
-
-		return {
-			did: resolved.did,
-			handle: resolved.handle,
-			pds: new URL(resolved.pds).href,
-		};
-	}
-}
-
 configureOAuth({
 	fetchClientAssertion: IS_CONFIDENTIAL_CLIENT ? fetchClientAssertion : undefined,
-	identityResolver: new SlingshotActorResolver(),
+	identityResolver: {
+		resolve(actor, options) {
+			return resolveMiniDoc(actor, options?.signal);
+		},
+	},
 	metadata: {
 		client_id: OAUTH_CLIENT_ID,
 		redirect_uri: OAUTH_REDIRECT_URI,

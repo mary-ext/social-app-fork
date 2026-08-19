@@ -1,5 +1,7 @@
 import { type PointerEvent, type RefObject, useEffect, useEffectEvent, useRef, useState } from 'react';
 
+import type { Did } from '@atcute/lexicons';
+
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { useInputModality } from '#/lib/browser/input-modality';
 import { IS_FIREFOX, IS_MOBILE_IOS, IS_SAFARI } from '#/lib/browser/platform';
@@ -57,6 +59,8 @@ export function Controls({
 	playerLoading,
 	quality,
 	subtitles,
+	videoCid,
+	authorDid,
 	isGif,
 	altText,
 }: {
@@ -70,6 +74,8 @@ export function Controls({
 	playerLoading: boolean;
 	quality: VideoQuality;
 	subtitles: VideoSubtitles;
+	videoCid: string;
+	authorDid?: Did;
 	isGif: boolean;
 	altText?: string;
 }) {
@@ -411,6 +417,8 @@ export function Controls({
 						tooltip={m['components.post.video.settings.label']()}
 						quality={quality}
 						subtitles={subtitles}
+						videoCid={videoCid}
+						authorDid={authorDid}
 						onOpenChange={onSettingsOpenChange}
 						fullscreenContainer={portalContainer}
 					/>

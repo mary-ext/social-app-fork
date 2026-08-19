@@ -1,6 +1,7 @@
 import { type RefObject, useEffect, useId, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
@@ -24,6 +25,7 @@ import { Controls } from './web-controls/VideoControls';
 
 export function VideoEmbedInnerWeb({
 	embed,
+	authorDid,
 	active,
 	setActive,
 	onScreen,
@@ -31,6 +33,7 @@ export function VideoEmbedInnerWeb({
 	lastKnownTime,
 }: {
 	embed: AppBskyEmbedVideo.View;
+	authorDid?: Did;
 	active: boolean;
 	setActive: () => void;
 	onScreen: boolean;
@@ -98,6 +101,8 @@ export function VideoEmbedInnerWeb({
 					fullscreenRef={containerRef}
 					quality={quality}
 					subtitles={subtitles}
+					videoCid={embed.cid}
+					authorDid={authorDid}
 					isGif={isGif}
 					altText={embed.alt}
 				/>

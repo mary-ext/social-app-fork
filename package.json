@@ -72,6 +72,7 @@
 		"@inlang/paraglide-js": "2.22.0",
 		"@oomfware/vite-plugin-svg-sprites": "^0.1.1",
 		"@types/node": "^26.2.0",
+		"@types/wicg-file-system-access": "^2023.10.7",
 		"@typescript/native": "npm:typescript@^7.0.2",
 		"@vanilla-extract/private": "^1.0.9",
 		"@vanilla-extract/vite-plugin": "^5.2.6",

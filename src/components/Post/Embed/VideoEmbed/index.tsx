@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -23,7 +24,13 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback';
 
 const MIN_CARD_WIDTH = 280;
 
-export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
+export function VideoEmbed({
+	embed,
+	authorDid,
+}: {
+	embed: AppBskyEmbedVideo.View;
+	authorDid?: Did;
+}) {
 	const ref = useRef<HTMLDivElement>(null);
 	const { isActive, mayLoad, nearScreen, onScreen, setActive } = useActiveVideo(ref);
 	const lastKnownTime = useRef<number | undefined>(undefined);
@@ -63,6 +70,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 						{nearScreen && (
 							<VideoEmbedInnerWeb
 								embed={embed}
+								authorDid={authorDid}
 								active={isActive}
 								setActive={setActive}
 								onScreen={onScreen}

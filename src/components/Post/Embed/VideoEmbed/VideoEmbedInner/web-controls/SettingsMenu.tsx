@@ -10,21 +10,30 @@ import {
 	useState,
 } from 'react';
 
+import type { Did } from '@atcute/lexicons';
+
 import { CompositeItem, CompositeRoot } from '@base-ui/react/internals/composite';
 import { Popover } from '@base-ui/react/popover';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getReducedMotion } from '#/lib/browser/reduced-motion';
+import { isAbortError } from '#/lib/errors';
+import { downloadVideo } from '#/lib/media/download-video';
 import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
 import type { Rendition } from '#/lib/media/hls/shared/protocol';
+
+import { useFetchPdsUrl } from '#/state/queries/resolve-pds';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 
 import { useVideoSpeed } from '#/components/Post/Embed/VideoEmbed/video-speed';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
+import * as Toast from '#/components/Toast';
 import { Tooltip } from '#/components/Tooltip';
 
+import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import ClosedCaptioningIcon from '#/icons/central/ClosedCaptioning_round_outlined_radius1_stroke2.svg';
@@ -85,6 +94,8 @@ export function SettingsMenu({
 	tooltip,
 	quality,
 	subtitles,
+	videoCid,
+	authorDid,
 	onOpenChange,
 	fullscreenContainer,
 }: {
@@ -92,6 +103,8 @@ export function SettingsMenu({
 	tooltip: string;
 	quality: VideoQuality;
 	subtitles: VideoSubtitles;
+	videoCid: string;
+	authorDid?: Did;
 	onOpenChange: (open: boolean) => void;
 	/** portal target while fullscreen. */
 	fullscreenContainer?: RefObject<HTMLElement | null>;
@@ -149,6 +162,12 @@ export function SettingsMenu({
 								value={selectedRendition && formatQualityLabel(selectedRendition)}
 								{...rowProps('quality')}
 							/>
+						)}
+						{authorDid !== undefined && (
+							<>
+								<hr className={styles.separator} />
+								<DownloadRow cid={videoCid} did={authorDid} />
+							</>
 						)}
 					</>
 				);
@@ -398,6 +417,49 @@ function Row({
 				</Text>
 			)}
 			<ChevronRightIcon className={styles.rowChevron} aria-hidden />
+		</MenuRow>
+	);
+}
+
+function DownloadRow({ cid, did }: { cid: string; did: Did }) {
+	const fetchPdsUrl = useFetchPdsUrl();
+	const [resolving, setResolving] = useState(false);
+
+	const label = m['components.post.video.download.label']();
+
+	const onDownload = async () => {
+		if (resolving) {
+			return;
+		}
+		setResolving(true);
+
+		try {
+			// fall back to the browser downloader if this lookup outlasts user activation.
+			const pdsUrl = await fetchPdsUrl(did).finally(() => setResolving(false));
+
+			if (await downloadVideo({ cid, did, pdsUrl })) {
+				Toast.show(m['components.post.video.download.savedToast']());
+			}
+		} catch (err) {
+			if (!isAbortError(err)) {
+				Toast.show(m['components.post.video.download.error'](), { type: 'error' });
+			}
+		}
+	};
+
+	return (
+		<MenuRow onClick={() => void onDownload()} aria-disabled={resolving || undefined}>
+			<DownloadIcon className={styles.rowIcon} aria-hidden />
+			<Text size="md_sub" weight="medium" color="white" numberOfLines={1} className={styles.rowLabel}>
+				{label}
+			</Text>
+			{resolving && (
+				<Spinner
+					className={styles.rowSpinner}
+					size="lg"
+					label={m['components.post.video.a11y.preparingDownload']()}
+				/>
+			)}
 		</MenuRow>
 	);
 }

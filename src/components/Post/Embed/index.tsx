@@ -128,7 +128,7 @@ function MediaEmbed({
 					}
 					activeClassName={css.activeMargin}
 				>
-					<VideoEmbed embed={media} />
+					<VideoEmbed embed={media} authorDid={rest.postAuthorDid} />
 				</ContentHider>
 			);
 		}

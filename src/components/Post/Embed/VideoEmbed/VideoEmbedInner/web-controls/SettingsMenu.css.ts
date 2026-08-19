@@ -118,6 +118,11 @@ export const rowChevron = style({
 	color: 'rgba(255, 255, 255, 0.65)',
 });
 
+export const rowSpinner = style({
+	flexShrink: 0,
+	marginRight: -2,
+});
+
 export const rowRadio = style({
 	boxSizing: 'border-box',
 	display: 'inline-flex',
