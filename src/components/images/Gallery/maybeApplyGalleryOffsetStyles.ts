@@ -1,5 +1,10 @@
 import { unwrapEmbed, type AppBskyFeedDefs } from '@atcute/bluesky';
-import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	type ModerationCause,
+	type ModerationDecision,
+} from '@atcute/bluesky-moderation';
 
 import { uniqueBy } from '@mary/array-fns';
 
@@ -11,11 +16,11 @@ export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };
 
 export function maybeApplyGalleryOffsetStyles({
 	additionalCauses,
-	modui,
+	moderation,
 	post,
 }: {
 	additionalCauses?: ModerationCause[] | AppModerationCause[];
-	modui: DisplayRestrictions;
+	moderation: ModerationDecision;
 	post: AppBskyFeedDefs.PostView;
 }) {
 	const record = getPostRecord(post);
@@ -41,6 +46,13 @@ export function maybeApplyGalleryOffsetStyles({
 	}
 
 	if (!hasImages) {
+		return;
+	}
+
+	const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+	const mediaModui = getDisplayRestrictions(moderation, DisplayContext.ContentMedia);
+
+	if (modui.blurs.length > 0 || mediaModui.blurs.length > 0) {
 		return;
 	}
 

@@ -115,7 +115,7 @@ function PostInner({
 
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
 		additionalCauses: [],
-		modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+		moderation,
 		post,
 	});
 	return (

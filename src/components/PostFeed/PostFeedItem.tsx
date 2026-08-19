@@ -247,7 +247,7 @@ function FeedItemInner({
 
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
 		additionalCauses: additionalPostAlerts,
-		modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+		moderation,
 		post,
 	});
 	return (
