@@ -2,13 +2,11 @@ import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { Blob as AtpBlob } from '@atcute/lexicons';
 
-import { uploadBlob } from '#/lib/api/records';
-import { LOCAL_DEV_SERVICE } from '#/lib/constants/services';
 import { VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { isNetworkError } from '#/lib/errors';
 import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
-import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 import { AbortError } from '#/lib/utils/abort-error';
@@ -18,11 +16,6 @@ import { m } from '#/paraglide/messages';
 type CaptionsTrack = { lang: string; file: File };
 
 export type VideoAction =
-	| {
-			type: 'compressingToUploading';
-			video: CompressedVideo;
-			signal: AbortSignal;
-	  }
 	| {
 			type: 'uploadingToProcessing';
 			jobId: string;
@@ -59,7 +52,6 @@ export const NO_VIDEO = Object.freeze({
 	progress: 0,
 	abortController: noopController,
 	asset: undefined,
-	video: undefined,
 	jobId: undefined,
 	pendingPublish: undefined,
 	altText: '',
@@ -73,21 +65,8 @@ type ErrorState = {
 	progress: 100;
 	abortController: AbortController;
 	asset: VideoAsset | null;
-	video: CompressedVideo | null;
 	jobId: string | null;
 	error: string;
-	pendingPublish?: undefined;
-	altText: string;
-	captions: CaptionsTrack[];
-};
-
-type CompressingState = {
-	status: 'compressing';
-	progress: number;
-	abortController: AbortController;
-	asset: VideoAsset;
-	video?: undefined;
-	jobId?: undefined;
 	pendingPublish?: undefined;
 	altText: string;
 	captions: CaptionsTrack[];
@@ -98,7 +77,6 @@ type UploadingState = {
 	progress: number;
 	abortController: AbortController;
 	asset: VideoAsset;
-	video: CompressedVideo;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 	altText: string;
@@ -110,7 +88,6 @@ type ProcessingState = {
 	progress: number;
 	abortController: AbortController;
 	asset: VideoAsset;
-	video: CompressedVideo;
 	jobId: string;
 	jobStatus: AppBskyVideoDefs.JobStatus | null;
 	pendingPublish?: undefined;
@@ -123,18 +100,17 @@ type DoneState = {
 	progress: 100;
 	abortController: AbortController;
 	asset: VideoAsset;
-	video: CompressedVideo;
 	jobId?: undefined;
 	pendingPublish: { blobRef: AtpBlob };
 	altText: string;
 	captions: CaptionsTrack[];
 };
 
-export type VideoState = ErrorState | CompressingState | UploadingState | ProcessingState | DoneState;
+export type VideoState = ErrorState | UploadingState | ProcessingState | DoneState;
 
-export function createVideoState(asset: VideoAsset, abortController: AbortController): CompressingState {
+export function createVideoState(asset: VideoAsset, abortController: AbortController): UploadingState {
 	return {
-		status: 'compressing',
+		status: 'uploading',
 		progress: 0,
 		abortController,
 		asset,
@@ -155,13 +131,12 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			abortController: state.abortController,
 			error: action.error,
 			asset: state.asset ?? null,
-			video: state.video ?? null,
 			jobId: state.jobId ?? null,
 			altText: state.altText,
 			captions: state.captions,
 		};
 	} else if (action.type === 'updateProgress') {
-		if (state.status === 'compressing' || state.status === 'uploading') {
+		if (state.status === 'uploading') {
 			return {
 				...state,
 				progress: action.progress,
@@ -177,19 +152,6 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			...state,
 			captions: action.updater(state.captions),
 		};
-	} else if (action.type === 'compressingToUploading') {
-		if (state.status === 'compressing') {
-			return {
-				status: 'uploading',
-				progress: 0,
-				abortController: state.abortController,
-				asset: state.asset,
-				video: action.video,
-				altText: state.altText,
-				captions: state.captions,
-			};
-		}
-		return state;
 	} else if (action.type === 'uploadingToProcessing') {
 		if (state.status === 'uploading') {
 			return {
@@ -197,7 +159,6 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				progress: 0,
 				abortController: state.abortController,
 				asset: state.asset,
-				video: state.video,
 				jobId: action.jobId,
 				jobStatus: null,
 				altText: state.altText,
@@ -219,7 +180,6 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				progress: 100,
 				abortController: state.abortController,
 				asset: state.asset,
-				video: state.video,
 				pendingPublish: {
 					blobRef: action.blobRef,
 				},
@@ -237,46 +197,15 @@ export async function processVideo(
 	dispatch: (action: VideoAction) => void,
 	pdsUrl: string,
 	pds: Client,
-	did: string,
 	signal: AbortSignal,
 ) {
-	let video: CompressedVideo | undefined;
-	try {
-		video = assertVideoWithinLimit(asset);
-	} catch (e) {
-		const message = getCompressErrorMessage(e);
-		if (message !== null) {
-			dispatch({
-				type: 'toError',
-				error: message,
-				signal,
-			});
-		}
-		return;
-	}
-	dispatch({
-		type: 'compressingToUploading',
-		video,
-		signal,
-	});
-
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
-		if (pdsUrl.startsWith(LOCAL_DEV_SERVICE)) {
-			const blobRef = await uploadVideoBlobDirectly(pds, video, signal);
-			dispatch({
-				type: 'toDone',
-				blobRef,
-				signal,
-			});
-			return;
-		}
-
+		assertVideoWithinLimit(asset);
 		uploadResponse = await uploadVideo({
-			video,
+			video: asset,
 			pds,
 			dispatchUrl: pdsUrl,
-			did,
 			signal,
 			setProgress: (p) => {
 				dispatch({ type: 'updateProgress', progress: p, signal });
@@ -368,18 +297,6 @@ export async function processVideo(
 	}
 }
 
-async function uploadVideoBlobDirectly(
-	pds: Client,
-	video: CompressedVideo,
-	signal: AbortSignal,
-): Promise<AtpBlob> {
-	if (signal.aborted) {
-		throw new AbortError();
-	}
-
-	return uploadBlob(pds, video.blob, video.mimeType);
-}
-
 function getProcessingErrorMessage(failureCode: string | undefined, error: string | undefined): string {
 	switch (failureCode) {
 		case 'encoding_failure': {
@@ -417,20 +334,12 @@ function getValidationErrorMessage(error: string | undefined): string | undefine
 	}
 }
 
-function getCompressErrorMessage(e: unknown): string | null {
+function getUploadErrorMessage(e: unknown): string | null {
 	if (e instanceof AbortError) {
 		return null;
 	}
 	if (e instanceof VideoTooLargeError) {
 		return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
-	}
-	console.error('Error compressing video', e);
-	return m['view.composer.video.error.compress']();
-}
-
-function getUploadErrorMessage(e: unknown): string | null {
-	if (e instanceof AbortError) {
-		return null;
 	}
 	if (e instanceof ServerError || e instanceof UploadLimitError) {
 		// https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77

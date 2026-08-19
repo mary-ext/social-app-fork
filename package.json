@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@atcute/atproto": "^4.0.4",
-		"@atcute/bluesky": "^4.0.18",
+		"@atcute/bluesky": "^4.0.19",
 		"@atcute/bluesky-moderation": "^4.2.2",
 		"@atcute/bluesky-richtext-builder": "^4.0.1",
 		"@atcute/bluesky-richtext-parser": "^2.1.2",

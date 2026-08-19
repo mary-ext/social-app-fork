@@ -1,4 +1,3 @@
-export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app';
 

@@ -176,7 +176,6 @@
 	],
 	"view.composer.gif.a11y.opensPicker": "Opens the GIF picker dialog",
 	"view.composer.gif.a11y.select": "Select GIF",
-	"view.composer.gif.compressing": "Compressing GIF...",
 	"view.composer.gif.error.altMissing": "One or more GIFs is missing alt text.",
 	"view.composer.gif.error.oneOnly": "You can only select one GIF at a time.",
 	"view.composer.gif.processing": "Processing GIF...",
@@ -247,10 +246,8 @@
 	],
 	"view.composer.thread.skipEmpty.message": "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.",
 	"view.composer.thread.skipEmpty.title": "Skip empty posts?",
-	"view.composer.video.compressing": "Compressing video...",
 	"view.composer.video.error.accountTooYoung": "Your account is not yet old enough to upload videos. Please try again later.",
 	"view.composer.video.error.altMissing": "One or more videos is missing alt text.",
-	"view.composer.video.error.compress": "An error occurred while compressing the video.",
 	"view.composer.video.error.dailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",
 	"view.composer.video.error.dailyLimitCount": "You've reached your daily limit for video uploads (too many videos)",
 	"view.composer.video.error.emailConfirmRequired": "Please confirm your email address to upload videos.",
@@ -286,7 +283,7 @@
 			}
 		}
 	],
-	"view.composer.video.error.tooLong": "Videos must be less than {minutes} minutes long.",
+	"view.composer.video.error.tooLong": "Videos must be {minutes} minutes or less.",
 	"view.composer.video.error.unsupportedType": "Unsupported video type: {mimeType}",
 	"view.composer.video.error.upload": "An error occurred while uploading the video. {message}",
 	"view.composer.video.error.uploadConnection": "An error occurred while uploading the video. Please check your internet connection and try again.",

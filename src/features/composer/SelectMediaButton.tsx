@@ -1,4 +1,9 @@
-import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
+import {
+	VIDEO_MAX_DURATION_MINUTES,
+	VIDEO_MAX_DURATION_MS,
+	VIDEO_MAX_SIZE,
+	VIDEO_MAX_SIZE_MB,
+} from '#/lib/constants/video';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
@@ -238,7 +243,9 @@ export function SelectMediaButton({
 					max: MAX_GALLERY_IMAGES,
 				}),
 				[SelectedAssetError.MaxVideos]: m['view.composer.video.error.oneOnly'](),
-				[SelectedAssetError.VideoTooLong]: m['view.composer.video.error.tooLong']({ minutes: 3 }),
+				[SelectedAssetError.VideoTooLong]: m['view.composer.video.error.tooLong']({
+					minutes: VIDEO_MAX_DURATION_MINUTES,
+				}),
 				[SelectedAssetError.MaxGIFs]: m['view.composer.gif.error.oneOnly'](),
 				[SelectedAssetError.FileTooBig]: m['view.composer.video.error.fileTooLarge']({
 					max: VIDEO_MAX_SIZE_MB,

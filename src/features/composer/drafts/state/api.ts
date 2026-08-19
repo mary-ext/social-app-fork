@@ -219,16 +219,15 @@ async function serializeVideo(
 	videoState: VideoState,
 	localRefPaths: Map<string, Blob>,
 ): Promise<AppBskyDraftDefs.DraftEmbedVideo | undefined> {
-	// Only save videos that have been compressed (have a video file)
-	if (!videoState.video) {
+	if (!videoState.asset) {
 		return undefined;
 	}
 
 	// Encode mime type in the path for restoration
-	const mimeType = videoState.video.mimeType || 'video/mp4';
+	const mimeType = videoState.asset.mimeType || 'video/mp4';
 	const ext = mimeToExt(mimeType);
 	const localRefPath = `video:${mimeType}:${crypto.randomUUID()}.${ext}`;
-	localRefPaths.set(localRefPath, videoState.video.blob);
+	localRefPaths.set(localRefPath, videoState.asset.blob);
 
 	// Read caption file contents as text
 	const captions = await Promise.all(

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
@@ -16,20 +16,11 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './VideoPreview.css';
 
-export function VideoPreview({
-	asset,
-	video,
-	clear,
-}: {
-	asset: VideoAsset;
-	video: CompressedVideo;
-	isActivePost: boolean;
-	clear: () => void;
-}) {
+export function VideoPreview({ asset, clear }: { asset: VideoAsset; clear: () => void }) {
 	// TODO: pause GIF previews when reduced motion is enabled.
 	const autoplayDisabled = useAutoplayDisabled();
 	const [previewFailed, setPreviewFailed] = useState(false);
-	const url = getBlobUrl(video.blob);
+	const url = getBlobUrl(asset.blob);
 
 	let aspectRatio: number | undefined;
 	if (asset.width && asset.height) {
@@ -47,7 +38,7 @@ export function VideoPreview({
 
 	return (
 		<div className={css.container} style={assignInlineVars({ [css.ratioVar]: String(constrained || 1) })}>
-			{video.mimeType === 'image/gif' ? (
+			{asset.mimeType === 'image/gif' ? (
 				<img src={url} className={css.media} alt="GIF" />
 			) : previewFailed ? (
 				<div className={css.previewUnavailable}>

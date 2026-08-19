@@ -1,22 +1,16 @@
 import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { VideoTooLargeError } from '#/lib/media/video/errors';
 
-import type { CompressedVideo, VideoAsset } from './types';
+import type { VideoAsset } from './types';
 
 /**
- * web does not compress videos client-side; this only validates the size and hands the blob through.
+ * checks that a selected video is small enough for the video service to accept.
  *
  * @param asset the selected video
- * @returns the video blob, unchanged
  * @throws {VideoTooLargeError} if the video exceeds the upload size limit
  */
-export function assertVideoWithinLimit(asset: VideoAsset): CompressedVideo {
+export function assertVideoWithinLimit(asset: VideoAsset): void {
 	if (asset.blob.size > VIDEO_MAX_SIZE) {
 		throw new VideoTooLargeError();
 	}
-
-	return {
-		blob: asset.blob,
-		mimeType: asset.mimeType,
-	};
 }

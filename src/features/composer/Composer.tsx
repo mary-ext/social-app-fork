@@ -226,7 +226,6 @@ export const ComposePost = ({
 			},
 			pdsUrl,
 			pds,
-			currentDid,
 			abortController.signal,
 		);
 	};
@@ -312,7 +311,7 @@ export const ComposePost = ({
 				});
 			}
 
-			// Start video compression and upload
+			// Start video upload
 			if (!pds || !pdsUrl) {
 				return;
 			}
@@ -330,7 +329,6 @@ export const ComposePost = ({
 				},
 				pdsUrl,
 				pds,
-				currentDid,
 				abortController.signal,
 			);
 		} catch (e) {
@@ -1122,7 +1120,6 @@ const ComposerPost = memo(function ComposerPost({
 						embed={post.embed}
 						dispatch={dispatchPost}
 						clearVideo={() => onClearVideo(post.id)}
-						isActivePost={isActive}
 						text={post.text}
 					/>
 				</div>
@@ -1136,14 +1133,12 @@ function ComposerEmbeds({
 	dispatch,
 	clearVideo,
 	canRemoveQuote,
-	isActivePost,
 	text,
 }: {
 	embed: EmbedDraft;
 	dispatch: (action: PostAction) => void;
 	clearVideo: () => void;
 	canRemoveQuote: boolean;
-	isActivePost: boolean;
 	text: string;
 }) {
 	const video = embed.media?.type === 'video' ? embed.media.video : null;
@@ -1175,15 +1170,7 @@ function ComposerEmbeds({
 			)}
 			{video && (
 				<div className={styles.videoContainer}>
-					{video.asset &&
-						(video.status !== 'compressing' && video.video ? (
-							<VideoPreview
-								asset={video.asset}
-								video={video.video}
-								isActivePost={isActivePost}
-								clear={clearVideo}
-							/>
-						) : null)}
+					{video.asset ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
 					<SubtitleDialogBtn
 						defaultAltText={video.altText}
 						saveAltText={(altText) =>

@@ -1,9 +1,30 @@
+import { abortReason } from '#/lib/utils/abort-error';
+
 /**
- * resolves after `ms` milliseconds.
+ * waits for a delay.
  *
- * @param ms milliseconds to wait
- * @returns a promise that resolves once the time has elapsed
+ * @param ms delay in milliseconds
+ * @param signal optional cancellation signal
+ * @returns when the delay ends
+ * @throws the signal's abort reason if cancelled
  */
-export function sleep(ms: number): Promise<void> {
-	return new Promise((r) => setTimeout(r, ms));
+export function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+	if (!signal) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+	return new Promise((resolve, reject) => {
+		if (signal.aborted) {
+			reject(abortReason(signal));
+			return;
+		}
+		const timer = setTimeout(() => {
+			signal.removeEventListener('abort', onAbort);
+			resolve();
+		}, ms);
+		const onAbort = () => {
+			clearTimeout(timer);
+			reject(abortReason(signal));
+		};
+		signal.addEventListener('abort', onAbort, { once: true });
+	});
 }

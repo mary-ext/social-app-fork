@@ -1,12 +1,25 @@
-import { type Client, ok } from '@atcute/client';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, Nsid } from '@atcute/lexicons';
 
-import { UploadLimitError } from '#/lib/media/video/errors';
+import { serviceMessage, UploadLimitError } from '#/lib/media/video/errors';
 
 import { VIDEO_PROXY_DID } from '#/env';
 import { m } from '#/paraglide/messages';
 
 import { createVideoClient } from './client';
+
+/** token cache requirements. */
+export type TokenRequest = {
+	/** required remaining token lifetime. */
+	minRemainingMs?: number;
+	/** rejected token to replace. */
+	replacing?: string;
+	/** token request signal. */
+	signal?: AbortSignal;
+};
+
+/** gets a valid service-auth token. */
+export type GetToken = (request?: TokenRequest) => Promise<string>;
 
 /** the `did:web` audience naming the service behind a URL, or null when the URL has no host. */
 function serviceAuthAudience(url: string | URL): Did | null {
@@ -70,7 +83,9 @@ export async function assertCanUploadVideo({ pds, dispatchUrl }: { pds: Client; 
 	});
 	const videoClient = createVideoClient(token);
 	const limits = await ok(videoClient.get('app.bsky.video.getUploadLimits')).catch((err) => {
-		if (err instanceof Error) {
+		if (err instanceof ClientResponseError) {
+			throw new UploadLimitError(serviceMessage(err));
+		} else if (err instanceof Error) {
 			throw new UploadLimitError(err.message);
 		} else {
 			throw err;

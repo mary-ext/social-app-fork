@@ -10,6 +10,7 @@ import { insertMentionAt } from '#/lib/mentions';
 import type { SelfLabel } from '#/lib/moderation/self-labels';
 import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
+import { AbortError } from '#/lib/utils/abort-error';
 
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
@@ -235,7 +236,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			if (indexToRemove !== -1) {
 				const postToRemove = state.thread.posts[indexToRemove]!;
 				if (postToRemove.embed.media?.type === 'video') {
-					postToRemove.embed.media.video.abortController.abort();
+					postToRemove.embed.media.video.abortController.abort(new AbortError());
 				}
 				nextPosts.splice(indexToRemove, 1);
 				nextActivePostIndex = Math.max(0, indexToRemove - 1);
@@ -433,7 +434,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
 			if (prevMedia?.type === 'video') {
-				prevMedia.video.abortController.abort();
+				prevMedia.video.abortController.abort(new AbortError());
 				nextMedia = undefined;
 			}
 			let nextLabels = state.labels;

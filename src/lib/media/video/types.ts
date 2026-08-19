@@ -1,4 +1,4 @@
-/** A video selected by the user, before compression. */
+/** a selected video ready for upload. */
 export type VideoAsset = {
 	blob: Blob;
 	width: number;
@@ -6,9 +6,4 @@ export type VideoAsset = {
 	mimeType: string;
 	/** duration in milliseconds, or null when it could not be determined */
 	duration: number | null;
-};
-
-export type CompressedVideo = {
-	blob: Blob;
-	mimeType: string;
 };
