@@ -24,13 +24,7 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback';
 
 const MIN_CARD_WIDTH = 280;
 
-export function VideoEmbed({
-	embed,
-	authorDid,
-}: {
-	embed: AppBskyEmbedVideo.View;
-	authorDid?: Did;
-}) {
+export function VideoEmbed({ embed, authorDid }: { embed: AppBskyEmbedVideo.View; authorDid?: Did }) {
 	const ref = useRef<HTMLDivElement>(null);
 	const { isActive, mayLoad, nearScreen, onScreen, setActive } = useActiveVideo(ref);
 	const lastKnownTime = useRef<number | undefined>(undefined);
