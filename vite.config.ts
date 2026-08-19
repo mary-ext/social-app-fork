@@ -120,6 +120,7 @@ export default defineConfig(({ mode }) => {
 			sourcemap: true,
 			// prevent content hashes from cascading through importers.
 			chunkImportMap: true,
+			modulePreload: { polyfill: false },
 			rolldownOptions: {
 				output: {
 					chunkFileNames: 'assets/js/[hash:7].js',
