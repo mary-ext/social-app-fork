@@ -18,7 +18,6 @@ import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
 } from '#/screens/Messages/components/splitView/MessagesRouteLoadingScreen';
-import { searchTabs } from '#/screens/Search/utils';
 
 import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 
@@ -232,7 +231,10 @@ export const routes = defineRoutes({
 			Search: route({
 				component: SearchScreen,
 				path: '/search',
-				query: { q: nonEmpty(), tab: optional(enumOf(searchTabs)) },
+				query: {
+					q: nonEmpty(),
+					tab: optional(enumOf(['feeds', 'latest', 'people', 'starterpacks', 'top'])),
+				},
 			}),
 			Explore: route({
 				component: ExploreScreen,
@@ -247,6 +249,7 @@ export const routes = defineRoutes({
 				component: NotificationsScreen,
 				meta: { bottomBar: true, requireAuth: true },
 				path: '/notifications',
+				query: { tab: optional(enumOf(['all', 'mentions'])) },
 				type: 'singleton',
 			}),
 			NotificationsActivityList: route({
@@ -375,6 +378,9 @@ export const routes = defineRoutes({
 				component: ProfileScreen,
 				params: { actor: actorIdentifier() },
 				path: '/:actor',
+				query: {
+					tab: optional(enumOf(['feeds', 'lists', 'media', 'posts', 'replies', 'starterpacks', 'videos'])),
+				},
 			}),
 			ProfileFollowers: route({
 				component: ProfileFollowersScreen,
@@ -421,12 +427,13 @@ export const routes = defineRoutes({
 				meta: { requireAuth: true },
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/list/:rkey',
+				query: { tab: optional(enumOf(['people', 'posts'])) },
 			}),
 			StarterPack: route({
 				component: StarterPackScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/pack/:rkey',
-				query: { new: optional(boolean()) },
+				query: { new: optional(boolean()), tab: optional(enumOf(['feeds', 'people', 'posts'])) },
 			}),
 			StarterPackEdit: route({
 				component: Wizard,
@@ -471,12 +478,13 @@ export const routes = defineRoutes({
 				component: HashtagScreen,
 				params: { tag: string() },
 				path: '/hashtag/:tag',
-				query: { author: optional(actorIdentifier()) },
+				query: { author: optional(actorIdentifier()), tab: optional(enumOf(['latest', 'top'])) },
 			}),
 			Topic: route({
 				component: TopicScreen,
 				params: { topic: string() },
 				path: '/topic/:topic',
+				query: { tab: optional(enumOf(['latest', 'top'])) },
 			}),
 
 			messages: layout({
@@ -537,6 +545,7 @@ export const routes = defineRoutes({
 				component: StarterPackScreenShort,
 				params: { code: string() },
 				path: '/start/:code',
+				query: { tab: optional(enumOf(['feeds', 'people', 'posts'])) },
 			}),
 
 			NotFound: route({

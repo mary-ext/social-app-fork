@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { enforceLen } from '#/lib/utils/text';
@@ -20,15 +18,13 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
 export default function TopicScreen() {
-	const [{ topic }] = useParams('Topic');
+	const [{ tab, topic }, replaceParams] = useParams('Topic');
 	useTitle(m['navigation.topic.title']());
 	const headerTitle = enforceLen(topic, 24, true, 'middle');
 
 	const onShare = () => {
 		void shareUrl(targetToShareUrl({ name: 'Topic', topic }));
 	};
-
-	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
 
 	const sections: Section<'latest' | 'top'>[] = [
 		{
@@ -47,8 +43,8 @@ export default function TopicScreen() {
 		<Layout.Screen>
 			<Tabs
 				sections={sections}
-				value={activeTab}
-				onValueChange={setActiveTab}
+				value={tab ?? 'top'}
+				onValueChange={(next) => replaceParams({ tab: next })}
 				header={
 					<Layout.Header.Outer noBottomBorder sticky={false}>
 						<Layout.Header.BackButton />

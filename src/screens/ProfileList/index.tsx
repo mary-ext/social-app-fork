@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bluesky-moderation';
 
@@ -139,7 +137,7 @@ function CuratedProfileList({
 	const isOwner = currentAccount?.did === list.creator.did;
 	const addUserDialogHandle = Dialog.useDialogHandle();
 	const onPressAddUser = () => addUserDialogHandle.open(null);
-	const [activeTab, setActiveTab] = useState<'people' | 'posts'>('posts');
+	const [{ tab }, replaceParams] = useParams('ProfileList');
 
 	useTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
@@ -153,7 +151,7 @@ function CuratedProfileList({
 		<>
 			<Tabs
 				header={header}
-				onValueChange={setActiveTab}
+				onValueChange={(next) => replaceParams({ tab: next })}
 				sections={[
 					{
 						children: (
@@ -168,7 +166,7 @@ function CuratedProfileList({
 						label: m['common.people.label'](),
 					},
 				]}
-				value={activeTab}
+				value={tab ?? 'posts'}
 			/>
 
 			<FAB icon={EditBigIcon} label={m['common.compose.action.new']()} onClick={() => openComposer({})} />

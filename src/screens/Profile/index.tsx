@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
@@ -49,6 +49,8 @@ import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import * as css from './index.css';
+
+type ProfileTabId = 'feeds' | 'lists' | 'media' | 'posts' | 'replies' | 'starterpacks' | 'videos';
 
 export function ProfileScreen() {
 	return (
@@ -157,7 +159,7 @@ function ProfileScreenLoaded({
 	const profile = useProfileShadow(profileUnshadowed);
 	const { openComposer } = useOpenComposer();
 
-	const [selectedTab, setSelectedTab] = useState<string | null>(null);
+	const [{ tab }, replaceParams] = useParams('Profile');
 
 	useTitle(combinedDisplayName(profile));
 
@@ -186,7 +188,7 @@ function ProfileScreenLoaded({
 		router.navigate({ to: { name: 'StarterPackWizard' } });
 	};
 
-	const sections = definite<Section<string>>([
+	const sections = definite<Section<ProfileTabId>>([
 		{
 			id: 'posts',
 			label: m['common.post.label'](),
@@ -273,7 +275,7 @@ function ProfileScreenLoaded({
 			children: <ProfileFeedgens did={profile.did} feedCount={feedCount} />,
 		},
 		showStarterPacksTab && {
-			id: 'starterPacks',
+			id: 'starterpacks',
 			label: m['common.starterPack.sectionTitle'](),
 			children: (
 				<ProfileStarterPacks
@@ -305,8 +307,6 @@ function ProfileScreenLoaded({
 		},
 	]);
 
-	// the selected tab, falling back to the first section until the user picks one (`showPostsTab` is
-	// always true, so the list is never empty)
 	// the profile is window-scrolled, so soft-reset just returns the page to the top
 	useFocusEffect(() => softReset.subscribe(() => window.scrollTo(0, 0)));
 
@@ -319,8 +319,8 @@ function ProfileScreenLoaded({
 			<Tabs
 				// the tab set isn't known until the real profile loads, so hold the bar back until then
 				sections={isPlaceholderProfile ? [] : sections}
-				value={selectedTab ?? ''}
-				onValueChange={setSelectedTab}
+				value={tab ?? 'posts'}
+				onValueChange={(next) => replaceParams({ tab: next })}
 				header={
 					<ProfileHeader
 						profile={profile}

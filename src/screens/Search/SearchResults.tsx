@@ -34,7 +34,7 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './SearchResults.css';
 
-export type SearchTabId = 'feeds' | 'latest' | 'people' | 'starterPacks' | 'top';
+export type SearchTabId = 'feeds' | 'latest' | 'people' | 'starterpacks' | 'top';
 
 export function SearchResults({
 	activeTab,
@@ -74,7 +74,7 @@ export function SearchResults({
 				children: <FeedsResults query={query} />,
 			},
 			noParams && {
-				id: 'starterPacks',
+				id: 'starterpacks',
 				label: m['common.starterPack.sectionTitle'](),
 				children: <StarterPackResults query={query} />,
 			},

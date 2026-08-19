@@ -6,7 +6,8 @@ import { definite } from '@mary/array-fns';
 
 import { profileTarget } from '#/lib/routes/targets';
 
-import { makeSearchQuery, type Params, type TabParam } from '#/screens/Search/utils';
+import type { SearchTabId } from '#/screens/Search/SearchResults';
+import { makeSearchQuery, type Params } from '#/screens/Search/utils';
 
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import * as Layout from '#/components/web/Layout';
@@ -44,7 +45,7 @@ export function SearchHeader({
 	navButton: ReactNode;
 	noBottomBorder?: boolean;
 	placeholder: string;
-	tab?: TabParam;
+	tab?: SearchTabId;
 }) {
 	const router = useRouter();
 	const navigateToPath = useNavigateToPath();

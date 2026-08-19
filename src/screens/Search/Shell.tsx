@@ -5,42 +5,20 @@ import { useFocusEffect } from '@oomfware/stacker';
 import { softReset } from '#/state/events';
 
 import { SearchHeader } from '#/screens/Search/SearchHeader';
-import { makeSearchQuery, parseSearchQuery, type TabParam } from '#/screens/Search/utils';
+import { makeSearchQuery, parseSearchQuery } from '#/screens/Search/utils';
 
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 import { useParams, useRouter } from '#/router';
 
-import { SearchResults, type SearchTabId } from './SearchResults';
+import { SearchResults } from './SearchResults';
 import * as css from './Shell.css';
-
-// Map tab parameter to tab id
-function getTabId(tabParam?: TabParam): SearchTabId {
-	switch (tabParam) {
-		case 'feed': {
-			return 'feeds';
-		}
-		case 'latest': {
-			return 'latest';
-		}
-		case 'profile':
-		case 'user': {
-			return 'people';
-		}
-		case 'starterpack': {
-			return 'starterPacks';
-		}
-		default: {
-			return 'top';
-		}
-	}
-}
 
 export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 	const router = useRouter();
-	const [{ tab: tabParam }] = useParams('Search');
-	const [activeTab, setActiveTab] = useState(() => getTabId(tabParam));
+	const [{ tab }, replaceParams] = useParams('Search');
+	const activeTab = tab ?? 'top';
 
 	const { params, query } = parseSearchQuery(queryParam || '');
 	const queryWithParams = makeSearchQuery(query, params);
@@ -84,13 +62,13 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 				}
 				noBottomBorder
 				placeholder={m['screens.search.input.placeholder']()}
-				tab={tabParam}
+				tab={tab}
 			/>
 			<div className={css.body}>
 				<SearchResults
 					activeTab={activeTab}
 					headerHeight={headerHeight}
-					onTabChange={setActiveTab}
+					onTabChange={(next) => replaceParams({ tab: next })}
 					query={query}
 					queryWithParams={queryWithParams}
 				/>

@@ -12,6 +12,8 @@ import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSugges
 import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStarterPacksQuery';
 
+import type { SearchTabId } from '#/screens/Search/SearchResults';
+
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
@@ -39,6 +41,8 @@ import { ExploreTrendingTopics } from './modules/ExploreTrendingTopics';
 
 type ExploreSearchButtonModule = 'suggestedAccounts' | 'suggestedFeeds';
 
+export type ExploreSearchTab = Extract<SearchTabId, 'feeds' | 'people'>;
+
 function LoadMore({ item }: { item: ExploreScreenItems & { type: 'loadMore' } }) {
 	return (
 		<button
@@ -64,7 +68,7 @@ type ExploreScreenItems =
 			searchButton?: {
 				label: string;
 				metricsTag: ExploreSearchButtonModule;
-				tab: 'feed' | 'profile' | 'user';
+				tab: ExploreSearchTab;
 			};
 	  }
 	| {
@@ -75,7 +79,7 @@ type ExploreScreenItems =
 			searchButton?: {
 				label: string;
 				metricsTag: ExploreSearchButtonModule;
-				tab: 'feed' | 'profile' | 'user';
+				tab: ExploreSearchTab;
 			};
 	  }
 	| {
@@ -128,11 +132,7 @@ type ExploreScreenItems =
 	  }
 	| FeedPreviewItem;
 
-export function Explore({
-	focusSearchInput,
-}: {
-	focusSearchInput: (tab: 'feed' | 'profile' | 'user') => void;
-}) {
+export function Explore({ focusSearchInput }: { focusSearchInput: (tab: ExploreSearchTab) => void }) {
 	const { data: preferences, error: preferencesError } = usePreferencesQuery();
 	const moderationOpts = useModerationOpts();
 	const [selectedInterest, setSelectedInterest] = useState<string | null>(null);
@@ -197,7 +197,7 @@ export function Explore({
 			searchButton: {
 				label: m['screens.search.account.searchMore'](),
 				metricsTag: 'suggestedAccounts',
-				tab: 'user',
+				tab: 'people',
 			},
 		});
 
@@ -271,7 +271,7 @@ export function Explore({
 			searchButton: {
 				label: m['screens.search.feeds.searchMore'](),
 				metricsTag: 'suggestedFeeds',
-				tab: 'feed',
+				tab: 'feeds',
 			},
 		});
 
@@ -414,7 +414,7 @@ export function Explore({
 						{item.searchButton && (
 							<ModuleHeader.SearchButton
 								label={item.searchButton.label}
-								onClick={() => focusSearchInput(item.searchButton?.tab || 'user')}
+								onClick={() => focusSearchInput(item.searchButton?.tab || 'people')}
 							/>
 						)}
 					</ModuleHeader.Container>
@@ -429,7 +429,7 @@ export function Explore({
 							{item.searchButton && (
 								<ModuleHeader.SearchButton
 									label={item.searchButton.label}
-									onClick={() => focusSearchInput(item.searchButton?.tab || 'user')}
+									onClick={() => focusSearchInput(item.searchButton?.tab || 'people')}
 								/>
 							)}
 						</ModuleHeader.Container>

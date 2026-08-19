@@ -28,14 +28,9 @@ import { InlineLinkText, LinkButton } from '#/components/web/Link';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import SettingsIcon from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused } from '#/router';
+import { useFocusEffect, useIsFocused, useParams } from '#/router';
 
 import * as css from './index.css';
-
-// We don't currently persist this across reloads since
-// you gotta visit All to clear the badge anyway.
-// But let's at least persist it during the sesssion.
-let lastActiveTab: 'all' | 'mentions' = 'all';
 
 export function NotificationsScreen() {
 	useTitle(m['common.nav.notifications']());
@@ -45,13 +40,9 @@ export function NotificationsScreen() {
 	const { checkUnread: checkUnreadAll } = useUnreadNotificationsApi();
 	const [isLoadingAll, setIsLoadingAll] = useState(false);
 	const [isLoadingMentions, setIsLoadingMentions] = useState(false);
-	const [activeTab, setActiveTab] = useState(lastActiveTab);
+	const [{ tab }, replaceParams] = useParams('Notifications');
+	const activeTab = tab ?? 'all';
 	const isLoading = activeTab === 'all' ? isLoadingAll : isLoadingMentions;
-
-	const onTabChange = (tab: 'all' | 'mentions') => {
-		setActiveTab(tab);
-		lastActiveTab = tab;
-	};
 
 	const queryClient = useQueryClient();
 	const checkUnreadMentions = async ({ invalidate }: { invalidate: boolean }) => {
@@ -94,7 +85,7 @@ export function NotificationsScreen() {
 			<Tabs
 				sections={sections}
 				value={activeTab}
-				onValueChange={onTabChange}
+				onValueChange={(next) => replaceParams({ tab: next })}
 				onTabReselect={() => softReset.emit()}
 				header={
 					<Layout.Header.Outer noBottomBorder sticky={false}>

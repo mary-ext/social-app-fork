@@ -7,7 +7,6 @@ import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { SearchHeader } from '#/screens/Search/SearchHeader';
-import type { TabParam } from '#/screens/Search/utils';
 
 import { EmptyState } from '#/components/EmptyState';
 import * as Layout from '#/components/web/Layout';
@@ -15,17 +14,16 @@ import * as Layout from '#/components/web/Layout';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { Explore } from './Explore';
+import { Explore, type ExploreSearchTab } from './Explore';
 import * as css from './index.css';
 
 export function ExploreScreen() {
 	const { hasSession } = useSession();
-	const [pendingTab, setPendingTab] = useState<TabParam | undefined>(undefined);
+	const [pendingTab, setPendingTab] = useState<ExploreSearchTab | undefined>(undefined);
 
 	useTitle(m['common.nav.explore']());
 
-	// stash the tab so a subsequent search submit lands on the matching results tab
-	const focusSearchInput = (tab: 'feed' | 'profile' | 'user') => {
+	const focusSearchInput = (tab: ExploreSearchTab) => {
 		setPendingTab(tab);
 		focusSearch.emit();
 	};

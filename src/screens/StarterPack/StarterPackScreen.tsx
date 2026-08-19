@@ -45,17 +45,19 @@ import { OverflowMenu } from './OverflowMenu';
 import { StarterPackHeader } from './StarterPackHeader';
 import * as css from './StarterPackScreen.css';
 
+type StarterPackTabId = 'feeds' | 'people' | 'posts';
+
 export function StarterPackScreen() {
-	const [params] = useParams('StarterPack');
+	const [params, replaceParams] = useParams('StarterPack');
 	return (
 		<Layout.Screen>
-			<StarterPackScreenInner routeParams={params} />
+			<StarterPackScreenInner onTabChange={(next) => replaceParams({ tab: next })} routeParams={params} />
 		</Layout.Screen>
 	);
 }
 
 export function StarterPackScreenShort() {
-	const [{ code }] = useParams('StarterPackShort');
+	const [{ code, tab }, replaceParams] = useParams('StarterPackShort');
 	const {
 		data: resolvedStarterPack,
 		isLoading,
@@ -78,12 +80,21 @@ export function StarterPackScreenShort() {
 	}
 	return (
 		<Layout.Screen>
-			<StarterPackScreenInner routeParams={resolvedStarterPack} />
+			<StarterPackScreenInner
+				onTabChange={(next) => replaceParams({ tab: next })}
+				routeParams={{ ...resolvedStarterPack, tab }}
+			/>
 		</Layout.Screen>
 	);
 }
 
-export function StarterPackScreenInner({ routeParams }: { routeParams: RouteParams<'StarterPack'> }) {
+export function StarterPackScreenInner({
+	onTabChange,
+	routeParams,
+}: {
+	onTabChange: (tab: StarterPackTabId) => void;
+	routeParams: RouteParams<'StarterPack'>;
+}) {
 	const { actor, rkey } = routeParams;
 	const { currentAccount } = useSession();
 	useTitle(m['common.starterPack.label']());
@@ -116,6 +127,7 @@ export function StarterPackScreenInner({ routeParams }: { routeParams: RoutePara
 			starterPack={starterPack}
 			routeParams={routeParams}
 			moderationOpts={moderationOpts}
+			onTabChange={onTabChange}
 		/>
 	);
 }
@@ -124,15 +136,17 @@ function StarterPackScreenLoaded({
 	starterPack,
 	routeParams,
 	moderationOpts,
+	onTabChange,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	routeParams: RouteParams<'StarterPack'>;
 	moderationOpts: ModerationOptions;
+	onTabChange: (tab: StarterPackTabId) => void;
 }) {
 	const showPeopleTab = !!starterPack.list;
 	const showFeedsTab = !!starterPack.feeds?.length;
 	const showPostsTab = !!starterPack.list;
-	const sections = definite<Section<'feeds' | 'people' | 'posts'>>([
+	const sections = definite<Section<StarterPackTabId>>([
 		showPeopleTab && {
 			id: 'people',
 			label: m['common.people.label'](),
@@ -149,7 +163,6 @@ function StarterPackScreenLoaded({
 			children: <PostsList listUri={starterPack.list!.uri} />,
 		},
 	]);
-	const [activeTab, setActiveTab] = useState<'feeds' | 'people' | 'posts'>('people');
 
 	const shareDialogHandle = Dialog.useDialogHandle();
 
@@ -171,8 +184,8 @@ function StarterPackScreenLoaded({
 		<>
 			<Tabs
 				sections={sections}
-				value={activeTab}
-				onValueChange={setActiveTab}
+				value={routeParams.tab ?? 'people'}
+				onValueChange={onTabChange}
 				header={
 					<Header starterPack={starterPack} routeParams={routeParams} onOpenShareDialog={onOpenShareDialog} />
 				}

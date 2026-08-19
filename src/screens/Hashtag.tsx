@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
@@ -31,7 +29,7 @@ import { useParams } from '#/router';
 export default function HashtagScreen() {
 	useTitle(m['navigation.hashtag.title']());
 
-	const [{ tag, author }] = useParams('Hashtag');
+	const [{ tag, author, tab }, replaceParams] = useParams('Hashtag');
 	const isCashtag = tag.startsWith('$');
 
 	// Cashtags already include the $ prefix, hashtags need # added
@@ -47,8 +45,6 @@ export default function HashtagScreen() {
 	const onShare = () => {
 		void shareUrl(targetToShareUrl({ name: 'Hashtag', author, tag }));
 	};
-
-	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
 
 	const sections: Section<'latest' | 'top'>[] = [
 		{
@@ -67,8 +63,8 @@ export default function HashtagScreen() {
 		<Layout.Screen>
 			<Tabs
 				sections={sections}
-				value={activeTab}
-				onValueChange={setActiveTab}
+				value={tab ?? 'top'}
+				onValueChange={(next) => replaceParams({ tab: next })}
 				header={
 					<Layout.Header.Outer noBottomBorder sticky={false}>
 						<Layout.Header.BackButton />
