@@ -504,6 +504,8 @@ export function resetProfilePostsQueries(queryClient: QueryClient, did: string, 
 }
 
 registerShadowFinders(RQKEY_ROOT, {
+	// prefer the feed post used to open the thread.
+	priority: 10,
 	findPosts: findAllPostsInQueryData,
 	findProfiles: findAllProfilesInQueryData,
 });

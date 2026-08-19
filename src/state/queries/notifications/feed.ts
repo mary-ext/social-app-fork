@@ -286,6 +286,8 @@ export function* findAllProfilesInQueryData(
 }
 
 registerShadowFinders(RQKEY_ROOT, {
+	// prefer fresh notification engagement counts.
+	priority: 20,
 	findPosts: findAllPostsInQueryData,
 	findProfiles: findAllProfilesInQueryData,
 });

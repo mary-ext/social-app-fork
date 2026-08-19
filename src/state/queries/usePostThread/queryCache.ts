@@ -1,7 +1,6 @@
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
-	AppBskyUnspeccedDefs,
 	AppBskyUnspeccedGetPostThreadOtherV2,
 	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
@@ -11,14 +10,7 @@ import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
 import { dangerousGetPostShadow, updatePostShadow } from '#/state/cache/post-shadow';
-import { registerShadowFinders } from '#/state/cache/registry';
-import { findAllPostsInQueryData as findAllPostsInBookmarksQueryData } from '#/state/queries/bookmarks/useBookmarksQuery';
-import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
-import { findAllPostsInQueryData as findAllPostsInMyLikesQueryData } from '#/state/queries/my-likes';
-import { findAllPostsInQueryData as findAllPostsInNotifsQueryData } from '#/state/queries/notifications/feed';
-import { findAllPostsInQueryData as findAllPostsInFeedQueryData } from '#/state/queries/post-feed';
-import { findAllPostsInQueryData as findAllPostsInQuoteQueryData } from '#/state/queries/post-quotes';
-import { findAllPostsInQueryData as findAllPostsInSearchQueryData } from '#/state/queries/search-posts';
+import { getPostFinders, registerShadowFinders } from '#/state/cache/registry';
 import { usePostThreadContext } from '#/state/queries/usePostThread';
 import { getBranch } from '#/state/queries/usePostThread/traversal';
 import {
@@ -165,55 +157,19 @@ export function getThreadPlaceholder(
 	uri: string,
 ): $type.enforce<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
 	let partial;
-	for (const item of getThreadPlaceholderCandidates(queryClient, uri)) {
-		// quoted posts may lack metrics; keep searching for a complete view.
-		const hasAllInfo = item.value.post.likeCount != null;
-		if (hasAllInfo) {
-			return item;
-		} else {
-			partial = item;
+	for (const findPosts of getPostFinders()) {
+		for (const post of findPosts(queryClient, uri)) {
+			const item = postViewToThreadPlaceholder(post);
+			// quoted posts may lack metrics; keep searching for a complete view.
+			const hasAllInfo = item.value.post.likeCount != null;
+			if (hasAllInfo) {
+				return item;
+			} else {
+				partial = item;
+			}
 		}
 	}
 	return partial;
-}
-
-export function* getThreadPlaceholderCandidates(
-	queryClient: QueryClient,
-	uri: string,
-): Generator<
-	$type.enforce<
-		Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-			value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
-		}
-	>,
-	void
-> {
-	for (const post of findAllPostsInQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-
-	// notification views often have fresh engagement counts.
-	for (const post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInFeedQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInSearchQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInMyLikesQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
-	for (const post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
-	}
 }
 
 export function* findAllPostsInQueryData(
@@ -325,6 +281,8 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 }
 
 registerShadowFinders(postThreadQueryKeyRoot, {
+	// prefer existing thread data for placeholders.
+	priority: 30,
 	findPosts: findAllPostsInQueryData,
 	findProfiles: findAllProfilesInQueryData,
 });
