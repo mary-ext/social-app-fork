@@ -14,6 +14,7 @@ import { dangerousGetPostShadow, updatePostShadow } from '#/state/cache/post-sha
 import { registerShadowFinders } from '#/state/cache/registry';
 import { findAllPostsInQueryData as findAllPostsInBookmarksQueryData } from '#/state/queries/bookmarks/useBookmarksQuery';
 import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews';
+import { findAllPostsInQueryData as findAllPostsInMyLikesQueryData } from '#/state/queries/my-likes';
 import { findAllPostsInQueryData as findAllPostsInNotifsQueryData } from '#/state/queries/notifications/feed';
 import { findAllPostsInQueryData as findAllPostsInFeedQueryData } from '#/state/queries/post-feed';
 import { findAllPostsInQueryData as findAllPostsInQuoteQueryData } from '#/state/queries/post-quotes';
@@ -205,6 +206,9 @@ export function* getThreadPlaceholderCandidates(
 		yield postViewToThreadPlaceholder(post);
 	}
 	for (const post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
+		yield postViewToThreadPlaceholder(post);
+	}
+	for (const post of findAllPostsInMyLikesQueryData(queryClient, uri)) {
 		yield postViewToThreadPlaceholder(post);
 	}
 	for (const post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {

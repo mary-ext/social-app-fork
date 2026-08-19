@@ -42,7 +42,6 @@ import * as Layout from '#/components/web/Layout';
 
 import MessageIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
-import HeartIcon from '#/icons/central/Heart_round_outlined_radius1_stroke1.svg';
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke1.svg';
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
@@ -165,7 +164,6 @@ function ProfileScreenLoaded({
 	const moderation = moderateProfile(profile, moderationOpts);
 
 	const isMe = profile.did === currentAccount?.did;
-	const showLikesTab = isMe;
 
 	const feedCount = profile.associated?.feedgens || 0;
 	const showFeedsTab = isMe || feedCount > 0;
@@ -266,18 +264,6 @@ function ProfileScreenLoaded({
 							: undefined
 					}
 					emptyStateIcon={VideoIcon}
-				/>
-			),
-		},
-		showLikesTab && {
-			id: 'likes',
-			label: m['common.like.label'](),
-			children: (
-				<ProfileFeedSection
-					feed={`likes|${profile.did}`}
-					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.like.empty']()}
-					emptyStateIcon={HeartIcon}
 				/>
 			),
 		},

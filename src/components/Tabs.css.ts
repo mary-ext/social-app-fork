@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
-import { fontSize, zIndex } from '#/styles/tokens.css';
+import { fontSize, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 export const root = style(
 	layered(components, {
@@ -58,8 +58,11 @@ export const tab = style(
 	}),
 );
 
-export const tabLabel = style({
+export const tabContent = style({
+	display: 'flex',
 	position: 'relative',
+	alignItems: 'center',
+	gap: space.sm,
 	'::after': {
 		position: 'absolute',
 		right: -4,
@@ -72,6 +75,12 @@ export const tabLabel = style({
 	selectors: {
 		[`${tab}[data-active] &::after`]: { backgroundColor: vars.palette.primary_500 },
 	},
+});
+
+export const tabIcon = style({
+	flexShrink: 0,
+	width: iconSize.sm,
+	height: iconSize.sm,
 });
 
 export const panel = style(

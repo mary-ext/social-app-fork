@@ -2,10 +2,12 @@
 
 import {
 	type ComponentPropsWithoutRef,
+	type ComponentType,
 	createContext,
 	type ReactNode,
 	type Ref,
 	type RefObject,
+	type SVGProps,
 	use,
 	useEffect,
 	useRef,
@@ -128,21 +130,26 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 	);
 };
 
+/** an SVG tab icon. */
+export type TabIcon = ComponentType<SVGProps<SVGSVGElement>>;
+
 export type TabProps = Omit<ComponentPropsWithoutRef<'button'>, 'value' | 'children'> & {
+	icon?: TabIcon;
 	value: string;
 	label: string;
 };
 
-export const Tab = ({ value, className, label, ...rest }: TabProps) => {
+export const Tab = ({ value, className, icon: Icon, label, ...rest }: TabProps) => {
 	return (
 		<BaseTabs.Tab
 			value={value}
 			className={clsx(styles.tab, className)}
 			render={(props, state) => (
 				<button {...props}>
-					<Text className={styles.tabLabel} color={state.active ? 'text' : 'textContrastMedium'}>
-						{label}
-					</Text>
+					<span className={styles.tabContent}>
+						{Icon && <Icon className={styles.tabIcon} />}
+						<Text color={state.active ? 'text' : 'textContrastMedium'}>{label}</Text>
+					</span>
 				</button>
 			)}
 			{...rest}
@@ -164,6 +171,8 @@ export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 
 export type Section<Id extends string> = {
 	children: ReactNode;
+	/** an optional icon before the label. */
+	icon?: TabIcon;
 	id: Id;
 	label: string;
 };
@@ -237,6 +246,7 @@ export const Tabs = <Id extends string>({
 					{sections.map((section) => (
 						<Tab
 							key={section.id}
+							icon={section.icon}
 							label={section.label}
 							value={section.id}
 							onClick={() => {

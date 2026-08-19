@@ -1,0 +1,52 @@
+import { useTitle } from '#/state/use-title';
+
+import { BookmarksTab } from '#/screens/History/Bookmarks';
+import { LikesTab } from '#/screens/History/Likes';
+import type { HistoryTabId } from '#/screens/History/utils';
+
+import { type Section, Tabs } from '#/components/Tabs';
+import * as Layout from '#/components/web/Layout';
+
+import BookmarkIcon from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
+import HeartIcon from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
+import { useParams } from '#/router';
+
+export function HistoryScreen() {
+	useTitle(m['common.nav.history']());
+
+	const [{ tab }, replaceParams] = useParams('History');
+
+	const sections: Section<HistoryTabId>[] = [
+		{
+			id: 'saved',
+			icon: BookmarkIcon,
+			label: m['common.nav.saved'](),
+			children: <BookmarksTab />,
+		},
+		{
+			id: 'likes',
+			icon: HeartIcon,
+			label: m['common.like.label'](),
+			children: <LikesTab />,
+		},
+	];
+
+	return (
+		<Layout.Screen>
+			<Tabs
+				sections={sections}
+				value={tab ?? 'saved'}
+				onValueChange={(next) => replaceParams({ tab: next })}
+				header={
+					<Layout.Header.Outer noBottomBorder sticky={false}>
+						<Layout.Header.BackButton />
+						<Layout.Header.Content>
+							<Layout.Header.TitleText>{m['common.nav.history']()}</Layout.Header.TitleText>
+						</Layout.Header.Content>
+					</Layout.Header.Outer>
+				}
+			/>
+		</Layout.Screen>
+	);
+}

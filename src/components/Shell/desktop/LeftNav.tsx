@@ -438,13 +438,13 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 						label={m['common.list.label']()}
 					/>
 					<NavItem
-						to={{ name: 'Bookmarks' }}
+						to={{ name: 'History' }}
 						minimal={leftNavMinimal}
 						icons={{
 							active: BookmarkFilledIcon,
 							inactive: BookmarkIcon,
 						}}
-						label={m['common.nav.saved']()}
+						label={m['common.nav.history']()}
 					/>
 					<NavItem
 						to={currentAccount ? profileTarget(currentAccount.did) : { name: 'Home' }}

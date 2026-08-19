@@ -14,6 +14,7 @@ import {
 
 import { actorIdentifier, did, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
 
+import { historyTabs } from '#/screens/History/utils';
 import {
 	MessagesRouteLoadingScreen,
 	MessagesSplitViewColumnLoadingScreen,
@@ -48,9 +49,6 @@ const AiSettingsScreen = lazy(() =>
 const AppearanceSettingsScreen = lazy(() =>
 	import('#/screens/Settings/AppearanceSettings').then((mod) => ({ default: mod.AppearanceSettingsScreen })),
 );
-const BookmarksScreen = lazy(() =>
-	import('#/screens/Bookmarks').then((mod) => ({ default: mod.BookmarksScreen })),
-);
 const ContentAndMediaSettingsScreen = lazy(() =>
 	import('#/screens/Settings/ContentAndMediaSettings').then((mod) => ({
 		default: mod.ContentAndMediaSettingsScreen,
@@ -68,6 +66,7 @@ const GroupChatJoinScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.GroupChatJoinScreen })),
 );
 const HashtagScreen = lazy(() => import('#/screens/Hashtag').then((mod) => ({ default: mod.default })));
+const HistoryScreen = lazy(() => import('#/screens/History').then((mod) => ({ default: mod.HistoryScreen })));
 const HomeScreen = lazy(() => import('#/screens/Home').then((mod) => ({ default: mod.HomeScreen })));
 const IntentComposeScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.IntentComposeScreen })),
@@ -366,6 +365,12 @@ export const routes = defineRoutes({
 				meta: { requireAuth: true },
 				path: '/lists',
 			}),
+			History: route({
+				component: HistoryScreen,
+				meta: { requireAuth: true },
+				path: '/history',
+				query: { tab: optional(enumOf(historyTabs)) },
+			}),
 
 			Profile: route({
 				component: ProfileScreen,
@@ -535,11 +540,6 @@ export const routes = defineRoutes({
 				path: '/start/:code',
 			}),
 
-			Bookmarks: route({
-				component: BookmarksScreen,
-				meta: { requireAuth: true },
-				path: '/saved',
-			}),
 			NotFound: route({
 				component: NotFoundScreen,
 				params: { rest: string() },

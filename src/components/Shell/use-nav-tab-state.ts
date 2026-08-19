@@ -3,8 +3,8 @@ import { useTarget } from '#/router';
 export function useNavigationTabState() {
 	const { name } = useTarget();
 	return {
-		isAtBookmarks: name === 'Bookmarks',
 		isAtFeeds: name === 'Feeds',
+		isAtHistory: name === 'History',
 		isAtHome: name === 'Home',
 		isAtMessages: name === 'Messages',
 		isAtNotifications: name === 'Notifications',

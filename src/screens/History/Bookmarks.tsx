@@ -5,7 +5,6 @@ import { cleanError } from '#/lib/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
-import { useTitle } from '#/state/use-title';
 
 import { EmptyState } from '#/components/EmptyState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
@@ -15,7 +14,6 @@ import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadin
 import { Text } from '#/components/Text';
 import * as toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as Layout from '#/components/web/Layout';
 import * as Skele from '#/components/web/Skeleton';
 
 import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
@@ -25,22 +23,6 @@ import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
 import * as css from './Bookmarks.css';
-
-export function BookmarksScreen() {
-	useTitle(m['common.savedPosts.title']());
-
-	return (
-		<Layout.Screen>
-			<Layout.Header.Outer>
-				<Layout.Header.BackButton />
-				<Layout.Header.Content>
-					<Layout.Header.TitleText>{m['common.savedPosts.title']()}</Layout.Header.TitleText>
-				</Layout.Header.Content>
-			</Layout.Header.Outer>
-			<BookmarksInner />
-		</Layout.Screen>
-	);
-}
 
 type ListItem =
 	| {
@@ -66,7 +48,6 @@ type ListItem =
 			};
 	  };
 
-// only governs rows that have never been on screen; the browser reuses the real size once rendered.
 const BOOKMARK_ITEM_HEIGHT_ESTIMATE = 300;
 
 function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
@@ -89,7 +70,8 @@ function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 	}
 }
 
-function BookmarksInner() {
+/** renders saved posts. */
+export function BookmarksTab() {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useBookmarksQuery();
 
 	const onEndReached = async () => {

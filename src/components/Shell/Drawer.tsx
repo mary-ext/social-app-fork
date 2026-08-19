@@ -73,7 +73,7 @@ export function Drawer() {
 function DrawerContent() {
 	const router = useRouter();
 	const { currentAccount, hasSession } = useSession();
-	const { isAtBookmarks, isAtFeeds, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
+	const { isAtFeeds, isAtHistory, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
 		useNavigationTabState();
 	const numUnreadNotifications = useUnreadNotifications();
 
@@ -87,7 +87,7 @@ function DrawerContent() {
 		}
 	};
 
-	const navigateAndClose = (screen: 'Bookmarks' | 'Feeds' | 'Lists' | 'Settings') => {
+	const navigateAndClose = (screen: 'Feeds' | 'History' | 'Lists' | 'Settings') => {
 		router.navigate({ to: { name: screen } });
 		setDrawerOpen(false);
 	};
@@ -159,9 +159,9 @@ function DrawerContent() {
 					<MenuItem
 						activeIcon={BookmarkFilled}
 						inactiveIcon={Bookmark}
-						isActive={isAtBookmarks}
-						label={m['common.nav.saved']()}
-						onPress={() => navigateAndClose('Bookmarks')}
+						isActive={isAtHistory}
+						label={m['common.nav.history']()}
+						onPress={() => navigateAndClose('History')}
 					/>
 					<MenuItem
 						activeIcon={UserCircleFilled}

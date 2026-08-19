@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
-	AppBskyFeedGetActorLikes,
 	AppBskyFeedGetAuthorFeed,
 	AppBskyFeedGetFeed,
 	AppBskyFeedGetListFeed,
@@ -34,7 +33,6 @@ import { STALE } from '#/state/queries';
 import { AuthorFeedAPI } from '#/state/queries/feed-api/author';
 import { CustomFeedAPI } from '#/state/queries/feed-api/custom';
 import { FollowingFeedAPI } from '#/state/queries/feed-api/following';
-import { LikesFeedAPI } from '#/state/queries/feed-api/likes';
 import { ListFeedAPI } from '#/state/queries/feed-api/list';
 import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
@@ -65,7 +63,6 @@ export type FeedDescriptor =
 	| 'following'
 	| `author|${ActorDid}|${AuthorFilter}`
 	| `feedgen|${FeedUri}`
-	| `likes|${ActorDid}`
 	| `list|${ListUri}`
 	| `posts|${PostsUriList}`;
 
@@ -357,10 +354,6 @@ function createApi({
 		const [__, actor, filter] = feedDesc.split('|');
 		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `author|${ActorDid}|${AuthorFilter}`, see above
 		return new AuthorFeedAPI({ appview, feedParams: { actor, filter } as AppBskyFeedGetAuthorFeed.$params });
-	} else if (feedDesc.startsWith('likes')) {
-		const [__, actor] = feedDesc.split('|');
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `likes|${ActorDid}`, see above
-		return new LikesFeedAPI({ appview, feedParams: { actor } as AppBskyFeedGetActorLikes.$params });
 	} else if (feedDesc.startsWith('feedgen')) {
 		const [__, feed] = feedDesc.split('|');
 		return new CustomFeedAPI({
