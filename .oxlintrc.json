@@ -95,7 +95,6 @@
 				"propNamePattern": "{markup,render*}"
 			}
 		],
-		"react/react-compiler": "error",
 		"react/react-in-jsx-scope": "off",
 		"react/rules-of-hooks": "error",
 		"typescript/consistent-return": "off",

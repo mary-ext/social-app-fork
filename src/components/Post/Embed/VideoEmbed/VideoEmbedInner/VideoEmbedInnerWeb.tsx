@@ -38,6 +38,7 @@ export function VideoEmbedInnerWeb({
 	setActive: () => void;
 	onScreen: boolean;
 	canLoad: boolean;
+	/** mutable playback position persisted across remounts. */
 	lastKnownTime: RefObject<number | undefined>;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ export function VideoEmbedInnerWeb({
 						muted={isGif || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
 						onTimeUpdate={(e) => {
-							// oxlint-disable-next-line react/react-compiler -- `lastKnownTime` is a ref prop; writing `.current` is intended
+							// oxlint-disable-next-line react/immutability -- mutable output ref
 							lastKnownTime.current = e.currentTarget.currentTime;
 						}}
 						loop

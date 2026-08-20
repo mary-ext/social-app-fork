@@ -17,8 +17,8 @@ minimumReleaseAgeExclude:
   - '@oomfware/*'
   - '@mary-ext/*'
   - '@jsr/mary__*'
+  - '@vitejs/plugin-react@6.1.0'
 
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
   '@vanilla-extract/css': patches/@vanilla-extract__css.patch
-  '@vitejs/plugin-react': patches/@vitejs__plugin-react.patch

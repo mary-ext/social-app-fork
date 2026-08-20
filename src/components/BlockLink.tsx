@@ -161,13 +161,13 @@ export function BlockLink({
 				tabIndex: label ? 0 : undefined,
 			};
 
-	// oxlint-disable-next-line react/react-compiler -- RC doesn't know this is meant to be a `ref` prop
+	// oxlint-disable-next-line react/refs -- forwards the prop ref
 	return cloneElement(node, {
 		...pressProps,
 		className: clsx(node.props.className, className),
 		onPointerEnter,
 		onPointerLeave,
-		// oxlint-disable-next-line react/react-compiler
+		// oxlint-disable-next-line react/refs -- forwards the prop ref
 		ref: mergeRefs([ref, node.props.ref]),
 	});
 }

@@ -88,6 +88,7 @@ export function Root({
 		if (dx !== 0) {
 			el.scrollBy({ behavior: 'smooth', left: dx });
 		}
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- activeKey triggers recentering
 	}, [activeKey]);
 
 	// click-and-drag to scroll, since the scrollbar is hidden and a trackpad/shift-wheel isn't always available
@@ -173,7 +174,8 @@ export function Root({
 		}, CONTINUOUS_SCROLL_DELAY);
 	};
 
-	useEffect(() => stopContinuousScroll, []);
+	const stopOnUnmount = useEffectEvent(stopContinuousScroll);
+	useEffect(() => () => stopOnUnmount(), []);
 
 	return (
 		<div className={css.outer} style={assignInlineVars({ [css.gutterVar]: `${gutterWidth}px` })}>

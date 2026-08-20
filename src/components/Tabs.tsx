@@ -119,6 +119,7 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 		if (dx !== 0) {
 			list.scrollBy({ behavior: 'smooth', left: dx });
 		}
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- value triggers recentering
 	}, [value]);
 
 	useDragScroll(listRef);

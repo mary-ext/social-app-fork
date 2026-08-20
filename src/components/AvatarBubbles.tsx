@@ -56,7 +56,7 @@ export function AvatarBubbles({
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
-			// oxlint-disable-next-line react/react-compiler -- intentional one-shot animation trigger
+			// oxlint-disable-next-line react/set-state-in-effect -- one-time animation start
 			setAnimatedIn(true);
 		}
 	}, [animate]);

@@ -759,6 +759,7 @@ export function Virtualizer<ItemT>({
 			return;
 		}
 		return store.connect();
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- scrollRoot reconnects the store
 	}, [enabled, scrollRoot, store]);
 
 	const range = snapshot.range;

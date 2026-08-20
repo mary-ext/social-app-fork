@@ -130,7 +130,7 @@ const createQueryClient = () =>
 	});
 
 const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] = {
-	shouldDehydrateMutation: (_: unknown) => false,
+	shouldDehydrateMutation: () => false,
 	shouldDehydrateQuery: (query) => {
 		return query.state.status === 'success' && isQueryPersisted(query.queryKey);
 	},

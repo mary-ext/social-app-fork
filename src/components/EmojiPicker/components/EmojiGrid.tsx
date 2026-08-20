@@ -72,8 +72,9 @@ export function EmojiGrid({
 		if (scrollRef.current) {
 			scrollRef.current.scrollTop = 0;
 		}
-		// oxlint-disable-next-line react/react-compiler -- guarded reset when the layout changes, not a per-render cascade
+		// oxlint-disable-next-line react/set-state-in-effect -- reset after layout changes
 		setScrollTop(0);
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- layout triggers the reset
 	}, [layout]);
 
 	// the section whose header sits at (or just above) the top of the viewport — what the nav highlights.

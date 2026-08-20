@@ -116,6 +116,7 @@ function GifPickerBody({
 	// Scroll to top when the effective query/category changes, NOT on every keystroke.
 	useEffect(() => {
 		gridRef.current?.scrollToTop();
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- query and category trigger the reset
 	}, [effectiveSearch, isRecentsActive]);
 
 	const onClearSearch = () => {

@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
-import svgSprites from '@oomfware/vite-plugin-svg-sprites';
+import { svgSprites } from '@oomfware/vite-plugin-svg-sprites';
 
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react';

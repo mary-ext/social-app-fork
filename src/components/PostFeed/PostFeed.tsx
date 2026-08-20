@@ -144,7 +144,7 @@ function PostFeed({
 
 	const lastFetchRef = useRef<number | null>(null);
 	if (lastFetchRef.current === null) {
-		// oxlint-disable-next-line react/react-compiler -- one-time Date.now() seed
+		// oxlint-disable-next-line react/purity -- initialize once
 		lastFetchRef.current = Date.now();
 	}
 
