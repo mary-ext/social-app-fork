@@ -25,7 +25,8 @@ const buildSystemPrompt = (targetLanguage: string): string =>
 Keep the writer's voice: slang, jokes, profanity, and sloppy punctuation all survive, and the translation \
 runs about as long as the post.
 
-Copy @handles, URLs, and #hashtags across exactly, and translate the prose around them.
+Copy @handles and URLs across exactly. Translate #hashtags along with the prose, keeping the # and \
+leaving no spaces inside.
 
 No notes, labels, or glosses. Give back the post as its reader would have read it.
 
