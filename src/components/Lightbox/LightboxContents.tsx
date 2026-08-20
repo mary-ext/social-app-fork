@@ -19,9 +19,9 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
 import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
+import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import ShareIcon from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
-import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
-import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import EllipsisIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -204,7 +204,7 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.previous']()}
 					onClick={prev}
 				>
-					<ChevronLeftIcon className={styles.controlIcon} />
+					<ArrowLeftIcon className={styles.controlIcon} />
 				</button>
 			)}
 			{canRight && (
@@ -214,7 +214,7 @@ function Chrome() {
 					aria-label={m['components.lightbox.a11y.next']()}
 					onClick={next}
 				>
-					<ChevronRightIcon className={styles.controlIcon} />
+					<ArrowRightIcon className={styles.controlIcon} />
 				</button>
 			)}
 			<div className={styles.topLeft}>
