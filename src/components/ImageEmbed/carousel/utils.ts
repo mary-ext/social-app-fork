@@ -100,8 +100,18 @@ export function getCarouselMetrics({
 		ratios,
 	});
 
-	// let the last tile snap without reducing the trailing gutter
-	const lastItemWidth = computeDims({ aspectRatio: ratios.at(-1), height: contentHeight }).width;
+	let stripWidth = ITEM_GAP * (ratios.length - 1);
+	let lastItemWidth = 0;
+	for (const ratio of ratios) {
+		lastItemWidth = computeDims({ aspectRatio: ratio, height: contentHeight }).width;
+		stripWidth += lastItemWidth;
+	}
 
+	// a strip that fits never scrolls, so snap room would only leave dead space past the last tile
+	if (stripWidth <= snapRoom - insetRight) {
+		return { contentHeight, paddingRight: insetRight };
+	}
+
+	// let the last tile snap without reducing the trailing gutter
 	return { contentHeight, paddingRight: Math.max(insetRight, snapRoom - lastItemWidth) };
 }
