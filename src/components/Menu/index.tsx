@@ -11,6 +11,8 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import * as styles from '#/components/Menu/Menu.css';
 import { Text } from '#/components/Text';
 
+import CheckmarkIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+
 // a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
 // `handle` (from `createHandle`/`useMenuHandle`) to drive a detached Trigger or open it imperatively.
 export const Root = BaseMenu.Root;
@@ -96,6 +98,49 @@ export function Item({
 		>
 			{children}
 		</BaseMenu.Item>
+	);
+}
+
+/**
+ * renders a menu checkbox without closing the menu.
+ *
+ * @param props the item props
+ * @returns the checkbox item
+ */
+export function CheckboxItem({
+	children,
+	label,
+	checked,
+	onCheckedChange,
+	disabled,
+}: {
+	children: ReactNode;
+	label?: string;
+	checked: boolean;
+	onCheckedChange: (checked: boolean) => void;
+	disabled?: boolean;
+}) {
+	return (
+		<BaseMenu.CheckboxItem
+			className={styles.item}
+			label={label}
+			checked={checked}
+			onCheckedChange={onCheckedChange}
+			disabled={disabled}
+		>
+			{children}
+		</BaseMenu.CheckboxItem>
+	);
+}
+
+/** @returns a checkbox indicator */
+export function ItemCheckbox() {
+	return (
+		<span className={styles.itemCheckbox}>
+			<BaseMenu.CheckboxItemIndicator>
+				<CheckmarkIcon className={styles.itemCheckboxMark} />
+			</BaseMenu.CheckboxItemIndicator>
+		</span>
 	);
 }
 

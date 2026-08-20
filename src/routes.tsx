@@ -379,7 +379,10 @@ export const routes = defineRoutes({
 				params: { actor: actorIdentifier() },
 				path: '/:actor',
 				query: {
-					tab: optional(enumOf(['feeds', 'lists', 'media', 'posts', 'replies', 'starterpacks', 'videos'])),
+					media: optional(enumOf(['all', 'videos'])),
+					replies: optional(boolean()),
+					reposts: optional(boolean()),
+					tab: optional(enumOf(['feeds', 'lists', 'media', 'posts', 'starterpacks'])),
 				},
 			}),
 			ProfileFollowers: route({

@@ -10,11 +10,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
 	const { data: preferences } = usePreferencesQuery();
 	const { currentAccount } = useSession();
 
-	if (feedDesc.type === 'author') {
-		if (feedDesc.filter === 'posts_with_replies') {
-			// TODO: Do this on the server instead.
-			return [FeedTuner.removeReposts];
-		}
+	if (feedDesc.type === 'author' && feedDesc.view === 'posts' && !feedDesc.showReposts) {
+		return [FeedTuner.removeReposts];
 	}
 	if (feedDesc.type === 'feedgen') {
 		return [FeedTuner.preferredLangOnly(contentLanguages), FeedTuner.removeMutedThreads];

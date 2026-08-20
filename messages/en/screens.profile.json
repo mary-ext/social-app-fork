@@ -58,6 +58,14 @@
 	"screens.profile.feed.pinnedToast": "Pinned {name} to home",
 	"screens.profile.feed.unpinnedToast": "Unpinned {name} from home",
 	"screens.profile.feedback.reportIssue": "Something wrong? Let us know.",
+	"screens.profile.filter.a11y.label": "Change what this feed shows",
+	"screens.profile.filter.media.all": "All media",
+	"screens.profile.filter.media.videos": "Videos only",
+	"screens.profile.filter.posts.postsOnly": "Posts only",
+	"screens.profile.filter.posts.replies": "replies",
+	"screens.profile.filter.posts.reposts": "reposts",
+	"screens.profile.filter.posts.showReplies": "Show replies",
+	"screens.profile.filter.posts.showReposts": "Show reposts",
 	"screens.profile.follow.followers.count": [
 		{
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],

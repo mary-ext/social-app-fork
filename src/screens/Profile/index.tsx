@@ -31,7 +31,8 @@ import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
 import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
 import { ProfileHeader } from '#/screens/Profile/Header';
 import { ProfileHeaderSkeleton } from '#/screens/Profile/Header/Skeleton';
-import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
+import { ProfileMediaSection } from '#/screens/Profile/Sections/Media';
+import { ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
 
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
@@ -40,17 +41,14 @@ import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPack
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
-import MessageIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
-import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke1.svg';
-import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import * as css from './index.css';
 
-type ProfileTabId = 'feeds' | 'lists' | 'media' | 'posts' | 'replies' | 'starterpacks' | 'videos';
+type ProfileTabId = 'feeds' | 'lists' | 'media' | 'posts' | 'starterpacks';
 
 export function ProfileScreen() {
 	return (
@@ -192,82 +190,12 @@ function ProfileScreenLoaded({
 		{
 			id: 'posts',
 			label: m['common.post.label'](),
-			children: (
-				<ProfileFeedSection
-					feed={{ type: 'author', did: profile.did, filter: 'posts_and_author_threads' }}
-					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.post.empty']()}
-					emptyStateButton={
-						isMe
-							? {
-									label: m['common.compose.action.writePost'](),
-									text: m['common.compose.action.writePost'](),
-									onPress: () => openComposer({}),
-									size: 'small',
-									color: 'primary',
-								}
-							: undefined
-					}
-				/>
-			),
-		},
-		{
-			id: 'replies',
-			label: m['common.reply.label'](),
-			children: (
-				<ProfileFeedSection
-					feed={{ type: 'author', did: profile.did, filter: 'posts_with_replies' }}
-					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.reply.empty']()}
-					emptyStateIcon={MessageIcon}
-				/>
-			),
+			children: <ProfilePostsSection did={profile.did} isMe={isMe} />,
 		},
 		{
 			id: 'media',
 			label: m['common.media.label'](),
-			children: (
-				<ProfileFeedSection
-					feed={{ type: 'author', did: profile.did, filter: 'posts_with_media' }}
-					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.media.empty']()}
-					emptyStateButton={
-						isMe
-							? {
-									label: m['common.compose.action.photo'](),
-									text: m['common.compose.action.photo'](),
-									onPress: () => openComposer({}),
-									size: 'small',
-									color: 'primary',
-								}
-							: undefined
-					}
-					emptyStateIcon={ImageIcon}
-				/>
-			),
-		},
-		{
-			id: 'videos',
-			label: m['common.video.label'](),
-			children: (
-				<ProfileFeedSection
-					feed={{ type: 'author', did: profile.did, filter: 'posts_with_video' }}
-					ignoreFilterFor={profile.did}
-					emptyStateMessage={m['common.video.empty']()}
-					emptyStateButton={
-						isMe
-							? {
-									label: m['common.compose.action.video'](),
-									text: m['common.compose.action.video'](),
-									onPress: () => openComposer({}),
-									size: 'small',
-									color: 'primary',
-								}
-							: undefined
-					}
-					emptyStateIcon={VideoIcon}
-				/>
-			),
+			children: <ProfileMediaSection did={profile.did} isMe={isMe} />,
 		},
 		showFeedsTab && {
 			id: 'feeds',

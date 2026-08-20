@@ -29,7 +29,7 @@ import { ListFeedAPI } from '#/state/queries/feed-api/list';
 import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
 import { joinInterestTags } from '#/state/queries/feed-api/utils';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { type FeedDescriptor, type FeedRequest, toFeedRequest } from '#/state/queries/feed-descriptor';
 import { FeedTuner } from '#/state/queries/feed-tuner';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
@@ -45,7 +45,17 @@ type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
 
 export const RQKEY_ROOT = 'post-feed';
 export function RQKEY(feedDesc: FeedDescriptor) {
-	return [RQKEY_ROOT, feedDesc];
+	return [RQKEY_ROOT, toFeedRequest(feedDesc)];
+}
+
+/**
+ * creates a partial key for an author's feeds.
+ *
+ * @param did the author DID
+ * @returns the query key
+ */
+export function RQKEY_AUTHOR(did: Did) {
+	return [RQKEY_ROOT, { type: 'author', did }];
 }
 
 export interface FeedPostSliceItem {
@@ -123,7 +133,7 @@ export function usePostFeedQuery(
 				? pageParam
 				: {
 						api: createApi({
-							feedDesc,
+							request: toFeedRequest(feedDesc),
 							appview,
 							// these values do not change, so they are not query-key inputs.
 							userInterests,
@@ -314,36 +324,36 @@ export async function pollLatest(page: FeedPage | undefined) {
 }
 
 function createApi({
-	feedDesc,
+	request,
 	userInterests,
 	appview,
 }: {
-	feedDesc: FeedDescriptor;
+	request: FeedRequest;
 	userInterests?: string;
 	appview: Client;
 }) {
-	switch (feedDesc.type) {
+	switch (request.type) {
 		case 'following': {
 			return new FollowingFeedAPI({ appview });
 		}
 		case 'author': {
 			return new AuthorFeedAPI({
 				appview,
-				feedParams: { actor: feedDesc.did, filter: feedDesc.filter },
+				feedParams: { actor: request.did, filter: request.filter, includePins: request.includePins },
 			});
 		}
 		case 'feedgen': {
 			return new CustomFeedAPI({
 				appview,
-				feedParams: { feed: feedDesc.uri },
+				feedParams: { feed: request.uri },
 				userInterests,
 			});
 		}
 		case 'list': {
-			return new ListFeedAPI({ appview, feedParams: { list: feedDesc.uri } });
+			return new ListFeedAPI({ appview, feedParams: { list: request.uri } });
 		}
 		case 'posts': {
-			return new PostListFeedAPI({ appview, feedParams: { uris: feedDesc.uris } });
+			return new PostListFeedAPI({ appview, feedParams: { uris: request.uris } });
 		}
 	}
 }
@@ -463,8 +473,7 @@ function assertSomePostsPassModeration(
 
 export function resetProfilePostsQueries(queryClient: QueryClient, did: Did, timeout = 0) {
 	setTimeout(() => {
-		// reset every author feed filter for this did.
-		void queryClient.resetQueries({ queryKey: [RQKEY_ROOT, { type: 'author', did }] });
+		void queryClient.resetQueries({ queryKey: RQKEY_AUTHOR(did) });
 	}, timeout);
 }
 

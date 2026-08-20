@@ -335,7 +335,6 @@
 	"common.profile.action.view": "View profile",
 	"common.quote.label": "Quotes",
 	"common.quote.post": "Quote post",
-	"common.reply.empty": "No replies yet",
 	"common.reply.label": "Replies",
 	"common.requests.action.request": "Request to join",
 	"common.requests.action.rescind": "Rescind request",
@@ -393,6 +392,5 @@
 	"common.time.hours24": "24 hours",
 	"common.verification.settingsTitle": "Verification settings",
 	"common.video.empty": "No video posts yet",
-	"common.video.label": "Videos",
 	"common.video.loading": "Loading video"
 }

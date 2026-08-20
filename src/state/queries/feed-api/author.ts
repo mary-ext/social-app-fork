@@ -5,17 +5,11 @@ import type { FeedAPI, FeedAPIResponse, FeedFetchOptions } from './types';
 
 export class AuthorFeedAPI implements FeedAPI {
 	appview: Client;
-	_params: AppBskyFeedGetAuthorFeed.$params;
+	params: AppBskyFeedGetAuthorFeed.$params;
 
 	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetAuthorFeed.$params }) {
 		this.appview = appview;
-		this._params = feedParams;
-	}
-
-	get params() {
-		const params = { ...this._params };
-		params.includePins = params.filter === 'posts_and_author_threads';
-		return params;
+		this.params = feedParams;
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {

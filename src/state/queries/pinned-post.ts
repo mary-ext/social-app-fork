@@ -3,7 +3,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import { RQKEY_AUTHOR as FEED_RQKEY_AUTHOR } from '#/state/queries/post-feed';
 
 import * as Toast from '#/components/Toast';
 
@@ -64,18 +64,7 @@ export function usePinnedPostMutation() {
 				}
 
 				void queryClient.invalidateQueries({
-					queryKey: FEED_RQKEY({
-						type: 'author',
-						did: currentAccount.did,
-						filter: 'posts_and_author_threads',
-					}),
-				});
-				void queryClient.invalidateQueries({
-					queryKey: FEED_RQKEY({
-						type: 'author',
-						did: currentAccount.did,
-						filter: 'posts_with_replies',
-					}),
+					queryKey: FEED_RQKEY_AUTHOR(currentAccount.did),
 				});
 			} catch (e) {
 				console.error('Failed to pin post', e);

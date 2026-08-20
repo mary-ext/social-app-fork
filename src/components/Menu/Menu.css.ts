@@ -103,21 +103,41 @@ export const separator = style({
 	height: 1,
 });
 
-export const itemRadio = style({
+const indicatorBase = style({
 	boxSizing: 'border-box',
 	display: 'inline-flex',
 	flexShrink: 0,
 	alignItems: 'center',
 	justifyContent: 'center',
 	border: `1px solid ${vars.palette.contrast_300}`,
-	borderRadius: 999,
 	width: 20,
 	height: 20,
 });
 
+export const itemRadio = style([indicatorBase, { borderRadius: 999 }]);
+
 export const itemRadioDot = style({
 	borderRadius: 999,
 	backgroundColor: vars.palette.primary_500,
+	width: 14,
+	height: 14,
+});
+
+export const itemCheckbox = style([
+	indicatorBase,
+	{
+		borderRadius: 4,
+		color: vars.palette.white,
+		selectors: {
+			[`${item}[data-checked] &`]: {
+				borderColor: vars.palette.primary_500,
+				backgroundColor: vars.palette.primary_500,
+			},
+		},
+	},
+]);
+
+export const itemCheckboxMark = style({
 	width: 14,
 	height: 14,
 });

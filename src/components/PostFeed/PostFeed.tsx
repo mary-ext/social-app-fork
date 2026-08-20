@@ -280,10 +280,7 @@ function PostFeed({
 		let feedKind: 'discover' | 'profile' | undefined;
 		if (isDiscover) {
 			feedKind = 'discover';
-		} else if (
-			feed.type === 'author' &&
-			(feed.filter === 'posts_and_author_threads' || feed.filter === 'posts_with_replies')
-		) {
+		} else if (feed.type === 'author' && feed.view === 'posts') {
 			feedKind = 'profile';
 		}
 
