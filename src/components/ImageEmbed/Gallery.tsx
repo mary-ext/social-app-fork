@@ -16,7 +16,8 @@ import {
 	CAROUSEL_MAX_HEIGHT,
 	CAROUSEL_MIN_HEIGHT,
 } from '#/components/ImageEmbed/carousel/const';
-import { useKeyboardHandlers } from '#/components/ImageEmbed/carousel/useKeyboardHandlers';
+import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
+import { useKeyboardPaging } from '#/components/ImageEmbed/carousel/useKeyboardPaging';
 import { computeDims, getAspectRatio, getCarouselMetrics } from '#/components/ImageEmbed/carousel/utils';
 import * as styles from '#/components/ImageEmbed/Gallery.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
@@ -48,24 +49,7 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 	});
 
 	const scrollRef = useRef<HTMLDivElement>(null);
-	const itemRefsRef = useRef<Map<number, HTMLElement>>(new Map());
-
-	const onActivate = (index: number) => {
-		itemRefsRef.current.forEach((node, i) => {
-			node.tabIndex = i === index ? 0 : -1;
-		});
-		itemRefsRef.current.get(index)?.focus({ preventScroll: true });
-	};
-
-	const setItemRef = (index: number, node: HTMLElement | null) => {
-		if (node) {
-			itemRefsRef.current.set(index, node);
-		} else {
-			itemRefsRef.current.delete(index);
-		}
-	};
-
-	useKeyboardHandlers({ itemRefsRef, onActivate, scrollPaddingLeft: insetLeft, scrollRef });
+	const { setActiveTile } = useKeyboardPaging({ scrollPaddingLeft: insetLeft, scrollRef });
 
 	return (
 		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
@@ -86,12 +70,12 @@ export function Gallery({ images, lightboxImages, onPressIn, viewContext }: Gall
 						imageCount={images.length}
 						contentHeight={contentHeight}
 						largeAltBadge={largeAltBadge}
-						setItemRef={setItemRef}
 						lightboxImages={lightboxImages}
 						onPressIn={onPressIn}
 					/>
 				))}
 			</div>
+			<PagingControls onPage={setActiveTile} scrollPaddingLeft={insetLeft} scrollRef={scrollRef} />
 		</div>
 	);
 }
@@ -102,7 +86,6 @@ function GalleryImage({
 	imageCount,
 	contentHeight,
 	largeAltBadge,
-	setItemRef,
 	lightboxImages,
 	onPressIn,
 }: {
@@ -111,7 +94,6 @@ function GalleryImage({
 	imageCount: number;
 	contentHeight: number;
 	largeAltBadge: boolean;
-	setItemRef: (index: number, node: HTMLElement | null) => void;
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
@@ -135,7 +117,6 @@ function GalleryImage({
 			handle={lightboxHandle}
 			payload={{ images: lightboxImages, index }}
 			type="button"
-			ref={(node: HTMLElement | null) => setItemRef(index, node)}
 			className={styles.item}
 			// size the border box to preserve the reserved peek
 			style={{ height: dims.height, width: dims.width }}

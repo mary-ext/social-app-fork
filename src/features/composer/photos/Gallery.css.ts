@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
+import { navHost } from '#/components/ImageEmbed/carousel/PagingControls.css';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import { colors } from '#/styles/colors';
@@ -10,10 +11,13 @@ import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const scrim = 'rgba(0, 0, 0, 0.75)';
 
-export const root = style({
-	width: '100%',
-	overflow: 'visible',
-});
+export const root = style([
+	navHost,
+	{
+		width: '100%',
+		overflow: 'visible',
+	},
+]);
 
 export const scroll = style({
 	boxSizing: 'border-box',

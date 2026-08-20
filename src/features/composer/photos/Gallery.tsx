@@ -1,4 +1,4 @@
-import type { FocusEvent } from 'react';
+import { type FocusEvent, useRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
@@ -8,6 +8,7 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
+import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { computeDims, getAspectRatio, getCarouselMetrics } from '#/components/ImageEmbed/carousel/utils';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { Text } from '#/components/Text';
@@ -92,6 +93,7 @@ const onFocus = (evt: FocusEvent<HTMLDivElement>) => {
 
 const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 	const { bleedStyle, bleedWidth, insetLeft, insetRight, ref: bleedRef } = useGalleryBleed();
+	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const { contentHeight, paddingRight } = getCarouselMetrics({
 		bleedWidth,
@@ -105,6 +107,7 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 	return (
 		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
 			<div
+				ref={scrollRef}
 				className={styles.scroll}
 				onFocus={onFocus}
 				role="group"
@@ -126,6 +129,7 @@ const Carousel = ({ dispatch, images, text }: GalleryProps) => {
 					/>
 				))}
 			</div>
+			<PagingControls scrollPaddingLeft={insetLeft} scrollRef={scrollRef} />
 		</div>
 	);
 };

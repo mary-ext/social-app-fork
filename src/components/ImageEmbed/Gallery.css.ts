@@ -1,15 +1,19 @@
 import { style } from '@vanilla-extract/css';
 
 import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
+import { navHost } from '#/components/ImageEmbed/carousel/PagingControls.css';
 
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, iconSize } from '#/styles/tokens.css';
 
-export const root = style({
-	width: '100%',
-	overflow: 'visible',
-});
+export const root = style([
+	navHost,
+	{
+		width: '100%',
+		overflow: 'visible',
+	},
+]);
 
 export const scroll = style({
 	boxSizing: 'border-box',
