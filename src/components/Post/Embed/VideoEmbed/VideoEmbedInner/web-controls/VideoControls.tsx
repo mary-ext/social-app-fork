@@ -176,11 +176,16 @@ export function Controls({
 		}
 	}, [onScreen, pause, active, play, autoplayDisabled]);
 
-	// clicking on any button should focus the player, if it's not already focused
-	const drawFocus = () => {
-		if (!active) {
-			setActive();
+	// touch controls need focus because they have no hover state
+	const activate = () => {
+		setActive();
+		if (isTouch) {
+			setFocused(true);
 		}
+	};
+
+	const drawFocus = () => {
+		activate();
 		setFocused(true);
 	};
 
@@ -210,7 +215,7 @@ export function Controls({
 	const onSettingsOpenChange = (open: boolean) => {
 		setSettingsOpen(open);
 		if (open) {
-			drawFocus();
+			activate();
 		}
 	};
 
@@ -248,7 +253,7 @@ export function Controls({
 		if (!videoRef.current) {
 			return;
 		}
-		drawFocus();
+		activate();
 
 		const videoTime = videoRef.current.currentTime;
 
@@ -260,7 +265,7 @@ export function Controls({
 		if (!videoRef.current) {
 			return;
 		}
-		drawFocus();
+		activate();
 
 		const videoTime = videoRef.current.currentTime;
 
