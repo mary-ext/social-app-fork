@@ -194,7 +194,7 @@ function ProfileScreenLoaded({
 			label: m['common.post.label'](),
 			children: (
 				<ProfileFeedSection
-					feed={`author|${profile.did}|posts_and_author_threads`}
+					feed={{ type: 'author', did: profile.did, filter: 'posts_and_author_threads' }}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.post.empty']()}
 					emptyStateButton={
@@ -216,7 +216,7 @@ function ProfileScreenLoaded({
 			label: m['common.reply.label'](),
 			children: (
 				<ProfileFeedSection
-					feed={`author|${profile.did}|posts_with_replies`}
+					feed={{ type: 'author', did: profile.did, filter: 'posts_with_replies' }}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.reply.empty']()}
 					emptyStateIcon={MessageIcon}
@@ -228,7 +228,7 @@ function ProfileScreenLoaded({
 			label: m['common.media.label'](),
 			children: (
 				<ProfileFeedSection
-					feed={`author|${profile.did}|posts_with_media`}
+					feed={{ type: 'author', did: profile.did, filter: 'posts_with_media' }}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.media.empty']()}
 					emptyStateButton={
@@ -251,7 +251,7 @@ function ProfileScreenLoaded({
 			label: m['common.video.label'](),
 			children: (
 				<ProfileFeedSection
-					feed={`author|${profile.did}|posts_with_video`}
+					feed={{ type: 'author', did: profile.did, filter: 'posts_with_video' }}
 					ignoreFilterFor={profile.did}
 					emptyStateMessage={m['common.video.empty']()}
 					emptyStateButton={

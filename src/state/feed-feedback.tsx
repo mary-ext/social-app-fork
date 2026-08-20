@@ -5,11 +5,12 @@ import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import { FIRST_PARTY_FEEDS } from '#/lib/constants/feeds';
+import { FIRST_PARTY_FEED_URIS } from '#/lib/constants/feeds';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
-import type { FeedDescriptor, FeedPostSliceItem } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import type { FeedPostSliceItem } from '#/state/queries/post-feed';
 
 import * as PostFeed from '#/components/PostFeed/PostFeed';
 
@@ -145,7 +146,7 @@ export function useFeedFeedbackContext() {
 
 // restrict feedback to Discover until third-party permissions exist.
 export function isDiscoverFeed(feed?: FeedDescriptor) {
-	return !!feed && FIRST_PARTY_FEEDS.includes(feed);
+	return feed?.type === 'feedgen' && FIRST_PARTY_FEED_URIS.includes(feed.uri);
 }
 
 function isInteractionAllowed(

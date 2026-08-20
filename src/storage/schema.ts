@@ -3,8 +3,6 @@ import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 
 import type { Gif } from '#/lib/gif';
 
-import type { FeedDescriptor } from '#/state/queries/post-feed';
-
 import type { Locale } from '#/paraglide/runtime';
 
 /** emoji skin tone: 1 = default/yellow, 2–6 = the five Fitzpatrick tones. */
@@ -59,7 +57,8 @@ export type SearchHistoryEntry = { kind: 'profile'; did: Did } | { kind: 'query'
 
 export type Account = {
 	labelers?: Did[];
-	lastSelectedHomeFeed?: FeedDescriptor;
+	/** selected feed URI, or `'following'`. */
+	lastSelectedHomeFeed?: string;
 
 	/** Recently selected GIFs in the GIF picker. Most recent first, capped at 20. */
 	recentGifs?: Gif[];

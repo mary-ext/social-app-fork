@@ -64,10 +64,18 @@ export function usePinnedPostMutation() {
 				}
 
 				void queryClient.invalidateQueries({
-					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_and_author_threads`),
+					queryKey: FEED_RQKEY({
+						type: 'author',
+						did: currentAccount.did,
+						filter: 'posts_and_author_threads',
+					}),
 				});
 				void queryClient.invalidateQueries({
-					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
+					queryKey: FEED_RQKEY({
+						type: 'author',
+						did: currentAccount.did,
+						filter: 'posts_with_replies',
+					}),
 				});
 			} catch (e) {
 				console.error('Failed to pin post', e);

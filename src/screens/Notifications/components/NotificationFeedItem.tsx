@@ -16,7 +16,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import { uniqueBy } from '@mary/array-fns';
@@ -140,12 +140,12 @@ let NotificationFeedItem = ({
 			break;
 		}
 		case 'subscribed-post': {
-			const posts: string[] = [];
+			const posts: ResourceUri[] = [];
 			for (const post of [item.notification, ...(item.additional ?? [])]) {
 				posts.push(post.uri);
 			}
-			// the activity screen takes the subject posts as a comma-joined query parameter, capped at 25.
-			itemTarget = { name: 'NotificationsActivityList', posts: posts.slice(0, 25).join(',') };
+			// app.bsky.feed.getPosts accepts at most 25 URIs.
+			itemTarget = { name: 'NotificationsActivityList', posts: posts.slice(0, 25) };
 			break;
 		}
 	}

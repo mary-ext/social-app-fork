@@ -45,7 +45,7 @@ import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/router';
 
 import { useModerationOpts } from '../moderation/moderation-opts';
-import type { FeedDescriptor } from './post-feed';
+import type { FeedDescriptor } from './feed-descriptor';
 import { precacheResolvedUri } from './resolve-uri';
 
 export type FeedSourceFeedInfo = {
@@ -125,7 +125,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		type: 'feed',
 		uri: view.uri,
 		view,
-		feedDescriptor: `feedgen|${view.uri}`,
+		feedDescriptor: { type: 'feedgen', uri: view.uri },
 		cid: view.cid,
 		target: recordTarget(urip),
 		avatar: view.avatar,
@@ -149,7 +149,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		type: 'list',
 		uri: view.uri,
 		view,
-		feedDescriptor: `list|${view.uri}`,
+		feedDescriptor: { type: 'list', uri: view.uri },
 		target: recordTarget(urip),
 		cid: view.cid,
 		avatar: view.avatar,
@@ -378,7 +378,7 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	type: 'feed',
 	displayName: 'Discover',
 	uri: DISCOVER_FEED_URI,
-	feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
+	feedDescriptor: { type: 'feedgen', uri: DISCOVER_FEED_URI },
 	target: { name: 'Home' },
 	cid: '',
 	avatar: '',
@@ -395,11 +395,14 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	contentMode: undefined,
 };
 
+// keep descriptor identity stable across renders.
+const FOLLOWING_FEED_DESCRIPTOR: FeedDescriptor = { type: 'following' };
+
 const createFollowingFeedInfo = (savedFeed: AppBskyActorDefs.SavedFeed): SavedFeedSourceInfo => ({
 	type: 'feed',
 	displayName: 'Following',
 	uri: savedFeed.value,
-	feedDescriptor: 'following',
+	feedDescriptor: FOLLOWING_FEED_DESCRIPTOR,
 	target: { name: 'Home' },
 	cid: '',
 	avatar: '',

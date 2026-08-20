@@ -35,6 +35,14 @@ const RESOURCE_URI_CODEC: Codec<ResourceUri> = {
 	encode: (value) => value,
 };
 
+const RESOURCE_URI_LIST_CODEC: Codec<ResourceUri[]> = {
+	decode: (raw) => {
+		const uris = raw.split(',').filter(isResourceUri);
+		return uris.length !== 0 ? uris : undefined;
+	},
+	encode: (value) => value.join(','),
+};
+
 const TID_CODEC: Codec<Tid> = {
 	decode: (raw) => (isTid(raw) ? raw : undefined),
 	encode: (value) => value,
@@ -71,6 +79,10 @@ export const recordKey = (): Codec<RecordKey> => RECORD_KEY_CODEC;
  * @returns the resource uri codec
  */
 export const resourceUri = (): Codec<ResourceUri> => RESOURCE_URI_CODEC;
+
+/** @returns a comma-separated resource URI codec that drops invalid entries */
+export const resourceUriList = (): Codec<ResourceUri[]> => RESOURCE_URI_LIST_CODEC;
+
 /**
  * returns a codec for a {@link Tid} path segment. an invalid segment fails to decode, causing the matcher to
  * skip the route.

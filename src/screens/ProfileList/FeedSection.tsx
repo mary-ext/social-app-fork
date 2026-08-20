@@ -3,7 +3,8 @@ import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { softReset } from '#/state/events';
-import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
 import { EmptyState } from '#/components/EmptyState';
 import type { ListMethods } from '#/components/List/List';

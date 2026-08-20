@@ -22,7 +22,7 @@ export function NotificationsActivityListScreen() {
 				</Layout.Header.Content>
 			</Layout.Header.Outer>
 			<PostFeed
-				feed={`posts|${posts}`}
+				feed={{ type: 'posts', uris: posts }}
 				disablePoll
 				renderEmptyState={() => (
 					<EmptyState icon={EditIcon} iconSize="_2xl" message={m['view.notifications.activity.empty']()} />

@@ -2,7 +2,8 @@ import { type ReactElement, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';

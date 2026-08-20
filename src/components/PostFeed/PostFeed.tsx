@@ -14,8 +14,8 @@ import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { postCreated } from '#/state/events';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { STALE } from '#/state/queries';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import {
-	type FeedDescriptor,
 	type FeedPostSlice,
 	type FeedPostSliceItem,
 	pollLatest,
@@ -56,6 +56,7 @@ export type FeedRow =
 	| {
 			type: 'feedShutdownMsg';
 			key: string;
+			feedUri: string;
 	  }
 	| {
 			type: 'sliceItem';
@@ -133,7 +134,8 @@ function PostFeed({
 	renderEmptyState: () => ReactElement;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }): ReactNode {
-	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
+	const feedgenUri = feed.type === 'feedgen' ? feed.uri : undefined;
+	const isDiscover = feedgenUri === DISCOVER_FEED_URI;
 
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
@@ -147,7 +149,7 @@ function PostFeed({
 	}
 
 	const showTrendingInterstitial = useShowTrendingInterstitial({
-		enabled: hasSession && feedUriOrActorDid === DISCOVER_FEED_URI,
+		enabled: hasSession && isDiscover,
 	});
 
 	const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(() => new Set<string>());
@@ -185,7 +187,7 @@ function PostFeed({
 		}
 
 		// Discover always has fresh content.
-		if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+		if (isDiscover) {
 			return onHasNew(true);
 		}
 
@@ -212,17 +214,18 @@ function PostFeed({
 	};
 
 	const myDid = currentAccount?.did || '';
-	useFocusEffect(() => {
+	const showsOwnPosts = feed.type === 'following' || (feed.type === 'author' && feed.did === myDid);
+	useEffect(() => {
+		if (!showsOwnPosts) {
+			return;
+		}
+
 		return postCreated.subscribe(() => {
-			// avoid invalidating while scrolled because it can disrupt native scrolling.
-			if (
-				!isScrolledDownRef.current &&
-				(feed === 'following' || feed === `author|${myDid}|posts_and_author_threads`)
-			) {
+			if (!isScrolledDownRef.current) {
 				void queryClient.invalidateQueries({ queryKey: RQKEY(feed) });
 			}
 		});
-	});
+	}, [feed, queryClient, showsOwnPosts]);
 
 	useFocusEffect(() => {
 		if (!disablePoll) {
@@ -256,7 +259,7 @@ function PostFeed({
 
 	const blockedOrMutedAuthors = usePostAuthorShadowFilter(
 		// author feeds have their own handling
-		feed.startsWith('author|') ? undefined : data?.pages,
+		feed.type === 'author' ? undefined : data?.pages,
 	);
 
 	const feedItems: FeedRow[] = ((): FeedRow[] => {
@@ -275,20 +278,21 @@ function PostFeed({
 		};
 
 		let feedKind: 'discover' | 'profile' | undefined;
-		if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+		if (isDiscover) {
 			feedKind = 'discover';
 		} else if (
-			feedType === 'author' &&
-			(feedTab === 'posts_and_author_threads' || feedTab === 'posts_with_replies')
+			feed.type === 'author' &&
+			(feed.filter === 'posts_and_author_threads' || feed.filter === 'posts_with_replies')
 		) {
 			feedKind = 'profile';
 		}
 
 		const arr: FeedRow[] = [];
-		if (KNOWN_SHUTDOWN_FEEDS.includes(feedUriOrActorDid)) {
+		if (feedgenUri !== undefined && KNOWN_SHUTDOWN_FEEDS.includes(feedgenUri)) {
 			arr.push({
 				type: 'feedShutdownMsg',
 				key: 'feedShutdownMsg',
+				feedUri: feedgenUri,
 			});
 		}
 		if (isFetched) {
@@ -454,7 +458,7 @@ function PostFeed({
 				return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;
 			}
 			case 'feedShutdownMsg': {
-				return <FeedShutdownMsg feedUri={feedUriOrActorDid} topBorder={rowIndex !== 0} />;
+				return <FeedShutdownMsg feedUri={row.feedUri} topBorder={rowIndex !== 0} />;
 			}
 			case 'interstitialFollows': {
 				return <SuggestedFollows feed={feed} />;

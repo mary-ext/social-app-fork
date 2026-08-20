@@ -1,4 +1,6 @@
-import type { FeedDescriptor } from '#/state/queries/post-feed';
+import type { ResourceUri } from '@atcute/lexicons';
+
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 
 import { EmptyState } from '#/components/EmptyState';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
@@ -7,7 +9,7 @@ import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stro
 import { m } from '#/paraglide/messages';
 
 interface PostsListProps {
-	listUri: string;
+	listUri: ResourceUri;
 }
 
 function renderPostsEmpty() {
@@ -15,7 +17,7 @@ function renderPostsEmpty() {
 }
 
 export function PostsList({ listUri }: PostsListProps) {
-	const feed: FeedDescriptor = `list|${listUri}`;
+	const feed: FeedDescriptor = { type: 'list', uri: listUri };
 
 	return <PostFeed feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />;
 }

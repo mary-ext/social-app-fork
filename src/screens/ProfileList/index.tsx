@@ -142,7 +142,7 @@ function CuratedProfileList({
 	useTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
 	const onChangeMembers = () => {
-		void truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`));
+		void truncateAndInvalidate(queryClient, FEED_RQKEY({ type: 'list', uri: list.uri }));
 	};
 
 	const header = <Header list={list} preferences={preferences} />;
@@ -155,7 +155,11 @@ function CuratedProfileList({
 				sections={[
 					{
 						children: (
-							<FeedSection feed={`list|${list.uri}`} isOwner={isOwner} onPressAddUser={onPressAddUser} />
+							<FeedSection
+								feed={{ type: 'list', uri: list.uri }}
+								isOwner={isOwner}
+								onPressAddUser={onPressAddUser}
+							/>
 						),
 						id: 'posts',
 						label: m['common.post.label'](),

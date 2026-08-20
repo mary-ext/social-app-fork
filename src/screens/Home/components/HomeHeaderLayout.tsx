@@ -1,4 +1,3 @@
-import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
 
 import * as Menu from '#/components/Menu';
@@ -16,14 +15,14 @@ import { m } from '#/paraglide/messages';
 import * as styles from './HomeHeaderLayout.css';
 
 type HomeFeed = {
-	id: FeedDescriptor;
+	id: string;
 	label: string;
 };
 
 type FeedSwitcherProps = {
 	activeFeed: HomeFeed;
 	feeds: HomeFeed[];
-	onSelectFeed: (id: FeedDescriptor) => void;
+	onSelectFeed: (id: string) => void;
 };
 
 type HomeHeaderLayoutProps = {

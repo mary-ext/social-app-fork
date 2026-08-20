@@ -1,14 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import type {
-	AppBskyActorDefs,
-	AppBskyFeedDefs,
-	AppBskyFeedGetAuthorFeed,
-	AppBskyFeedGetFeed,
-	AppBskyFeedGetListFeed,
-	AppBskyFeedGetPosts,
-	AppBskyFeedPost,
-} from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -17,7 +9,7 @@ import {
 	type ModerationDecision,
 } from '@atcute/bluesky-moderation';
 import type { Client } from '@atcute/client';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type Did, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { mapDefined } from '@mary/array-fns';
 
@@ -37,6 +29,7 @@ import { ListFeedAPI } from '#/state/queries/feed-api/list';
 import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
 import { joinInterestTags } from '#/state/queries/feed-api/utils';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { FeedTuner } from '#/state/queries/feed-tuner';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
@@ -47,24 +40,6 @@ import { useModerationOpts } from '../moderation/moderation-opts';
 import { useFeedTuners } from './feed-tuners';
 import { usePreferencesQuery } from './preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
-
-type ActorDid = string;
-export type AuthorFilter =
-	| 'posts_with_replies'
-	| 'posts_no_replies'
-	| 'posts_and_author_threads'
-	| 'posts_with_media'
-	| 'posts_with_video';
-type FeedUri = string;
-type ListUri = string;
-type PostsUriList = string;
-
-export type FeedDescriptor =
-	| 'following'
-	| `author|${ActorDid}|${AuthorFilter}`
-	| `feedgen|${FeedUri}`
-	| `list|${ListUri}`
-	| `posts|${PostsUriList}`;
 
 type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
 
@@ -347,35 +322,29 @@ function createApi({
 	userInterests?: string;
 	appview: Client;
 }) {
-	// string splitting loses the segment types encoded by FeedDescriptor.
-	if (feedDesc === 'following') {
-		return new FollowingFeedAPI({ appview });
-	} else if (feedDesc.startsWith('author')) {
-		const [__, actor, filter] = feedDesc.split('|');
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `author|${ActorDid}|${AuthorFilter}`, see above
-		return new AuthorFeedAPI({ appview, feedParams: { actor, filter } as AppBskyFeedGetAuthorFeed.$params });
-	} else if (feedDesc.startsWith('feedgen')) {
-		const [__, feed] = feedDesc.split('|');
-		return new CustomFeedAPI({
-			appview,
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `feedgen|${FeedUri}`, see above
-			feedParams: { feed } as AppBskyFeedGetFeed.$params,
-			userInterests,
-		});
-	} else if (feedDesc.startsWith('list')) {
-		const [__, list] = feedDesc.split('|');
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `list|${ListUri}`, see above
-		return new ListFeedAPI({ appview, feedParams: { list } as AppBskyFeedGetListFeed.$params });
-	} else if (feedDesc.startsWith('posts')) {
-		const [__, uriList] = feedDesc.split('|');
-		return new PostListFeedAPI({
-			appview,
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `posts|${PostsUriList}`, see above
-			feedParams: { uris: uriList!.split(',') } as AppBskyFeedGetPosts.$params,
-		});
-	} else {
-		// keep a safe fallback for malformed descriptors.
-		return new FollowingFeedAPI({ appview });
+	switch (feedDesc.type) {
+		case 'following': {
+			return new FollowingFeedAPI({ appview });
+		}
+		case 'author': {
+			return new AuthorFeedAPI({
+				appview,
+				feedParams: { actor: feedDesc.did, filter: feedDesc.filter },
+			});
+		}
+		case 'feedgen': {
+			return new CustomFeedAPI({
+				appview,
+				feedParams: { feed: feedDesc.uri },
+				userInterests,
+			});
+		}
+		case 'list': {
+			return new ListFeedAPI({ appview, feedParams: { list: feedDesc.uri } });
+		}
+		case 'posts': {
+			return new PostListFeedAPI({ appview, feedParams: { uris: feedDesc.uris } });
+		}
 	}
 }
 
@@ -492,14 +461,10 @@ function assertSomePostsPassModeration(
 	}
 }
 
-export function resetProfilePostsQueries(queryClient: QueryClient, did: string, timeout = 0) {
+export function resetProfilePostsQueries(queryClient: QueryClient, did: Did, timeout = 0) {
 	setTimeout(() => {
-		void queryClient.resetQueries({
-			predicate: (query) => {
-				const feedDesc = query.queryKey[1];
-				return query.queryKey[0] === RQKEY_ROOT && typeof feedDesc === 'string' && feedDesc.includes(did);
-			},
-		});
+		// reset every author feed filter for this did.
+		void queryClient.resetQueries({ queryKey: [RQKEY_ROOT, { type: 'author', did }] });
 	}, timeout);
 }
 

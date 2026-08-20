@@ -12,7 +12,7 @@ import {
 	string,
 } from '@oomfware/stacker';
 
-import { actorIdentifier, did, recordKey, resourceUri, tid } from '#/lib/routes/codecs';
+import { actorIdentifier, did, recordKey, resourceUri, resourceUriList, tid } from '#/lib/routes/codecs';
 
 import {
 	MessagesRouteLoadingScreen,
@@ -256,7 +256,7 @@ export const routes = defineRoutes({
 				component: NotificationsActivityListScreen,
 				meta: { requireAuth: true },
 				path: '/notifications/activity',
-				query: { posts: string() },
+				query: { posts: resourceUriList() },
 			}),
 
 			IntentCompose: route({

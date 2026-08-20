@@ -3,14 +3,13 @@ import { useEffect, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
-import { isDid } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import type { FeedDescriptor } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { useSession } from '#/state/session';
@@ -107,12 +106,11 @@ function SuggestedFollowCard({
 
 export function SuggestedFollows({ feed }: { feed: FeedDescriptor }) {
 	const { currentAccount } = useSession();
-	const [feedType, feedUriOrDid] = feed.split('|');
-	if (feedType === 'author' && isDid(feedUriOrDid)) {
-		if (currentAccount?.did === feedUriOrDid) {
+	if (feed.type === 'author') {
+		if (currentAccount?.did === feed.did) {
 			return null;
 		}
-		return <SuggestedFollowsProfile did={feedUriOrDid} />;
+		return <SuggestedFollowsProfile did={feed.did} />;
 	}
 	return <SuggestedFollowsHome />;
 }

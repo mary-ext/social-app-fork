@@ -8,7 +8,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { cleanError, errorToString } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
 
-import type { FeedDescriptor } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
 import { EmptyState } from '#/components/EmptyState';
@@ -51,11 +51,7 @@ export function PostFeedErrorMessage({
 }) {
 	const knownError = detectKnownError(feedDesc, error);
 
-	if (
-		typeof knownError !== 'undefined' &&
-		knownError !== KnownError.Unknown &&
-		feedDesc.startsWith('feedgen')
-	) {
+	if (typeof knownError !== 'undefined' && knownError !== KnownError.Unknown && feedDesc.type === 'feedgen') {
 		return (
 			<FeedgenErrorMessage
 				feedDesc={feedDesc}
@@ -88,7 +84,7 @@ function FeedgenErrorMessage({
 	savedFeedConfig,
 	topBorder,
 }: {
-	feedDesc: FeedDescriptor;
+	feedDesc: Extract<FeedDescriptor, { type: 'feedgen' }>;
 	knownError: KnownError;
 	rawError?: Error;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
@@ -106,8 +102,7 @@ function FeedgenErrorMessage({
 		[KnownError.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
 		[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
 	}[knownError];
-	const [__, uri] = feedDesc.split('|');
-	const ownerDid = safeParseFeedgenOwnerDid(uri!);
+	const ownerDid = safeParseFeedgenOwnerDid(feedDesc.uri);
 	const removePromptHandle = Prompt.usePromptHandle();
 	const { mutateAsync: removeFeed } = useRemoveFeedMutation();
 
@@ -219,7 +214,7 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError 
 	if (errorString.includes(KnownError.FeedSignedInOnly)) {
 		return KnownError.FeedSignedInOnly;
 	}
-	if (!feedDesc.startsWith('feedgen')) {
+	if (feedDesc.type !== 'feedgen') {
 		return KnownError.Unknown;
 	}
 	if (errorString.includes('could not find feed')) {

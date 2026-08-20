@@ -7,7 +7,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { FeedSourceInfo } from '#/state/queries/feed';
-import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 

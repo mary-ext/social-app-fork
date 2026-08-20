@@ -2,7 +2,6 @@ import { useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { getCurrentDid } from '#/state/session';
 
 import { account } from '#/storage';
@@ -10,25 +9,23 @@ import { account } from '#/storage';
 const emitter = new SimpleEventEmitter<[]>();
 
 // `undefined` until the persisted feed is pulled in, `null` once there turned out to be none.
-let selected: FeedDescriptor | null | undefined;
+let selected: string | null | undefined;
 
 const subscribe = (onStoreChange: () => void) => emitter.subscribe(onStoreChange);
 
-const getSelectedFeed = (): FeedDescriptor | null => {
+const getSelectedFeed = (): string | null => {
 	if (selected === undefined) {
 		const did = getCurrentDid();
-		selected = (did ? account.get([did, 'lastSelectedHomeFeed']) : undefined) ?? null;
+		const stored = did ? account.get([did, 'lastSelectedHomeFeed']) : undefined;
+		// discard legacy pipe-delimited descriptors.
+		selected = stored === undefined || stored.includes('|') ? null : stored;
 	}
 
 	return selected;
 };
 
-/**
- * sets the currently selected feed.
- *
- * @param feed descriptor of feed to select
- */
-export const setSelectedFeed = (feed: FeedDescriptor) => {
+/** @param feed URI of the feed to select, or `'following'` */
+export const setSelectedFeed = (feed: string) => {
 	if (selected === feed) {
 		return;
 	}
@@ -43,9 +40,5 @@ export const setSelectedFeed = (feed: FeedDescriptor) => {
 	emitter.emit();
 };
 
-/**
- * returns the currently selected feed.
- *
- * @returns descriptor of selected feed, or `null`
- */
+/** @returns the selected feed URI, `'following'`, or `null` */
 export const useSelectedFeed = () => useSyncExternalStore(subscribe, getSelectedFeed);

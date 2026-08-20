@@ -9,7 +9,7 @@ import { cleanError } from '#/lib/errors';
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
@@ -79,7 +79,7 @@ function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 
 	useTitle(feedInfo.displayName);
 
-	const feed = `feedgen|${feedInfo.uri}` as FeedDescriptor;
+	const feed = feedInfo.feedDescriptor;
 
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);

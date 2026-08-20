@@ -1,11 +1,8 @@
 import type { ReactNode } from 'react';
 
-import { bskyFeedUri } from '#/lib/constants/feeds';
-
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { usePinnedFeedsInfos } from '#/state/queries/feed';
-import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
@@ -32,21 +29,20 @@ export function HomeScreen() {
 	const preferences = usePreferencesQuery();
 	const pinnedFeeds = usePinnedFeedsInfos();
 
-	const whatsHotFeed: FeedDescriptor = `feedgen|${bskyFeedUri('whats-hot')}`;
-
 	// keep header navigation available while feeds load or fail
-	let sections: Section<FeedDescriptor>[];
+	let sections: Section<string>[];
 	if (!preferences.data || !pinnedFeeds.data) {
 		sections = [];
 	} else if (!hasSession) {
+		const feedInfo = pinnedFeeds.data[0]!;
 		sections = [
 			{
-				id: whatsHotFeed,
-				label: 'Discover',
+				id: feedInfo.uri,
+				label: feedInfo.displayName,
 				children: (
 					<FeedPage
-						feed={whatsHotFeed}
-						feedInfo={pinnedFeeds.data[0]!}
+						feed={feedInfo.feedDescriptor}
+						feedInfo={feedInfo}
 						renderEmptyState={renderCustomFeedEmptyState}
 					/>
 				),
@@ -56,19 +52,19 @@ export function HomeScreen() {
 		sections = pinnedFeeds.data.map((feedInfo) => {
 			const feed = feedInfo.feedDescriptor;
 			return {
-				id: feed,
+				id: feedInfo.uri,
 				label: feedInfo.displayName,
 				children:
-					feed === 'following' ? (
+					feed.type === 'following' ? (
 						<FeedPage
-							key={feed}
+							key={feedInfo.uri}
 							feed={feed}
 							feedInfo={feedInfo}
 							renderEmptyState={renderFollowingEmptyState}
 						/>
 					) : (
 						<FeedPage
-							key={feed}
+							key={feedInfo.uri}
 							feed={feed}
 							feedInfo={feedInfo}
 							renderEmptyState={renderCustomFeedEmptyState}
@@ -88,7 +84,7 @@ export function HomeScreen() {
 	const activeFeed = feeds[activeIndex];
 	useTitle(active?.label ?? m['common.nav.home']());
 
-	const onSelectFeed = (feed: FeedDescriptor) => {
+	const onSelectFeed = (feed: string) => {
 		window.scrollTo(0, 0);
 
 		if (feed === active?.id) {

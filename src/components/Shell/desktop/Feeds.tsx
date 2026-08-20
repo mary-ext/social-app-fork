@@ -17,7 +17,6 @@ import { useRouter, useTarget } from '#/router';
 
 import * as css from './Feeds.css';
 
-// sentinel group value for the "More feeds" entry — never a real feed descriptor.
 const MORE_FEEDS = 'more-feeds';
 
 export function DesktopFeeds() {
@@ -45,17 +44,14 @@ export function DesktopFeeds() {
 
 	// the active feed is selected only on Home; with no explicit selection the first pinned feed leads. on the
 	// Feeds screen the sentinel "More feeds" entry is the selected one instead.
-	const activeFeed =
-		target.name === 'Home' ? (selectedFeed ?? pinnedFeedInfos[0]?.feedDescriptor) : undefined;
+	const activeFeed = target.name === 'Home' ? (selectedFeed ?? pinnedFeedInfos[0]?.uri) : undefined;
 	const activeValue = activeFeed ?? (target.name === 'Feeds' ? MORE_FEEDS : undefined);
 
 	const onValueChange = (next: string[]) => {
 		// More feeds is an <a> that navigates itself, so it never reports here. single-select: clicking another
 		// feed yields `[feed]`, re-clicking the active one yields `[]`.
 		const nextValue = next[0];
-		const feed = nextValue
-			? pinnedFeedInfos.find((info) => info.feedDescriptor === nextValue)?.feedDescriptor
-			: activeFeed;
+		const feed = nextValue ? pinnedFeedInfos.find((info) => info.uri === nextValue)?.uri : activeFeed;
 		if (!feed) {
 			return;
 		}
@@ -100,11 +96,11 @@ export function DesktopFeeds() {
 }
 
 function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
-	const isFollowing = feedInfo.feedDescriptor === 'following';
+	const isFollowing = feedInfo.feedDescriptor.type === 'following';
 
 	return (
 		<Toggle
-			value={feedInfo.feedDescriptor}
+			value={feedInfo.uri}
 			className={css.item}
 			aria-label={feedInfo.displayName}
 			title={m['view.feeds.feed.a11y.opens']({ name: feedInfo.displayName })}
