@@ -7,7 +7,7 @@ import { TRENDING_DID } from '#/lib/constants/feeds';
 import { cleanError } from '#/lib/errors';
 
 import { softReset } from '#/state/events';
-import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
+import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
@@ -84,7 +84,7 @@ function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const queryClient = useQueryClient();
-	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
+	const feedFeedback = useFeedFeedback(toFeedFeedbackTarget(feedInfo), hasSession);
 	const scrollElRef = useRef<ListMethods | null>(null);
 
 	const onScrollToTop = () => {

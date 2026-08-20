@@ -5,7 +5,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { softReset } from '#/state/events';
-import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
+import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
 import type { FeedSourceInfo } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -40,7 +40,7 @@ export function FeedPage({
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
-	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
+	const feedFeedback = useFeedFeedback(toFeedFeedbackTarget(feedInfo), hasSession);
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
 

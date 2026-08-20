@@ -52,9 +52,10 @@ export const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
  * @param router the router to navigate
  * @param path the in-app path
  * @param action how the destination enters history
+ * @param state structured-cloneable history state
  */
-export const navigateTo = (router: AppRouter, path: string, action: LinkAction): void => {
-	router.navigate({ replace: action === 'replace', to: path });
+export const navigateTo = (router: AppRouter, path: string, action: LinkAction, state?: unknown): void => {
+	router.navigate({ replace: action === 'replace', state, to: path });
 };
 
 /** Returns a function that navigates to an in-app route `path` via the given {@link LinkAction}. */

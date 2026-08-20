@@ -19,10 +19,10 @@ import { postUriToTarget } from '#/lib/routes/targets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
+import { postSourceState } from '#/state/post-source';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
-import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
@@ -141,7 +141,17 @@ function FeedItemInner({
 	const { currentAccount } = useSession();
 
 	const target = postUriToTarget(post.uri);
-	const { sendInteraction, feedSourceInfo } = useFeedFeedbackContext();
+	const { sendInteraction, feed } = useFeedFeedbackContext();
+
+	let viaRepost: { uri: ResourceUri; cid: string } | undefined;
+	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
+		viaRepost = {
+			uri: reason.uri,
+			cid: reason.cid,
+		};
+	}
+
+	const sourceState = postSourceState({ feed, feedContext, reqId, via: viaRepost });
 
 	const onPressReply = () => {
 		sendInteraction({
@@ -198,15 +208,6 @@ function FeedItemInner({
 			reqId,
 		});
 		unstableCacheProfileView(queryClient, post.author);
-		setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
-			feedSourceInfo,
-			post: {
-				post,
-				reason: reason?.$type === 'app.bsky.feed.defs#reasonRepost' ? reason : undefined,
-				feedContext,
-				reqId,
-			},
-		});
 	};
 
 	/**
@@ -219,14 +220,6 @@ function FeedItemInner({
 		: undefined;
 
 	const { isActive: live } = useActorStatus(post.author);
-
-	let viaRepost: { uri: ResourceUri; cid: string } | undefined;
-	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
-		viaRepost = {
-			uri: reason.uri,
-			cid: reason.cid,
-		};
-	}
 
 	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
 	let additionalPostAlerts: AppModerationCause[] = [];
@@ -252,7 +245,7 @@ function FeedItemInner({
 	});
 	return (
 		<GalleryBleed>
-			<BlockLink to={target} onBeforePress={onBeforePress}>
+			<BlockLink to={target} state={sourceState} onBeforePress={onBeforePress}>
 				<PostLayout.Frame hoverable topBorder={!(hideTopBorder || isThreadChild)}>
 					<div className={css.reasonRow}>
 						<div className={css.spineSlot}>

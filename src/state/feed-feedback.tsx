@@ -2,14 +2,13 @@ import { createContext, useContext, useEffect, useRef } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
 import { FIRST_PARTY_FEED_URIS } from '#/lib/constants/feeds';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
-import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import type { FeedPostSliceItem } from '#/state/queries/post-feed';
 
 import * as PostFeed from '#/components/PostFeed/PostFeed';
@@ -29,30 +28,51 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<AppBskyFeedDefs.Interact
 	'app.bsky.feed.defs#interactionSeen',
 ]);
 
+/** identifies a feed generator that accepts interaction reports. */
+export type FeedFeedbackTarget = {
+	uri: ResourceUri;
+	serviceDid: Did;
+};
+
+/**
+ * gets the interaction reporting target for a feed.
+ *
+ * @param info the feed
+ * @returns the target when interactions are accepted
+ */
+export const toFeedFeedbackTarget = (info: FeedSourceInfo): FeedFeedbackTarget | undefined => {
+	if (!isFeedSourceFeedInfo(info) || info.feedDescriptor.type !== 'feedgen') {
+		return undefined;
+	}
+
+	const uri = info.feedDescriptor.uri;
+	const serviceDid = info.view?.did;
+	if (!serviceDid || !(isFirstPartyFeed(uri) || info.acceptsInteractions)) {
+		return undefined;
+	}
+
+	return { uri, serviceDid };
+};
+
 export type StateContext = {
 	enabled: boolean;
 	onItemSeen: (item: PostFeed.FeedRow) => void;
 	sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void;
-	feedSourceInfo: FeedSourceInfo | undefined;
+	feed: FeedFeedbackTarget | undefined;
 };
 
 const stateContext = createContext<StateContext>({
 	enabled: false,
 	onItemSeen: (_item: PostFeed.FeedRow) => {},
 	sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
-	feedSourceInfo: undefined,
+	feed: undefined,
 });
 stateContext.displayName = 'FeedFeedbackContext';
 
-export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasSession: boolean) {
+export function useFeedFeedback(feed: FeedFeedbackTarget | undefined, hasSession: boolean) {
 	const { appview } = getClients();
 
-	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
-
-	const isDiscover = isDiscoverFeed(feed?.feedDescriptor);
-	const acceptsInteractions = !!(isDiscover || feed?.acceptsInteractions);
-	const proxyDid = feed?.view?.did;
-	const enabled = !!feed && !!proxyDid && acceptsInteractions && hasSession;
+	const enabled = !!feed && hasSession;
 
 	const queue = useRef<Set<string>>(new Set());
 	const history = useRef<
@@ -61,11 +81,15 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 	>(new WeakSet());
 
 	const sendToFeedNoDelay = () => {
+		if (!feed || !hasSession) {
+			return;
+		}
+
 		const interactions = Array.from(queue.current).map(toInteraction);
 		queue.current.clear();
 
 		const interactionsToSend = interactions.filter(
-			(interaction) => interaction.event && isInteractionAllowed(enabled, feed, interaction.event),
+			(interaction) => interaction.event && isInteractionAllowed(feed, interaction.event),
 		);
 
 		if (interactionsToSend.length === 0) {
@@ -74,9 +98,8 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 
 		ok(
 			appview.post('app.bsky.feed.sendInteractions', {
-				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
-				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `uri` widens to `string` only for the Following pseudo-feed
-				input: { interactions: interactionsToSend, feed: feed?.uri as ResourceUri | undefined },
+				headers: { 'atproto-proxy': `${feed.serviceDid}#bsky_fg` },
+				input: { interactions: interactionsToSend, feed: feed.uri },
 			}),
 		).catch(() => {}); // ignore upstream errors
 	};
@@ -134,7 +157,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		enabled,
 		onItemSeen,
 		sendInteraction,
-		feedSourceInfo: typeof feed === 'object' ? feed : undefined,
+		feed,
 	};
 }
 
@@ -144,21 +167,12 @@ export function useFeedFeedbackContext() {
 	return useContext(stateContext);
 }
 
-// restrict feedback to Discover until third-party permissions exist.
-export function isDiscoverFeed(feed?: FeedDescriptor) {
-	return feed?.type === 'feedgen' && FIRST_PARTY_FEED_URIS.includes(feed.uri);
+function isFirstPartyFeed(uri: ResourceUri) {
+	return FIRST_PARTY_FEED_URIS.includes(uri);
 }
 
-function isInteractionAllowed(
-	enabled: boolean,
-	feed: FeedSourceFeedInfo | undefined,
-	interaction: AppBskyFeedDefs.Interaction['event'],
-) {
-	if (!enabled || !feed) {
-		return false;
-	}
-	const isDiscover = isDiscoverFeed(feed.feedDescriptor);
-	return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction);
+function isInteractionAllowed(feed: FeedFeedbackTarget, interaction: AppBskyFeedDefs.Interaction['event']) {
+	return isFirstPartyFeed(feed.uri) ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction);
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {

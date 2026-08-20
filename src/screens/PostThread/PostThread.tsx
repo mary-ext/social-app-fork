@@ -8,10 +8,10 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { useFeedFeedback } from '#/state/feed-feedback';
+import { usePostSource } from '#/state/post-source';
 import type { ThreadViewOption } from '#/state/queries/preferences/useThreadPreferences';
 import { PostThreadContextProvider, type ThreadItem, usePostThread } from '#/state/queries/usePostThread';
 import { useSession } from '#/state/session';
-import { useUnstablePostSource } from '#/state/unstable-post-source';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 
@@ -54,8 +54,8 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	const headerRef = useRef<HTMLDivElement>(null);
 	const listRef = useRef<ListMethods>(null);
 	const needsInitialAnchor = useRef(true);
-	const anchorPostSource = useUnstablePostSource(uri);
-	const feedFeedback = useFeedFeedback(anchorPostSource?.feedSourceInfo, hasSession);
+	const anchorPostSource = usePostSource();
+	const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession);
 
 	/*
 	 * One query to rule them all
@@ -103,8 +103,8 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 			feedFeedback.sendInteraction({
 				item: post.uri,
 				event: 'app.bsky.feed.defs#interactionReply',
-				feedContext: anchorPostSource.post.feedContext,
-				reqId: anchorPostSource.post.reqId,
+				feedContext: anchorPostSource.feedContext,
+				reqId: anchorPostSource.reqId,
 			});
 		}
 	});

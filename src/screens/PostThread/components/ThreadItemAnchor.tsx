@@ -5,7 +5,6 @@ import type {
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
-import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
@@ -20,10 +19,10 @@ import { triangularRandom } from '#/lib/utils/numbers';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
+import type { PostSource } from '#/state/post-source';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
-import type { PostSource } from '#/state/unstable-post-source';
 
 import { niceDate } from '#/locale/intl/datetime';
 import { formatPostStatCount } from '#/locale/intl/number';
@@ -141,7 +140,7 @@ function ThreadItemAnchorInner({
 }) {
 	const { openComposer } = useOpenComposer();
 	const { currentAccount, hasSession } = useSession();
-	const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession);
+	const feedFeedback = useFeedFeedback(postSource?.feed, hasSession);
 	const [{ translate }, replaceParams] = useParams('PostThread');
 
 	const post = postShadow;
@@ -183,17 +182,7 @@ function ThreadItemAnchorInner({
 	);
 	const showFollowButton = currentAccount?.did !== post.author.did && !onlyFollowersCanReply;
 
-	let viaRepost: { uri: ResourceUri; cid: string } | undefined;
-	{
-		const reason = postSource?.post.reason;
-
-		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
-			viaRepost = {
-				uri: reason.uri,
-				cid: reason.cid,
-			};
-		}
-	}
+	const viaRepost = postSource?.via;
 
 	const onPressReply = useNonReactiveCallback(() => {
 		openComposer({
@@ -213,8 +202,8 @@ function ThreadItemAnchorInner({
 			feedFeedback.sendInteraction({
 				item: post.uri,
 				event: 'app.bsky.feed.defs#interactionReply',
-				feedContext: postSource.post.feedContext,
-				reqId: postSource.post.reqId,
+				feedContext: postSource.feedContext,
+				reqId: postSource.reqId,
 			});
 		}
 	});
@@ -224,8 +213,8 @@ function ThreadItemAnchorInner({
 			feedFeedback.sendInteraction({
 				item: post.uri,
 				event: 'app.bsky.feed.defs#clickthroughAuthor',
-				feedContext: postSource.post.feedContext,
-				reqId: postSource.post.reqId,
+				feedContext: postSource.feedContext,
+				reqId: postSource.reqId,
 			});
 		}
 	};
@@ -235,8 +224,8 @@ function ThreadItemAnchorInner({
 			feedFeedback.sendInteraction({
 				item: post.uri,
 				event: 'app.bsky.feed.defs#clickthroughEmbed',
-				feedContext: postSource.post.feedContext,
-				reqId: postSource.post.reqId,
+				feedContext: postSource.feedContext,
+				reqId: postSource.reqId,
 			});
 		}
 	};
@@ -286,8 +275,8 @@ function ThreadItemAnchorInner({
 								record={record}
 								richText={richText}
 								threadgateRecord={threadgateRecord}
-								feedContext={postSource?.post?.feedContext}
-								reqId={postSource?.post?.reqId}
+								feedContext={postSource?.feedContext}
+								reqId={postSource?.reqId}
 							/>
 						</div>
 					</div>
@@ -436,8 +425,8 @@ function ThreadItemAnchorInner({
 							<AnchorPostControls
 								post={postShadow}
 								onPressReply={onPressReply}
-								feedContext={postSource?.post?.feedContext}
-								reqId={postSource?.post?.reqId}
+								feedContext={postSource?.feedContext}
+								reqId={postSource?.reqId}
 								viaRepost={viaRepost}
 							/>
 						</FeedFeedbackProvider>

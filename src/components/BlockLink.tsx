@@ -38,6 +38,8 @@ type BlockLinkProps = {
 	children: ReactNode;
 	/** The in-app destination, e.g. `{ name: 'PostThread', actor, rkey }`. */
 	to: RouteTarget;
+	/** structured-cloneable state for the destination history entry. */
+	state?: unknown;
 	/**
 	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner
 	 * links already provide keyboard/AT access to avoid redundant tab stops.
@@ -76,6 +78,7 @@ const onAuxClick = (e: MouseEvent<HTMLElement>) => {
 export function BlockLink({
 	children,
 	to,
+	state,
 	label,
 	className,
 	ref,
@@ -99,7 +102,7 @@ export function BlockLink({
 			window.open(path, '_blank');
 			return;
 		}
-		navigateTo(router, path, 'push');
+		navigateTo(router, path, 'push', state);
 	};
 
 	// record where the pointer went down so onClick can consult the press origin. capture phase so a child
