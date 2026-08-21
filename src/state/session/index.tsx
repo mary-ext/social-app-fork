@@ -3,8 +3,6 @@ import { createContext, type PropsWithChildren, useContext, useEffect, useSyncEx
 import { sessionDropped } from '#/state/events';
 import type { SessionStateContext } from '#/state/session/types';
 
-import { signinDialogHandle } from '#/components/dialogs/handles';
-
 import { dropToGuest, getSnapshot, subscribe } from './store';
 
 export type { SessionAccount } from '#/state/session/types';
@@ -58,16 +56,4 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 
 export function useSession() {
 	return useContext(StateContext);
-}
-
-export function useRequireAuth() {
-	const { hasSession } = useSession();
-
-	return (fn: () => unknown) => {
-		if (hasSession) {
-			fn();
-		} else {
-			signinDialogHandle.openWithPayload({});
-		}
-	};
 }

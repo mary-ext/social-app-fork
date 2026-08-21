@@ -10,8 +10,8 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
-import { useRequireAuth } from '#/state/session';
 
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 

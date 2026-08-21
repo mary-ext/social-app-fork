@@ -3,7 +3,9 @@ import { Outlet } from '@oomfware/stacker';
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { conversationTarget } from '#/lib/routes/targets';
 
+import { CurrentConvoIdProvider } from '#/state/messages/current-convo-id';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
+import { ListConvosProvider } from '#/state/queries/messages/list-conversations';
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
@@ -17,6 +19,16 @@ import * as css from './MessagesSplitViewLayout.css';
 
 /** layout shared by every message screen: the persistent chat-list column plus the active conversation. */
 export function MessagesSplitViewLayout() {
+	return (
+		<CurrentConvoIdProvider>
+			<ListConvosProvider>
+				<MessagesSplitViewLayoutContent />
+			</ListConvosProvider>
+		</CurrentConvoIdProvider>
+	);
+}
+
+function MessagesSplitViewLayoutContent() {
 	const { rightNavVisible } = useLayoutBreakpoints();
 
 	if (!rightNavVisible) {

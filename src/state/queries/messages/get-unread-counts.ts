@@ -41,3 +41,38 @@ export function useUnreadCountsQuery() {
 		},
 	});
 }
+
+/** @returns the message badge state. */
+export function useUnreadMessageCount(): {
+	count: number;
+	numUnread?: string;
+	hasNew: boolean;
+} {
+	const { data } = useUnreadCountsQuery();
+	const accepted = data?.unreadAcceptedConvos ?? 0;
+	const request = data?.unreadRequestConvos ?? 0;
+
+	if (accepted > 0) {
+		return {
+			count: accepted,
+			// the API cap represents overflow.
+			numUnread:
+				accepted >= UNREAD_ACCEPTED_CAP
+					? String(UNREAD_ACCEPTED_CAP - 1) + '+'
+					: String(Math.min(accepted, UNREAD_ACCEPTED_CAP - 1)),
+			hasNew: false,
+		};
+	} else if (request > 0) {
+		return {
+			count: 1,
+			numUnread: undefined,
+			hasNew: true,
+		};
+	} else {
+		return {
+			count: 0,
+			numUnread: undefined,
+			hasNew: false,
+		};
+	}
+}

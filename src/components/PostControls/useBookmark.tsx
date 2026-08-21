@@ -4,8 +4,8 @@ import { cleanError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
-import { useRequireAuth } from '#/state/session';
 
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as toast from '#/components/Toast';
 
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';

@@ -2,10 +2,14 @@ import { createContext, type ReactNode, useContext, useEffect } from 'react';
 
 import type { Client } from '@atcute/client';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { onVisibilityChange } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
+import { RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL } from '#/state/queries/messages/get-unread-counts';
 import { getClients, useSession } from '#/state/session';
 
 const MessagesEventBusContext = createContext<MessagesEventBus | null>(null);
@@ -51,5 +55,27 @@ function MessagesEventBusProviderInner({ chat, children }: { chat: Client; child
 		});
 	}, [bus]);
 
-	return <MessagesEventBusContext.Provider value={bus}>{children}</MessagesEventBusContext.Provider>;
+	return (
+		<MessagesEventBusContext.Provider value={bus}>
+			<UnreadCountsSync bus={bus} />
+			{children}
+		</MessagesEventBusContext.Provider>
+	);
+}
+
+function UnreadCountsSync({ bus }: { bus: MessagesEventBus }) {
+	const queryClient = useQueryClient();
+	const invalidateUnreadCounts = useThrottledCallback(() => {
+		void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
+	}, 500);
+
+	useEffect(() => {
+		return bus.on((event) => {
+			if (event.type === 'logs') {
+				invalidateUnreadCounts();
+			}
+		}, {});
+	}, [bus, invalidateUnreadCounts]);
+
+	return null;
 }

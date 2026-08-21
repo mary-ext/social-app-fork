@@ -1,7 +1,7 @@
 import type { ComponentType, MouseEvent, SVGProps } from 'react';
 
 import { softReset } from '#/state/events';
-import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
+import { useUnreadMessageCount } from '#/state/queries/messages/get-unread-counts';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useSession } from '#/state/session';
 

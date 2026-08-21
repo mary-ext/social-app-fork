@@ -18,8 +18,8 @@ import {
 	RQKEY as getConvoKey,
 	useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation';
-import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations';
-import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
+import { LIST_CONVOS_RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations-key';
+import { profileQueryKey as createProfileQueryKey } from '#/state/queries/profile-key';
 import { getClients, useSession } from '#/state/session';
 
 import { useFocusEffect } from '#/router';

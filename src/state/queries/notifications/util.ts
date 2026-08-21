@@ -1,17 +1,11 @@
 import type {
 	AppBskyFeedDefs,
 	AppBskyFeedLike,
-	AppBskyFeedPost,
 	AppBskyFeedRepost,
 	AppBskyGraphDefs,
 	AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateNotification,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
@@ -19,10 +13,8 @@ import { chunked } from '@mary/array-fns';
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import { labelIsHideableOffense } from '#/lib/moderation/causes';
-import { hasMutedWord } from '#/lib/moderation/muted-words';
-
-import { precacheProfile } from '../profile';
+import { unstableCacheProfileView } from '../unstable-profile-cache';
+import { shouldFilterNotification } from './notification-filter';
 import type { FeedNotification, FeedPage, NotificationType } from './types';
 
 const GROUPABLE_REASONS = new Set([
@@ -75,7 +67,7 @@ export async function fetchPage({
 	const indexedAt = data.notifications[0]?.indexedAt;
 
 	// filter out notifs by mod rules
-	const notifs = data.notifications.filter((notif) => !shouldFilterNotif(notif, moderationOpts));
+	const notifs = data.notifications.filter((notif) => !shouldFilterNotification(notif, moderationOpts));
 
 	// group notifications which are essentially similar (follows, likes on a post)
 	const notifsGrouped = groupNotifications(notifs);
@@ -91,7 +83,7 @@ export async function fetchPage({
 				} else {
 					notif.subject = subjects.posts.get(notif.subjectUri);
 					if (notif.subject) {
-						precacheProfile(queryClient, notif.subject.author);
+						unstableCacheProfileView(queryClient, notif.subject.author);
 					}
 				}
 			}
@@ -116,41 +108,6 @@ export async function fetchPage({
 
 // internal methods
 // =
-
-export function shouldFilterNotif(
-	notif: AppBskyNotificationListNotifications.Notification,
-	moderationOpts: ModerationOptions | undefined,
-): boolean {
-	const containsImperative = !!notif.author.labels?.some((label) => labelIsHideableOffense(label));
-	if (containsImperative) {
-		return true;
-	}
-	if (!moderationOpts) {
-		return false;
-	}
-	if (notif.reason === 'subscribed-post') {
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `subscribed-post` reason fixes the collection
-		const record = notif.record as AppBskyFeedPost.Main;
-		if (
-			hasMutedWord({
-				keywordFilters: moderationOpts.prefs.keywordFilters ?? [],
-				text: record.text,
-				facets: record.facets,
-				outlineTags: record.tags,
-				actor: notif.author,
-			})
-		) {
-			return true;
-		}
-	}
-	if (notif.author.viewer?.following) {
-		return false;
-	}
-	return (
-		getDisplayRestrictions(moderateNotification(notif, moderationOpts), DisplayContext.ContentList).filters
-			.length > 0
-	);
-}
 
 export function groupNotifications(
 	notifs: AppBskyNotificationListNotifications.Notification[],

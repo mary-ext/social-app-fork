@@ -8,10 +8,10 @@ import { isAbortError } from '#/lib/errors';
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
-import { useRequireAuth } from '#/state/session';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';

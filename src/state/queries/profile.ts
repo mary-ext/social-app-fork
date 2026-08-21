@@ -32,24 +32,19 @@ import type { Shadow } from '#/state/cache/types';
 import { STALE } from '#/state/queries';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { RQKEY as PROFILE_FOLLOWS_RQKEY } from '#/state/queries/profile-follows';
+import { PROFILE_RQKEY_ROOT, profileQueryKey } from '#/state/queries/profile-key';
 import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
-import {
-	unstableCacheProfileView,
-	useUnstableProfileViewCache,
-} from '#/state/queries/unstable-profile-cache';
+import { useUnstableProfileViewCache } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { getAccountProfileView, getClients, useSession } from '#/state/session';
 
-import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
+import { LIST_CONVOS_RQKEY_ROOT } from './messages/list-conversations-key';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
 import { RQKEY as RQKEY_MY_MUTED } from './my-muted-accounts';
 
 export * from '#/state/queries/unstable-profile-cache';
-/** @deprecated use {@link unstableCacheProfileView} instead */
-export const precacheProfile = unstableCacheProfileView;
 
-export const RQKEY_ROOT = 'profile';
-export const RQKEY = (did: string) => [RQKEY_ROOT, did];
+export const RQKEY = profileQueryKey;
 
 function getProfilePlaceholder(
 	getUnstableProfile: (didOrHandle: string) => AnyProfileView | undefined,
@@ -553,7 +548,7 @@ export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 			// hooks. the convo list is also read raw (e.g. the unread badge's
 			// calculateCount, getMessageInfo), and blocks emit no chat log event,
 			// so without a refetch that data stays stale indefinitely.
-			void queryClient.invalidateQueries({ queryKey: [RQKEY_LIST_CONVOS] });
+			void queryClient.invalidateQueries({ queryKey: [LIST_CONVOS_RQKEY_ROOT] });
 		},
 	});
 
@@ -683,7 +678,7 @@ export function* findAllProfilesInQueryData(
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
 	const profileQueryDatas = queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
-		queryKey: [RQKEY_ROOT],
+		queryKey: [PROFILE_RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of profileQueryDatas) {
 		if (!queryData) {
@@ -695,6 +690,6 @@ export function* findAllProfilesInQueryData(
 	}
 }
 
-registerShadowFinders(RQKEY_ROOT, {
+registerShadowFinders(PROFILE_RQKEY_ROOT, {
 	findProfiles: findAllProfilesInQueryData,
 });

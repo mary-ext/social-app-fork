@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { softReset } from '#/state/events';
-import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
+import { notificationFeedQueryKey } from '#/state/queries/notifications/notification-feed-key';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
 import { truncateAndInvalidate } from '#/state/queries/util';
@@ -47,7 +47,7 @@ export function NotificationsScreen() {
 	const queryClient = useQueryClient();
 	const checkUnreadMentions = async ({ invalidate }: { invalidate: boolean }) => {
 		if (invalidate) {
-			return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'));
+			return truncateAndInvalidate(queryClient, notificationFeedQueryKey('mentions'));
 		}
 	};
 
@@ -143,7 +143,7 @@ function NotificationsTab({
 		scrollElRef.current?.scrollToOffset({ animated: false, offset: 0 });
 		if (hasNew) {
 			// render what we have now
-			void truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filter));
+			void truncateAndInvalidate(queryClient, notificationFeedQueryKey(filter));
 		} else if (!isLoading) {
 			// check with the server
 			setIsLoadingLatest(true);

@@ -4,8 +4,8 @@ import { isAbortError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/types';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
-import { useRequireAuth } from '#/state/session';
 
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';

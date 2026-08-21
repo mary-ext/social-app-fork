@@ -22,20 +22,16 @@ import { getClients, useSession } from '#/state/session';
 
 import { RQKEY as CONVO_KEY } from './conversation';
 import {
-	RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL,
-	UNREAD_ACCEPTED_CAP,
-	useUnreadCountsQuery,
-} from './get-unread-counts';
-import {
 	type ConvoRequestListQueryData,
 	optimisticDeleteJoinRequest,
 	RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
 } from './list-conversation-requests';
+import { LIST_CONVOS_RQKEY_ROOT } from './list-conversations-key';
 import { listConvoMembersQueryKey } from './list-convo-members';
 
 const DEFAULT_LIMIT = 10;
 
-export const RQKEY_ROOT = 'convo-list';
+export const RQKEY_ROOT = LIST_CONVOS_RQKEY_ROOT;
 export const RQKEY = (
 	status: 'accepted' | 'request' | 'all',
 	readState: 'all' | 'unread' = 'all',
@@ -168,19 +164,12 @@ export function ListConvosProviderInner({ children }: { children: ReactNode }) {
 		void queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] });
 	}, 500);
 
-	// any chat log can change unread counts, so refresh them after each batch.
-	const debouncedInvalidateUnreadCounts = useThrottledCallback(() => {
-		void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
-	}, 500);
-
 	useEffect(() => {
 		const unsub = messagesBus.on(
 			(events) => {
 				if (events.type !== 'logs') {
 					return;
 				}
-
-				debouncedInvalidateUnreadCounts();
 
 				function mutateMembers(
 					convoId: string,
@@ -724,50 +713,9 @@ export function ListConvosProviderInner({ children }: { children: ReactNode }) {
 		);
 
 		return () => unsub();
-	}, [
-		messagesBus,
-		currentConvoId,
-		queryClient,
-		currentAccount?.did,
-		debouncedRefetch,
-		debouncedInvalidateUnreadCounts,
-	]);
+	}, [messagesBus, currentConvoId, queryClient, currentAccount?.did, debouncedRefetch]);
 
 	return <>{children}</>;
-}
-
-export function useUnreadMessageCount(): {
-	count: number;
-	numUnread?: string;
-	hasNew: boolean;
-} {
-	const { data } = useUnreadCountsQuery();
-	const accepted = data?.unreadAcceptedConvos ?? 0;
-	const request = data?.unreadRequestConvos ?? 0;
-
-	if (accepted > 0) {
-		return {
-			count: accepted,
-			// render the API's overflow sentinel as a plus count.
-			numUnread:
-				accepted >= UNREAD_ACCEPTED_CAP
-					? String(UNREAD_ACCEPTED_CAP - 1) + '+'
-					: String(Math.min(accepted, UNREAD_ACCEPTED_CAP - 1)),
-			hasNew: false,
-		};
-	} else if (request > 0) {
-		return {
-			count: 1,
-			numUnread: undefined,
-			hasNew: true,
-		};
-	} else {
-		return {
-			count: 0,
-			numUnread: undefined,
-			hasNew: false,
-		};
-	}
 }
 
 export type ConvoListQueryData = {

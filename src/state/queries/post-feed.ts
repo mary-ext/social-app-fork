@@ -31,10 +31,9 @@ import type { FeedAPI } from '#/state/queries/feed-api/types';
 import { joinInterestTags } from '#/state/queries/feed-api/utils';
 import { type FeedDescriptor, type FeedRequest, toFeedRequest } from '#/state/queries/feed-descriptor';
 import { FeedTuner } from '#/state/queries/feed-tuner';
+import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
-
-import { KnownError } from '#/components/PostFeed/PostFeedErrorMessage';
 
 import { useModerationOpts } from '../moderation/moderation-opts';
 import { useFeedTuners } from './feed-tuners';
@@ -467,7 +466,7 @@ function assertSomePostsPassModeration(
 	}
 
 	if (!somePostsPassModeration) {
-		throw new Error(KnownError.FeedSignedInOnly);
+		throw new Error(PostFeedErrorCode.FeedSignedInOnly);
 	}
 }
 

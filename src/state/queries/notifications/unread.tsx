@@ -2,9 +2,11 @@
 
 import { createContext, type PropsWithChildren, useContext, useEffect, useRef, useState } from 'react';
 
-import { ok } from '@atcute/client';
+import type { AppBskyNotificationListNotifications } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { type Client, ok } from '@atcute/client';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
 import { isDocumentVisible } from '#/lib/browser/visibility';
 
@@ -12,9 +14,9 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { getClients, useSession } from '#/state/session';
 
-import { RQKEY as RQKEY_NOTIFS } from './feed';
+import { notificationFeedQueryKey } from './notification-feed-key';
+import { shouldFilterNotification } from './notification-filter';
 import type { CachedFeedPage, FeedPage } from './types';
-import { fetchPage } from './util';
 
 const UPDATE_INTERVAL = 30 * 1e3; // 30sec
 
@@ -114,20 +116,10 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 			// paths below so a re-fire can't clear another request's in-flight lock.
 			isFetchingRef.current = true;
 			try {
-				// count
-				const { page, indexedAt: lastIndexed } = await fetchPage({
-					appview,
-					cursor: undefined,
-					limit: 40,
-					queryClient,
-					moderationOpts,
-					reasons: [],
-
-					// only fetch subjects when the page is going to be used
-					// in the notifications query, otherwise skip it
-					fetchAdditionalData: !!invalidate,
-				});
-				const unreadCount = countUnread(page);
+				// skip grouping and subject fetches unless the feed cache needs them.
+				const { page, lastIndexed, unreadCount } = invalidate
+					? await fetchGroupedUnread({ appview, queryClient, moderationOpts })
+					: await fetchRawUnread({ appview, moderationOpts });
 				const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
 
 				// track last sync
@@ -143,8 +135,8 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 				// update & broadcast
 				setNumUnread(unreadCountStr);
 				if (invalidate) {
-					void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
-					void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
+					void truncateAndInvalidate(queryClient, notificationFeedQueryKey('all'));
+					void truncateAndInvalidate(queryClient, notificationFeedQueryKey('mentions'));
 				}
 				// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
 				broadcast.postMessage({ event: unreadCountStr });
@@ -207,3 +199,59 @@ function countUnread(page: FeedPage) {
 	}
 	return num;
 }
+
+function countRawUnread(
+	notifications: AppBskyNotificationListNotifications.Notification[],
+	moderationOpts: ModerationOptions | undefined,
+) {
+	let count = 0;
+	for (const notification of notifications) {
+		if (!notification.isRead && !shouldFilterNotification(notification, moderationOpts)) {
+			count++;
+		}
+	}
+	return count;
+}
+
+type UnreadCheck = { page: FeedPage | undefined; lastIndexed: string | undefined; unreadCount: number };
+
+const unreadCheckParams = () => ({ limit: 40, reasons: [] as string[] });
+
+const fetchGroupedUnread = async ({
+	appview,
+	queryClient,
+	moderationOpts,
+}: {
+	appview: Client;
+	queryClient: QueryClient;
+	moderationOpts: ModerationOptions | undefined;
+}): Promise<UnreadCheck> => {
+	const { fetchPage } = await import('./util');
+	const { page, indexedAt } = await fetchPage({
+		appview,
+		cursor: undefined,
+		queryClient,
+		moderationOpts,
+		fetchAdditionalData: true,
+		...unreadCheckParams(),
+	});
+	return { page, lastIndexed: indexedAt, unreadCount: countUnread(page) };
+};
+
+// grouping preserves every notification in `additional`, so raw and grouped counts match.
+const fetchRawUnread = async ({
+	appview,
+	moderationOpts,
+}: {
+	appview: Client;
+	moderationOpts: ModerationOptions | undefined;
+}): Promise<UnreadCheck> => {
+	const data = await ok(
+		appview.get('app.bsky.notification.listNotifications', { params: unreadCheckParams() }),
+	);
+	return {
+		page: undefined,
+		lastIndexed: data.notifications[0]?.indexedAt,
+		unreadCount: countRawUnread(data.notifications, moderationOpts),
+	};
+};

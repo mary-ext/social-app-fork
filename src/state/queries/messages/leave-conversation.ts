@@ -11,7 +11,8 @@ import {
 	optimisticDelete as optimisticDeleteRequest,
 	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
 } from './list-conversation-requests';
-import { type ConvoListQueryData, RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
+import type { ConvoListQueryData } from './list-conversations';
+import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations-key';
 
 const RQKEY_ROOT = 'leave-convo';
 export function RQKEY(convoId: string | undefined) {

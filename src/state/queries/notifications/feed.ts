@@ -28,6 +28,7 @@ import { getClients } from '#/state/session';
 import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
+import { NOTIFICATION_FEED_RQKEY_ROOT, notificationFeedQueryKey } from './notification-feed-key';
 import type { FeedPage } from './types';
 import { useUnreadNotificationsApi } from './unread';
 import { fetchPage } from './util';
@@ -37,11 +38,6 @@ export type { FeedNotification, FeedPage, NotificationType } from './types';
 const PAGE_SIZE = 30;
 
 type RQPageParam = string | undefined;
-
-const RQKEY_ROOT = 'notification-feed';
-export function RQKEY(filter: 'all' | 'mentions') {
-	return [RQKEY_ROOT, filter];
-}
 
 export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all' | 'mentions' }) {
 	const { appview } = getClients();
@@ -63,7 +59,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	} | null>(null);
 
 	const query = useInfiniteQuery<FeedPage, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
-		queryKey: RQKEY(filter),
+		queryKey: notificationFeedQueryKey(filter),
 		enabled,
 		staleTime: STALE.INFINITY,
 		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
@@ -224,7 +220,7 @@ export function* findAllPostsInQueryData(
 	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
-		queryKey: [RQKEY_ROOT],
+		queryKey: [NOTIFICATION_FEED_RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {
@@ -255,7 +251,7 @@ export function* findAllProfilesInQueryData(
 	did: string,
 ): Generator<AnyProfileView, void> {
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
-		queryKey: [RQKEY_ROOT],
+		queryKey: [NOTIFICATION_FEED_RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {
@@ -285,7 +281,7 @@ export function* findAllProfilesInQueryData(
 	}
 }
 
-registerShadowFinders(RQKEY_ROOT, {
+registerShadowFinders(NOTIFICATION_FEED_RQKEY_ROOT, {
 	// prefer fresh notification engagement counts.
 	priority: 20,
 	findPosts: findAllPostsInQueryData,

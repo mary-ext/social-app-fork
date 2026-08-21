@@ -26,7 +26,7 @@ import {
 	MaxHiddenRepliesError,
 	useToggleReplyVisibilityMutation,
 } from '#/state/queries/threadgate';
-import { useRequireAuth, useSession } from '#/state/session';
+import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { isPostInLanguage } from '#/locale/helpers';
@@ -36,6 +36,7 @@ import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';

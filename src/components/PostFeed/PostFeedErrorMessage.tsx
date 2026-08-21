@@ -9,6 +9,7 @@ import { cleanError, errorToString } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
 
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
 import { EmptyState } from '#/components/EmptyState';
@@ -23,18 +24,6 @@ import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
 import * as css from './PostFeedErrorMessage.css';
-
-export enum KnownError {
-	Block = 'Block',
-	FeedgenDoesNotExist = 'FeedgenDoesNotExist',
-	FeedgenMisconfigured = 'FeedgenMisconfigured',
-	FeedgenBadResponse = 'FeedgenBadResponse',
-	FeedgenOffline = 'FeedgenOffline',
-	FeedgenUnknown = 'FeedgenUnknown',
-	FeedSignedInOnly = 'FeedSignedInOnly',
-	FeedTooManyRequests = 'FeedTooManyRequests',
-	Unknown = 'Unknown',
-}
 
 export function PostFeedErrorMessage({
 	feedDesc,
@@ -51,7 +40,11 @@ export function PostFeedErrorMessage({
 }) {
 	const knownError = detectKnownError(feedDesc, error);
 
-	if (typeof knownError !== 'undefined' && knownError !== KnownError.Unknown && feedDesc.type === 'feedgen') {
+	if (
+		typeof knownError !== 'undefined' &&
+		knownError !== PostFeedErrorCode.Unknown &&
+		feedDesc.type === 'feedgen'
+	) {
 		return (
 			<FeedgenErrorMessage
 				feedDesc={feedDesc}
@@ -63,7 +56,7 @@ export function PostFeedErrorMessage({
 		);
 	}
 
-	if (knownError === KnownError.Block) {
+	if (knownError === PostFeedErrorCode.Block) {
 		return (
 			<EmptyState
 				icon={WarningIcon}
@@ -85,22 +78,22 @@ function FeedgenErrorMessage({
 	topBorder,
 }: {
 	feedDesc: Extract<FeedDescriptor, { type: 'feedgen' }>;
-	knownError: KnownError;
+	knownError: PostFeedErrorCode;
 	rawError?: Error;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	topBorder: boolean;
 }) {
 	const router = useRouter();
 	const msg = {
-		[KnownError.Unknown]: '',
-		[KnownError.Block]: '',
-		[KnownError.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
-		[KnownError.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
-		[KnownError.FeedgenBadResponse]: m['view.posts.feed.error.badResponse'](),
-		[KnownError.FeedgenOffline]: m['view.posts.feed.error.offline'](),
-		[KnownError.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
-		[KnownError.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
-		[KnownError.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
+		[PostFeedErrorCode.Unknown]: '',
+		[PostFeedErrorCode.Block]: '',
+		[PostFeedErrorCode.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
+		[PostFeedErrorCode.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
+		[PostFeedErrorCode.FeedgenBadResponse]: m['view.posts.feed.error.badResponse'](),
+		[PostFeedErrorCode.FeedgenOffline]: m['view.posts.feed.error.offline'](),
+		[PostFeedErrorCode.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
+		[PostFeedErrorCode.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
+		[PostFeedErrorCode.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
 	}[knownError];
 	const ownerDid = safeParseFeedgenOwnerDid(feedDesc.uri);
 	const removePromptHandle = Prompt.usePromptHandle();
@@ -130,18 +123,18 @@ function FeedgenErrorMessage({
 
 	let cta: ReactNode;
 	switch (knownError) {
-		case KnownError.FeedSignedInOnly: {
+		case PostFeedErrorCode.FeedSignedInOnly: {
 			cta = null;
 			break;
 		}
-		case KnownError.FeedgenDoesNotExist:
-		case KnownError.FeedgenMisconfigured:
-		case KnownError.FeedgenBadResponse:
-		case KnownError.FeedgenOffline:
-		case KnownError.FeedgenUnknown: {
+		case PostFeedErrorCode.FeedgenDoesNotExist:
+		case PostFeedErrorCode.FeedgenMisconfigured:
+		case PostFeedErrorCode.FeedgenBadResponse:
+		case PostFeedErrorCode.FeedgenOffline:
+		case PostFeedErrorCode.FeedgenUnknown: {
 			cta = (
 				<div className={css.cta}>
-					{knownError === KnownError.FeedgenDoesNotExist && savedFeedConfig && (
+					{knownError === PostFeedErrorCode.FeedgenDoesNotExist && savedFeedConfig && (
 						<Button
 							color="secondary_inverted"
 							label={m['view.posts.feed.remove.label']()}
@@ -192,7 +185,7 @@ function safeParseFeedgenOwnerDid(uri: string): Did | undefined {
 	}
 }
 
-function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError | undefined {
+function detectKnownError(feedDesc: FeedDescriptor, error: unknown): PostFeedErrorCode | undefined {
 	if (!error) {
 		return undefined;
 	}
@@ -200,40 +193,40 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError 
 		error instanceof ClientResponseError &&
 		(error.error === 'BlockedActor' || error.error === 'BlockedByActor')
 	) {
-		return KnownError.Block;
+		return PostFeedErrorCode.Block;
 	}
 
 	// check status codes
 	if (typeof error === 'object' && error !== null && 'status' in error && error.status === 429) {
-		return KnownError.FeedTooManyRequests;
+		return PostFeedErrorCode.FeedTooManyRequests;
 	}
 
 	// convert error to string and continue
 	const errorString = errorToString(error);
 
-	if (errorString.includes(KnownError.FeedSignedInOnly)) {
-		return KnownError.FeedSignedInOnly;
+	if (errorString.includes(PostFeedErrorCode.FeedSignedInOnly)) {
+		return PostFeedErrorCode.FeedSignedInOnly;
 	}
 	if (feedDesc.type !== 'feedgen') {
-		return KnownError.Unknown;
+		return PostFeedErrorCode.Unknown;
 	}
 	if (errorString.includes('could not find feed')) {
-		return KnownError.FeedgenDoesNotExist;
+		return PostFeedErrorCode.FeedgenDoesNotExist;
 	}
 	if (errorString.includes('feed unavailable')) {
-		return KnownError.FeedgenOffline;
+		return PostFeedErrorCode.FeedgenOffline;
 	}
 	if (errorString.includes('invalid did document')) {
-		return KnownError.FeedgenMisconfigured;
+		return PostFeedErrorCode.FeedgenMisconfigured;
 	}
 	if (errorString.includes('could not resolve did document')) {
-		return KnownError.FeedgenMisconfigured;
+		return PostFeedErrorCode.FeedgenMisconfigured;
 	}
 	if (errorString.includes('invalid feed generator service details in did document')) {
-		return KnownError.FeedgenMisconfigured;
+		return PostFeedErrorCode.FeedgenMisconfigured;
 	}
 	if (errorString.includes('invalid response')) {
-		return KnownError.FeedgenBadResponse;
+		return PostFeedErrorCode.FeedgenBadResponse;
 	}
-	return KnownError.FeedgenUnknown;
+	return PostFeedErrorCode.FeedgenUnknown;
 }

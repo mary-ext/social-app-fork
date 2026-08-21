@@ -6,9 +6,7 @@ import { useEffect } from 'react';
 
 import { RouterView } from '@oomfware/stacker';
 
-import { initializeLanguageDetection } from '#/lib/language-detection';
-
-import { MessagesProvider } from '#/state/messages';
+import { MessagesEventBusProvider } from '#/state/messages/events';
 import { Provider as LabelDefsProvider } from '#/state/moderation/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/moderation/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
@@ -35,7 +33,7 @@ function InnerApp() {
 		<Splash isReady={!isSessionResuming}>
 			{/* QueryProvider resets children on currentDid changes */}
 			<QueryProvider currentDid={currentAccount?.did}>
-				<MessagesProvider>
+				<MessagesEventBusProvider>
 					{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
 					<LabelDefsProvider>
 						<ModerationOptsProvider>
@@ -45,7 +43,7 @@ function InnerApp() {
 							</UnreadNotifsProvider>
 						</ModerationOptsProvider>
 					</LabelDefsProvider>
-				</MessagesProvider>
+				</MessagesEventBusProvider>
 			</QueryProvider>
 		</Splash>
 	);
@@ -53,8 +51,10 @@ function InnerApp() {
 
 function App() {
 	useEffect(() => {
-		// prewarm language-detection weights so detection is ready by first use
-		void initializeLanguageDetection();
+		// prewarm without adding the detector to the initial chunk.
+		void import('#/lib/language-detection').then(({ initializeLanguageDetection }) => {
+			void initializeLanguageDetection();
+		});
 	}, []);
 
 	/*

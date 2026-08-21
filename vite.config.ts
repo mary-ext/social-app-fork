@@ -63,8 +63,8 @@ export default defineConfig(({ mode }) => {
 			// #endregion
 
 			// #region lazy tier
-			{ name: 'messages', test: /[\\/]src[\\/]paraglide[\\/]/, priority: 20 },
-			{ name: 'icons', test: /[\\/]src[\\/]icons[\\/]/, priority: 20 },
+			{ name: 'messages', test: /[\\/]src[\\/]paraglide[\\/]/, minShareCount: 4, priority: 20 },
+			{ name: 'icons', test: /[\\/]src[\\/]icons[\\/]/, minShareCount: 1, priority: 20 },
 			{ name: 'base-ui', test: /node_modules[\\/](?:@base-ui|@floating-ui)[\\/]/, priority: 15 },
 			{ name: 'atproto', test: /node_modules[\\/](?:@atcute|@jsr[\\/]mary__)/, priority: 15 },
 			{ name: 'common', priority: 0 },

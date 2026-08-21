@@ -15,7 +15,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { networkConfirmed, networkLost } from '#/state/events';
-import { RQKEY_ROOT as PROFILE_RQKEY_ROOT } from '#/state/queries/profile';
+import { PROFILE_RQKEY_ROOT } from '#/state/queries/profile-key';
 import { isQueryPersisted } from '#/state/queries/util';
 import { updateAccountProfile } from '#/state/session';
 

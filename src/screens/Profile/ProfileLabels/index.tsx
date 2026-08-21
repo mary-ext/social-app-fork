@@ -16,13 +16,13 @@ import { useLabelerInfoQuery, useLabelerSubscriptionMutation } from '#/state/que
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
-import { useRequireAuth } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { dateTimeLong } from '#/locale/intl/datetime';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorScreen } from '#/components/ErrorScreen';
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';

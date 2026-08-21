@@ -12,7 +12,7 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
 import { useFetchHandle } from '#/state/queries/handle';
-import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
+import { useUnreadMessageCount } from '#/state/queries/messages/get-unread-counts';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';

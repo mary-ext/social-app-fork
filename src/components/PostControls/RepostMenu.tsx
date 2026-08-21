@@ -1,7 +1,8 @@
 import { cloneElement, type MouseEvent, type ReactElement } from 'react';
 
-import { useRequireAuth, useSession } from '#/state/session';
+import { useSession } from '#/state/session';
 
+import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { Tooltip } from '#/components/Tooltip';
 
