@@ -53,7 +53,7 @@
 		"@mary/keybinds": "jsr:^0.1.2",
 		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lang-detect": "^0.2.1",
-		"@oomfware/lightbox": "^0.1.8",
+		"@oomfware/lightbox": "^0.1.9",
 		"@oomfware/scion": "^0.1.2",
 		"@oomfware/stacker": "^0.2.3",
 		"@oomfware/tug": "^0.2.0",

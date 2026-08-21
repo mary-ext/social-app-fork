@@ -52,12 +52,24 @@ export function LightboxContents({
 		}
 	}
 
-	// arrow-key paging is bound to the viewport (tabIndex -1); the eager popup no longer hands it
-	// initialFocus, so focus it here on open.
+	// keep keyboard paging active when transient chrome drops focus
 	useEffect(() => {
-		if (open) {
-			viewportRef.current?.focus({ preventScroll: true });
+		const el = viewportRef.current;
+		if (!open || !el) {
+			return undefined;
 		}
+
+		const onFocusOut = (e: FocusEvent) => {
+			// do not steal focus when the window loses it
+			if (e.relatedTarget === null && document.hasFocus()) {
+				el.focus({ preventScroll: true });
+			}
+		};
+
+		el.focus({ preventScroll: true });
+		el.addEventListener('focusout', onFocusOut);
+
+		return () => el.removeEventListener('focusout', onFocusOut);
 	}, [open]);
 
 	const toggleTimer = useRef<number | null>(null);
@@ -93,10 +105,10 @@ export function LightboxContents({
 		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>
 			<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
 				<Lb.Track>{renderSlide}</Lb.Track>
+				<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
+					<Chrome />
+				</div>
 			</Lb.Viewport>
-			<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
-				<Chrome />
-			</div>
 		</Lb.Provider>
 	);
 }
@@ -196,26 +208,26 @@ function Chrome() {
 
 	return (
 		<>
-			{canLeft && (
-				<button
-					type="button"
-					className={clsx(styles.navButton, styles.navLeft)}
-					aria-label={m['components.lightbox.a11y.previous']()}
-					onClick={prev}
-				>
-					<ArrowLeftIcon className={styles.controlIcon} />
-				</button>
-			)}
-			{canRight && (
-				<button
-					type="button"
-					className={clsx(styles.navButton, styles.navRight)}
-					aria-label={m['components.lightbox.a11y.next']()}
-					onClick={next}
-				>
-					<ArrowRightIcon className={styles.controlIcon} />
-				</button>
-			)}
+			<button
+				type="button"
+				className={clsx(styles.navButton, styles.navLeft)}
+				aria-label={m['components.lightbox.a11y.previous']()}
+				disabled={!canLeft}
+				tabIndex={-1}
+				onClick={prev}
+			>
+				<ArrowLeftIcon className={styles.controlIcon} />
+			</button>
+			<button
+				type="button"
+				className={clsx(styles.navButton, styles.navRight)}
+				aria-label={m['components.lightbox.a11y.next']()}
+				disabled={!canRight}
+				tabIndex={-1}
+				onClick={next}
+			>
+				<ArrowRightIcon className={styles.controlIcon} />
+			</button>
 			<div className={styles.topLeft}>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
@@ -240,8 +252,9 @@ function Chrome() {
 				<XIcon className={styles.controlIcon} />
 			</BaseDialog.Close>
 			{img?.alt ? (
-				<div className={styles.altPanel}>
-					<Text size="md" className={styles.altText}>
+				// let long alt text bypass viewport gestures and receive keyboard focus
+				<div className={styles.altPanel} tabIndex={0} data-lightbox-passthrough>
+					<Text size="md" selectable className={styles.altText}>
 						{img.alt}
 					</Text>
 				</div>

@@ -118,8 +118,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1
       '@oomfware/lightbox':
-        specifier: ^0.1.8
-        version: 0.1.8(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^0.1.9
+        version: 0.1.9(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@oomfware/scion':
         specifier: ^0.1.2
         version: 0.1.2
@@ -1068,8 +1068,8 @@ packages:
   '@oomfware/lang-detect@0.2.1':
     resolution: {integrity: sha512-ZVs+CYEIuDXV7GDib6LGCBvE4bglnCO9UMJRj/PeB/9W0az3sdkXNr4VIKfvprYyTZGhynhy13FVNV3ysDuNog==}
 
-  '@oomfware/lightbox@0.1.8':
-    resolution: {integrity: sha512-7R+HVTjB3Xrldbp9rAZsoh/E0TW3zG6v8HVi2Z048b9+0TYc/ENI/h6HcG6BT1k9Rjfu5FABJGm1pvXgXHApmQ==}
+  '@oomfware/lightbox@0.1.9':
+    resolution: {integrity: sha512-FifZ1AOuc0a3c31BMRQc68p4kyYzt1UaSsm+dMYT4sXbWDTh3jps5FApNA3HoPf3WallWkMEXCIqlgVnI5XiFg==}
     peerDependencies:
       '@base-ui/react': '>=1.5.0'
       react: '>=19.2'
@@ -3217,7 +3217,7 @@ snapshots:
 
   '@oomfware/lang-detect@0.2.1': {}
 
-  '@oomfware/lightbox@0.1.8(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@oomfware/lightbox@0.1.9(@base-ui/react@1.7.0(patch_hash=31662d56365ecef5bfde62f7524a9cfb86a9da146be485f50c8440a617395513)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.2
       react: 19.2.8

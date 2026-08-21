@@ -104,6 +104,7 @@ export const navButton = style({
 	pointerEvents: 'auto',
 	selectors: {
 		'&:hover': { background: 'rgba(0, 0, 0, 0.53)' },
+		'&:disabled': { animation: 'none', opacity: 0, pointerEvents: 'none' },
 	},
 	'@media': {
 		'screen and (max-width: 800px)': { width: 34, height: 34 },
