@@ -2,8 +2,6 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 
-import { useViewportZoomLock } from '#/lib/hooks/use-viewport-zoom-lock';
-
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
@@ -22,7 +20,7 @@ import { Error } from '#/components/Error';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
-import { useFocusEffect, useIsFocused, useParams, useRouter } from '#/router';
+import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
@@ -58,9 +56,6 @@ export function MessagesConversationScreenInner() {
 
 function Inner() {
 	const convoState = useConvo();
-	const isFocused = useIsFocused();
-
-	useViewportZoomLock({ enabled: isFocused });
 
 	const convo = convoState.convo;
 
