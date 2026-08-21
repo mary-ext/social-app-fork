@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-import { iconSize, zIndex } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 const fadeIn = keyframes({
 	from: { opacity: 0 },
@@ -50,30 +50,34 @@ export const chromeHidden = style({
 	opacity: 0,
 });
 
-const blurred = {
+const blurred = style({
 	WebkitBackdropFilter: 'blur(8px)',
 	backdropFilter: 'blur(8px)',
-} as const;
-
-export const circle = style({
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-	animation: `${fadeIn} 200ms ease 200ms both`,
-	border: 'none',
-	borderRadius: 16,
-	background: 'rgba(0, 0, 0, 0.75)',
-	padding: 0,
-	width: 32,
-	height: 32,
-	color: '#fff',
-	cursor: 'pointer',
-	pointerEvents: 'auto',
-	...blurred,
-	selectors: {
-		'&:hover': { background: 'rgba(0, 0, 0, 0.85)' },
-	},
 });
+
+const scrim = 'rgba(0, 0, 0, 0.75)';
+
+export const circle = style([
+	blurred,
+	{
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		animation: `${fadeIn} 200ms ease 200ms both`,
+		border: 'none',
+		borderRadius: borderRadius.lg,
+		background: scrim,
+		padding: 0,
+		width: 32,
+		height: 32,
+		color: '#fff',
+		cursor: 'pointer',
+		pointerEvents: 'auto',
+		selectors: {
+			'&:hover': { background: 'rgba(0, 0, 0, 0.85)' },
+		},
+	},
+]);
 
 export const topLeft = style({ position: 'absolute', top: 20, left: 20, zIndex: 1 });
 export const topRight = style({ position: 'absolute', top: 20, right: 20, zIndex: 1 });
@@ -108,27 +112,28 @@ export const navButton = style({
 export const navLeft = style({ left: 20 });
 export const navRight = style({ right: 20 });
 
-export const altPanel = style({
-	position: 'absolute',
-	right: 0,
-	bottom: 0,
-	left: 0,
-	animation: `${fadeIn} 200ms ease 200ms both`,
-	zIndex: 1,
-	background: 'rgba(0, 0, 0, 0.45)',
-});
-
-export const altButton = style({
-	display: 'block',
-	margin: 0,
-	border: 'none',
-	background: 'transparent',
-	padding: '16px 32px',
-	width: '100%',
-	textAlign: 'left',
-	cursor: 'pointer',
-	pointerEvents: 'auto',
-});
+export const altPanel = style([
+	blurred,
+	{
+		position: 'absolute',
+		right: 20,
+		bottom: 20,
+		left: 20,
+		animation: `${fadeIn} 200ms ease 200ms both`,
+		zIndex: 1,
+		margin: '0 auto',
+		borderRadius: borderRadius.sm,
+		background: scrim,
+		boxSizing: 'border-box',
+		paddingBlock: space.lg,
+		paddingInline: space.xl,
+		maxWidth: '72ch',
+		maxHeight: '40svh',
+		overflowY: 'auto',
+		overscrollBehavior: 'contain',
+		pointerEvents: 'auto',
+	},
+]);
 
 export const altText = style({
 	lineHeight: 1.4,
@@ -149,20 +154,37 @@ export const pagerDots = style({
 	pointerEvents: 'none',
 });
 
-const dotBase = {
-	borderRadius: 999,
-} as const;
-export const dotPill = style({
-	display: 'flex',
-	gap: 5,
-	alignItems: 'center',
-	borderRadius: 999,
-	background: 'rgba(0, 0, 0, 0.75)',
-	padding: '6px 10px',
-	...blurred,
+const dotBase = style({
+	borderRadius: borderRadius.full,
 });
-export const dotActive = style({ ...dotBase, background: '#fff', width: 6, height: 6 });
-export const dotInactive = style({ ...dotBase, background: 'rgba(255, 255, 255, 0.4)', width: 4, height: 4 });
+
+export const dotPill = style([
+	blurred,
+	{
+		display: 'flex',
+		gap: 5,
+		alignItems: 'center',
+		borderRadius: borderRadius.full,
+		background: scrim,
+		padding: '6px 10px',
+	},
+]);
+export const dotActive = style([
+	dotBase,
+	{
+		background: '#fff',
+		width: 6,
+		height: 6,
+	},
+]);
+export const dotInactive = style([
+	dotBase,
+	{
+		background: 'rgba(255, 255, 255, 0.4)',
+		width: 4,
+		height: 4,
+	},
+]);
 
 export const slideSpinner = style({
 	display: 'flex',

@@ -15,7 +15,6 @@
 	"components.lightbox.a11y.options": "Image options",
 	"components.lightbox.a11y.previous": "Previous image",
 	"components.lightbox.a11y.viewer": "Image viewer",
-	"components.lightbox.altText.expand": "Expand alt text",
 	"components.lightbox.download.error": "Failed to save image",
 	"components.lightbox.download.label": "Download image",
 	"components.lightbox.download.savedToast": "Image saved",

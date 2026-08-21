@@ -93,10 +93,10 @@ export function LightboxContents({
 		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>
 			<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
 				<Lb.Track>{renderSlide}</Lb.Track>
-				<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
-					<Chrome />
-				</div>
 			</Lb.Viewport>
+			<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
+				<Chrome />
+			</div>
 		</Lb.Provider>
 	);
 }
@@ -157,7 +157,6 @@ function useImageLoading(src: string) {
 function Chrome() {
 	const { images, next, prev } = useLightbox();
 	const index = useLightboxState((state) => state.index);
-	const [altExpanded, setAltExpanded] = useState(false);
 
 	const img = images[index];
 	const canLeft = index > 0;
@@ -242,16 +241,9 @@ function Chrome() {
 			</BaseDialog.Close>
 			{img?.alt ? (
 				<div className={styles.altPanel}>
-					<button
-						type="button"
-						className={styles.altButton}
-						aria-label={m['components.lightbox.altText.expand']()}
-						onClick={() => setAltExpanded((v) => !v)}
-					>
-						<Text size="md" numberOfLines={altExpanded ? undefined : 3} className={styles.altText}>
-							{img.alt}
-						</Text>
-					</button>
+					<Text size="md" className={styles.altText}>
+						{img.alt}
+					</Text>
 				</div>
 			) : null}
 			{images.length > 1 && (
