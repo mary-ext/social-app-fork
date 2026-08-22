@@ -158,6 +158,9 @@ const PostThreadScreen = lazy(() =>
 const ProfileCompatScreen = lazy(() =>
 	import('#/screens/null-routes').then((mod) => ({ default: mod.ProfileCompatScreen })),
 );
+const ProfileFeedsScreen = lazy(() =>
+	import('#/screens/Profile/ProfileCollections').then((mod) => ({ default: mod.ProfileFeedsScreen })),
+);
 const ProfileFollowersScreen = lazy(() =>
 	import('#/screens/Profile/ProfileFollowers').then((mod) => ({ default: mod.ProfileFollowersScreen })),
 );
@@ -178,9 +181,15 @@ const ProfileLabelsScreen = lazy(() =>
 const ProfileListScreen = lazy(() =>
 	import('#/screens/ProfileList').then((mod) => ({ default: mod.ProfileListScreen })),
 );
+const ProfileListsScreen = lazy(() =>
+	import('#/screens/Profile/ProfileCollections').then((mod) => ({ default: mod.ProfileListsScreen })),
+);
 const ProfileScreen = lazy(() => import('#/screens/Profile').then((mod) => ({ default: mod.ProfileScreen })));
 const ProfileSearchScreen = lazy(() =>
 	import('#/screens/Profile/ProfileSearch').then((mod) => ({ default: mod.ProfileSearchScreen })),
+);
+const ProfileStarterPacksScreen = lazy(() =>
+	import('#/screens/Profile/ProfileCollections').then((mod) => ({ default: mod.ProfileStarterPacksScreen })),
 );
 const SavedFeeds = lazy(() => import('#/screens/SavedFeeds').then((mod) => ({ default: mod.SavedFeeds })));
 const SearchScreen = lazy(() => import('#/screens/Search').then((mod) => ({ default: mod.SearchScreen })));
@@ -382,8 +391,13 @@ export const routes = defineRoutes({
 					media: optional(enumOf(['all', 'videos'])),
 					replies: optional(boolean()),
 					reposts: optional(boolean()),
-					tab: optional(enumOf(['feeds', 'lists', 'media', 'posts', 'starterpacks'])),
+					tab: optional(enumOf(['collections', 'media', 'posts'])),
 				},
+			}),
+			ProfileFeeds: route({
+				component: ProfileFeedsScreen,
+				params: { actor: actorIdentifier() },
+				path: '/:actor/feeds',
 			}),
 			ProfileFollowers: route({
 				component: ProfileFollowersScreen,
@@ -410,10 +424,20 @@ export const routes = defineRoutes({
 				params: { actor: actorIdentifier() },
 				path: '/:actor/labels',
 			}),
+			ProfileLists: route({
+				component: ProfileListsScreen,
+				params: { actor: actorIdentifier() },
+				path: '/:actor/lists',
+			}),
 			ProfileSearch: route({
 				component: ProfileSearchScreen,
 				params: { actor: actorIdentifier() },
 				path: '/:actor/search',
+			}),
+			ProfileStarterPacks: route({
+				component: ProfileStarterPacksScreen,
+				params: { actor: actorIdentifier() },
+				path: '/:actor/packs',
 			}),
 			CustomFeed: route({
 				component: CustomFeedScreen,

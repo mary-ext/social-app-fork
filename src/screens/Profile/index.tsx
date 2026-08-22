@@ -27,28 +27,25 @@ import { useTitle } from '#/state/use-title';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 
-import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
-import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
 import { ProfileHeader } from '#/screens/Profile/Header';
 import { ProfileHeaderSkeleton } from '#/screens/Profile/Header/Skeleton';
-import { ProfileMediaSection } from '#/screens/Profile/Sections/Media';
-import { ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
+import { ProfileCollectionsSection } from '#/screens/Profile/Sections/Collections';
+import { ProfileMediaFilter, ProfileMediaSection } from '#/screens/Profile/Sections/Media';
+import { ProfilePostsFilter, ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
 
 import { ErrorScreen } from '#/components/ErrorScreen';
 import { FAB } from '#/components/FAB';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
-import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
-import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import * as css from './index.css';
 
-type ProfileTabId = 'feeds' | 'lists' | 'media' | 'posts' | 'starterpacks';
+type ProfileTabId = 'collections' | 'media' | 'posts';
 
 export function ProfileScreen() {
 	return (
@@ -151,7 +148,6 @@ function ProfileScreenLoaded({
 	moderationOpts: ModerationOptions;
 	isPlaceholderProfile: boolean;
 }) {
-	const router = useRouter();
 	const { hasSession, currentAccount } = useSession();
 
 	const profile = useProfileShadow(profileUnshadowed);
@@ -166,13 +162,9 @@ function ProfileScreenLoaded({
 	const isMe = profile.did === currentAccount?.did;
 
 	const feedCount = profile.associated?.feedgens || 0;
-	const showFeedsTab = isMe || feedCount > 0;
-
 	const starterPackCount = profile.associated?.starterPacks || 0;
-	const showStarterPacksTab = isMe || starterPackCount > 0;
-
-	const listCount = (profile.associated?.lists || 0) - starterPackCount;
-	const showListsTab = isMe || listCount > 0;
+	const listCount = Math.max(0, (profile.associated?.lists || 0) - starterPackCount);
+	const showCollectionsTab = isMe || feedCount > 0 || starterPackCount > 0 || listCount > 0;
 
 	const onPressCompose = () => {
 		const mention =
@@ -182,56 +174,31 @@ function ProfileScreenLoaded({
 		openComposer({ mention });
 	};
 
-	const navToWizard = () => {
-		router.navigate({ to: { name: 'StarterPackWizard' } });
-	};
-
 	const sections = definite<Section<ProfileTabId>>([
 		{
 			id: 'posts',
 			label: m['common.post.label'](),
+			actions: <ProfilePostsFilter />,
 			children: <ProfilePostsSection did={profile.did} isMe={isMe} />,
 		},
 		{
 			id: 'media',
 			label: m['common.media.label'](),
+			actions: <ProfileMediaFilter />,
 			children: <ProfileMediaSection did={profile.did} isMe={isMe} />,
 		},
-		showFeedsTab && {
-			id: 'feeds',
-			label: m['common.nav.feeds'](),
-			children: <ProfileFeedgens did={profile.did} feedCount={feedCount} />,
-		},
-		showStarterPacksTab && {
-			id: 'starterpacks',
-			label: m['common.starterPack.sectionTitle'](),
+		showCollectionsTab && {
+			id: 'collections',
+			label: m['screens.profile.collections.label'](),
 			children: (
-				<ProfileStarterPacks
+				<ProfileCollectionsSection
 					did={profile.did}
+					feedCount={feedCount}
 					isMe={isMe}
+					listCount={listCount}
 					starterPackCount={starterPackCount}
-					emptyStateMessage={
-						isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()
-					}
-					emptyStateButton={
-						isMe
-							? {
-									label: m['common.starterPack.action.create'](),
-									text: m['common.starterPack.action.create'](),
-									onPress: navToWizard,
-									color: 'primary',
-									size: 'small',
-								}
-							: undefined
-					}
-					emptyStateIcon={CircleAndSquareIcon}
 				/>
 			),
-		},
-		showListsTab && {
-			id: 'lists',
-			label: m['common.list.label'](),
-			children: <ProfileLists did={profile.did} listCount={listCount} />,
 		},
 	]);
 
@@ -249,6 +216,7 @@ function ProfileScreenLoaded({
 				sections={isPlaceholderProfile ? [] : sections}
 				value={tab ?? 'posts'}
 				onValueChange={(next) => replaceParams({ tab: next })}
+				variant="hug"
 				header={
 					<ProfileHeader
 						profile={profile}

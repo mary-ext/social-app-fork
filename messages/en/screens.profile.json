@@ -7,6 +7,12 @@
 	"screens.profile.avatar.a11y.viewProfile": "View {handle}'s profile",
 	"screens.profile.banner.a11y.placeholder": "Profile banner placeholder",
 	"screens.profile.banner.a11y.view": "View profile banner",
+	"screens.profile.collections.action.seeAll": "See all",
+	"screens.profile.collections.empty.other": "This account doesn't have any feeds, starter packs, or lists.",
+	"screens.profile.collections.feeds.title": "Feeds by @{handle}",
+	"screens.profile.collections.label": "Collections",
+	"screens.profile.collections.lists.title": "Lists by @{handle}",
+	"screens.profile.collections.starterPacks.title": "Starter packs by @{handle}",
 	"screens.profile.editProfile.action": "Edit profile",
 	"screens.profile.editProfile.bio.hint": "Tell us a bit about yourself",
 	"screens.profile.editProfile.bio.tooLong": [
@@ -61,9 +67,6 @@
 	"screens.profile.filter.a11y.label": "Change what this feed shows",
 	"screens.profile.filter.media.all": "All media",
 	"screens.profile.filter.media.videos": "Videos only",
-	"screens.profile.filter.posts.postsOnly": "Posts only",
-	"screens.profile.filter.posts.replies": "replies",
-	"screens.profile.filter.posts.reposts": "reposts",
 	"screens.profile.filter.posts.showReplies": "Show replies",
 	"screens.profile.filter.posts.showReposts": "Show reposts",
 	"screens.profile.follow.followers.count": [

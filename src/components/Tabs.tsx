@@ -19,7 +19,10 @@ import { clsx } from 'clsx';
 import * as styles from '#/components/Tabs.css';
 import { Text } from '#/components/Text';
 
-const TabsContext = createContext<{ value: string } | null>(null);
+/** controls whether tabs fill the row or fit their labels. */
+export type TabsVariant = 'fill' | 'hug';
+
+const TabsContext = createContext<{ value: string; variant: TabsVariant } | null>(null);
 
 /**
  * enables click-and-drag horizontal scrolling for an overflowing container.
@@ -79,11 +82,20 @@ export type RootProps = Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> & {
 	onValueChange: (value: string) => void;
 	ref?: Ref<HTMLDivElement>;
 	value: string;
+	variant?: TabsVariant;
 };
 
-export const Root = ({ children, className, onValueChange, ref, value, ...rest }: RootProps) => {
+export const Root = ({
+	children,
+	className,
+	onValueChange,
+	ref,
+	value,
+	variant = 'fill',
+	...rest
+}: RootProps) => {
 	return (
-		<TabsContext value={{ value }}>
+		<TabsContext value={{ value, variant }}>
 			<BaseTabs.Root
 				ref={ref}
 				value={value}
@@ -141,10 +153,12 @@ export type TabProps = Omit<ComponentPropsWithoutRef<'button'>, 'value' | 'child
 };
 
 export const Tab = ({ value, className, icon: Icon, label, ...rest }: TabProps) => {
+	const { variant } = use(TabsContext)!;
+
 	return (
 		<BaseTabs.Tab
 			value={value}
-			className={clsx(styles.tab, className)}
+			className={clsx(styles.tab, styles.tabVariant[variant], className)}
 			render={(props, state) => (
 				<button {...props}>
 					<span className={styles.tabContent}>
@@ -171,6 +185,8 @@ export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 };
 
 export type Section<Id extends string> = {
+	/** content shown after the active tab. */
+	actions?: ReactNode;
 	children: ReactNode;
 	/** an optional icon before the label. */
 	icon?: TabIcon;
@@ -191,6 +207,7 @@ export type TabsProps<Id extends string> = {
 	onValueChange: (value: Id) => void;
 	sections: Section<Id>[];
 	value: Id;
+	variant?: TabsVariant;
 };
 
 /**
@@ -200,6 +217,7 @@ export type TabsProps<Id extends string> = {
  * @param props.value active tab value
  * @param props.onValueChange callback triggered on tab change
  * @param props.header optional header element rendered above the tab bar
+ * @param props.variant whether the tabs fill the bar or hug their labels
  */
 export const Tabs = <Id extends string>({
 	header,
@@ -208,12 +226,14 @@ export const Tabs = <Id extends string>({
 	onValueChange,
 	sections,
 	value,
+	variant = 'fill',
 }: TabsProps<Id>) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	// a value that no longer matches any section (dynamic tab sets shrink as filters apply) falls back to
 	// the first tab, so the bar and panels stay in sync with what's actually selectable
-	const active = sections.some((section) => section.id === value) ? value : sections[0]?.id;
+	const activeSection = sections.find((section) => section.id === value) ?? sections[0];
+	const active = activeSection?.id;
 
 	// on switching to another tab, scroll up just enough to unstick the tab bar — bringing the scroll-away
 	// header back into view — rather than leaving the bar floating mid-content over a freshly mounted panel
@@ -232,6 +252,7 @@ export const Tabs = <Id extends string>({
 		<Root
 			ref={rootRef}
 			value={active ?? ''}
+			variant={variant}
 			onValueChange={(next) => {
 				// `Root` is keyed by plain strings; map back to the section that owns the value
 				const section = sections.find(({ id }) => id === next);
@@ -243,27 +264,30 @@ export const Tabs = <Id extends string>({
 		>
 			{header}
 			{sections.length > 0 && (
-				<List style={headerOffset ? { top: headerOffset } : undefined}>
-					{sections.map((section) => (
-						<Tab
-							key={section.id}
-							icon={section.icon}
-							label={section.label}
-							value={section.id}
-							onClick={() => {
-								// Base UI's onValueChange doesn't fire when the active tab is re-tapped
-								if (active !== section.id) {
-									return;
-								}
-								if (onTabReselect) {
-									onTabReselect(section.id);
-								} else {
-									window.scrollTo(0, 0);
-								}
-							}}
-						/>
-					))}
-				</List>
+				<div className={styles.bar} style={headerOffset ? { top: headerOffset } : undefined}>
+					<List>
+						{sections.map((section) => (
+							<Tab
+								key={section.id}
+								icon={section.icon}
+								label={section.label}
+								value={section.id}
+								onClick={() => {
+									// Base UI's onValueChange doesn't fire when the active tab is re-tapped
+									if (active !== section.id) {
+										return;
+									}
+									if (onTabReselect) {
+										onTabReselect(section.id);
+									} else {
+										window.scrollTo(0, 0);
+									}
+								}}
+							/>
+						))}
+					</List>
+					{activeSection?.actions && <div className={styles.actions}>{activeSection.actions}</div>}
+				</div>
 			)}
 			{sections.map((section) => (
 				<Panel key={section.id} value={section.id}>

@@ -10,6 +10,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 
 import { useModerationOpts } from '../moderation/moderation-opts';
@@ -33,6 +34,7 @@ export function useProfileListsQuery(did: Did) {
 	>({
 		queryKey: RQKEY(did),
 		enabled,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: ({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) =>
 			ok(
 				appview.get('app.bsky.graph.getLists', {

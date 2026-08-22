@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
@@ -12,15 +12,25 @@ export const root = style(
 	}),
 );
 
-export const list = style(
+export const bar = style(
 	layered(components, {
 		display: 'flex',
 		position: 'sticky',
 		top: 0,
+		alignItems: 'stretch',
 		flexDirection: 'row',
 		zIndex: zIndex.raised,
 		borderBottom: `1px solid ${vars.palette.contrast_100}`,
 		backgroundColor: vars.palette.contrast_0,
+	}),
+);
+
+export const list = style(
+	layered(components, {
+		display: 'flex',
+		flex: '1 1 auto',
+		flexDirection: 'row',
+		minWidth: 0,
 		overflowX: 'auto',
 		scrollbarWidth: 'none',
 		userSelect: 'none',
@@ -30,13 +40,19 @@ export const list = style(
 	}),
 );
 
+export const actions = style({
+	display: 'flex',
+	flexShrink: 0,
+	alignItems: 'center',
+	paddingInline: space.md,
+});
+
 const tabPaddingBlock = 12;
 
 export const tab = style(
 	layered(components, {
 		appearance: 'none',
 		display: 'flex',
-		flexGrow: 1,
 		flexShrink: 0,
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -57,6 +73,11 @@ export const tab = style(
 		},
 	}),
 );
+
+export const tabVariant = styleVariants({
+	fill: { '@layer': { [components]: { flexGrow: 1 } } },
+	hug: {},
+});
 
 export const tabContent = style({
 	display: 'flex',

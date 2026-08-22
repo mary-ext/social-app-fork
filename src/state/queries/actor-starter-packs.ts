@@ -3,6 +3,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
+import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 
 export const RQKEY_ROOT = 'actor-starter-packs';
@@ -16,6 +17,7 @@ export function useActorStarterPacksQuery({ did, enabled = true }: { did?: Did; 
 	return useInfiniteQuery({
 		queryKey: RQKEY(did),
 		enabled: !!did && enabled,
+		staleTime: STALE.MINUTES.ONE,
 		queryFn: ({ pageParam, signal }: { pageParam?: string; signal: AbortSignal }) =>
 			ok(
 				appview.get('app.bsky.graph.getActorStarterPacks', {

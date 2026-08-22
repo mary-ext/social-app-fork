@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -7,7 +7,7 @@ import { cleanError } from '#/lib/errors';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
+import { EmptyState } from '#/components/EmptyState';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { ListFooter } from '#/components/Lists';
@@ -19,6 +19,7 @@ import {
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
+import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
@@ -49,19 +50,10 @@ interface ProfileStarterPacksProps {
 	isMe: boolean;
 	/** Known starter-pack count, used to size the loading skeleton; falls back to a small default. */
 	starterPackCount?: number;
-	emptyStateMessage?: string;
-	emptyStateButton?: EmptyStateButtonProps;
-	emptyStateIcon?: EmptyStateIcon | ReactElement;
 }
 
-export function ProfileStarterPacks({
-	did,
-	isMe,
-	starterPackCount,
-	emptyStateMessage,
-	emptyStateButton,
-	emptyStateIcon,
-}: ProfileStarterPacksProps): ReactNode {
+export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStarterPacksProps): ReactNode {
+	const router = useRouter();
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useActorStarterPacksQuery({ did });
 	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;
@@ -117,9 +109,19 @@ export function ProfileStarterPacks({
 			}
 			return (
 				<EmptyState
-					icon={emptyStateIcon}
-					message={emptyStateMessage ?? m['components.starterPack.list.empty']()}
-					button={emptyStateButton}
+					icon={CircleAndSquareIcon}
+					message={isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()}
+					button={
+						isMe
+							? {
+									label: m['common.starterPack.action.create'](),
+									text: m['common.starterPack.action.create'](),
+									onPress: () => router.navigate({ to: { name: 'StarterPackWizard' } }),
+									size: 'small',
+									color: 'primary',
+								}
+							: undefined
+					}
 				/>
 			);
 		}
