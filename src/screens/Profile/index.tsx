@@ -101,8 +101,8 @@ function ProfileScreenInner() {
 		}
 	}, [queryClient, profile?.viewer?.blockedBy, resolvedDid]);
 
-	// Most pushes will happen here, since we will have only placeholder data
-	if (isDidPending || isProfilePending) {
+	// a disabled profile query remains pending until handle resolution produces a DID.
+	if (isDidPending || (!!resolvedDid && isProfilePending)) {
 		return (
 			<Layout.Content>
 				<ProfileHeaderSkeleton />
