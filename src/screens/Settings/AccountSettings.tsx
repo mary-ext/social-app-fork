@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from 'react';
+
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,12 +12,9 @@ import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
-import { Trans } from '#/locale/Trans';
-
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
-import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
 import CarIcon from '#/icons/central/CarFrontView_round_outlined_radius1_stroke2.svg';
@@ -26,6 +25,7 @@ import { m } from '#/paraglide/messages';
 
 import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
+import { PrivacyRequestDialog } from './components/PrivacyRequestDialog';
 
 type AllowSubscriptions = AppBskyNotificationDeclaration.Main['allowSubscriptions'];
 
@@ -46,6 +46,7 @@ export function AccountSettingsScreen() {
 		isPending: isContentVisibilityPending,
 	} = useContentVisibilityQuery();
 	const updateContentVisibility = useContentVisibilityMutation();
+	const hideFromRecommendations = contentVisibility?.value.hideFromAlgorithmicRecommendations ?? false;
 
 	return (
 		<Layout.Screen>
@@ -81,25 +82,7 @@ export function AccountSettingsScreen() {
 						</Settings.ButtonRow>
 					</Settings.Section>
 
-					<Settings.Section
-						footnoteText={
-							<Trans
-								message={m['screens.settings.privacy.discoverability.notice']}
-								markup={{
-									t0: ({ children }) => (
-										<ExternalInlineLinkText
-											size="sm"
-											label={m['screens.settings.privacy.discoverability.learnMore']()}
-											href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
-										>
-											{children}
-										</ExternalInlineLinkText>
-									),
-								}}
-							/>
-						}
-						titleText={m['screens.settings.privacy.title']()}
-					>
+					<Settings.Section titleText={m['screens.settings.privacy.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.activitySubscription.allowNotifying']()}
 							onPress={() => activityHandle.open(null)}
@@ -113,34 +96,28 @@ export function AccountSettingsScreen() {
 								titleText={m['screens.settings.activitySubscription.allowNotifying']()}
 							/>
 						</Settings.ButtonRow>
+					</Settings.Section>
 
-						<Settings.SwitchRow
-							disabled={isContentVisibilityPending || isContentVisibilityError}
-							label={m['screens.settings.privacy.algoVisibility.request']()}
-							loading={updateContentVisibility.isPending}
-							onChange={(hide) => updateContentVisibility.mutate(hide)}
-							value={contentVisibility?.value.hideFromAlgorithmicRecommendations ?? false}
-						>
-							<Settings.Icon icon={MagnifyingGlassIcon} />
-							<Settings.Label
-								subtitleText={m['screens.settings.privacy.algoVisibility.description']()}
-								titleText={m['screens.settings.privacy.algoVisibility.request']()}
-							/>
-						</Settings.SwitchRow>
+					<Settings.Section>
+						<PrivacyRequestRow
+							descriptionText={m['screens.settings.privacy.algoVisibility.description']()}
+							icon={MagnifyingGlassIcon}
+							isError={isContentVisibilityError}
+							loading={isContentVisibilityPending}
+							onChange={updateContentVisibility.mutate}
+							titleText={m['screens.settings.privacy.algoVisibility.request']()}
+							value={hideFromRecommendations}
+						/>
 
-						<Settings.SwitchRow
-							disabled={!pwi.canToggle}
-							label={m['screens.settings.privacy.discoverability.request']()}
-							loading={pwi.loading}
+						<PrivacyRequestRow
+							descriptionText={m['screens.settings.privacy.discoverability.description']()}
+							icon={EyeSlashIcon}
+							isError={pwi.isError}
+							loading={!pwi.canToggle}
 							onChange={pwi.toggle}
+							titleText={m['screens.settings.privacy.discoverability.request']()}
 							value={pwi.enabled}
-						>
-							<Settings.Icon icon={EyeSlashIcon} />
-							<Settings.Label
-								subtitleText={m['screens.settings.privacy.discoverability.description']()}
-								titleText={m['screens.settings.privacy.discoverability.request']()}
-							/>
-						</Settings.SwitchRow>
+						/>
 					</Settings.Section>
 				</Settings.List>
 			</Layout.Content>
@@ -169,6 +146,52 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 	}
 }
 
+const PrivacyRequestRow = ({
+	className,
+	descriptionText,
+	icon,
+	isError,
+	loading,
+	onChange,
+	titleText,
+	value,
+}: {
+	className?: string;
+	descriptionText: string;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	isError: boolean;
+	loading: boolean;
+	onChange: (value: boolean) => void;
+	titleText: string;
+	value: boolean;
+}) => {
+	const handle = Dialog.useDialogHandle();
+
+	let subtitleText = value ? m['common.status.on']() : m['common.status.off']();
+	if (isError) {
+		subtitleText = m['screens.settings.preferences.error.loading']();
+	}
+
+	return (
+		<>
+			<Settings.ButtonRow className={className} label={titleText} onPress={() => handle.open(null)}>
+				<Settings.Icon icon={icon} />
+				<Settings.Label loading={!isError && loading} subtitleText={subtitleText} titleText={titleText} />
+			</Settings.ButtonRow>
+
+			<PrivacyRequestDialog
+				descriptionText={descriptionText}
+				disabled={isError || loading}
+				handle={handle}
+				isError={isError}
+				onChange={onChange}
+				titleText={titleText}
+				value={value}
+			/>
+		</>
+	);
+};
+
 /**
  * toggles a single self-label on the current account's profile record.
  *
@@ -178,7 +201,7 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: boolean; value: string }) {
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
-	const { data: profile, isPlaceholderData } = useProfileQuery({ did: currentAccount?.did });
+	const { data: profile, isError, isPlaceholderData } = useProfileQuery({ did: currentAccount?.did });
 	const updateProfile = useProfileUpdateMutation();
 
 	const enabled = profile?.labels?.some((l) => l.val === value && l.src === profile.did) ?? false;
@@ -224,5 +247,5 @@ function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: bool
 		);
 	};
 
-	return { canToggle, enabled, loading, toggle };
+	return { canToggle, enabled, isError, loading, toggle };
 }
