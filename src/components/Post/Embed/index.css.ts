@@ -24,6 +24,10 @@ export const postWithMedia = style({
 	flexDirection: 'column',
 });
 
+export const postWithMediaGap = style({
+	gap: 8,
+});
+
 export const quoteOuter = style({
 	boxSizing: 'border-box',
 	display: 'flex',

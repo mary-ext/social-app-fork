@@ -19,7 +19,7 @@ export const card = recipe(
 			borderStyle: 'solid',
 			borderRadius: borderRadius.md,
 			borderColor: vars.palette.contrast_100,
-			backgroundColor: colors.bg,
+			backgroundColor: 'transparent',
 			width: '100%',
 			overflow: 'hidden',
 			textDecoration: 'none',
@@ -39,6 +39,7 @@ export const card = recipe(
 						cursor: 'pointer',
 						selectors: {
 							'&:hover': { borderColor: vars.palette.contrast_300 },
+							'&:active': { backgroundColor: colors.bg },
 						},
 					},
 				],

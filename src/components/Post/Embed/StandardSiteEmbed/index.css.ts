@@ -46,7 +46,7 @@ export const articleCard = recipe(
 			borderStyle: 'solid',
 			borderRadius: borderRadius.lg,
 			borderColor: colors.borderContrastLow,
-			backgroundColor: colors.bg,
+			backgroundColor: 'transparent',
 			width: '100%',
 			overflow: 'hidden',
 			selectors: {
@@ -63,6 +63,7 @@ export const articleCard = recipe(
 					{
 						selectors: {
 							[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
+							[`&:has(${bodyLink}:active)`]: { backgroundColor: colors.bg },
 						},
 					},
 				],
@@ -290,7 +291,7 @@ export const publicationCard = recipe(
 			borderStyle: 'solid',
 			borderRadius: borderRadius.lg,
 			borderColor: colors.borderContrastLow,
-			backgroundColor: colors.bg,
+			backgroundColor: 'transparent',
 			padding: space.md,
 			width: '100%',
 			overflow: 'hidden',
@@ -305,6 +306,7 @@ export const publicationCard = recipe(
 								borderColor: colors.borderContrastHigh,
 								backgroundColor: colors.contrast_25,
 							},
+							[`&:has(${pubFill}:active)`]: { backgroundColor: colors.bg },
 						},
 					},
 				],

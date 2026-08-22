@@ -43,7 +43,12 @@ export function Embed({ embed: rawEmbed, ...rest }: EmbedProps) {
 
 	if (media && record) {
 		return (
-			<div className={css.postWithMedia}>
+			<div
+				className={clsx(
+					css.postWithMedia,
+					rest.viewContext === PostEmbedViewContext.ChatMessage && css.postWithMediaGap,
+				)}
+			>
 				<MediaEmbed media={media} {...rest} />
 				<RecordEmbed record={record} {...rest} />
 			</div>
