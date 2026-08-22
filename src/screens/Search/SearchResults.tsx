@@ -88,6 +88,7 @@ export function SearchResults({
 
 const POST_ITEM_HEIGHT_ESTIMATE = 300;
 const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
+const FEED_ITEM_HEIGHT_ESTIMATE = 120;
 const STARTER_PACK_ITEM_HEIGHT_ESTIMATE = 120;
 
 function Pending() {
@@ -351,21 +352,44 @@ function StarterPackResults({ query }: { query: string }) {
 }
 
 function FeedsResults({ query }: { query: string }) {
-	const { data: results, isFetched } = usePopularFeedsSearch({ query });
+	const {
+		data: results,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isFetched,
+		isFetching,
+		isFetchingNextPage,
+	} = usePopularFeedsSearch({ query });
 
-	if (!isFetched || !results) {
+	const feeds = results?.pages.flatMap((page) => page.feeds) ?? [];
+
+	const onEndReached = () => {
+		if (isFetching || !hasNextPage || error) {
+			return;
+		}
+		void fetchNextPage();
+	};
+
+	if (error) {
+		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
+	}
+
+	if (!isFetched) {
 		return <Pending />;
 	}
 
-	if (!results.length) {
+	if (!feeds.length) {
 		return <EmptyState messageText={<NoResultsText query={query} />} />;
 	}
 
 	return (
 		<List
-			data={results}
+			data={feeds}
+			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.uri}
-			ListFooterComponent={<ListFooter />}
+			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
+			onEndReached={onEndReached}
 			// the sticky tab bar already draws the divider above the first row
 			renderItem={({ index, item }) => <FeedCard.Default topBorder={index !== 0} view={item} />}
 		/>

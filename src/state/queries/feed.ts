@@ -347,25 +347,33 @@ export function usePopularFeedsSearch({ query, enabled }: { query: string; enabl
 	const moderationOpts = useModerationOpts();
 	const enabledInner = enabled ?? !!moderationOpts;
 
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey: createPopularFeedsSearchQueryKey(query),
 		enabled: enabledInner,
-		queryFn: async ({ signal }) => {
-			const data = await ok(
+		queryFn: async ({ pageParam, signal }) => {
+			return await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
 					signal,
-					params: { limit: 15, query: query },
+					params: { limit: 15, cursor: pageParam, query: query },
 				}),
 			);
-
-			return data.feeds;
 		},
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (lastPage) => lastPage.cursor,
 		placeholderData: keepPreviousData,
-		select(data) {
-			return data.filter((feed) => {
-				const decision = moderateFeedGenerator(feed, moderationOpts!);
-				return getDisplayRestrictions(decision, DisplayContext.ContentMedia).blurs.length === 0;
-			});
+		select: (data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.$output>) => {
+			return {
+				...data,
+				pages: data.pages.map((page) => {
+					return {
+						...page,
+						feeds: page.feeds.filter((feed) => {
+							const decision = moderateFeedGenerator(feed, moderationOpts!);
+							return getDisplayRestrictions(decision, DisplayContext.ContentMedia).blurs.length === 0;
+						}),
+					};
+				}),
+			};
 		},
 	});
 }

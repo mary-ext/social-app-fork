@@ -56,9 +56,27 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 			? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))
 			: undefined;
 
-	const { data: searchedFeeds, isFetching: isFetchingSearchedFeeds } = usePopularFeedsSearch({
+	const {
+		data: searchedFeedsPages,
+		error: searchedFeedsError,
+		fetchNextPage: fetchNextSearchedFeedsPage,
+		hasNextPage: hasNextSearchedFeedsPage,
+		isFetching: isFetchingSearchedFeeds,
+	} = usePopularFeedsSearch({
 		query: throttledQuery,
 	});
+	const searchedFeeds = searchedFeedsPages?.pages.flatMap((p) => p.feeds);
+
+	const onEndReached = () => {
+		if (!query) {
+			void fetchNextPage();
+			return;
+		}
+		if (isFetchingSearchedFeeds || !hasNextSearchedFeedsPage || searchedFeedsError) {
+			return;
+		}
+		void fetchNextSearchedFeedsPage();
+	};
 
 	const isLoading = !isFetchedSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds;
 
@@ -90,7 +108,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				estimateHeight={WIZARD_ITEM_HEIGHT_ESTIMATE}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
-				onEndReached={!query ? () => void fetchNextPage() : undefined}
+				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
 				ListEmptyComponent={
 					<div className={css.empty}>
