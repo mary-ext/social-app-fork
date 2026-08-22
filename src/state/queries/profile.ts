@@ -22,6 +22,7 @@ import {
 } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
+import { isRecordNotFoundError } from '#/lib/errors';
 import type { ImageMeta } from '#/lib/media/composer-image';
 import { retry } from '#/lib/utils/retry';
 import { until } from '#/lib/utils/until';
@@ -641,7 +642,7 @@ async function upsertProfile(
 				rkey: 'self',
 			}).catch((e) => {
 				// a missing record means a brand-new profile; anything else should propagate
-				if (e instanceof Error && e.message.includes('Could not locate record:')) {
+				if (isRecordNotFoundError(e)) {
 					return undefined;
 				}
 				throw e;

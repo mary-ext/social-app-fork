@@ -6,6 +6,7 @@ import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
+import { isRecordNotFoundError } from '#/lib/errors';
 import { networkRetry, retry } from '#/lib/utils/retry';
 
 import { STALE } from '#/state/queries';
@@ -86,7 +87,7 @@ export async function getThreadgateRecord({
 				 * throwing an error. NB: This will also catch reference errors, such as
 				 * a typo in the URI.
 				 */
-				if (e instanceof Error && e.message.includes(`Could not locate record:`)) {
+				if (isRecordNotFoundError(e)) {
 					return false;
 				}
 				return true;
@@ -107,7 +108,7 @@ export async function getThreadgateRecord({
 		 * throwing an error. NB: This will also catch reference errors, such as
 		 * a typo in the URI.
 		 */
-		if (e instanceof Error && e.message.includes(`Could not locate record:`)) {
+		if (isRecordNotFoundError(e)) {
 			return null;
 		} else {
 			throw e;

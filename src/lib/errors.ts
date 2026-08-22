@@ -161,6 +161,21 @@ export function shouldRetryError(e: unknown) {
 }
 
 /**
+ * checks for declared or legacy missing-record errors. legacy messages may also indicate an invalid record
+ * reference.
+ *
+ * @param e thrown value
+ * @returns whether the record was not found
+ */
+export function isRecordNotFoundError(e: unknown) {
+	if (e instanceof ClientResponseError && e.error === 'RecordNotFound') {
+		return true;
+	}
+	// older PDS versions report the miss only in the message.
+	return e instanceof Error && e.message.includes('Could not locate record');
+}
+
+/**
  * checks if an error was raised by aborting an in-flight action.
  *
  * matches on `name` because aborts arrive from several sources — `AbortController`, the toggle mutation

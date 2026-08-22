@@ -16,6 +16,7 @@ import {
 } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
+import { isRecordNotFoundError } from '#/lib/errors';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { getClients, useSession } from '#/state/session';
@@ -70,7 +71,7 @@ export function useNotificationDeclarationQuery() {
 					rkey: 'self',
 				});
 			} catch (err) {
-				if (err instanceof Error && err.message.includes('Could not locate record')) {
+				if (isRecordNotFoundError(err)) {
 					return {
 						value: {
 							$type: 'app.bsky.notification.declaration',
