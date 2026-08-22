@@ -13,6 +13,8 @@ import { AbortError } from '#/lib/utils/abort-error';
 
 import { m } from '#/paraglide/messages';
 
+import { advanceVideoProgress } from './video-progress';
+
 type CaptionsTrack = { lang: string; file: File };
 
 export type VideoAction =
@@ -62,7 +64,7 @@ export type NoVideoState = typeof NO_VIDEO;
 
 type ErrorState = {
 	status: 'error';
-	progress: 100;
+	progress: number;
 	abortController: AbortController;
 	asset: VideoAsset | null;
 	jobId: string | null;
@@ -97,7 +99,7 @@ type ProcessingState = {
 
 type DoneState = {
 	status: 'done';
-	progress: 100;
+	progress: 1;
 	abortController: AbortController;
 	asset: VideoAsset;
 	jobId?: undefined;
@@ -127,7 +129,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 	if (action.type === 'toError') {
 		return {
 			status: 'error',
-			progress: 100,
+			progress: state.progress,
 			abortController: state.abortController,
 			error: action.error,
 			asset: state.asset ?? null,
@@ -139,7 +141,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 		if (state.status === 'uploading') {
 			return {
 				...state,
-				progress: action.progress,
+				progress: advanceVideoProgress(state.progress, 'uploading', action.progress),
 			};
 		}
 	} else if (action.type === 'updateAltText') {
@@ -156,7 +158,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 		if (state.status === 'uploading') {
 			return {
 				status: 'processing',
-				progress: 0,
+				progress: advanceVideoProgress(state.progress, 'processing', 0),
 				abortController: state.abortController,
 				asset: state.asset,
 				jobId: action.jobId,
@@ -170,14 +172,17 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			return {
 				...state,
 				jobStatus: action.jobStatus,
-				progress: action.jobStatus.progress !== undefined ? action.jobStatus.progress / 100 : state.progress,
+				progress:
+					action.jobStatus.progress !== undefined
+						? advanceVideoProgress(state.progress, 'processing', action.jobStatus.progress / 100)
+						: state.progress,
 			};
 		}
 	} else if (action.type === 'toDone') {
 		if (state.status === 'uploading' || state.status === 'processing') {
 			return {
 				status: 'done',
-				progress: 100,
+				progress: 1,
 				abortController: state.abortController,
 				asset: state.asset,
 				pendingPublish: {
