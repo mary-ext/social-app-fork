@@ -39,7 +39,6 @@ export function useUpdateActorDeclaration({
 			});
 			await putRecord(pds, {
 				repo: currentAccount.did,
-				collection: 'chat.bsky.actor.declaration',
 				rkey: 'self',
 				record: {
 					$type: 'chat.bsky.actor.declaration',

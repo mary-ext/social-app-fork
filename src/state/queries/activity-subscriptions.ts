@@ -94,7 +94,6 @@ export function useNotificationDeclarationMutation() {
 		mutationFn: async (record: AppBskyNotificationDeclaration.Main) => {
 			return await putRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: 'app.bsky.notification.declaration',
 				rkey: 'self',
 				record,
 			});

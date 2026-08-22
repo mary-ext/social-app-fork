@@ -14,7 +14,6 @@ export function useLikeMutation() {
 		mutationFn: async ({ uri, cid }: { uri: string; cid: string }) => {
 			const res = await createRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: 'app.bsky.feed.like',
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),

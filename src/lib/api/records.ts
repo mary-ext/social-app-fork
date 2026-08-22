@@ -1,20 +1,19 @@
 import type { ComAtprotoRepoGetRecord, ComAtprotoRepoListRecords } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
-import type { Blob as AtpBlob, Cid, Did, InferInput, ResourceUri } from '@atcute/lexicons';
+import type { Blob as AtpBlob, Cid, Did, InferInput, Nsid, ResourceUri } from '@atcute/lexicons';
 import type { Records } from '@atcute/lexicons/ambient';
 
 /**
  * typed `com.atproto.repo.*` record helpers.
  *
- * re-types generic `getRecord`'s `value` and `putRecord`'s `record` from `unknown` to their concrete shapes
- * via the ambient `Records` map based on the collection NSID, and centralizes the necessary casts for repo
- * wire shapes.
+ * re-types generic record values from `unknown` to their concrete shapes via the ambient `Records` map, and
+ * centralizes the necessary casts for repo wire shapes.
  */
 
 /** An NSID for which a record type is registered in the ambient `Records` map. */
-type RecordType = keyof Records;
+type RecordType = keyof Records & Nsid;
 
-interface CreateRecordOptions<K extends RecordType> {
+interface CreateRecordInput<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	record: InferInput<Records[K]>;
@@ -22,6 +21,10 @@ interface CreateRecordOptions<K extends RecordType> {
 	swapCommit?: string;
 	validate?: boolean;
 }
+
+type CreateRecordOptions<K extends RecordType> = Omit<CreateRecordInput<K>, 'collection' | 'record'> & {
+	record: InferInput<Records[K]> & { $type: K };
+};
 
 /**
  * creates a repo record via `com.atproto.repo.createRecord`.
@@ -31,10 +34,14 @@ interface CreateRecordOptions<K extends RecordType> {
  * @returns create-record response
  */
 export const createRecord = async <K extends RecordType>(client: Client, options: CreateRecordOptions<K>) => {
-	return await ok(client.post('com.atproto.repo.createRecord', { input: options }));
+	const input: CreateRecordInput<K> = {
+		...options,
+		collection: options.record.$type,
+	};
+	return await ok(client.post('com.atproto.repo.createRecord', { input }));
 };
 
-interface PutRecordOptions<K extends RecordType> {
+interface PutRecordInput<K extends RecordType> {
 	repo: Did;
 	collection: K;
 	rkey: string;
@@ -44,6 +51,10 @@ interface PutRecordOptions<K extends RecordType> {
 	validate?: boolean;
 }
 
+type PutRecordOptions<K extends RecordType> = Omit<PutRecordInput<K>, 'collection' | 'record'> & {
+	record: InferInput<Records[K]> & { $type: K };
+};
+
 /**
  * writes a repo record at a known rkey.
  *
@@ -52,7 +63,11 @@ interface PutRecordOptions<K extends RecordType> {
  * @returns put-record response
  */
 export const putRecord = async <K extends RecordType>(client: Client, options: PutRecordOptions<K>) => {
-	return await ok(client.post('com.atproto.repo.putRecord', { input: options }));
+	const input: PutRecordInput<K> = {
+		...options,
+		collection: options.record.$type,
+	};
+	return await ok(client.post('com.atproto.repo.putRecord', { input }));
 };
 
 interface DeleteRecordOptions<K extends RecordType> {

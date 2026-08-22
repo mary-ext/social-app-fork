@@ -333,7 +333,6 @@ function useProfileFollowMutation() {
 		mutationFn: async ({ did }) => {
 			return await createRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: 'app.bsky.graph.follow',
 				record: {
 					$type: 'app.bsky.graph.follow',
 					createdAt: new Date().toISOString(),
@@ -583,7 +582,6 @@ function useProfileBlockMutation() {
 			}
 			return await createRecord(pds!, {
 				repo: currentAccount.did,
-				collection: 'app.bsky.graph.block',
 				record: {
 					$type: 'app.bsky.graph.block',
 					createdAt: new Date().toISOString(),
@@ -652,7 +650,6 @@ async function upsertProfile(
 
 			await putRecord(pds, {
 				repo: did,
-				collection: 'app.bsky.actor.profile',
 				rkey: 'self',
 				record: { $type: 'app.bsky.actor.profile', ...updated },
 				swapRecord: existing?.cid ?? null,

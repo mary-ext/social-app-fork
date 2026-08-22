@@ -57,7 +57,6 @@ export function useContentVisibilityMutation() {
 		mutationFn: async (hideFromAlgorithmicRecommendations: boolean) => {
 			return await putRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: COLLECTION,
 				rkey: 'self',
 				record: {
 					$type: COLLECTION,

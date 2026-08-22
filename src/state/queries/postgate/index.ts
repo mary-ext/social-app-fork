@@ -101,7 +101,6 @@ export async function writePostgateRecord({
 	await networkRetry(2, () =>
 		putRecord(pds, {
 			repo: did,
-			collection: POSTGATE_COLLECTION,
 			rkey: postUrip.rkey!,
 			record: postgate,
 		}),

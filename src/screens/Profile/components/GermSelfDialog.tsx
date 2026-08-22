@@ -66,7 +66,6 @@ function DialogInner({ did, handle }: { did: Did; handle: Dialog.DialogHandle })
 				try {
 					await putRecord(pds!, {
 						repo: did,
-						collection: 'com.germnetwork.declaration',
 						rkey: 'self',
 						record: previousRecord,
 					});

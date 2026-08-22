@@ -101,7 +101,6 @@ export function useUpsertLiveStatusMutation(
 
 				await putRecord(pds!, {
 					repo,
-					collection,
 					rkey: 'self',
 					record,
 					swapRecord: existing?.cid ?? null,

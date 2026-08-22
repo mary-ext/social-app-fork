@@ -124,7 +124,6 @@ export function useCreateStarterPackMutation({
 
 			return await createRecord(pds!, {
 				repo: did,
-				collection: 'app.bsky.graph.starterpack',
 				record: {
 					$type: 'app.bsky.graph.starterpack',
 					createdAt: new Date().toISOString(),
@@ -232,7 +231,6 @@ export function useEditStarterPackMutation({
 			const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey;
 			await putRecord(pds!, {
 				repo: did,
-				collection: 'app.bsky.graph.starterpack',
 				rkey,
 				record: {
 					$type: 'app.bsky.graph.starterpack',

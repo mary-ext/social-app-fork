@@ -85,7 +85,6 @@ export function useListCreateMutation() {
 			}
 			const res = await createRecord(pds!, {
 				repo: currentAccount.did,
-				collection: 'app.bsky.graph.list',
 				record,
 			});
 
@@ -143,7 +142,6 @@ export function useListMetadataMutation() {
 			}
 			const res = await putRecord(pds!, {
 				repo: currentAccount.did,
-				collection: 'app.bsky.graph.list',
 				rkey,
 				record,
 			});
@@ -262,7 +260,6 @@ export function useListBlockMutation() {
 			if (block) {
 				await createRecord(pds!, {
 					repo: currentAccount.did,
-					collection: 'app.bsky.graph.listblock',
 					record: {
 						$type: 'app.bsky.graph.listblock',
 						createdAt: new Date().toISOString(),

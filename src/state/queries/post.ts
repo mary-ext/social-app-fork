@@ -179,7 +179,6 @@ function usePostLikeMutation() {
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: 'app.bsky.feed.like',
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),
@@ -274,7 +273,6 @@ function usePostRepostMutation() {
 		mutationFn: ({ uri, cid, via }) => {
 			return createRecord(pds!, {
 				repo: currentAccount!.did,
-				collection: 'app.bsky.feed.repost',
 				record: {
 					$type: 'app.bsky.feed.repost',
 					createdAt: new Date().toISOString(),

@@ -28,6 +28,7 @@ export function useMessageDraft() {
 
 /**
  * saves the active conversation's draft on unmount.
+ *
  * @param message current composer text
  */
 export function useSaveMessageDraft(message: string) {

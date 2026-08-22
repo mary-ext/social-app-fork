@@ -26,7 +26,6 @@ export const createStarterPackList = async ({
 
 	const list = await createRecord(pds, {
 		repo: did,
-		collection: 'app.bsky.graph.list',
 		record: {
 			$type: 'app.bsky.graph.list',
 			avatar: undefined,

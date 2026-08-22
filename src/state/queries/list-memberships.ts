@@ -83,7 +83,6 @@ export function useListMembershipAddMutation({
 			}
 			const res = await createRecord(pds!, {
 				repo: currentAccount.did,
-				collection: 'app.bsky.graph.listitem',
 				record: {
 					$type: 'app.bsky.graph.listitem',
 					createdAt: new Date().toISOString(),

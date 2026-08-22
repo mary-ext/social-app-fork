@@ -137,7 +137,6 @@ export async function writeThreadgateRecord({
 	await networkRetry(2, () =>
 		putRecord(pds, {
 			repo: did,
-			collection: 'app.bsky.feed.threadgate',
 			rkey: postUrip.rkey!,
 			record,
 		}),
