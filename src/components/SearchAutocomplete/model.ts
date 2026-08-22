@@ -1,5 +1,5 @@
 import type { AnyProfileView } from '@atcute/bluesky';
-import type { Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 
 import {
 	addDays,
@@ -64,7 +64,7 @@ export type InteractiveItem =
 			selected: boolean;
 			today: boolean;
 	  }
-	| { kind: 'goto'; key: string; name: string; target: RouteTarget }
+	| { kind: 'goto'; key: string; name: ActorIdentifier; target: RouteTarget }
 	| { kind: 'link'; key: string; path: string }
 	| { kind: 'operator'; key: string; operator: SearchOperator }
 	| { kind: 'operatorValue'; key: string; op: OperatorName; value: string }

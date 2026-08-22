@@ -10,6 +10,8 @@ import {
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
+import { ok } from '@atcute/client';
+import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { mapDefined } from '@mary/array-fns';
 import {
@@ -38,7 +40,7 @@ import {
 } from '#/state/preferences/search-history';
 import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
-import { useSession } from '#/state/session';
+import { getClients, useSession } from '#/state/session';
 
 import * as SearchField from '#/components/forms/SearchField';
 
@@ -69,6 +71,16 @@ const defaultProfileQuery = (tokens: Token[]): string => {
 		.map((token) => token.value)
 		.join('')
 		.trim();
+};
+
+const rememberGotoProfile = async (actor: ActorIdentifier) => {
+	const { appview } = getClients();
+	const profile = await ok(
+		appview.get('app.bsky.actor.getProfile', {
+			params: { actor },
+		}),
+	);
+	addSearchHistoryEntry({ kind: 'profile', did: profile.did });
 };
 
 /** turns a suggestion into the plain string Base UI uses for its accessible value. */
@@ -493,6 +505,7 @@ function ActiveSearchAutocomplete({
 				break;
 			}
 			case 'goto': {
+				void rememberGotoProfile(item.name).catch(() => {});
 				navigate(getRouter().href(item.target));
 				break;
 			}
