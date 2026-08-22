@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
@@ -111,17 +112,27 @@ export const chips = style({
 	scrollbarWidth: 'none',
 });
 
-export const chip = style({
-	display: 'flex',
-	flexShrink: 0,
-	alignItems: 'center',
-	border: `1px solid ${colors.contrast_100}`,
-	borderRadius: borderRadius.full,
-	paddingBlock: space.xs,
-	paddingInlineStart: space.xs,
-	paddingInlineEnd: space.xs,
-	maxWidth: 200,
-});
+export const chip = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexShrink: 0,
+			alignItems: 'center',
+			border: `1px solid ${colors.contrast_100}`,
+			borderRadius: borderRadius.full,
+			paddingBlock: space.xs,
+			paddingInlineStart: space.xs,
+			paddingInlineEnd: space.xs,
+			maxWidth: 200,
+		},
+		variants: {
+			labeler: {
+				true: { paddingInlineStart: space.sm },
+			},
+		},
+	},
+	{ debugId: 'chip' },
+);
 
 export const chipName = style({
 	marginRight: space.xs,

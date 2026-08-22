@@ -247,7 +247,7 @@ function MemberChips({
 				const handle = profile.handle;
 
 				return (
-					<div className={css.chip} key={profile.did}>
+					<div className={css.chip({ labeler: !!profile.associated?.labeler })} key={profile.did}>
 						<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} size={24} />
 						<Text className={css.chipName} numberOfLines={1} size="sm">
 							{handle}
