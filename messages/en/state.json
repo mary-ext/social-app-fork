@@ -7,5 +7,6 @@
 	"state.notifications.error.settingsUpdate": "Could not update notification settings",
 	"state.pin.error": "Failed to pin post",
 	"state.pin.pinned": "Post pinned",
-	"state.pin.unpinned": "Post unpinned"
+	"state.pin.unpinned": "Post unpinned",
+	"state.privacy.error.contentVisibilityUpdate": "Failed to update content visibility"
 }

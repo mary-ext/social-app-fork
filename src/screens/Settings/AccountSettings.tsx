@@ -3,6 +3,7 @@ import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
+import { useContentVisibilityMutation, useContentVisibilityQuery } from '#/state/queries/content-visibility';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
@@ -19,6 +20,7 @@ import { ExternalInlineLinkText } from '#/components/web/Link';
 import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
 import CarIcon from '#/icons/central/CarFrontView_round_outlined_radius1_stroke2.svg';
 import EyeSlashIcon from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import RobotIcon from '#/icons/central/Robot_round_outlined_radius0_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -37,6 +39,13 @@ export function AccountSettingsScreen() {
 	const pwi = useSelfLabelToggle({ value: '!no-unauthenticated' });
 
 	const { data: declaration, isError, isPending } = useNotificationDeclarationQuery();
+
+	const {
+		data: contentVisibility,
+		isError: isContentVisibilityError,
+		isPending: isContentVisibilityPending,
+	} = useContentVisibilityQuery();
+	const updateContentVisibility = useContentVisibilityMutation();
 
 	return (
 		<Layout.Screen>
@@ -104,6 +113,20 @@ export function AccountSettingsScreen() {
 								titleText={m['screens.settings.activitySubscription.allowNotifying']()}
 							/>
 						</Settings.ButtonRow>
+
+						<Settings.SwitchRow
+							disabled={isContentVisibilityPending || isContentVisibilityError}
+							label={m['screens.settings.privacy.algoVisibility.request']()}
+							loading={updateContentVisibility.isPending}
+							onChange={(hide) => updateContentVisibility.mutate(hide)}
+							value={contentVisibility?.value.hideFromAlgorithmicRecommendations ?? false}
+						>
+							<Settings.Icon icon={MagnifyingGlassIcon} />
+							<Settings.Label
+								subtitleText={m['screens.settings.privacy.algoVisibility.description']()}
+								titleText={m['screens.settings.privacy.algoVisibility.request']()}
+							/>
+						</Settings.SwitchRow>
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}

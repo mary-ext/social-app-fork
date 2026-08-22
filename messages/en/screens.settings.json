@@ -149,6 +149,8 @@
 	"screens.settings.preferences.error.load": "Failed to load preference.",
 	"screens.settings.preferences.error.loading": "Error loading preference",
 	"screens.settings.preferences.title": "Preferences",
+	"screens.settings.privacy.algoVisibility.description": "Notifies every app, including the Bluesky app, that you don't want your posts picked up by algorithmic recommendations. Bluesky keeps them out of Discover, except for your followers.",
+	"screens.settings.privacy.algoVisibility.request": "Request exclusion from recommendations",
 	"screens.settings.privacy.discoverability.description": "Notifies every app, including the Bluesky app, that you don't want your account shown to people who aren't signed in.",
 	"screens.settings.privacy.discoverability.learnMore": "Learn more about what is public on Bluesky.",
 	"screens.settings.privacy.discoverability.notice": "Honoring this request is voluntary: your profile and posts stay publicly available, and some apps may show your account anyway. {#t0}Learn more.{/t0}",
