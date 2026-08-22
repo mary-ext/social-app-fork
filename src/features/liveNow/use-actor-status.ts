@@ -91,9 +91,13 @@ function computeStatusModeration(
 
 export function useActorStatus(actor?: AnyProfileView) {
 	const shadowed = useMaybeProfileShadow(actor);
-	const tick = useTick();
 	const config = useLiveNowConfig();
 	const moderationOpts = useModerationOpts();
+
+	const status = shadowed && 'status' in shadowed ? shadowed.status : undefined;
+
+	// only subscribe while status expiry needs revalidation.
+	const tick = useTick(!!status);
 
 	const moderation = computeStatusModeration(actor, moderationOpts);
 
@@ -106,31 +110,31 @@ export function useActorStatus(actor?: AnyProfileView) {
 		return DEFAULT_STATE;
 	}
 
-	if (shadowed && 'status' in shadowed && shadowed.status) {
-		const isValid = isStatusValidForViewers(shadowed.status, config);
-		const isDisabled = shadowed.status.isDisabled;
-		const isActive = isStatusStillActive(shadowed.status.expiresAt);
+	if (status) {
+		const isValid = isStatusValidForViewers(status, config);
+		const isDisabled = status.isDisabled;
+		const isActive = isStatusStillActive(status.expiresAt);
 		if (isValid && !isDisabled && isActive) {
 			return {
 				status: 'app.bsky.actor.status#live',
-				cid: shadowed.status.cid,
-				uri: shadowed.status.uri,
-				embed: shadowed.status.embed, // temp_isStatusValid asserts this
-				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+				cid: status.cid,
+				uri: status.uri,
+				embed: status.embed, // temp_isStatusValid asserts this
+				expiresAt: status.expiresAt!, // isStatusStillActive asserts this
 				isActive: true,
 				isDisabled: false,
-				record: shadowed.status.record,
+				record: status.record,
 			} satisfies AppBskyActorDefs.StatusView;
 		}
 		return {
 			status: 'app.bsky.actor.status#live',
-			cid: shadowed.status.cid,
-			uri: shadowed.status.uri,
-			embed: shadowed.status.embed, // temp_isStatusValid asserts this
-			expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+			cid: status.cid,
+			uri: status.uri,
+			embed: status.embed, // temp_isStatusValid asserts this
+			expiresAt: status.expiresAt!, // isStatusStillActive asserts this
 			isActive: false,
 			isDisabled,
-			record: shadowed.status.record,
+			record: status.record,
 		} satisfies AppBskyActorDefs.StatusView;
 	} else {
 		return DEFAULT_STATE;

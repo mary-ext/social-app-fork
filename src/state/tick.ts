@@ -15,5 +15,12 @@ const subscribe = (onStoreChange: () => void) => emitter.subscribe(onStoreChange
 
 const getTick = () => tick;
 
-/** a coarse timestamp that advances on its own */
-export const useTick = () => useSyncExternalStore(subscribe, getTick);
+const noopSubscribe = () => () => {};
+
+/**
+ * provides a timestamp that updates once a minute while enabled.
+ *
+ * @param enabled whether to subscribe to updates
+ * @returns the current timestamp
+ */
+export const useTick = (enabled = true) => useSyncExternalStore(enabled ? subscribe : noopSubscribe, getTick);
