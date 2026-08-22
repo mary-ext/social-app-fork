@@ -4,92 +4,63 @@ description: Sync new changes from upstream.
 disable-model-invocation: true
 ---
 
-### 1. Fetch upstream
+## 1. Establish the range
 
-```
-git fetch bluesky
-```
+`git fetch upstream` — the remote is `https://github.com/bluesky-social/social-app`, and the clone
+must be full, not shallow.
 
-This remote should be set it to `github:bluesky-social/social-app` if it's not present.
-
-Ensure that it is not a shallow clone.
-
-### 2. Establish the range
-
-Read the marker in `README.md` under "upstream tracking":
+`README.md` under "upstream tracking" carries the marker:
 
 > last reviewed upstream tip: `<hash>` (date)
 
-The review range is `<hash>..upstream/main` (`upstream/main` is bluesky's default branch). Confirm
-the size:
+The range is `<hash>..upstream/main`. Size it with `git rev-list --count` and `git log --oneline`.
 
-```
-git rev-list --count <hash>..upstream/main
-git log --oneline <hash>..upstream/main
-```
+## 2. Review every commit, oldest to newest
 
-### 3. Review every commit
+`git show <commit>`, then find the fork's counterpart with grepping the codebase and judge what a
+port would actually cost.
 
-Read each commit's diff, oldest to newest:
+- Read the diff, not the subject line. A commit that reads as an iOS/Android fix or a dependency
+  bump still touches shared and web code often enough to be worth checking.
+- Nothing applies cleanly — React Native is nearly gone here, so every port is a rewrite rather than
+  a cherry-pick.
+- Absent code is usually deliberate: a stripped feature, or something still beta or A/B gated.
+  Determine which before calling it a gap. A good beta feature is still portable, and we may unflag
+  it ahead of upstream.
 
-```
-git show <commit>
-```
+**Chase the prerequisites.** A commit's diff is only half the story; keep digging until you can
+state what porting it needs, and say what you checked.
 
-Take the following cases in mind:
+- New or changed lexicons → do our `@atcute/*` packages cover them yet? Compare the installed
+  version against `pnpm view @atcute/<pkg>`.
+- New upstream dependency → does the same package work on web, is there an equivalent, or is it
+  replaceable with what we already have?
+- Builds on an earlier upstream commit outside the range, or on one you tiered as skip → surface
+  that link.
 
-1. **Review benign-looking commits.** A commit whose message reads as a pure iOS/Android fix or a
-   tooling dependency bump can still touch web-related paths.
+**Large ranges:** hand chunks of hashes to subagents, asking each for per-commit files touched,
+whether web or shared code changed, a one-line summary, and a preliminary tier. Re-run `git show`
+yourself on the candidates they flag — a subagent returns a paraphrase, not the source.
 
-2. **No commit will ever be a match.** It will always conflict, we are pretty much close to removing
-   React Native entirely here. This will not be a direct port from upstream.
+## 3. Report, grouped by interest
 
-3. **Absent code is not missing code.** We may deliberately omit code that might just not be ready
-   yet, e.g. considered beta or placed under A/B testing. If a commit touches on a feature whose
-   code is absent, determine whether it had been intentionally dropped or not.
-
-   This does not mean we won't port beta features at all though, we may even unflag it ahead of time
-   if it's a good change.
-
-For each relevant change, find where the corresponding code lives in this fork (Grep/Glob/Read) and
-evaluate what a port would actually require given the divergence. When no counterpart exists, record
-why: stripped feature, beta or A/B-gated, or a genuine gap worth filling.
-
-**Large ranges:** Split the list of commits into chunks and hand each chunk to a subagent. Give the
-subagent the exact hashes and this instruction: `git show` each commit and report per commit — files
-touched, whether any web/shared code changed, a one-line summary, and a preliminary tier (step 5).
-Then re-run `git show` yourself on the port-worthy candidates before trusting them; a subagent
-returns a paraphrase, not the source.
-
-### 4. Report, grouped by interest
-
-Prepare a table of commits and rationale over why we should/shouldn't port, grouped into the
-following tiers:
+A table of commit and rationale, in tiers:
 
 - **Good to port** — clear web value, fits the fork cleanly.
 - **Meh to port** — minor or marginal; fine to skip.
 - **Bad but we can port anyway** — awkward fit or extra work, but defensible.
-- **Ignore entirely** — native-only, a/b-gated, or targets a stripped feature.
+- **Ignore entirely** — native-only, A/B gated, or targets a stripped feature.
 
-Then propose an order for the items worth porting (by dependency, risk, and size). Each item ports
-as its own separate commit — decompose the list into commit-sized units of one logical change, never
-a single batched "sync upstream" commit. Stop here.
+Attach the prerequisites from step 2 to each portable item. Then propose an order by dependency,
+risk, and size, decomposed into commit-sized units of one logical change each. Stop here.
 
-### 5. Get explicit agreement
+## 4. Get explicit agreement
 
-Present the plan and wait for the user to explicitly agree before any porting begins. Expect
-back-and-forth over what belongs in or out — revise until they sign off. Only then move on to
-implementation.
+Present the plan and wait for explicit sign-off before porting. Expect back-and-forth over what
+belongs in or out; revise until the user agrees, then implement.
 
 ## Advancing the marker
 
-Once the reviewed range has been handled — ported or consciously skipped — per the agreed plan,
-update the marker in `README.md`. Pin the resolved hash, not the moving branch:
-
-```
-git rev-parse upstream/main
-```
-
-Write that hash and today's date into "last reviewed upstream tip". The marker means "reviewed", not
-"ported": advance it when review of the range is complete, including for changes deliberately
-skipped.
+The marker means "reviewed", not "ported" — advance it once the range is handled, deliberate skips
+included. Write the resolved hash from `git rev-parse upstream/main` and today's date into
+`README.md`.
