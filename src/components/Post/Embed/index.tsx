@@ -1,3 +1,5 @@
+import { lazy, type ReactNode, Suspense } from 'react';
+
 import { unwrapEmbed, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
@@ -21,22 +23,32 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostMeta } from '#/components/PostMeta';
 import { RichText } from '#/components/RichText';
-import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 
 import { m } from '#/paraglide/messages';
 
 import { BlockedEmbed } from './BlockedEmbed';
 import { ChatInviteEmbed } from './ChatInviteEmbed';
-import { ModeratedFeedEmbed } from './FeedEmbed';
 import * as css from './index.css';
-import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
-import { StandardSiteEmbed } from './StandardSiteEmbed';
 import { isStandardSiteEmbed } from './StandardSiteEmbed/utils';
 import { type CommonProps, type EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
 export { PostEmbedViewContext } from './types';
+
+const StandardSiteEmbed = lazy(() =>
+	import('./StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
+);
+
+const ModeratedFeedEmbed = lazy(() =>
+	import('./FeedEmbed').then((mod) => ({ default: mod.ModeratedFeedEmbed })),
+);
+const ModeratedListEmbed = lazy(() =>
+	import('./ListEmbed').then((mod) => ({ default: mod.ModeratedListEmbed })),
+);
+const StarterPackCard = lazy(() =>
+	import('#/components/StarterPack/StarterPackCard').then((mod) => ({ default: mod.Embed })),
+);
 
 export function Embed({ embed: rawEmbed, ...rest }: EmbedProps) {
 	const { media, record } = unwrapEmbed(rawEmbed);
@@ -94,7 +106,13 @@ function MediaEmbed({
 						}
 						activeClassName={css.activeMargin}
 					>
-						<StandardSiteEmbed view={media.external} onOpen={rest.onOpen} className={css.standardSiteGap} />
+						<Suspense
+							fallback={
+								<ExternalEmbed link={media.external} onOpen={rest.onOpen} className={css.externalCardGap} />
+							}
+						>
+							<StandardSiteEmbed view={media.external} onOpen={rest.onOpen} className={css.standardSiteGap} />
+						</Suspense>
 					</ContentHider>
 				);
 			}
@@ -143,6 +161,14 @@ function MediaEmbed({
 	}
 }
 
+function LazyRecordCard({ children }: { children: ReactNode }) {
+	return (
+		<div className={css.recordCardGap}>
+			<Suspense fallback={null}>{children}</Suspense>
+		</div>
+	);
+}
+
 function RecordEmbed({
 	record,
 	...rest
@@ -152,23 +178,23 @@ function RecordEmbed({
 	switch (record.$type) {
 		case 'app.bsky.feed.defs#generatorView': {
 			return (
-				<div className={css.recordCardGap}>
+				<LazyRecordCard>
 					<ModeratedFeedEmbed embed={record} {...rest} />
-				</div>
+				</LazyRecordCard>
 			);
 		}
 		case 'app.bsky.graph.defs#listView': {
 			return (
-				<div className={css.recordCardGap}>
+				<LazyRecordCard>
 					<ModeratedListEmbed embed={record} />
-				</div>
+				</LazyRecordCard>
 			);
 		}
 		case 'app.bsky.graph.defs#starterPackViewBasic': {
 			return (
-				<div className={css.recordCardGap}>
+				<LazyRecordCard>
 					<StarterPackCard starterPack={record} />
-				</div>
+				</LazyRecordCard>
 			);
 		}
 		case 'app.bsky.labeler.defs#labelerView': {

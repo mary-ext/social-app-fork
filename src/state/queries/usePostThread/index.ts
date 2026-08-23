@@ -31,7 +31,6 @@ import { getClients, useSession } from '#/state/session';
 import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 export * from '#/state/queries/usePostThread/context';
-export { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread/queryCache';
 export * from '#/state/queries/usePostThread/types';
 
 export function usePostThread({ anchor }: { anchor?: ResourceUri }) {

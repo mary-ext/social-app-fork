@@ -7,11 +7,10 @@ import type {
 import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
-import { type QueryClient, useQueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 
 import { dangerousGetPostShadow, updatePostShadow } from '#/state/cache/post-shadow';
 import { getPostFinders, registerShadowFinders } from '#/state/cache/registry';
-import { usePostThreadContext } from '#/state/queries/usePostThread';
 import { getBranch } from '#/state/queries/usePostThread/traversal';
 import {
 	type ApiThreadItem,
@@ -231,53 +230,6 @@ export function* findAllProfilesInQueryData(
 			}
 		}
 	}
-}
-
-export function useUpdatePostThreadThreadgateQueryCache() {
-	const qc = useQueryClient();
-	const context = usePostThreadContext();
-
-	return (threadgate: AppBskyFeedDefs.ThreadgateView) => {
-		if (!context) {
-			return;
-		}
-
-		function mutator<T>(thread: ApiThreadItem[]): T[] {
-			for (let i = 0; i < thread.length; i++) {
-				const item = thread[i]!;
-
-				if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') {
-					continue;
-				}
-
-				if (item.depth === 0) {
-					thread.splice(i, 1, {
-						...item,
-						value: {
-							...item.value,
-							post: {
-								...item.value.post,
-								threadgate,
-							},
-						},
-					});
-				}
-			}
-
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the caller pins `T` to the query's thread-item variant
-			return thread as T[];
-		}
-
-		qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.$output>(context.postThreadQueryKey, (data) => {
-			if (!data) {
-				return;
-			}
-			return {
-				...data,
-				thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([...data.thread]),
-			};
-		});
-	};
 }
 
 registerShadowFinders(postThreadQueryKeyRoot, {

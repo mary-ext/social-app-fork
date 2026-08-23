@@ -13,7 +13,7 @@ import {
 } from '#/state/queries/threadgate';
 
 import * as Dialog from '#/components/Dialog';
-import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
+import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog/SettingsBody';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import TinyChevronIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';

@@ -64,20 +64,14 @@ const shareItemToStringValue = (item: ShareTargetItem): string => {
 	}
 };
 
-export function SendViaChatDialog({
+export function SendViaChatBody({
 	handle,
 	onSelectChat,
 }: {
 	handle: Dialog.DialogHandle;
 	onSelectChat: (chatId: string) => void;
 }) {
-	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} label={m['components.dms.share.title']()} scroll="body">
-				<ChatCreationFlow handle={handle} onChatReady={onSelectChat} pickStep={SelectShareTargetStep} />
-			</Dialog.Popup>
-		</Dialog.Root>
-	);
+	return <ChatCreationFlow handle={handle} onChatReady={onSelectChat} pickStep={SelectShareTargetStep} />;
 }
 
 // #region share target step

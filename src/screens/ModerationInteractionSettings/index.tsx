@@ -13,7 +13,7 @@ import {
 } from '#/state/queries/threadgate';
 import { useTitle } from '#/state/use-title';
 
-import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog';
+import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog/SettingsBody';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';

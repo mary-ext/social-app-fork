@@ -19,6 +19,7 @@ import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/su
 import { m } from '#/paraglide/messages';
 
 import { AltBadge } from '../GifPresentationControls';
+import { HLSUnsupportedError, VideoNotFoundError } from './errors';
 import * as styles from './VideoEmbedInnerWeb.css';
 import type { VideoQuality, VideoSubtitles } from './web-controls/SettingsMenu';
 import { Controls } from './web-controls/VideoControls';
@@ -110,18 +111,6 @@ export function VideoEmbedInnerWeb({
 			</div>
 		</div>
 	);
-}
-
-export class HLSUnsupportedError extends Error {
-	constructor() {
-		super('HLS is not supported');
-	}
-}
-
-export class VideoNotFoundError extends Error {
-	constructor() {
-		super('Video not found');
-	}
 }
 
 function useHlsPlayer({

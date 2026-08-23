@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -12,15 +12,20 @@ import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 import {
 	HLSUnsupportedError,
-	VideoEmbedInnerWeb,
 	VideoNotFoundError,
-} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb';
+} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/errors';
 
 import { m } from '#/paraglide/messages';
 
 import { useActiveVideo } from './active-video';
 import * as styles from './index.css';
 import * as VideoFallback from './VideoEmbedInner/VideoFallback';
+
+const VideoEmbedInnerWeb = lazy(() =>
+	import('#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb').then((mod) => ({
+		default: mod.VideoEmbedInnerWeb,
+	})),
+);
 
 const MIN_CARD_WIDTH = 280;
 
@@ -62,15 +67,17 @@ export function VideoEmbed({ embed, authorDid }: { embed: AppBskyEmbedVideo.View
 				<div className={styles.contents} {...noRowLink}>
 					<ErrorBoundary renderError={renderError} key={key}>
 						{nearScreen && (
-							<VideoEmbedInnerWeb
-								embed={embed}
-								authorDid={authorDid}
-								active={isActive}
-								setActive={setActive}
-								onScreen={onScreen}
-								canLoad={mayLoad}
-								lastKnownTime={lastKnownTime}
-							/>
+							<Suspense fallback={null}>
+								<VideoEmbedInnerWeb
+									embed={embed}
+									authorDid={authorDid}
+									active={isActive}
+									setActive={setActive}
+									onScreen={onScreen}
+									canLoad={mayLoad}
+									lastKnownTime={lastKnownTime}
+								/>
+							</Suspense>
 						)}
 					</ErrorBoundary>
 				</div>

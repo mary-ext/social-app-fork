@@ -18,7 +18,7 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util';
-import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread';
+import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread/threadgate-cache';
 import { getClients, useSession } from '#/state/session';
 import { setReplyHidden } from '#/state/threadgate-hidden-replies';
 

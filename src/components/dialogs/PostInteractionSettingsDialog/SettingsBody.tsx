@@ -4,31 +4,20 @@ import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { isResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useQueryClient } from '@tanstack/react-query';
-
-import { STALE } from '#/state/queries';
 import { useMyListsQuery } from '#/state/queries/my-lists';
-import { useGetPost } from '#/state/queries/post';
-import {
-	createPostgateQueryKey,
-	getPostgateRecord,
-	usePostgateQuery,
-	useWritePostgateMutation,
-} from '#/state/queries/postgate';
+import { usePostgateQuery, useWritePostgateMutation } from '#/state/queries/postgate';
 import { createPostgateRecord, embeddingRules } from '#/state/queries/postgate/util';
 import {
-	createThreadgateViewQueryKey,
 	type ThreadgateAllowUISetting,
 	threadgateViewToAllowUISetting,
 	useSetThreadgateAllowMutation,
 	useThreadgateViewQuery,
 } from '#/state/queries/threadgate';
-import { getClients, useSession } from '#/state/session';
+import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import * as styles from '#/components/dialogs/PostInteractionSettingsDialog.css';
 import * as Toggle from '#/components/forms/Toggle';
 import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
@@ -43,7 +32,24 @@ import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke
 import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { CenteredSpinner } from '../CenteredSpinner';
+import * as styles from './SettingsBody.css';
+import { SettingsLoading } from './SettingsLoading';
+
+export type PostInteractionSettingsDialogProps = {
+	handle: Dialog.DialogHandle;
+	/** URI of the post to edit the interaction settings for. Could be a root post or could be a reply. */
+	postUri: ResourceUri;
+	/**
+	 * The URI of the root post in the thread. Used to determine if the viewer owns the threadgate record and
+	 * can therefore edit it.
+	 */
+	rootPostUri: ResourceUri;
+	/**
+	 * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we happen to have one before opening the
+	 * settings dialog.
+	 */
+	initialThreadgateView?: AppBskyFeedDefs.ThreadgateView;
+};
 
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;
@@ -94,34 +100,7 @@ function DialogInner(props: PostInteractionSettingsFormProps) {
 	);
 }
 
-export type PostInteractionSettingsDialogProps = {
-	handle: Dialog.DialogHandle;
-	/** URI of the post to edit the interaction settings for. Could be a root post or could be a reply. */
-	postUri: ResourceUri;
-	/**
-	 * The URI of the root post in the thread. Used to determine if the viewer owns the threadgate record and
-	 * can therefore edit it.
-	 */
-	rootPostUri: ResourceUri;
-	/**
-	 * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we happen to have one before opening the
-	 * settings dialog.
-	 */
-	initialThreadgateView?: AppBskyFeedDefs.ThreadgateView;
-};
-
-/** Threadgate settings dialog. Used in the thread. */
-export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
-	return (
-		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.dialogs.interaction.title']()} size="narrow">
-				<PostInteractionSettingsDialogInner handle={handle} {...props} />
-			</Dialog.Popup>
-		</Dialog.Root>
-	);
-}
-
-function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractionSettingsDialogProps) {
+export function SettingsBody({ handle, ...props }: PostInteractionSettingsDialogProps) {
 	const { currentAccount } = useSession();
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -203,12 +182,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 	]);
 
 	if (isLoading) {
-		return (
-			<>
-				<Dialog.Close variant="floating" />
-				<CenteredSpinner label={m['components.dialogs.interaction.loading']()} />
-			</>
-		);
+		return <SettingsLoading />;
 	}
 
 	return (
@@ -506,39 +480,4 @@ function Header() {
 			<Dialog.Close />
 		</Dialog.TitleRow>
 	);
-}
-
-export function usePrefetchPostInteractionSettings({
-	postUri,
-	rootPostUri,
-}: {
-	postUri: ResourceUri;
-	rootPostUri: ResourceUri;
-}) {
-	const queryClient = useQueryClient();
-	const { appview, pds } = getClients();
-	const getPost = useGetPost();
-
-	return async () => {
-		try {
-			await Promise.all([
-				queryClient.prefetchQuery({
-					queryKey: createPostgateQueryKey(postUri),
-					queryFn: ({ signal }) =>
-						getPostgateRecord({ appview, pds: pds!, postUri, signal }).then((res) => res ?? null),
-					staleTime: STALE.SECONDS.THIRTY,
-				}),
-				queryClient.prefetchQuery({
-					queryKey: createThreadgateViewQueryKey(rootPostUri),
-					queryFn: async () => {
-						const post = await getPost({ uri: rootPostUri });
-						return post.threadgate ?? null;
-					},
-					staleTime: STALE.SECONDS.THIRTY,
-				}),
-			]);
-		} catch (e) {
-			console.error('Failed to prefetch post interaction settings', e);
-		}
-	};
 }

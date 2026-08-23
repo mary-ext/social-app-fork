@@ -4,11 +4,12 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import type { ResolvedLink } from '#/lib/api/resolve';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
-import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
+import { RQKEY_LINK } from '#/state/queries/resolve-link-key';
 
 import { composerDialogHandle } from '#/components/dialogs/handles';
 import * as Toast from '#/components/Toast';
@@ -60,7 +61,7 @@ export function useOpenComposer() {
 		if (opts.quote) {
 			const appUrl = recordUriToShareUrl(opts.quote.uri);
 			if (appUrl) {
-				precacheResolveLinkQuery(queryClient, appUrl, {
+				const resolved: ResolvedLink = {
 					type: 'record',
 					kind: 'post',
 					record: {
@@ -68,7 +69,9 @@ export function useOpenComposer() {
 						uri: opts.quote.uri,
 					},
 					view: opts.quote,
-				});
+				};
+
+				queryClient.setQueryData(RQKEY_LINK(appUrl), resolved);
 			}
 		}
 		const author = opts.replyTo?.author || opts.quote?.author;
