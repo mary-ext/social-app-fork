@@ -2,10 +2,12 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 
+export const BANNER_ASPECT_RATIO = 3;
+
 export const banner = style({
 	display: 'block',
 	backgroundColor: colors.contrast_25,
-	aspectRatio: '3 / 1',
+	aspectRatio: `${BANNER_ASPECT_RATIO} / 1`,
 	width: '100%',
 	overflow: 'hidden',
 });

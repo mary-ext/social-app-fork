@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-
 import { useFocusEffect } from '@oomfware/stacker';
+
+import { useElementHeight } from '#/lib/hooks/use-element-height';
 
 import { softReset } from '#/state/events';
 
@@ -24,19 +24,7 @@ export function SearchScreenShell({ queryParam }: { queryParam: string }) {
 	const queryWithParams = makeSearchQuery(query, params);
 
 	// measure the sticky header so the tab bar below it can offset itself by that height
-	const [headerHeight, setHeaderHeight] = useState(0);
-	const headerRef = useRef<HTMLDivElement | null>(null);
-	useLayoutEffect(() => {
-		const el = headerRef.current;
-		if (!el) {
-			return;
-		}
-		const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
-		measure();
-		const observer = new ResizeObserver(measure);
-		observer.observe(el);
-		return () => observer.disconnect();
-	}, []);
+	const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
 	const navigateToExplore = () => {
 		// drop back to the explore page: clear the query and tab

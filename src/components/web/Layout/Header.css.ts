@@ -1,5 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
+import { HEADER_HEIGHT } from '#/components/web/Layout/const';
+
 import { vars } from '#/styles/contract.css';
 import { space, zIndex } from '#/styles/tokens.css';
 
@@ -18,7 +20,7 @@ export const outer = style({
 	paddingBlock: space.xs,
 	paddingInline: space.lg,
 	width: '100%',
-	minHeight: 52,
+	minHeight: HEADER_HEIGHT,
 });
 
 export const outerNoBorder = style({
@@ -27,27 +29,6 @@ export const outerNoBorder = style({
 
 export const outerStatic = style({
 	position: 'static',
-});
-
-export const bannerOuter = style({
-	position: 'relative',
-});
-
-export const bannerHeader = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	position: 'absolute',
-	insetInline: 0,
-	top: 0,
-	flexDirection: 'row',
-	gap: space.sm,
-	alignItems: 'center',
-	zIndex: zIndex.raised,
-	// inset the header below the notch; the banner behind covers the safe area itself
-	paddingTop: `calc(${space.xs}px + env(safe-area-inset-top, 0px))`,
-	paddingBottom: space.xs,
-	paddingInline: space.lg,
-	minHeight: 51,
 });
 
 export const content = style({

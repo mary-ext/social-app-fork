@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { combinedDisplayName, isInvalidHandle } from '#/lib/display-names';
 import { cleanError } from '#/lib/errors';
+import { useElementHeight } from '#/lib/hooks/use-element-height';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -29,6 +30,7 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { ProfileHeader } from '#/screens/Profile/Header';
 import { ProfileHeaderSkeleton } from '#/screens/Profile/Header/Skeleton';
+import { ProfileStickyHeader } from '#/screens/Profile/Header/Sticky';
 import { ProfileCollectionsSection } from '#/screens/Profile/Sections/Collections';
 import { ProfileMediaFilter, ProfileMediaSection } from '#/screens/Profile/Sections/Media';
 import { ProfilePostsFilter, ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
@@ -155,6 +157,8 @@ function ProfileScreenLoaded({
 
 	const [{ tab }, replaceParams] = useParams('Profile');
 
+	const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
+
 	useTitle(combinedDisplayName(profile));
 
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -211,7 +215,9 @@ function ProfileScreenLoaded({
 			screenDescription={m['components.moderation.screenHider.user']()}
 			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
+			<ProfileStickyHeader isPlaceholderProfile={isPlaceholderProfile} profile={profile} ref={headerRef} />
 			<Tabs
+				headerOffset={headerHeight}
 				// the tab set isn't known until the real profile loads, so hold the bar back until then
 				sections={isPlaceholderProfile ? [] : sections}
 				value={tab ?? 'posts'}

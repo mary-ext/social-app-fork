@@ -8,6 +8,8 @@ import { fontSize, fontWeight, iconSize, lineHeight } from '#/styles/tokens.css'
 
 const HOVER = '&:hover:not(:disabled)';
 
+export const SCRIM_BACKGROUND = 'rgba(0, 0, 0, 0.5)';
+
 const fontSizeVar = createVar();
 const fontSizeScale = fallbackVar(fontSizeVar, fontSize.md_sub);
 
@@ -60,7 +62,7 @@ export const button = recipe(
 				outline: {},
 				// translucent dark treatment for buttons floating over media (banners, images)
 				scrim: {
-					backgroundColor: 'rgba(0, 0, 0, 0.5)',
+					backgroundColor: SCRIM_BACKGROUND,
 					color: vars.palette.white,
 					selectors: { [HOVER]: { backgroundColor: 'rgba(0, 0, 0, 0.75)' } },
 				},

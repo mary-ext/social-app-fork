@@ -15,7 +15,6 @@ import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { UserBanner } from '#/components/UserBanner';
-import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
@@ -23,8 +22,7 @@ import { useProfileHeader } from './Context';
 import * as css from './Shell.css';
 
 /**
- * profile-header scaffold displaying a banner with a back button, an overlapping avatar with a live ring, and
- * moderation alerts.
+ * renders the profile banner, avatar, and moderation alerts.
  *
  * @param children header body
  */
@@ -73,28 +71,23 @@ export function ProfileHeaderShell({ children }: { children: ReactNode }): React
 
 	return (
 		<div className={css.frame}>
-			<Layout.Header.OuterOnBanner
-				banner={
-					isPlaceholderProfile ? (
-						<div className={css.bannerPlaceholder} />
-					) : profile.banner && canViewMedia ? (
-						<Dialog.Trigger
-							type="button"
-							handle={lightboxHandle}
-							payload={{ images: [{ src: profile.banner }], index: 0 }}
-							className={css.bannerButton}
-							aria-label={m['screens.profile.banner.a11y.view']()}
-							onPointerDown={preloadLightbox}
-						>
-							{bannerImage}
-						</Dialog.Trigger>
-					) : (
-						bannerImage
-					)
-				}
-			>
-				<Layout.Header.BackButton variant="scrim" />
-			</Layout.Header.OuterOnBanner>
+			{isPlaceholderProfile ? (
+				<UserBanner />
+			) : profile.banner && canViewMedia ? (
+				<Dialog.Trigger
+					type="button"
+					handle={lightboxHandle}
+					payload={{ images: [{ src: profile.banner }], index: 0 }}
+					className={css.bannerButton}
+					aria-label={m['screens.profile.banner.a11y.view']()}
+					onPointerDown={preloadLightbox}
+				>
+					{bannerImage}
+				</Dialog.Trigger>
+			) : (
+				bannerImage
+			)}
+
 			{/* placed before the header body so its tab order matches its visual spot (top-left, over the banner edge) */}
 			<div className={css.avatarAnchor}>
 				{live.isActive ? (

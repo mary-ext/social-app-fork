@@ -8,13 +8,6 @@ export const frame = style({
 	backgroundColor: colors.bg,
 });
 
-// mirror the loaded header so the skeleton doesn't shift on load
-export const banner = style({
-	backgroundColor: colors.contrast_50,
-	aspectRatio: '3 / 1',
-	width: '100%',
-});
-
 export const avatarAnchor = style({
 	position: 'relative',
 });

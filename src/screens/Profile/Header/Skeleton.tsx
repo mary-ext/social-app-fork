@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useConstant } from '#/lib/hooks/use-constant';
 
+import { UserBanner } from '#/components/UserBanner';
 import * as Skele from '#/components/web/Skeleton';
 
 import * as css from './Skeleton.css';
@@ -14,7 +15,7 @@ export function ProfileHeaderSkeleton(_props: {}): ReactNode {
 
 	return (
 		<div className={css.frame}>
-			<div className={css.banner} />
+			<UserBanner />
 
 			<div className={css.avatarAnchor}>
 				<div className={css.avatarRing}>

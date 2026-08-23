@@ -2,3 +2,6 @@
 
 /** Width of the center column. */
 export const CENTER_COLUMN_WIDTH = 600;
+
+/** header height excluding the top safe area. */
+export const HEADER_HEIGHT = 52;

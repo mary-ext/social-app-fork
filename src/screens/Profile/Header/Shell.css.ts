@@ -17,12 +17,6 @@ export const bannerButton = style({
 	cursor: 'pointer',
 });
 
-export const bannerPlaceholder = style({
-	backgroundColor: colors.contrast_50,
-	aspectRatio: '3 / 1',
-	width: '100%',
-});
-
 // empty marker at the banner's bottom edge; the avatar anchors to it to straddle the banner at any height
 export const avatarAnchor = style({
 	position: 'relative',
