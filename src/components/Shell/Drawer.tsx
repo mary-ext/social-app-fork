@@ -5,7 +5,6 @@ import { clsx } from 'clsx';
 
 import { profileTarget } from '#/lib/routes/targets';
 
-import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
@@ -25,12 +24,7 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
-import BellFilled from '#/icons/central/Bell_round_filled_radius1_stroke2.svg';
-import Bell from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
-import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke2.svg';
 import Bookmark from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
-import MessageFilled from '#/icons/central/BubbleAnnotation3_round_filled_radius1_stroke2.svg';
-import Message from '#/icons/central/BubbleAnnotation3_round_outlined_radius1_stroke2.svg';
 import List from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import DotGrid from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import Hashtag from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
@@ -38,12 +32,11 @@ import HomeFilled from '#/icons/central/HomeOpen_round_filled_radius1_stroke2.sv
 import Home from '#/icons/central/HomeOpen_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassFilled from '#/icons/central/MagnifyingGlass_round_filled_radius1_stroke2.svg';
 import MagnifyingGlass from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
-import UserCircleFilled from '#/icons/central/PeopleCircle_round_filled_radius1_stroke2.svg';
 import UserCircle from '#/icons/central/PeopleCircle_round_outlined_radius1_stroke2.svg';
 import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import Settings from '#/icons/central/SettingsGear2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
+import { type RouteTarget, useRouter } from '#/router';
 
 const SWITCHER_AVATAR_SIZE = 24;
 const SWITCHER_ACCOUNT_LIMIT = 2;
@@ -73,26 +66,18 @@ export function Drawer() {
 function DrawerContent() {
 	const router = useRouter();
 	const { currentAccount, hasSession } = useSession();
-	const { isAtFeeds, isAtHistory, isAtHome, isAtMessages, isAtNotifications, isAtSearch } =
-		useNavigationTabState();
-	const numUnreadNotifications = useUnreadNotifications();
+	const { isAtHome, isAtSearch } = useNavigationTabState();
 
-	const onPressTab = (tab: 'Explore' | 'Home' | 'Messages' | 'MyProfile' | 'Notifications') => {
+	const navigateAndClose = (to: RouteTarget) => {
+		router.navigate({ to });
 		setDrawerOpen(false);
-		// MyProfile doesn't exist on the web navigator, so resolve it to the Profile route -ansh
-		if (tab === 'MyProfile') {
-			router.navigate({ to: profileTarget(currentAccount!.did) });
-		} else {
-			router.navigate({ to: { name: tab } });
+	};
+
+	const onPressProfile = () => {
+		if (currentAccount) {
+			navigateAndClose(profileTarget(currentAccount.did));
 		}
 	};
-
-	const navigateAndClose = (screen: 'Feeds' | 'History' | 'Lists' | 'Settings') => {
-		router.navigate({ to: { name: screen } });
-		setDrawerOpen(false);
-	};
-
-	const onPressProfile = () => onPressTab('MyProfile');
 
 	return (
 		<>
@@ -109,97 +94,47 @@ function DrawerContent() {
 			{hasSession ? (
 				<>
 					<MenuItem
-						activeIcon={MagnifyingGlassFilled}
-						inactiveIcon={MagnifyingGlass}
-						isActive={isAtSearch}
-						label={m['common.nav.explore']()}
-						onPress={() => onPressTab('Explore')}
-					/>
-					<MenuItem
-						activeIcon={HomeFilled}
-						inactiveIcon={Home}
-						isActive={isAtHome}
-						label={m['common.nav.home']()}
-						onPress={() => onPressTab('Home')}
-					/>
-					<MenuItem
-						activeIcon={MessageFilled}
-						inactiveIcon={Message}
-						isActive={isAtMessages}
-						label={m['common.chat.label']()}
-						onPress={() => onPressTab('Messages')}
-					/>
-					<MenuItem
-						activeIcon={BellFilled}
-						count={numUnreadNotifications}
-						countLabel={
-							numUnreadNotifications === ''
-								? undefined
-								: m['view.notifications.unreadCount.a11y']({ count: numUnreadNotifications })
-						}
-						inactiveIcon={Bell}
-						isActive={isAtNotifications}
-						label={m['common.nav.notifications']()}
-						onPress={() => onPressTab('Notifications')}
-					/>
-					<MenuItem
-						activeIcon={Hashtag}
-						inactiveIcon={Hashtag}
-						isActive={isAtFeeds}
+						icon={Hashtag}
 						label={m['common.nav.feeds']()}
-						onPress={() => navigateAndClose('Feeds')}
+						onPress={() => navigateAndClose({ name: 'Feeds' })}
 					/>
 					<MenuItem
-						activeIcon={List}
-						inactiveIcon={List}
-						isActive={false}
+						icon={List}
 						label={m['common.list.label']()}
-						onPress={() => navigateAndClose('Lists')}
+						onPress={() => navigateAndClose({ name: 'Lists' })}
 					/>
 					<MenuItem
-						activeIcon={BookmarkFilled}
-						inactiveIcon={Bookmark}
-						isActive={isAtHistory}
+						icon={Bookmark}
 						label={m['common.nav.history']()}
-						onPress={() => navigateAndClose('History')}
+						onPress={() => navigateAndClose({ name: 'History' })}
 					/>
+					<MenuItem icon={UserCircle} label={m['common.nav.profile']()} onPress={onPressProfile} />
 					<MenuItem
-						activeIcon={UserCircleFilled}
-						inactiveIcon={UserCircle}
-						isActive={false}
-						label={m['common.nav.profile']()}
-						onPress={onPressProfile}
-					/>
-					<MenuItem
-						activeIcon={Settings}
-						inactiveIcon={Settings}
-						isActive={false}
+						icon={Settings}
 						label={m['common.nav.settings']()}
-						onPress={() => navigateAndClose('Settings')}
+						onPress={() => navigateAndClose({ name: 'Settings' })}
 					/>
 				</>
 			) : (
 				<>
 					<MenuItem
 						activeIcon={HomeFilled}
-						inactiveIcon={Home}
+						icon={Home}
 						isActive={isAtHome}
 						label={m['common.nav.home']()}
-						onPress={() => onPressTab('Home')}
+						onPress={() => navigateAndClose({ name: 'Home' })}
 					/>
 					<MenuItem
-						activeIcon={Hashtag}
-						inactiveIcon={Hashtag}
-						isActive={isAtFeeds}
+						icon={Hashtag}
 						label={m['common.nav.feeds']()}
-						onPress={() => navigateAndClose('Feeds')}
+						onPress={() => navigateAndClose({ name: 'Feeds' })}
 					/>
 					<MenuItem
 						activeIcon={MagnifyingGlassFilled}
-						inactiveIcon={MagnifyingGlass}
+						icon={MagnifyingGlass}
 						isActive={isAtSearch}
 						label={m['common.nav.explore']()}
-						onPress={() => onPressTab('Explore')}
+						onPress={() => navigateAndClose({ name: 'Explore' })}
 					/>
 				</>
 			)}
@@ -336,38 +271,21 @@ function DrawerAccountSwitcher() {
 
 function MenuItem({
 	activeIcon: ActiveIcon,
-	count,
-	countLabel,
-	inactiveIcon: InactiveIcon,
-	isActive,
+	icon: InactiveIcon,
+	isActive = false,
 	label,
 	onPress,
 }: {
-	activeIcon: ComponentType<SVGProps<SVGSVGElement>>;
-	count?: string;
-	countLabel?: string;
-	inactiveIcon: ComponentType<SVGProps<SVGSVGElement>>;
-	isActive: boolean;
+	activeIcon?: ComponentType<SVGProps<SVGSVGElement>>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	isActive?: boolean;
 	label: string;
 	onPress: () => void;
 }) {
-	const Icon = isActive ? ActiveIcon : InactiveIcon;
+	const Icon = isActive && ActiveIcon ? ActiveIcon : InactiveIcon;
 	return (
 		<button aria-label={label} className={styles.menuItem} onClick={onPress} type="button">
-			<span className={styles.iconWrap}>
-				<Icon className={clsx(styles.navIcon, isActive && styles.navIconActive)} />
-				{count ? (
-					<Text
-						aria-label={countLabel}
-						size="sm"
-						weight="semiBold"
-						color="white"
-						className={styles.countBadge}
-					>
-						{count}
-					</Text>
-				) : null}
-			</span>
+			<Icon className={clsx(styles.navIcon, isActive && styles.navIconActive)} />
 			<Text numberOfLines={1} size="_2xl" weight={isActive ? 'bold' : 'normal'}>
 				{label}
 			</Text>

@@ -1,7 +1,5 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import * as navBadge from '#/components/Shell/nav-badge.css';
-
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { space, zIndex } from '#/styles/tokens.css';
@@ -152,10 +150,6 @@ export const menuItem = style(
 		},
 	}),
 );
-
-export const iconWrap = style({ display: 'inline-flex', position: 'relative' });
-
-export const countBadge = style([navBadge.badge, { top: -4, right: -10 }]);
 
 // the nav weight, stated here so the outlined Feeds glyph matches its siblings. inert on the assets
 // that hardcode `stroke-width`, which is most of them — only a `_stroke1` asset omits the attribute
