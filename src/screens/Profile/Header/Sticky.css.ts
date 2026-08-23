@@ -58,10 +58,14 @@ export const outer = style({
 	alignItems: 'center',
 	zIndex: zIndex.float,
 	containerType: 'inline-size',
-	marginBottom: `calc(-1 * ${height})`,
 	paddingTop: 'env(safe-area-inset-top, 0px)',
 	paddingInline: PADDING_INLINE,
 	height,
+	'@supports': {
+		'(animation-timeline: scroll())': {
+			marginBottom: `calc(-1 * ${height})`,
+		},
+	},
 });
 
 export const backdrop = style([
