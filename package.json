@@ -70,7 +70,7 @@
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "2.22.0",
-		"@oomfware/vite-plugin-svg-sprites": "^0.1.1",
+		"@oomfware/vite-plugin-svg-sprites": "^0.1.2",
 		"@types/node": "^26.2.0",
 		"@types/wicg-file-system-access": "^2023.10.7",
 		"@typescript/native": "npm:typescript@^7.0.2",

@@ -164,8 +164,8 @@ importers:
         specifier: 2.22.0
         version: 2.22.0(@typescript/typescript6@6.0.2)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))
       '@oomfware/vite-plugin-svg-sprites':
-        specifier: ^0.1.1
-        version: 0.1.1(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))
+        specifier: ^0.1.2
+        version: 0.1.2(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -1090,8 +1090,8 @@ packages:
   '@oomfware/tug@0.2.0':
     resolution: {integrity: sha512-GIVeJ6pSbO2vTa3369fadVv5Uh6j5yFmAIvwDOCwZE1OpfdV4Wtycfz7d4xyl56nhDbmn/QXLqVXnKrpwkuong==}
 
-  '@oomfware/vite-plugin-svg-sprites@0.1.1':
-    resolution: {integrity: sha512-Zga3ck3SbwHc/G502ojzCLwlws2d+ax/w9Pe85q/VWNTyXQGKA8fHVFKewUZddYIDWCj8h6GoLQFGoYShvom3Q==}
+  '@oomfware/vite-plugin-svg-sprites@0.1.2':
+    resolution: {integrity: sha512-KkQcfuUiPydhz3BGxWdMIYKHmrDe+CcmrOnVLCfhVkxx6GpjMfBqkw4+disi/gfJ11vbr0NBaJEerGJY2+sCFA==}
     peerDependencies:
       react: '>=18'
       svelte: '>=5.56.8'
@@ -3246,7 +3246,7 @@ snapshots:
     dependencies:
       esm-env: 1.2.2
 
-  '@oomfware/vite-plugin-svg-sprites@0.1.1(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))':
+  '@oomfware/vite-plugin-svg-sprites@0.1.2(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))':
     dependencies:
       lightningcss: 1.33.0
       magic-string: 1.2.2
