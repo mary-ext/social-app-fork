@@ -1,7 +1,10 @@
-import type { ComponentType, SVGProps } from 'react';
+import { type ComponentType, type SVGProps, useEffect, useRef, useState } from 'react';
+
+import { exchangeOpenRouterCode } from '#/lib/ai/openrouter-oauth';
 
 import {
 	setImageDescriptionModel,
+	setOpenRouterApiKey,
 	setTranslationModel,
 	useImageDescriptionModel,
 	useOpenRouterApiKey,
@@ -12,12 +15,14 @@ import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/SettingsCards';
+import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import LockIcon from '#/icons/central/Lock_round_outlined_radius3_stroke2.svg';
 import TranslateIcon from '#/icons/central/Translate_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
+import { useParams } from '#/router';
 
 import { ModelPickerDialog } from './components/ModelPickerDialog';
 import { OpenRouterKeyDialog } from './components/OpenRouterKeyDialog';
@@ -29,9 +34,17 @@ export function AiSettingsScreen() {
 
 	const keyDialogHandle = Dialog.useDialogHandle();
 
+	const signingIn = useOpenRouterSignIn();
 	const apiKey = useOpenRouterApiKey();
 	const imageDescriptionModel = useImageDescriptionModel();
 	const translationModel = useTranslationModel();
+
+	let keyValueText: string = m['screens.settings.ai.apiKey.notSet']();
+	if (signingIn) {
+		keyValueText = m['screens.settings.ai.apiKey.signingIn']();
+	} else if (apiKey !== undefined) {
+		keyValueText = maskKey(apiKey);
+	}
 
 	return (
 		<Layout.Screen>
@@ -50,7 +63,7 @@ export function AiSettingsScreen() {
 						<Settings.ButtonRow
 							label={m['screens.settings.ai.apiKey.label']()}
 							onPress={() => keyDialogHandle.open(null)}
-							valueText={apiKey === undefined ? m['screens.settings.ai.apiKey.notSet']() : maskKey(apiKey)}
+							valueText={keyValueText}
 						>
 							<Settings.Icon icon={LockIcon} />
 							<Settings.Label titleText={m['screens.settings.ai.apiKey.label']()} />
@@ -80,6 +93,36 @@ export function AiSettingsScreen() {
 		</Layout.Screen>
 	);
 }
+
+const useOpenRouterSignIn = (): boolean => {
+	const [{ code }, replaceParams] = useParams('AiSettings');
+	const [signingIn, setSigningIn] = useState(code !== undefined);
+	const redeemed = useRef(false);
+
+	useEffect(() => {
+		if (code === undefined || redeemed.current) {
+			return;
+		}
+
+		redeemed.current = true;
+		replaceParams({ code: undefined });
+
+		exchangeOpenRouterCode(code)
+			.then(
+				(key) => {
+					setOpenRouterApiKey(key);
+					Toast.show(m['screens.settings.ai.apiKey.signedInToast']());
+				},
+				(error: unknown) => {
+					console.error('Error occurred while finishing the OpenRouter sign-in', error);
+					Toast.show(m['screens.settings.ai.apiKey.signInError'](), { type: 'error' });
+				},
+			)
+			.finally(() => setSigningIn(false));
+	}, [code, replaceParams]);
+
+	return signingIn;
+};
 
 const ModelRow = ({
 	icon,

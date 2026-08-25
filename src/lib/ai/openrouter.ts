@@ -1,8 +1,9 @@
-import * as v from '@atcute/lexicons/validations';
+import * as v from 'valibot';
 
 import { type AltTextInput, runAltTextRound } from '#/lib/ai/alt-text';
 import type { CompleteChat } from '#/lib/ai/chat';
 import { OpenRouterError } from '#/lib/ai/openrouter-error';
+import { openRouterErrorSchema } from '#/lib/ai/openrouter-response';
 import { runTranslation, type TranslationInput } from '#/lib/ai/translate';
 
 /**
@@ -14,13 +15,6 @@ import { runTranslation, type TranslationInput } from '#/lib/ai/translate';
  */
 
 const COMPLETIONS_URL = 'https://openrouter.ai/api/v1/chat/completions';
-
-/** OpenRouter reports failures in this envelope, on error statuses and occasionally alongside a 200. */
-const errorSchema = v.object({
-	error: v.object({
-		message: v.optional(v.string()),
-	}),
-});
 
 const completionSchema = v.object({
 	choices: v.array(
@@ -121,25 +115,25 @@ const createOpenRouterCompletion = ({
 
 		const body: unknown = await response.json().catch(() => undefined);
 
+		const failure = v.safeParse(openRouterErrorSchema, body);
+
 		if (!response.ok) {
-			const parsed = v.safeParse(errorSchema, body);
-			const detail = parsed.ok ? parsed.value.error.message : undefined;
+			const detail = failure.success ? failure.output.error.message : undefined;
 			throw new OpenRouterError(detail ?? `OpenRouter returned ${response.status}`, {
 				status: response.status,
 			});
 		}
 
 		// a 200 carrying an error envelope means the request was accepted and the generation still failed
-		const failure = v.safeParse(errorSchema, body);
-		if (failure.ok) {
-			throw new OpenRouterError(failure.value.error.message ?? 'OpenRouter could not run the model');
+		if (failure.success) {
+			throw new OpenRouterError(failure.output.error.message ?? 'OpenRouter could not run the model');
 		}
 
 		const parsed = v.safeParse(completionSchema, body);
-		if (!parsed.ok) {
+		if (!parsed.success) {
 			throw new OpenRouterError('OpenRouter returned a reply in an unexpected shape');
 		}
 
-		return parsed.value.choices[0]?.message.content ?? '';
+		return parsed.output.choices[0]?.message.content ?? '';
 	};
 };

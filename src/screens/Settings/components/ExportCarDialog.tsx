@@ -7,10 +7,9 @@ import { downloadBytes } from '#/lib/utils/download';
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -89,7 +88,7 @@ function DialogInner() {
 				size="large"
 			>
 				{loading === 'repo' ? (
-					<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+					<ButtonSpinner label={m['common.status.saving']()} />
 				) : (
 					<ButtonIcon icon={DownloadIcon} />
 				)}
@@ -111,7 +110,7 @@ function DialogInner() {
 				size="large"
 			>
 				{loading === 'chat' ? (
-					<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+					<ButtonSpinner label={m['common.status.saving']()} />
 				) : (
 					<ButtonIcon icon={DownloadIcon} />
 				)}

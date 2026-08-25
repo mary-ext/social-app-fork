@@ -298,6 +298,7 @@ export const routes = defineRoutes({
 				component: AiSettingsScreen,
 				meta: { requireAuth: true },
 				path: '/settings/ai',
+				query: { code: optional(nonEmpty()) },
 			}),
 			AppearanceSettings: route({
 				component: AppearanceSettingsScreen,
