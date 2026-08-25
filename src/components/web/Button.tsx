@@ -11,6 +11,7 @@ import {
 import { Button as BaseButton } from '@base-ui/react/button';
 import { clsx } from 'clsx';
 
+import { Spinner } from '#/components/Spinner';
 import * as styles from '#/components/web/Button.css';
 
 import type { RecipeVariants } from '#/styles/recipe';
@@ -82,22 +83,44 @@ const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], keyof typeof iconSiz
 	tiny: 'xs',
 };
 
-/** Renders an icon that inherits the button's text color via `currentColor`. */
-export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
+const useIconBox = (size: keyof typeof iconSize | undefined) => {
 	const ctx = useContext(ButtonContext);
 	if (!ctx) {
 		throw new Error('ButtonIcon must be rendered inside a Button');
 	}
+
 	const resolvedSize = size ?? DEFAULT_ICON_SIZE[ctx.size];
+	return {
+		className: styles.iconBox({
+			narrow: resolvedSize === '_2xs',
+			pull: ctx.shape !== 'round',
+			size: ctx.size,
+		}),
+		iconToken: resolvedSize,
+	};
+};
+
+/** Renders an icon that inherits the button's text color via `currentColor`. */
+export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
+	const { className, iconToken } = useIconBox(size);
 	return (
-		<span
-			className={styles.iconBox({
-				narrow: resolvedSize === '_2xs',
-				pull: ctx.shape !== 'round',
-				size: ctx.size,
-			})}
-		>
-			<Icon className={styles.icon[resolvedSize]} />
+		<span className={className}>
+			<Icon className={styles.icon[iconToken]} />
+		</span>
+	);
+}
+
+export type ButtonSpinnerProps = {
+	color?: 'white' | 'default';
+	label: string;
+	size?: keyof typeof iconSize;
+};
+
+export function ButtonSpinner({ color, label, size }: ButtonSpinnerProps) {
+	const { className, iconToken } = useIconBox(size);
+	return (
+		<span className={className}>
+			<Spinner color={color} label={label} size={iconToken} />
 		</span>
 	);
 }
