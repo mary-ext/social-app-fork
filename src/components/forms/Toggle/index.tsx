@@ -1,4 +1,4 @@
-'use no memo'; // compiler output is duplicated across lazy chunks and outweighs these thin wrappers
+'use no memo'; // generated cache cost outweighs reuse in these shallow renderers
 
 import { type ComponentType, createContext, type ReactNode, type SVGProps, useContext } from 'react';
 

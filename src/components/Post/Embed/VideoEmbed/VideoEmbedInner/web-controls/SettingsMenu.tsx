@@ -356,6 +356,8 @@ function MenuRow({
 	onOpen?: () => void;
 	children: ReactNode;
 } & Omit<ComponentPropsWithoutRef<'button'>, 'onKeyDown'>) {
+	'use no memo'; // forwarded props invalidate the generated wrapper cache
+
 	return (
 		<CompositeItem
 			render={

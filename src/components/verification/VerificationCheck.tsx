@@ -1,3 +1,5 @@
+'use no memo'; // forwarded SVG props invalidate the generated wrapper cache
+
 import type { SVGProps } from 'react';
 
 import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';

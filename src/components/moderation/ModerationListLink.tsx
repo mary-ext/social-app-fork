@@ -1,3 +1,5 @@
+'use no memo'; // forwarded text props invalidate the generated wrapper cache
+
 import type { ReactNode } from 'react';
 
 import { recordUriToTarget } from '#/lib/routes/targets';

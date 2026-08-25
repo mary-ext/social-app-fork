@@ -1,3 +1,5 @@
+'use no memo'; // forwarded props invalidate the generated wrapper cache
+
 import type { ComponentType, SVGProps } from 'react';
 
 import { clsx } from 'clsx';

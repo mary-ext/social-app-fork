@@ -230,6 +230,8 @@ export function Tab({
 	className,
 	...props
 }: { active?: boolean; children: ReactNode } & ComponentPropsWithoutRef<'button'>) {
+	'use no memo'; // forwarded props invalidate the generated wrapper cache
+
 	return (
 		<button {...props} className={clsx(css.tab({ active }), className)} data-active={active} type="button">
 			{children}

@@ -44,6 +44,8 @@ type AuthorLinkProps = Pick<
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
 function AuthorLink({ disabled, label, onPress, ref, to, ...text }: AuthorLinkProps) {
+	'use no memo'; // forwarded text props invalidate the generated wrapper cache
+
 	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
 	// element ref either way, so narrow it at the boundary.
 	if (disabled) {

@@ -1,3 +1,5 @@
+'use no memo'; // forwarded composition props invalidate the generated wrapper caches
+
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';

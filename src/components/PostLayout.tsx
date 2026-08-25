@@ -1,3 +1,5 @@
+'use no memo'; // forwarded composition props invalidate the generated wrapper caches
+
 import type { HTMLAttributes, Ref } from 'react';
 
 import { clsx } from 'clsx';
