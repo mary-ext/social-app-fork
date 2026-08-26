@@ -1,19 +1,20 @@
-import type { AppBskyUnspeccedDefs, AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 
-import { definite, mapDefined } from '@mary/array-fns';
+import { definite, mapDefined, uniqueBy } from '@mary/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 
 import type { AppLink } from '#/lib/links/app-url';
 import { parseBlueskyPath } from '#/lib/links/schemes/bluesky';
+import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { hasMutedWord } from '#/lib/moderation/muted-words';
 import { appLinkToTarget } from '#/lib/routes/app-links';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
-import { joinInterestTags, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
+import { createBskyTopicsHeader, joinInterestTags } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
@@ -50,6 +51,10 @@ const labelFor = (link: AppLink, name: string): string => {
 	}
 };
 
+const hiddenRank = (actor: AppBskyActorDefs.ProfileViewBasic): number => {
+	return isMuted(actor) || isBlockedOrBlocking(actor) ? 1 : 0;
+};
+
 const resolveTopic = (trend: AppBskyUnspeccedDefs.TrendView): TrendingTopic | undefined => {
 	const url = URL.parse(trend.link, 'https://bsky.app');
 	const parsed = url !== null ? parseBlueskyPath(url) : undefined;
@@ -61,20 +66,6 @@ const resolveTopic = (trend: AppBskyUnspeccedDefs.TrendView): TrendingTopic | un
 	return { ...trend, label: labelFor(parsed, trend.displayName), target: appLinkToTarget(parsed) };
 };
 
-// the appview can repeat a topic across trends; two rows linking to the same search read as a glitch.
-const dedupeByLink = <T extends { link: string }>(trends: T[]): T[] => {
-	const seen = new Set<string>();
-	return trends.filter((trend) => {
-		if (seen.has(trend.link)) {
-			return false;
-		}
-		seen.add(trend.link);
-		return true;
-	});
-};
-
-// the limit belongs in the key: callers asking for different counts get different lists back, and a shorter
-// one must not satisfy a caller that wanted more.
 export const createGetTrendsQueryKey = ({ limit = DEFAULT_LIMIT }: Pick<QueryProps, 'limit'> = {}) => [
 	'trends',
 	limit,
@@ -96,9 +87,9 @@ export function useGetTrendsQuery({
 		enabled: enabled && !!preferences,
 		staleTime: STALE.MINUTES.THREE,
 		refetchOnWindowFocus,
-		queryFn: ({ signal }) => {
+		queryFn: async ({ signal }) => {
 			const contentLangs = getContentLanguages().join(',');
-			return ok(
+			const data = await ok(
 				appview.get('app.bsky.unspecced.getTrends', {
 					signal,
 					headers: {
@@ -108,19 +99,27 @@ export function useGetTrendsQuery({
 					params: { limit },
 				}),
 			);
+
+			const trends = mapDefined(
+				uniqueBy(data.trends, (trend) => trend.link),
+				(trend) => {
+					// oxlint-disable-next-line unicorn/no-array-sort
+					trend.actors.sort((a, b) => hiddenRank(a) - hiddenRank(b));
+
+					return resolveTopic(trend);
+				},
+			);
+
+			return { trends };
 		},
-		select: (data: AppBskyUnspeccedGetTrends.$output) => {
-			const trends = mapDefined(data.trends ?? [], (trend) => {
+		select: (data) => {
+			const trends = data.trends.filter((trend) => {
 				const text = definite([trend.topic, trend.displayName, trend.category, trend.description]).join(' ');
 
-				if (hasMutedWord({ keywordFilters, text })) {
-					return undefined;
-				}
-
-				return resolveTopic(trend);
+				return !hasMutedWord({ keywordFilters, text });
 			});
 
-			return { trends: dedupeByLink(trends) };
+			return { trends };
 		},
 	});
 }
