@@ -1,14 +1,32 @@
 import { style } from '@vanilla-extract/css';
 
+import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
-export const outer = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.lg,
-	paddingBottom: space.sm,
-	paddingInline: space.lg,
-});
+export const outer = recipe(
+	{
+		base: {
+			display: 'flex',
+			flexDirection: 'column',
+			gap: space.lg,
+			paddingInline: space.lg,
+		},
+		defaultVariants: { bottomBorder: false },
+		variants: {
+			bottomBorder: {
+				false: {
+					paddingBottom: space.sm,
+				},
+				true: {
+					paddingBottom: space.lg,
+					borderBottom: `1px solid ${vars.palette.contrast_100}`,
+				},
+			},
+		},
+	},
+	{ debugId: 'outer' },
+);
 
 export const header = style({
 	display: 'flex',

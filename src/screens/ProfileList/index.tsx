@@ -194,7 +194,7 @@ function ModerationProfileList({
 
 	return (
 		<>
-			<Header list={list} preferences={preferences} />
+			<Header list={list} preferences={preferences} bottomBorder />
 			<AboutSection list={list} onPressAddUser={onPressAddUser} />
 			<ListAddRemoveUsersDialog handle={addUserDialogHandle} list={list} />
 		</>

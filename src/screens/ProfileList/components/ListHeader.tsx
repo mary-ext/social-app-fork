@@ -15,11 +15,15 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './ListHeader.css';
 
-/**
- * profile-subpage header card for a list: avatar, title, and a "by …" byline, followed by the list
- * description.
- */
-export function ListHeader({ isOwner, list }: { isOwner: boolean; list: AppBskyGraphDefs.ListView }) {
+export function ListHeader({
+	bottomBorder,
+	isOwner,
+	list,
+}: {
+	bottomBorder?: boolean;
+	isOwner: boolean;
+	list: AppBskyGraphDefs.ListView;
+}) {
 	const onPressAvi = () => {
 		if (
 			list.avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
@@ -49,7 +53,7 @@ export function ListHeader({ isOwner, list }: { isOwner: boolean; list: AppBskyG
 		: undefined;
 
 	return (
-		<div className={css.outer}>
+		<div className={css.outer({ bottomBorder })}>
 			<div className={css.header}>
 				<button
 					type="button"

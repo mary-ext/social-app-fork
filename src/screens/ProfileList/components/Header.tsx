@@ -22,9 +22,11 @@ import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
 
 export function Header({
+	bottomBorder,
 	list,
 	preferences,
 }: {
+	bottomBorder?: boolean;
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
 }) {
@@ -155,7 +157,11 @@ export function Header({
 					<MoreOptionsMenu list={list} />
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
-			<ListHeader list={list} isOwner={list.creator.did === currentAccount?.did} />
+			<ListHeader
+				list={list}
+				isOwner={list.creator.did === currentAccount?.did}
+				bottomBorder={bottomBorder}
+			/>
 		</>
 	);
 }
