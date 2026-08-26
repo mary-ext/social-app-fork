@@ -82,9 +82,7 @@ export function LightboxContents({
 		[],
 	);
 	const onTap = (info: LightboxTapInfo) => {
-		// only taps on the image toggle the chrome — backdrop/chrome taps keep their own behaviour (mouse
-		// backdrop-click closes, the controls handle their own clicks).
-		if (!info.onImage) {
+		if (!info.onImage && info.pointerType !== 'touch') {
 			return;
 		}
 		// the lib fires onTap on the *first* tap of a double-tap-to-zoom too, so defer the toggle past the
