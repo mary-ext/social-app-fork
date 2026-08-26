@@ -6,10 +6,13 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import type { AppModerationCause } from '#/lib/moderation/causes';
 import type { Richtext } from '#/lib/rich-text';
 
+import type { PostNumbering } from '#/state/queries/feed-tuner';
+
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
+import { PostNumberBlock } from '#/components/PostNumber';
 
 import * as css from './PostContent.css';
 
@@ -22,6 +25,7 @@ import * as css from './PostContent.css';
 function PostContent({
 	post,
 	richText,
+	postNumbering,
 	moderation,
 	displayContext,
 	additionalCauses,
@@ -31,6 +35,7 @@ function PostContent({
 }: {
 	post: AppBskyFeedDefs.PostView;
 	richText: Richtext;
+	postNumbering?: PostNumbering;
 	moderation: ModerationDecision;
 	/** Which moderation surface to gate against: the feed list vs. a focused post view. */
 	displayContext: 'list' | 'view';
@@ -44,10 +49,19 @@ function PostContent({
 	const bodyModui =
 		displayContext === 'view' ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : listModui;
 
+	let text: ReactNode;
+	if (richText.text) {
+		text = (
+			<ClampedPostText authorHandle={post.author.handle} postNumbering={postNumbering} richText={richText} />
+		);
+	} else if (postNumbering) {
+		text = <PostNumberBlock value={postNumbering} />;
+	}
+
 	return (
 		<ContentHider modui={bodyModui} ignoreMute={ignoreMute} childContainerClassName={css.childContainer}>
 			<PostAlerts additionalCauses={additionalCauses} className={css.alerts} modui={bodyModui} />
-			{richText.text ? <ClampedPostText authorHandle={post.author.handle} richText={richText} /> : undefined}
+			{text}
 			{post.embed ? (
 				<div style={embedStyle}>
 					<Embed

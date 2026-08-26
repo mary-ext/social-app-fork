@@ -20,6 +20,7 @@ import { postUriToTarget } from '#/lib/routes/targets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { postSourceState } from '#/state/post-source';
+import type { PostNumbering } from '#/state/queries/feed-tuner';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
@@ -44,6 +45,7 @@ import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {
 	record: AppBskyFeedPost.Main;
+	postNumbering: PostNumbering | undefined;
 	reason: AppBskyFeedDefs.FeedViewPost['reason'] | undefined;
 	moderation: ModerationDecision;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
@@ -60,6 +62,7 @@ interface FeedItemProps {
 export function PostFeedItem({
 	post,
 	record,
+	postNumbering,
 	reason,
 	feedContext,
 	reqId,
@@ -93,6 +96,7 @@ export function PostFeedItem({
 				key={postShadowed.uri}
 				post={postShadowed}
 				record={record}
+				postNumbering={postNumbering}
 				reason={reason}
 				feedContext={feedContext}
 				reqId={reqId}
@@ -116,6 +120,7 @@ export function PostFeedItem({
 function FeedItemInner({
 	post,
 	record,
+	postNumbering,
 	reason,
 	feedContext,
 	reqId,
@@ -306,6 +311,7 @@ function FeedItemInner({
 								moderation={moderation}
 								onOpenEmbed={onOpenEmbed}
 								post={post}
+								postNumbering={postNumbering}
 								richText={richText}
 								embedStyle={galleryOffsetStyles?.embed}
 							/>

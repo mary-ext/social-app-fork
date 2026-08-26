@@ -30,7 +30,7 @@ import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
 import { joinInterestTags } from '#/state/queries/feed-api/utils';
 import { type FeedDescriptor, type FeedRequest, toFeedRequest } from '#/state/queries/feed-descriptor';
-import { FeedTuner } from '#/state/queries/feed-tuner';
+import { FeedTuner, type PostNumbering } from '#/state/queries/feed-tuner';
 import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';
@@ -62,6 +62,7 @@ export interface FeedPostSliceItem {
 	uri: string;
 	post: AppBskyFeedDefs.PostView;
 	record: AppBskyFeedPost.Main;
+	postNumbering?: PostNumbering;
 	moderation: ModerationDecision;
 	parentAuthor?: AppBskyActorDefs.ProfileViewBasic;
 	isParentBlocked?: boolean;
@@ -241,6 +242,7 @@ export function usePostFeedQuery(
 										uri: item.post.uri,
 										post: item.post,
 										record: item.record,
+										postNumbering: item.postNumbering,
 										moderation: moderations[i]!,
 										parentAuthor: item.parentAuthor,
 										isParentBlocked: item.isParentBlocked,

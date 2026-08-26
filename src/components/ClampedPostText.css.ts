@@ -9,8 +9,12 @@ export const richText = style({
 	flexDirection: 'column',
 });
 
-export const showMore = style({
+export const showMoreRow = style({
 	alignSelf: 'flex-start',
+	fontSize: fontSize.md,
+});
+
+export const showMore = style({
 	border: 'none',
 	background: 'none',
 	padding: 0,

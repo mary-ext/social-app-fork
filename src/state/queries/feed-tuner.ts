@@ -4,22 +4,51 @@ import {
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
+	type AppBskyUnspeccedDefs,
 } from '@atcute/bluesky';
 
 import { getPostRecord } from '#/lib/api/record-casts';
 
 import { isPostInLanguage } from '#/locale/helpers';
 
-type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
+/** 1-based position in an author's thread. */
+export type PostNumbering = {
+	index: number;
+	count: number;
+};
+
+// not sure why these aren't in #feedViewPost at the moment.
+type RawPostNumbering = Pick<AppBskyUnspeccedDefs.ThreadItemPost, 'opThreadPostCount' | 'opThreadPostIndex'>;
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost & RawPostNumbering;
 
 type FeedTunerFn = (tuner: FeedTuner, slices: FeedViewPostsSlice[], dryRun: boolean) => FeedViewPostsSlice[];
 
 type FeedSliceItem = {
 	post: AppBskyFeedDefs.PostView;
 	record: AppBskyFeedPost.Main;
+	postNumbering: PostNumbering | undefined;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	isParentBlocked: boolean;
 	isParentNotFound: boolean;
+};
+
+const readPostNumbering = (value: RawPostNumbering): PostNumbering | undefined => {
+	const { opThreadPostCount: count, opThreadPostIndex: index } = value;
+
+	if (count === undefined || index === undefined || index < 1 || count < 1 || index > count) {
+		return undefined;
+	}
+
+	return { index, count };
+};
+
+// ancestors omit numbering; infer contiguous OP-thread positions from the selected post.
+const inferParentNumbering = (leaf: PostNumbering | undefined): PostNumbering | undefined => {
+	return leaf !== undefined && leaf.index > 1 ? { index: leaf.index - 1, count: leaf.count } : undefined;
+};
+
+const inferRootNumbering = (leaf: PostNumbering | undefined): PostNumbering | undefined => {
+	return leaf !== undefined ? { index: 1, count: leaf.count } : undefined;
 };
 
 type AuthorContext = {
@@ -39,7 +68,11 @@ class FeedViewPostsSlice {
 	rootUri: string;
 	feedPostUri: string;
 
-	constructor(feedPost: FeedViewPost) {
+	constructor(
+		feedPost: FeedViewPost,
+		numbering: PostNumbering | undefined,
+		postNumberingByUri: Map<string, PostNumbering>,
+	) {
 		const { post, reply, reason } = feedPost;
 		this.items = [];
 		this.isIncompleteThread = false;
@@ -66,6 +99,7 @@ class FeedViewPostsSlice {
 		this.items.push({
 			post,
 			record,
+			postNumbering: numbering,
 			parentAuthor,
 			isParentBlocked,
 			isParentNotFound,
@@ -99,6 +133,7 @@ class FeedViewPostsSlice {
 		this.items.unshift({
 			post: parent,
 			record: parentRecord,
+			postNumbering: postNumberingByUri.get(parent.uri) ?? inferParentNumbering(numbering),
 			parentAuthor: grandparentAuthor,
 			isParentBlocked: isGrandparentBlocked,
 			isParentNotFound: isGrandparentNotFound,
@@ -117,6 +152,7 @@ class FeedViewPostsSlice {
 		this.items.unshift({
 			post: root,
 			record: getPostRecord(root),
+			postNumbering: postNumberingByUri.get(root.uri) ?? inferRootNumbering(numbering),
 			isParentBlocked: false,
 			isParentNotFound: false,
 			parentAuthor: undefined,
@@ -190,7 +226,17 @@ export class FeedTuner {
 			dryRun: false,
 		},
 	): FeedViewPostsSlice[] {
-		let slices = feed.map((item) => new FeedViewPostsSlice(item));
+		// reuse reported numbering when a post appears as an ancestor
+		const numberings = feed.map((item) => readPostNumbering(item));
+		const postNumberingByUri = new Map<string, PostNumbering>();
+		feed.forEach((item, i) => {
+			const numbering = numberings[i];
+			if (numbering !== undefined) {
+				postNumberingByUri.set(item.post.uri, numbering);
+			}
+		});
+
+		let slices = feed.map((item, i) => new FeedViewPostsSlice(item, numberings[i], postNumberingByUri));
 
 		for (const tunerFn of this.tunerFns) {
 			slices = tunerFn(this, slices.slice(), dryRun);

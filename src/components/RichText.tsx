@@ -34,6 +34,8 @@ export type RichTextProps = Pick<
 	linkUnderline?: InlineLinkUnderline;
 	/** The body-text sizes RichText renders (a subset of the full scale), each enlarged for emoji-only content. */
 	size?: 'lg' | 'md' | 'md_sub' | 'sm' | 'xl' | 'xs';
+	/** content appended inline and included in line clamping. */
+	suffix?: ReactNode;
 	value: Richtext | string;
 };
 
@@ -56,6 +58,7 @@ export function RichText({
 	numberOfLines,
 	selectable,
 	size,
+	suffix,
 	value,
 	weight,
 }: RichTextProps) {
@@ -65,6 +68,8 @@ export function RichText({
 	if (segments.every((segment) => segment.type === 'text')) {
 		text = toPlainText(segments);
 	}
+
+	const tail = suffix ? <> {suffix}</> : null;
 
 	// emoji-only text is enlarged and unclamped, so it takes its own host rather than the shared one below
 	if (text !== undefined && isOnlyEmoji(text)) {
@@ -78,6 +83,7 @@ export function RichText({
 				weight={weight}
 			>
 				{text}
+				{tail}
 			</Text>
 		);
 	}
@@ -179,6 +185,7 @@ export function RichText({
 			weight={weight}
 		>
 			{children}
+			{tail}
 		</Text>
 	);
 }

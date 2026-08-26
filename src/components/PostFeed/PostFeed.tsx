@@ -478,6 +478,7 @@ function PostFeed({
 					<PostFeedItem
 						post={item.post}
 						record={item.record}
+						postNumbering={item.postNumbering}
 						reason={indexInSlice === 0 ? slice.reason : undefined}
 						feedContext={slice.feedContext}
 						reqId={slice.reqId}

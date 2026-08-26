@@ -26,6 +26,24 @@
 		}
 	],
 	"components.post.image.a11y.slide": "slide",
+	"components.post.number.a11y.position": [
+		{
+			"declarations": ["input index", "input count", "local n1 = index: number", "local n2 = count: number"],
+			"selectors": [],
+			"match": {
+				"": "Post {n1} of {n2}"
+			}
+		}
+	],
+	"components.post.number.badge": [
+		{
+			"declarations": ["input index", "input count", "local n1 = index: number", "local n2 = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n1}/{n2}"
+			}
+		}
+	],
 	"components.post.publication.action.subscribe": "Subscribe on {name}",
 	"components.post.publication.action.subscribeTo": "Subscribe to {title} on {name}",
 	"components.post.publication.action.view": "View publication",
