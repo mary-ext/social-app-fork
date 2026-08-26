@@ -22,7 +22,11 @@ export function SidebarTrendingTopics() {
 
 function Inner() {
 	const trendingPrompt = Prompt.usePromptHandle();
-	const { data: trending, error, isPending } = useGetTrendsQuery({ refetchOnWindowFocus: true });
+	const {
+		data: trending,
+		error,
+		isPending,
+	} = useGetTrendsQuery({ limit: TRENDING_LIMIT, refetchOnWindowFocus: true });
 	const noTopics = !isPending && !error && !trending?.trends?.length;
 
 	if (error || noTopics) {
@@ -60,9 +64,7 @@ function Inner() {
 									<Skeleton.Text size="sm" width={i % 2 === 0 ? 80 : 100} />
 								</Skeleton.Row>
 							))
-						: trending?.trends
-								.slice(0, TRENDING_LIMIT)
-								.map((topic, i) => <TopicLink key={topic.link} index={i} topic={topic} />)}
+						: trending?.trends.map((topic, i) => <TopicLink key={topic.link} index={i} topic={topic} />)}
 				</div>
 			</div>
 			<Prompt.Basic

@@ -21,7 +21,9 @@ import { getClients } from '#/state/session';
 import { m } from '#/paraglide/messages';
 import type { RouteTarget } from '#/router';
 
-export const DEFAULT_LIMIT = 5;
+const FETCH_LIMIT = 20;
+
+const QUERY_KEY = ['trends'];
 
 export type TrendingTopic = AppBskyUnspeccedDefs.TrendView & {
 	label: string;
@@ -30,7 +32,7 @@ export type TrendingTopic = AppBskyUnspeccedDefs.TrendView & {
 
 interface QueryProps {
 	enabled?: boolean;
-	limit?: number;
+	limit: number;
 	refetchOnWindowFocus?: boolean;
 }
 
@@ -66,16 +68,7 @@ const resolveTopic = (trend: AppBskyUnspeccedDefs.TrendView): TrendingTopic | un
 	return { ...trend, label: labelFor(parsed, trend.displayName), target: appLinkToTarget(parsed) };
 };
 
-export const createGetTrendsQueryKey = ({ limit = DEFAULT_LIMIT }: Pick<QueryProps, 'limit'> = {}) => [
-	'trends',
-	limit,
-];
-
-export function useGetTrendsQuery({
-	enabled = true,
-	limit = DEFAULT_LIMIT,
-	refetchOnWindowFocus,
-}: QueryProps = {}) {
+export function useGetTrendsQuery({ enabled = true, limit, refetchOnWindowFocus }: QueryProps) {
 	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = (preferences?.moderationPrefs?.mutedWords || []).map((word) =>
@@ -83,7 +76,7 @@ export function useGetTrendsQuery({
 	);
 
 	return useQuery({
-		queryKey: createGetTrendsQueryKey({ limit }),
+		queryKey: QUERY_KEY,
 		enabled: enabled && !!preferences,
 		staleTime: STALE.MINUTES.THREE,
 		refetchOnWindowFocus,
@@ -96,7 +89,7 @@ export function useGetTrendsQuery({
 						...createBskyTopicsHeader(joinInterestTags(preferences)),
 						'Accept-Language': contentLangs,
 					},
-					params: { limit },
+					params: { limit: FETCH_LIMIT },
 				}),
 			);
 
@@ -113,11 +106,15 @@ export function useGetTrendsQuery({
 			return { trends };
 		},
 		select: (data) => {
-			const trends = data.trends.filter((trend) => {
-				const text = definite([trend.topic, trend.displayName, trend.category, trend.description]).join(' ');
+			const trends = data.trends
+				.filter((trend) => {
+					const text = definite([trend.topic, trend.displayName, trend.category, trend.description]).join(
+						' ',
+					);
 
-				return !hasMutedWord({ keywordFilters, text });
-			});
+					return !hasMutedWord({ keywordFilters, text });
+				})
+				.slice(0, limit);
 
 			return { trends };
 		},

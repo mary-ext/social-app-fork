@@ -16,8 +16,6 @@ import * as css from './TrendingInterstitial.css';
 
 const SKELETON_WIDTHS = [80, 50, 120, 30, 180];
 
-// the pill row wraps, so it can carry more topics than the sidebar's ranked list. shared by both hooks below
-// so they land on one query rather than fetching the same trends twice under different keys.
 const TRENDING_LIMIT = 14;
 
 export function useShowTrendingInterstitial({ enabled }: { enabled: boolean }): boolean {
