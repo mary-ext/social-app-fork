@@ -101,3 +101,15 @@ move that a cancelled finger never sends. both cancel events are now bound, and 
 
 either one froze the video seekbar at the press position while playback continued, since
 `Scrubber.tsx` only clears `seekPosition` from `onValueCommitted`.
+
+## `utils/useAnchoredPopupScrollLock.mjs` — always lock scroll, including touch opens
+
+drops the touch condition from the `useScrollLock` call. everything above it is left alone, so the
+measurement still runs and its result is now unused.
+
+upstream skips the lock on a touch open unless the popup is within 20px of the viewport width, so a
+swipe outside can dismiss it. but only the lock is gated — the modal backdrop still blocks outside
+taps, and the popup still tracks its anchor — so the page scrolls under a menu nothing outside is
+tappable in, and only on touch.
+
+covers `Menu`, `Select`, `Combobox`, `Popover`.

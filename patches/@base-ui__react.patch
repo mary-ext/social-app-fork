@@ -301,3 +301,14 @@ index b762f793723159dd4bd42669dd34a0527bace60e..05b08cdfd4a3f030cb4d152aef2133a4
    });
  
    // Intentionally NOT stable. Its identity is derived from `baseRegisterTrigger`, which is keyed on
+diff --git a/utils/useAnchoredPopupScrollLock.mjs b/utils/useAnchoredPopupScrollLock.mjs
+index 98ccc072b8e45f501a7bef87c665b25831c04c88..e9fbbeedc1be2f78f715f12b6e3c78c20ff67a6a 100644
+--- a/utils/useAnchoredPopupScrollLock.mjs
++++ b/utils/useAnchoredPopupScrollLock.mjs
+@@ -27,5 +27,5 @@ export function useAnchoredPopupScrollLock(enabled, touchOpen, positionerElement
+     const popupWidth = positionerElement.offsetWidth;
+     setTouchOpenShouldLockScroll(viewportWidth > 0 && popupWidth > 0 && popupWidth >= viewportWidth - VIEWPORT_WIDTH_TOLERANCE_PX);
+   }, [enabled, touchOpen, positionerElement]);
+-  useScrollLock(enabled && (!touchOpen || touchOpenShouldLockScroll), referenceElement);
++  useScrollLock(enabled, referenceElement);
+ }
