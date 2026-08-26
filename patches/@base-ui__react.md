@@ -1,115 +1,54 @@
 # `@base-ui/react` patch notes
 
-## `utils/InternalBackdrop.mjs` — drop the `cutout` clip-path
+## `utils/InternalBackdrop.mjs`: drop the `cutout` clip-path
 
-removes the branch that punches a polygon hole in the internal backdrop around a `cutout` element.
-the hole keeps a trigger hoverable while its own popup is open, which no other headless library
-does; the trigger still closes the popup, the press just dismisses instead of toggling. the
-`getBoundingClientRect` + `clipPath` recompute per backdrop render goes with it.
+removes the hole around the trigger in an anchored popup's internal backdrop. the backdrop now
+intercepts trigger presses like any other outside press instead of leaving the trigger interactive.
 
-`cutout` is set by the positioners, not by app code, so this covers every root `Menu` (`modal`
-defaults to true), every `Select`, a modal `Combobox`, and a modal `Popover`. `Dialog` renders the
-backdrop without a cutout and is unaffected.
+the positioners supply `cutout`, so this affects root `Menu` and `Select` instances and modal
+`Combobox` and `Popover` instances. `Dialog` does not supply a cutout.
 
-## `utils/popups/popupStoreUtils.mjs` — drop the mid-registration trigger claim
+## `utils/popups/popupStoreUtils.mjs`: drop the mid-registration trigger claim
 
-deletes the `if (activeTriggerId == null && open)` block in `useTriggerDataForwarding`. upstream
-uses it so that when a popup is already open with no active trigger, the first detached trigger to
-register claims the open instance (for focus/ARIA) and forwards its `payload` into the store.
+prevents the first detached trigger registered during an imperative open from claiming the popup and
+replacing its payload. this matters for the image lightbox, whose handle is shared by imperative
+openers and many post-image `Dialog.Trigger`s.
 
-that hijacks a handle shared between an imperative `openWithPayload` open and many unrelated
-detached triggers. the global image lightbox is exactly this shape: opened imperatively from a
-profile avatar/banner (no trigger), while a feed of post-image `Dialog.Trigger`s share the same
-handle. if the avatar lightbox is opened before the feed finishes loading, the first post-image
-trigger to mount claims the open instance — which then flips `isMountedByTrigger`
-(`activeTriggerId === triggerId && mounted`) true for it, so the layout-effect path forwards its
-`payload` too — and the displayed image silently swaps to the first post's image.
+`useImplicitActiveTrigger` still claims a trigger when exactly one is registered. an imperative open
+on a multi-trigger handle remains unowned rather than associating it with an unrelated trigger.
 
-removing the block is safe because `useImplicitActiveTrigger` (run by every popup `Root`) already
-auto-claims the sole trigger of a single-trigger handle, guarded by `triggerCount === 1` and
-evaluated after the commit settles. so the legitimate single-trigger race stays covered, while a
-multi-trigger handle is simply left with no active trigger (focus returns to the document rather
-than to an unrelated trigger).
+## `combobox/root/AriaCombobox.mjs` + `autocomplete/root/AutocompleteRoot.d.mts`: expose `setActiveIndex` on `actionsRef`
 
-## `combobox/root/AriaCombobox.mjs` + `autocomplete/root/AutocompleteRoot.d.mts` — expose `setActiveIndex` on `actionsRef`
+adds `setActiveIndex(index)` to the autocomplete imperative actions. `SearchAutocomplete` uses it to
+set the calendar's initial highlight, continue keyboard navigation across month boundaries, and
+highlight touch or pen targets before an item press.
 
-adds `setActiveIndex(index)` to the imperative handle built in `AriaCombobox` (alongside `unmount`),
-delegating to the existing internal `setIndices({ activeIndex, type: 'none' })`, and declares it on
-`AutocompleteRootActions`.
+## `dialog/root/useRenderDialogRoot.mjs` + `popover/root/PopoverRoot.mjs` + `drawer/root/DrawerRoot.mjs`: `CloseWatcher` for the Android back gesture
 
-Base UI Autocomplete owns the highlighted index and exposes no controlled/imperative way to set it
-(`onItemHighlighted` only observes; `autoHighlight` only targets the first item). the right-rail
-search calendar (`src/components/SearchAutocomplete`) needs to drive it: open with today (or the
-first of a partially-typed month) highlighted, and roll the highlight across months at the grid
-edges via sentinel cells. the store already has `setIndices`; this just surfaces it through the
-`actionsRef` the consumer already passes.
+moves the drawer's Android `CloseWatcher` into the shared dialog root, extending back-gesture
+dismissal to dialogs and alert dialogs, and adds the same behavior to non-nested popovers. a dialog
+registers only when it has no open nested dialog. the change remains Android-only so desktop
+dismissal continues through `useDismiss`.
 
-## `dialog/root/useRenderDialogRoot.mjs` + `popover/root/PopoverRoot.mjs` + `drawer/root/DrawerRoot.mjs` — `CloseWatcher` for the Android back gesture
+## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts`: allow automatic unmounting with `actionsRef`
 
-registers a `CloseWatcher` on the topmost open dialog/alert-dialog/popover/drawer so the Android
-back gesture (Chromium-only) closes it, calling `store.setOpen(false, …)` with the `close-watcher`
-reason. Android-only (`platform.os.android`) to avoid clashing with the desktop Escape/nesting that
-`useDismiss` owns.
+passing `actionsRef` normally opts into manual unmounting after a closing animation. `autoUnmount`
+keeps Base UI's automatic transition-aware unmounting while still exposing imperative actions.
+`SearchAutocomplete` needs this because it uses `setActiveIndex` but does not manage popup
+animations or call `actions.unmount()`.
 
-upstream shipped this only in the drawer (`DrawerProviderReporter`); we moved it to
-`useRenderDialogRoot` — the shared path for `Dialog.Root`, `AlertDialog.Root`, and `Drawer.Root` —
-and deleted the drawer's copy, along with the three imports and the `nestedOpenDialogCount` /
-`popupElement` reads that only it used. topmost is `nestedOpenDialogCount === 0`.
+## `slider/control/SliderControl.mjs`: make touch gestures commit
 
-popovers have no nested-open count, so `PopoverRoot` gates on `!nested` (only a root popover
-registers). `PopoverRoot` no longer derives `nested` itself — the value now goes into `PopoverStore`
-at construction and is not readable from state — so the patch restores the
-`useFloatingParentNodeId() != null` call that used to live there.
+touch emits both `pointerdown` and `touchstart`. the native touch handler now preserves the
+interaction value established by the pointer handler so a tap reaches `onValueCommitted`.
 
-no `.d.mts` changes.
+`pointercancel` and `touchcancel` now use the normal end handler, committing the current value and
+clearing drag state and document listeners. the video scrubber relies on `onValueCommitted` to leave
+its seeking state.
 
-## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts` — add an `autoUnmount` opt-out
+## `utils/useAnchoredPopupScrollLock.mjs`: always lock scroll, including touch opens
 
-changes the `useOpenChangeComplete` gate from `enabled: !props.actionsRef` to
-`enabled: !props.actionsRef || props.autoUnmount === true`, and declares the `autoUnmount?: boolean`
-prop on `ComboboxRootProps` (so it flows to `AutocompleteRoot` via the shared props type).
-`autoUnmount` only does anything when `actionsRef` is set — without it the popup always
-auto-unmounts (and `=== true` keeps `enabled` a boolean, since `useOpenChangeComplete` defaults a
-missing `enabled` to `true`).
+locks the page whenever an anchored popup requests scroll locking, including touch opens. without
+this, the modal backdrop blocks outside taps while the page can still scroll beneath the popup.
 
-upstream couples two unrelated concerns: passing `actionsRef` (the only way to reach the
-`setActiveIndex` handle above) also opts out of the built-in unmount-on-close, handing the consumer
-the contract to call `actions.unmount()` after its own exit animation. the right-rail search
-(`src/components/SearchAutocomplete`) needs `actionsRef` for the calendar but has no reason to own
-unmount timing — without this, the popup's `mounted` never flips false and the suggestions linger in
-the DOM after every blur/escape/outside-press. `autoUnmount` restores the automatic unmount (which
-already awaits the close transition via `useAnimationsFinished`, so a future CSS exit animation
-still works) while keeping the imperative handle.
-
-## `slider/control/SliderControl.mjs` — make touch gestures commit
-
-two ways a touch gesture ends without `onValueCommitted`. `handleTouchEnd` is its only caller, and
-it commits only when `currentInteractionValueRef` is set.
-
-**a tap.** `pointerdown` and the native `touchstart` handler both fire on touch and both run
-`startPressing`, which nulls that ref; the second one's `setValue` is then a no-op, because
-`pointerdown` already applied the value, so the ref stays null. `handleTouchStart` now skips the
-press when the ref is already set, while still attaching the document listeners. drags escape this
-because later moves re-set the ref, and a mouse escapes it because there is no `touchstart`.
-
-**a cancelled gesture.** `handleTouchEnd` is bound to `pointerup`/`touchend` only, so a
-`pointercancel`/`touchcancel` — Android Chrome collapsing the url bar mid-drag, long-press, palm
-rejection — leaves the slider mid-drag, with `dragging` stuck true and the document move listeners
-attached. upstream's net in `handleTouchMove` (a later `pointermove` with `buttons === 0`) needs a
-move that a cancelled finger never sends. both cancel events are now bound, and unbound in
-`stopListening`.
-
-either one froze the video seekbar at the press position while playback continued, since
-`Scrubber.tsx` only clears `seekPosition` from `onValueCommitted`.
-
-## `utils/useAnchoredPopupScrollLock.mjs` — always lock scroll, including touch opens
-
-drops the touch condition from the `useScrollLock` call. everything above it is left alone, so the
-measurement still runs and its result is now unused.
-
-upstream skips the lock on a touch open unless the popup is within 20px of the viewport width, so a
-swipe outside can dismiss it. but only the lock is gated — the modal backdrop still blocks outside
-taps, and the popup still tracks its anchor — so the page scrolls under a menu nothing outside is
-tappable in, and only on touch.
-
-covers `Menu`, `Select`, `Combobox`, `Popover`.
+this affects `Menu`, `Select`, `Combobox`, and `Popover`.
