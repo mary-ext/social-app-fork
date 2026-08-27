@@ -1,7 +1,8 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { components, layered } from '#/styles/layers.css';
+import { layered } from '#/styles/layers';
+import { components } from '#/styles/layers.css';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const swipeEase = 'cubic-bezier(0.32, 0.72, 0, 1)';

@@ -1,7 +1,8 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { components, layered } from '#/styles/layers.css';
+import { layered } from '#/styles/layers';
+import { components } from '#/styles/layers.css';
 import { fontSize } from '#/styles/tokens.css';
 
 const borderWidth = 1;

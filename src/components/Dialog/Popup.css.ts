@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { components, layered } from '#/styles/layers.css';
+import { layered } from '#/styles/layers';
+import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { iconSize, space, zIndex } from '#/styles/tokens.css';
 
