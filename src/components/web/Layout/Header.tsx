@@ -45,8 +45,14 @@ export function Content({ children, className }: { children?: ReactNode; classNa
 	return <div className={clsx(styles.content, className)}>{children}</div>;
 }
 
-export function Slot({ children }: { children?: ReactNode }) {
-	return <div className={styles.slot}>{children}</div>;
+/** groups controls at the start edge. */
+export function StartSlot({ children }: { children?: ReactNode }) {
+	return <div className={styles.startSlot}>{children}</div>;
+}
+
+/** groups controls at the end edge. */
+export function EndSlot({ children }: { children?: ReactNode }) {
+	return <div className={styles.endSlot}>{children}</div>;
 }
 
 export function TitleText({ children }: { children: ReactNode }) {
@@ -96,7 +102,7 @@ export function BackButton({ className, label, onClick, variant = 'ghost' }: Bac
 	};
 
 	return (
-		<Slot>
+		<StartSlot>
 			<Button
 				className={className}
 				label={label ?? m['common.action.goBack']()}
@@ -107,7 +113,7 @@ export function BackButton({ className, label, onClick, variant = 'ghost' }: Bac
 			>
 				<ButtonIcon icon={ArrowLeft} size="lg" />
 			</Button>
-		</Slot>
+		</StartSlot>
 	);
 }
 
@@ -122,7 +128,7 @@ export function MenuButton() {
 	}
 
 	return (
-		<Slot>
+		<StartSlot>
 			<Button
 				label={m['common.a11y.openDrawerMenu']()}
 				variant="ghost"
@@ -137,7 +143,7 @@ export function MenuButton() {
 			>
 				<MenuButtonGlyph />
 			</Button>
-		</Slot>
+		</StartSlot>
 	);
 }
 

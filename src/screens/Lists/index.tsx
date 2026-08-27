@@ -39,7 +39,7 @@ export function ListsScreen() {
 					<Layout.Header.TitleText>{m['common.list.label']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<Button
 						label={m['common.list.action.new']()}
 						color="secondary"
@@ -50,7 +50,7 @@ export function ListsScreen() {
 						<ButtonIcon icon={PlusIcon} />
 						<ButtonText>{m['common.status.new']()}</ButtonText>
 					</Button>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<MyLists filter="curate" />
 			<CreateOrEditListDialog

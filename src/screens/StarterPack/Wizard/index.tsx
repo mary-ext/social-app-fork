@@ -277,7 +277,7 @@ function WizardInner({
 					<Layout.Header.TitleText>{currUiStrings.header}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{isEditEnabled && (
-					<Layout.Header.Slot>
+					<Layout.Header.EndSlot>
 						<Button
 							label={m['common.action.edit']()}
 							color="secondary"
@@ -286,7 +286,7 @@ function WizardInner({
 						>
 							<ButtonText>{m['common.action.edit']()}</ButtonText>
 						</Button>
-					</Layout.Header.Slot>
+					</Layout.Header.EndSlot>
 				)}
 			</Layout.Header.Outer>
 			{state.currentStep === 'Details' ? (

@@ -119,7 +119,7 @@ function ProfileHeaderReady({
 				</div>
 			</div>
 
-			<Layout.Header.Slot>
+			<Layout.Header.EndSlot>
 				<ConvoMenu
 					blockInfo={blockInfo}
 					convo={convo}
@@ -137,7 +137,7 @@ function ProfileHeaderReady({
 						</Button>
 					}
 				/>
-			</Layout.Header.Slot>
+			</Layout.Header.EndSlot>
 		</>
 	);
 }
@@ -172,7 +172,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				</Link>
 			)}
 
-			<Layout.Header.Slot>
+			<Layout.Header.EndSlot>
 				{disabled ? (
 					<Button
 						color="secondary"
@@ -196,7 +196,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						<ButtonIcon icon={DotsHorizontalIcon} size="md" />
 					</LinkButton>
 				)}
-			</Layout.Header.Slot>
+			</Layout.Header.EndSlot>
 		</>
 	);
 }

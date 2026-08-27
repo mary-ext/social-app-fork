@@ -53,7 +53,7 @@ export function MutedWordsScreen() {
 					<Layout.Header.TitleText>{m['screens.moderation.mutedWord.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<Button
 						color="secondary"
 						label={m['common.mutedWord.action.add']()}
@@ -63,7 +63,7 @@ export function MutedWordsScreen() {
 						<ButtonIcon icon={Plus} />
 						<ButtonText>{m['common.action.add']()}</ButtonText>
 					</Button>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 
 			<Layout.Content>

@@ -41,9 +41,9 @@ export function InterestsSettingsScreen() {
 					<Layout.Header.TitleText>{m['common.interest.yourInterests']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 				{isSaving && (
-					<Layout.Header.Slot>
+					<Layout.Header.EndSlot>
 						<Spinner color="default" label={m['common.status.saving']()} size="sm" />
-					</Layout.Header.Slot>
+					</Layout.Header.EndSlot>
 				)}
 			</Layout.Header.Outer>
 			<Layout.Content>

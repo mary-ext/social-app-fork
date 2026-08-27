@@ -51,7 +51,7 @@ export default function TopicScreen() {
 						<Layout.Header.Content>
 							<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
 						</Layout.Header.Content>
-						<Layout.Header.Slot>
+						<Layout.Header.EndSlot>
 							<Button
 								color="primary"
 								label={m['common.share.action.share']()}
@@ -62,7 +62,7 @@ export default function TopicScreen() {
 							>
 								<ButtonIcon icon={Share} />
 							</Button>
-						</Layout.Header.Slot>
+						</Layout.Header.EndSlot>
 					</Layout.Header.Outer>
 				}
 			/>

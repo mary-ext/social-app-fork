@@ -76,7 +76,7 @@ export default function HashtagScreen() {
 								</Layout.Header.SubtitleText>
 							)}
 						</Layout.Header.Content>
-						<Layout.Header.Slot>
+						<Layout.Header.EndSlot>
 							<Button
 								color="primary"
 								label={m['common.share.action.share']()}
@@ -87,7 +87,7 @@ export default function HashtagScreen() {
 							>
 								<ButtonIcon icon={Share} />
 							</Button>
-						</Layout.Header.Slot>
+						</Layout.Header.EndSlot>
 					</Layout.Header.Outer>
 				}
 			/>

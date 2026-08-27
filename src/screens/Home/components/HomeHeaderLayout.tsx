@@ -42,7 +42,7 @@ export function HomeHeaderLayout({ feedSwitcher, pending }: HomeHeaderLayoutProp
 				<HeaderContent feedSwitcher={feedSwitcher} pending={pending} />
 			</Layout.Header.Content>
 
-			<Layout.Header.Slot>
+			<Layout.Header.EndSlot>
 				{hasSession && (
 					<LinkButton
 						color="secondary"
@@ -55,7 +55,7 @@ export function HomeHeaderLayout({ feedSwitcher, pending }: HomeHeaderLayoutProp
 						<ButtonIcon icon={FeedsIcon} size="lg" />
 					</LinkButton>
 				)}
-			</Layout.Header.Slot>
+			</Layout.Header.EndSlot>
 		</Layout.Header.Outer>
 	);
 }

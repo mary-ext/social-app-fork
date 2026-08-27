@@ -298,7 +298,7 @@ export function Header({
 						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 
-					<Layout.Header.Slot>
+					<Layout.Header.EndSlot>
 						<InboxRequests count={requestCount} variant="solid" action={action} />
 						<ChatSettingsMenu
 							render={
@@ -318,7 +318,7 @@ export function Header({
 								<ButtonIcon icon={NewChatIcon} />
 							</Button>
 						)}
-					</Layout.Header.Slot>
+					</Layout.Header.EndSlot>
 				</>
 			) : (
 				<>
@@ -327,7 +327,7 @@ export function Header({
 						<Layout.Header.TitleText>{m['screens.messages.chats.title']()}</Layout.Header.TitleText>
 					</Layout.Header.Content>
 
-					<Layout.Header.Slot>
+					<Layout.Header.EndSlot>
 						<InboxRequests count={requestCount} variant="ghost" />
 
 						<ChatSettingsMenu
@@ -343,7 +343,7 @@ export function Header({
 								</Button>
 							}
 						/>
-					</Layout.Header.Slot>
+					</Layout.Header.EndSlot>
 				</>
 			)}
 		</Layout.Header.Outer>

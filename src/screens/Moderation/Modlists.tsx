@@ -39,7 +39,7 @@ export function ModerationModlistsScreen() {
 					<Layout.Header.TitleText>{m['common.moderation.listsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
 
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<Button
 						label={m['common.list.action.new']()}
 						color="secondary"
@@ -50,7 +50,7 @@ export function ModerationModlistsScreen() {
 						<ButtonIcon icon={PlusIcon} />
 						<ButtonText>{m['common.status.new']()}</ButtonText>
 					</Button>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 
 			<MyLists filter="mod" />

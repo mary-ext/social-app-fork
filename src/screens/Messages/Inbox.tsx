@@ -73,9 +73,9 @@ export function MessagesInboxScreen() {
 				</Layout.Header.Content>
 
 				{hasUnreadConvos && (
-					<Layout.Header.Slot>
+					<Layout.Header.EndSlot>
 						<MarkAsReadHeaderButton />
-					</Layout.Header.Slot>
+					</Layout.Header.EndSlot>
 				)}
 			</Layout.Header.Outer>
 			<RequestList listConvosQuery={listConvosQuery} conversations={conversations} />

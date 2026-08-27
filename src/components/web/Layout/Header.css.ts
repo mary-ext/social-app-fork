@@ -38,16 +38,13 @@ export const content = style({
 	justifyContent: 'center',
 });
 
-export const slot = style({
+const slot = style({
 	display: 'flex',
 	flexShrink: 0,
 	gap: space.sm,
 	alignItems: 'center',
-
-	':first-child': {
-		marginLeft: -space.sm,
-	},
-	':last-child': {
-		marginRight: -space.sm,
-	},
 });
+
+export const startSlot = style([slot, { marginInlineStart: -space.sm }]);
+
+export const endSlot = style([slot, { marginInlineEnd: -space.sm }]);

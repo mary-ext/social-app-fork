@@ -95,7 +95,7 @@ export function NotificationsScreen() {
 							<Layout.Header.TitleText>{m['common.nav.notifications']()}</Layout.Header.TitleText>
 						</Layout.Header.Content>
 
-						<Layout.Header.Slot>
+						<Layout.Header.EndSlot>
 							<LinkButton
 								to={{ name: 'NotificationSettings' }}
 								label={m['common.notifications.settingsTitle']()}
@@ -110,7 +110,7 @@ export function NotificationsScreen() {
 									<ButtonIcon icon={SettingsIcon} size="lg" />
 								)}
 							</LinkButton>
-						</Layout.Header.Slot>
+						</Layout.Header.EndSlot>
 					</Layout.Header.Outer>
 				}
 			/>

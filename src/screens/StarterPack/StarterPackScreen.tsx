@@ -281,7 +281,7 @@ function Header({
 			<Layout.Header.Outer noBottomBorder sticky={false}>
 				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
 				<Layout.Header.Content />
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					{hasSession ? (
 						<>
 							{isOwn ? (
@@ -314,7 +314,7 @@ function Header({
 							/>
 						</>
 					) : null}
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<StarterPackHeader
 				record={record}

@@ -67,7 +67,7 @@ export function ProfileLabelsScreen() {
 			<Layout.Header.Outer noBottomBorder>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content />
-				<Layout.Header.Slot>{labeler && <LabelerActions labeler={labeler} />}</Layout.Header.Slot>
+				<Layout.Header.EndSlot>{labeler && <LabelerActions labeler={labeler} />}</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<Layout.Content>
 				{isPending ? (

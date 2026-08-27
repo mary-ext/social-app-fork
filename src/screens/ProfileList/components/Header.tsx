@@ -115,7 +115,7 @@ export function Header({
 						<ListByline isOwner={isOwner} list={list} />
 					</Text>
 				</Layout.Header.Content>
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					{isCurateList ? (
 						<Button
 							color={isPinned ? 'secondary' : 'primary_subtle'}
@@ -168,7 +168,7 @@ export function Header({
 						)
 					) : null}
 					<MoreOptionsMenu list={list} />
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 				<Layout.ScrollAway.Backdrop />
 			</Layout.Header.Outer>
 			<Layout.ScrollAway.Region>

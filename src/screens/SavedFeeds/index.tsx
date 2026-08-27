@@ -233,7 +233,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.nav.feeds']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<Button
 						size="small"
 						color={hasUnsavedChanges ? 'primary' : 'secondary'}
@@ -248,7 +248,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						)}
 						<ButtonText>{gtMobile ? m['common.action.saveChanges']() : m['common.action.save']()}</ButtonText>
 					</Button>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<List
 				data={items}

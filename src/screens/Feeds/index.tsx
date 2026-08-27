@@ -338,7 +338,7 @@ export function FeedsScreen() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.nav.feeds']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<LinkButton
 						color="secondary"
 						label={m['common.feeds.action.edit']()}
@@ -349,7 +349,7 @@ export function FeedsScreen() {
 					>
 						<ButtonIcon icon={Gear} size="lg" />
 					</LinkButton>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<List
 				data={items}

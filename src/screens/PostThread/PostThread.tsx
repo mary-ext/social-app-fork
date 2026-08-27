@@ -401,14 +401,14 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['navigation.post.title']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					<HeaderDropdown
 						sort={thread.state.sort}
 						setSort={setSortWrapped}
 						view={thread.state.view}
 						setView={setViewWrapped}
 					/>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			{thread.state.error ? (
 				<ThreadError error={thread.state.error} onRetry={() => void thread.actions.refetch()} />

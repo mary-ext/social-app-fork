@@ -54,11 +54,11 @@ export function CustomFeedHeaderSkeleton() {
 			<Layout.Header.Content>
 				<div className={css.skeletonBar} />
 			</Layout.Header.Content>
-			<Layout.Header.Slot>
+			<Layout.Header.EndSlot>
 				<div className={css.skeletonPin}>
 					<Pin className={css.pinIcon} />
 				</div>
-			</Layout.Header.Slot>
+			</Layout.Header.EndSlot>
 		</Layout.Header.Outer>
 	);
 }
@@ -180,7 +180,7 @@ export function CustomFeedHeader({ info, isTrending }: { info: FeedSourceFeedInf
 					</div>
 				</Layout.Header.Content>
 
-				<Layout.Header.Slot>
+				<Layout.Header.EndSlot>
 					{!isTrending &&
 						hasSession &&
 						(isPinned ? (
@@ -245,7 +245,7 @@ export function CustomFeedHeader({ info, isTrending }: { info: FeedSourceFeedInf
 					>
 						<ButtonIcon icon={Ellipsis} size="lg" />
 					</Button>
-				</Layout.Header.Slot>
+				</Layout.Header.EndSlot>
 			</Layout.Header.Outer>
 			<Dialog.Root handle={infoHandle}>
 				<Dialog.Popup label={m['screens.profile.feed.a11y.menu']()} size="medium">
