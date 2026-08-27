@@ -27,7 +27,8 @@ const resolveCommitHash = (): string => {
 	}
 };
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
+	const isBuild = command === 'build';
 	const isProduction = mode === 'production';
 
 	const oauthScope = process.env.PUBLIC_OAUTH_SCOPE || oauthMetadata.scope;
@@ -119,7 +120,7 @@ export default defineConfig(({ mode }) => {
 			emptyOutDir: true,
 			sourcemap: true,
 			// prevent content hashes from cascading through importers.
-			chunkImportMap: true,
+			chunkImportMap: isBuild,
 			modulePreload: { polyfill: false },
 			rolldownOptions: {
 				output: {
