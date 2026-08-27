@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { profileTarget } from '#/lib/routes/targets';
@@ -14,6 +16,39 @@ import { InlineLinkText } from '#/components/web/Link';
 import { m } from '#/paraglide/messages';
 
 import * as css from './ListHeader.css';
+
+/**
+ * renders a localized list byline.
+ *
+ * @param creator custom creator content
+ * @param isOwner whether the viewer owns the list
+ * @param list displayed list
+ */
+export function ListByline({
+	creator,
+	isOwner,
+	list,
+}: {
+	creator?: ReactNode;
+	isOwner: boolean;
+	list: AppBskyGraphDefs.ListView;
+}) {
+	const renderCreator = () => creator ?? list.creator.handle;
+
+	if (list.purpose === 'app.bsky.graph.defs#modlist') {
+		return isOwner ? (
+			m['view.profile.list.moderationByYou']()
+		) : (
+			<Trans message={m['view.profile.list.moderationBy']} markup={{ t0: renderCreator }} />
+		);
+	}
+
+	return isOwner ? (
+		m['view.profile.list.byYou']()
+	) : (
+		<Trans message={m['view.profile.list.by']} markup={{ t0: renderCreator }} />
+	);
+}
 
 export function ListHeader({
 	bottomBorder,
@@ -35,13 +70,13 @@ export function ListHeader({
 		}
 	};
 
-	const creatorLink = () => (
+	const creatorLink = (
 		<InlineLinkText
 			to={profileTarget(list.creator.did)}
 			label={m['screens.profile.avatar.a11y.viewProfile']({ handle: list.creator.handle })}
 			color="textContrastMedium"
 		>
-			{list.creator.handle || ''}
+			{list.creator.handle}
 		</InlineLinkText>
 	);
 
@@ -69,17 +104,7 @@ export function ListHeader({
 						{list.name || ''}
 					</Text>
 					<Text color="textContrastMedium" numberOfLines={1}>
-						{list.purpose === 'app.bsky.graph.defs#modlist' ? (
-							isOwner ? (
-								m['view.profile.list.moderationByYou']()
-							) : (
-								<Trans message={m['view.profile.list.moderationBy']} markup={{ t0: creatorLink }} />
-							)
-						) : isOwner ? (
-							m['view.profile.list.byYou']()
-						) : (
-							<Trans message={m['view.profile.list.by']} markup={{ t0: creatorLink }} />
-						)}
+						<ListByline creator={creatorLink} isOwner={isOwner} list={list} />
 					</Text>
 				</div>
 			</div>

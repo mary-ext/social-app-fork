@@ -31,7 +31,7 @@ export function ProfileStickyHeader({ isPlaceholderProfile, profile, ref }: Prop
 		<div className={css.outer} ref={ref}>
 			<Layout.Header.BackButton className={css.backButton} variant="scrim" />
 			{!isPlaceholderProfile && (
-				<div className={css.content}>
+				<Layout.Header.Content className={css.content}>
 					<Text numberOfLines={1} size="lg" weight="bold">
 						{profile.handle}
 					</Text>
@@ -41,9 +41,9 @@ export function ProfileStickyHeader({ isPlaceholderProfile, profile, ref }: Prop
 							formatted: formatCount(postsCount),
 						})}
 					</Text>
-				</div>
+				</Layout.Header.Content>
 			)}
-			<div className={css.backdrop} />
+			<Layout.ScrollAway.Backdrop />
 		</div>
 	);
 }

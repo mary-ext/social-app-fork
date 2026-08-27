@@ -51,7 +51,7 @@ type ProfileTabId = 'collections' | 'media' | 'posts';
 
 export function ProfileScreen() {
 	return (
-		<Layout.Screen noInsetTop>
+		<Layout.Screen className={Layout.ScrollAway.scope} noInsetTop>
 			<ProfileScreenInner />
 		</Layout.Screen>
 	);

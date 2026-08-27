@@ -1,3 +1,5 @@
+import type { Ref } from 'react';
+
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
@@ -9,6 +11,7 @@ import {
 import { useSession } from '#/state/session';
 
 import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
@@ -17,7 +20,7 @@ import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.sv
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
-import { ListHeader } from './ListHeader';
+import { ListByline, ListHeader } from './ListHeader';
 import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
 
@@ -25,10 +28,12 @@ export function Header({
 	bottomBorder,
 	list,
 	preferences,
+	ref,
 }: {
 	bottomBorder?: boolean;
 	list: AppBskyGraphDefs.ListView;
 	preferences: UsePreferencesQueryResponse;
+	ref?: Ref<HTMLDivElement>;
 }) {
 	const router = useRouter();
 	const { currentAccount } = useSession();
@@ -47,6 +52,7 @@ export function Header({
 
 	const savedFeedConfig = preferences?.savedFeeds?.find((f) => f.value === list.uri);
 	const isPinned = !!savedFeedConfig?.pinned;
+	const isOwner = list.creator.did === currentAccount?.did;
 
 	const onTogglePinned = async () => {
 		try {
@@ -99,9 +105,16 @@ export function Header({
 
 	return (
 		<>
-			<Layout.Header.Outer noBottomBorder sticky={false}>
+			<Layout.Header.Outer noBottomBorder ref={ref}>
 				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
-				<Layout.Header.Content />
+				<Layout.Header.Content className={Layout.ScrollAway.reveal}>
+					<Text numberOfLines={1} size="lg" weight="semiBold">
+						{list.name || ''}
+					</Text>
+					<Text color="textContrastMedium" numberOfLines={1} size="sm">
+						<ListByline isOwner={isOwner} list={list} />
+					</Text>
+				</Layout.Header.Content>
 				<Layout.Header.Slot>
 					{isCurateList ? (
 						<Button
@@ -156,12 +169,11 @@ export function Header({
 					) : null}
 					<MoreOptionsMenu list={list} />
 				</Layout.Header.Slot>
+				<Layout.ScrollAway.Backdrop />
 			</Layout.Header.Outer>
-			<ListHeader
-				list={list}
-				isOwner={list.creator.did === currentAccount?.did}
-				bottomBorder={bottomBorder}
-			/>
+			<Layout.ScrollAway.Region>
+				<ListHeader list={list} isOwner={isOwner} bottomBorder={bottomBorder} />
+			</Layout.ScrollAway.Region>
 		</>
 	);
 }

@@ -9,6 +9,7 @@ import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/co
 import * as styles from '#/components/web/Layout/Layout.css';
 
 export * as Header from '#/components/web/Layout/Header';
+export * as ScrollAway from '#/components/web/Layout/ScrollAway';
 
 export type ScreenProps = ComponentPropsWithoutRef<'div'> & {
 	noInsetTop?: boolean;

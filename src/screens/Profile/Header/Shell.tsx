@@ -15,6 +15,7 @@ import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';
 import { UserBanner } from '#/components/UserBanner';
+import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
 
@@ -71,22 +72,24 @@ export function ProfileHeaderShell({ children }: { children: ReactNode }): React
 
 	return (
 		<div className={css.frame}>
-			{isPlaceholderProfile ? (
-				<UserBanner />
-			) : profile.banner && canViewMedia ? (
-				<Dialog.Trigger
-					type="button"
-					handle={lightboxHandle}
-					payload={{ images: [{ src: profile.banner }], index: 0 }}
-					className={css.bannerButton}
-					aria-label={m['screens.profile.banner.a11y.view']()}
-					onPointerDown={preloadLightbox}
-				>
-					{bannerImage}
-				</Dialog.Trigger>
-			) : (
-				bannerImage
-			)}
+			<Layout.ScrollAway.Region>
+				{isPlaceholderProfile ? (
+					<UserBanner />
+				) : profile.banner && canViewMedia ? (
+					<Dialog.Trigger
+						type="button"
+						handle={lightboxHandle}
+						payload={{ images: [{ src: profile.banner }], index: 0 }}
+						className={css.bannerButton}
+						aria-label={m['screens.profile.banner.a11y.view']()}
+						onPointerDown={preloadLightbox}
+					>
+						{bannerImage}
+					</Dialog.Trigger>
+				) : (
+					bannerImage
+				)}
+			</Layout.ScrollAway.Region>
 
 			{/* placed before the header body so its tab order matches its visual spot (top-left, over the banner edge) */}
 			<div className={css.avatarAnchor}>

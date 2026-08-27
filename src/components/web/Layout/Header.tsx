@@ -41,8 +41,8 @@ export function Outer({
 	);
 }
 
-export function Content({ children }: { children?: ReactNode }) {
-	return <div className={styles.content}>{children}</div>;
+export function Content({ children, className }: { children?: ReactNode; className?: string }) {
+	return <div className={clsx(styles.content, className)}>{children}</div>;
 }
 
 export function Slot({ children }: { children?: ReactNode }) {

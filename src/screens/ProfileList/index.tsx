@@ -4,6 +4,7 @@ import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bl
 import { useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
+import { useElementHeight } from '#/lib/hooks/use-element-height';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListQuery } from '#/state/queries/list';
@@ -36,7 +37,7 @@ import { FeedSection } from './FeedSection';
 
 export function ProfileListScreen() {
 	return (
-		<Layout.Screen>
+		<Layout.Screen className={Layout.ScrollAway.scope}>
 			<ProfileListScreenInner />
 		</Layout.Screen>
 	);
@@ -138,6 +139,7 @@ function CuratedProfileList({
 	const addUserDialogHandle = Dialog.useDialogHandle();
 	const onPressAddUser = () => addUserDialogHandle.open(null);
 	const [{ tab }, replaceParams] = useParams('ProfileList');
+	const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
 	useTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 
@@ -145,12 +147,13 @@ function CuratedProfileList({
 		void truncateAndInvalidate(queryClient, FEED_RQKEY({ type: 'list', uri: list.uri }));
 	};
 
-	const header = <Header list={list} preferences={preferences} />;
+	const header = <Header list={list} preferences={preferences} ref={headerRef} />;
 
 	return (
 		<>
 			<Tabs
 				header={header}
+				headerOffset={headerHeight}
 				onValueChange={(next) => replaceParams({ tab: next })}
 				sections={[
 					{
