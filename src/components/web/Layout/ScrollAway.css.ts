@@ -1,6 +1,7 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
 import { HEADER_HEIGHT } from '#/components/web/Layout/const';
+import { outer } from '#/components/web/Layout/Header.css';
 import { driven, TIMELINE } from '#/components/web/Layout/scroll-away';
 
 import { colors } from '#/styles/colors';
@@ -50,6 +51,12 @@ export const backdrop = style([
 		zIndex: -1,
 		borderBottom: '1px solid transparent',
 		backgroundColor: 'transparent',
+
+		selectors: {
+			[`${outer} > &`]: {
+				bottom: -1,
+			},
+		},
 	},
 	driven(solidifying, solid),
 ]);
