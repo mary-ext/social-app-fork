@@ -15,6 +15,8 @@ this project uses React Compiler, `@base-ui/react` and Paraglide.
   - if you need to stop a server you did not spawn for any reason, like stale HMR issues, confirm
     with the user.
 - build with `pnpm build` (vite)
+  - do not run `vite build` while a Vite development server is running, this will cause spurious HMR
+    updates.
 - format with `pnpm format` (oxfmt)
 - lint and typecheck with `pnpm lint` (oxlint)
   - oxlint is configured to run the type checker, AVOID running `tsc`
