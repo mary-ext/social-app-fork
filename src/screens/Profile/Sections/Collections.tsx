@@ -187,6 +187,12 @@ function CollectionGroup<Item>({
 	seeAllTarget,
 	title,
 }: CollectionGroupProps<Item>): ReactNode {
+	const isCountEmpty = count === 0 && items.length === 0 && !error;
+
+	if (!isMe && isCountEmpty) {
+		return null;
+	}
+
 	const isEmpty = !isPending && items.length === 0;
 
 	if (isEmpty && !isMe && !error) {
@@ -194,7 +200,11 @@ function CollectionGroup<Item>({
 	}
 
 	let body: ReactNode;
-	if (error && items.length === 0) {
+	if (isCountEmpty) {
+		body = (
+			<EmptyState button={emptyButton} icon={Icon} message={emptyMessage} messageColor="textContrastMedium" />
+		);
+	} else if (error && items.length === 0) {
 		body = <ErrorMessage message={error} onPressTryAgain={onRetry} />;
 	} else if (isPending) {
 		body = placeholder;
