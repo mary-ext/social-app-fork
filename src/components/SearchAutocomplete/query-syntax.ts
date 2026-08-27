@@ -139,6 +139,15 @@ export const SEARCH_OPERATORS: SearchOperator[] = [
 	{ kind: 'enum', name: 'replies', options: ['none', 'only'], placeholder: 'none' },
 ];
 
+/**
+ * checks whether a string is a recognized operator name.
+ *
+ * @param name value to check
+ * @returns whether the value is an operator name
+ */
+export const isOperatorName = (name: string): name is OperatorName =>
+	SEARCH_OPERATORS.some((operator) => operator.name === name);
+
 const MAYBE_HANDLE_RE = /^@?[a-zA-Z0-9-.]*$/;
 const MAYBE_DATE_RE = /^[\d\-+.:Z]*$/;
 
@@ -240,11 +249,13 @@ export const classifyActiveToken = (active: ActiveToken | undefined): Suggestion
  *
  * @param tokens tokenized query
  * @param active token under the caret
+ * @param fixedFilters operators excluded from suggestions
  * @returns operators to list under "search options"
  */
 export const getOperatorSuggestions = (
 	tokens: Token[],
 	active: ActiveToken | undefined,
+	fixedFilters: readonly OperatorName[],
 ): SearchOperator[] => {
 	const token = active?.token;
 	if (token?.type === 'quoted') {
@@ -256,6 +267,10 @@ export const getOperatorSuggestions = (
 	const followingSet = tokens.some((t) => t.type === 'word' && t.value === 'from:following');
 
 	return SEARCH_OPERATORS.filter(({ multiple, name }) => {
+		if (fixedFilters.includes(name)) {
+			return false;
+		}
+
 		if (name === 'from' && followingSet) {
 			return false;
 		}

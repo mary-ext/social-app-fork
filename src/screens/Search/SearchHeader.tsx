@@ -2,13 +2,14 @@ import type { ReactNode, Ref } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { definite } from '@mary/array-fns';
+import { definite, mapDefined } from '@mary/array-fns';
 
 import { profileTarget } from '#/lib/routes/targets';
 
 import type { SearchTabId } from '#/screens/Search/SearchResults';
 import { makeSearchQuery, type Params } from '#/screens/Search/utils';
 
+import { isOperatorName } from '#/components/SearchAutocomplete/query-syntax';
 import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
@@ -19,8 +20,8 @@ import { useRouter } from '#/router';
  * the search chrome shared by the Explore, Search, and ProfileSearch screens: a sticky header wrapping the
  * autocomplete input. submitting always hands off to the Search results screen, prefixing any fixed params.
  *
- * @param fixedParams query filters prefixed to every submitted search (e.g. the profile-search `from:`
- *   filter)
+ * @param autoFocus focus the search field on mount
+ * @param fixedParams query filters prefixed to submissions and excluded from autocomplete
  * @param headerRef forwarded to the header element so callers can measure its height
  * @param initialQuery query to seed the input with; a trailing space is appended so the caret opens on a
  *   fresh token
@@ -31,6 +32,7 @@ import { useRouter } from '#/router';
  *   over to the Search screen
  */
 export function SearchHeader({
+	autoFocus,
 	fixedParams,
 	headerRef,
 	initialQuery,
@@ -39,6 +41,7 @@ export function SearchHeader({
 	placeholder,
 	tab,
 }: {
+	autoFocus?: boolean;
 	fixedParams?: Params;
 	headerRef?: Ref<HTMLDivElement>;
 	initialQuery: string;
@@ -64,13 +67,19 @@ export function SearchHeader({
 		router.navigate({ to: profileTarget(profile.did) });
 	};
 
+	const fixedFilters = mapDefined(Object.entries(fixedParams ?? {}), ([name, value]) =>
+		value && isOperatorName(name) ? name : undefined,
+	);
+
 	return (
 		<Layout.Header.Outer noBottomBorder={noBottomBorder} ref={headerRef}>
 			{navButton}
 
 			<Layout.Header.Content>
 				<SearchAutocomplete
+					autoFocus={autoFocus}
 					eager
+					fixedFilters={fixedFilters}
 					initialQuery={initialQuery ? initialQuery + ' ' : initialQuery}
 					placeholder={placeholder}
 					onNavigate={(path) => navigateToPath(path, 'push')}

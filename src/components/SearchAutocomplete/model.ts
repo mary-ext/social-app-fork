@@ -105,7 +105,7 @@ const MAX_RECENT_SHOWN = 8;
  * @param pending whether the profile hydration is currently loading
  */
 const buildRecentRows = (
-	history: SearchHistoryEntry[],
+	history: readonly SearchHistoryEntry[],
 	recentProfiles: Map<string, AnyProfileView>,
 	pending: boolean,
 ): ListRow[] => {
@@ -211,6 +211,7 @@ const buildCalendarDays = ({
  * @param query raw search query
  * @param recentProfiles resolved profile views for the history's profile entries, keyed by DID
  * @param recentProfilesPending whether recent profiles' hydration is still in flight
+ * @param scoped whether the search has fixed filters
  * @param today current day, highlighted in the calendar
  * @param visibleMonth month the calendar is showing
  * @returns tagged result for the renderer
@@ -225,18 +226,20 @@ export const buildResult = ({
 	query,
 	recentProfiles,
 	recentProfilesPending,
+	scoped,
 	today,
 	visibleMonth,
 }: {
 	constraints: DateConstraints;
 	fromActive: boolean;
-	history: SearchHistoryEntry[];
+	history: readonly SearchHistoryEntry[];
 	mode: SuggestionMode;
 	operators: SearchOperator[];
 	profiles: AnyProfileView[];
 	query: string;
 	recentProfiles: Map<string, AnyProfileView>;
 	recentProfilesPending: boolean;
+	scoped: boolean;
 	today: Date;
 	visibleMonth: Date;
 }): AutocompleteResult => {
@@ -296,7 +299,9 @@ export const buildResult = ({
 					);
 				}
 			}
+			// the hero is specific to global search.
 			if (
+				!scoped &&
 				!rows.some(
 					(row) =>
 						row.kind === 'profile' ||
@@ -309,10 +314,14 @@ export const buildResult = ({
 				rows.push({ kind: 'hero', key: 'hero' });
 			}
 			if (operators.length > 0) {
-				rows.push(
-					{ kind: 'divider', key: 'divider' },
-					{ kind: 'sectionLabel', key: 'options-label', label: m['components.web.search.filter.label']() },
-				);
+				if (rows.length > 0) {
+					rows.push({ kind: 'divider', key: 'divider' });
+				}
+				rows.push({
+					kind: 'sectionLabel',
+					key: 'options-label',
+					label: m['components.web.search.filter.label'](),
+				});
 				for (const operator of operators) {
 					rows.push({ kind: 'operator', key: `operator-${operator.name}`, operator });
 				}

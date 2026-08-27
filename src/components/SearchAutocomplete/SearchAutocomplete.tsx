@@ -46,6 +46,7 @@ import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 import { getRouter } from '#/router';
+import type { SearchHistoryEntry } from '#/storage';
 
 import { CalendarBody } from './CalendarBody';
 import { buildResult, CALENDAR_DAY_COUNT, type InteractiveItem, interactiveItems } from './model';
@@ -54,6 +55,7 @@ import {
 	findActiveToken,
 	getDateConstraints,
 	getOperatorSuggestions,
+	type OperatorName,
 	parseStartDate,
 	splitFilters,
 } from './query-syntax';
@@ -140,14 +142,18 @@ const splicePosition = (tokens: Token[], tokenIndex: number): [start: number, en
 	return [start, start + tokens[tokenIndex]!.value.length];
 };
 
+const NO_FIXED_FILTERS: readonly OperatorName[] = [];
+const NO_HISTORY: readonly SearchHistoryEntry[] = [];
+
 type SearchAutocompleteProps = {
+	fixedFilters?: readonly OperatorName[];
 	onNavigate: (path: string) => void;
 	onNavigateToProfile: (profile: AnyProfileView) => void;
 	onSubmit: (query: string) => void;
 };
 
 type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
-	/** mount the live field immediately rather than the cheap idle placeholder, without grabbing focus on mount. */
+	autoFocus?: boolean;
 	eager?: boolean;
 	/** seed text for the field; re-seeds the field whenever it changes (e.g. navigating between searches). */
 	initialQuery?: string;
@@ -158,7 +164,9 @@ type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
 /**
  * a search entry point that lazily mounts the autocomplete search field on first engagement unless eager.
  *
+ * @param autoFocus whether to focus an eager field on mount
  * @param eager mount the live field immediately instead of the lazy placeholder
+ * @param fixedFilters operators supplied outside the editable query
  * @param initialQuery text to seed the live field with
  * @param onNavigate callback to navigate to an in-app route path
  * @param onNavigateToProfile callback to open a profile chosen from the typeahead
@@ -166,6 +174,7 @@ type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
  * @param placeholder placeholder shown while the field is empty
  */
 export function SearchAutocomplete({
+	autoFocus,
 	eager,
 	initialQuery,
 	placeholder,
@@ -182,11 +191,10 @@ export function SearchAutocomplete({
 	}, []);
 
 	if (active) {
-		// lazy fields receive focus on activation; eager fields do not.
 		return (
 			<ActiveSearchAutocomplete
 				{...props}
-				autoFocus={!eager}
+				autoFocus={autoFocus || !eager}
 				initialQuery={initialQuery}
 				placeholder={placeholder}
 			/>
@@ -211,6 +219,7 @@ export function SearchAutocomplete({
  */
 function ActiveSearchAutocomplete({
 	autoFocus,
+	fixedFilters = NO_FIXED_FILTERS,
 	initialQuery = '',
 	onNavigate,
 	onNavigateToProfile,
@@ -220,7 +229,11 @@ function ActiveSearchAutocomplete({
 	const { currentAccount } = useSession();
 	const { data: meProfile } = useProfileQuery({ did: currentAccount?.did });
 
-	const history = useSearchHistory();
+	const scoped = fixedFilters.length > 0;
+
+	const storedHistory = useSearchHistory();
+	// fixed filters invalidate global history.
+	const history = scoped ? NO_HISTORY : storedHistory;
 	const recentProfileDids = mapDefined(history, (entry) =>
 		entry.kind === 'profile' ? entry.did : undefined,
 	);
@@ -246,7 +259,6 @@ function ActiveSearchAutocomplete({
 		});
 	}, []);
 
-	// focus lazy fields before paint; eager fields start closed and unfocused.
 	useLayoutEffect(() => {
 		if (autoFocus) {
 			inputRef.current?.focus();
@@ -275,11 +287,13 @@ function ActiveSearchAutocomplete({
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
 	const mode = useMemo(() => classifyActiveToken(active), [active]);
-	const operatorSuggestions = getOperatorSuggestions(tokens, active);
-	const fromActive = tokens.some(
-		(token, index) =>
-			index !== active?.tokenIndex && token.type === 'word' && token.value.startsWith('from:'),
-	);
+	const operatorSuggestions = getOperatorSuggestions(tokens, active, fixedFilters);
+	const fromActive =
+		fixedFilters.includes('from') ||
+		tokens.some(
+			(token, index) =>
+				index !== active?.tokenIndex && token.type === 'word' && token.value.startsWith('from:'),
+		);
 
 	// the selectable date range for the active `since`/`until` picker (day-granular bounds).
 	const dateConstraints = useMemo(
@@ -341,6 +355,7 @@ function ActiveSearchAutocomplete({
 		recentProfiles,
 		// reserve a row for unresolved recent profiles while they load.
 		recentProfilesPending,
+		scoped,
 		today,
 		visibleMonth,
 	});

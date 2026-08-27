@@ -34,6 +34,7 @@ export const ProfileSearchScreen = () => {
 	return (
 		<Layout.Screen>
 			<SearchHeader
+				autoFocus
 				fixedParams={{ from: profile?.handle ?? actor }}
 				initialQuery=""
 				navButton={<Layout.Header.BackButton />}
