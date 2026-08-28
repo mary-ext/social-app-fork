@@ -1,7 +1,3 @@
-import type { ReactNode } from 'react';
-
-import { ProfileMenu } from '#/screens/Profile/components/ProfileMenu';
-
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
 import * as Dialog from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
@@ -96,10 +92,6 @@ export function UnblockButton() {
 	);
 }
 
-/**
- * The profile header action row, selected by the viewer's relationship to the profile. The profile menu is
- * always present; the relationship discriminant decides what precedes it.
- */
 export function ProfileHeaderActions() {
 	const {
 		meta: { hasSession, moderationOpts, relationship },
@@ -124,23 +116,19 @@ export function ProfileHeaderActions() {
 		}
 	}
 
-	let relationshipActions: ReactNode = null;
 	switch (relationship) {
 		case 'self': {
-			relationshipActions = <EditProfileButton />;
-			break;
+			return <EditProfileButton />;
 		}
 		case 'blocking': {
-			relationshipActions = <UnblockButton />;
-			break;
+			return <UnblockButton />;
 		}
 		case 'blocked-by':
 		case 'blocking-by-list': {
-			relationshipActions = null;
-			break;
+			return null;
 		}
 		case 'default': {
-			relationshipActions = (
+			return (
 				<>
 					{hasSession && (
 						<>
@@ -153,14 +141,6 @@ export function ProfileHeaderActions() {
 					<FollowButton />
 				</>
 			);
-			break;
 		}
 	}
-
-	return (
-		<>
-			{relationshipActions}
-			<ProfileMenu profile={profile} />
-		</>
-	);
 }

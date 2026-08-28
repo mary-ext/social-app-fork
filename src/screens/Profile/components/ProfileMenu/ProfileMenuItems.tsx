@@ -34,17 +34,14 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { shareText, shareUrl } from '#/components/sharing';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon } from '#/components/web/Button';
 
 import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
 import RepostOff from '#/icons/central/ArrowsRepeatRightLeftOff_round_outlined_radius1_stroke2.svg';
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
-import Ellipsis from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import Flag from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
 import ListAdd from '#/icons/central/ListAdd_round_outlined_radius1_stroke2.svg';
 import LiveIcon from '#/icons/central/LiveFull_round_outlined_radius1_stroke2.svg';
-import SearchIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import Mute from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import PersonCheck from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
 import UserMinus from '#/icons/central/PeopleRemove2_round_outlined_radius1_stroke2.svg';
@@ -52,14 +49,12 @@ import PersonX from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2
 import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
 
-function ProfileMenu({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }): ReactNode {
+function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }): ReactNode {
 	const { currentAccount, hasSession } = useSession();
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const addToListsDialogHandle = Dialog.useDialogHandle();
 	const queryClient = useQueryClient();
-	const router = useRouter();
 	const isSelf = currentAccount?.did === profile.did;
 	const isFollowing = profile.viewer?.following;
 	const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy;
@@ -201,182 +196,158 @@ function ProfileMenu({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileView
 		void shareText(profile.did);
 	};
 
-	const onPressSearch = () => {
-		router.navigate({ to: { name: 'ProfileSearch', actor: profile.did } });
-	};
-
 	return (
 		<>
-			<Menu.Root>
-				<Menu.Trigger
-					render={
-						<Button
-							label={m['common.a11y.moreOptions']()}
-							variant="solid"
-							color="secondary"
-							size="small"
-							shape="round"
-						>
-							<ButtonIcon icon={Ellipsis} size="sm" />
-						</Button>
-					}
-				/>
+			<Menu.Popup label={m['common.a11y.moreOptions']()} align="end" minWidth={170}>
+				<Menu.Group>
+					<Menu.Item
+						label={m['view.profile.sharing.action.copyLink']()}
+						onClick={() => {
+							if (showLoggedOutWarning) {
+								loggedOutWarningPromptHandle.open(null);
+							} else {
+								onPressShare();
+							}
+						}}
+					>
+						<Menu.ItemText>{m['view.profile.sharing.action.copyLink']()}</Menu.ItemText>
+						<Menu.ItemIcon icon={ChainLinkIcon} />
+					</Menu.Item>
+				</Menu.Group>
 
-				<Menu.Popup label={m['common.a11y.moreOptions']()} align="end" minWidth={170}>
-					<Menu.Group>
-						<Menu.Item
-							label={m['view.profile.sharing.action.copyLink']()}
-							onClick={() => {
-								if (showLoggedOutWarning) {
-									loggedOutWarningPromptHandle.open(null);
-								} else {
-									onPressShare();
-								}
-							}}
-						>
-							<Menu.ItemText>{m['view.profile.sharing.action.copyLink']()}</Menu.ItemText>
-							<Menu.ItemIcon icon={ChainLinkIcon} />
-						</Menu.Item>
-						<Menu.Item label={m['view.profile.action.searchPosts']()} onClick={onPressSearch}>
-							<Menu.ItemText>{m['view.profile.action.searchPosts']()}</Menu.ItemText>
-							<Menu.ItemIcon icon={SearchIcon} />
-						</Menu.Item>
-					</Menu.Group>
-
-					{hasSession && (
-						<>
-							<Menu.Separator />
-							<Menu.Group>
-								{!isSelf && isFollowingBlockedAccount && (
-									<Menu.Item
-										label={m['view.profile.follow.action.unfollow']()}
-										onClick={() => void onPressUnfollowAccount()}
-									>
-										<Menu.ItemText>{m['view.profile.follow.action.unfollow']()}</Menu.ItemText>
-										<Menu.ItemIcon icon={UserMinus} />
-									</Menu.Item>
-								)}
-								<Menu.Item label={m['common.starterPack.action.add']()} onClick={onPressAddToStarterPacks}>
-									<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={StarterPack} />
-								</Menu.Item>
+				{hasSession && (
+					<>
+						<Menu.Separator />
+						<Menu.Group>
+							{!isSelf && isFollowingBlockedAccount && (
 								<Menu.Item
-									label={m['view.profile.list.add']()}
-									onClick={() => addToListsDialogHandle.open(null)}
+									label={m['view.profile.follow.action.unfollow']()}
+									onClick={() => void onPressUnfollowAccount()}
 								>
-									<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={ListAdd} />
+									<Menu.ItemText>{m['view.profile.follow.action.unfollow']()}</Menu.ItemText>
+									<Menu.ItemIcon icon={UserMinus} />
 								</Menu.Item>
-								{isSelf && canGoLive && (
-									<Menu.Item
-										label={
-											status.isDisabled
-												? m['view.profile.liveStatus.action.goLiveDisabled']()
-												: status.isActive
-													? m['view.profile.liveStatus.action.edit']()
-													: m['features.liveNow.goLive.confirm']()
+							)}
+							<Menu.Item label={m['common.starterPack.action.add']()} onClick={onPressAddToStarterPacks}>
+								<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>
+								<Menu.ItemIcon icon={StarterPack} />
+							</Menu.Item>
+							<Menu.Item
+								label={m['view.profile.list.add']()}
+								onClick={() => addToListsDialogHandle.open(null)}
+							>
+								<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
+								<Menu.ItemIcon icon={ListAdd} />
+							</Menu.Item>
+							{isSelf && canGoLive && (
+								<Menu.Item
+									label={
+										status.isDisabled
+											? m['view.profile.liveStatus.action.goLiveDisabled']()
+											: status.isActive
+												? m['view.profile.liveStatus.action.edit']()
+												: m['features.liveNow.goLive.confirm']()
+									}
+									onClick={() => {
+										if (status.isDisabled) {
+											goLiveDisabledDialogHandle.open(null);
+										} else {
+											goLiveDialogHandle.open(null);
 										}
-										onClick={() => {
-											if (status.isDisabled) {
-												goLiveDisabledDialogHandle.open(null);
-											} else {
-												goLiveDialogHandle.open(null);
-											}
-										}}
-									>
-										<Menu.ItemText>
-											{status.isDisabled
-												? m['view.profile.liveStatus.action.goLiveDisabled']()
-												: status.isActive
-													? m['view.profile.liveStatus.action.edit']()
-													: m['features.liveNow.goLive.confirm']()}
-										</Menu.ItemText>
-										<Menu.ItemIcon icon={LiveIcon} />
-									</Menu.Item>
-								)}
-								{!isSelf && (
-									<>
-										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
-											<>
-												{/* a full mute already hides the reposts, so the narrower scope has nothing left to offer */}
-												{!profile.viewer?.muted &&
-													(profile.viewer?.following || profile.viewer?.mutedOnlyReposts) && (
-														<Menu.Item
-															label={
-																profile.viewer?.mutedOnlyReposts
-																	? m['common.mute.action.showReposts']()
-																	: m['common.mute.action.hideReposts']()
-															}
-															onClick={() => void onPressMuteReposts()}
-														>
-															<Menu.ItemText>
-																{profile.viewer?.mutedOnlyReposts
-																	? m['common.mute.action.showReposts']()
-																	: m['common.mute.action.hideReposts']()}
-															</Menu.ItemText>
-															<Menu.ItemIcon icon={profile.viewer?.mutedOnlyReposts ? Repost : RepostOff} />
-														</Menu.Item>
-													)}
-												<Menu.Item
-													label={
-														profile.viewer?.muted
-															? m['common.mute.action.unmuteAccount']()
-															: m['common.mute.action.muteAccount']()
-													}
-													onClick={() => mutePromptHandle.open(null)}
-												>
-													<Menu.ItemText>
-														{profile.viewer?.muted
-															? m['common.mute.action.unmuteAccount']()
-															: m['common.mute.action.muteAccount']()}
-													</Menu.ItemText>
-													<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
-												</Menu.Item>
-											</>
-										)}
-										{!profile.viewer?.blockingByList && (
+									}}
+								>
+									<Menu.ItemText>
+										{status.isDisabled
+											? m['view.profile.liveStatus.action.goLiveDisabled']()
+											: status.isActive
+												? m['view.profile.liveStatus.action.edit']()
+												: m['features.liveNow.goLive.confirm']()}
+									</Menu.ItemText>
+									<Menu.ItemIcon icon={LiveIcon} />
+								</Menu.Item>
+							)}
+							{!isSelf && (
+								<>
+									{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
+										<>
+											{/* a full mute already hides the reposts, so the narrower scope has nothing left to offer */}
+											{!profile.viewer?.muted &&
+												(profile.viewer?.following || profile.viewer?.mutedOnlyReposts) && (
+													<Menu.Item
+														label={
+															profile.viewer?.mutedOnlyReposts
+																? m['common.mute.action.showReposts']()
+																: m['common.mute.action.hideReposts']()
+														}
+														onClick={() => void onPressMuteReposts()}
+													>
+														<Menu.ItemText>
+															{profile.viewer?.mutedOnlyReposts
+																? m['common.mute.action.showReposts']()
+																: m['common.mute.action.hideReposts']()}
+														</Menu.ItemText>
+														<Menu.ItemIcon icon={profile.viewer?.mutedOnlyReposts ? Repost : RepostOff} />
+													</Menu.Item>
+												)}
 											<Menu.Item
 												label={
-													profile.viewer
-														? m['common.block.action.unblockAccount']()
-														: m['common.block.action.blockAccount']()
+													profile.viewer?.muted
+														? m['common.mute.action.unmuteAccount']()
+														: m['common.mute.action.muteAccount']()
 												}
-												onClick={() => blockPromptHandle.open(null)}
+												onClick={() => mutePromptHandle.open(null)}
 											>
 												<Menu.ItemText>
-													{profile.viewer?.blocking
-														? m['common.block.action.unblockAccount']()
-														: m['common.block.action.blockAccount']()}
+													{profile.viewer?.muted
+														? m['common.mute.action.unmuteAccount']()
+														: m['common.mute.action.muteAccount']()}
 												</Menu.ItemText>
-												<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonX} />
+												<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
 											</Menu.Item>
-										)}
-										<Menu.Item label={m['view.profile.action.report']()} onClick={onPressReportAccount}>
-											<Menu.ItemText>{m['view.profile.action.report']()}</Menu.ItemText>
-											<Menu.ItemIcon icon={Flag} />
+										</>
+									)}
+									{!profile.viewer?.blockingByList && (
+										<Menu.Item
+											label={
+												profile.viewer
+													? m['common.block.action.unblockAccount']()
+													: m['common.block.action.blockAccount']()
+											}
+											onClick={() => blockPromptHandle.open(null)}
+										>
+											<Menu.ItemText>
+												{profile.viewer?.blocking
+													? m['common.block.action.unblockAccount']()
+													: m['common.block.action.blockAccount']()}
+											</Menu.ItemText>
+											<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonX} />
 										</Menu.Item>
-									</>
-								)}
-							</Menu.Group>
-						</>
-					)}
-					{devModeEnabled ? (
-						<>
-							<Menu.Separator />
-							<Menu.Group>
-								<Menu.Item label={m['view.profile.sharing.action.copyUri']()} onClick={onPressShareATUri}>
-									<Menu.ItemText>{m['view.profile.sharing.action.copyUri']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={ClipboardIcon} />
-								</Menu.Item>
-								<Menu.Item label={m['view.profile.sharing.action.copyDid']()} onClick={onPressShareDID}>
-									<Menu.ItemText>{m['view.profile.sharing.action.copyDid']()}</Menu.ItemText>
-									<Menu.ItemIcon icon={ClipboardIcon} />
-								</Menu.Item>
-							</Menu.Group>
-						</>
-					) : null}
-				</Menu.Popup>
-			</Menu.Root>
+									)}
+									<Menu.Item label={m['view.profile.action.report']()} onClick={onPressReportAccount}>
+										<Menu.ItemText>{m['view.profile.action.report']()}</Menu.ItemText>
+										<Menu.ItemIcon icon={Flag} />
+									</Menu.Item>
+								</>
+							)}
+						</Menu.Group>
+					</>
+				)}
+				{devModeEnabled ? (
+					<>
+						<Menu.Separator />
+						<Menu.Group>
+							<Menu.Item label={m['view.profile.sharing.action.copyUri']()} onClick={onPressShareATUri}>
+								<Menu.ItemText>{m['view.profile.sharing.action.copyUri']()}</Menu.ItemText>
+								<Menu.ItemIcon icon={ClipboardIcon} />
+							</Menu.Item>
+							<Menu.Item label={m['view.profile.sharing.action.copyDid']()} onClick={onPressShareDID}>
+								<Menu.ItemText>{m['view.profile.sharing.action.copyDid']()}</Menu.ItemText>
+								<Menu.ItemIcon icon={ClipboardIcon} />
+							</Menu.Item>
+						</Menu.Group>
+					</>
+				) : null}
+			</Menu.Popup>
 			<StarterPackDialog handle={addToStarterPacksDialogHandle} targetDid={profile.did} />
 			<UserAddRemoveListsDialog
 				handle={addToListsDialogHandle}
@@ -419,4 +390,4 @@ function ProfileMenu({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileView
 	);
 }
 
-export { ProfileMenu };
+export { ProfileMenuItems };

@@ -41,7 +41,7 @@ export const outer = style({
 
 export const content = style([reveal, { minWidth: 0 }]);
 
-export const backButton = style([
+export const action = style([
 	{
 		selectors: {
 			'&:hover:not(:disabled)': { boxShadow: 'inset 0 0 0 999px rgb(from currentColor r g b / 0.15)' },

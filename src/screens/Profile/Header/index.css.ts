@@ -2,8 +2,13 @@ import { style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
+import { AVATAR_OVERHANG } from './Shell.css';
+
+const bodyPaddingTop = space.md;
+const buttonRowPaddingBottom = space.sm;
+
 export const body = style({
-	paddingTop: space.md,
+	paddingTop: bodyPaddingTop,
 	paddingBottom: space.sm,
 	paddingInline: space.lg,
 	overflow: 'hidden',
@@ -16,8 +21,10 @@ export const buttonRow = style({
 	gap: space.xs,
 	alignItems: 'center',
 	justifyContent: 'flex-end',
-	paddingBottom: space.sm,
+	paddingBottom: buttonRowPaddingBottom,
 	paddingLeft: 90,
+	// keep the name below the avatar
+	minHeight: AVATAR_OVERHANG - bodyPaddingTop - buttonRowPaddingBottom,
 });
 
 export const nameBlock = style({

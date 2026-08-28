@@ -3,6 +3,12 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+const AVATAR_SIZE = 94;
+
+const AVATAR_LIFT = 46;
+
+export const AVATAR_OVERHANG = AVATAR_SIZE - AVATAR_LIFT;
+
 export const frame = style({
 	position: 'relative',
 	backgroundColor: colors.bg,
@@ -26,7 +32,7 @@ export const avatarBox = style({
 	display: 'block',
 	position: 'absolute',
 	// straddle the banner's bottom edge
-	top: -46,
+	top: -AVATAR_LIFT,
 	left: 10,
 });
 
@@ -50,8 +56,8 @@ export const avatarRing = style({
 	borderRadius: borderRadius.full,
 	borderColor: colors.bg,
 	backgroundColor: colors.bg,
-	width: 94,
-	height: 94,
+	width: AVATAR_SIZE,
+	height: AVATAR_SIZE,
 });
 
 export const avatarRingLive = style({
