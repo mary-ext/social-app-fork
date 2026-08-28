@@ -6,6 +6,7 @@
 	"scripts": {
 		"postinstall": "pnpm paraglide:compile && pnpm cf-typegen",
 		"dev": "vite",
+		"dev:bundled": "vite --experimentalBundle",
 		"dev:worker": "wrangler dev --var DEV:true",
 		"deploy": "wrangler deploy",
 		"cf-typegen": "wrangler types",
@@ -71,11 +72,11 @@
 	"devDependencies": {
 		"@inlang/paraglide-js": "2.24.1",
 		"@oomfware/vite-plugin-svg-sprites": "^0.1.2",
+		"@oomfware/vite-plugin-vanilla-extract": "^0.1.0",
 		"@types/node": "^26.2.0",
 		"@types/wicg-file-system-access": "^2023.10.7",
 		"@typescript/native": "npm:typescript@^7.0.2",
 		"@vanilla-extract/private": "^1.0.9",
-		"@vanilla-extract/vite-plugin": "^5.2.6",
 		"@vitejs/plugin-react": "^6.1.0",
 		"emojibase-data": "^17.0.0",
 		"eslint-plugin-bsky-internal": "link:eslint",

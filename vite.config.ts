@@ -2,8 +2,8 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
 import { svgSprites } from '@oomfware/vite-plugin-svg-sprites';
+import { vanillaExtractPlugin } from '@oomfware/vite-plugin-vanilla-extract';
 
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Rolldown } from 'vite';
 
