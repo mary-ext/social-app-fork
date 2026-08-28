@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type Ref, useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
+import { useElementHeight } from '#/lib/hooks/use-element-height';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { targetToShareUrl } from '#/lib/routes/app-links';
@@ -42,7 +43,7 @@ import { m } from '#/paraglide/messages';
 import { type RouteParams, useParams, useRouter } from '#/router';
 
 import { OverflowMenu } from './OverflowMenu';
-import { StarterPackHeader } from './StarterPackHeader';
+import { StarterPackByline, StarterPackHeader } from './StarterPackHeader';
 import * as css from './StarterPackScreen.css';
 
 type StarterPackTabId = 'feeds' | 'people' | 'posts';
@@ -50,7 +51,7 @@ type StarterPackTabId = 'feeds' | 'people' | 'posts';
 export function StarterPackScreen() {
 	const [params, replaceParams] = useParams('StarterPack');
 	return (
-		<Layout.Screen>
+		<Layout.Screen className={Layout.ScrollAway.scope}>
 			<StarterPackScreenInner onTabChange={(next) => replaceParams({ tab: next })} routeParams={params} />
 		</Layout.Screen>
 	);
@@ -79,7 +80,7 @@ export function StarterPackScreenShort() {
 		);
 	}
 	return (
-		<Layout.Screen>
+		<Layout.Screen className={Layout.ScrollAway.scope}>
 			<StarterPackScreenInner
 				onTabChange={(next) => replaceParams({ tab: next })}
 				routeParams={{ ...resolvedStarterPack, tab }}
@@ -165,6 +166,7 @@ function StarterPackScreenLoaded({
 	]);
 
 	const shareDialogHandle = Dialog.useDialogHandle();
+	const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
 	const link = targetToShareUrl(starterPackTarget(starterPack.creator.did, routeParams.rkey));
 
@@ -187,8 +189,14 @@ function StarterPackScreenLoaded({
 				value={routeParams.tab ?? 'people'}
 				onValueChange={onTabChange}
 				header={
-					<Header starterPack={starterPack} routeParams={routeParams} onOpenShareDialog={onOpenShareDialog} />
+					<Header
+						starterPack={starterPack}
+						routeParams={routeParams}
+						onOpenShareDialog={onOpenShareDialog}
+						ref={headerRef}
+					/>
 				}
+				headerOffset={headerHeight}
 			/>
 
 			<ShareDialog handle={shareDialogHandle} link={link} starterPack={starterPack} />
@@ -200,10 +208,12 @@ function Header({
 	starterPack,
 	routeParams,
 	onOpenShareDialog,
+	ref,
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	routeParams: RouteParams<'StarterPack'>;
 	onOpenShareDialog: () => void;
+	ref: Ref<HTMLDivElement>;
 }) {
 	const { currentAccount, hasSession } = useSession();
 	const { appview, pds } = getClients();
@@ -278,9 +288,14 @@ function Header({
 
 	return (
 		<>
-			<Layout.Header.Outer noBottomBorder sticky={false}>
+			<Layout.Header.Outer noBottomBorder ref={ref}>
 				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
-				<Layout.Header.Content />
+				<Layout.Header.Content className={Layout.ScrollAway.reveal}>
+					<Layout.Header.TitleText numberOfLines={1}>{record.name}</Layout.Header.TitleText>
+					<Layout.Header.SubtitleText numberOfLines={1}>
+						<StarterPackByline handle={creator.handle} isOwn={isOwn} />
+					</Layout.Header.SubtitleText>
+				</Layout.Header.Content>
 				<Layout.Header.EndSlot>
 					{hasSession ? (
 						<>
@@ -315,17 +330,20 @@ function Header({
 						</>
 					) : null}
 				</Layout.Header.EndSlot>
+				<Layout.ScrollAway.Backdrop />
 			</Layout.Header.Outer>
-			<StarterPackHeader
-				record={record}
-				creator={creator}
-				isOwn={isOwn}
-				hasSession={hasSession}
-				joinedAllTimeCount={joinedAllTimeCount}
-				onPressSignIn={() => {
-					signinDialogHandle.openWithPayload({});
-				}}
-			/>
+			<Layout.ScrollAway.Region>
+				<StarterPackHeader
+					record={record}
+					creator={creator}
+					isOwn={isOwn}
+					hasSession={hasSession}
+					joinedAllTimeCount={joinedAllTimeCount}
+					onPressSignIn={() => {
+						signinDialogHandle.openWithPayload({});
+					}}
+				/>
+			</Layout.ScrollAway.Region>
 		</>
 	);
 }

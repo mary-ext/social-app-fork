@@ -55,17 +55,23 @@ export function EndSlot({ children }: { children?: ReactNode }) {
 	return <div className={styles.endSlot}>{children}</div>;
 }
 
-export function TitleText({ children }: { children: ReactNode }) {
+export function TitleText({ children, numberOfLines = 2 }: { children: ReactNode; numberOfLines?: number }) {
 	return (
-		<Text size="lg" weight="semiBold" numberOfLines={2}>
+		<Text size="lg" weight="semiBold" numberOfLines={numberOfLines}>
 			{children}
 		</Text>
 	);
 }
 
-export function SubtitleText({ children }: { children: ReactNode }) {
+export function SubtitleText({
+	children,
+	numberOfLines = 2,
+}: {
+	children: ReactNode;
+	numberOfLines?: number;
+}) {
 	return (
-		<Text size="sm" color="textContrastMedium" numberOfLines={2}>
+		<Text size="sm" color="textContrastMedium" numberOfLines={numberOfLines}>
 			{children}
 		</Text>
 	);

@@ -11,7 +11,6 @@ import {
 import { useSession } from '#/state/session';
 
 import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
@@ -108,12 +107,10 @@ export function Header({
 			<Layout.Header.Outer noBottomBorder ref={ref}>
 				{canGoBack ? <Layout.Header.BackButton /> : <Layout.Header.MenuButton />}
 				<Layout.Header.Content className={Layout.ScrollAway.reveal}>
-					<Text numberOfLines={1} size="lg" weight="semiBold">
-						{list.name || ''}
-					</Text>
-					<Text color="textContrastMedium" numberOfLines={1} size="sm">
+					<Layout.Header.TitleText numberOfLines={1}>{list.name}</Layout.Header.TitleText>
+					<Layout.Header.SubtitleText numberOfLines={1}>
 						<ListByline isOwner={isOwner} list={list} />
-					</Text>
+					</Layout.Header.SubtitleText>
 				</Layout.Header.Content>
 				<Layout.Header.EndSlot>
 					{isCurateList ? (

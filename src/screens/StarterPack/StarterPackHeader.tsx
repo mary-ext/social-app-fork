@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyActorDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 
 import { profileTarget } from '#/lib/routes/targets';
@@ -14,6 +16,28 @@ import StarterPack from '#/icons/original/StarterPackSky.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './StarterPackHeader.css';
+
+/**
+ * @param creator custom creator node
+ * @param handle fallback creator handle
+ * @param isOwn whether to use the owner byline
+ * @returns the localized byline
+ */
+export function StarterPackByline({
+	creator,
+	handle,
+	isOwn,
+}: {
+	creator?: ReactNode;
+	handle: string;
+	isOwn: boolean;
+}) {
+	if (isOwn) {
+		return m['common.starterPack.byYou']();
+	}
+
+	return <Trans message={m['view.profile.starterPack.by']} markup={{ t0: () => creator ?? handle }} />;
+}
 
 /**
  * profile-subpage header card for a starter pack: the starter-pack glyph, the pack's title, and a "by …"
@@ -54,24 +78,19 @@ export function StarterPackHeader({
 						{record.name || ''}
 					</Text>
 					<Text color="textContrastMedium" numberOfLines={1}>
-						{isOwn ? (
-							m['common.starterPack.byYou']()
-						) : (
-							<Trans
-								message={m['view.profile.starterPack.by']}
-								markup={{
-									t0: () => (
-										<InlineLinkText
-											to={profileTarget(creator.did)}
-											label={m['screens.profile.avatar.a11y.viewProfile']({ handle: creator.handle })}
-											color="textContrastMedium"
-										>
-											{creator.handle}
-										</InlineLinkText>
-									),
-								}}
-							/>
-						)}
+						<StarterPackByline
+							creator={
+								<InlineLinkText
+									to={profileTarget(creator.did)}
+									label={m['screens.profile.avatar.a11y.viewProfile']({ handle: creator.handle })}
+									color="textContrastMedium"
+								>
+									{creator.handle}
+								</InlineLinkText>
+							}
+							handle={creator.handle}
+							isOwn={isOwn}
+						/>
 					</Text>
 				</div>
 			</div>
