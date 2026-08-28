@@ -69,6 +69,9 @@ importers:
       '@atcute/ozone':
         specifier: ^4.0.9
         version: 4.0.9(@atcute/lexicons@2.1.0)
+      '@atcute/tangled':
+        specifier: ^2.0.16
+        version: 2.0.16(@atcute/lexicons@2.1.0)
       '@atcute/tid':
         specifier: ^1.1.4
         version: 1.1.4
@@ -150,9 +153,15 @@ importers:
       dequal:
         specifier: ^2.0.3
         version: 2.0.3
+      highlight.js:
+        specifier: 11.11.2
+        version: 11.11.2
       idb-keyval:
         specifier: ^6.3.0
         version: 6.3.0
+      lowlight:
+        specifier: ^3.3.0
+        version: 3.3.0
       tldts:
         specifier: ^7.4.10
         version: 7.4.10
@@ -169,6 +178,9 @@ importers:
       '@oomfware/vite-plugin-vanilla-extract':
         specifier: ^0.1.0
         version: 0.1.0(@oxc-project/types@0.146.0)(@vanilla-extract/css@1.21.2(patch_hash=db5f4b15486aaa4226da06516bfb01460b8d79a52973e5b8695b3a3bbc9a4a98))(rolldown@1.2.5)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(terser@5.48.0))
+      '@types/hast':
+        specifier: ^3.0.5
+        version: 3.0.5
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -311,6 +323,11 @@ packages:
 
   '@atcute/ozone@4.0.9':
     resolution: {integrity: sha512-kP0s4txO/vM6w24HpLqjj+bHty3ZXVYN9al8KYBUKFhid5PMmNkWbwXjfyiERiUad8TIHBm/HMvHTKXueJAwpw==}
+    peerDependencies:
+      '@atcute/lexicons': ^2.0.0
+
+  '@atcute/tangled@2.0.16':
+    resolution: {integrity: sha512-VW6ZOo8z2njfB9NfLbkWSwloBuCE/kO8vby8WVq+RHt9MHC0vbhYvOZTfaZEXnF8Qlwfy47CZD7iDwEMyXYQog==}
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
@@ -1591,11 +1608,17 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
+  '@types/hast@3.0.5':
+    resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
+
   '@types/node@26.2.0':
     resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
 
   '@types/react@19.2.18':
     resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
+
+  '@types/unist@3.0.3':
+    resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
   '@types/wicg-file-system-access@2023.10.7':
     resolution: {integrity: sha512-g49ijasEJvCd7ifmAY2D0wdEtt1xRjBbA33PJTiv8mKBr7DoMsPeISoJ8oQOTopSRi+FBWPpPW5ouDj2QPKtGA==}
@@ -1837,6 +1860,9 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
+  devlop@1.1.0:
+    resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
 
@@ -1900,6 +1926,10 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  highlight.js@11.11.2:
+    resolution: {integrity: sha512-oaXMACAU0kzOMXBjWpNcX+vlwSBCIAiZ9BHa7gA15NOTtT2L/l8OSZDuqS2XppOhZBPJ7hm4o8ep2kyuip2uEQ==}
+    engines: {node: '>=12.0.0'}
 
   idb-keyval@6.3.0:
     resolution: {integrity: sha512-um+2dgAWmYsu615EXpWVwSmapJhON0G43t3Ka/EVaohzPQXSMqKEqeDK/oIW3Ow+BXaF2PvSc+oBTFp793A5Ow==}
@@ -1993,6 +2023,9 @@ packages:
   lightningcss@1.33.0:
     resolution: {integrity: sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==}
     engines: {node: '>= 12.0.0'}
+
+  lowlight@3.3.0:
+    resolution: {integrity: sha512-0JNhgFoPvP6U6lE/UdVsSq99tn6DhjjpAj5MxG49ewd2mOBVtwWYIT8ClyABhq198aXXODMU6Ox8DrGy/CpTZQ==}
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -2454,6 +2487,11 @@ snapshots:
     dependencies:
       '@atcute/atproto': 4.0.4(@atcute/lexicons@2.1.0)
       '@atcute/bluesky': 4.0.20(@atcute/lexicons@2.1.0)
+      '@atcute/lexicons': 2.1.0
+
+  '@atcute/tangled@2.0.16(@atcute/lexicons@2.1.0)':
+    dependencies:
+      '@atcute/atproto': 4.0.4(@atcute/lexicons@2.1.0)
       '@atcute/lexicons': 2.1.0
 
   '@atcute/tid@1.1.4':
@@ -3255,6 +3293,10 @@ snapshots:
       '@tanstack/query-core': 5.102.2
       react: 19.2.8
 
+  '@types/hast@3.0.5':
+    dependencies:
+      '@types/unist': 3.0.3
+
   '@types/node@26.2.0':
     dependencies:
       undici-types: 8.3.0
@@ -3263,6 +3305,8 @@ snapshots:
     dependencies:
       csstype: 3.2.3
     optional: true
+
+  '@types/unist@3.0.3': {}
 
   '@types/wicg-file-system-access@2023.10.7': {}
 
@@ -3425,6 +3469,10 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
+  devlop@1.1.0:
+    dependencies:
+      dequal: 2.0.3
+
   dom-serializer@2.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -3525,6 +3573,8 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  highlight.js@11.11.2: {}
+
   idb-keyval@6.3.0: {}
 
   javascript-stringify@2.1.0: {}
@@ -3583,6 +3633,12 @@ snapshots:
       lightningcss-linux-x64-musl: 1.33.0
       lightningcss-win32-arm64-msvc: 1.33.0
       lightningcss-win32-x64-msvc: 1.33.0
+
+  lowlight@3.3.0:
+    dependencies:
+      '@types/hast': 3.0.5
+      devlop: 1.1.0
+      highlight.js: 11.11.2
 
   lru-cache@10.4.3: {}
 

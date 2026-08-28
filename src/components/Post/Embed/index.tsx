@@ -1,6 +1,6 @@
 import { lazy, type ReactNode, Suspense } from 'react';
 
-import { unwrapEmbed, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AppBskyEmbedRecord, type AppBskyFeedDefs, unwrapEmbed } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 
@@ -31,6 +31,8 @@ import { ChatInviteEmbed } from './ChatInviteEmbed';
 import * as css from './index.css';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
 import { isStandardSiteEmbed } from './StandardSiteEmbed/utils';
+import { parseTangledStringUrl } from './TangledStringEmbed/detect';
+import { TangledStringPlaceholder } from './TangledStringEmbed/Placeholder';
 import { type CommonProps, type EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
@@ -38,6 +40,10 @@ export { PostEmbedViewContext } from './types';
 
 const StandardSiteEmbed = lazy(() =>
 	import('./StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
+);
+
+const TangledStringEmbed = lazy(() =>
+	import('./TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
 );
 
 const ModeratedFeedEmbed = lazy(() =>
@@ -81,16 +87,15 @@ function MediaEmbed({
 }: CommonProps & {
 	media: NonNullable<ReturnType<typeof unwrapEmbed>['media']>;
 }) {
+	const modui = rest.moderation
+		? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
+		: undefined;
+
 	switch (media.$type) {
 		case 'app.bsky.embed.images#view':
 		case 'app.bsky.embed.gallery#view': {
 			return (
-				<ContentHider
-					modui={
-						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
-					}
-					activeClassName={css.activeMargin}
-				>
+				<ContentHider modui={modui} activeClassName={css.activeMargin}>
 					<ImageEmbed embed={media} {...rest} />
 				</ContentHider>
 			);
@@ -98,14 +103,7 @@ function MediaEmbed({
 		case 'app.bsky.embed.external#view': {
 			if (isStandardSiteEmbed(media.external)) {
 				return (
-					<ContentHider
-						modui={
-							rest.moderation
-								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
-								: undefined
-						}
-						activeClassName={css.activeMargin}
-					>
+					<ContentHider modui={modui} activeClassName={css.activeMargin}>
 						<Suspense
 							fallback={
 								<ExternalEmbed link={media.external} onOpen={rest.onOpen} className={css.externalCardGap} />
@@ -116,41 +114,35 @@ function MediaEmbed({
 					</ContentHider>
 				);
 			}
+
+			const target = parseTangledStringUrl(media.external.uri);
+			if (target) {
+				return (
+					<ContentHider modui={modui} activeClassName={css.activeMargin}>
+						<Suspense fallback={<TangledStringPlaceholder className={css.externalCardGap} />}>
+							<TangledStringEmbed target={target} onOpen={rest.onOpen} className={css.externalCardGap} />
+						</Suspense>
+					</ContentHider>
+				);
+			}
 			const externalLink = resolveUrlToLink(media.external.uri);
 			const chatInviteCode = externalLink?.kind === 'chatInvite' ? externalLink.code : undefined;
 			if (chatInviteCode) {
 				return (
-					<ContentHider
-						modui={
-							rest.moderation
-								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
-								: undefined
-						}
-						activeClassName={css.activeMargin}
-					>
+					<ContentHider modui={modui} activeClassName={css.activeMargin}>
 						<ChatInviteEmbed code={chatInviteCode} link={media.external} onOpen={rest.onOpen} />
 					</ContentHider>
 				);
 			}
 			return (
-				<ContentHider
-					modui={
-						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
-					}
-					activeClassName={css.activeMargin}
-				>
+				<ContentHider modui={modui} activeClassName={css.activeMargin}>
 					<ExternalEmbed link={media.external} onOpen={rest.onOpen} className={css.externalCardGap} />
 				</ContentHider>
 			);
 		}
 		case 'app.bsky.embed.video#view': {
 			return (
-				<ContentHider
-					modui={
-						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
-					}
-					activeClassName={css.activeMargin}
-				>
+				<ContentHider modui={modui} activeClassName={css.activeMargin}>
 					<VideoEmbed embed={media} authorDid={rest.postAuthorDid} />
 				</ContentHider>
 			);

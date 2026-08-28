@@ -6,6 +6,7 @@ import {
 } from '@atcute/lexicons/syntax';
 
 import type { AppLink } from '#/lib/links/app-url';
+import { decodeUrlSegment } from '#/lib/utils/url';
 
 // invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof. `/start/` is the
 // legacy alias bsky.app still serves for starter packs.
@@ -19,16 +20,6 @@ const SEARCH_RE = /^\/search\/?$/;
 const STARTER_PACK_RE = /^\/(?:start|starter-pack)\/([^/]+)\/([^/]+)\/?$/;
 const TOPIC_RE = /^\/topic\/([^/]+)\/?$/;
 
-// `URL.pathname` hands back the raw form, and a client that percent-encodes its segments writes dids as
-// `did%3Aplc%3A…`. a malformed escape is kept literal rather than throwing.
-const decodeSegment = (raw: string): string => {
-	try {
-		return decodeURIComponent(raw);
-	} catch {
-		return raw;
-	}
-};
-
 const parseRecordMatch = (
 	match: RegExpExecArray,
 ): { actor: ActorIdentifier; rkey: RecordKey } | undefined => {
@@ -36,8 +27,8 @@ const parseRecordMatch = (
 	if (!rawActor || !rawRkey) {
 		return undefined;
 	}
-	const actor = decodeSegment(rawActor);
-	const rkey = decodeSegment(rawRkey);
+	const actor = decodeUrlSegment(rawActor);
+	const rkey = decodeUrlSegment(rawRkey);
 	if (!isActorIdentifier(actor) || !isRecordKey(rkey)) {
 		return undefined;
 	}
@@ -83,13 +74,13 @@ export const parseBlueskyPath = (url: URL): AppLink | undefined => {
 	const hashtagMatch = HASHTAG_RE.exec(path);
 	if (hashtagMatch) {
 		const [, tag] = hashtagMatch;
-		return tag ? { kind: 'hashtag', author: parseHashtagAuthor(url), tag: decodeSegment(tag) } : undefined;
+		return tag ? { kind: 'hashtag', author: parseHashtagAuthor(url), tag: decodeUrlSegment(tag) } : undefined;
 	}
 
 	const profileMatch = PROFILE_RE.exec(path);
 	if (profileMatch) {
 		const [, rawActor] = profileMatch;
-		const actor = rawActor && decodeSegment(rawActor);
+		const actor = rawActor && decodeUrlSegment(rawActor);
 		return actor && isActorIdentifier(actor) ? { kind: 'profile', actor } : undefined;
 	}
 
@@ -102,7 +93,7 @@ export const parseBlueskyPath = (url: URL): AppLink | undefined => {
 	const topicMatch = TOPIC_RE.exec(path);
 	if (topicMatch) {
 		const [, topic] = topicMatch;
-		return topic ? { kind: 'topic', topic: decodeSegment(topic) } : undefined;
+		return topic ? { kind: 'topic', topic: decodeUrlSegment(topic) } : undefined;
 	}
 
 	return undefined;

@@ -74,6 +74,28 @@
 	"components.post.state.deleted": "Deleted",
 	"components.post.state.removedByAuthor": "Removed by author",
 	"components.post.state.removedByYou": "Removed by you",
+	"components.post.tangledString.a11y.open": [
+		{
+			"declarations": ["input filename"],
+			"selectors": [],
+			"match": {
+				"": "Open {filename} on tangled.org"
+			}
+		}
+	],
+	"components.post.tangledString.a11y.openSnippet": "Open this snippet on tangled.org",
+	"components.post.tangledString.error": "This snippet couldn't be loaded.",
+	"components.post.tangledString.lineCount": [
+		{
+			"declarations": ["input lineCount", "local cp = lineCount: plural", "local n = lineCount: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{n} line",
+				"cp=other": "{n} lines"
+			}
+		}
+	],
+	"components.post.tangledString.viewFile": "View file",
 	"components.post.text.expand": "Expand post text",
 	"components.post.text.showMore": "Show more",
 	"components.post.translate.action.hide": "Hide translation",

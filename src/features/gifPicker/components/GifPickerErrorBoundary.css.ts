@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, monoFontFamily, space } from '#/styles/tokens.css';
 
 export const root = style({
 	boxSizing: 'border-box',
@@ -25,6 +25,6 @@ export const details = style({
 	whiteSpace: 'pre-wrap',
 	wordBreak: 'break-word',
 	color: vars.palette.contrast_500,
-	fontFamily: `ui-monospace, SFMono-Regular, Menlo, monospace`,
+	fontFamily: monoFontFamily,
 	fontSize: 12,
 });

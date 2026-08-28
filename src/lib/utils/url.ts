@@ -1,4 +1,18 @@
 /**
+ * decodes a URL path segment without throwing.
+ *
+ * @param raw encoded segment
+ * @returns the decoded or original segment
+ */
+export const decodeUrlSegment = (raw: string): string => {
+	try {
+		return decodeURIComponent(raw);
+	} catch {
+		return raw;
+	}
+};
+
+/**
  * parses a string into a URL, accepting only safe http(s) schemes.
  *
  * @param text the URL string to parse
