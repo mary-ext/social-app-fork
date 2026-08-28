@@ -5,8 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"postinstall": "pnpm paraglide:compile && pnpm cf-typegen",
-		"dev": "vite",
-		"dev:bundled": "vite --experimentalBundle",
+		"dev": "vite --experimentalBundle",
 		"dev:worker": "wrangler dev --var DEV:true",
 		"deploy": "wrangler deploy",
 		"cf-typegen": "wrangler types",
