@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { useSession } from '#/state/session';
 
@@ -27,7 +27,7 @@ export function useMessageDraft() {
 }
 
 /**
- * saves the active conversation's draft on unmount.
+ * saves the draft when the conversation changes or the composer unmounts.
  *
  * @param message current composer text
  */
@@ -35,18 +35,16 @@ export function useSaveMessageDraft(message: string) {
 	const { currentConvoId } = useCurrentConvoId();
 	const { currentAccount } = useSession();
 	const key = draftKey(currentAccount?.did, currentConvoId);
-	const messageRef = useRef(message);
-	useEffect(() => {
-		messageRef.current = message;
-	});
+	const getMessage = useEffectEvent(() => message);
 
 	useEffect(() => {
 		return () => {
 			if (!key) {
 				return;
 			}
-			if (messageRef.current) {
-				drafts.set(key, messageRef.current);
+			const draft = getMessage();
+			if (draft) {
+				drafts.set(key, draft);
 			} else {
 				drafts.delete(key);
 			}
