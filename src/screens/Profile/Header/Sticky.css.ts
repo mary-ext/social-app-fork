@@ -3,7 +3,6 @@ import { keyframes, style } from '@vanilla-extract/css';
 import { SCRIM_BACKGROUND } from '#/components/web/Button.css';
 import { HEADER_HEIGHT } from '#/components/web/Layout/const';
 import { driven, OVERLAP, SUPPORTS } from '#/components/web/Layout/scroll-away';
-import { reveal } from '#/components/web/Layout/ScrollAway.css';
 
 import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
@@ -38,8 +37,6 @@ export const outer = style({
 		},
 	},
 });
-
-export const content = style([reveal, { minWidth: 0 }]);
 
 export const action = style([
 	{

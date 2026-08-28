@@ -40,7 +40,7 @@ export function ProfileStickyHeader({ isPlaceholderProfile, profile, ref }: Prop
 		<div className={css.outer} ref={ref}>
 			<Layout.Header.BackButton className={css.action} variant="scrim" />
 			{/* keeps trailing controls aligned while loading */}
-			<Layout.Header.Content className={css.content}>
+			<Layout.Header.Content className={Layout.ScrollAway.reveal}>
 				{!isPlaceholderProfile && (
 					<>
 						<Text numberOfLines={1} size="lg" weight="bold">

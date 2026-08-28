@@ -36,6 +36,7 @@ export const content = style({
 	flex: '1 1 0%',
 	flexDirection: 'column',
 	justifyContent: 'center',
+	minWidth: 0,
 });
 
 const slot = style({
