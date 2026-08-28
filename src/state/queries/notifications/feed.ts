@@ -5,7 +5,7 @@
  * true})` to immediately sync latest results.
  */
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
@@ -27,6 +27,7 @@ import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
+import { useAutoPagination } from '../use-auto-pagination';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
 import { NOTIFICATION_FEED_RQKEY_ROOT, notificationFeedQueryKey } from './notification-feed-key';
 import type { FeedPage } from './types';
@@ -94,7 +95,12 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 			return page;
 		},
 		initialPageParam: undefined,
-		getNextPageParam: (lastPage) => lastPage.cursor,
+		getNextPageParam: (lastPage, _allPages, _lastPageParam, allPageParams) => {
+			if (!lastPage.cursor || allPageParams.includes(lastPage.cursor)) {
+				return undefined;
+			}
+			return lastPage.cursor;
+		},
 		select: (data: InfiniteData<FeedPage>) => {
 			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 			const { moderationOpts, hiddenReplyUris } = selectArgs;
@@ -174,41 +180,8 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	});
 
 	// fetch more pages when filtering leaves fewer items than requested.
-	const lastItemCount = useRef(0);
-	const wantedItemCount = useRef(0);
-	const autoPaginationAttemptCount = useRef(0);
-	useEffect(() => {
-		const { data, isLoading, isRefetching, isFetchingNextPage, hasNextPage } = query;
-		let itemCount = 0;
-		for (const page of data?.pages || []) {
-			itemCount += page.items.length;
-		}
-
-		if (itemCount !== lastItemCount.current) {
-			if (itemCount < lastItemCount.current) {
-				wantedItemCount.current = itemCount;
-			}
-			lastItemCount.current = itemCount;
-		}
-
-		if (isLoading || isRefetching) {
-			wantedItemCount.current = PAGE_SIZE;
-		} else if (isFetchingNextPage) {
-			if (itemCount > wantedItemCount.current) {
-				// account for pages requested by another caller.
-				wantedItemCount.current = itemCount + PAGE_SIZE;
-			}
-		} else if (hasNextPage) {
-			if (itemCount < wantedItemCount.current) {
-				autoPaginationAttemptCount.current++;
-				if (autoPaginationAttemptCount.current < 50 /* fail-safe */) {
-					void query.fetchNextPage();
-				}
-			} else {
-				autoPaginationAttemptCount.current = 0;
-			}
-		}
-	}, [query]);
+	const itemCount = query.data?.pages.reduce((count, page) => count + page.items.length, 0) ?? 0;
+	useAutoPagination({ query, itemCount, pageSize: PAGE_SIZE });
 
 	return query;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
@@ -38,6 +38,7 @@ import { getClients, useSession } from '#/state/session';
 import { useModerationOpts } from '../moderation/moderation-opts';
 import { useFeedTuners } from './feed-tuners';
 import { usePreferencesQuery } from './preferences';
+import { useAutoPagination } from './use-auto-pagination';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
 type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
@@ -159,15 +160,13 @@ export function usePostFeedQuery(
 			};
 		},
 		initialPageParam: undefined,
-		getNextPageParam: (lastPage) =>
-			lastPage.cursor
-				? {
-						api: lastPage.api,
-						cursor: lastPage.cursor,
-					}
-				: undefined,
+		getNextPageParam: (lastPage, _allPages, _lastPageParam, allPageParams) => {
+			if (!lastPage.cursor || allPageParams.some((param) => param?.cursor === lastPage.cursor)) {
+				return undefined;
+			}
+			return { api: lastPage.api, cursor: lastPage.cursor };
+		},
 		select: (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
-			// read selector inputs from the stable object to avoid stale closures.
 			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
 			const { feedTuners, moderationOpts, ignoreFilterFor } = selectArgs;
 
@@ -262,43 +261,13 @@ export function usePostFeedQuery(
 	});
 
 	// fetch more pages when filtering leaves fewer items than requested.
-	const lastItemCount = useRef(0);
-	const wantedItemCount = useRef(0);
-	const autoPaginationAttemptCount = useRef(0);
-	useEffect(() => {
-		const { data, isLoading, isRefetching, isFetchingNextPage, hasNextPage } = query;
-		let itemCount = 0;
-		for (const page of data?.pages || []) {
-			for (const slice of page.slices) {
-				itemCount += slice.items.length;
-			}
+	let itemCount = 0;
+	for (const page of query.data?.pages ?? []) {
+		for (const slice of page.slices) {
+			itemCount += slice.items.length;
 		}
-
-		if (itemCount !== lastItemCount.current) {
-			if (itemCount < lastItemCount.current) {
-				wantedItemCount.current = itemCount;
-			}
-			lastItemCount.current = itemCount;
-		}
-
-		if (isLoading || isRefetching) {
-			wantedItemCount.current = MIN_POSTS;
-		} else if (isFetchingNextPage) {
-			if (itemCount > wantedItemCount.current) {
-				// account for pages requested by another caller.
-				wantedItemCount.current = itemCount + MIN_POSTS;
-			}
-		} else if (hasNextPage) {
-			if (itemCount < wantedItemCount.current) {
-				autoPaginationAttemptCount.current++;
-				if (autoPaginationAttemptCount.current < 50 /* fail-safe */) {
-					void query.fetchNextPage();
-				}
-			} else {
-				autoPaginationAttemptCount.current = 0;
-			}
-		}
-	}, [query]);
+	}
+	useAutoPagination({ query, itemCount, pageSize: MIN_POSTS });
 
 	return query;
 }
