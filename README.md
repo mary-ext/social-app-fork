@@ -6,7 +6,7 @@ features removed.
 ## upstream tracking
 
 - upstream remote: `https://github.com/bluesky-social/social-app/`
-- last reviewed upstream tip: `5b88335bb118f4f65dcb564e10109d6c6a78cb67` (2026-08-26)
+- last reviewed upstream tip: `5eb5ac480007e1026bc4b0ef28e4d9b39a41ca63` (2026-08-28)
 
 When reviewing new upstream commits, start from the last reviewed upstream tip and port only changes
 that still fit this fork.
