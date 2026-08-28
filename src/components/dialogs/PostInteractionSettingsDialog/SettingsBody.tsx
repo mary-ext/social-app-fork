@@ -167,9 +167,8 @@ export function SettingsBody({ handle, ...props }: PostInteractionSettingsDialog
 			Toast.show(m['common.error.issueConnection'](), {
 				type: 'error',
 			});
-		} finally {
-			setIsSaving(false);
 		}
+		setIsSaving(false);
 	}, [
 		handle,
 		props.postUri,

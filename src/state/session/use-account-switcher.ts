@@ -25,9 +25,8 @@ export function useAccountSwitcher() {
 				Toast.show(m['lib.error.signInAs']({ handle: account.handle }), {
 					type: 'warning',
 				});
-			} finally {
-				setPendingDid(null);
 			}
+			setPendingDid(null);
 		},
 		[pendingDid],
 	);

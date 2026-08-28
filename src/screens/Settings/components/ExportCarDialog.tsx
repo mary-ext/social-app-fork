@@ -47,9 +47,8 @@ function DialogInner() {
 		} catch (e) {
 			console.error('Error occurred while downloading CAR file', e);
 			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
-		} finally {
-			setLoading(false);
 		}
+		setLoading(false);
 	};
 
 	const downloadChatData = async () => {
@@ -66,9 +65,8 @@ function DialogInner() {
 		} catch (e) {
 			console.error('Error occurred while downloading chat data', e);
 			Toast.show(m['screens.settings.export.saveError'](), { type: 'error' });
-		} finally {
-			setLoading(false);
 		}
+		setLoading(false);
 	};
 
 	return (

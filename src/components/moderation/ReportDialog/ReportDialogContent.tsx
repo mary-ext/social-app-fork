@@ -180,9 +180,8 @@ function Inner({
 		} catch (e) {
 			console.error('Failed to submit report', e);
 			dispatch({ type: 'setError', error: reportErrorMessage(e) ?? m['common.error.generic']() });
-		} finally {
-			setIsPending(false);
 		}
+		setIsPending(false);
 	};
 
 	const title = copy.title;

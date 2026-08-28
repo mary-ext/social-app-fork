@@ -797,9 +797,8 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			router.navigate({ to: { name: 'MessagesConversation', conversation: data.convo.id } });
 		} catch (e) {
 			console.error('Failed to get conversation', e);
-		} finally {
-			setIsLoading(false);
 		}
+		setIsLoading(false);
 	};
 
 	if (

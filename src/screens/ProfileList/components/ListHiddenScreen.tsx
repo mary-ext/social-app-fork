@@ -86,9 +86,8 @@ export function ListHiddenScreen({
 		} catch (e) {
 			console.error('Failed to remove list from saved feeds', e);
 			Toast.show(m['common.error.issueConnection']());
-		} finally {
-			setIsProcessing(false);
 		}
+		setIsProcessing(false);
 	};
 
 	return (

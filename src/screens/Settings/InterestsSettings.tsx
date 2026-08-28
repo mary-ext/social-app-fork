@@ -120,9 +120,8 @@ function Inner({
 				Toast.show(m['screens.settings.interests.saveError'](), {
 					type: 'error',
 				});
-			} finally {
-				setIsSaving(false);
 			}
+			setIsSaving(false);
 		},
 		1500,
 		{ onUnmount: 'flush' },

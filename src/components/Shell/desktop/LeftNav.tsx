@@ -317,9 +317,8 @@ function ComposeBtn({ minimal }: { minimal: boolean }) {
 					handle = await fetchHandle(handle);
 				} catch {
 					handle = undefined;
-				} finally {
-					setIsFetchingHandle(false);
 				}
+				setIsFetchingHandle(false);
 			}
 
 			if (!handle || handle === currentAccount?.handle || isInvalidHandle(handle)) {

@@ -89,10 +89,11 @@ function ChooseAccountScreen({
 				await switchAccount(account);
 			} catch (e) {
 				console.error('sign in dialog: resume account failed', e);
-				await login({ identifier: account.did });
-			} finally {
 				setPendingDid(null);
+				await login({ identifier: account.did });
+				return;
 			}
+			setPendingDid(null);
 		},
 		[close, currentAccount?.did, pendingDid],
 	);

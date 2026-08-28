@@ -292,7 +292,6 @@ function PostMenuItems({
 					type: 'error',
 				});
 			}
-		} finally {
 		}
 	};
 
@@ -307,7 +306,6 @@ function PostMenuItems({
 						type: 'error',
 					});
 				}
-			} finally {
 			}
 		} else {
 			try {
@@ -319,7 +317,6 @@ function PostMenuItems({
 						type: 'error',
 					});
 				}
-			} finally {
 			}
 		}
 	};
