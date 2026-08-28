@@ -1,3 +1,7 @@
+registries:
+  'https://npm.jsr.io/':
+    scopes: ['@jsr']
+
 trustPolicy: 'no-downgrade'
 trustPolicyIgnoreAfter: 10080
 
