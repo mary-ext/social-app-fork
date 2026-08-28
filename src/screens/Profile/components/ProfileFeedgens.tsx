@@ -49,7 +49,7 @@ interface ProfileFeedgensProps {
 export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileFeedgensQuery(did);
-	const isEmpty = !isPending && !data?.pages[0]?.feeds.length;
+	const isEmpty = !isPending && !data?.pages.some((page) => page.feeds.length);
 	const { data: preferences } = usePreferencesQuery();
 	const router = useRouter();
 	const { currentAccount } = useSession();

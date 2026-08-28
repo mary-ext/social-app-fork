@@ -49,7 +49,7 @@ interface ProfileListsProps {
 export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useProfileListsQuery(did);
-	const isEmpty = !isPending && !data?.pages[0]?.lists.length;
+	const isEmpty = !isPending && !data?.pages.some((page) => page.lists.length);
 	const { data: preferences } = usePreferencesQuery();
 	const router = useRouter();
 	const { currentAccount } = useSession();

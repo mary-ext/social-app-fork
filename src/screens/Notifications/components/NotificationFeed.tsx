@@ -49,7 +49,7 @@ export function NotificationFeed({
 			filter,
 		});
 	// check all pages because mentions can leave the first page empty.
-	const isEmpty = !isFetching && !data?.pages.find((page) => page.items.length > 0);
+	const isEmpty = !isFetching && !data?.pages.some((page) => page.items.length);
 
 	let items: NotificationItem[] = [];
 	if (isFetched) {

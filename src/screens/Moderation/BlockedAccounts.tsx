@@ -24,8 +24,8 @@ export function ModerationBlockedAccounts() {
 
 	const { data, isFetching, isError, error, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
 		useMyBlockedAccountsQuery();
-	const isEmpty = !isFetching && !data?.pages[0]?.blocks.length;
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.blocks) : [];
+	const isEmpty = !isFetching && profiles.length === 0;
 
 	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {

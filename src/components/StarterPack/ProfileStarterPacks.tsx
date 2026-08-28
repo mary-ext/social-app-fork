@@ -56,9 +56,9 @@ export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStar
 	const router = useRouter();
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
 		useActorStarterPacksQuery({ did });
-	const isEmpty = !isPending && !data?.pages[0]?.starterPacks.length;
 	const starterPacks = data?.pages.flatMap((page) => page.starterPacks);
 	const hasStarterPacks = !!starterPacks?.length;
+	const isEmpty = !isPending && !hasStarterPacks;
 
 	let items: StarterPackItem[] = [];
 	if (isError && isEmpty) {

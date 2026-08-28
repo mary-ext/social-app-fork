@@ -25,8 +25,8 @@ export function ModerationMutedAccounts() {
 
 	const { data, isFetching, isError, error, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
 		useMyMutedAccountsQuery();
-	const isEmpty = !isFetching && !data?.pages[0]?.mutes.length;
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.mutes) : [];
+	const isEmpty = !isFetching && profiles.length === 0;
 
 	const onEndReached = () => {
 		if (isFetching || !hasNextPage || isError) {
