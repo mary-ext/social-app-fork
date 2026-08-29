@@ -105,7 +105,7 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 			<div className={css.footer}>
 				<Byline actor={target.actor} />
 
-				<div className={css.footerSection}>
+				<div className={css.footerRight}>
 					{record ? (
 						<Text color="textContrastMedium" size="xs">
 							{m['components.post.tangledString.lineCount']({

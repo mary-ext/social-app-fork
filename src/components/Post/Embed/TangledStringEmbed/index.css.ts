@@ -73,7 +73,7 @@ export const message = style({
 export const footer = style({
 	display: 'flex',
 	flexDirection: 'row',
-	gap: space.sm,
+	gap: space.lg,
 	alignItems: 'center',
 	justifyContent: 'space-between',
 	paddingInline: space.md,
@@ -81,17 +81,19 @@ export const footer = style({
 	borderTop: `1px solid ${colors.borderContrastLow}`,
 });
 
-export const footerSection = style({
+export const footerRight = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.sm,
 	alignItems: 'center',
+	flexShrink: 0,
 });
 
 export const byline = style({
 	display: 'flex',
 	alignItems: 'center',
 	gap: space.sm,
+	minWidth: 0,
 });
 
 export const bylineHandle = style({
