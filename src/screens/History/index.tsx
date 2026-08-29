@@ -5,6 +5,7 @@ import { LikesTab } from '#/screens/History/Likes';
 
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
+import { HEADER_HEIGHT } from '#/components/web/Layout/const';
 
 import BookmarkIcon from '#/icons/central/Bookmark_round_outlined_radius0_stroke2.svg';
 import HeartIcon from '#/icons/central/Heart2_round_outlined_radius1_stroke2.svg';
@@ -34,11 +35,12 @@ export function HistoryScreen() {
 	return (
 		<Layout.Screen>
 			<Tabs
+				headerOffset={HEADER_HEIGHT}
 				sections={sections}
 				value={tab ?? 'saved'}
 				onValueChange={(next) => replaceParams({ tab: next })}
 				header={
-					<Layout.Header.Outer noBottomBorder sticky={false}>
+					<Layout.Header.Outer noBottomBorder>
 						<Layout.Header.BackButton />
 						<Layout.Header.Content>
 							<Layout.Header.TitleText>{m['common.nav.history']()}</Layout.Header.TitleText>
