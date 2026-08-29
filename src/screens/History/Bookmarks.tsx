@@ -1,14 +1,17 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { cleanError } from '#/lib/errors';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
-import { EmptyState } from '#/components/EmptyState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { Text } from '#/components/Text';
@@ -25,14 +28,6 @@ import { useRouter } from '#/router';
 import * as css from './Bookmarks.css';
 
 type ListItem =
-	| {
-			type: 'loading';
-			key: 'loading';
-	  }
-	| {
-			type: 'empty';
-			key: 'empty';
-	  }
 	| {
 			type: 'bookmark';
 			key: string;
@@ -52,12 +47,6 @@ const BOOKMARK_ITEM_HEIGHT_ESTIMATE = 300;
 
 function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 	switch (item.type) {
-		case 'loading': {
-			return <PostFeedLoadingPlaceholder />;
-		}
-		case 'empty': {
-			return <BookmarksEmpty />;
-		}
 		case 'bookmark': {
 			return <BookmarkItem item={item} hideTopBorder={index === 0} />;
 		}
@@ -70,46 +59,57 @@ function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 	}
 }
 
-/** renders saved posts. */
+const keyExtractor = (item: ListItem) => item.key;
+
 export function BookmarksTab() {
-	const { data, error, fetchNextPage, isError, isFetchingNextPage, isLoading, refetch } = useBookmarksQuery();
+	const router = useRouter();
+	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } = useBookmarksQuery();
 
-	if (isError && !data) {
-		return <ListMaybePlaceholder isLoading={false} isError onRetry={refetch} />;
-	}
-
-	const items: ListItem[] = [];
-	if (data) {
-		const bookmarks = data.pages.flatMap((p) => p.bookmarks);
-
-		if (bookmarks.length > 0) {
-			for (const bookmark of bookmarks) {
-				if (bookmark.item.$type === 'app.bsky.feed.defs#notFoundPost') {
-					items.push({
-						type: 'bookmarkNotFound',
-						key: bookmark.item.uri,
-						bookmark: {
-							...bookmark,
-							item: bookmark.item,
-						},
-					});
+	const items =
+		data?.pages.flatMap((page) => {
+			return mapDefined(page.bookmarks, ({ item, subject, createdAt }): ListItem | undefined => {
+				switch (item.$type) {
+					case 'app.bsky.feed.defs#notFoundPost': {
+						return {
+							type: 'bookmarkNotFound',
+							key: item.uri,
+							bookmark: { item, subject, createdAt },
+						};
+					}
+					case 'app.bsky.feed.defs#postView': {
+						return {
+							type: 'bookmark',
+							key: item.uri,
+							bookmark: { item, subject, createdAt },
+						};
+					}
 				}
-				if (bookmark.item.$type === 'app.bsky.feed.defs#postView') {
-					items.push({
-						type: 'bookmark',
-						key: bookmark.item.uri,
-						bookmark: {
-							...bookmark,
-							item: bookmark.item,
-						},
-					});
-				}
-			}
-		} else {
-			items.push({ type: 'empty', key: 'empty' });
+			});
+		}) ?? [];
+
+	if (items.length < 1) {
+		if (isError) {
+			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
 		}
-	} else if (isLoading) {
-		items.push({ type: 'loading', key: 'loading' });
+
+		if (isPending) {
+			return <PostFeedLoadingPlaceholder />;
+		}
+
+		return (
+			<ListEmpty
+				className={css.empty}
+				icon={BookmarkDeleteLarge}
+				message={m['screens.bookmarks.empty']()}
+				button={{
+					label: m['screens.bookmarks.backHome'](),
+					text: m['common.action.goHome'](),
+					onPress: () => router.navigate({ to: { name: 'Home' } }),
+					size: 'small',
+					color: 'secondary',
+				}}
+			/>
+		);
 	}
 
 	return (
@@ -119,20 +119,19 @@ export function BookmarksTab() {
 			keyExtractor={keyExtractor}
 			renderItem={renderItem}
 			ListFooterComponent={
-				<ListFooter
-					border={items.length > 0}
-					error={cleanError(error)}
-					isFetchingNextPage={isFetchingNextPage}
-					onRetry={fetchNextPage}
-				/>
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
 			}
 			onEndReached={() => void fetchNextPage()}
 			onEndReachedThreshold={2}
 		/>
 	);
 }
-
-const keyExtractor = (item: ListItem) => item.key;
 
 function BookmarkNotFound({
 	hideTopBorder,
@@ -189,24 +188,4 @@ function BookmarkItem({
 	hideTopBorder: boolean;
 }) {
 	return <Post post={item.bookmark.item} hideTopBorder={hideTopBorder} />;
-}
-
-function BookmarksEmpty() {
-	const router = useRouter();
-
-	return (
-		<EmptyState
-			icon={BookmarkDeleteLarge}
-			message={m['screens.bookmarks.empty']()}
-			messageColor="textContrastMedium"
-			button={{
-				label: m['screens.bookmarks.backHome'](),
-				text: m['common.action.goHome'](),
-				onPress: () => router.navigate({ to: { name: 'Home' } }),
-				size: 'small',
-				color: 'secondary',
-			}}
-			className={css.empty}
-		/>
-	);
 }
