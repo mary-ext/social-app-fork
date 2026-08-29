@@ -4,11 +4,11 @@ export const TIMELINE = '--scroll-away';
 
 export const SUPPORTS = `(timeline-scope: ${TIMELINE})`;
 
+export const LEAD_IN = '--scroll-away-lead-in';
+
 export const OVERLAP = '--scroll-away-overlap';
 
-const LEAD_IN = 0.25;
-
-const RANGE = `exit calc(${LEAD_IN * 100}% + ${1 - LEAD_IN} * var(${OVERLAP}, 0px)) exit 100%`;
+const RANGE = `exit calc(var(${LEAD_IN}, 0) * 100% + (1 - var(${LEAD_IN}, 0)) * var(${OVERLAP}, 0px)) exit 100%`;
 
 /**
  * creates a scroll-driven animation rule with a static fallback.
