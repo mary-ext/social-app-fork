@@ -8,7 +8,7 @@ import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
 import { EmptyState } from '#/components/EmptyState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { Text } from '#/components/Text';
@@ -72,19 +72,14 @@ function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 
 /** renders saved posts. */
 export function BookmarksTab() {
-	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useBookmarksQuery();
+	const { data, error, fetchNextPage, isError, isFetchingNextPage, isLoading, refetch } = useBookmarksQuery();
 
-	const onEndReached = async () => {
-		if (isFetchingNextPage || !hasNextPage || error) {
-			return;
-		}
-		await fetchNextPage();
-	};
+	if (isError && !data) {
+		return <ListMaybePlaceholder isLoading={false} isError onRetry={refetch} />;
+	}
 
 	const items: ListItem[] = [];
-	if (isLoading) {
-		items.push({ type: 'loading', key: 'loading' });
-	} else if (!error && data) {
+	if (data) {
 		const bookmarks = data.pages.flatMap((p) => p.bookmarks);
 
 		if (bookmarks.length > 0) {
@@ -113,9 +108,9 @@ export function BookmarksTab() {
 		} else {
 			items.push({ type: 'empty', key: 'empty' });
 		}
+	} else if (isLoading) {
+		items.push({ type: 'loading', key: 'loading' });
 	}
-
-	const isEmpty = items.length === 1 && items[0]?.type === 'empty';
 
 	return (
 		<List
@@ -125,13 +120,13 @@ export function BookmarksTab() {
 			renderItem={renderItem}
 			ListFooterComponent={
 				<ListFooter
-					border={!isEmpty}
+					border={items.length > 0}
 					error={cleanError(error)}
 					isFetchingNextPage={isFetchingNextPage}
 					onRetry={fetchNextPage}
 				/>
 			}
-			onEndReached={() => void onEndReached()}
+			onEndReached={() => void fetchNextPage()}
 			onEndReachedThreshold={2}
 		/>
 	);

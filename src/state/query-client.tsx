@@ -69,12 +69,10 @@ function checkIsOnlineIfNeeded() {
 	receivedNetworkConfirmed = false;
 	checkPromise = checkIsOnline().then((nextIsOnline) => {
 		checkPromise = undefined;
-		if (nextIsOnline && receivedNetworkLost) {
-			isNetworkStateUnclear = true;
-		}
-		if (!nextIsOnline && receivedNetworkConfirmed) {
-			isNetworkStateUnclear = true;
-		}
+
+		isNetworkStateUnclear =
+			(nextIsOnline && receivedNetworkLost) || (!nextIsOnline && receivedNetworkConfirmed);
+
 		if (!isNetworkStateUnclear) {
 			onlineManager.setOnline(nextIsOnline);
 		}

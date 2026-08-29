@@ -5,17 +5,20 @@ import type { OAuthUserAgent } from './oauth';
 /** fetch handler shape shared by the OAuth agent and `@atcute/client`. */
 export type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
-/** emits network state events around a fetch-like function. */
-export function withNetworkEvents<Args extends unknown[]>(
-	fetchFn: (...args: Args) => Promise<Response>,
-): (...args: Args) => Promise<Response> {
-	return async (...args) => {
+/** emits network state events around a fetch handler. */
+export function withNetworkEvents(fetchFn: FetchHandler): FetchHandler {
+	return async (url, init) => {
+		const signal = init.signal;
+
 		try {
-			const response = await fetchFn(...args);
+			const response = await fetchFn(url, init);
 			networkConfirmed.emit();
 			return response;
 		} catch (e) {
-			networkLost.emit();
+			if (!signal?.aborted) {
+				networkLost.emit();
+			}
+
 			throw e;
 		}
 	};
