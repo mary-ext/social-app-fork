@@ -3,10 +3,11 @@ import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
 
 import { GCTIME, STALE } from '#/state/queries';
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryPersister } from '#/state/query-persister';
 import { getClients } from '#/state/session';
 
-const chatActorStatusQueryKey = () => createQueryKey('chat-actor-status', {}, { persistedVersion: 1 });
+const chatActorStatusQueryKey = () => ['chat-actor-status'];
+const chatActorStatusQueryPersister = createQueryPersister({ version: 1 });
 
 export function useChatActorStatusQuery() {
 	const { chat } = getClients();
@@ -21,5 +22,6 @@ export function useChatActorStatusQuery() {
 			}
 			return await ok(chat.get('chat.bsky.actor.getStatus', { signal }));
 		},
+		persister: chatActorStatusQueryPersister,
 	});
 }

@@ -1,22 +1,22 @@
 import type { ReactNode } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { focusManager, onlineManager, type Query, QueryCache, QueryClient } from '@tanstack/react-query';
 import {
-	type PersistQueryClientOptions,
-	PersistQueryClientProvider,
-	type PersistQueryClientProviderProps,
-} from '@tanstack/react-query-persist-client';
+	focusManager,
+	onlineManager,
+	type Query,
+	QueryCache,
+	QueryClient,
+	QueryClientProvider,
+} from '@tanstack/react-query';
 
 import { isDocumentVisible } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { networkConfirmed, networkLost } from '#/state/events';
 import { PROFILE_RQKEY_ROOT } from '#/state/queries/profile-key';
-import { isQueryPersisted } from '#/state/queries/util';
 import { updateAccountProfile } from '#/state/session';
 
 declare global {
@@ -129,19 +129,12 @@ const createQueryClient = () =>
 		},
 	});
 
-const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] = {
-	shouldDehydrateMutation: () => false,
-	shouldDehydrateQuery: (query) => {
-		return query.state.status === 'success' && isQueryPersisted(query.queryKey);
-	},
-};
-
 export function QueryProvider({
 	children,
 	currentDid,
 }: {
 	children: ReactNode;
-	currentDid: string | undefined;
+	currentDid: Did | undefined;
 }) {
 	return (
 		<QueryProviderInner
@@ -154,13 +147,7 @@ export function QueryProvider({
 	);
 }
 
-function QueryProviderInner({
-	children,
-	currentDid,
-}: {
-	children: ReactNode;
-	currentDid: string | undefined;
-}) {
+function QueryProviderInner({ children, currentDid }: { children: ReactNode; currentDid: Did | undefined }) {
 	// keep a mount-time snapshot for the account invariant.
 	const initialDid = useConstant(() => currentDid);
 	if (currentDid !== initialDid) {
@@ -168,21 +155,5 @@ function QueryProviderInner({
 	}
 	// create the client inside the account-keyed subtree.
 	const queryClient = useConstant(() => createQueryClient());
-	const persistOptions = useConstant(() => {
-		const storage = createPersistedQueryStorage(currentDid ?? 'logged-out');
-		const asyncPersister = createAsyncStoragePersister({
-			storage,
-			key: 'queryClient-' + (currentDid ?? 'logged-out'),
-		});
-		return {
-			persister: asyncPersister,
-			dehydrateOptions,
-			buster: import.meta.env.PUBLIC_GIT_COMMIT_HASH || 'dev',
-		} satisfies Omit<PersistQueryClientOptions, 'queryClient'>;
-	});
-	return (
-		<PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-			{children}
-		</PersistQueryClientProvider>
-	);
+	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

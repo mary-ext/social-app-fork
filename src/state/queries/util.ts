@@ -8,51 +8,6 @@ import type { ParsedResourceUri } from '@atcute/lexicons/syntax';
 
 import type { InfiniteData, QueryClient, QueryKey } from '@tanstack/react-query';
 
-export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
-	string,
-	T,
-	{
-		persistedVersion?: number;
-	},
-];
-
-/** Helper method to ensure consistent query keys and key ordering */
-export function createQueryKey<T extends Record<string, unknown>>(
-	/** The query key root. All queries must have a root. */
-	root: string,
-	/** Any arguments the query depends on, and if changed, should result in the query being refetched. */
-	args: T,
-	options: {
-		/**
-		 * version of the persisted query format.
-		 *
-		 * set `gcTime: GCTIME.INFINITY` to prevent the persisted query from being garbage collected immediately.
-		 */
-		persistedVersion?: number;
-	} = {},
-): StructuredQueryKey<T> {
-	return [root, args, options] as const;
-}
-
-export function isQueryPersisted(
-	queryKey: QueryKey,
-): queryKey is StructuredQueryKey<Record<string, unknown>> {
-	if (!Array.isArray(queryKey) || queryKey.length !== 3) {
-		return false;
-	}
-	if (typeof queryKey[0] !== 'string') {
-		return false;
-	}
-	if (typeof queryKey[1] !== 'object' || queryKey[1] === null) {
-		return false;
-	}
-	const options: unknown = queryKey[2];
-	if (typeof options !== 'object' || options === null) {
-		return false;
-	}
-	return 'persistedVersion' in options && typeof options.persistedVersion === 'number';
-}
-
 export async function truncateAndInvalidate(queryClient: QueryClient, queryKey: QueryKey) {
 	queryClient.setQueriesData<InfiniteData<unknown>>({ queryKey }, (data) => {
 		if (data) {

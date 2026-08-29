@@ -5,13 +5,12 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { dequal } from 'dequal/lite';
 
-import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
-
 import { sessionDropped } from '#/state/events';
 import { accountProfileView, toAccountProfile } from '#/state/session/account-profile';
 import type { SessionAccount } from '#/state/session/types';
 
 import { auth } from '#/storage';
+import { clearPersistedQueryCache } from '#/storage/query-cache';
 
 import {
 	createGuestClients,
@@ -112,10 +111,10 @@ export function signOut({
 	clearDids = [],
 }: {
 	accounts: readonly SessionAccount[];
-	clearDids?: readonly string[];
+	clearDids?: readonly Did[];
 }): void {
 	for (const did of clearDids) {
-		void clearPersistedQueryStorage(did);
+		clearPersistedQueryCache(did);
 	}
 	persistSnapshot({ accounts, currentAccountDid: undefined });
 	history.pushState(null, '', '/');
@@ -189,7 +188,7 @@ export function updateAccountProfile(profile: AnyProfileView): void {
 
 export function removeAccount(account: SessionAccount) {
 	deleteStoredSession(account.did);
-	void clearPersistedQueryStorage(account.did);
+	clearPersistedQueryCache(account.did);
 	const nextAccounts = snapshot.accounts.filter((a) => a.did !== account.did);
 	if (account.did === snapshot.currentDid) {
 		// removing the current account signs out and reloads.

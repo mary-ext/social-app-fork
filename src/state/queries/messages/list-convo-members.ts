@@ -5,11 +5,10 @@ import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { STALE } from '#/state/queries';
-import { createQueryKey } from '#/state/queries/util';
 import { getClients } from '#/state/session';
 
 const RQKEY_ROOT = 'listConvoMembers';
-export const listConvoMembersQueryKey = (convoId: string) => createQueryKey(RQKEY_ROOT, { convoId });
+export const listConvoMembersQueryKey = (convoId: string) => [RQKEY_ROOT, { convoId }];
 
 // group chat size is at least 50, so should fetch the whole list in one go
 const LIMIT = 50;

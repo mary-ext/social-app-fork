@@ -1,6 +1,8 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 
+import type { JsonValue } from 'type-fest';
+
 import type { Gif } from '#/lib/gif';
 
 import type { Locale } from '#/paraglide/runtime';
@@ -42,6 +44,7 @@ export type Device = {
 	postLanguageHistory?: string[];
 	/** BCP-47 2-letter language code to translate posts into. */
 	primaryLanguage?: string;
+	queryCacheBuster?: string;
 	/** recently picked emoji ids, most recent first. */
 	recentEmojis?: string[];
 	requireAltTextEnabled?: boolean;
@@ -93,4 +96,16 @@ export type AuthAccountProfile = {
 	displayName?: string;
 	/** statuses used by verification badges. */
 	verification?: Pick<AppBskyActorDefs.VerificationState, 'trustedVerifierStatus' | 'verifiedStatus'>;
+};
+
+export type QueryCacheScope = Did | 'logged-out';
+
+export type QueryCache = {
+	[queryHash: string]: PersistedQueryEntry;
+};
+
+export type PersistedQueryEntry = {
+	data: JsonValue;
+	dataUpdatedAt: number;
+	version: number;
 };

@@ -9,14 +9,15 @@ import { MAX_LABELERS } from '#/lib/constants/profile';
 import { GCTIME, STALE } from '#/state/queries';
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { addLabeler, removeLabeler } from '#/state/queries/preferences/agent';
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryPersister } from '#/state/query-persister';
 import { getClients } from '#/state/session';
 
-const labelerInfoQueryKeyRoot = 'labeler-info';
-const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
+const LABELER_INFO_RQKEY_ROOT = 'labeler-info';
+const labelerInfoQueryKey = (did: string) => [LABELER_INFO_RQKEY_ROOT, did];
 
-const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
-	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
+const LABELERS_DETAILED_INFO_RQKEY_ROOT = 'labelers-detailed-info';
+const createLabelersDetailedInfoQueryKey = (dids: string[]) => [LABELERS_DETAILED_INFO_RQKEY_ROOT, { dids }];
+const labelersDetailedInfoQueryPersister = createQueryPersister({ version: 1 });
 
 /**
  * queries the labeler service record published by an account.
@@ -63,6 +64,7 @@ export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `detailed: true` makes the service views detailed
 			return data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
 		},
+		persister: labelersDetailedInfoQueryPersister,
 	});
 }
 

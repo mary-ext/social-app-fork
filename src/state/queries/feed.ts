@@ -38,7 +38,7 @@ import { feedTarget, listTarget } from '#/lib/routes/targets';
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryPersister } from '#/state/query-persister';
 import { getClients, useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
@@ -424,30 +424,23 @@ const createFollowingFeedInfo = (savedFeed: AppBskyActorDefs.SavedFeed): SavedFe
 });
 
 export const FEED_INFO_RQKEY_ROOT = 'feed-info';
+const feedInfoQueryPersister = createQueryPersister({ version: 1 });
 
-const createPinnedFeedInfoQueryKey = (uri: string) =>
-	createQueryKey(
-		FEED_INFO_RQKEY_ROOT,
-		{
-			kind: 'pinned',
-			uri,
-		},
-		{
-			persistedVersion: 1,
-		},
-	);
+const createPinnedFeedInfoQueryKey = (uri: string) => [
+	FEED_INFO_RQKEY_ROOT,
+	{
+		kind: 'pinned',
+		uri,
+	},
+];
 
-const createSavedFeedInfosQueryKey = (feedUris: string[]) =>
-	createQueryKey(
-		FEED_INFO_RQKEY_ROOT,
-		{
-			kind: 'saved',
-			feedUris,
-		},
-		{
-			persistedVersion: 1,
-		},
-	);
+const createSavedFeedInfosQueryKey = (feedUris: string[]) => [
+	FEED_INFO_RQKEY_ROOT,
+	{
+		kind: 'saved',
+		feedUris,
+	},
+];
 
 const fetchFeedGenerator = createBatchedFetch<ResourceUri, AppBskyFeedDefs.GeneratorView>({
 	limit: 50,
@@ -499,6 +492,7 @@ export function usePinnedFeedsInfos() {
 			queryFn({ signal }) {
 				return fetchPinnedFeedInfo(item, signal);
 			},
+			persister: feedInfoQueryPersister,
 		})),
 		combine(results: UseQueryResult<FeedSourceInfo | null>[]) {
 			return {
@@ -658,6 +652,7 @@ export function useSavedFeeds() {
 				feeds: result,
 			};
 		},
+		persister: feedInfoQueryPersister,
 		placeholderData: (previousData) => {
 			return (
 				previousData || {

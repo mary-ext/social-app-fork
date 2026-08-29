@@ -33,7 +33,7 @@ import {
 	DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const';
 import type { ThreadViewPreferences, UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryPersister } from '#/state/query-persister';
 import { getClients, useSession } from '#/state/session';
 import { saveSubscribedLabelers } from '#/state/session/labelers';
 
@@ -45,7 +45,8 @@ export * from '#/state/queries/preferences/const';
 export * from '#/state/queries/preferences/moderation';
 export * from '#/state/queries/preferences/types';
 
-export const preferencesQueryKey = createQueryKey('getPreferences', {}, { persistedVersion: 1 });
+export const preferencesQueryKey = ['getPreferences'];
+const preferencesQueryPersister = createQueryPersister({ version: 1 });
 
 export function usePreferencesQuery() {
 	const { pds } = getClients();
@@ -83,6 +84,7 @@ export function usePreferencesQuery() {
 				return preferences;
 			}
 		},
+		persister: preferencesQueryPersister,
 		structuralSharing: replaceEqualDeep,
 	});
 

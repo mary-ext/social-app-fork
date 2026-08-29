@@ -1,4 +1,4 @@
-import type { Account, Auth, Device } from '#/storage/schema';
+import type { Account, Auth, Device, QueryCache, QueryCacheScope } from '#/storage/schema';
 import { Storage } from '#/storage/storage';
 
 export * from '#/storage/schema';
@@ -13,11 +13,16 @@ export const account = new Storage<[string], Account>({ id: 'bsky_account' });
 /** OAuth-backed account list and active account pointer for this device. */
 export const auth = new Storage<[], Auth>({ id: 'bsky_auth' });
 
+export const persistedQueryCache = new Storage<[QueryCacheScope], QueryCache>({
+	id: 'bsky_query_cache',
+});
+
 if (import.meta.env.DEV && typeof window !== 'undefined') {
 	// @ts-expect-error - dev global
 	window.bsky_storage = {
 		account,
 		auth,
 		device,
+		persistedQueryCache,
 	};
 }

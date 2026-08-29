@@ -120,27 +120,44 @@ export class Storage<Scopes extends unknown[], Schema extends JsonObject> {
 		}
 	}
 
-	/** removes all stored keys belonging to this storage instance. */
-	removeAll() {
-		if (!store) {
-			return;
+	protected removeByPrefix(prefix: string) {
+		const keys = new Set<string>();
+
+		// clear memory even without backing storage.
+		for (const key of this.cache.keys()) {
+			if (key.startsWith(prefix)) {
+				keys.add(key);
+			}
 		}
 
-		const prefix = `${this.id}${SEP}`;
-		const keys: string[] = [];
-
-		for (let idx = 0, len = store.length; idx < len; idx++) {
-			const key = store.key(idx);
-			if (key?.startsWith(prefix)) {
-				keys.push(key);
+		if (store) {
+			for (let idx = 0, len = store.length; idx < len; idx++) {
+				const key = store.key(idx);
+				if (key?.startsWith(prefix)) {
+					keys.add(key);
+				}
 			}
 		}
 
 		for (const key of keys) {
-			store.removeItem(key);
+			store?.removeItem(key);
 			this.cache.delete(key);
 			this.emit(key);
 		}
+	}
+
+	/**
+	 * removes all values in a scope.
+	 *
+	 * @param scopes scope path
+	 */
+	removeScope(scopes: [...Scopes]) {
+		this.removeByPrefix(`${this.scopedKey(scopes)}${SEP}`);
+	}
+
+	/** removes all stored keys belonging to this storage instance. */
+	removeAll() {
+		this.removeByPrefix(`${this.id}${SEP}`);
 	}
 
 	/**

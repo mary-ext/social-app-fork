@@ -5,17 +5,15 @@ import { ok } from '@atcute/client';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useMessagesEventBus } from '#/state/messages/events';
-import { createQueryKey } from '#/state/queries/util';
 import { getClients } from '#/state/session';
 
 import { STALE } from '..';
 
 export const JOIN_REQUESTS_THRESHOLD = 20;
 
-const listJoinRequestsQueryKeyRoot = 'list-join-requests';
+const RQKEY_ROOT = 'list-join-requests';
 
-export const createListJoinRequestsQueryKey = (args: { convoId: string }) =>
-	createQueryKey(listJoinRequestsQueryKeyRoot, args);
+export const createListJoinRequestsQueryKey = (args: { convoId: string }) => [RQKEY_ROOT, args];
 
 export function useListJoinRequestsQuery({
 	convoId,

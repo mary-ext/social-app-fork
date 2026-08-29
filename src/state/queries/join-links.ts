@@ -3,12 +3,13 @@ import { type Client, ok } from '@atcute/client';
 
 import { type QueryClient, type QueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryPersister } from '#/state/query-persister';
 import { getClients } from '#/state/session';
 
 import { STALE } from '.';
 
-const joinLinkPreviewQueryKeyRoot = 'join-link-preview';
+const RQKEY_ROOT = 'join-link-preview';
+const joinLinkPreviewQueryPersister = createQueryPersister({ version: 1 });
 
 /**
  * an entry from a join link preview response. can be a usable preview or a disabled/invalid placeholder.
@@ -16,15 +17,15 @@ const joinLinkPreviewQueryKeyRoot = 'join-link-preview';
  */
 export type JoinLinkPreview = ChatBskyGroupGetJoinLinkPreviews.$output['joinLinkPreviews'][number];
 
-export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSession: boolean }) =>
-	createQueryKey(joinLinkPreviewQueryKeyRoot, args, {
-		persistedVersion: 1,
-	});
+export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSession: boolean }) => [
+	RQKEY_ROOT,
+	args,
+];
 
 /** matches a join link preview query key whose `codes` argument contains `code`. */
 const joinLinkPreviewKeyHasCode = (queryKey: QueryKey, code: string) => {
 	const [root, args] = queryKey;
-	if (root !== joinLinkPreviewQueryKeyRoot) {
+	if (root !== RQKEY_ROOT) {
 		return false;
 	}
 	if (typeof args !== 'object' || args === null || !('codes' in args)) {
@@ -52,7 +53,7 @@ export function invalidateJoinLinkPreviewsForConvo(queryClient: QueryClient, con
 	return queryClient.invalidateQueries({
 		predicate: (query) => {
 			const [root] = query.queryKey;
-			if (root !== joinLinkPreviewQueryKeyRoot) {
+			if (root !== RQKEY_ROOT) {
 				return false;
 			}
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the root check above pins the cache entry
@@ -109,6 +110,7 @@ export function useJoinLinkPreviewsQuery({
 			}
 			return fetchJoinLinkPreviews({ chat, codes, signal });
 		},
+		persister: joinLinkPreviewQueryPersister,
 		initialData,
 	});
 }
@@ -131,9 +133,10 @@ export function useGetJoinLinkPreview() {
 		hasSession: boolean;
 	}): Promise<JoinLinkPreview | undefined> => {
 		try {
-			const data = await queryClient.fetchQuery({
+			const data = await queryClient.fetchQuery<ChatBskyGroupGetJoinLinkPreviews.$output>({
 				queryKey: createJoinLinkPreviewQueryKey({ codes: [code], hasSession }),
 				queryFn: ({ signal }) => fetchJoinLinkPreviews({ chat, codes: [code], signal }),
+				persister: joinLinkPreviewQueryPersister,
 				staleTime: STALE.SECONDS.FIFTEEN,
 			});
 			return data.joinLinkPreviews[0];

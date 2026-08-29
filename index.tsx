@@ -8,6 +8,7 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import App from '#/App';
 import { overwriteGetLocale } from '#/paraglide/runtime';
+import { prepareQueryCache } from '#/storage/query-cache';
 
 // the UI locale is fixed for the page session (changing it reloads), so point paraglide at the
 // resolved LOCALE and stamp the document language once, up front.
@@ -15,6 +16,7 @@ overwriteGetLocale(() => LOCALE);
 document.documentElement.lang = LOCALE;
 
 initAppearance();
+prepareQueryCache();
 
 const rootEl = document.getElementById('root');
 if (!rootEl) {
