@@ -27,7 +27,7 @@ export const createQueryPersister = ({ version }: { version: number }) => {
 
 		if (query.state.data === undefined) {
 			const stored = persistedQueryCache.get([scope, query.queryHash]);
-			if (stored?.version === version) {
+			if (stored?.version === version && stored.expiresAt > Date.now()) {
 				notifyManager.schedule(() => {
 					// preserve the cached fetch time for stale checks.
 					query.setState({ dataUpdatedAt: stored.dataUpdatedAt });
@@ -55,6 +55,7 @@ export const createQueryPersister = ({ version }: { version: number }) => {
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- query data must be JSON-serializable
 				data: query.state.data as PersistedQueryEntry['data'],
 				dataUpdatedAt: query.state.dataUpdatedAt,
+				expiresAt: query.state.dataUpdatedAt + query.gcTime,
 				version,
 			});
 		});

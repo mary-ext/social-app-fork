@@ -53,7 +53,7 @@ export function useLabelersDetailedInfoQuery({ dids }: { dids: Did[] }) {
 		queryKey: createLabelersDetailedInfoQueryKey(dids),
 		enabled: !!dids.length,
 		staleTime: STALE.MINUTES.ONE,
-		gcTime: GCTIME.INFINITY,
+		gcTime: GCTIME.DAYS.SEVEN,
 		queryFn: async ({ signal }) => {
 			const data = await ok(
 				appview.get('app.bsky.labeler.getServices', {

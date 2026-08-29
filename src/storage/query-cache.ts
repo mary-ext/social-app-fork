@@ -4,16 +4,16 @@ import { device, persistedQueryCache } from '#/storage';
 
 const BUSTER = import.meta.env.PUBLIC_GIT_COMMIT_HASH || 'dev';
 
-/**
- * invalidates persisted queries between builds; call before cache reads.
- */
+/** invalidates persisted queries between builds and prunes expired entries; call before cache reads. */
 export const prepareQueryCache = (): void => {
-	if (device.get(['queryCacheBuster']) === BUSTER) {
+	if (device.get(['queryCacheBuster']) !== BUSTER) {
+		persistedQueryCache.removeAll();
+		device.set(['queryCacheBuster'], BUSTER);
 		return;
 	}
 
-	persistedQueryCache.removeAll();
-	device.set(['queryCacheBuster'], BUSTER);
+	const now = Date.now();
+	persistedQueryCache.removeWhere((entry) => entry.expiresAt <= now);
 };
 
 /**

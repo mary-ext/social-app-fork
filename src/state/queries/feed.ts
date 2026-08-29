@@ -488,7 +488,7 @@ export function usePinnedFeedsInfos() {
 		queries: fetchedItems.map((item) => ({
 			queryKey: createPinnedFeedInfoQueryKey(item.value),
 			staleTime: STALE.MINUTES.FIFTEEN,
-			gcTime: GCTIME.INFINITY,
+			gcTime: GCTIME.DAYS.SEVEN,
 			queryFn({ signal }) {
 				return fetchPinnedFeedInfo(item, signal);
 			},
@@ -572,7 +572,7 @@ export function useSavedFeeds() {
 		queryKey: createSavedFeedInfosQueryKey(savedItems.map((f) => f.value)),
 		enabled: !isLoadingPrefs,
 		staleTime: STALE.INFINITY,
-		gcTime: GCTIME.INFINITY,
+		gcTime: GCTIME.DAYS.SEVEN,
 		queryFn: async ({ signal }) => {
 			const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>();
 			const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>();

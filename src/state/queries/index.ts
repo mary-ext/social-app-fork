@@ -1,6 +1,7 @@
 const SECOND = 1e3;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
 
 export const STALE = {
 	SECONDS: {
@@ -24,5 +25,7 @@ export const GCTIME = {
 	MINUTES: {
 		FIVE: 5 * MINUTE,
 	},
-	INFINITY: Infinity,
+	DAYS: {
+		SEVEN: 7 * DAY,
+	},
 };

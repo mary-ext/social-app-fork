@@ -107,5 +107,6 @@ export type QueryCache = {
 export type PersistedQueryEntry = {
 	data: JsonValue;
 	dataUpdatedAt: number;
+	expiresAt: number;
 	version: number;
 };

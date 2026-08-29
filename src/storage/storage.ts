@@ -1,6 +1,6 @@
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import type { JsonObject, JsonValue } from 'type-fest';
+import type { JsonObject } from 'type-fest';
 
 const SEP = ':';
 
@@ -11,7 +11,7 @@ try {
 } catch {}
 
 export class Storage<Scopes extends unknown[], Schema extends JsonObject> {
-	protected cache = new Map<string, JsonValue | undefined>();
+	protected cache = new Map<string, Schema[keyof Schema] | undefined>();
 	protected emitters = new Map<string, SimpleEventEmitter<[]>>();
 	protected id: string;
 
@@ -117,6 +117,51 @@ export class Storage<Scopes extends unknown[], Schema extends JsonObject> {
 	removeMany(scopes: [...Scopes], keys: (keyof Schema)[]) {
 		for (const key of keys) {
 			this.remove([...scopes, key]);
+		}
+	}
+
+	/**
+	 * removes stored entries matching a predicate.
+	 *
+	 * @param predicate selects values to remove
+	 */
+	removeWhere(predicate: (data: Schema[keyof Schema]) => boolean) {
+		const prefix = `${this.id}${SEP}`;
+		const keys = new Set<string>();
+
+		for (const key of this.cache.keys()) {
+			if (key.startsWith(prefix)) {
+				keys.add(key);
+			}
+		}
+
+		if (store) {
+			for (let idx = 0, len = store.length; idx < len; idx++) {
+				const key = store.key(idx);
+				if (key?.startsWith(prefix)) {
+					keys.add(key);
+				}
+			}
+		}
+
+		for (const key of keys) {
+			let value = this.cache.get(key);
+			if (!this.cache.has(key)) {
+				try {
+					const raw = store?.getItem(key) || '{}';
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+					const parsed = JSON.parse(raw) as { data: Schema[keyof Schema] | undefined };
+					value = parsed.data;
+				} catch {
+					// malformed value
+				}
+			}
+
+			if (value !== undefined && predicate(value)) {
+				store?.removeItem(key);
+				this.cache.delete(key);
+				this.emit(key);
+			}
 		}
 	}
 

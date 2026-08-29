@@ -19,7 +19,7 @@ export function useFetchPdsUrl() {
 
 	return async (did: Did) => {
 		const { pds } = await queryClient.fetchQuery({
-			gcTime: GCTIME.INFINITY,
+			gcTime: GCTIME.MINUTES.FIVE,
 			staleTime: STALE.HOURS.ONE,
 			queryKey: fetchPdsQueryKey(did),
 			queryFn: ({ signal }) => resolveMiniDoc(did, signal),
