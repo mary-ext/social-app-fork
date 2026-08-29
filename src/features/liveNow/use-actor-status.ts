@@ -7,8 +7,6 @@ import {
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { isAfterDate } from '@mary/date-fns';
-
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
@@ -145,10 +143,8 @@ export function isStatusStillActive(timeStr: string | undefined) {
 	if (!timeStr) {
 		return false;
 	}
-	const now = new Date();
-	const expiry = new Date(timeStr);
 
-	return isAfterDate(expiry, now);
+	return Date.parse(timeStr) > Date.now();
 }
 
 /**
