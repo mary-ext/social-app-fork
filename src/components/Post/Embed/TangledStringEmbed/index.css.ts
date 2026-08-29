@@ -3,6 +3,8 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
+import { previewHeight } from './metrics';
+
 export const card = style({
 	backgroundColor: colors.bg,
 	boxSizing: 'border-box',
@@ -60,7 +62,12 @@ export const codeArea = style({
 export const message = style({
 	display: 'flex',
 	flexDirection: 'column',
+	alignItems: 'center',
+	justifyContent: 'center',
+	boxSizing: 'border-box',
+	minHeight: previewHeight,
 	padding: space.md,
+	textAlign: 'center',
 });
 
 export const footer = style({
