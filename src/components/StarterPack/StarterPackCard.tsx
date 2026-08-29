@@ -207,7 +207,7 @@ function IconPlaceholder() {
 /** Placeholder for the title + byline stack that sits beside the icon. */
 function TitleAndBylinePlaceholder() {
 	return (
-		<Skeleton.Col>
+		<Skeleton.Col grow>
 			<Skeleton.Text size="md" width="60%" />
 			<Skeleton.Text color="contrast_25" size="md_sub" width="40%" />
 		</Skeleton.Col>

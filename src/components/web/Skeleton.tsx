@@ -57,17 +57,19 @@ export function Row({
 	return <div className={clsx(styles.row({ align, gap }), className)}>{children}</div>;
 }
 
-/** A flex-1 vertical flex group of placeholders. */
+/** A vertical flex group of placeholders. */
 export function Col({
 	children,
 	className,
 	gap,
+	grow,
 }: {
 	children?: ReactNode;
 	className?: string;
 	gap?: RecipeVariants<typeof styles.col>['gap'];
+	grow?: boolean;
 }) {
-	return <div className={clsx(styles.col({ gap }), className)}>{children}</div>;
+	return <div className={clsx(styles.col({ gap, grow }), className)}>{children}</div>;
 }
 
 /** Loading placeholder for a circular element (e.g. a user avatar), sized to `size` pixels. */

@@ -233,7 +233,7 @@ export function AvatarPlaceholder({ color, size = 40 }: { color?: Skeleton.Color
  */
 export function NameAndHandlePlaceholder({ color }: { color?: Skeleton.Color }) {
 	return (
-		<Skeleton.Col>
+		<Skeleton.Col grow>
 			<Skeleton.Text color={color} size="md" width="20%" />
 			<Skeleton.Text color={color} size="md_sub" width="25%" />
 		</Skeleton.Col>

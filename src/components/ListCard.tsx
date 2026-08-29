@@ -171,7 +171,7 @@ export function TitleAndByline({
 
 export function TitleAndBylinePlaceholder({ creator }: { creator?: boolean }) {
 	return (
-		<Skeleton.Col>
+		<Skeleton.Col grow>
 			<Skeleton.Text size="md" width="60%" />
 			{creator && <Skeleton.Text color="contrast_25" size="md" width="40%" />}
 		</Skeleton.Col>

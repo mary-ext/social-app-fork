@@ -155,7 +155,6 @@ export const col = recipe(
 	{
 		base: {
 			display: 'flex',
-			flex: 1,
 			flexDirection: 'column',
 			minWidth: 0,
 		},
@@ -164,6 +163,9 @@ export const col = recipe(
 				md: { gap: space.md },
 				sm: { gap: space.sm },
 				xs: { gap: space.xs },
+			},
+			grow: {
+				true: { flex: 1 },
 			},
 		},
 	},

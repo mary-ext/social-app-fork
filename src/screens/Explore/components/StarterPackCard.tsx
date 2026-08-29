@@ -164,7 +164,7 @@ export function StarterPackCardSkeleton() {
 		<div className={css.card}>
 			<AvatarStack numPending={profileCount} profiles={[]} />
 			<div className={css.body}>
-				<Skeleton.Col gap="xs">
+				<Skeleton.Col gap="xs" grow>
 					<Skeleton.Text size="md" width={180} />
 					<Skeleton.Text size="sm" width={120} />
 				</Skeleton.Col>
