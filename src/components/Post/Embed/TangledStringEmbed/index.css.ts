@@ -39,11 +39,16 @@ export const filenameLink = style({
 	display: 'flex',
 	flexGrow: 1,
 	minWidth: 0,
-
-	':hover': {
-		textDecoration: 'underline',
-	},
 });
+
+export const filenameLinkInteractive = style([
+	filenameLink,
+	{
+		':hover': {
+			textDecoration: 'underline',
+		},
+	},
+]);
 
 export const domainLink = style({
 	display: 'flex',
@@ -97,9 +102,16 @@ export const byline = style({
 	minWidth: 0,
 });
 
+export const bylineInteractive = style([
+	byline,
+	{
+		cursor: 'pointer',
+	},
+]);
+
 export const bylineHandle = style({
 	selectors: {
-		[`${byline}:hover &`]: {
+		[`${bylineInteractive}:hover &`]: {
 			textDecoration: 'underline',
 			textDecorationColor: colors.textContrastMedium,
 		},

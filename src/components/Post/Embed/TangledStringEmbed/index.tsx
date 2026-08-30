@@ -11,6 +11,7 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useTangledStringQuery } from '#/state/queries/tangled-string';
 
 import * as Dialog from '#/components/Dialog';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -44,6 +45,7 @@ type TangledStringEmbedProps = {
 
 export function TangledStringEmbed({ target, className, onOpen }: TangledStringEmbedProps) {
 	const dialog = Dialog.useDialogHandle();
+	const navigationDisabled = useNavigationDisabled();
 
 	const uri = makeRecordUri(target.actor, 'sh.tangled.string', target.rkey);
 	const { data: record, error } = useTangledStringQuery({ uri });
@@ -54,33 +56,45 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 			? m['components.post.tangledString.a11y.open']({ filename })
 			: m['components.post.tangledString.a11y.openSnippet']();
 	const viewFileLabel = m['components.post.tangledString.viewFile']();
+	const filenameContent = record ? (
+		<Text numberOfLines={1} size="md_sub" weight="semiBold">
+			{record.filename}
+		</Text>
+	) : !error ? (
+		<Skele.Text size="md_sub" width={120} />
+	) : null;
 
 	return (
 		<div className={clsx(css.card, className)}>
 			<div className={css.header}>
 				<CodeBrackets aria-hidden className={css.headerIcon} />
 
-				<ExternalLink className={css.filenameLink} href={target.href} label={openLabel} onPress={onOpen}>
-					{record ? (
-						<Text numberOfLines={1} size="md_sub" weight="semiBold">
-							{record.filename}
-						</Text>
-					) : !error ? (
-						<Skele.Text size="md_sub" width={120} />
-					) : null}
-				</ExternalLink>
+				{navigationDisabled ? (
+					<div className={css.filenameLink}>{filenameContent}</div>
+				) : (
+					<ExternalLink
+						className={css.filenameLinkInteractive}
+						href={target.href}
+						label={openLabel}
+						onPress={onOpen}
+					>
+						{filenameContent}
+					</ExternalLink>
+				)}
 
-				<ExternalLink
-					className={css.domainLink}
-					href={target.href}
-					label={m['components.post.tangledString.a11y.openSnippet']()}
-					onPress={onOpen}
-					tabIndex={-1}
-				>
-					<Text color="textContrastMedium" size="xs">
-						tangled.org
-					</Text>
-				</ExternalLink>
+				{!navigationDisabled ? (
+					<ExternalLink
+						className={css.domainLink}
+						href={target.href}
+						label={m['components.post.tangledString.a11y.openSnippet']()}
+						onPress={onOpen}
+						tabIndex={-1}
+					>
+						<Text color="textContrastMedium" size="xs">
+							tangled.org
+						</Text>
+					</ExternalLink>
+				) : null}
 			</div>
 
 			<div className={css.codeArea}>
@@ -114,22 +128,24 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 						</Text>
 					) : null}
 
-					<Button
-						className={css.action}
-						color="secondary"
-						disabled={record === undefined}
-						label={viewFileLabel}
-						onClick={() => dialog.open(null)}
-						size="tiny"
-						variant="ghost"
-					>
-						<ButtonText>{viewFileLabel}</ButtonText>
-						<ButtonIcon icon={ExpandIcon} />
-					</Button>
+					{!navigationDisabled ? (
+						<Button
+							className={css.action}
+							color="secondary"
+							disabled={record === undefined}
+							label={viewFileLabel}
+							onClick={() => dialog.open(null)}
+							size="tiny"
+							variant="ghost"
+						>
+							<ButtonText>{viewFileLabel}</ButtonText>
+							<ButtonIcon icon={ExpandIcon} />
+						</Button>
+					) : null}
 				</div>
 			</div>
 
-			{record !== undefined ? (
+			{record !== undefined && !navigationDisabled ? (
 				<FullFileDialog
 					contents={record.contents}
 					filename={record.filename}
@@ -143,6 +159,7 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 }
 
 const Byline = ({ actor }: { actor: ActorIdentifier }) => {
+	const navigationDisabled = useNavigationDisabled();
 	const { data: did } = useResolveDidQuery(actor);
 	const { data: author } = useProfileQuery({ batch: true, did });
 
@@ -155,19 +172,29 @@ const Byline = ({ actor }: { actor: ActorIdentifier }) => {
 		);
 	}
 
+	const content = (
+		<>
+			<UserAvatar avatar={author.avatar} size={20} type="user" />
+			<Text
+				className={css.bylineHandle}
+				color="textContrastMedium"
+				numberOfLines={1}
+				size="sm"
+				weight="medium"
+			>
+				{author.handle}
+			</Text>
+		</>
+	);
+
+	if (navigationDisabled) {
+		return <div className={css.byline}>{content}</div>;
+	}
+
 	return (
 		<ProfileHoverCard actor={did}>
-			<Link className={css.byline} label={author.handle} to={profileTarget(author.did)}>
-				<UserAvatar avatar={author.avatar} size={20} type="user" />
-				<Text
-					className={css.bylineHandle}
-					color="textContrastMedium"
-					numberOfLines={1}
-					size="sm"
-					weight="medium"
-				>
-					{author.handle}
-				</Text>
+			<Link className={css.bylineInteractive} label={author.handle} to={profileTarget(author.did)}>
+				{content}
 			</Link>
 		</ProfileHoverCard>
 	);

@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { lazy, type CSSProperties, type ReactNode, Suspense } from 'react';
 
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
@@ -19,6 +19,8 @@ import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
+import { parseTangledStringUrl } from '#/components/Post/Embed/TangledStringEmbed/detect';
+import { TangledStringPlaceholder } from '#/components/Post/Embed/TangledStringEmbed/Placeholder';
 import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
@@ -26,6 +28,10 @@ import { Text } from '#/components/Text';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ExternalEmbed.css';
+
+const TangledStringEmbed = lazy(() =>
+	import('#/components/Post/Embed/TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
+);
 
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const { data, error } = useResolveGifQuery(gif);
@@ -88,8 +94,15 @@ export const ExternalEmbedLink = ({
 }) => {
 	const { data, error } = useResolveLinkQuery(uri);
 	const thumbUrl = getBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
+	const tangledTarget = parseTangledStringUrl(uri);
 	let linkComponent: ReactNode;
-	if (data) {
+	if (tangledTarget) {
+		linkComponent = (
+			<Suspense fallback={<TangledStringPlaceholder />}>
+				<TangledStringEmbed target={tangledTarget} />
+			</Suspense>
+		);
+	} else if (data) {
 		if (data.type === 'external') {
 			const external = data.view?.external;
 			if (external && isStandardSiteEmbed(external)) {
