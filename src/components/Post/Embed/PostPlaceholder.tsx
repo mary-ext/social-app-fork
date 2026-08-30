@@ -13,6 +13,7 @@ export function PostPlaceholder({ children, trailing }: { children: ReactNode; t
 			<Text size="md" weight="medium" color="textContrastMedium">
 				{children}
 			</Text>
+
 			{trailing ? <div className={css.trailing}>{trailing}</div> : null}
 		</div>
 	);

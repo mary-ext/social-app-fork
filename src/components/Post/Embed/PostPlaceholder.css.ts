@@ -9,7 +9,6 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 8,
-	alignItems: 'center',
 	marginTop: 8,
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
@@ -24,6 +23,7 @@ export const icon = style({
 });
 
 export const trailing = style({
+	display: 'flex',
 	marginLeft: 'auto',
 	flexShrink: 0,
 });
