@@ -27,7 +27,8 @@ import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { ListMaybePlaceholder } from '#/components/Lists';
+import { ListError } from '#/components/List/ListError';
+import { ListLoading } from '#/components/List/ListLoading';
 import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
@@ -70,12 +71,14 @@ export function StarterPackScreenShort() {
 	if (isLoading || isError || !resolvedStarterPack) {
 		return (
 			<Layout.Screen>
-				<ListMaybePlaceholder
-					isLoading={isLoading}
-					isError={isError}
-					errorMessage={m['screens.starterPack.error.notFound']()}
-					emptyMessage={m['screens.starterPack.error.notFound']()}
-				/>
+				{isLoading ? (
+					<ListLoading />
+				) : (
+					<ListError
+						message={m['screens.starterPack.error.notFound']()}
+						title={m['common.error.pageNotFound']()}
+					/>
+				)}
 			</Layout.Screen>
 		);
 	}
@@ -109,12 +112,14 @@ export function StarterPackScreenInner({
 		(starterPack.list !== undefined || starterPack.creator.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
+		if (!isErrorDid && !isErrorStarterPack && (!did || !starterPack || !moderationOpts)) {
+			return <ListLoading />;
+		}
+
 		return (
-			<ListMaybePlaceholder
-				isLoading={!isErrorDid && !isErrorStarterPack && (!did || !starterPack || !moderationOpts)}
-				isError={isErrorDid || isErrorStarterPack || !isValid}
-				errorMessage={m['screens.starterPack.error.notFound']()}
-				emptyMessage={m['screens.starterPack.error.notFound']()}
+			<ListError
+				message={m['screens.starterPack.error.notFound']()}
+				title={m['common.error.pageNotFound']()}
 			/>
 		);
 	}

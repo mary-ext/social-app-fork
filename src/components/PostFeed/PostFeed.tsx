@@ -26,11 +26,12 @@ import { useSession } from '#/state/session';
 
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import * as ListTail from '#/components/List/ListTail';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { RichText } from '#/components/RichText';
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
 
+import { m } from '#/paraglide/messages';
 import { useFocusEffect, useIsFocused } from '#/router';
 
 import { FeedShutdownMsg } from './FeedShutdownMsg';
@@ -107,10 +108,9 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 
-// estimate row height from typical post sizes.
 const FEED_ITEM_HEIGHT_ESTIMATE = 300;
 
-function PostFeed({
+export function PostFeed({
 	feed,
 	description,
 	ignoreFilterFor,
@@ -414,26 +414,10 @@ function PostFeed({
 		return arr;
 	})();
 
-	// events
-	// =
-
-	const onEndReached = () => {
-		if (isFetching || !hasNextPage || isError) {
-			return;
-		}
-
-		void fetchNextPage();
-	};
-
 	const onPressTryAgain = () => {
 		void refetch();
 		onHasNew?.(false);
 	};
-
-	const onPressRetryLoadMore = () => fetchNextPage();
-
-	// rendering
-	// =
 
 	const renderItem = ({ item: row, index: rowIndex }: ListRenderItemInfo<FeedRow>) => {
 		switch (row.type) {
@@ -516,23 +500,23 @@ function PostFeed({
 			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			ListFooterComponent={
-				<ListFooter
-					border={!isEmpty}
-					error={isError && !isEmpty ? cleanError(error) : undefined}
-					hasNextPage={hasNextPage}
-					isFetchingNextPage={isFetchingNextPage}
-					onRetry={onPressRetryLoadMore}
-					showEndMessage={!isEmpty && !isFetching}
-				/>
+				<ListTail.Frame border={!isEmpty}>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError && !isEmpty ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : !isEmpty && !isFetching && !hasNextPage ? (
+						<ListTail.End>{m['common.list.endOfList']()}</ListTail.End>
+					) : null}
+				</ListTail.Frame>
 			}
 			onScrolledDownChange={handleScrolledDownChange}
-			onEndReached={onEndReached}
+			onEndReached={() => void fetchNextPage()}
 			onEndReachedThreshold={2}
 			onItemSeen={onItemSeen}
 		/>
 	);
 }
-export { PostFeed };
 
 export function isThreadParentAt(arr: Array<unknown>, i: number) {
 	if (arr.length === 1) {

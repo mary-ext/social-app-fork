@@ -31,7 +31,8 @@ import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
 import * as Dialog from '#/components/Dialog';
 import { markStarterPackCreated } from '#/components/dialogs/starter-pack-dialog-reopen';
-import { ListMaybePlaceholder } from '#/components/Lists';
+import { ListError } from '#/components/List/ListError';
+import { ListLoading } from '#/components/List/ListLoading';
 import { Spinner } from '#/components/Spinner';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import { Text } from '#/components/Text';
@@ -64,24 +65,15 @@ export function Wizard() {
 	// Use targetDid if provided (from dialog), otherwise use current account
 	const profileDid = targetDid || currentAccount!.did;
 
-	const {
-		data: starterPack,
-		isLoading: isLoadingStarterPack,
-		isError: isErrorStarterPack,
-	} = useStarterPackQuery({ did: currentAccount!.did, rkey });
+	const { data: starterPack, isLoading: isLoadingStarterPack } = useStarterPackQuery({
+		did: currentAccount!.did,
+		rkey,
+	});
 	const listUri = starterPack?.list?.uri;
 
-	const {
-		data: listItems,
-		isLoading: isLoadingProfiles,
-		isError: isErrorProfiles,
-	} = useAllListMembersQuery(listUri);
+	const { data: listItems, isLoading: isLoadingProfiles } = useAllListMembersQuery(listUri);
 
-	const {
-		data: profile,
-		isLoading: isLoadingProfile,
-		isError: isErrorProfile,
-	} = useProfileQuery({ did: profileDid });
+	const { data: profile, isLoading: isLoadingProfile } = useProfileQuery({ did: profileDid });
 
 	const isEdit = !!rkey;
 	const isReady = (!isEdit || (isEdit && starterPack && listItems)) && profile && moderationOpts;
@@ -89,20 +81,22 @@ export function Wizard() {
 	if (!isReady) {
 		return (
 			<Layout.Screen>
-				<ListMaybePlaceholder
-					isLoading={isLoadingStarterPack || isLoadingProfiles || isLoadingProfile}
-					isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-					errorMessage={m['screens.starterPack.error.notFound']()}
-				/>
+				{isLoadingStarterPack || isLoadingProfiles || isLoadingProfile ? (
+					<ListLoading />
+				) : (
+					<ListError
+						message={m['screens.starterPack.error.notFound']()}
+						title={m['common.error.pageNotFound']()}
+					/>
+				)}
 			</Layout.Screen>
 		);
 	} else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
 		return (
 			<Layout.Screen>
-				<ListMaybePlaceholder
-					isLoading={false}
-					isError={true}
-					errorMessage={m['screens.starterPack.error.notFound']()}
+				<ListError
+					message={m['screens.starterPack.error.notFound']()}
+					title={m['common.error.pageNotFound']()}
 				/>
 			</Layout.Screen>
 		);
