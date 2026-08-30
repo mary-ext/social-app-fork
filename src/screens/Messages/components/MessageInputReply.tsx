@@ -1,7 +1,5 @@
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/display-names';
-
 import { useConvoActive } from '#/state/messages/convo';
 
 import { useMessageReplies } from '#/components/dms/MessageReplies';
@@ -26,7 +24,7 @@ export function MessageInputReply() {
 	}
 
 	const senderProfile = convo.relatedProfiles.get(replyTo.sender.did);
-	const displayName = senderProfile ? profileDisplayName(senderProfile) : null;
+	const displayName = senderProfile?.handle ?? null;
 
 	const { subtle, text } = getReplyPreviewText(replyTo);
 

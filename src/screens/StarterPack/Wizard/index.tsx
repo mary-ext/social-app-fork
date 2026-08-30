@@ -5,7 +5,7 @@ import { isDid, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useParams, useRoute } from '@oomfware/stacker';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
-import { profileDisplayName, sanitizeDisplayName } from '#/lib/display-names';
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/starter-pack';
@@ -141,8 +141,7 @@ function WizardInner({
 	const parsed = parseStarterPackUri(currentStarterPack?.uri);
 
 	const getDefaultName = () => {
-		const displayName = profileDisplayName(currentProfile!, { bareHandle: true });
-		return m['screens.starterPack.name.display']({ name: displayName }).slice(0, 50);
+		return m['screens.starterPack.name.display']({ name: currentProfile!.handle }).slice(0, 50);
 	};
 
 	const wizardUiStrings: Record<WizardStep, { header: string; nextBtn: string; subtitle?: string }> = {

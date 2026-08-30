@@ -1,5 +1,3 @@
-import { profileDisplayName } from '#/lib/display-names';
-
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
 import * as Dialog from '#/components/Dialog';
@@ -27,17 +25,17 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 
 			let names = null;
 			if (members.length === 1) {
-				names = m['screens.messages.addedToChat.one']({ name: profileDisplayName(members[0]!) });
+				names = m['screens.messages.addedToChat.one']({ name: members[0]!.handle });
 			} else if (members.length === 2) {
 				names = m['screens.messages.addedToChat.two']({
-					name: profileDisplayName(members[0]!),
-					name2: profileDisplayName(members[1]!),
+					name: members[0]!.handle,
+					name2: members[1]!.handle,
 				});
 			} else if (members.length > 2) {
 				const memberCount = convo.details.memberCount - 2;
 				names = m['screens.messages.addedToChat.many']({
-					name: profileDisplayName(members[0]!),
-					name2: profileDisplayName(members[1]!),
+					name: members[0]!.handle,
+					name2: members[1]!.handle,
 					count: memberCount,
 				});
 			}

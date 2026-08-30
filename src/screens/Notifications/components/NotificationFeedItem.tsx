@@ -26,7 +26,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
 import { MAX_POST_LINES } from '#/lib/constants/post';
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { isAbortError } from '#/lib/errors';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 
@@ -172,7 +171,7 @@ let NotificationFeedItem = ({
 
 	const niceTimestamp = niceDate(item.notification.indexedAt);
 	const firstAuthor = authors[0]!;
-	const firstAuthorName = sanitizeDisplayName(firstAuthor.profile.displayName || firstAuthor.profile.handle);
+	const firstAuthorName = firstAuthor.profile.handle;
 
 	// Calculate if this is a follow-back notification
 	let isFollowBack = false;
@@ -223,7 +222,6 @@ let NotificationFeedItem = ({
 				key={firstAuthor.profile.did}
 				to={firstAuthor.target}
 				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthorName })}
-				className={css.authorName}
 				color="text"
 				weight="semiBold"
 				size="md"
@@ -708,7 +706,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 			await queueFollow();
 			Toast.show(
 				m['common.follow.a11y.following']({
-					name: sanitizeDisplayName(profile.displayName || profile.handle),
+					name: profile.handle,
 				}),
 			);
 		} catch (err) {
@@ -725,7 +723,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 			await queueUnfollow();
 			Toast.show(
 				m['common.follow.noLongerFollowing']({
-					name: sanitizeDisplayName(profile.displayName || profile.handle),
+					name: profile.handle,
 				}),
 			);
 		} catch (err) {
@@ -838,11 +836,7 @@ function ExpandedAuthorProfileCard({
 				<ProfileCard.Header>
 					<ProfileCard.Avatar profile={author.profile} moderationOpts={moderationOpts} />
 					<ProfileCard.NameAndHandle profile={author.profile} moderationOpts={moderationOpts} />
-					<ProfileCard.FollowButton
-						profile={author.profile}
-						moderationOpts={moderationOpts}
-						variant="subtle"
-					/>
+					<ProfileCard.FollowButton profile={author.profile} variant="subtle" />
 				</ProfileCard.Header>
 			</ProfileCard.Outer>
 		</ProfileCard.Link>

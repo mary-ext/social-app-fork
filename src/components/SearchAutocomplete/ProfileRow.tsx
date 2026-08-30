@@ -31,9 +31,11 @@ export function ProfileRow({ row }: { row: Extract<ListRow, { kind: 'profile' }>
 				<Text numberOfLines={1} weight="medium">
 					{row.profile.handle}
 				</Text>
-				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{row.profile.displayName || row.profile.handle}
-				</Text>
+				{row.profile.displayName ? (
+					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+						{row.profile.displayName}
+					</Text>
+				) : null}
 			</span>
 		</Autocomplete.Item>
 	);

@@ -1,14 +1,7 @@
 import { type ReactNode, useState } from 'react';
 
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
 
-import { profileDisplayName } from '#/lib/display-names';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
@@ -49,7 +42,6 @@ type DialogInnerProps = {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	handle: Dialog.DialogHandle;
 	isOwner: boolean;
-	moderationOpts: ModerationOptions;
 	owner: GroupConvoMember;
 };
 
@@ -63,10 +55,8 @@ export function InviteLinkDialog(props: DialogInnerProps) {
 	);
 }
 
-function DialogInner({ convo, handle, isOwner, moderationOpts, owner }: DialogInnerProps) {
-	const ownerName = profileDisplayName(owner, {
-		moderation: getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileBio),
-	});
+function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
+	const ownerName = owner.handle;
 
 	const { joinLink } = convo.details;
 

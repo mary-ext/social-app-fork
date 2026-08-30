@@ -26,7 +26,7 @@ export function StepDetails() {
 		staleTime: STALE.INFINITY,
 	});
 
-	const name = currentProfile?.displayName || currentProfile?.handle;
+	const name = currentProfile?.handle;
 	const nameLength = state.name?.length ?? 0;
 
 	return (

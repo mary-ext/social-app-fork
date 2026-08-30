@@ -237,8 +237,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 						<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={item} size={44} />
 					</ProfileCard.Link>
 					<div>
-						<ProfileCard.Name moderationOpts={moderationOpts} profile={item} />
-						<ProfileCard.Handle profile={item} />
+						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={item} />
 						<div className={css.knownFollowers}>
 							<KnownFollowers moderationOpts={moderationOpts} profile={item} showIfEmpty variant="compact" />
 						</div>
@@ -341,15 +340,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 				list
 			)}
 			{showFooter ? footer : null}
-			{owner && moderationOpts && (
-				<InviteLinkDialog
-					convo={convo}
-					handle={inviteLinkHandle}
-					owner={owner}
-					isOwner={isOwner}
-					moderationOpts={moderationOpts}
-				/>
-			)}
+			{owner && <InviteLinkDialog convo={convo} handle={inviteLinkHandle} isOwner={isOwner} owner={owner} />}
 		</>
 	);
 }

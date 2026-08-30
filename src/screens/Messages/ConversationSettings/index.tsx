@@ -1,13 +1,11 @@
 import { useRef, useState } from 'react';
 
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
-import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { conversationTarget } from '#/lib/routes/targets';
 
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
 import { useEditGroupChatName } from '#/state/queries/messages/edit-group-chat-name';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
@@ -95,7 +93,6 @@ export function MessagesConversationSettingsScreen() {
 
 function SettingsInner({ convoId }: { convoId: string }) {
 	const router = useRouter();
-	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 	const { data: convoData, error, refetch } = useConvoQuery({ convoId });
 
@@ -111,7 +108,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 		);
 	}
 
-	if (!convo || !moderationOpts) {
+	if (!convo) {
 		return (
 			<div className={css.loading}>
 				<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
@@ -135,7 +132,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 		);
 	}
 
-	return <GroupSettings convo={convo} moderationOpts={moderationOpts} />;
+	return <GroupSettings convo={convo} />;
 }
 
 function keyExtractor(item: Item) {
@@ -147,13 +144,7 @@ function isGroupMember(member: ChatBskyActorDefs.ProfileViewBasic): member is Gr
 	return member.kind === undefined || member.kind.$type === 'chat.bsky.actor.defs#groupConvoMember';
 }
 
-function GroupSettings({
-	convo,
-	moderationOpts,
-}: {
-	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOptions;
-}) {
+function GroupSettings({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const { currentAccount } = useSession();
@@ -252,7 +243,7 @@ function GroupSettings({
 			data={items}
 			estimateHeight={76}
 			keyExtractor={keyExtractor}
-			ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} moderationOpts={moderationOpts} />}
+			ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} />}
 			ListFooterComponent={<ListTail.Frame border={false} />}
 			renderItem={renderItem}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
@@ -273,11 +264,9 @@ function GroupSettings({
 function SettingsHeader({
 	convo,
 	isOwner,
-	moderationOpts,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	isOwner: boolean;
-	moderationOpts: ModerationOptions;
 }) {
 	const router = useRouter();
 
@@ -508,7 +497,6 @@ function SettingsHeader({
 					owner={convo.primaryMember}
 					handle={inviteLinkDialog}
 					isOwner={isOwner}
-					moderationOpts={moderationOpts}
 				/>
 			)}
 			<LockChatPrompt handle={lockChatPrompt} onConfirm={handleConfirmLock} />

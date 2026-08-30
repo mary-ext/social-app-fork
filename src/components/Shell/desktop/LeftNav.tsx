@@ -101,9 +101,11 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 												{profile.handle}
 											</Text>
 
-											<Text size="xs" color="textContrastMedium" numberOfLines={1}>
-												{sanitizeDisplayName(profile.displayName || profile.handle)}
-											</Text>
+											{profile.displayName ? (
+												<Text size="xs" color="textContrastMedium" numberOfLines={1}>
+													{sanitizeDisplayName(profile.displayName)}
+												</Text>
+											) : null}
 										</div>
 										<EllipsisIcon aria-hidden={true} className={css.ellipsisIcon} />
 									</>

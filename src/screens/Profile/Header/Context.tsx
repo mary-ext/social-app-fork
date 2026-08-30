@@ -1,15 +1,8 @@
 import { createContext, type ReactNode, use } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationDecision,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import { moderateProfile, type ModerationDecision, type ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { isAbortError } from '#/lib/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -119,10 +112,7 @@ export function ProfileHeaderProvider({
 				onFollowChange?.(true);
 				Toast.show(
 					m['common.follow.a11y.following']({
-						name: sanitizeDisplayName(
-							profile.displayName || profile.handle,
-							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-						),
+						name: profile.handle,
 					}),
 				);
 			} catch (err) {
@@ -140,10 +130,7 @@ export function ProfileHeaderProvider({
 				onFollowChange?.(false);
 				Toast.show(
 					m['common.follow.noLongerFollowing']({
-						name: sanitizeDisplayName(
-							profile.displayName || profile.handle,
-							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-						),
+						name: profile.handle,
 					}),
 					{ type: 'default' },
 				);

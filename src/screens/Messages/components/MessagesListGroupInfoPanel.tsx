@@ -2,9 +2,6 @@ import type { ReactNode } from 'react';
 
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/display-names';
-
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 import { useSession } from '#/state/session';
 
@@ -28,7 +25,6 @@ export function MessagesListGroupInfoPanel({
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 }) {
-	const moderationOpts = useModerationOpts();
 	const convoId = convo.view.id;
 
 	const addMembersHandle = Dialog.useDialogHandle();
@@ -54,18 +50,18 @@ export function MessagesListGroupInfoPanel({
 
 	let names: ReactNode = null;
 	if (members.length === 1) {
-		names = m['screens.messages.newChat.one']({ name: profileDisplayName(members[0]!) });
+		names = m['screens.messages.newChat.one']({ name: members[0]!.handle });
 	} else if (members.length === 2) {
 		names = m['screens.messages.newChat.two']({
-			name: profileDisplayName(members[0]!),
-			name2: profileDisplayName(members[1]!),
+			name: members[0]!.handle,
+			name2: members[1]!.handle,
 		});
 	} else if (members.length > 2) {
 		const memberCount = convo.details.memberCount - 2;
 		names = m['screens.messages.newChat.many']({
-			name: profileDisplayName(members[0]!),
+			name: members[0]!.handle,
 			count: memberCount,
-			name2: profileDisplayName(members[1]!),
+			name2: members[1]!.handle,
 		});
 	}
 
@@ -127,11 +123,10 @@ export function MessagesListGroupInfoPanel({
 					</div>
 				) : null}
 			</div>
-			{convo.primaryMember && moderationOpts && (
+			{convo.primaryMember && (
 				<InviteLinkDialog
 					convo={convo}
 					owner={convo.primaryMember}
-					moderationOpts={moderationOpts}
 					isOwner={isOwner}
 					handle={inviteLinkHandle}
 				/>

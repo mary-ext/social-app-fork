@@ -1,7 +1,5 @@
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { profileDisplayName } from '#/lib/display-names';
-
 import { isDidBlockedInConvo } from '#/components/dms/getMessageInfo';
 
 import { m } from '#/paraglide/messages';
@@ -29,7 +27,7 @@ export function getReactionInfo({
 	const isFromMe = reaction.sender.did === currentAccountDid;
 	const senderDid = reaction.sender.did;
 	const sender = convo.members.find((member) => member.did === senderDid);
-	const name = sender ? profileDisplayName(sender) : null;
+	const name = sender?.handle ?? null;
 
 	// Hide the preview when either the reactor or the author of the reacted-to message is blocked —
 	// otherwise a blocked reactor's name or a blocked sender's message text would leak into the chat list.

@@ -3,6 +3,7 @@ import type { ComponentType, SVGProps } from 'react';
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import { clsx } from 'clsx';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
@@ -151,6 +152,7 @@ function DrawerProfileCard({
 }) {
 	const { data: profile } = useProfileQuery({ did: account.did });
 	const { isActive: live } = useActorStatus(profile);
+	const displayName = profile?.displayName ? sanitizeDisplayName(profile.displayName) : '';
 
 	return (
 		<div className={styles.profileCardWrap}>
@@ -169,13 +171,15 @@ function DrawerProfileCard({
 				<div>
 					<div className={styles.profileNameRow}>
 						<Text numberOfLines={1} size="xl" weight="bold">
-							{profile?.displayName || account.handle}
+							{account.handle}
 						</Text>
 						{profile && <ProfileBadges profile={profile} size="lg" />}
 					</div>
-					<Text color="textContrastMedium" numberOfLines={1} size="md">
-						{`@${account.handle}`}
-					</Text>
+					{displayName ? (
+						<Text color="textContrastMedium" numberOfLines={1} size="md">
+							{displayName}
+						</Text>
+					) : null}
 				</div>
 				<Text color="textContrastMedium" size="md">
 					<Trans

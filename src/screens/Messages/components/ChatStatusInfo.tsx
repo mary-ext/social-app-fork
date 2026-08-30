@@ -3,7 +3,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/display-names';
+import { sanitizeDisplayName } from '#/lib/display-names';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
@@ -100,10 +100,9 @@ function InviterHeader({
 }) {
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
-	const displayName = profileDisplayName(profile, {
-		bareHandle: true,
-		moderation: getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-	});
+	const displayName = profile.displayName
+		? sanitizeDisplayName(profile.displayName, getDisplayRestrictions(moderation, DisplayContext.ProfileBio))
+		: '';
 
 	return (
 		<div className={styles.inviterRow}>
@@ -115,7 +114,7 @@ function InviterHeader({
 			<div className={styles.inviterColumn}>
 				<Text className={styles.inviterName}>
 					<Trans
-						inputs={{ name: displayName }}
+						inputs={{ name: profile.handle }}
 						markup={{
 							t0: ({ children }) => (
 								<Text color="text" numberOfLines={1} size="md" weight="semiBold">
@@ -133,7 +132,11 @@ function InviterHeader({
 						message={m['screens.messages.addedToChat.addedYou']}
 					/>
 				</Text>
-				<Text className={styles.handle} color="textContrastHigh" size="sm">{`@${profile.handle}`}</Text>
+				{displayName ? (
+					<Text className={styles.handle} color="textContrastHigh" size="sm">
+						{displayName}
+					</Text>
+				) : null}
 			</div>
 		</div>
 	);

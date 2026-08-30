@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
@@ -46,7 +45,7 @@ export function PreviewableUserAvatar({
 	const status = useActorStatus(profile);
 	const liveHandle = Dialog.useDialogHandle();
 
-	const name = sanitizeDisplayName(profile.displayName || profile.handle);
+	const name = profile.handle;
 	const circular = props.type !== 'algo' && props.type !== 'list';
 	const radius = circular ? '50%' : props.size > 32 ? '8px' : '3px';
 

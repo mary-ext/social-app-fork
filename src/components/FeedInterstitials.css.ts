@@ -143,22 +143,6 @@ export const body = style({
 	paddingBottom: space.sm,
 });
 
-export const nameRow = style({
-	display: 'flex',
-	flexDirection: 'row',
-	alignItems: 'center',
-	maxWidth: '100%',
-});
-
-export const badges = style({
-	flexShrink: 0,
-	paddingLeft: space.xs,
-
-	':empty': {
-		display: 'none',
-	},
-});
-
 export const identity = style({
 	display: 'flex',
 	flexDirection: 'column',

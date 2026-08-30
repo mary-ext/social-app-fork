@@ -1,6 +1,6 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { profileDisplayName, isInvalidHandle } from '#/lib/display-names';
+import { isInvalidHandle, sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -29,16 +29,13 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 		return null;
 	}
 
-	const handle = `@${profile.handle}`;
-	const displayName = moderationOpts
-		? profileDisplayName(profile, {
-				bareHandle: true,
-				moderation: getDisplayRestrictions(
-					moderateProfile(profile, moderationOpts),
-					DisplayContext.ProfileBio,
-				),
-			})
-		: handle;
+	const displayName =
+		moderationOpts && profile.displayName
+			? sanitizeDisplayName(
+					profile.displayName,
+					getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileBio),
+				)
+			: '';
 	const profileLink = profile.handle && !isInvalidHandle(profile.handle) ? profile.handle : profile.did;
 
 	return (
@@ -46,13 +43,15 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 			<UserAvatar avatar={profile.avatar} size={88} type={profile.associated?.labeler ? 'labeler' : 'user'} />
 			<div className={css.nameRow}>
 				<Text color="text" size="_2xl" weight="bold">
-					{displayName}
+					{profile.handle}
 				</Text>
 				<ProfileBadges profile={profile} size="lg" />
 			</div>
-			<Text className={css.handle} color="textContrastHigh" size="sm">
-				{handle}
-			</Text>
+			{displayName ? (
+				<Text className={css.handle} color="textContrastHigh" size="sm">
+					{displayName}
+				</Text>
+			) : null}
 			{moderationOpts ? (
 				<div className={css.labels}>
 					<ProfileCard.Labels moderationOpts={moderationOpts} profile={profile} />

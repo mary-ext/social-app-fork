@@ -2,8 +2,6 @@ import type { ComponentType, SVGProps } from 'react';
 
 import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { profileDisplayName } from '#/lib/display-names';
-
 import LeaveIcon from '#/icons/central/ArrowBoxLeft_round_outlined_radius1_stroke2.svg';
 import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
 import ChainLinkBrokenIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
@@ -17,7 +15,7 @@ export type SystemMessageAction =
 	| {
 			kind: 'profile';
 			profile: ChatBskyActorDefs.ProfileViewBasic;
-			displayName: string;
+			handle: string;
 	  }
 	| { kind: 'inviteLink' };
 
@@ -38,7 +36,7 @@ function getProfileAction(
 	return {
 		kind: 'profile',
 		profile,
-		displayName: profileDisplayName(profile),
+		handle: profile.handle,
 	};
 }
 
@@ -54,8 +52,8 @@ export function getSystemMessageInfo(
 				Icon: JoinIcon,
 				message: action
 					? opts.short
-						? m['components.dms.update.added']({ name: action.displayName })
-						: m['components.dms.update.addedToGroup']({ name: action.displayName })
+						? m['components.dms.update.added']({ name: action.handle })
+						: m['components.dms.update.addedToGroup']({ name: action.handle })
 					: opts.short
 						? m['components.dms.update.someoneAdded']()
 						: m['components.dms.update.someoneAddedToGroup'](),
@@ -68,8 +66,8 @@ export function getSystemMessageInfo(
 				Icon: LeaveIcon,
 				message: action
 					? opts.short
-						? m['components.dms.update.removed']({ name: action.displayName })
-						: m['components.dms.update.removedFromGroup']({ name: action.displayName })
+						? m['components.dms.update.removed']({ name: action.handle })
+						: m['components.dms.update.removedFromGroup']({ name: action.handle })
 					: opts.short
 						? m['components.dms.update.someoneRemoved']()
 						: m['components.dms.update.someoneRemovedFromGroup'](),
@@ -82,8 +80,8 @@ export function getSystemMessageInfo(
 				Icon: JoinIcon,
 				message: action
 					? opts.short
-						? m['components.dms.update.joined']({ name: action.displayName })
-						: m['components.dms.update.joinedGroup']({ name: action.displayName })
+						? m['components.dms.update.joined']({ name: action.handle })
+						: m['components.dms.update.joinedGroup']({ name: action.handle })
 					: opts.short
 						? m['components.dms.update.someoneJoined']()
 						: m['components.dms.update.someoneJoinedGroup'](),
@@ -96,8 +94,8 @@ export function getSystemMessageInfo(
 				Icon: LeaveIcon,
 				message: action
 					? opts.short
-						? m['components.dms.update.left']({ name: action.displayName })
-						: m['components.dms.update.leftGroup']({ name: action.displayName })
+						? m['components.dms.update.left']({ name: action.handle })
+						: m['components.dms.update.leftGroup']({ name: action.handle })
 					: opts.short
 						? m['components.dms.update.someoneLeft']()
 						: m['components.dms.update.someoneLeftGroup'](),

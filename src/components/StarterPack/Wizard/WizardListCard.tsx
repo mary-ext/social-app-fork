@@ -41,7 +41,7 @@ function WizardListCard({
 	profile?: AppBskyActorDefs.ProfileViewBasic;
 	feed?: AppBskyFeedDefs.GeneratorView;
 	displayName: string;
-	subtitle: string;
+	subtitle?: string;
 	onPress: () => void;
 	avatar?: string;
 	included?: boolean;
@@ -55,9 +55,11 @@ function WizardListCard({
 				<Text color="textContrastHigh" weight="semiBold" size="md" numberOfLines={1}>
 					{displayName}
 				</Text>
-				<Text color="textContrastMedium" size="md_sub" numberOfLines={1}>
-					{subtitle}
-				</Text>
+				{subtitle ? (
+					<Text color="textContrastMedium" size="md_sub" numberOfLines={1}>
+						{subtitle}
+					</Text>
+				) : null}
 			</div>
 		</>
 	);
@@ -125,7 +127,7 @@ export function WizardProfileCard({
 		moderateProfile(profile, moderationOpts),
 		DisplayContext.ProfileMedia,
 	);
-	const displayName = profile.displayName ? sanitizeDisplayName(profile.displayName) : profile.handle;
+	const displayName = profile.displayName ? sanitizeDisplayName(profile.displayName) : undefined;
 
 	const onPress = () => {
 		if (disabled) {

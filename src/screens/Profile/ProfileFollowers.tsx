@@ -1,6 +1,5 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -43,9 +42,7 @@ export const ProfileFollowersScreen = () => {
 				<Layout.Header.Content>
 					{profile && (
 						<>
-							<Layout.Header.TitleText>
-								{sanitizeDisplayName(profile.displayName || profile.handle)}
-							</Layout.Header.TitleText>
+							<Layout.Header.TitleText>{profile.handle}</Layout.Header.TitleText>
 							<Layout.Header.SubtitleText>
 								{m['screens.profile.follow.followers.count']({ count: followersCount ?? 0 })}
 							</Layout.Header.SubtitleText>

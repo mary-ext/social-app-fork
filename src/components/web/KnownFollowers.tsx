@@ -1,12 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { Trans } from '#/locale/Trans';
@@ -87,19 +81,7 @@ function KnownFollowersInner({
 	showIfEmpty?: boolean;
 	variant: KnownFollowersVariant;
 }) {
-	const slice = cachedKnownFollowers.followers.slice(0, 3).map((f) => {
-		const moderation = moderateProfile(f, moderationOpts);
-		return {
-			moderation,
-			profile: {
-				...f,
-				displayName: sanitizeDisplayName(
-					f.displayName || f.handle,
-					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-				),
-			},
-		};
-	});
+	const slice = cachedKnownFollowers.followers.slice(0, 3);
 
 	// Does not have blocks applied. Always >= slice.length
 	const serverCount = cachedKnownFollowers.count;
@@ -114,11 +96,7 @@ function KnownFollowersInner({
 			label={m['common.follow.a11y.knownFollowers']()}
 			to={{ name: 'ProfileKnownFollowers', actor: profile.did }}
 		>
-			<AvatarStack
-				moderationOpts={moderationOpts}
-				profiles={slice.map(({ profile: prof }) => prof)}
-				size={AVI_SIZE[variant]}
-			/>
+			<AvatarStack moderationOpts={moderationOpts} profiles={slice} size={AVI_SIZE[variant]} />
 
 			<Text className={css.text} color="textContrastMedium" numberOfLines={2} size="sm">
 				{slice.length >= 2 ? (
@@ -127,8 +105,8 @@ function KnownFollowersInner({
 							message={m['common.follow.followedByMany']}
 							inputs={{
 								count: serverCount - 2,
-								name: slice[0]!.profile.displayName,
-								name2: slice[1]!.profile.displayName,
+								name: slice[0]!.handle,
+								name2: slice[1]!.handle,
 							}}
 							markup={{
 								t0: ({ children }) => (
@@ -147,8 +125,8 @@ function KnownFollowersInner({
 						<Trans
 							message={m['common.follow.followedByTwo']}
 							inputs={{
-								name: slice[0]!.profile.displayName,
-								name2: slice[1]!.profile.displayName,
+								name: slice[0]!.handle,
+								name2: slice[1]!.handle,
 							}}
 							markup={{
 								t0: ({ children }) => (
@@ -167,7 +145,7 @@ function KnownFollowersInner({
 				) : serverCount > 1 ? (
 					<Trans
 						message={m['common.follow.followedByOthers']}
-						inputs={{ count: serverCount - 1, name: slice[0]!.profile.displayName }}
+						inputs={{ count: serverCount - 1, name: slice[0]!.handle }}
 						markup={{
 							t0: ({ children }) => (
 								<Text color="textContrastMedium" size="sm">
@@ -179,7 +157,7 @@ function KnownFollowersInner({
 				) : (
 					<Trans
 						message={m['common.follow.followedBy']}
-						inputs={{ name: slice[0]!.profile.displayName }}
+						inputs={{ name: slice[0]!.handle }}
 						markup={{
 							t0: ({ children }) => (
 								<Text color="textContrastMedium" size="sm">

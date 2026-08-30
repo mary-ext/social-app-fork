@@ -17,7 +17,6 @@ import { useSession } from '#/state/session';
 import { BlockLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/FeedInterstitials.css';
-import { ProfileBadges } from '#/components/ProfileBadges';
 import { SuggestedFollowsDialog } from '#/components/SuggestedFollowsDialog';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -57,7 +56,7 @@ function SuggestedFollowCard({
 		<BlockLink
 			className={clsx(css.cardBase, css.cardLink)}
 			label={m['common.profile.a11y.viewNamed']({
-				name: profile.displayName || profile.handle,
+				name: profile.handle,
 			})}
 			to={profileTarget(profile.did)}
 		>
@@ -75,18 +74,7 @@ function SuggestedFollowCard({
 				<div className={css.body}>
 					<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} size={88} />
 					<div className={css.identity}>
-						<div className={css.nameRow}>
-							<ProfileCard.Name
-								color="text"
-								moderationOpts={moderationOpts}
-								profile={profile}
-								size="lg"
-								weight="semiBold"
-							/>
-							<div className={css.badges}>
-								<ProfileBadges profile={profile} size="md" />
-							</div>
-						</div>
+						<ProfileCard.Handle profile={profile} />
 						<div className={css.description}>
 							<ProfileCard.Description
 								align="center"
@@ -98,7 +86,7 @@ function SuggestedFollowCard({
 						</div>
 					</div>
 				</div>
-				<ProfileCard.FollowButton moderationOpts={moderationOpts} profile={profile} variant="text-only" />
+				<ProfileCard.FollowButton profile={profile} variant="text-only" />
 			</div>
 		</BlockLink>
 	);

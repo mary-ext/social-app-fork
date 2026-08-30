@@ -108,9 +108,11 @@ function ProfileItem({
 				<Text numberOfLines={1} weight="medium">
 					{item.profile.handle}
 				</Text>
-				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-					{item.profile.displayName || item.profile.handle}
-				</Text>
+				{item.profile.displayName ? (
+					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+						{item.profile.displayName}
+					</Text>
+				) : null}
 			</span>
 		</BaseAutocomplete.Item>
 	);

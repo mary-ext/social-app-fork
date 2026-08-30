@@ -58,7 +58,7 @@ export function Default({
 	topBorder,
 }: {
 	descriptionLines?: number;
-	followButtonProps?: Partial<Omit<FollowButtonProps, 'moderationOpts' | 'profile'>>;
+	followButtonProps?: Partial<Omit<FollowButtonProps, 'profile'>>;
 	moderationOpts: ModerationOptions;
 	onPress?: () => void;
 	profile: AnyProfileView;
@@ -71,7 +71,7 @@ export function Default({
 				<Header>
 					<Avatar moderationOpts={moderationOpts} profile={profile} />
 					<NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-					<FollowButton moderationOpts={moderationOpts} profile={profile} {...followButtonProps} />
+					<FollowButton profile={profile} {...followButtonProps} />
 				</Header>
 				{showLabels && <Labels moderationOpts={moderationOpts} profile={profile} />}
 				<Description numberOfLines={descriptionLines} profile={profile} />
@@ -108,7 +108,7 @@ export function Link({
 		<BlockLink
 			className={clsx(css.link, className)}
 			label={m['common.profile.a11y.viewNamed']({
-				name: profile.displayName || profile.handle,
+				name: profile.handle,
 			})}
 			onBeforePress={onPress}
 			to={profileTarget(profile.did)}
@@ -189,11 +189,17 @@ export function Name({
 	size?: 'md_sub' | 'lg';
 	weight?: 'normal' | 'semiBold';
 }) {
+	if (!profile.displayName) {
+		return null;
+	}
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
-		profile.displayName || profile.handle,
+		profile.displayName,
 		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
+	if (!name) {
+		return null;
+	}
 
 	return (
 		<Text numberOfLines={1} color={color} size={size} weight={weight}>
@@ -356,7 +362,6 @@ export function Labels({
 export type FollowButtonVariant = 'default' | 'text-only' | 'suggested' | 'subtle';
 
 export type FollowButtonProps = {
-	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
 	variant?: FollowButtonVariant;
 };
@@ -368,29 +373,18 @@ export function FollowButton(props: FollowButtonProps) {
 	return hasSession && !isMe ? <FollowButtonInner {...props} /> : null;
 }
 
-function FollowButtonInner({
-	moderationOpts,
-	profile: profileUnshadowed,
-	variant = 'default',
-}: FollowButtonProps) {
+function FollowButtonInner({ profile: profileUnshadowed, variant = 'default' }: FollowButtonProps) {
 	const profile = useProfileShadow(profileUnshadowed);
-	const moderation = moderateProfile(profile, moderationOpts);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
 	const isRound = variant === 'suggested';
 	const followingWithIcon = variant !== 'text-only';
 	const followWithIcon = variant !== 'text-only' && variant !== 'subtle';
 
-	const name = () =>
-		sanitizeDisplayName(
-			profile.displayName || profile.handle,
-			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-		);
-
 	const onPressFollow = async () => {
 		try {
 			await queueFollow();
-			Toast.show(m['common.follow.a11y.following']({ name: name() }));
+			Toast.show(m['common.follow.a11y.following']({ name: profile.handle }));
 		} catch (err) {
 			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });
@@ -401,7 +395,7 @@ function FollowButtonInner({
 	const onPressUnfollow = async () => {
 		try {
 			await queueUnfollow();
-			Toast.show(m['common.follow.noLongerFollowing']({ name: name() }));
+			Toast.show(m['common.follow.noLongerFollowing']({ name: profile.handle }));
 		} catch (err) {
 			if (!isAbortError(err)) {
 				Toast.show(m['common.error.generic'](), { type: 'error' });

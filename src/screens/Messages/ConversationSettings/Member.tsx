@@ -1,6 +1,3 @@
-import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
-
-import { profileDisplayName } from '#/lib/display-names';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -51,27 +48,14 @@ export function Member({
 		return <MemberPlaceholder />;
 	}
 
-	const moderation = moderateProfile(profile, moderationOpts);
-
 	const isDeletedAccount = profile.handle === 'missing.invalid';
-	const displayName = isDeletedAccount
-		? m['common.account.deleted']()
-		: profileDisplayName(profile, {
-				bareHandle: true,
-				moderation: getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-			});
+	const displayName = isDeletedAccount ? m['common.account.deleted']() : profile.handle;
 	const isProfileOwner = profile.did === convo.primaryMember?.did;
 	const isSelf = currentAccount?.did === profile.did;
 
 	const joinedReason = profile.kind?.addedBy
 		? m['screens.messages.addedToChat.addedBy']({
-				name: profileDisplayName(profile.kind.addedBy, {
-					bareHandle: true,
-					moderation: getDisplayRestrictions(
-						moderateProfile(profile.kind.addedBy, moderationOpts),
-						DisplayContext.ProfileBio,
-					),
-				}),
+				name: profile.kind.addedBy.handle,
 			})
 		: m['screens.messages.addedToChat.addedByInviteLink']();
 
@@ -84,8 +68,7 @@ export function Member({
 				<div className={css.header}>
 					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
 					<div className={css.nameColumn}>
-						<ProfileCard.Handle profile={profile} />
-						<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
+						<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
 
 						{!isProfileOwner && (
 							<Text className={css.joinedReason} color="textContrastMedium" numberOfLines={1} size="sm">

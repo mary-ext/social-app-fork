@@ -1,12 +1,9 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { differenceInSeconds } from '@mary/date-fns';
 
-import { sanitizeDisplayName } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
@@ -65,18 +62,10 @@ function DialogInner({
 	now: Date;
 	onClose: () => void;
 }) {
-	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 	const isMe = profile.did === currentAccount?.did;
 
-	let profileName = profile.displayName || profile.handle;
-	if (moderationOpts) {
-		const moderation = moderateProfile(profile, moderationOpts);
-		profileName = sanitizeDisplayName(
-			profile.displayName || profile.handle,
-			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-		);
-	}
+	const profileName = profile.handle;
 
 	const getJoinMessage = () => {
 		const parts = relativeMessageParts(createdAt, now);

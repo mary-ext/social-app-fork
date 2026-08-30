@@ -5,7 +5,6 @@ import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { profileDisplayName } from '#/lib/display-names';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { isOnlyEmoji } from '#/lib/utils/emoji';
 
@@ -88,7 +87,7 @@ let MessageItem = ({
 
 	const isPending = item.type === 'pendingMessage';
 
-	const displayName = profile ? profileDisplayName(profile) : null;
+	const displayName = profile?.handle ?? null;
 
 	const isFromSelf = message.sender?.did != null && message.sender.did === currentAccount?.did;
 
@@ -157,7 +156,7 @@ let MessageItem = ({
 			const memberSender = relatedProfiles.get(senderDid);
 			if (memberSender) {
 				reactionsLabel = m['components.dms.reaction.reactedBy']({
-					name: profileDisplayName(memberSender),
+					name: memberSender.handle,
 					reaction: reaction.value,
 				});
 			} else {
@@ -482,11 +481,7 @@ function ReplyCaption({
 	) {
 		const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did;
 		const originalProfile = relatedProfiles.get(replyTo.sender.did);
-		const originalName = originalSenderIsSelf
-			? null
-			: originalProfile
-				? profileDisplayName(originalProfile)
-				: null;
+		const originalName = originalSenderIsSelf ? null : originalProfile ? originalProfile.handle : null;
 		caption = isFromSelf
 			? originalSenderIsSelf
 				? m['components.dms.update.youRepliedToYourself']()
@@ -547,7 +542,7 @@ function ReplyQuote({
 	// Hide the quoted content if we block, or are blocked by, the original
 	// sender - mirroring how the message bubble itself is hidden.
 	const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false;
-	const senderName = senderProfile && !isBlocked ? profileDisplayName(senderProfile) : null;
+	const senderName = senderProfile && !isBlocked ? senderProfile.handle : null;
 
 	const tintColor = isFromSelf ? 'white' : 'text';
 	const subtleColor = isFromSelf ? 'white' : 'textContrastHigh';

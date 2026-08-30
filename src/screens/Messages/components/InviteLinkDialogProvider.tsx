@@ -1,6 +1,5 @@
 import { createContext, type ReactNode, useContext } from 'react';
 
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -36,10 +35,9 @@ function GroupInviteLinkDialogProvider({
 }) {
 	const { currentAccount } = useSession();
 	const handle = Dialog.useDialogHandle();
-	const moderationOpts = useModerationOpts();
 	const owner = convo.primaryMember;
 
-	if (!owner || !moderationOpts) {
+	if (!owner) {
 		return <>{children}</>;
 	}
 
@@ -48,13 +46,7 @@ function GroupInviteLinkDialogProvider({
 	return (
 		<Context.Provider value={handle}>
 			{children}
-			<InviteLinkDialog
-				convo={convo}
-				handle={handle}
-				owner={owner}
-				isOwner={isOwner}
-				moderationOpts={moderationOpts}
-			/>
+			<InviteLinkDialog convo={convo} handle={handle} owner={owner} isOwner={isOwner} />
 		</Context.Provider>
 	);
 }

@@ -1,8 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { profileDisplayName } from '#/lib/display-names';
-
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Dialog from '#/components/Dialog';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -21,7 +19,7 @@ export function SubscribeProfileButton({
 }) {
 	const handle = Dialog.useDialogHandle();
 
-	const name = profileDisplayName(profile, { bareHandle: true });
+	const name = profile.handle;
 	const isSubscribed =
 		profile.viewer?.activitySubscription?.post || profile.viewer?.activitySubscription?.reply;
 	const Icon = isSubscribed ? BellRingingIcon : BellPlusIcon;
