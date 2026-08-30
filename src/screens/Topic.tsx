@@ -6,14 +6,18 @@ import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { shareUrl } from '#/components/sharing';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -73,57 +77,44 @@ export default function TopicScreen() {
 const POST_ITEM_HEIGHT_ESTIMATE = 300;
 
 function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest' }) {
-	const {
-		data,
-		isFetched,
-		isFetchingNextPage,
-		isLoading,
-		isError,
-		error,
-		refetch,
-		fetchNextPage,
-		hasNextPage,
-	} = useSearchPostsQuery({
-		query: topic,
-		sort,
-	});
+	const { data, isFetchingNextPage, isPending, isError, error, refetch, fetchNextPage } = useSearchPostsQuery(
+		{
+			query: topic,
+			sort,
+		},
+	);
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || error) {
-			return;
+	if (posts.length < 1) {
+		if (isError) {
+			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
 		}
-		void fetchNextPage();
-	};
+
+		if (isPending) {
+			return <PostFeedLoadingPlaceholder />;
+		}
+
+		return <ListEmpty icon={MagnifyingGlassIcon} message={m['screens.topic.empty']()} />;
+	}
 
 	return (
-		<>
-			{posts.length < 1 ? (
-				<ListMaybePlaceholder
-					isLoading={isLoading || !isFetched}
-					isError={isError}
-					onRetry={refetch}
-					emptyType="results"
-					emptyMessage={m['screens.topic.empty']()}
-				/>
-			) : (
-				<List
-					data={posts}
-					estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
-					keyExtractor={(item, index) => `${item.uri}-${index}`}
-					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
-					onEndReached={onEndReached}
-					onEndReachedThreshold={4}
-					ListFooterComponent={
-						<ListFooter
-							isFetchingNextPage={isFetchingNextPage}
-							error={cleanError(error)}
-							onRetry={fetchNextPage}
-						/>
-					}
-				/>
-			)}
-		</>
+		<List
+			data={posts}
+			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={(item) => `${item.uri}|${item.cid}`}
+			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
+			ListFooterComponent={
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
+			}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
+		/>
 	);
 }

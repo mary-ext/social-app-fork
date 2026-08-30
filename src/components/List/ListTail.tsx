@@ -63,3 +63,17 @@ export function Error({ message, onRetry }: { message: string; onRetry: () => vo
 		</div>
 	);
 }
+
+/**
+ * renders an end of list message.
+ *
+ * @param children end-of-list message
+ * @returns the end marker
+ */
+export function End({ children }: { children: ReactNode }) {
+	return (
+		<Text color="textContrastLow" size="sm">
+			{children}
+		</Text>
+	);
+}

@@ -10,10 +10,3 @@ export const header = style({
 	paddingInline: space.lg,
 	borderBottom: `1px solid ${colors.borderContrastLow}`,
 });
-
-export const emptyState = style({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center',
-	gap: space.xl,
-});

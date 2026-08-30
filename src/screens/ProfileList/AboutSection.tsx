@@ -8,9 +8,10 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
-import { EmptyState } from '#/components/EmptyState';
 import { List, type ListMethods } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -36,27 +37,12 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isOwner = list.creator.did === currentAccount?.did;
 
-	const {
-		data,
-		error,
-		fetchNextPage,
-		hasNextPage,
-		isError,
-		isFetched,
-		isFetching,
-		isFetchingNextPage,
-		refetch,
-	} = useListMembersQuery(list.uri);
+	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } = useListMembersQuery(
+		list.uri,
+	);
 
 	const items = data?.pages ? data.pages.flatMap((page) => page.items) : [];
-	const isEmpty = !isFetching && isFetched && items.length === 0;
-
-	const onEndReached = () => {
-		if (isFetching || !hasNextPage || isError) {
-			return;
-		}
-		void fetchNextPage();
-	};
+	const isEmpty = !isPending && items.length === 0;
 
 	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
@@ -65,37 +51,32 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 		});
 	};
 
-	if (!moderationOpts || ((isFetching || !isFetched) && items.length === 0 && !isError)) {
-		return <ProfileCard.LoadingPlaceholder />;
+	if (isError && items.length === 0) {
+		return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
 	}
 
-	if (isEmpty && isError) {
-		return (
-			<ListMaybePlaceholder
-				errorMessage={cleanError(error)}
-				isError={true}
-				isLoading={false}
-				onRetry={refetch}
-			/>
-		);
+	if (isPending || !moderationOpts) {
+		return <ProfileCard.LoadingPlaceholder />;
 	}
 
 	if (isEmpty) {
 		return (
-			<div className={css.emptyState}>
-				<EmptyState icon={ListIcon} message={m['screens.profileList.members.empty']()} />
-				{isOwner && (
-					<Button
-						color="primary"
-						label={m['screens.profileList.members.startAdding']()}
-						onClick={onPressAddUser}
-						size="small"
-					>
-						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
-					</Button>
-				)}
-			</div>
+			<ListEmpty
+				icon={ListIcon}
+				message={m['screens.profileList.members.empty']()}
+				button={
+					isOwner
+						? {
+								label: m['screens.profileList.members.startAdding'](),
+								text: m['screens.profileList.members.startAddingCta'](),
+								icon: PersonPlusIcon,
+								onPress: onPressAddUser,
+								size: 'small',
+								color: 'primary',
+							}
+						: undefined
+				}
+			/>
 		);
 	}
 
@@ -115,23 +96,12 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	) : undefined;
 
 	return (
-		<div>
+		<>
 			<List
+				ref={scrollElRef}
 				data={items}
 				estimateHeight={MEMBER_ITEM_HEIGHT_ESTIMATE}
 				keyExtractor={(item) => item.subject.did}
-				ListFooterComponent={
-					<ListFooter
-						error={cleanError(error)}
-						isFetchingNextPage={isFetchingNextPage}
-						onRetry={fetchNextPage}
-					/>
-				}
-				ListHeaderComponent={header}
-				onEndReached={onEndReached}
-				onEndReachedThreshold={2}
-				onScrolledDownChange={setIsScrolledDown}
-				ref={scrollElRef}
 				renderItem={({ index, item }) => (
 					<ListMember
 						index={index}
@@ -142,7 +112,21 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 						profile={item.subject}
 					/>
 				)}
+				ListFooterComponent={
+					<ListTail.Frame>
+						{isFetchingNextPage ? (
+							<ListTail.Pending />
+						) : isError ? (
+							<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+						) : null}
+					</ListTail.Frame>
+				}
+				ListHeaderComponent={header}
+				onEndReached={() => void fetchNextPage()}
+				onEndReachedThreshold={2}
+				onScrolledDownChange={setIsScrolledDown}
 			/>
+
 			{isScrolledDown && (
 				<LoadLatestBtn
 					label={m['screens.profileList.a11y.scrollToTop']()}
@@ -150,6 +134,6 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 					showIndicator={false}
 				/>
 			)}
-		</div>
+		</>
 	);
 }

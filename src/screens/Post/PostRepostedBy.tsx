@@ -10,10 +10,13 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -57,42 +60,26 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: number }) {
 	const moderationOpts = useModerationOpts();
 
-	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
-	const {
-		data,
-		isLoading: isLoadingRepostedBy,
-		isFetchingNextPage,
-		hasNextPage,
-		fetchNextPage,
-		error,
-	} = usePostRepostedByQuery(resolvedUri?.uri);
+	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(uri);
+	const { data, isPending, isFetchingNextPage, fetchNextPage, error } = usePostRepostedByQuery(
+		resolvedUri?.uri,
+	);
 
 	const isError = !!(resolveError || error);
 
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || isError) {
-			return;
+	if (repostedBy.length < 1 || !moderationOpts) {
+		if (isError) {
+			return <ListError message={cleanError(resolveError || error)} />;
 		}
-		void fetchNextPage();
-	};
 
-	if (!moderationOpts || ((isLoadingUri || isLoadingRepostedBy) && repostedBy.length < 1 && !isError)) {
-		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
-	}
+		// the paged query stays pending while the uri resolves, so this covers both fetches
+		if (isPending || !moderationOpts) {
+			return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+		}
 
-	if (repostedBy.length < 1) {
-		return (
-			<ListMaybePlaceholder
-				isLoading={false}
-				isError={isError}
-				emptyType="results"
-				emptyTitle={m['screens.postThread.engagement.repost.empty']()}
-				emptyMessage={m['screens.postThread.engagement.repost.emptyPrompt']()}
-				errorMessage={cleanError(resolveError || error)}
-			/>
-		);
+		return <ListEmpty icon={RepostIcon} message={m['screens.postThread.engagement.repost.emptyPrompt']()} />;
 	}
 
 	return (
@@ -100,18 +87,20 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 			data={repostedBy}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={2}
 			ListFooterComponent={
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					error={cleanError(error)}
-					onRetry={fetchNextPage}
-				/>
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
 			}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
 		/>
 	);
 }

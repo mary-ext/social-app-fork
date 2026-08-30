@@ -9,10 +9,13 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import PeopleIcon from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -48,42 +51,25 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 
 function ProfileKnownFollowers({ name }: { name: string }) {
 	const moderationOpts = useModerationOpts();
-	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
-	const {
-		data,
-		isLoading: isFollowersLoading,
-		isFetchingNextPage,
-		hasNextPage,
-		fetchNextPage,
-		error,
-		refetch,
-	} = useProfileKnownFollowersQuery(resolvedDid);
+	const { data: resolvedDid, error: resolveError } = useResolveDidQuery(name);
+	const { data, isPending, isFetchingNextPage, fetchNextPage, error, refetch } =
+		useProfileKnownFollowersQuery(resolvedDid);
 
 	const isError = !!(resolveError || error);
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || isError) {
-			return;
+	if (followers.length < 1 || !moderationOpts) {
+		if (isError) {
+			return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
 		}
-		void fetchNextPage();
-	};
 
-	if (!moderationOpts || ((isDidLoading || isFollowersLoading) && followers.length < 1 && !isError)) {
-		return <ProfileCard.LoadingPlaceholder />;
-	}
+		// the paged query stays pending while the did resolves, so this covers both fetches
+		if (isPending || !moderationOpts) {
+			return <ProfileCard.LoadingPlaceholder />;
+		}
 
-	if (followers.length < 1) {
 		return (
-			<ListMaybePlaceholder
-				isLoading={false}
-				isError={isError}
-				emptyType="results"
-				emptyMessage={m['screens.profile.follow.knownFollowers.empty']({ name })}
-				errorMessage={cleanError(resolveError || error)}
-				onRetry={isError ? refetch : undefined}
-				topBorder={false}
-			/>
+			<ListEmpty icon={PeopleIcon} message={m['screens.profile.follow.knownFollowers.empty']({ name })} />
 		);
 	}
 
@@ -92,18 +78,20 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 			data={followers}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={2}
 			ListFooterComponent={
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					error={cleanError(error)}
-					onRetry={fetchNextPage}
-				/>
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
 			}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
 		/>
 	);
 }

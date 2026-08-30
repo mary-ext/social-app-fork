@@ -11,7 +11,9 @@ import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -71,52 +73,38 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 		router.navigate({ to: { name: 'Explore' } });
 	};
 
-	const { data: resolvedDid, isLoading: isDidLoading, error: resolveError } = useResolveDidQuery(name);
+	const { data: resolvedDid, error: resolveError } = useResolveDidQuery(name);
 	const isMe = resolvedDid === currentAccount?.did;
-	// your own following list is one you curated in order, so keep it chronological; on someone else's profile
-	// the interesting question is who matters, which is what `top` answers.
+
 	const sort = isMe ? 'latest' : 'top';
-	const {
-		data,
-		isLoading: isFollowsLoading,
-		isFetchingNextPage,
-		hasNextPage,
-		fetchNextPage,
-		error,
-		refetch,
-	} = useProfileFollowsQuery(resolvedDid, { sort });
+	const { data, isPending, isFetchingNextPage, fetchNextPage, error, refetch } = useProfileFollowsQuery(
+		resolvedDid,
+		{ sort },
+	);
 
 	const isError = !!resolveError || !!error;
 
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || !!error) {
-			return;
+	if (follows.length < 1 || !moderationOpts) {
+		if (isError) {
+			return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
 		}
-		void fetchNextPage();
-	};
 
-	if (!moderationOpts || ((isDidLoading || isFollowsLoading) && follows.length < 1 && !isError)) {
-		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
-	}
+		// the paged query stays pending while the did resolves, so this covers both fetches
+		if (isPending || !moderationOpts) {
+			return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+		}
 
-	if (follows.length < 1) {
 		return (
-			<ListMaybePlaceholder
-				isLoading={false}
-				isError={isError}
-				emptyType="results"
-				emptyMessage={
+			<ListEmpty
+				icon={PeopleRemoveIcon}
+				message={
 					isMe
 						? m['view.profile.followers.followingEmpty']()
 						: m['view.profile.followers.followingEmptyUser']()
 				}
-				errorMessage={cleanError(resolveError || error)}
-				onRetry={isError ? refetch : undefined}
-				useEmptyState={true}
-				emptyStateIcon={PeopleRemoveIcon}
-				emptyStateButton={{
+				button={{
 					label: m['view.profile.action.seeSuggested'](),
 					text: m['view.profile.action.seeSuggested'](),
 					onPress: onPressFindAccounts,
@@ -132,18 +120,20 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 			data={follows}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={keyExtractor}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={2}
 			ListFooterComponent={
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					error={cleanError(error)}
-					onRetry={fetchNextPage}
-				/>
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
 			}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
 		/>
 	);
 }

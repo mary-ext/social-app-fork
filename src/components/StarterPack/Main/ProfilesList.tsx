@@ -5,13 +5,16 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { mapDefined } from '@mary/array-fns';
 
+import { cleanError } from '#/lib/errors';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListError } from '#/components/List/ListError';
+import { ListLoading } from '#/components/List/ListLoading';
+import * as ListTail from '#/components/List/ListTail';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
@@ -27,10 +30,14 @@ interface ProfilesListProps {
 
 export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const { currentAccount } = useSession();
-	const { data, refetch, isError } = useAllListMembersQuery(listUri);
+	const { data, error, isError, isPending, refetch } = useAllListMembersQuery(listUri);
 
 	if (!data) {
-		return <ListMaybePlaceholder isLoading={true} isError={isError} onRetry={refetch} />;
+		if (isError) {
+			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+		}
+
+		return isPending ? <ListLoading /> : null;
 	}
 
 	// the server returns these sorted by descending creation date, so we invert to show oldest first
@@ -58,11 +65,11 @@ export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 		<List
 			data={profiles}
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={keyExtractor}
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
-			keyExtractor={keyExtractor}
-			ListFooterComponent={<ListFooter />}
+			ListFooterComponent={<ListTail.Frame />}
 		/>
 	);
 }

@@ -12,10 +12,14 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Layout from '#/components/web/Layout';
 
+import CloseQuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -64,15 +68,10 @@ function keyExtractor(item: { post: AppBskyFeedDefs.PostView }) {
 }
 
 function PostQuotes({ uri }: { uri: string }) {
-	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
-	const {
-		data,
-		isLoading: isLoadingQuotes,
-		isFetchingNextPage,
-		hasNextPage,
-		fetchNextPage,
-		error,
-	} = usePostQuotesQuery(resolvedUri?.uri);
+	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(uri);
+	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, error } = usePostQuotesQuery(
+		resolvedUri?.uri,
+	);
 
 	const moderationOpts = useModerationOpts();
 
@@ -88,45 +87,39 @@ function PostQuotes({ uri }: { uri: string }) {
 			) ?? [])
 		: [];
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || isError) {
-			return;
-		}
-		void fetchNextPage();
-	};
-
 	if (quotes.length < 1) {
+		if (isError) {
+			return <ListError message={cleanError(resolveError || error)} />;
+		}
+
+		if (isPending || !moderationOpts) {
+			return <PostFeedLoadingPlaceholder />;
+		}
+
 		return (
-			<ListMaybePlaceholder
-				isLoading={isLoadingUri || isLoadingQuotes}
-				isError={isError}
-				emptyType="results"
-				emptyTitle={m['screens.postThread.engagement.quote.empty']()}
-				emptyMessage={m['screens.postThread.engagement.quote.emptyPrompt']()}
-				errorMessage={cleanError(resolveError || error)}
-			/>
+			<ListEmpty icon={CloseQuoteIcon} message={m['screens.postThread.engagement.quote.emptyPrompt']()} />
 		);
 	}
 
-	// loaded
-	// =
 	return (
 		<List
 			data={quotes}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={4}
 			ListFooterComponent={
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					error={cleanError(error)}
-					onRetry={fetchNextPage}
-					showEndMessage
-					endMessageText={m['screens.postThread.engagement.quote.endOfFeed']()}
-				/>
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : !hasNextPage ? (
+						<ListTail.End>{m['screens.postThread.engagement.quote.endOfFeed']()}</ListTail.End>
+					) : null}
+				</ListTail.Frame>
 			}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
 		/>
 	);
 }

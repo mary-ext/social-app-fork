@@ -12,8 +12,11 @@ import { Trans } from '#/locale/Trans';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { List } from '#/components/List/List';
-import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
+import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { SearchError } from '#/components/SearchError';
 import { shareUrl } from '#/components/sharing';
 import { type Section, Tabs } from '#/components/Tabs';
@@ -23,6 +26,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineButton } from '#/components/web/Link';
 
 import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -113,26 +117,11 @@ function HashtagScreenTab({
 	// Cashtags need # prefix for search: "#$BTC"
 	const queryParam = isCashtag ? `#${fullTag}` : fullTag;
 
-	const {
-		data,
-		isFetched,
-		isFetchingNextPage,
-		isLoading,
-		isError,
-		error,
-		refetch,
-		fetchNextPage,
-		hasNextPage,
-	} = useSearchPostsQuery({ author, query: queryParam, sort });
+	const { data, isFetchingNextPage, isPending, isError, error, refetch, fetchNextPage } = useSearchPostsQuery(
+		{ author, query: queryParam, sort },
+	);
 
 	const posts = data?.pages.flatMap((page) => page.posts) || [];
-
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || error) {
-			return;
-		}
-		void fetchNextPage();
-	};
 
 	if (!hasSession) {
 		return (
@@ -158,33 +147,35 @@ function HashtagScreenTab({
 		);
 	}
 
+	if (posts.length < 1) {
+		if (isError) {
+			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+		}
+
+		if (isPending) {
+			return <PostFeedLoadingPlaceholder />;
+		}
+
+		return <ListEmpty icon={MagnifyingGlassIcon} message={m['screens.hashtag.empty']()} />;
+	}
+
 	return (
-		<>
-			{posts.length < 1 ? (
-				<ListMaybePlaceholder
-					isLoading={isLoading || !isFetched}
-					isError={isError}
-					onRetry={refetch}
-					emptyType="results"
-					emptyMessage={m['screens.hashtag.empty']()}
-				/>
-			) : (
-				<List
-					data={posts}
-					estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
-					keyExtractor={(item, index) => `${item.uri}-${index}`}
-					renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
-					onEndReached={onEndReached}
-					onEndReachedThreshold={4}
-					ListFooterComponent={
-						<ListFooter
-							isFetchingNextPage={isFetchingNextPage}
-							error={cleanError(error)}
-							onRetry={fetchNextPage}
-						/>
-					}
-				/>
-			)}
-		</>
+		<List
+			data={posts}
+			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={(item) => `${item.uri}|${item.cid}`}
+			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
+			ListFooterComponent={
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
+			}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
+		/>
 	);
 }
