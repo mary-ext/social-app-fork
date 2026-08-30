@@ -58,16 +58,16 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 	const isError = !!(resolveError || error);
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
-	if (followers.length < 1 || !moderationOpts) {
-		if (isError) {
-			return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
-		}
+	if (isError && followers.length < 1) {
+		return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
+	}
 
-		// the paged query stays pending while the did resolves, so this covers both fetches
-		if (isPending || !moderationOpts) {
-			return <ProfileCard.LoadingPlaceholder />;
-		}
+	// the paged query stays pending while the did resolves, so this covers both fetches
+	if (isPending || !moderationOpts) {
+		return <ProfileCard.LoadingPlaceholder />;
+	}
 
+	if (followers.length < 1) {
 		return (
 			<ListEmpty icon={PeopleIcon} message={m['screens.profile.follow.knownFollowers.empty']({ name })} />
 		);
@@ -90,7 +90,12 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

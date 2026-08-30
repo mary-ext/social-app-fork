@@ -18,14 +18,14 @@ export function ListError({
 	title,
 }: {
 	hideBackButton?: boolean;
-	message?: string;
+	message: string;
 	onRetry?: () => void;
 	title?: string;
 }) {
 	return (
 		<Error
 			hideBackButton={hideBackButton}
-			message={message || m['common.error.generic']()}
+			message={message}
 			onRetry={onRetry}
 			title={title ?? m['common.error.oops']()}
 		/>

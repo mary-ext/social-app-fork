@@ -86,16 +86,16 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
-	if (follows.length < 1 || !moderationOpts) {
-		if (isError) {
-			return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
-		}
+	if (isError && follows.length < 1) {
+		return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
+	}
 
-		// the paged query stays pending while the did resolves, so this covers both fetches
-		if (isPending || !moderationOpts) {
-			return <ProfileCard.LoadingPlaceholder count={initialCount} />;
-		}
+	// the paged query stays pending while the did resolves, so this covers both fetches
+	if (isPending || !moderationOpts) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
+	if (follows.length < 1) {
 		return (
 			<ListEmpty
 				icon={PeopleRemoveIcon}
@@ -132,7 +132,12 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

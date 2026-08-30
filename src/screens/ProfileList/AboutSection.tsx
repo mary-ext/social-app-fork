@@ -42,7 +42,6 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	);
 
 	const items = data?.pages ? data.pages.flatMap((page) => page.items) : [];
-	const isEmpty = !isPending && items.length === 0;
 
 	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
@@ -59,7 +58,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 		return <ProfileCard.LoadingPlaceholder />;
 	}
 
-	if (isEmpty) {
+	if (items.length === 0) {
 		return (
 			<ListEmpty
 				icon={ListIcon}
@@ -122,7 +121,12 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 					</ListTail.Frame>
 				}
 				ListHeaderComponent={header}
-				onEndReached={() => void fetchNextPage()}
+				onEndReached={() => {
+					if (isError) {
+						return;
+					}
+					void fetchNextPage();
+				}}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={setIsScrolledDown}
 			/>

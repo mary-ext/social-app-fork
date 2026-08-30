@@ -44,7 +44,7 @@ export function MyLists({ filter }: { filter: MyListsFilter }): ReactNode {
 			return <ListCard.LoadingPlaceholder count={10} />;
 		}
 
-		return <ListEmpty icon={ListIcon} message={emptyText} />;
+		return <ListEmpty icon={ListIcon} iconColor="textContrastMedium" message={emptyText} />;
 	}
 
 	return (

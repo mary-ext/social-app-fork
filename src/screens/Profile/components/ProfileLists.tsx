@@ -76,7 +76,12 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

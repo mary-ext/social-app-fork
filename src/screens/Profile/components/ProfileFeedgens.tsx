@@ -78,7 +78,12 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

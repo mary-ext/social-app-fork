@@ -233,7 +233,12 @@ export function ChatList({
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={0}
 		/>
 	);

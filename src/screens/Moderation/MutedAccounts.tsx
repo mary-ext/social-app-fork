@@ -50,7 +50,12 @@ export function ModerationMutedAccounts() {
 					data={profiles}
 					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item) => item.did}
-					onEndReached={() => void fetchNextPage()}
+					onEndReached={() => {
+						if (isError) {
+							return;
+						}
+						void fetchNextPage();
+					}}
 					renderItem={({ item, index }) => <MutedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={

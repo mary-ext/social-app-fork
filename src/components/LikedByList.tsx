@@ -25,15 +25,16 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 
 	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
-	if (likes.length < 1 || !moderationOpts) {
-		if (isError) {
-			return <ListError message={cleanError(resolveError || error)} />;
-		}
+	if (isError && likes.length < 1) {
+		return <ListError message={cleanError(resolveError || error)} />;
+	}
 
-		if (isPending || !moderationOpts) {
-			return <ProfileCard.LoadingPlaceholder count={initialCount} />;
-		}
+	// the paged query stays pending while the uri resolves, so this covers both fetches
+	if (isPending || !moderationOpts) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
+	if (likes.length < 1) {
 		return <ListEmpty icon={HeartIcon} message={m['common.like.emptyPrompt']()} />;
 	}
 
@@ -54,7 +55,12 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item.actor} topBorder={index !== 0} />
 			)}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

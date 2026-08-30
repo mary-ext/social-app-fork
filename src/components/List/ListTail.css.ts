@@ -1,10 +1,8 @@
-import { createVar, fallbackVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
-
-export const minHeightVar = createVar();
 
 export const frame = recipe(
 	{
@@ -16,7 +14,7 @@ export const frame = recipe(
 			paddingTop: 30,
 			paddingBottom: space.lg,
 			width: '100%',
-			minHeight: fallbackVar(minHeightVar, '180px'),
+			minHeight: 180,
 		},
 		defaultVariants: { border: true },
 		variants: {

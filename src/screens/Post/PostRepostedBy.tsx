@@ -69,16 +69,16 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
-	if (repostedBy.length < 1 || !moderationOpts) {
-		if (isError) {
-			return <ListError message={cleanError(resolveError || error)} />;
-		}
+	if (isError && repostedBy.length < 1) {
+		return <ListError message={cleanError(resolveError || error)} />;
+	}
 
-		// the paged query stays pending while the uri resolves, so this covers both fetches
-		if (isPending || !moderationOpts) {
-			return <ProfileCard.LoadingPlaceholder count={initialCount} />;
-		}
+	// the paged query stays pending while the uri resolves, so this covers both fetches
+	if (isPending || !moderationOpts) {
+		return <ProfileCard.LoadingPlaceholder count={initialCount} />;
+	}
 
+	if (repostedBy.length < 1) {
 		return <ListEmpty icon={RepostIcon} message={m['screens.postThread.engagement.repost.emptyPrompt']()} />;
 	}
 
@@ -99,7 +99,12 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 			renderItem={({ index, item }) => (
 				<ProfileCard.Default moderationOpts={moderationOpts} profile={item} topBorder={index !== 0} />
 			)}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

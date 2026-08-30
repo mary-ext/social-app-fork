@@ -1,36 +1,13 @@
-import type { ReactElement } from 'react';
+import type { ComponentProps } from 'react';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
-
-import { m } from '#/paraglide/messages';
+import { EmptyState } from '#/components/EmptyState';
 
 /**
  * renders an empty list state.
  *
- * @param button optional action
- * @param className container class
- * @param icon state icon
- * @param message empty-state message
+ * @param props forwarded to {@link EmptyState}
  * @returns the empty state
  */
-export function ListEmpty({
-	button,
-	className,
-	icon,
-	message,
-}: {
-	button?: EmptyStateButtonProps;
-	className?: string;
-	icon?: EmptyStateIcon | ReactElement;
-	message?: string;
-}) {
-	return (
-		<EmptyState
-			button={button}
-			className={className}
-			icon={icon}
-			message={message ?? m['common.list.noResults']()}
-			messageColor="textContrastMedium"
-		/>
-	);
+export function ListEmpty(props: Omit<ComponentProps<typeof EmptyState>, 'messageColor'>) {
+	return <EmptyState {...props} messageColor="textContrastMedium" />;
 }

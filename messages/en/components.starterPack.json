@@ -15,7 +15,6 @@
 	"components.starterPack.edit.feeds": "Edit feeds",
 	"components.starterPack.edit.people": "Edit people",
 	"components.starterPack.list.empty": "Starter packs let you share your favorite feeds and people with your friends.",
-	"components.starterPack.list.error": "There was an issue fetching your starter packs. Tap here to try again.",
 	"components.starterPack.membership.action.add": "Add {name} to starter pack",
 	"components.starterPack.membership.action.remove": "Remove {name} from starter pack",
 	"components.starterPack.share.a11yLabel": "Share link dialog",

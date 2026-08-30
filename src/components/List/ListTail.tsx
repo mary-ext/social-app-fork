@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
 
-import { assignInlineVars } from '@vanilla-extract/dynamic';
-
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -15,26 +13,10 @@ import * as css from './ListTail.css';
  *
  * @param border whether to show the divider
  * @param children pagination state
- * @param minHeight reserved height in pixels
  * @returns the list tail
  */
-export function Frame({
-	border = true,
-	children,
-	minHeight,
-}: {
-	border?: boolean;
-	children?: ReactNode;
-	minHeight?: number;
-}) {
-	return (
-		<div
-			className={css.frame({ border })}
-			style={minHeight != null ? assignInlineVars({ [css.minHeightVar]: `${minHeight}px` }) : undefined}
-		>
-			{children}
-		</div>
-	);
+export function Frame({ border = true, children }: { border?: boolean; children?: ReactNode }) {
+	return <div className={css.frame({ border })}>{children}</div>;
 }
 
 /** @returns a pagination spinner */

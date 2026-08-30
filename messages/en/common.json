@@ -249,7 +249,6 @@
 	"common.list.empty": "You have no lists.",
 	"common.list.emptyUser": "No lists",
 	"common.list.endOfList": "You have reached the end",
-	"common.list.fetchError": "There was an issue fetching your lists. Tap here to try again.",
 	"common.list.hidden": "Hidden list",
 	"common.list.label": "Lists",
 	"common.list.moderation.description": "Public, sharable lists of users to mute or block in bulk.",

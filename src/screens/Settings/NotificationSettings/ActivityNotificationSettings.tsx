@@ -104,12 +104,12 @@ export function ActivityNotificationSettingsScreen() {
 						</Settings.List>
 					</>
 				}
-				ListEmptyComponent={isPending || error ? null : <EmptyHint />}
+				ListEmptyComponent={isPending || isError ? null : <EmptyHint />}
 				ListFooterComponent={
 					<ListTail.Frame>
 						{isFetchingNextPage ? (
 							<ListTail.Pending />
-						) : error ? (
+						) : isError ? (
 							<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
 						) : null}
 					</ListTail.Frame>

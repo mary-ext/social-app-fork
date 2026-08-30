@@ -61,27 +61,32 @@ export function NotificationFeed({
 			keyExtractor={(item) => item._reactKey}
 			renderItem={renderItem}
 			ListEmptyComponent={
-				<>
-					{isError ? (
-						<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
-					) : isPending ? (
-						<NotificationFeedLoadingPlaceholder />
-					) : (
-						<ListEmpty icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
-					)}
-				</>
+				isError ? (
+					<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
+				) : isPending ? (
+					<NotificationFeedLoadingPlaceholder />
+				) : (
+					<ListEmpty className={css.emptyState} icon={BellIcon} message={m['view.notifications.empty']()} />
+				)
 			}
 			ListHeaderComponent={ListHeaderComponent}
 			ListFooterComponent={
-				<ListTail.Frame>
-					{isFetchingNextPage ? (
-						<ListTail.Pending />
-					) : isError && notifications.length > 0 ? (
-						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
-					) : null}
-				</ListTail.Frame>
+				notifications.length > 0 && (
+					<ListTail.Frame>
+						{isFetchingNextPage ? (
+							<ListTail.Pending />
+						) : isError ? (
+							<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+						) : null}
+					</ListTail.Frame>
+				)
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 			onScrolledDownChange={onScrolledDownChange}
 		/>

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { definite } from '@mary/array-fns';
+import { definite, uniqueBy } from '@mary/array-fns';
 
 import { cleanError, isNetworkError, shouldRetryError } from '#/lib/errors';
 import { normalizeSearchQuery } from '#/lib/search-query';
@@ -175,16 +175,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 		isFetchingNextPage,
 	} = useSearchPostsQuery({ query: normalizedQuery, sort });
 
-	const posts = results?.pages.flatMap((page) => page.posts) ?? [];
-	const seen = new Set<string>();
-	const items: AppBskyFeedDefs.PostView[] = [];
-	for (const post of posts) {
-		if (seen.has(post.uri)) {
-			continue;
-		}
-		seen.add(post.uri);
-		items.push(post);
-	}
+	const items = uniqueBy(results?.pages.flatMap((page) => page.posts) ?? [], (post) => post.uri);
 
 	const onEndReached = () => {
 		if (isFetching || !hasNextPage || error) {

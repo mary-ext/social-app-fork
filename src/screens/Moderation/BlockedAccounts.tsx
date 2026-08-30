@@ -49,7 +49,12 @@ export function ModerationBlockedAccounts() {
 					data={profiles}
 					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-					onEndReached={() => void fetchNextPage()}
+					onEndReached={() => {
+						if (isError) {
+							return;
+						}
+						void fetchNextPage();
+					}}
 					renderItem={({ item, index }) => <BlockedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={

@@ -160,8 +160,13 @@ function RequestList({
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
-			onEndReachedThreshold={2}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
+			onEndReachedThreshold={0}
 		/>
 	);
 

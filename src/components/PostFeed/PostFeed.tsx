@@ -511,7 +511,12 @@ export function PostFeed({
 				</ListTail.Frame>
 			}
 			onScrolledDownChange={handleScrolledDownChange}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 			onItemSeen={onItemSeen}
 		/>

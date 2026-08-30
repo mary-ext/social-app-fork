@@ -85,7 +85,12 @@ export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStar
 					</ListTail.Frame>
 				)
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

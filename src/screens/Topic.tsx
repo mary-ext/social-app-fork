@@ -1,3 +1,5 @@
+import { uniqueBy } from '@mary/array-fns';
+
 import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { enforceLen } from '#/lib/utils/text';
@@ -84,7 +86,7 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 		},
 	);
 
-	const posts = data?.pages.flatMap((page) => page.posts) || [];
+	const posts = uniqueBy(data?.pages.flatMap((page) => page.posts) ?? [], (post) => post.uri);
 
 	if (posts.length < 1) {
 		if (isError) {
@@ -102,7 +104,7 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 		<List
 			data={posts}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
-			keyExtractor={(item) => `${item.uri}|${item.cid}`}
+			keyExtractor={(item) => item.uri}
 			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 			ListFooterComponent={
 				<ListTail.Frame>
@@ -113,7 +115,12 @@ function TopicScreenTab({ topic, sort }: { topic: string; sort: 'top' | 'latest'
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

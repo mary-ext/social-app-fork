@@ -58,6 +58,12 @@ export function StarterPackScreen() {
 	);
 }
 
+function NotFound() {
+	return (
+		<ListError message={m['screens.starterPack.error.notFound']()} title={m['common.error.pageNotFound']()} />
+	);
+}
+
 export function StarterPackScreenShort() {
 	const [{ code, tab }, replaceParams] = useParams('StarterPackShort');
 	const {
@@ -69,18 +75,7 @@ export function StarterPackScreenShort() {
 	});
 
 	if (isLoading || isError || !resolvedStarterPack) {
-		return (
-			<Layout.Screen>
-				{isLoading ? (
-					<ListLoading />
-				) : (
-					<ListError
-						message={m['screens.starterPack.error.notFound']()}
-						title={m['common.error.pageNotFound']()}
-					/>
-				)}
-			</Layout.Screen>
-		);
+		return <Layout.Screen>{isLoading ? <ListLoading /> : <NotFound />}</Layout.Screen>;
 	}
 	return (
 		<Layout.Screen className={Layout.ScrollAway.scope}>
@@ -112,16 +107,15 @@ export function StarterPackScreenInner({
 		(starterPack.list !== undefined || starterPack.creator.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
-		if (!isErrorDid && !isErrorStarterPack && (!did || !starterPack || !moderationOpts)) {
+		if (isErrorDid || isErrorStarterPack) {
+			return <NotFound />;
+		}
+
+		if (!did || !starterPack || !moderationOpts) {
 			return <ListLoading />;
 		}
 
-		return (
-			<ListError
-				message={m['screens.starterPack.error.notFound']()}
-				title={m['common.error.pageNotFound']()}
-			/>
-		);
+		return <NotFound />;
 	}
 
 	if (!starterPack.list && starterPack.creator.did === currentAccount?.did) {

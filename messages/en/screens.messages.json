@@ -37,7 +37,6 @@
 	"screens.messages.chats.markAllRead.action": "Mark all chats as read",
 	"screens.messages.chats.markAllRead.error": "Failed to mark all chats as read",
 	"screens.messages.chats.markAllRead.toast": "Marked all chats as read",
-	"screens.messages.chats.reload.action": "Reload conversations",
 	"screens.messages.chats.reload.error": "Failed to load conversations",
 	"screens.messages.chats.title": "Chats",
 	"screens.messages.composer.a11y": "Message input field",

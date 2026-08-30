@@ -1,5 +1,7 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { cleanError } from '#/lib/errors';
 
 import { useMyLikesQuery } from '#/state/queries/my-likes';
@@ -16,12 +18,15 @@ import { m } from '#/paraglide/messages';
 
 const LIKE_ITEM_HEIGHT_ESTIMATE = 300;
 
-const keyExtractor = (item: AppBskyFeedDefs.PostView) => `${item.uri}|${item.cid}`;
+const keyExtractor = (item: AppBskyFeedDefs.PostView) => item.uri;
 
 export function LikesTab() {
 	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } = useMyLikesQuery();
 
-	const posts = data?.pages.flatMap((page) => page.feed.map((item) => item.post)) ?? [];
+	const posts = uniqueBy(
+		data?.pages.flatMap((page) => page.feed.map((item) => item.post)) ?? [],
+		(post) => post.uri,
+	);
 
 	if (posts.length < 1) {
 		if (isError) {
@@ -50,7 +55,12 @@ export function LikesTab() {
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);

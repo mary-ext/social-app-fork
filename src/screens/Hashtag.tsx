@@ -1,5 +1,7 @@
 import type { ActorIdentifier } from '@atcute/lexicons';
 
+import { uniqueBy } from '@mary/array-fns';
+
 import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { enforceLen } from '#/lib/utils/text';
@@ -121,8 +123,6 @@ function HashtagScreenTab({
 		{ author, query: queryParam, sort },
 	);
 
-	const posts = data?.pages.flatMap((page) => page.posts) || [];
-
 	if (!hasSession) {
 		return (
 			<SearchError title={m['common.search.loggedOutError']()}>
@@ -147,6 +147,8 @@ function HashtagScreenTab({
 		);
 	}
 
+	const posts = uniqueBy(data?.pages.flatMap((page) => page.posts) ?? [], (post) => post.uri);
+
 	if (posts.length < 1) {
 		if (isError) {
 			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
@@ -163,7 +165,7 @@ function HashtagScreenTab({
 		<List
 			data={posts}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
-			keyExtractor={(item) => `${item.uri}|${item.cid}`}
+			keyExtractor={(item) => item.uri}
 			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 			ListFooterComponent={
 				<ListTail.Frame>
@@ -174,7 +176,12 @@ function HashtagScreenTab({
 					) : null}
 				</ListTail.Frame>
 			}
-			onEndReached={() => void fetchNextPage()}
+			onEndReached={() => {
+				if (isError) {
+					return;
+				}
+				void fetchNextPage();
+			}}
 			onEndReachedThreshold={2}
 		/>
 	);
