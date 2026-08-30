@@ -57,6 +57,7 @@ export const domainLink = style({
 
 export const codeArea = style({
 	backgroundColor: colors.contrast_25,
+	height: previewHeight,
 });
 
 export const message = style({
@@ -65,7 +66,7 @@ export const message = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	boxSizing: 'border-box',
-	minHeight: previewHeight,
+	height: '100%',
 	padding: space.md,
 	textAlign: 'center',
 });
