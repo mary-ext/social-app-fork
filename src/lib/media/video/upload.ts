@@ -74,9 +74,9 @@ async function runUpload({
 						mimeType: video.mimeType,
 						name,
 						// the service verifies these values later, but can use them for early rejection.
-						width: video.width,
-						height: video.height,
-						durationMs: video.duration ?? undefined,
+						width: video.width || undefined,
+						height: video.height || undefined,
+						durationMs: video.duration !== null ? Math.round(video.duration) : undefined,
 					},
 					signal,
 				}),
