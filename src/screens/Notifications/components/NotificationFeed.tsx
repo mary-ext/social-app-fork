@@ -5,10 +5,10 @@ import { cleanError } from '#/lib/errors';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
-import { EmptyState } from '#/components/EmptyState';
-import { ErrorMessage } from '#/components/ErrorMessage';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import { ListEmpty } from '#/components/List/ListEmpty';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 
 import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -18,16 +18,6 @@ import { NotificationFeedItem } from './NotificationFeedItem';
 import { NotificationFeedLoadingPlaceholder } from './NotificationFeedLoadingPlaceholder';
 
 const NOTIFICATION_ITEM_HEIGHT_ESTIMATE = 120;
-
-const EMPTY_FEED_ITEM = { _reactKey: '__empty__' } as const;
-const LOADING_ITEM = { _reactKey: '__loading__' } as const;
-
-type NotificationItem = FeedNotification | typeof EMPTY_FEED_ITEM | typeof LOADING_ITEM;
-type NotificationSentinel = Exclude<NotificationItem, FeedNotification>;
-
-const isNotificationSentinel = (item: NotificationItem): item is NotificationSentinel => {
-	return item === EMPTY_FEED_ITEM || item === LOADING_ITEM;
-};
 
 export function NotificationFeed({
 	filter,
@@ -43,46 +33,16 @@ export function NotificationFeed({
 	ListHeaderComponent?: ReactNode;
 }) {
 	const moderationOpts = useModerationOpts();
-	const { data, isFetching, isFetched, isError, error, hasNextPage, isFetchingNextPage, fetchNextPage } =
+	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } =
 		useNotificationFeedQuery({
 			enabled: enabled && !!moderationOpts,
 			filter,
 		});
+
 	// check all pages because mentions can leave the first page empty.
-	const isEmpty = !isFetching && !data?.pages.some((page) => page.items.length);
+	const notifications = data?.pages.flatMap((page) => page.items) ?? [];
 
-	let items: NotificationItem[] = [];
-	if (isFetched) {
-		if (isEmpty) {
-			items = items.concat([EMPTY_FEED_ITEM]);
-		} else if (data) {
-			for (const page of data.pages) {
-				items = items.concat(page.items);
-			}
-		}
-	} else {
-		items.push(LOADING_ITEM);
-	}
-
-	const onEndReached = () => {
-		if (isFetching || !hasNextPage || isError) {
-			return;
-		}
-
-		void fetchNextPage();
-	};
-
-	const onPressRetryLoadMore = () => fetchNextPage();
-
-	const renderItem = ({ item, index }: ListRenderItemInfo<NotificationItem>) => {
-		if (isNotificationSentinel(item)) {
-			if (item === LOADING_ITEM) {
-				return <NotificationFeedLoadingPlaceholder />;
-			}
-			return (
-				<EmptyState icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
-			);
-		}
+	const renderItem = ({ item, index }: ListRenderItemInfo<FeedNotification>) => {
 		return (
 			<NotificationFeedItem
 				highlightUnread={filter === 'all'}
@@ -93,30 +53,37 @@ export function NotificationFeed({
 		);
 	};
 
-	const feedFooter = (
-		<ListFooter
-			isFetchingNextPage={isFetchingNextPage}
-			error={isError && !isEmpty ? cleanError(error) : undefined}
-			onRetry={onPressRetryLoadMore}
-			hasNextPage={hasNextPage}
-		/>
-	);
-
 	return (
-		<>
-			{error && <ErrorMessage message={cleanError(error)} />}
-			<List
-				ref={scrollElRef}
-				data={items}
-				estimateHeight={NOTIFICATION_ITEM_HEIGHT_ESTIMATE}
-				keyExtractor={(item) => item._reactKey}
-				renderItem={renderItem}
-				ListHeaderComponent={ListHeaderComponent}
-				ListFooterComponent={feedFooter}
-				onEndReached={onEndReached}
-				onEndReachedThreshold={2}
-				onScrolledDownChange={onScrolledDownChange}
-			/>
-		</>
+		<List
+			ref={scrollElRef}
+			data={notifications}
+			estimateHeight={NOTIFICATION_ITEM_HEIGHT_ESTIMATE}
+			keyExtractor={(item) => item._reactKey}
+			renderItem={renderItem}
+			ListEmptyComponent={
+				<>
+					{isError ? (
+						<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
+					) : isPending ? (
+						<NotificationFeedLoadingPlaceholder />
+					) : (
+						<ListEmpty icon={BellIcon} message={m['view.notifications.empty']()} className={css.emptyState} />
+					)}
+				</>
+			}
+			ListHeaderComponent={ListHeaderComponent}
+			ListFooterComponent={
+				<ListTail.Frame>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError && notifications.length > 0 ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
+			}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
+			onScrolledDownChange={onScrolledDownChange}
+		/>
 	);
 }

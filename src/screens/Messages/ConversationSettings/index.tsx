@@ -25,7 +25,7 @@ import { ReportConversationDialog } from '#/components/dms/ReportConversationDia
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import * as ListTail from '#/components/List/ListTail';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -253,7 +253,7 @@ function GroupSettings({
 			estimateHeight={76}
 			keyExtractor={keyExtractor}
 			ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} moderationOpts={moderationOpts} />}
-			ListFooterComponent={<ListFooter border={false} />}
+			ListFooterComponent={<ListTail.Frame border={false} />}
 			renderItem={renderItem}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 		/>

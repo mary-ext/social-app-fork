@@ -14,17 +14,15 @@ import { useTitle } from '#/state/use-title';
 import { EmptyState } from '#/components/EmptyState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
-import { Text } from '#/components/Text';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
-import RetryIcon from '#/icons/central/ArrowRotateCounterClockwise_round_outlined_radius1_stroke2.svg';
 import InboxLargeIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
-import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
@@ -96,44 +94,24 @@ function RequestList({
 
 	useRequestMessagePollInterval();
 
-	const { isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error, refetch } =
-		listConvosQuery;
+	const { isPending, isFetchingNextPage, fetchNextPage, isError, error, refetch } = listConvosQuery;
 
 	useRefreshOnFocus(refetch);
 
-	const onEndReached = () => {
-		if (isFetchingNextPage || !hasNextPage || isError) {
-			return;
-		}
-		void fetchNextPage();
-	};
-
 	if (conversations.length < 1) {
-		if (isLoading) {
-			return <ChatListLoadingPlaceholder />;
-		}
-
 		if (isError) {
 			return (
-				<div className={css.errorWrap}>
-					<CircleInfoIcon className={css.circleInfoIcon} />
-					<Text size="_2xl" weight="semiBold" className={css.errorTitle}>
-						{m['common.error.whoops']()}
-					</Text>
-					<Text size="md" align="center" color="textContrastMedium" className={css.errorMessage}>
-						{cleanError(error) || m['screens.messages.chats.reload.error']()}
-					</Text>
-					<Button
-						label={m['screens.messages.chats.reload.action']()}
-						size="small"
-						color="secondary_inverted"
-						onClick={() => void refetch()}
-					>
-						<ButtonText>{m['common.action.retry']()}</ButtonText>
-						<ButtonIcon icon={RetryIcon} />
-					</Button>
-				</div>
+				<ListError
+					hideBackButton
+					message={cleanError(error) || m['screens.messages.chats.reload.error']()}
+					onRetry={() => void refetch()}
+					title={m['common.error.whoops']()}
+				/>
 			);
+		}
+
+		if (isPending) {
+			return <ChatListLoadingPlaceholder />;
 		}
 
 		return (
@@ -168,22 +146,22 @@ function RequestList({
 
 	const list = (
 		<List
+			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			data={conversations}
 			estimateHeight={REQUEST_ITEM_HEIGHT_ESTIMATE}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={0}
-			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 			ListFooterComponent={
-				<ListFooter
-					border={false}
-					error={cleanError(error)}
-					hasNextPage={hasNextPage}
-					isFetchingNextPage={isFetchingNextPage}
-					onRetry={fetchNextPage}
-				/>
+				<ListTail.Frame border={false}>
+					{isFetchingNextPage ? (
+						<ListTail.Pending />
+					) : isError ? (
+						<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+					) : null}
+				</ListTail.Frame>
 			}
+			onEndReached={() => void fetchNextPage()}
+			onEndReachedThreshold={2}
 		/>
 	);
 

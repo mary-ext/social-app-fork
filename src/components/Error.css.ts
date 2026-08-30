@@ -37,7 +37,7 @@ export const message = style({
 	paddingInline: space.lg,
 	'@media': {
 		[desktop]: {
-			width: 450,
+			maxWidth: 450,
 			paddingInline: 0,
 		},
 	},
@@ -52,7 +52,7 @@ export const buttonGroup = style({
 	paddingInline: space.lg,
 	'@media': {
 		[desktop]: {
-			width: 350,
+			maxWidth: 350,
 			paddingInline: 0,
 		},
 	},
