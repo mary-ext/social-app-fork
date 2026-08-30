@@ -17,7 +17,7 @@ import { Trans } from '#/locale/Trans';
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Dialog from '#/components/Dialog';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import * as ListTail from '#/components/List/ListTail';
 import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
@@ -106,12 +106,13 @@ export function ActivityNotificationSettingsScreen() {
 				}
 				ListEmptyComponent={isPending || error ? null : <EmptyHint />}
 				ListFooterComponent={
-					<ListFooter
-						error={cleanError(error)}
-						hasNextPage={hasNextPage}
-						isFetchingNextPage={isFetchingNextPage}
-						onRetry={fetchNextPage}
-					/>
+					<ListTail.Frame>
+						{isFetchingNextPage ? (
+							<ListTail.Pending />
+						) : error ? (
+							<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+						) : null}
+					</ListTail.Frame>
 				}
 				onEndReached={onEndReached}
 				onEndReachedThreshold={2}

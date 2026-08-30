@@ -6,9 +6,9 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 import { useTitle } from '#/state/use-title';
 
-import { ErrorScreen } from '#/components/ErrorScreen';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import { ListError } from '#/components/List/ListError';
+import * as ListTail from '#/components/List/ListTail';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -22,18 +22,10 @@ const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
 export function ModerationBlockedAccounts() {
 	useTitle(m['common.block.accountsTitle']());
 
-	const { data, isFetching, isError, error, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } =
+	const { data, isPending, isError, error, refetch, fetchNextPage, isFetchingNextPage } =
 		useMyBlockedAccountsQuery();
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.blocks) : [];
-	const isEmpty = !isFetching && profiles.length === 0;
-
-	const onEndReached = () => {
-		if (isFetching || !hasNextPage || isError) {
-			return;
-		}
-
-		void fetchNextPage();
-	};
+	const isEmpty = !isPending && profiles.length === 0;
 
 	return (
 		<Layout.Screen>
@@ -47,7 +39,7 @@ export function ModerationBlockedAccounts() {
 				<div>
 					<Info />
 					{isError ? (
-						<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
+						<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
 					) : (
 						<Empty />
 					)}
@@ -57,16 +49,17 @@ export function ModerationBlockedAccounts() {
 					data={profiles}
 					estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 					keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-					onEndReached={onEndReached}
+					onEndReached={() => void fetchNextPage()}
 					renderItem={({ item, index }) => <BlockedRow index={index} profile={item} />}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={
-						<ListFooter
-							isFetchingNextPage={isFetchingNextPage}
-							hasNextPage={hasNextPage}
-							error={cleanError(error)}
-							onRetry={fetchNextPage}
-						/>
+						<ListTail.Frame>
+							{isFetchingNextPage ? (
+								<ListTail.Pending />
+							) : isError ? (
+								<ListTail.Error message={cleanError(error)} onRetry={() => void fetchNextPage()} />
+							) : null}
+						</ListTail.Frame>
 					}
 				/>
 			)}

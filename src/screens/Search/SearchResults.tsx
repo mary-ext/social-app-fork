@@ -20,7 +20,7 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { SearchError } from '#/components/SearchError';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
@@ -237,7 +237,9 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 			data={items}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.uri}
-			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
+			ListFooterComponent={
+				<ListTail.Frame>{isFetchingNextPage ? <ListTail.Pending /> : null}</ListTail.Frame>
+			}
 			onEndReached={onEndReached}
 			renderItem={({ index, item }) => <SearchPost position={index} post={item} />}
 		/>
@@ -289,7 +291,7 @@ function UserResults({ query }: { query: string }) {
 			estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.did}
 			ListFooterComponent={
-				<ListFooter hasNextPage={hasNextPage && hasSession} isFetchingNextPage={isFetchingNextPage} />
+				<ListTail.Frame>{isFetchingNextPage ? <ListTail.Pending /> : null}</ListTail.Frame>
 			}
 			onEndReached={onEndReached}
 			// the sticky tab bar already draws the divider above the first row
@@ -343,7 +345,9 @@ function StarterPackResults({ query }: { query: string }) {
 			data={starterPacks}
 			estimateHeight={STARTER_PACK_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.uri}
-			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
+			ListFooterComponent={
+				<ListTail.Frame>{isFetchingNextPage ? <ListTail.Pending /> : null}</ListTail.Frame>
+			}
 			onEndReached={onEndReached}
 			// the sticky tab bar already draws the divider above the first row
 			renderItem={({ index, item }) => <StarterPackCard.Default starterPack={item} topBorder={index !== 0} />}
@@ -388,7 +392,9 @@ function FeedsResults({ query }: { query: string }) {
 			data={feeds}
 			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			keyExtractor={(item) => item.uri}
-			ListFooterComponent={<ListFooter hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} />}
+			ListFooterComponent={
+				<ListTail.Frame>{isFetchingNextPage ? <ListTail.Pending /> : null}</ListTail.Frame>
+			}
 			onEndReached={onEndReached}
 			// the sticky tab bar already draws the divider above the first row
 			renderItem={({ index, item }) => <FeedCard.Default topBorder={index !== 0} view={item} />}

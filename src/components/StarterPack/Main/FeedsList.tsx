@@ -2,7 +2,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
-import { ListFooter } from '#/components/Lists';
+import * as ListTail from '#/components/List/ListTail';
 
 const FEED_ITEM_HEIGHT_ESTIMATE = 164;
 
@@ -21,7 +21,7 @@ export function FeedsList({ feeds }: FeedsListProps) {
 			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 			renderItem={({ index, item }) => <FeedCard.Default view={item} topBorder={index !== 0} />}
 			keyExtractor={keyExtractor}
-			ListFooterComponent={<ListFooter />}
+			ListFooterComponent={<ListTail.Frame />}
 		/>
 	);
 }
