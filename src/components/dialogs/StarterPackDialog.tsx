@@ -129,8 +129,9 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 					}
 				}}
 				onEndReached={onEndReached}
-				isFetchingNextPage={isFetchingNextPage}
-				loadingLabel={m['common.status.loading']()}
+				ListFooterComponent={
+					isFetchingNextPage ? <CenteredSpinner label={m['common.status.loading']()} size="xl" /> : null
+				}
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={css.loading}>

@@ -139,8 +139,9 @@ function BlockDialogInner({
 					/>
 				)}
 				onEndReached={onEndReached}
-				isFetchingNextPage={isFetchingNextPage}
-				loadingLabel={m['common.status.loading']()}
+				ListFooterComponent={
+					isFetchingNextPage ? <CenteredSpinner label={m['common.status.loading']()} size="xl" /> : null
+				}
 				ListHeaderComponent={
 					hasMutualGroupChats ? (
 						<Text className={css.groupsLabel} color="textContrastHigh" size="sm" weight="semiBold">

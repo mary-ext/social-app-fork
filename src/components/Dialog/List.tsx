@@ -2,7 +2,6 @@ import { type ReactNode, useRef } from 'react';
 
 import { clsx } from 'clsx';
 
-import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as styles from '#/components/Dialog/Popup.css';
 import { List as BaseList, type ListRenderItem } from '#/components/List/List';
 
@@ -11,17 +10,15 @@ export type { ListRenderItem, ListRenderItemInfo } from '#/components/List/List'
 export type ListProps<ItemT> = {
 	data: readonly ItemT[];
 	keyExtractor: (item: ItemT, index: number) => string;
+	/** shown in place of the rows when `data` is empty, below any header. */
 	ListEmptyComponent?: ReactNode;
-	/** shown after non-empty data. */
+	/** shown after non-empty data; the place for a pagination spinner or retry. */
 	ListFooterComponent?: ReactNode;
 	/** shown before items, including when `data` is empty. */
 	ListHeaderComponent?: ReactNode;
 	className?: string;
 	/** enables virtualization with this estimated row height. */
 	estimateHeight?: number;
-	isFetchingNextPage?: boolean;
-	/** required to show the pagination spinner. */
-	loadingLabel?: string;
 	onEndReached?: () => void;
 	renderItem: ListRenderItem<ItemT>;
 };
@@ -40,8 +37,6 @@ export function List<ItemT>({
 	ListHeaderComponent,
 	className,
 	estimateHeight,
-	isFetchingNextPage,
-	loadingLabel,
 	onEndReached,
 	renderItem,
 }: ListProps<ItemT>) {
@@ -56,14 +51,7 @@ export function List<ItemT>({
 				estimateHeight={estimateHeight}
 				keyExtractor={keyExtractor}
 				ListEmptyComponent={ListEmptyComponent}
-				ListFooterComponent={
-					!isEmpty && (
-						<>
-							{ListFooterComponent}
-							{isFetchingNextPage && loadingLabel && <CenteredSpinner label={loadingLabel} size="xl" />}
-						</>
-					)
-				}
+				ListFooterComponent={!isEmpty && ListFooterComponent}
 				ListHeaderComponent={ListHeaderComponent}
 				onEndReached={onEndReached}
 				onEndReachedThreshold={2}

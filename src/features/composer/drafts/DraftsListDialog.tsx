@@ -80,8 +80,6 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 					</div>
 				)}
 				onEndReached={onEndReached}
-				isFetchingNextPage={isFetchingNextPage}
-				loadingLabel={m['view.composer.drafts.loading']()}
 				ListEmptyComponent={
 					isLoading ? (
 						<div className={styles.loading}>
@@ -97,13 +95,16 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 					)
 				}
 				ListFooterComponent={
-					drafts.length > 5 ? (
-						<div className={styles.footerNote}>
-							<Text align="center" color="textContrastMedium">
-								{m['view.composer.text.placeholder']()}
-							</Text>
-						</div>
-					) : null
+					<>
+						{drafts.length > 5 && (
+							<div className={styles.footerNote}>
+								<Text align="center" color="textContrastMedium">
+									{m['view.composer.text.placeholder']()}
+								</Text>
+							</div>
+						)}
+						{isFetchingNextPage && <CenteredSpinner label={m['view.composer.drafts.loading']()} size="xl" />}
+					</>
 				}
 			/>
 		</>
