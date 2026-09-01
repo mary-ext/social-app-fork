@@ -2,9 +2,35 @@
 
 const SHELL = '/';
 
+const PRECACHE_CONCURRENCY = 6;
+const isShellFallback = (response) => !!response.headers.get('content-type')?.startsWith('text/html');
+
+const precache = async (cache) => {
+	const queue = PRECACHE.slice();
+
+	await Promise.all(
+		Array.from({ length: PRECACHE_CONCURRENCY }, async () => {
+			let url;
+			while ((url = queue.pop()) !== undefined) {
+				const response = await fetch(url);
+				if (!response.ok || isShellFallback(response)) {
+					throw new Error(`precache failed: ${url} (${response.status})`);
+				}
+
+				await cache.put(url, response);
+			}
+		}),
+	);
+};
+
 self.addEventListener('install', (event) => {
 	event.waitUntil(
-		self.caches.open(CACHE).then((cache) => Promise.all([cache.add(SHELL), cache.addAll(PRECACHE)])),
+		(async () => {
+			const cache = await self.caches.open(CACHE);
+
+			await precache(cache);
+			await cache.add(new Request(SHELL, { cache: 'reload' }));
+		})(),
 	);
 });
 
@@ -46,7 +72,16 @@ self.addEventListener('fetch', (event) => {
 		event.respondWith(
 			self.caches.open(CACHE).then(async (cache) => {
 				const cached = await cache.match(request);
-				return cached ?? fetch(request);
+				if (cached) {
+					return cached;
+				}
+
+				const response = await fetch(request);
+				if (response.ok && !isShellFallback(response)) {
+					event.waitUntil(cache.put(request, response.clone()));
+				}
+
+				return response;
 			}),
 		);
 
