@@ -7,8 +7,11 @@ import {
 	generateAltText,
 	getClientAssertion,
 	getLinkImage,
+	listAiModels,
+	listAiProviders,
 	translateText,
 } from '../src/lib/lexicons';
+import { listAiModelOffers, listAiProviderCatalog } from './ai-catalog';
 import { generateAltTextDraft } from './alt-text';
 import { issueClientAssertion, serveClientMetadata } from './client-assertion';
 import { resolveLinkMeta } from './resolve';
@@ -90,6 +93,20 @@ router.addQuery(getLinkImage, {
 			});
 		}
 		return cached;
+	},
+});
+
+router.addQuery(listAiModels, {
+	async handler({ params, request }) {
+		requireSameOrigin(request);
+		return json(await listAiModelOffers(params));
+	},
+});
+
+router.addQuery(listAiProviders, {
+	async handler({ request }) {
+		requireSameOrigin(request);
+		return json(await listAiProviderCatalog());
 	},
 });
 

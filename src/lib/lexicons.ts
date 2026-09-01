@@ -138,6 +138,100 @@ export const getLinkImage = v.query('internal.app.getLinkImage', {
 	},
 });
 
+// #region AI catalog
+
+/** supported AI API formats. */
+export const AI_WIRE_FORMATS = ['anthropic_messages', 'openai_chat_completions', 'openai_responses'] as const;
+
+export type AiWireFormat = (typeof AI_WIRE_FORMATS)[number];
+
+/** models.dev modality names. */
+export const AI_MODALITIES = ['audio', 'image', 'pdf', 'text', 'video'] as const;
+
+export type AiModality = (typeof AI_MODALITIES)[number];
+
+export const AI_TOKEN_LIMIT_FIELDS = ['max_completion_tokens', 'max_tokens'] as const;
+
+export type AiTokenLimitField = (typeof AI_TOKEN_LIMIT_FIELDS)[number];
+
+const aiEndpointAuthSchema = v.object({
+	header: v.string(),
+	prefix: v.optional(v.string()),
+});
+
+const aiEndpointSchema = v.object({
+	auth: v.optional(aiEndpointAuthSchema),
+	format: v.literalEnum(AI_WIRE_FORMATS),
+	/** stable provider-scoped id stored instead of the URL. */
+	id: v.string(),
+	/** defaults by wire format when absent. */
+	tokenLimitField: v.optional(v.literalEnum(AI_TOKEN_LIMIT_FIELDS)),
+	url: v.string(),
+});
+
+export type AiEndpoint = v.InferOutput<typeof aiEndpointSchema>;
+
+const aiProviderSchema = v.object({
+	endpoints: v.array(aiEndpointSchema),
+	id: v.string(),
+	name: v.string(),
+});
+
+export type AiProvider = v.InferOutput<typeof aiProviderSchema>;
+
+/** lists supported providers and their endpoints. */
+export const listAiProviders = v.query('internal.app.listAiProviders', {
+	params: null,
+	output: {
+		type: 'lex',
+		schema: v.object({
+			providers: v.array(aiProviderSchema),
+		}),
+	},
+});
+
+const MAX_AI_PROVIDER_FILTERS = 32;
+
+const aiModelCapabilitiesSchema = v.object({
+	inputModalities: v.array(v.literalEnum(AI_MODALITIES)),
+	outputModalities: v.array(v.literalEnum(AI_MODALITIES)),
+	structuredOutput: v.boolean(),
+	temperature: v.boolean(),
+});
+
+const aiModelOfferSchema = v.object({
+	capabilities: aiModelCapabilitiesSchema,
+	deprecated: v.optional(v.boolean()),
+	/** endpoint id from {@link listAiProviders}. */
+	endpoint: v.string(),
+	format: v.literalEnum(AI_WIRE_FORMATS),
+	model: v.string(),
+	name: v.string(),
+	provider: v.string(),
+});
+
+export type AiModelOffer = v.InferOutput<typeof aiModelOfferSchema>;
+
+/** lists model routes matching the requested capabilities. */
+export const listAiModels = v.query('internal.app.listAiModels', {
+	params: v.object({
+		formats: v.constrain(v.array(v.literalEnum(AI_WIRE_FORMATS)), [v.arrayLength(1, AI_WIRE_FORMATS.length)]),
+		includeDeprecated: v.optional(v.boolean(), false),
+		inputModalities: v.optional(v.array(v.literalEnum(AI_MODALITIES)), () => []),
+		outputModalities: v.optional(v.array(v.literalEnum(AI_MODALITIES)), () => []),
+		providers: v.constrain(v.array(v.string()), [v.arrayLength(1, MAX_AI_PROVIDER_FILTERS)]),
+		structuredOutput: v.optional(v.boolean(), false),
+	}),
+	output: {
+		type: 'lex',
+		schema: v.object({
+			models: v.array(aiModelOfferSchema),
+		}),
+	},
+});
+
+// #endregion
+
 const MAX_TRANSLATION_CHARS = 3000;
 
 export const translationSchema = v.object({
@@ -170,5 +264,7 @@ declare module '@atcute/lexicons/ambient' {
 	interface XRPCQueries {
 		'internal.app.extractLinkMeta': typeof extractLinkMeta;
 		'internal.app.getLinkImage': typeof getLinkImage;
+		'internal.app.listAiModels': typeof listAiModels;
+		'internal.app.listAiProviders': typeof listAiProviders;
 	}
 }
