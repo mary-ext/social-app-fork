@@ -17,6 +17,15 @@ openers and many post-image `Dialog.Trigger`s.
 `useImplicitActiveTrigger` still claims a trigger when exactly one is registered. an imperative open
 on a multi-trigger handle remains unowned rather than associating it with an unrelated trigger.
 
+## `unstable-close-all-popups`: immediately close floating content
+
+adds `closeAllPopups()`, backed by a registry that only contains mounted floating roots. menus,
+popovers, preview cards, selects, and non-inline autocomplete or combobox popups close and unmount
+synchronously instead of playing their exit animation after navigation moves their trigger.
+
+dialogs, drawers, tooltips, and inline autocomplete or combobox content do not register, so their
+existing close behavior and animations are unchanged.
+
 ## `combobox/root/AriaCombobox.mjs` + `autocomplete/root/AutocompleteRoot.d.mts`: expose `setActiveIndex` on `actionsRef`
 
 adds `setActiveIndex(index)` to the autocomplete imperative actions. `SearchAutocomplete` uses it to

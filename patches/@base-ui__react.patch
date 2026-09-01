@@ -1,5 +1,5 @@
 diff --git a/autocomplete/root/AutocompleteRoot.d.mts b/autocomplete/root/AutocompleteRoot.d.mts
-index 2f18bd5480a2844d3d0ca11adccf560393fcf122..d62c3239e81e66df21698945e58920550d576478 100644
+index 2f18bd5..d62c323 100644
 --- a/autocomplete/root/AutocompleteRoot.d.mts
 +++ b/autocomplete/root/AutocompleteRoot.d.mts
 @@ -25,6 +25,8 @@ export declare function AutocompleteRoot<ItemValue>(props: Omit<AutocompleteRoot
@@ -12,7 +12,7 @@ index 2f18bd5480a2844d3d0ca11adccf560393fcf122..d62c3239e81e66df21698945e5892055
  export type AutocompleteRootChangeEventReason = AriaCombobox.ChangeEventReason;
  export type AutocompleteRootChangeEventDetails = AriaCombobox.ChangeEventDetails;
 diff --git a/combobox/root/AriaCombobox.d.mts b/combobox/root/AriaCombobox.d.mts
-index 1f1cde93d49c29f946684e180f751512057f6d77..ac34e4656d3f0957688ddedc31145fc7bd6ba52e 100644
+index 1f1cde9..ac34e46 100644
 --- a/combobox/root/AriaCombobox.d.mts
 +++ b/combobox/root/AriaCombobox.d.mts
 @@ -107,6 +107,13 @@ interface ComboboxRootProps<ItemValue> {
@@ -30,10 +30,33 @@ index 1f1cde93d49c29f946684e180f751512057f6d77..ac34e4656d3f0957688ddedc31145fc7
     * Callback fired when an item is highlighted or unhighlighted.
     * Receives the highlighted item value (or `undefined` if no item is highlighted) and event details with a `reason` property describing why the highlight changed.
 diff --git a/combobox/root/AriaCombobox.mjs b/combobox/root/AriaCombobox.mjs
-index 3864151c6b12fa4cf223c37c9bc6efe2c0dd832b..8559d14e643ebd3f09b6d06a6f0eb920a7e3986c 100644
+index 3864151..ceb26ff 100644
 --- a/combobox/root/AriaCombobox.mjs
 +++ b/combobox/root/AriaCombobox.mjs
-@@ -658,7 +658,7 @@ export function AriaCombobox(props) {
+@@ -32,6 +32,7 @@ import { isScrollableY } from "../../utils/scrollable.mjs";
+ import { useValueChanged } from "../../internals/useValueChanged.mjs";
+ import { NOOP } from "../../internals/noop.mjs";
+ import { FOCUSABLE_POPUP_PROPS } from "../../utils/popups/index.mjs";
++import { useRegisterPopupCloseAction } from "../../utils/popups/closeAllPopups.mjs";
+ import { mergeProps } from "../../merge-props/index.mjs";
+ import { stringifyAsLabel, stringifyAsValue, isGroupedItems } from "../../internals/resolveValueLabel.mjs";
+ import { compareItemEquality, defaultItemEquality, findSelectionIndex, removeItem, selectedValueIncludes } from "../../internals/itemEquality.mjs";
+@@ -644,7 +645,13 @@ export function AriaCombobox(props) {
+       }
+     }
+   });
+-
++  const closeImmediately = useStableCallback(() => {
++    if (open) {
++      setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
++    }
++    handleUnmount();
++  });
++  useRegisterPopupCloseAction(mounted && !inline, closeImmediately);
+   // Support composing the Dialog component around an inline combobox.
+   // `[role="dialog"]` is more interoperable than using a context, e.g. it can work
+   // with third-party modal libraries, though the limitation is that the closest
+@@ -658,7 +665,7 @@ export function AriaCombobox(props) {
      return popupRef;
    }, [inline, positionerElement]);
    useOpenChangeComplete({
@@ -42,7 +65,7 @@ index 3864151c6b12fa4cf223c37c9bc6efe2c0dd832b..8559d14e643ebd3f09b6d06a6f0eb920
      open,
      ref: resolvedPopupRef,
      onComplete() {
-@@ -668,8 +668,12 @@ export function AriaCombobox(props) {
+@@ -668,8 +675,12 @@ export function AriaCombobox(props) {
      }
    });
    React.useImperativeHandle(props.actionsRef, () => ({
@@ -57,8 +80,15 @@ index 3864151c6b12fa4cf223c37c9bc6efe2c0dd832b..8559d14e643ebd3f09b6d06a6f0eb920
    useIsoLayoutEffect(function syncClosedState() {
      if (open) {
        return;
+@@ -1139,4 +1150,4 @@ export function AriaCombobox(props) {
+       })
+     })
+   });
+-}
+\ No newline at end of file
++}
 diff --git a/dialog/root/useRenderDialogRoot.mjs b/dialog/root/useRenderDialogRoot.mjs
-index 49111df0463159391d3ade4c2cd767715695a7e4..177ff3ab835fda54a4ed412b078bc5182acd4a1a 100644
+index 49111df..177ff3a 100644
 --- a/dialog/root/useRenderDialogRoot.mjs
 +++ b/dialog/root/useRenderDialogRoot.mjs
 @@ -1,6 +1,9 @@
@@ -106,7 +136,7 @@ index 49111df0463159391d3ade4c2cd767715695a7e4..177ff3ab835fda54a4ed412b078bc518
      forceUnmount
    } = useOpenStateTransitions(open, store);
 diff --git a/drawer/root/DrawerRoot.mjs b/drawer/root/DrawerRoot.mjs
-index 4ffbea97c607d334e5e1cb71251f94abb30f1b4c..dbe9b6c48f635e333efe770bce8ce4547df39db2 100644
+index 4ffbea9..dbe9b6c 100644
 --- a/drawer/root/DrawerRoot.mjs
 +++ b/drawer/root/DrawerRoot.mjs
 @@ -2,12 +2,9 @@
@@ -163,8 +193,56 @@ index 4ffbea97c607d334e5e1cb71251f94abb30f1b4c..dbe9b6c48f635e333efe770bce8ce454
    return null;
  }
 \ No newline at end of file
+diff --git a/menu/root/MenuRoot.mjs b/menu/root/MenuRoot.mjs
+index 96dc92b..64aecda 100644
+--- a/menu/root/MenuRoot.mjs
++++ b/menu/root/MenuRoot.mjs
+@@ -130,6 +130,8 @@ export const MenuRoot = fastComponent(function MenuRoot(props) {
+     forceUnmount
+   } = useOpenStateTransitions(open, store, () => {
+     store.set('allowMouseEnter', false);
++  }, {
++    registerForCloseAll: true
+   });
+   useIsoLayoutEffect(() => {
+     if (contextMenuContext && !parentMenuRootContext) {
+@@ -403,4 +405,4 @@ function useMenuRootStore(initialState) {
+   // through an event).
+   const store = useRefWithInit(() => new MenuStore(initialState)).current;
+   return store;
+-}
+\ No newline at end of file
++}
+diff --git a/package.json b/package.json
+index ff5c0bf..fa8a1fe 100644
+--- a/package.json
++++ b/package.json
+@@ -662,6 +662,16 @@
+         "default": "./types/index.mjs"
+       }
+     },
++    "./unstable-close-all-popups": {
++      "import": {
++        "types": "./unstable-close-all-popups/index.d.mts",
++        "default": "./unstable-close-all-popups/index.mjs"
++      },
++      "default": {
++        "types": "./unstable-close-all-popups/index.d.mts",
++        "default": "./unstable-close-all-popups/index.mjs"
++      }
++    },
+     "./unstable-use-media-query": {
+       "import": {
+         "types": "./unstable-use-media-query/index.d.mts",
+@@ -1275,4 +1285,4 @@
+   },
+   "main": "./index.js",
+   "types": "./index.d.ts"
+-}
+\ No newline at end of file
++}
 diff --git a/popover/root/PopoverRoot.mjs b/popover/root/PopoverRoot.mjs
-index 35d6486593fc60272bf993c3839e8eff8c93b6b4..c76193970fc8b18a38fe6ef402361bb06ea5f340 100644
+index 35d6486..8c0fd1f 100644
 --- a/popover/root/PopoverRoot.mjs
 +++ b/popover/root/PopoverRoot.mjs
 @@ -1,7 +1,10 @@
@@ -179,7 +257,16 @@ index 35d6486593fc60272bf993c3839e8eff8c93b6b4..c76193970fc8b18a38fe6ef402361bb0
  import { PopoverRootContext, usePopoverRootContext } from "./PopoverRootContext.mjs";
  import { PopoverStore } from "../store/PopoverStore.mjs";
  import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
-@@ -54,6 +57,30 @@ function PopoverRootComponent({
+@@ -45,6 +48,8 @@ function PopoverRootComponent({
+       stickIfOpen: true,
+       openChangeReason: null
+     });
++  }, {
++    registerForCloseAll: true
+   });
+   store.useSyncedValues({
+     modal
+@@ -54,6 +59,30 @@ function PopoverRootComponent({
        store.context.stickIfOpenTimeout.clear();
      }
    }, [store, open]);
@@ -210,8 +297,70 @@ index 35d6486593fc60272bf993c3839e8eff8c93b6b4..c76193970fc8b18a38fe6ef402361bb0
    React.useImperativeHandle(props.actionsRef, () => ({
      unmount: forceUnmount,
      close: () => store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction))
+@@ -128,4 +157,4 @@ function PopoverInteractions({
+     popupProps
+   });
+   return null;
+-}
+\ No newline at end of file
++}
+diff --git a/preview-card/root/PreviewCardRoot.mjs b/preview-card/root/PreviewCardRoot.mjs
+index fac4f14..a89d3f7 100644
+--- a/preview-card/root/PreviewCardRoot.mjs
++++ b/preview-card/root/PreviewCardRoot.mjs
+@@ -43,6 +43,8 @@ function PreviewCardRootComponent(props) {
+     forceUnmount
+   } = useOpenStateTransitions(open, store, () => {
+     store.context.inlineRectCoordsRef.current = undefined;
++  }, {
++    registerForCloseAll: true
+   });
+   useIsoLayoutEffect(() => {
+     if (open) {
+@@ -102,4 +104,4 @@ export const PreviewCardRoot = fastComponent(function PreviewCardRoot(props) {
+     })
+   });
+ });
+-if (process.env.NODE_ENV !== "production") PreviewCardRoot.displayName = "PreviewCardRoot";
+\ No newline at end of file
++if (process.env.NODE_ENV !== "production") PreviewCardRoot.displayName = "PreviewCardRoot";
+diff --git a/select/root/SelectRoot.mjs b/select/root/SelectRoot.mjs
+index da1f59d..f2b42d0 100644
+--- a/select/root/SelectRoot.mjs
++++ b/select/root/SelectRoot.mjs
+@@ -31,8 +31,8 @@ import { useValueChanged } from "../../internals/useValueChanged.mjs";
+ import { useOpenInteractionType } from "../../utils/useOpenInteractionType.mjs";
+ import { getMaxScrollOffset, normalizeScrollOffset } from "../../utils/scrollEdges.mjs";
+ import { FOCUSABLE_POPUP_PROPS } from "../../utils/popups/index.mjs";
++import { useRegisterPopupCloseAction } from "../../utils/popups/closeAllPopups.mjs";
+ import { mergeProps } from "../../merge-props/index.mjs";
+-
+ /**
+  * Groups all parts of the select.
+  * Doesn't render its own HTML element.
+@@ -235,6 +235,13 @@ export function SelectRoot(props) {
+     });
+     onOpenChangeComplete?.(false);
+   });
++  const closeImmediately = useStableCallback(() => {
++    if (open) {
++      setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
++    }
++    handleUnmount();
++  });
++  useRegisterPopupCloseAction(mounted, closeImmediately);
+   useOpenChangeComplete({
+     enabled: !actionsRef,
+     open,
+@@ -446,4 +453,4 @@ export function SelectRoot(props) {
+       suppressHydrationWarning: true
+     }), hiddenInputs]
+   });
+-}
+\ No newline at end of file
++}
 diff --git a/slider/control/SliderControl.mjs b/slider/control/SliderControl.mjs
-index 6a2b200873be9c7f2f91858dd22659bc6f5f1292..52860b24049801617f46f8a5e7a4f32d647e3344 100644
+index 6a2b200..52860b2 100644
 --- a/slider/control/SliderControl.mjs
 +++ b/slider/control/SliderControl.mjs
 @@ -316,13 +316,15 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
@@ -265,8 +414,22 @@ index 6a2b200873be9c7f2f91858dd22659bc6f5f1292..52860b24049801617f46f8a5e7a4f32d
        }
      }, elementProps],
      stateAttributesMapping: sliderStateAttributesMapping
+diff --git a/unstable-close-all-popups/index.d.mts b/unstable-close-all-popups/index.d.mts
+new file mode 100644
+index 0000000..bce2a13
+--- /dev/null
++++ b/unstable-close-all-popups/index.d.mts
+@@ -0,0 +1 @@
++export { closeAllPopups } from "../utils/popups/closeAllPopups.mjs";
+diff --git a/unstable-close-all-popups/index.mjs b/unstable-close-all-popups/index.mjs
+new file mode 100644
+index 0000000..bce2a13
+--- /dev/null
++++ b/unstable-close-all-popups/index.mjs
+@@ -0,0 +1 @@
++export { closeAllPopups } from "../utils/popups/closeAllPopups.mjs";
 diff --git a/utils/InternalBackdrop.mjs b/utils/InternalBackdrop.mjs
-index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
+index 574e6e4..0994b9e 100644
 --- a/utils/InternalBackdrop.mjs
 +++ b/utils/InternalBackdrop.mjs
 @@ -10,10 +10,6 @@ export const InternalBackdrop = /*#__PURE__*/React.forwardRef(function InternalB
@@ -280,11 +443,92 @@ index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1
    return /*#__PURE__*/_jsx("div", {
      ref: ref,
      role: "presentation"
+diff --git a/utils/popups/closeAllPopups.d.mts b/utils/popups/closeAllPopups.d.mts
+new file mode 100644
+index 0000000..426254b
+--- /dev/null
++++ b/utils/popups/closeAllPopups.d.mts
+@@ -0,0 +1,4 @@
++/** closes every registered floating popup immediately, without waiting for an exit animation. */
++export declare function closeAllPopups(): void;
++/** @internal */
++export declare function useRegisterPopupCloseAction(mounted: boolean, close: () => void): void;
+diff --git a/utils/popups/closeAllPopups.mjs b/utils/popups/closeAllPopups.mjs
+new file mode 100644
+index 0000000..90969e6
+--- /dev/null
++++ b/utils/popups/closeAllPopups.mjs
+@@ -0,0 +1,35 @@
++'use client';
++
++import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
++
++const closeActions = new Set();
++
++/**
++ * closes every registered floating popup immediately, without waiting for an exit animation.
++ *
++ * dialogs and tooltips do not register themselves. controlled popups must honor their `onOpenChange`
++ * callback to remain closed after the immediate unmount.
++ */
++export function closeAllPopups() {
++  for (const close of Array.from(closeActions)) {
++    close();
++  }
++}
++
++/**
++ * registers an immediate close action while a floating popup is mounted.
++ *
++ * @param mounted whether the popup is mounted
++ * @param close action that closes and unmounts the popup
++ */
++export function useRegisterPopupCloseAction(mounted, close) {
++  useIsoLayoutEffect(() => {
++    if (!mounted) {
++      return undefined;
++    }
++    closeActions.add(close);
++    return () => {
++      closeActions.delete(close);
++    };
++  }, [mounted, close]);
++}
+diff --git a/utils/popups/popupStoreUtils.d.mts b/utils/popups/popupStoreUtils.d.mts
+index e606c10..e04997d 100644
+--- a/utils/popups/popupStoreUtils.d.mts
++++ b/utils/popups/popupStoreUtils.d.mts
+@@ -133,7 +133,9 @@ export declare function useImplicitActiveTrigger<State extends PopupStoreState<u
+  *
+  * @returns A function to forcibly unmount the popup.
+  */
+-export declare function useOpenStateTransitions<State extends PopupStoreState<unknown>>(open: boolean, store: ReactStore<State, PopupStoreContext<never>, typeof popupStoreSelectors>, onUnmount?: () => void): {
++export declare function useOpenStateTransitions<State extends PopupStoreState<unknown>>(open: boolean, store: ReactStore<State, PopupStoreContext<never>, typeof popupStoreSelectors>, onUnmount?: () => void, options?: {
++    registerForCloseAll?: boolean;
++}): {
+   forceUnmount: () => void;
+   transitionStatus: import("../../internals/useTransitionStatus.mjs").TransitionStatus;
+ };
+@@ -141,4 +143,4 @@ export declare function usePopupInteractionProps<State extends PopupStoreState<u
+ export declare function usePopupRootSync<State extends PopupStoreState<unknown> & {
+   openMethod: InteractionType | null;
+ }>(store: ReactStore<State, PopupStoreContext<never>, typeof popupStoreSelectors>, open: boolean): void;
+-export {};
+\ No newline at end of file
++export {};
 diff --git a/utils/popups/popupStoreUtils.mjs b/utils/popups/popupStoreUtils.mjs
-index b762f793723159dd4bd42669dd34a0527bace60e..05b08cdfd4a3f030cb4d152aef2133a4225eff7c 100644
+index b762f79..56fd6bb 100644
 --- a/utils/popups/popupStoreUtils.mjs
 +++ b/utils/popups/popupStoreUtils.mjs
-@@ -211,16 +211,6 @@ export function useTriggerDataForwarding(triggerId, triggerElementRef, store, st
+@@ -14,6 +14,7 @@ import { useTransitionStatus } from "../../internals/useTransitionStatus.mjs";
+ import { useOpenChangeComplete } from "../../internals/useOpenChangeComplete.mjs";
+ import { createChangeEventDetails } from "../../internals/createBaseUIEventDetails.mjs";
+ import { REASONS } from "../../internals/reasons.mjs";
++import { useRegisterPopupCloseAction } from "./closeAllPopups.mjs";
+ export const FOCUSABLE_POPUP_PROPS = {
+   tabIndex: -1,
+   [FOCUSABLE_ATTRIBUTE]: ''
+@@ -211,16 +212,6 @@ export function useTriggerDataForwarding(triggerId, triggerElementRef, store, st
        });
        return;
      }
@@ -301,8 +545,41 @@ index b762f793723159dd4bd42669dd34a0527bace60e..05b08cdfd4a3f030cb4d152aef2133a4
    });
  
    // Intentionally NOT stable. Its identity is derived from `baseRegisterTrigger`, which is keyed on
+@@ -374,7 +365,10 @@ export function useImplicitActiveTrigger(store, options = {}) {
+  *
+  * @returns A function to forcibly unmount the popup.
+  */
+-export function useOpenStateTransitions(open, store, onUnmount) {
++export function useOpenStateTransitions(open, store, onUnmount, options = {}) {
++  const {
++    registerForCloseAll = false
++  } = options;
+   const {
+     mounted,
+     setMounted,
+@@ -400,6 +394,13 @@ export function useOpenStateTransitions(open, store, onUnmount) {
+     onUnmount?.();
+     store.context.onOpenChangeComplete?.(false);
+   });
++  const closeImmediately = useStableCallback(() => {
++    if (store.select('open')) {
++      store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction));
++    }
++    forceUnmount();
++  });
++  useRegisterPopupCloseAction(registerForCloseAll && mounted, closeImmediately);
+   useOpenChangeComplete({
+     enabled: mounted && !open && !syncedPreventUnmountingOnClose,
+     open,
+@@ -436,4 +437,4 @@ export function usePopupRootSync(store, open) {
+       store.set('openMethod', null);
+     }
+   }, [store]);
+-}
+\ No newline at end of file
++}
 diff --git a/utils/useAnchoredPopupScrollLock.mjs b/utils/useAnchoredPopupScrollLock.mjs
-index 98ccc072b8e45f501a7bef87c665b25831c04c88..e9fbbeedc1be2f78f715f12b6e3c78c20ff67a6a 100644
+index 98ccc07..e9fbbee 100644
 --- a/utils/useAnchoredPopupScrollLock.mjs
 +++ b/utils/useAnchoredPopupScrollLock.mjs
 @@ -27,5 +27,5 @@ export function useAnchoredPopupScrollLock(enabled, touchOpen, positionerElement
@@ -312,3 +589,4 @@ index 98ccc072b8e45f501a7bef87c665b25831c04c88..e9fbbeedc1be2f78f715f12b6e3c78c2
 -  useScrollLock(enabled && (!touchOpen || touchOpenShouldLockScroll), referenceElement);
 +  useScrollLock(enabled, referenceElement);
  }
+\ No newline at end of file
