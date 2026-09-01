@@ -85,6 +85,7 @@
 		"oxfmt": "^0.65.0",
 		"oxlint": "^1.80.0",
 		"oxlint-tsgolint": "^7.0.2001",
+		"terser": "^5.51.2",
 		"type-fest": "^5.9.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
 		"vite": "^8.2.2",
