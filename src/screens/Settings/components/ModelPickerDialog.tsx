@@ -19,6 +19,7 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
+import RobotIcon from '#/icons/central/Robot_round_outlined_radius0_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ModelPickerDialog.css';
@@ -141,14 +142,14 @@ const DialogInner = ({
 		return entry.name.toLowerCase().includes(needle) || entry.detail?.toLowerCase().includes(needle) === true;
 	});
 
-	let statusText: string | undefined;
-	if (linked.size === 0) {
-		statusText = m['screens.settings.ai.model.needsProvider']();
-	} else if (error !== null) {
-		statusText = m['screens.settings.ai.model.loadError']();
-	}
-	const isLoading = linked.size > 0 && isPending;
-	const listEntries = isLoading ? [] : visible;
+	const hasProviders = linked.size > 0;
+	const statusText = !hasProviders || error === null ? undefined : m['screens.settings.ai.model.loadError']();
+	const isLoading = hasProviders && isPending;
+	const listEntries = isLoading || !hasProviders ? [] : visible;
+	const emptyIcon = hasProviders ? MagnifyingGlassIcon : RobotIcon;
+	const emptyMessage = hasProviders
+		? m['screens.settings.ai.model.noMatches']()
+		: m['screens.settings.ai.model.needsProvider']();
 
 	return (
 		<Combobox.Root
@@ -224,10 +225,7 @@ const DialogInner = ({
 							)}
 							<Combobox.Empty>
 								{!isLoading && statusText === undefined && (
-									<ListEmpty
-										icon={MagnifyingGlassIcon}
-										message={m['screens.settings.ai.model.noMatches']()}
-									/>
+									<ListEmpty icon={emptyIcon} message={emptyMessage} />
 								)}
 							</Combobox.Empty>
 						</>
