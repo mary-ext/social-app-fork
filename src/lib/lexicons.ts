@@ -150,10 +150,6 @@ export const AI_MODALITIES = ['audio', 'image', 'pdf', 'text', 'video'] as const
 
 export type AiModality = (typeof AI_MODALITIES)[number];
 
-export const AI_TOKEN_LIMIT_FIELDS = ['max_completion_tokens', 'max_tokens'] as const;
-
-export type AiTokenLimitField = (typeof AI_TOKEN_LIMIT_FIELDS)[number];
-
 const aiEndpointAuthSchema = v.object({
 	header: v.string(),
 	prefix: v.optional(v.string()),
@@ -164,8 +160,6 @@ const aiEndpointSchema = v.object({
 	format: v.literalEnum(AI_WIRE_FORMATS),
 	/** stable provider-scoped id stored instead of the URL. */
 	id: v.string(),
-	/** defaults by wire format when absent. */
-	tokenLimitField: v.optional(v.literalEnum(AI_TOKEN_LIMIT_FIELDS)),
 	url: v.string(),
 });
 
@@ -215,7 +209,8 @@ export type AiModelOffer = v.InferOutput<typeof aiModelOfferSchema>;
 /** lists model routes matching the requested capabilities. */
 export const listAiModels = v.query('internal.app.listAiModels', {
 	params: v.object({
-		formats: v.constrain(v.array(v.literalEnum(AI_WIRE_FORMATS)), [v.arrayLength(1, AI_WIRE_FORMATS.length)]),
+		/** empty allows all formats. */
+		formats: v.optional(v.array(v.literalEnum(AI_WIRE_FORMATS)), () => []),
 		includeDeprecated: v.optional(v.boolean(), false),
 		inputModalities: v.optional(v.array(v.literalEnum(AI_MODALITIES)), () => []),
 		outputModalities: v.optional(v.array(v.literalEnum(AI_MODALITIES)), () => []),

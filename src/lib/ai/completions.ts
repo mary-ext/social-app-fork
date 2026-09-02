@@ -1,21 +1,13 @@
 import * as v from 'valibot';
 
 import { type AltTextInput, runAltTextRound } from '#/lib/ai/alt-text';
-import type { ChatCompletionOptions, CompleteChat } from '#/lib/ai/chat';
+import type { CompleteChat } from '#/lib/ai/chat';
 import type { AiRoute } from '#/lib/ai/config';
 import { createProviderError } from '#/lib/ai/error';
 import { aiErrorEnvelopeSchema } from '#/lib/ai/response';
 import { runTranslation, type TranslationInput } from '#/lib/ai/translate';
-
-const completionSchema = v.object({
-	choices: v.array(
-		v.object({
-			message: v.object({
-				content: v.optional(v.nullable(v.string())),
-			}),
-		}),
-	),
-});
+import { AI_FORMAT_HEADERS } from '#/lib/ai/wire/headers';
+import { AI_WIRE_ADAPTERS } from '#/lib/ai/wire/registry';
 
 /**
  * drafts image alt text with the configured AI route.
@@ -58,12 +50,16 @@ export const runAiTranslation = ({
 };
 
 const createCompletion = (route: AiRoute, signal: AbortSignal): CompleteChat => {
-	const { apiKey, endpoint, model, providerName } = route;
+	const { apiKey, endpoint, model, providerName, supportsTemperature } = route;
 
+	const adapter = AI_WIRE_ADAPTERS[endpoint.format];
 	const fail = createProviderError(providerName);
 
 	return async (options) => {
-		const headers: Record<string, string> = { 'content-type': 'application/json' };
+		const headers: Record<string, string> = {
+			'content-type': 'application/json',
+			...AI_FORMAT_HEADERS[endpoint.format],
+		};
 		if (endpoint.auth !== undefined && apiKey !== undefined) {
 			headers[endpoint.auth.header] = (endpoint.auth.prefix ?? '') + apiKey;
 		}
@@ -74,7 +70,13 @@ const createCompletion = (route: AiRoute, signal: AbortSignal): CompleteChat => 
 				method: 'POST',
 				signal: signal,
 				headers: headers,
-				body: JSON.stringify(buildRequest(route, options)),
+				body: JSON.stringify(
+					adapter.buildBody({
+						...options,
+						model: model,
+						temperature: supportsTemperature ? options.temperature : undefined,
+					}),
+				),
 			});
 		} catch (error: unknown) {
 			// preserve abort errors.
@@ -98,28 +100,11 @@ const createCompletion = (route: AiRoute, signal: AbortSignal): CompleteChat => 
 			throw fail(envelope.output.error.message ?? `${providerName} could not run ${model}`);
 		}
 
-		const parsed = v.safeParse(completionSchema, body);
-		if (!parsed.success) {
+		const reply = adapter.readReply(body);
+		if (reply === undefined) {
 			throw fail(`${providerName} returned a reply in an unexpected shape`);
 		}
 
-		return parsed.output.choices[0]?.message.content ?? '';
-	};
-};
-
-const buildRequest = (
-	{ endpoint, model, supportsTemperature }: AiRoute,
-	{ maxTokens, messages, responseSchema, temperature }: ChatCompletionOptions,
-) => {
-	return {
-		[endpoint.tokenLimitField ?? 'max_tokens']: maxTokens,
-		messages: messages,
-		model: model,
-		response_format: {
-			type: 'json_schema',
-			json_schema: { ...responseSchema, strict: true },
-		},
-		// some reasoning models reject the temperature field.
-		temperature: supportsTemperature ? temperature : undefined,
+		return reply;
 	};
 };

@@ -24,33 +24,39 @@ const VERDICT_TTL_MS: Record<ProbeOutcome, number> = {
 	unreachable: 60 * 60 * 1000,
 };
 
-type Verdict = { expires: number; outcome: ProbeOutcome };
+type Verdict = { expires: number; headers: string; outcome: ProbeOutcome };
 
 type VerdictMap = Record<string, Verdict>;
+
+export type CorsProbeTarget = {
+	/** requested header names in lowercase. */
+	headers: string[];
+	url: string;
+};
 
 /**
  * filters endpoint URLs by CORS preflight support.
  *
- * @param urls endpoint URLs to check
+ * @param targets endpoints to check
  * @returns URLs without a confirmed CORS rejection
  */
-export const selectCorsAllowedUrls = async (urls: readonly string[]): Promise<Set<string>> => {
-	const distinct = [...new Set(urls)];
+export const selectCorsAllowedUrls = async (targets: readonly CorsProbeTarget[]): Promise<Set<string>> => {
+	const distinct = new Map(targets.map((target) => [target.url, target]));
 	const now = Date.now();
 
 	const cached = await readVerdicts();
 	const verdicts: VerdictMap = {};
-	const unknown: string[] = [];
-	const expired: string[] = [];
+	const unknown: CorsProbeTarget[] = [];
+	const expired: CorsProbeTarget[] = [];
 
-	for (const url of distinct) {
-		const verdict = cached[url];
-		if (verdict === undefined) {
-			unknown.push(url);
+	for (const target of distinct.values()) {
+		const verdict = cached[target.url];
+		if (verdict === undefined || verdict.headers !== probeKey(target)) {
+			unknown.push(target);
 		} else {
-			verdicts[url] = verdict;
+			verdicts[target.url] = verdict;
 			if (verdict.expires <= now) {
-				expired.push(url);
+				expired.push(target);
 			}
 		}
 	}
@@ -63,7 +69,7 @@ export const selectCorsAllowedUrls = async (urls: readonly string[]): Promise<Se
 	}
 
 	const allowed = new Set<string>();
-	for (const url of distinct) {
+	for (const url of distinct.keys()) {
 		// only confirmed CORS rejections are excluded.
 		if (verdicts[url]?.outcome !== 'rejected') {
 			allowed.add(url);
@@ -77,25 +83,31 @@ export const selectCorsAllowedUrls = async (urls: readonly string[]): Promise<Se
 	return allowed;
 };
 
-const revalidate = async (verdicts: VerdictMap, expired: readonly string[]): Promise<void> => {
+const revalidate = async (verdicts: VerdictMap, expired: readonly CorsProbeTarget[]): Promise<void> => {
 	await writeVerdicts({ ...verdicts, ...(await probeAll(expired)) });
 };
 
-const probeAll = async (urls: readonly string[]): Promise<VerdictMap> => {
+const probeAll = async (targets: readonly CorsProbeTarget[]): Promise<VerdictMap> => {
 	const verdicts: VerdictMap = {};
 
 	// workers pull from a shared queue.
-	const queue = urls[Symbol.iterator]();
+	const queue = targets[Symbol.iterator]();
 	const consume = async (): Promise<void> => {
-		for (const url of queue) {
-			const outcome = await probe(url);
-			verdicts[url] = { expires: Date.now() + expiryIn(outcome), outcome };
+		for (const target of queue) {
+			const outcome = await probe(target);
+			verdicts[target.url] = {
+				expires: Date.now() + expiryIn(outcome),
+				headers: probeKey(target),
+				outcome,
+			};
 		}
 	};
 
-	await Promise.all(Array.from({ length: Math.min(PROBE_CONCURRENCY, urls.length) }, consume));
+	await Promise.all(Array.from({ length: Math.min(PROBE_CONCURRENCY, targets.length) }, consume));
 	return verdicts;
 };
+
+const probeKey = ({ headers }: CorsProbeTarget): string => headers.toSorted().join(',');
 
 /** staggers expiry times to avoid synchronized probes. */
 const expiryIn = (outcome: ProbeOutcome): number => {
@@ -103,13 +115,15 @@ const expiryIn = (outcome: ProbeOutcome): number => {
 	return ttl - Math.random() * (ttl / 3);
 };
 
-const probe = async (url: string): Promise<ProbeOutcome> => {
+const probe = async (target: CorsProbeTarget): Promise<ProbeOutcome> => {
+	const { headers, url } = target;
+
 	let response: Response;
 	try {
 		// send a browser-style preflight.
 		response = await fetch(url, {
 			headers: {
-				'access-control-request-headers': 'authorization,content-type',
+				'access-control-request-headers': probeKey(target),
 				'access-control-request-method': 'POST',
 				origin: APP_ORIGIN,
 			},
@@ -129,10 +143,10 @@ const probe = async (url: string): Promise<ProbeOutcome> => {
 		return 'unreachable';
 	}
 
-	return isPreflightAccepted(response) ? 'allowed' : 'rejected';
+	return isPreflightAccepted(response, headers) ? 'allowed' : 'rejected';
 };
 
-const isPreflightAccepted = (response: Response): boolean => {
+const isPreflightAccepted = (response: Response, requested: readonly string[]): boolean => {
 	if (!response.ok) {
 		return false;
 	}
@@ -143,10 +157,9 @@ const isPreflightAccepted = (response: Response): boolean => {
 	}
 
 	// POST is CORS-safelisted.
-	const headers = new Set(splitHeaderList(response.headers.get('access-control-allow-headers')));
+	const allowed = new Set(splitHeaderList(response.headers.get('access-control-allow-headers')));
 
-	// some providers use '*' instead of listing authorization.
-	return headers.has('*') || (headers.has('authorization') && headers.has('content-type'));
+	return allowed.has('*') || requested.every((header) => allowed.has(header));
 };
 
 const splitHeaderList = (raw: string | null): string[] => {

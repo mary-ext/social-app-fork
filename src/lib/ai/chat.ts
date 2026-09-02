@@ -1,6 +1,14 @@
-export type ChatContentPart =
-	| { type: 'image_url'; image_url: { url: string } }
-	| { type: 'text'; text: string };
+export type ChatImagePart = { type: 'image'; data: string; mimeType: string };
+
+export type ChatContentPart = ChatImagePart | { type: 'text'; text: string };
+
+/**
+ * @param part image data
+ * @returns a base64 data URL
+ */
+export const toImageDataUrl = ({ data, mimeType }: ChatImagePart): string => {
+	return `data:${mimeType};base64,${data}`;
+};
 
 export type ChatMessage =
 	| { role: 'assistant'; content: string }

@@ -1,4 +1,4 @@
-import type { AiTokenLimitField, AiWireFormat } from '../src/lib/lexicons';
+import type { AiWireFormat } from '../src/lib/lexicons';
 
 export type AiProviderOverlay = {
 	api?: string;
@@ -6,12 +6,13 @@ export type AiProviderOverlay = {
 	endpointIds?: Record<string, string>;
 	/** overrides the format inferred from the provider package. */
 	format?: AiWireFormat;
-	/** overrides the default output token-limit field. */
-	tokenLimitField?: AiTokenLimitField;
 };
 
 /** models.dev provider corrections. */
 export const PROVIDER_OVERLAYS: Record<string, AiProviderOverlay> = {
+	anthropic: {
+		api: 'https://api.anthropic.com/v1',
+	},
 	cerebras: {
 		api: 'https://api.cerebras.ai/v1',
 		format: 'openai_chat_completions',
@@ -42,9 +43,6 @@ export const PROVIDER_OVERLAYS: Record<string, AiProviderOverlay> = {
 	},
 	openai: {
 		api: 'https://api.openai.com/v1',
-		format: 'openai_chat_completions',
-		// reasoning models reject `max_tokens`.
-		tokenLimitField: 'max_completion_tokens',
 	},
 	perplexity: {
 		api: 'https://api.perplexity.ai',

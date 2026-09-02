@@ -9,8 +9,6 @@ const SELECTION_KEYS: Record<AiFeature, 'aiImageDescriptionModel' | 'aiTranslati
 	translation: 'aiTranslationModel',
 };
 
-const RUNNABLE_FORMATS = new Set(['openai_chat_completions']);
-
 // keep the empty value referentially stable.
 const EMPTY: AiProviderConfigs = {};
 
@@ -106,7 +104,7 @@ export const getAiRoute = (feature: AiFeature): AiRoute | null => {
 	}
 
 	const endpoint = provider.endpoints.find((entry) => entry.id === selection.endpoint);
-	if (endpoint === undefined || !RUNNABLE_FORMATS.has(endpoint.format)) {
+	if (endpoint === undefined) {
 		return null;
 	}
 

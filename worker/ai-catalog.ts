@@ -2,6 +2,7 @@ import { waitUntil } from 'cloudflare:workers';
 
 import type * as v from '@atcute/lexicons/validations';
 
+import { AI_FORMAT_HEADERS } from '../src/lib/ai/wire/headers';
 import {
 	AI_MODALITIES,
 	type AiEndpoint,
@@ -11,11 +12,9 @@ import {
 	type AiWireFormat,
 	type listAiModels,
 } from '../src/lib/lexicons';
-import { selectCorsAllowedUrls } from './ai-cors';
+import { type CorsProbeTarget, selectCorsAllowedUrls } from './ai-cors';
 import { type AiProviderOverlay, PROVIDER_OVERLAYS } from './ai-overlay';
 import { loadModelsDevCatalog, type ModelsDevModel, type ModelsDevProvider } from './models-dev';
-
-const SUPPORTED_FORMATS = new Set<AiWireFormat>(['openai_chat_completions']);
 
 /** maps AI SDK packages to their wire format. */
 const PACKAGE_FORMATS: Record<string, AiWireFormat> = {
@@ -34,6 +33,12 @@ const FORMAT_PATHS: Record<AiWireFormat, string> = {
 };
 
 const BEARER_AUTH: AiEndpoint['auth'] = { header: 'authorization', prefix: 'Bearer ' };
+
+const FORMAT_AUTH: Record<AiWireFormat, AiEndpoint['auth']> = {
+	anthropic_messages: { header: 'x-api-key' },
+	openai_chat_completions: BEARER_AUTH,
+	openai_responses: BEARER_AUTH,
+};
 
 const KNOWN_MODALITIES = new Set<string>(AI_MODALITIES);
 
@@ -75,7 +80,7 @@ export const listAiModelOffers = async (params: ModelParams): Promise<{ models: 
 		}
 
 		for (const offer of offers) {
-			if (!formats.has(offer.format)) {
+			if (formats.size > 0 && !formats.has(offer.format)) {
 				continue;
 			}
 			if (offer.deprecated && !params.includeDeprecated) {
@@ -121,7 +126,7 @@ const loadNormalizedCatalog = async (): Promise<NormalizedProvider[]> => {
 
 const dropCorsBlocked = async (listed: NormalizedProvider[]): Promise<NormalizedProvider[]> => {
 	const allowed = await selectCorsAllowedUrls(
-		listed.flatMap(({ provider }) => provider.endpoints.map((endpoint) => endpoint.url)),
+		listed.flatMap(({ provider }) => provider.endpoints.map(toProbeTarget)),
 	);
 
 	const kept: NormalizedProvider[] = [];
@@ -135,6 +140,14 @@ const dropCorsBlocked = async (listed: NormalizedProvider[]): Promise<Normalized
 		}
 	}
 	return kept;
+};
+
+const toProbeTarget = (endpoint: AiEndpoint): CorsProbeTarget => {
+	const headers = ['content-type', ...Object.keys(AI_FORMAT_HEADERS[endpoint.format])];
+	if (endpoint.auth !== undefined) {
+		headers.push(endpoint.auth.header);
+	}
+	return { headers, url: endpoint.url };
 };
 
 const normalizeCatalog = (source: ModelsDevProvider[]): NormalizedProvider[] => {
@@ -171,7 +184,7 @@ const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | unde
 
 	for (const model of Object.values(source.models)) {
 		const format = resolveFormat(model, overlay, source);
-		if (format === undefined || !SUPPORTED_FORMATS.has(format)) {
+		if (format === undefined) {
 			continue;
 		}
 
@@ -191,7 +204,7 @@ const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | unde
 		const url = base + FORMAT_PATHS[format];
 		const existing = endpoints.get(id);
 		if (existing === undefined) {
-			endpoints.set(id, { auth: BEARER_AUTH, format, id, tokenLimitField: overlay?.tokenLimitField, url });
+			endpoints.set(id, { auth: FORMAT_AUTH[format], format, id, url });
 		} else if (existing.format !== format || existing.url !== url) {
 			// reject ambiguous endpoint ids.
 			continue;
@@ -201,7 +214,7 @@ const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | unde
 			capabilities: {
 				inputModalities: toModalities(model.modalities?.input),
 				outputModalities: toModalities(model.modalities?.output),
-				structuredOutput: model.structured_output === true,
+				structuredOutput: supportsStructuredOutput(model, format),
 				// omit temperature unless explicitly supported.
 				temperature: model.temperature === true,
 			},
@@ -229,6 +242,14 @@ const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | unde
 			name: source.name,
 		},
 	};
+};
+
+// Anthropic structured output uses forced tool calls.
+const supportsStructuredOutput = (model: ModelsDevModel, format: AiWireFormat): boolean => {
+	if (format === 'anthropic_messages') {
+		return model.tool_call === true;
+	}
+	return model.structured_output === true;
 };
 
 /** resolves format by shape, model package, overlay, then provider package. */

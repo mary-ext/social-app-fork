@@ -28,6 +28,7 @@ const modelSchema = v.object({
 	status: v.optional(v.string()),
 	structured_output: v.optional(v.boolean()),
 	temperature: v.optional(v.boolean()),
+	tool_call: v.optional(v.boolean()),
 });
 
 const providerSchema = v.object({

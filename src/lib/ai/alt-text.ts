@@ -111,12 +111,14 @@ export const runAltTextRound = async ({
 	const run = (messages: ChatMessage[]) =>
 		complete({ maxTokens: MAX_TOKENS, messages, responseSchema, temperature: TEMPERATURE });
 
-	let reply = await run(buildMessages(input));
+	const messages = buildMessages(input);
+
+	let reply = await run(messages);
 	let parsed = parseDraft(reply);
 
 	if (parsed === undefined) {
 		reply = await run([
-			{ role: 'system', content: SYSTEM_PROMPT },
+			...messages,
 			{ role: 'assistant', content: reply },
 			{ role: 'user', content: RETRY_PROMPT },
 		]);
@@ -131,9 +133,7 @@ export const runAltTextRound = async ({
 };
 
 const buildMessages = ({ context, image, rounds }: AltTextInput): ChatMessage[] => {
-	const opening: ChatContentPart[] = [
-		{ type: 'image_url', image_url: { url: `data:${image.mimeType};base64,${image.data.$bytes}` } },
-	];
+	const opening: ChatContentPart[] = [{ type: 'image', data: image.data.$bytes, mimeType: image.mimeType }];
 
 	const contextText = formatContext(context);
 	if (contextText !== undefined) {

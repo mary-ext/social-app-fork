@@ -3,6 +3,7 @@ import { env } from 'cloudflare:workers';
 import { UpstreamFailureError } from '@atcute/xrpc-server';
 
 import type { CompleteChat } from '../src/lib/ai/chat';
+import { toOpenaiChatMessages } from '../src/lib/ai/wire/openai-messages';
 
 const MODEL = '@cf/zai-org/glm-5.3-flash';
 
@@ -22,7 +23,7 @@ export const createWorkersAiCompletion = (feature: 'description' | 'translation'
 				chat_template_kwargs: { enable_thinking: false },
 				max_tokens: maxTokens,
 				temperature: temperature,
-				messages: messages,
+				messages: toOpenaiChatMessages(messages),
 				response_format: {
 					type: 'json_schema',
 					json_schema: { ...responseSchema, strict: true },

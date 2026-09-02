@@ -53,7 +53,6 @@ export const useAiModelsQuery = ({ inputModalities, outputModalities, providers 
 				internalClient.get('internal.app.listAiModels', {
 					signal: signal,
 					params: {
-						formats: ['openai_chat_completions'],
 						inputModalities: inputModalities,
 						outputModalities: outputModalities,
 						providers: sorted,
