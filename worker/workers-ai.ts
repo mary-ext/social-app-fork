@@ -4,7 +4,7 @@ import { UpstreamFailureError } from '@atcute/xrpc-server';
 
 import type { CompleteChat } from '../src/lib/ai/chat';
 
-const MODEL = '@cf/google/gemma-4-26b-a4b-it';
+const MODEL = '@cf/zai-org/glm-5.3-flash';
 
 /**
  * creates a Workers AI chat transport.
