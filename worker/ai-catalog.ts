@@ -11,6 +11,7 @@ import {
 	type AiWireFormat,
 	type listAiModels,
 } from '../src/lib/lexicons';
+import { selectCorsAllowedUrls } from './ai-cors';
 import { type AiProviderOverlay, PROVIDER_OVERLAYS } from './ai-overlay';
 import { loadModelsDevCatalog, type ModelsDevModel, type ModelsDevProvider } from './models-dev';
 
@@ -105,7 +106,7 @@ const loadNormalizedCatalog = async (): Promise<NormalizedProvider[]> => {
 		return await cached.json<NormalizedProvider[]>();
 	}
 
-	const listed = normalizeCatalog(await loadModelsDevCatalog());
+	const listed = await dropCorsBlocked(normalizeCatalog(await loadModelsDevCatalog()));
 	waitUntil(
 		caches.default.put(
 			CATALOG_CACHE_KEY,
@@ -116,6 +117,24 @@ const loadNormalizedCatalog = async (): Promise<NormalizedProvider[]> => {
 	);
 
 	return listed;
+};
+
+const dropCorsBlocked = async (listed: NormalizedProvider[]): Promise<NormalizedProvider[]> => {
+	const allowed = await selectCorsAllowedUrls(
+		listed.flatMap(({ provider }) => provider.endpoints.map((endpoint) => endpoint.url)),
+	);
+
+	const kept: NormalizedProvider[] = [];
+	for (const entry of listed) {
+		const endpoints = entry.provider.endpoints.filter((endpoint) => allowed.has(endpoint.url));
+		const ids = new Set(endpoints.map((endpoint) => endpoint.id));
+		const offers = entry.offers.filter((offer) => ids.has(offer.endpoint));
+
+		if (isAdvertisable(offers)) {
+			kept.push({ offers, provider: { ...entry.provider, endpoints } });
+		}
+	}
+	return kept;
 };
 
 const normalizeCatalog = (source: ModelsDevProvider[]): NormalizedProvider[] => {
@@ -135,6 +154,10 @@ const normalizeCatalog = (source: ModelsDevProvider[]): NormalizedProvider[] => 
 
 const compare = (a: string, b: string): number => {
 	return a < b ? -1 : a > b ? 1 : 0;
+};
+
+const isAdvertisable = (offers: readonly AiModelOffer[]): boolean => {
+	return offers.some((offer) => !offer.deprecated);
 };
 
 const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | undefined => {
@@ -191,8 +214,8 @@ const normalizeProvider = (source: ModelsDevProvider): NormalizedProvider | unde
 		});
 	}
 
-	// keep deprecated offers resolvable, but do not advertise deprecated-only providers.
-	if (!offers.some((offer) => !offer.deprecated)) {
+	// keep deprecated offers resolvable, but hide deprecated-only providers.
+	if (!isAdvertisable(offers)) {
 		return undefined;
 	}
 
