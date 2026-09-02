@@ -33,12 +33,11 @@ import * as Dialog from '#/components/Dialog';
 import { markStarterPackCreated } from '#/components/dialogs/starter-pack-dialog-reopen';
 import { ListError } from '#/components/List/ListError';
 import { ListLoading } from '#/components/List/ListLoading';
-import { Spinner } from '#/components/Spinner';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -520,7 +519,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 					}
 				>
 					<ButtonText>{nextBtnText}</ButtonText>
-					{state.processing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{state.processing && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 			</div>
 		</div>

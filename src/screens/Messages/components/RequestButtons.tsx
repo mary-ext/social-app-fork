@@ -18,11 +18,11 @@ import { ReportConversationDialog } from '#/components/dms/ReportConversationDia
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
 import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
-import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import {
 	Button as WebButton,
 	ButtonIcon as WebButtonIcon,
+	ButtonSpinner as WebButtonSpinner,
 	type ButtonProps as WebButtonProps,
 	ButtonText as WebButtonText,
 } from '#/components/web/Button';
@@ -223,10 +223,9 @@ export function AcceptChatButton({
 	let Icon: ReactNode = null;
 	if (isPending) {
 		Icon = (
-			<Spinner
+			<WebButtonSpinner
 				color={color === 'secondary' || props.variant === 'outline' ? 'default' : 'white'}
 				label={m['common.status.loading']()}
-				size="sm"
 			/>
 		);
 	} else if (icon) {

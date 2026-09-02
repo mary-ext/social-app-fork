@@ -30,7 +30,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import ChevronRight from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
@@ -191,7 +191,7 @@ function ModerationScreenInner({ preferences }: { preferences: UsePreferencesQue
 						size="small"
 						variant="ghost"
 					>
-						{isRemovingLabelers && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{isRemovingLabelers && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 						<ButtonText>{m['common.action.remove']()}</ButtonText>
 					</Button>
 				</div>

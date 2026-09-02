@@ -22,12 +22,11 @@ import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-s
 
 import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -205,7 +204,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						variant="solid"
 					>
 						<ButtonText>{m['features.liveNow.goLive.confirm']()}</ButtonText>
-						{isGoingLive && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+						{isGoingLive && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 					</Button>
 				)}
 			</Dialog.Actions>

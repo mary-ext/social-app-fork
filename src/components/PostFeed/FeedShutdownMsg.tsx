@@ -12,10 +12,9 @@ import {
 
 import { Trans } from '#/locale/Trans';
 
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
@@ -97,7 +96,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 						variant="outline"
 					>
 						<ButtonText>{m['view.posts.feed.remove.label']()}</ButtonText>
-						{isRemovePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{isRemovePending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 					</Button>
 					{!hasDiscoverPinned && (
 						<Button
@@ -108,7 +107,7 @@ export function FeedShutdownMsg({ feedUri, topBorder = false }: { feedUri: strin
 							variant="solid"
 						>
 							<ButtonText>{m['view.posts.feed.replace.label']()}</ButtonText>
-							{isReplacePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+							{isReplacePending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 						</Button>
 					)}
 				</div>

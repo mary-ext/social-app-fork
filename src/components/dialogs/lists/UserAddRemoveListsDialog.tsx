@@ -18,7 +18,7 @@ import * as ListCard from '#/components/ListCard';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
@@ -216,7 +216,7 @@ function ListRow({
 					variant="solid"
 				>
 					{isMutating ? (
-						<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+						<ButtonSpinner color="white" label={m['common.status.saving']()} />
 					) : (
 						<ButtonText>{!membershipUri ? m['common.action.add']() : m['common.action.remove']()}</ButtonText>
 					)}

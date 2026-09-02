@@ -13,8 +13,7 @@ import {
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
@@ -70,7 +69,7 @@ export function EditImageDialogInner({
 						variant="ghost"
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{pending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{pending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

@@ -20,12 +20,11 @@ import {
 import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import ClockIcon from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -158,7 +157,7 @@ function DialogInner({
 					variant="solid"
 				>
 					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
-					{isRemovingLiveStatus && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isRemovingLiveStatus && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 				{isDirty ? (
 					<Button
@@ -170,7 +169,7 @@ function DialogInner({
 						variant="solid"
 					>
 						<ButtonText>{m['common.action.save']()}</ButtonText>
-						{isGoingLive && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+						{isGoingLive && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 					</Button>
 				) : (
 					<Button

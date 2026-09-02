@@ -13,10 +13,9 @@ import { useSession } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import { useHider } from '#/components/moderation/Hider';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import EyeSlash from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -126,7 +125,7 @@ export function ListHiddenScreen({
 						variant="solid"
 					>
 						<ButtonText>{m['screens.list.savedFeeds.remove']()}</ButtonText>
-						{isProcessing && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{isProcessing && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 					</Button>
 				) : null}
 				{isOwner ? (
@@ -156,7 +155,7 @@ export function ListHiddenScreen({
 						variant="solid"
 					>
 						<ButtonText>{m['screens.list.subscription.unsubscribe']()}</ButtonText>
-						{isProcessing && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{isProcessing && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 					</Button>
 				) : null}
 				<Button

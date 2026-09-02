@@ -28,11 +28,10 @@ import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Settings from '#/components/SettingsCards';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, useInternalLink } from '#/components/web/Link';
 
@@ -132,7 +131,7 @@ function LabelerActions({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 					onClick={() => onRequestToggle(true)}
 					size="small"
 				>
-					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isPending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 					<ButtonText>{m['screens.profile.labeler.action.subscribe']()}</ButtonText>
 				</Button>
 			)}

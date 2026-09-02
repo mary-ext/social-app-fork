@@ -19,10 +19,9 @@ import { MissingFeed } from '#/components/MissingFeed';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
@@ -216,13 +215,13 @@ function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.G
 			>
 				{isSaved ? (
 					<>
-						{isPending && <Spinner color="white" label={null} size="sm" />}
+						{isPending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 						<ButtonText>{m['common.feeds.action.unpin']()}</ButtonText>
 					</>
 				) : (
 					<>
 						{isPending ? (
-							<Spinner color="white" label={null} size="sm" />
+							<ButtonSpinner color="white" label={m['common.status.saving']()} />
 						) : (
 							<ButtonIcon icon={PinIcon} size="md" />
 						)}

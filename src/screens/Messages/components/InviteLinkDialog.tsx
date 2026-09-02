@@ -15,11 +15,10 @@ import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
 import { shareUrl } from '#/components/sharing';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import ArrowShareRightIcon from '#/icons/central/ArrowShareRight_round_outlined_radius1_stroke2.svg';
@@ -262,7 +261,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 						</ButtonText>
 						{linkHasChanged ? (
 							isSaving ? (
-								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+								<ButtonSpinner color="white" label={m['common.status.saving']()} />
 							) : (
 								<ButtonIcon icon={ArrowRightIcon} />
 							)
@@ -370,7 +369,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 								variant="solid"
 							>
 								<ButtonText>{m['screens.messages.inviteLink.enable.short']()}</ButtonText>
-								{isEnabling ? <Spinner color="white" label={m['common.status.saving']()} size="sm" /> : null}
+								{isEnabling ? <ButtonSpinner color="white" label={m['common.status.saving']()} /> : null}
 							</Button>
 							<Button
 								disabled={isEnabling || isDisabling}

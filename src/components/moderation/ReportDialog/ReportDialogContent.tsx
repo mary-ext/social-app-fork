@@ -17,7 +17,7 @@ import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
@@ -303,7 +303,7 @@ function Inner({
 									: m['components.moderation.report.submit']()}
 							</ButtonText>
 							{isPending ? (
-								<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+								<ButtonSpinner color="white" label={m['common.status.saving']()} />
 							) : (
 								<ButtonIcon icon={isSuccess ? CheckIcon : PaperPlaneIcon} />
 							)}

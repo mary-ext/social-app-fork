@@ -4,9 +4,8 @@ import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list'
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
-import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import PersonXIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
@@ -54,7 +53,7 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 							color="primary_subtle"
 							disabled={isPending}
 						>
-							{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+							{isPending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 							<ButtonText>{m['screens.profileList.subscribe.action.subscribe']()}</ButtonText>
 						</Button>
 					}

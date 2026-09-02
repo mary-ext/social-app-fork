@@ -14,12 +14,11 @@ import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
 import { ErrorMessage } from '#/components/ErrorMessage';
 import * as Prompt from '#/components/Prompt';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
@@ -189,7 +188,7 @@ function DialogInner({
 						onClick={() => void onPressSave()}
 					>
 						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{isUpdatingProfile && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+						{isUpdatingProfile && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 					</Button>
 				</Dialog.Header.Slot>
 			</Dialog.Header.Outer>

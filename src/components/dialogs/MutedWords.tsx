@@ -11,12 +11,11 @@ import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';
 import type * as Select from '#/components/Select';
 import * as Settings from '#/components/SettingsCards';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -160,7 +159,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			>
 				<ButtonText>{m['common.action.add']()}</ButtonText>
 				{isPending ? (
-					<Spinner color="white" label={m['components.dialogs.list.adding']()} size="sm" />
+					<ButtonSpinner color="white" label={m['components.dialogs.list.adding']()} />
 				) : (
 					<ButtonIcon icon={Plus} />
 				)}

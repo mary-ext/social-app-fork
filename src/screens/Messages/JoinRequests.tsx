@@ -25,7 +25,7 @@ import { List } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { KnownFollowers } from '#/components/web/KnownFollowers';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -298,7 +298,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					>
 						<ButtonText>{m['common.action.retry']()}</ButtonText>
 						{isPTRing ? (
-							<Spinner color="white" label={m['common.status.loading']()} size="sm" />
+							<ButtonSpinner color="white" label={m['common.status.loading']()} />
 						) : (
 							<ButtonIcon icon={RetryIcon} />
 						)}

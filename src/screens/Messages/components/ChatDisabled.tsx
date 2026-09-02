@@ -10,12 +10,11 @@ import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
@@ -154,7 +153,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					variant="solid"
 				>
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
-					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isPending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 			</Dialog.Actions>
 		</Stack>

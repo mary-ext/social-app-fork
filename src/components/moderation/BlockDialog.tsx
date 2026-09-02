@@ -21,10 +21,9 @@ import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { parseConvoView } from '#/components/dms/util';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
@@ -287,7 +286,7 @@ function MutualGroupChat({
 					size="small"
 				>
 					<ButtonText>{m['components.moderation.chat.removeMember']()}</ButtonText>
-					{isRemovePending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isRemovePending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 			) : isCurrentConvo ? (
 				<Text color="textContrastMedium" size="sm" weight="medium">
@@ -305,7 +304,7 @@ function MutualGroupChat({
 					size="small"
 				>
 					<ButtonText>{m['common.chat.action.leave']()}</ButtonText>
-					{isLeavePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+					{isLeavePending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 				</Button>
 			)}
 		</div>

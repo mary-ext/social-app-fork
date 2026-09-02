@@ -18,12 +18,11 @@ import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, type ButtonProps, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
@@ -238,7 +237,7 @@ function DialogInner({
 			<Dialog.Actions>
 				<Button {...buttonProps} variant="solid">
 					<ButtonText>{buttonProps.label}</ButtonText>
-					{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isSaving && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 			</Dialog.Actions>
 		</Stack>

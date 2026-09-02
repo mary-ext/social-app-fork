@@ -12,10 +12,9 @@ import { useToggleSavedFeed } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
 import * as Prompt from '#/components/Prompt';
-import { Spinner } from '#/components/Spinner';
 import { Text, type TextProps } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner } from '#/components/web/Button';
 import { Link } from '#/components/web/Link';
 
 import SearchIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
@@ -122,7 +121,7 @@ function PinButtonInner({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 				variant="ghost"
 			>
 				{isPending ? (
-					<Spinner color="default" label={null} size="sm" />
+					<ButtonSpinner color="default" label={m['common.status.saving']()} />
 				) : (
 					<ButtonIcon icon={isSaved ? TrashIcon : PinIcon} size="lg" />
 				)}

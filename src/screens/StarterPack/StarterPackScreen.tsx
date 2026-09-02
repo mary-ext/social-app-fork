@@ -29,7 +29,6 @@ import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ListError } from '#/components/List/ListError';
 import { ListLoading } from '#/components/List/ListLoading';
-import { Spinner } from '#/components/Spinner';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
@@ -37,7 +36,7 @@ import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -318,7 +317,7 @@ function Header({
 									onClick={() => void onFollowAll()}
 								>
 									<ButtonText>{m['screens.starterPack.follow.action']()}</ButtonText>
-									{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+									{isProcessing && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 								</Button>
 							)}
 							<OverflowMenu
@@ -399,7 +398,7 @@ function InvalidStarterPack({ rkey }: { rkey: string }) {
 						}}
 					>
 						<ButtonText>{m['common.action.delete']()}</ButtonText>
-						{isProcessing && <Spinner color="white" label={m['common.status.saving']()} size="xs" />}
+						{isProcessing && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 					</Button>
 					<Button
 						variant="solid"

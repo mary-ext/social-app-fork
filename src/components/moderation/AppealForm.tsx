@@ -15,13 +15,12 @@ import { getClients } from '#/state/session';
 import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
@@ -139,7 +138,7 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 
 				<Button color="primary" label={m['common.action.submit']()} onClick={onSubmit} variant="solid">
 					<ButtonText>{m['common.action.submit']()}</ButtonText>
-					{isPending && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+					{isPending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 				</Button>
 			</Dialog.Actions>
 		</Stack>

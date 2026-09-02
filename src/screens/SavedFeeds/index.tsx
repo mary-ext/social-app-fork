@@ -20,10 +20,9 @@ import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { EmptyState, type EmptyStateIcon } from '#/components/EmptyState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { ExternalInlineLinkText } from '#/components/web/Link';
 
@@ -242,7 +241,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 						disabled={isOverwritePending || !hasUnsavedChanges}
 					>
 						{isOverwritePending ? (
-							<Spinner color="default" label={m['common.status.saving']()} size="sm" />
+							<ButtonSpinner color="default" label={m['common.status.saving']()} />
 						) : (
 							<ButtonIcon icon={SaveIcon} />
 						)}

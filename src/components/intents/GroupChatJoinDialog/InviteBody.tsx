@@ -22,7 +22,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 
 import JoinIcon from '#/icons/central/ArrowBoxRight_round_outlined_radius1_stroke2.svg';
@@ -335,11 +335,7 @@ export function InviteBody({
 					size="large"
 				>
 					{isJoinPending || isWithdrawPending ? (
-						<Spinner
-							color={isJoinPending ? 'white' : 'default'}
-							label={m['common.status.saving']()}
-							size="sm"
-						/>
+						<ButtonSpinner color={isJoinPending ? 'white' : 'default'} label={m['common.status.saving']()} />
 					) : (
 						<ButtonIcon icon={ButtonIconImage} />
 					)}

@@ -19,12 +19,11 @@ import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
@@ -466,7 +465,7 @@ export function PostInteractionSettingsForm({
 				size="large"
 			>
 				<ButtonText>{m['common.action.save']()}</ButtonText>
-				{isSaving && <Spinner color="white" label={m['common.status.saving']()} size="sm" />}
+				{isSaving && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 			</Button>
 		</div>
 	);

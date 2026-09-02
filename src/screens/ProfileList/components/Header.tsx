@@ -10,9 +10,8 @@ import {
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
 
-import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import PinIcon from '#/icons/central/Thumbtack_round_outlined_radius1_stroke2.svg';
@@ -127,7 +126,7 @@ export function Header({
 						>
 							{!isPinned &&
 								(isPending ? (
-									<Spinner color="white" label={m['common.status.saving']()} size="sm" />
+									<ButtonSpinner color="white" label={m['common.status.saving']()} />
 								) : (
 									<ButtonIcon icon={PinIcon} />
 								))}
@@ -146,7 +145,7 @@ export function Header({
 								size="small"
 								disabled={isBlockPending}
 							>
-								{isBlockPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+								{isBlockPending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 								<ButtonText>{m['common.block.action.unblock']()}</ButtonText>
 							</Button>
 						) : isMuting ? (
@@ -157,7 +156,7 @@ export function Header({
 								size="small"
 								disabled={isMutePending}
 							>
-								{isMutePending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+								{isMutePending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 								<ButtonText>{m['common.mute.action.unmute']()}</ButtonText>
 							</Button>
 						) : (

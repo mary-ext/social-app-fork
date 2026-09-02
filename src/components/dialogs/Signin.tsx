@@ -8,12 +8,11 @@ import { AccountList } from '#/components/AccountList';
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle, type SigninDialogPayload } from '#/components/dialogs/handles';
 import * as css from '#/components/dialogs/Signin.css';
-import { Spinner } from '#/components/Spinner';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import AtIcon from '#/icons/central/At_round_outlined_radius1_stroke2.svg';
 import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
@@ -196,7 +195,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					size="large"
 				>
 					{isSubmitting ? (
-						<Spinner color="white" label={m['common.status.loading']()} size="sm" />
+						<ButtonSpinner color="white" label={m['common.status.loading']()} />
 					) : (
 						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
 					)}

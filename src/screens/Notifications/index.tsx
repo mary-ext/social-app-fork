@@ -18,10 +18,9 @@ import { NotificationFeed } from '#/screens/Notifications/components/Notificatio
 import { FAB } from '#/components/FAB';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
-import { Spinner } from '#/components/Spinner';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Admonition } from '#/components/web/Admonition';
-import { ButtonIcon } from '#/components/web/Button';
+import { ButtonIcon, ButtonSpinner } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
 
@@ -105,7 +104,7 @@ export function NotificationsScreen() {
 								shape="round"
 							>
 								{isLoading ? (
-									<Spinner color="default" label={m['common.status.loading']()} size="lg" />
+									<ButtonSpinner color="default" label={m['common.status.loading']()} />
 								) : (
 									<ButtonIcon icon={SettingsIcon} size="lg" />
 								)}

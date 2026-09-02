@@ -20,10 +20,9 @@ import {
 	useStarterPackDialogReopen,
 } from '#/components/dialogs/starter-pack-dialog-reopen';
 import * as css from '#/components/dialogs/StarterPackDialog.css';
-import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
@@ -279,7 +278,7 @@ function StarterPackItem({
 				onClick={handleToggleMembership}
 				size="small"
 			>
-				{isPending && <Spinner color="default" label={m['common.status.saving']()} size="sm" />}
+				{isPending && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
 				<ButtonText>
 					{isSelf
 						? m['components.dialogs.list.owner']()
