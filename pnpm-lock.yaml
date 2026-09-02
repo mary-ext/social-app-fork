@@ -125,8 +125,8 @@ importers:
         specifier: ^0.1.9
         version: 0.1.9(@base-ui/react@1.7.0(patch_hash=47904e9864a8d46ba72b58d455ee56a2a77d6de89ec52a669288b874ab4f85d1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@oomfware/scion':
-        specifier: ^0.1.6
-        version: 0.1.6
+        specifier: ^0.1.7
+        version: 0.1.7
       '@oomfware/stacker':
         specifier: ^0.2.3
         version: 0.2.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -784,8 +784,8 @@ packages:
   '@inlang/recommend-sherlock@0.2.1':
     resolution: {integrity: sha512-ckv8HvHy/iTqaVAEKrr+gnl+p3XFNwe5D2+6w6wJk2ORV2XkcRkKOJ/XsTUJbPSiyi4PI+p+T3bqbmNx/rDUlg==}
 
-  '@inlang/sdk@3.0.2':
-    resolution: {integrity: sha512-qBAzkOLRQ42hZBl2/AZFZD+/JkdjBAvwxWphdTs9UbikMsuLathOBOIl+rC/mzaq48ylD3zE8Je2nrx7tbm0pw==}
+  '@inlang/sdk@3.0.3':
+    resolution: {integrity: sha512-11aQcOw58oAcCtIOJ17XhQxfxaiGsg6XJi7coMul8wNJiW+Rzv2OfJU42NLwSuWXUNSASjegp5Z3uklTkY5GJw==}
     engines: {node: '>=20.0.0'}
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -876,8 +876,8 @@ packages:
       '@base-ui/react':
         optional: true
 
-  '@oomfware/scion@0.1.6':
-    resolution: {integrity: sha512-no3yO1dB4b/wdZK7XhZdmSxBf/nR39M1Cu6petYAeG9wMkS/1zkS0wJxgruVxoG6Caadh49sHyudhUK/eqNMVQ==}
+  '@oomfware/scion@0.1.7':
+    resolution: {integrity: sha512-2wLRPNlLGSE3OaCLY45aVCmACqfkSnDyU1O96tzKpgAj+Pqylc1rbbGFF2V3VSeAa+nlT2BVtBr61xAMYyioxw==}
 
   '@oomfware/stacker@0.2.3':
     resolution: {integrity: sha512-Gc+fpEcrRSm+Z7YNqtupZ4PXKy43jSmLL+WKJzYDnSzl0HJc68uBQE1GTnyaecvsW9QAaqkn16jd9w8AUGurGQ==}
@@ -1422,10 +1422,6 @@ packages:
 
   '@speed-highlight/core@1.2.24':
     resolution: {integrity: sha512-qeW2e1l78afw8VhRPfPQ1Gjj+KU5XFQ/OFV5ti6eTa9bruO7mJyZtA4vw0ofqmA3tKCkROE9xLk3VZoeRc98nw==}
-
-  '@sqlite.org/sqlite-wasm@3.48.0-build4':
-    resolution: {integrity: sha512-hI6twvUkzOmyGZhQMza1gpfqErZxXRw6JEsiVjUbo7tFanVD+8Oil0Ih3l2nGzHdxPI41zFmfUQG7GHqhciKZQ==}
-    hasBin: true
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -2006,11 +2002,6 @@ packages:
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
-
-  sqlite-wasm-kysely@0.3.0:
-    resolution: {integrity: sha512-TzjBNv7KwRw6E3pdKdlRyZiTmUIE0UttT/Sl56MVwVARl/u5gp978KepazCJZewFUnlWHz9i3NQd4kOtP/Afdg==}
-    peerDependencies:
-      kysely: '*'
 
   supports-color@10.2.2:
     resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
@@ -2616,7 +2607,7 @@ snapshots:
   '@inlang/paraglide-js@2.25.0(@typescript/typescript6@6.0.2)(vite@8.2.2(@types/node@26.4.0)(terser@5.51.2))':
     dependencies:
       '@inlang/recommend-sherlock': 0.2.1
-      '@inlang/sdk': 3.0.2
+      '@inlang/sdk': 3.0.3
       commander: 11.1.0
       consola: 3.4.0
       jiti: 2.7.0
@@ -2632,12 +2623,11 @@ snapshots:
     dependencies:
       comment-json: 4.6.2
 
-  '@inlang/sdk@3.0.2':
+  '@inlang/sdk@3.0.3':
     dependencies:
       '@lix-js/sdk': 0.12.3
       '@sinclair/typebox': 0.31.30
       kysely: 0.28.17
-      sqlite-wasm-kysely: 0.3.0(kysely@0.28.17)
       uuid: 14.0.2
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -2721,7 +2711,7 @@ snapshots:
     optionalDependencies:
       '@base-ui/react': 1.7.0(patch_hash=47904e9864a8d46ba72b58d455ee56a2a77d6de89ec52a669288b874ab4f85d1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  '@oomfware/scion@0.1.6':
+  '@oomfware/scion@0.1.7':
     dependencies:
       csstype: 3.2.3
       esm-env: 1.2.2
@@ -3012,8 +3002,6 @@ snapshots:
   '@sindresorhus/is@7.2.0': {}
 
   '@speed-highlight/core@1.2.24': {}
-
-  '@sqlite.org/sqlite-wasm@3.48.0-build4': {}
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -3545,11 +3533,6 @@ snapshots:
       source-map: 0.6.1
 
   source-map@0.6.1: {}
-
-  sqlite-wasm-kysely@0.3.0(kysely@0.28.17):
-    dependencies:
-      '@sqlite.org/sqlite-wasm': 3.48.0-build4
-      kysely: 0.28.17
 
   supports-color@10.2.2: {}
 

@@ -55,7 +55,7 @@
 		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@oomfware/lightbox": "^0.1.9",
-		"@oomfware/scion": "^0.1.6",
+		"@oomfware/scion": "^0.1.7",
 		"@oomfware/stacker": "^0.2.3",
 		"@oomfware/tug": "^0.2.0",
 		"@tanstack/react-query": "^5.102.8",
