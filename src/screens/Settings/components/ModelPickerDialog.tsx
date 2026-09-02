@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
-import { type Modality, useOpenRouterModelsQuery } from '#/state/queries/openrouter-models';
+import type { AiModelSelection, AiProviderConfigs } from '#/lib/ai/config';
+import type { AiModality, AiModelOffer } from '#/lib/lexicons';
 
+import { useAiModelsQuery } from '#/state/queries/ai-catalog';
+
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
-import { SearchInput } from '#/components/forms/SearchInput';
-import * as Toggle from '#/components/forms/Toggle';
+import * as SearchField from '#/components/forms/SearchField';
+import type { ListMethods } from '#/components/List/List';
+import { ListEmpty } from '#/components/List/ListEmpty';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ModelPickerDialog.css';
@@ -22,84 +30,146 @@ const MODEL_ITEM_HEIGHT_ESTIMATE = 66;
 type Entry = {
 	id: string;
 	name: string;
+	detail?: string;
+};
+
+const offerKey = (offer: Pick<AiModelOffer, 'endpoint' | 'model' | 'provider'>): string => {
+	return `${offer.provider} ${offer.model} ${offer.endpoint}`;
 };
 
 type Props = {
 	handle: Dialog.DialogHandle;
-	inputModalities: readonly Modality[];
-	model: string | undefined;
-	onSave: (model: string | undefined) => void;
+	inputModalities: AiModality[];
+	onSave: (selection: AiModelSelection | undefined) => void;
+	providers: AiProviderConfigs;
+	selection: AiModelSelection | undefined;
 	titleText: string;
 };
 
 /**
- * renders an OpenRouter model picker.
+ * renders the model picker.
  *
- * @param props dialog state and model requirements
+ * @param props dialog state and model filters
  * @returns the model picker dialog
  */
-export const ModelPickerDialog = ({ handle, inputModalities, model, onSave, titleText }: Props) => {
+export const ModelPickerDialog = ({ handle, ...props }: Props) => {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} scroll="body" label={titleText}>
-				<DialogInner
-					handle={handle}
-					inputModalities={inputModalities}
-					model={model}
-					onSave={onSave}
-					titleText={titleText}
-				/>
+			<Dialog.Popup className={styles.popup} scroll="body" label={props.titleText}>
+				<DialogInner {...props} close={() => handle.close()} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 };
 
-const DialogInner = ({ handle, inputModalities, model, onSave, titleText }: Props) => {
+const DialogInner = ({
+	close,
+	inputModalities,
+	onSave,
+	providers,
+	selection,
+	titleText,
+}: Omit<Props, 'handle'> & { close: () => void }) => {
+	// catalog offers use models.dev ids; selections use device-local ids.
+	const linked = new Map<string, { id: string; name: string }>(
+		Object.entries(providers).flatMap(([id, config]) => {
+			return config.modelsDevId === undefined ? [] : [[config.modelsDevId, { id: id, name: config.name }]];
+		}),
+	);
+
 	const {
-		data: models,
+		data: offers,
 		error,
 		isPending,
-	} = useOpenRouterModelsQuery({
+	} = useAiModelsQuery({
 		inputModalities: inputModalities,
 		outputModalities: ['text'],
+		providers: [...linked.keys()],
 	});
 
-	const [selected, setSelected] = useState(model ?? NONE);
+	const saved = selection !== undefined ? providers[selection.provider] : undefined;
+	const savedKey =
+		selection !== undefined && saved?.modelsDevId !== undefined
+			? offerKey({ ...selection, provider: saved.modelsDevId })
+			: NONE;
+
+	const [selected, setSelected] = useState(savedKey);
 	const [search, setSearch] = useState('');
+	const listRef = useRef<ListMethods>(null);
+
+	const byKey = new Map((offers ?? []).map((offer) => [offerKey(offer), offer]));
 
 	const onClose = () => {
-		onSave(selected === NONE ? undefined : selected);
-		handle.close();
+		const offer = byKey.get(selected);
+		const provider = offer && linked.get(offer.provider);
+		if (offer !== undefined && provider !== undefined) {
+			onSave({
+				endpoint: offer.endpoint,
+				model: offer.model,
+				name: offer.name,
+				provider: provider.id,
+				supportsTemperature: offer.capabilities.temperature,
+			});
+		} else if (selected !== savedKey) {
+			onSave(undefined);
+		}
+
+		close();
 	};
 
-	const entries: Entry[] = [
-		{ id: NONE, name: m['screens.settings.ai.model.none']() },
-		...(models ?? []).map((entry) => ({ id: entry.id, name: entry.name })),
-	];
-	// keep the saved model available when the model list omits it.
-	if (model !== undefined && !entries.some((entry) => entry.id === model)) {
-		entries.splice(1, 0, { id: model, name: model });
+	const entries: Entry[] = [{ id: NONE, name: m['screens.settings.ai.model.none']() }];
+	// retain a saved choice missing from the current catalog.
+	if (selection !== undefined && saved !== undefined && savedKey !== NONE && !byKey.has(savedKey)) {
+		entries.push({
+			id: savedKey,
+			name: selection.name,
+			detail: describe(saved.name, selection.model),
+		});
 	}
+	for (const [key, offer] of byKey) {
+		const provider = linked.get(offer.provider);
+		if (provider === undefined) {
+			continue;
+		}
+
+		entries.push({ id: key, name: offer.name, detail: describe(provider.name, offer.model) });
+	}
+	const selectedEntry = entries.find((entry) => entry.id === selected) ?? null;
 
 	const needle = search.trim().toLowerCase();
 	const visible = entries.filter((entry) => {
-		return entry.name.toLowerCase().includes(needle) || entry.id.toLowerCase().includes(needle);
+		return entry.name.toLowerCase().includes(needle) || entry.detail?.toLowerCase().includes(needle) === true;
 	});
 
 	let statusText: string | undefined;
-	if (isPending) {
-		statusText = m['screens.settings.ai.model.loading']();
+	if (linked.size === 0) {
+		statusText = m['screens.settings.ai.model.needsProvider']();
 	} else if (error !== null) {
 		statusText = m['screens.settings.ai.model.loadError']();
 	}
+	const isLoading = linked.size > 0 && isPending;
+	const listEntries = isLoading ? [] : visible;
 
 	return (
-		<Toggle.Group
-			className={styles.group}
-			label={titleText}
-			onChange={(values) => setSelected(values[0] ?? NONE)}
-			type="radio"
-			values={[selected]}
+		<Combobox.Root
+			autoHighlight
+			filter={null}
+			inline
+			inputValue={search}
+			isItemEqualToValue={(entry, value) => entry.id === value.id}
+			items={listEntries}
+			itemToStringLabel={(entry) => entry.name}
+			itemToStringValue={(entry) => entry.id}
+			onInputValueChange={(value, details) => {
+				if (details.reason === 'input-change') {
+					setSearch(value);
+					listRef.current?.scrollToTop();
+				}
+			}}
+			onValueChange={(entry) => setSelected(entry?.id ?? NONE)}
+			open
+			value={selectedEntry}
+			virtualized
 		>
 			<div className={styles.header}>
 				<Text className={styles.title} size="lg" weight="semiBold" numberOfLines={1}>
@@ -120,75 +190,91 @@ const DialogInner = ({ handle, inputModalities, model, onSave, titleText }: Prop
 			</div>
 
 			<div className={styles.search}>
-				<SearchInput
-					autoFocus
-					label={m['screens.settings.ai.model.search']()}
-					maxLength={50}
-					onChangeText={setSearch}
-					onClear={() => setSearch('')}
-					placeholder={m['screens.settings.ai.model.search']()}
-					value={search}
-				/>
+				<SearchField.Root>
+					<SearchField.Icon />
+					<Combobox.Input
+						render={
+							<SearchField.Input
+								aria-label={m['screens.settings.ai.model.search']()}
+								autoFocus
+								maxLength={50}
+								placeholder={m['screens.settings.ai.model.search']()}
+							/>
+						}
+					/>
+					{search.length > 0 && (
+						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearch('')} />
+					)}
+				</SearchField.Root>
 			</div>
 
-			<Dialog.List
-				className={styles.list}
-				data={visible}
-				estimateHeight={MODEL_ITEM_HEIGHT_ESTIMATE}
-				keyExtractor={(entry) => entry.id}
-				ListEmptyComponent={<Empty message={m['screens.settings.ai.model.noMatches']()} />}
-				ListHeaderComponent={
-					statusText !== undefined && (
-						<Text className={styles.status} color="textContrastMedium" size="sm">
-							{statusText}
-						</Text>
-					)
-				}
-				renderItem={({ index, item: entry }) => (
-					<Toggle.RadioItem
-						className={clsx(styles.item, index !== visible.length - 1 && styles.itemBorder)}
-						label={entry.name}
-						value={entry.id}
-					>
-						<div className={styles.itemText}>
-							<Text color="textContrastHigh" numberOfLines={1} weight="semiBold">
-								{entry.name}
-							</Text>
-							{entry.id !== NONE && (
-								<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
-									{entry.id}
+			<Combobox.List className={styles.comboboxList}>
+				<Dialog.List
+					className={styles.list}
+					data={listEntries}
+					estimateHeight={MODEL_ITEM_HEIGHT_ESTIMATE}
+					keyExtractor={(entry) => entry.id}
+					ListHeaderComponent={
+						<>
+							{isLoading && <CenteredSpinner label={m['screens.settings.ai.model.loading']()} size="xl" />}
+							{statusText !== undefined && (
+								<Text className={styles.status} color="textContrastMedium" size="sm">
+									{statusText}
 								</Text>
 							)}
-						</div>
-						<Toggle.RadioIndicator />
-					</Toggle.RadioItem>
-				)}
-			/>
+							<Combobox.Empty>
+								{!isLoading && statusText === undefined && (
+									<ListEmpty
+										icon={MagnifyingGlassIcon}
+										message={m['screens.settings.ai.model.noMatches']()}
+									/>
+								)}
+							</Combobox.Empty>
+						</>
+					}
+					ref={listRef}
+					renderItem={({ index, item: entry }) => (
+						<Combobox.Item
+							aria-posinset={index + 1}
+							aria-setsize={listEntries.length}
+							className={clsx(styles.item, index !== listEntries.length - 1 && styles.itemBorder)}
+							index={index}
+							value={entry}
+						>
+							<div className={styles.itemText}>
+								<Text color="textContrastHigh" numberOfLines={1} weight="semiBold">
+									{entry.name}
+								</Text>
+								{entry.detail !== undefined && (
+									<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+										{entry.detail}
+									</Text>
+								)}
+							</div>
+
+							<Combobox.ItemIndicator>
+								<CheckIcon className={styles.checkIcon} />
+							</Combobox.ItemIndicator>
+						</Combobox.Item>
+					)}
+				/>
+			</Combobox.List>
 
 			<Dialog.Footer>
 				<Button
 					className={styles.doneButton}
 					color="primary"
-					label={m['common.a11y.closeDialog']()}
+					label={m['common.action.done']()}
 					onClick={onClose}
 					size="large"
 				>
 					<ButtonText>{m['common.action.done']()}</ButtonText>
 				</Button>
 			</Dialog.Footer>
-		</Toggle.Group>
+		</Combobox.Root>
 	);
 };
 
-const Empty = ({ message }: { message: string }) => {
-	return (
-		<div className={styles.empty}>
-			<Text className={styles.emptyMessage} color="textContrastHigh" size="sm">
-				{message}
-			</Text>
-			<Text color="textContrastLow" size="xs">
-				(╯°□°)╯︵ ┻━┻
-			</Text>
-		</div>
-	);
+const describe = (providerName: string, model: string): string => {
+	return m['screens.settings.ai.model.route']({ model: model, provider: providerName });
 };

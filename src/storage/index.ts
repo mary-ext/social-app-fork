@@ -1,3 +1,4 @@
+import { migrateDevice } from '#/storage/migrations';
 import type { Account, Auth, Device, QueryCache, QueryCacheScope } from '#/storage/schema';
 import { Storage } from '#/storage/storage';
 
@@ -16,6 +17,9 @@ export const auth = new Storage<[], Auth>({ id: 'bsky_auth' });
 export const persistedQueryCache = new Storage<[QueryCacheScope], QueryCache>({
 	id: 'bsky_query_cache',
 });
+
+// migrate before reading device storage.
+migrateDevice(device);
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
 	// @ts-expect-error - dev global

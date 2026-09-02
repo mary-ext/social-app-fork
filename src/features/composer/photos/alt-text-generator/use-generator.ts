@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react';
 
-import { describeAiFailure } from '#/lib/ai/openrouter-error';
+import { describeAiFailure } from '#/lib/ai/error';
 
 import { m } from '#/paraglide/messages';
 

@@ -3,13 +3,13 @@ import { ok } from '@atcute/client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { describeAiFailure } from '#/lib/ai/openrouter-error';
+import { describeAiFailure } from '#/lib/ai/error';
 import type { Translation, TranslationInput } from '#/lib/ai/translate';
 import { getPostRecord } from '#/lib/api/record-casts';
 
 import { getInternalServiceClient } from '#/state/internal-service-client';
+import { getAiRoute } from '#/state/preferences/ai';
 import { usePrimaryLanguage } from '#/state/preferences/languages';
-import { getTranslationConfig } from '#/state/preferences/openrouter';
 import { GCTIME, STALE } from '#/state/queries/index';
 
 import { m } from '#/paraglide/messages';
@@ -86,11 +86,11 @@ const translate = async ({
 	signal,
 	...input
 }: TranslationInput & { signal: AbortSignal }): Promise<Translation> => {
-	const openrouter = getTranslationConfig();
-	if (openrouter !== null) {
-		const { runOpenRouterTranslation } = await import('#/lib/ai/openrouter');
+	const route = getAiRoute('translation');
+	if (route !== null) {
+		const { runAiTranslation } = await import('#/lib/ai/completions');
 
-		return await runOpenRouterTranslation({ ...openrouter, input: input, signal: signal });
+		return await runAiTranslation({ input: input, route: route, signal: signal });
 	}
 
 	return await ok(

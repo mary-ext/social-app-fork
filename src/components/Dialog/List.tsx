@@ -1,9 +1,9 @@
-import { type ReactNode, useRef } from 'react';
+import { type ReactNode, type Ref, useRef } from 'react';
 
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/Dialog/Popup.css';
-import { List as BaseList, type ListRenderItem } from '#/components/List/List';
+import { List as BaseList, type ListMethods, type ListRenderItem } from '#/components/List/List';
 
 export type { ListRenderItem, ListRenderItemInfo } from '#/components/List/List';
 
@@ -20,6 +20,8 @@ export type ListProps<ItemT> = {
 	/** enables virtualization with this estimated row height. */
 	estimateHeight?: number;
 	onEndReached?: () => void;
+	/** exposes imperative scrolling controls for the list. */
+	ref?: Ref<ListMethods>;
 	renderItem: ListRenderItem<ItemT>;
 };
 
@@ -38,6 +40,7 @@ export function List<ItemT>({
 	className,
 	estimateHeight,
 	onEndReached,
+	ref,
 	renderItem,
 }: ListProps<ItemT>) {
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,6 +58,7 @@ export function List<ItemT>({
 				ListHeaderComponent={ListHeaderComponent}
 				onEndReached={onEndReached}
 				onEndReachedThreshold={2}
+				ref={ref}
 				renderItem={renderItem}
 				scrollRoot={scrollRef}
 			/>

@@ -5,7 +5,7 @@ import { ALT_TEXT_MIME_TYPES } from '#/lib/lexicons';
 import { compressAltTextImage } from '#/lib/media/compress-image';
 
 import { getInternalServiceClient } from '#/state/internal-service-client';
-import { getImageDescriptionConfig } from '#/state/preferences/openrouter';
+import { getAiRoute } from '#/state/preferences/ai';
 
 import type { AltTextContext, AltTextDraft, AltTextImage, AltTextRound } from './types';
 
@@ -36,11 +36,11 @@ export const generateAltText = async ({ context, image, rounds, signal }: Option
 		rounds: rounds,
 	};
 
-	const openrouter = getImageDescriptionConfig();
-	if (openrouter !== null) {
-		const { runOpenRouterAltTextRound } = await import('#/lib/ai/openrouter');
+	const route = getAiRoute('imageDescription');
+	if (route !== null) {
+		const { runAiAltTextRound } = await import('#/lib/ai/completions');
 
-		return await runOpenRouterAltTextRound({ ...openrouter, input: input, signal: signal });
+		return await runAiAltTextRound({ input: input, route: route, signal: signal });
 	}
 
 	return await ok(

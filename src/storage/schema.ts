@@ -3,6 +3,7 @@ import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 
 import type { JsonValue } from 'type-fest';
 
+import type { AiModelSelection, AiProviderConfigs } from '#/lib/ai/config';
 import type { Gif } from '#/lib/gif';
 
 import type { Locale } from '#/paraglide/runtime';
@@ -12,6 +13,9 @@ export type SkinTone = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** Data that's specific to the device and does not vary based account */
 export type Device = {
+	aiImageDescriptionModel?: AiModelSelection;
+	aiProviders?: AiProviderConfigs;
+	aiTranslationModel?: AiModelSelection;
 	/** The paraglide locale for UI translations. Resolved once into `LOCALE`; changing it reloads. */
 	appLanguage?: Locale;
 	colorMode?: 'dark' | 'light' | 'system';
@@ -31,11 +35,11 @@ export type Device = {
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	largeAltBadgeEnabled?: boolean;
-	/** The user's own OpenRouter API key. */
+	/** @deprecated migrated to {@link Device.aiProviders}. */
 	openrouterApiKey?: string;
-	/** OpenRouter model slug used to draft image descriptions, e.g. `google/gemini-2.5-flash`. */
+	/** @deprecated migrated to {@link Device.aiImageDescriptionModel}. */
 	openrouterImageDescriptionModel?: string;
-	/** OpenRouter model slug used to translate posts, e.g. `google/gemini-2.5-flash`. */
+	/** @deprecated migrated to {@link Device.aiTranslationModel}. */
 	openrouterTranslationModel?: string;
 	pdsAddressHistory?: string[];
 	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */

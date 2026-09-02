@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
-import { iconSize, space, zIndex } from '#/styles/tokens.css';
+import { space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.md;
@@ -12,13 +12,6 @@ const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDI
 export const popup = style({
 	height: 600,
 	maxWidth: 500,
-});
-
-export const comboboxList = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minHeight: 0,
 });
 
 export const header = style({
@@ -60,12 +53,17 @@ export const list = style({
 export const item = style({
 	boxSizing: 'border-box',
 	display: 'flex',
-	alignItems: 'center',
+	flexDirection: 'column',
 	outline: 'none',
 	width: '100%',
-	gap: space.md,
+	gap: space._2xs,
+	appearance: 'none',
+	border: 'none',
+	background: 'none',
 	color: colors.text,
+	font: 'inherit',
 	cursor: 'pointer',
+	textAlign: 'start',
 	userSelect: 'none',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
@@ -86,26 +84,8 @@ export const itemBorder = style({
 	},
 });
 
-export const itemText = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minWidth: 0,
-	gap: space._2xs,
-});
-
-export const checkIcon = style({
-	color: colors.primary_500,
-	width: iconSize.sm,
-	height: iconSize.sm,
-});
-
 export const status = style({
 	display: 'block',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
-});
-
-export const doneButton = style({
-	width: '100%',
 });
