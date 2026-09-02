@@ -411,32 +411,14 @@ function areSameAuthor(authors: AuthorContext): boolean {
 
 function shouldDisplayReplyInFollowing(authors: AuthorContext, userDid: string): boolean {
 	const { author, parentAuthor, grandparentAuthor, rootAuthor } = authors;
-	if (!isSelfOrFollowing(author, userDid)) {
-		return false;
-	}
-	if (
-		(!parentAuthor || parentAuthor.did === author.did) &&
-		(!rootAuthor || rootAuthor.did === author.did) &&
-		(!grandparentAuthor || grandparentAuthor.did === author.did)
-	) {
-		return true;
-	}
-	if (parentAuthor && parentAuthor.did !== author.did && isSelfOrFollowing(parentAuthor, userDid)) {
-		return true;
-	}
-	if (
-		grandparentAuthor &&
-		grandparentAuthor.did !== author.did &&
-		isSelfOrFollowing(grandparentAuthor, userDid)
-	) {
-		return true;
-	}
-	if (rootAuthor && rootAuthor.did !== author.did && isSelfOrFollowing(rootAuthor, userDid)) {
-		return true;
-	}
-	return false;
+	return (
+		isSelfOrFollowing(author, userDid) &&
+		isSelfOrFollowing(parentAuthor, userDid) &&
+		isSelfOrFollowing(grandparentAuthor, userDid) &&
+		isSelfOrFollowing(rootAuthor, userDid)
+	);
 }
 
-function isSelfOrFollowing(profile: AppBskyActorDefs.ProfileViewBasic, userDid: string) {
-	return !!(profile.did === userDid || profile.viewer?.following);
+function isSelfOrFollowing(profile: AppBskyActorDefs.ProfileViewBasic | undefined, userDid: string) {
+	return !profile || profile.did === userDid || !!profile.viewer?.following;
 }
