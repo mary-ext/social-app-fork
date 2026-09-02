@@ -39,32 +39,26 @@ export function MessageProfileButton({ profile }: { profile: AppBskyActorDefs.Pr
 		}
 	};
 
-	if (!convoAvailability) {
-		// pending state, sized to the button to avoid layout shift
-		if (canBeMessaged(profile)) {
-			return (
-				<div aria-hidden className={css.loading}>
-					<Message className={css.messageIcon} />
-				</div>
-			);
-		}
+	const pending = !convoAvailability;
+	const visible = pending ? canBeMessaged(profile) : convoAvailability.canChat;
+
+	if (!visible) {
 		return null;
 	}
 
-	if (convoAvailability.canChat) {
-		return (
-			<Button
-				color="secondary"
-				label={m['components.dms.chat.action.message']({ handle: profile.handle })}
-				onClick={onPress}
-				shape="round"
-				size="small"
-				variant="solid"
-			>
-				<ButtonIcon icon={Message} size="md" />
-			</Button>
-		);
-	}
-
-	return null;
+	return (
+		<Button
+			aria-hidden={pending || undefined}
+			className={pending ? css.skeleton : undefined}
+			color="secondary"
+			disabled={pending}
+			label={m['components.dms.chat.action.message']({ handle: profile.handle })}
+			onClick={onPress}
+			shape="round"
+			size="small"
+			variant="solid"
+		>
+			<ButtonIcon icon={Message} size="md" />
+		</Button>
+	);
 }
