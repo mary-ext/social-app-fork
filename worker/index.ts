@@ -24,6 +24,10 @@ const DID_DOCUMENT_PATH = '/.well-known/did.json';
 
 const EXTRACT_CACHE_TTL = 60 * 60;
 
+const AI_CATALOG_CACHE_TTL = 15 * 60;
+
+const AI_CATALOG_HEADERS = { 'cache-control': `private, max-age=${AI_CATALOG_CACHE_TTL}` };
+
 /** accepts requests from the app origin only. */
 const requireSameOrigin = (request: Request): void => {
 	if (request.headers.get('sec-fetch-site') !== 'same-origin') {
@@ -99,14 +103,14 @@ router.addQuery(getLinkImage, {
 router.addQuery(listAiModels, {
 	async handler({ params, request }) {
 		requireSameOrigin(request);
-		return json(await listAiModelOffers(params));
+		return json(await listAiModelOffers(params), { headers: AI_CATALOG_HEADERS });
 	},
 });
 
 router.addQuery(listAiProviders, {
 	async handler({ request }) {
 		requireSameOrigin(request);
-		return json(await listAiProviderCatalog());
+		return json(await listAiProviderCatalog(), { headers: AI_CATALOG_HEADERS });
 	},
 });
 

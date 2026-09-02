@@ -1,3 +1,5 @@
+import { waitUntil } from 'cloudflare:workers';
+
 import type * as v from '@atcute/lexicons/validations';
 
 import {
@@ -36,6 +38,9 @@ const KNOWN_MODALITIES = new Set<string>(AI_MODALITIES);
 
 type NormalizedProvider = { offers: AiModelOffer[]; provider: AiProvider };
 
+const CATALOG_CACHE_TTL = 15 * 60;
+const CATALOG_CACHE_KEY = 'https://ai-catalog.invalid/1';
+
 /**
  * lists providers with at least one supported model.
  *
@@ -43,7 +48,7 @@ type NormalizedProvider = { offers: AiModelOffer[]; provider: AiProvider };
  * @throws {UpstreamFailureError} when the catalog is unavailable
  */
 export const listAiProviderCatalog = async (): Promise<{ providers: AiProvider[] }> => {
-	const listed = await normalizeCatalog(() => true);
+	const listed = await loadNormalizedCatalog();
 	return { providers: listed.map((entry) => entry.provider) };
 };
 
@@ -57,13 +62,17 @@ type ModelParams = v.InferOutput<(typeof listAiModels)['params']>;
  * @throws {UpstreamFailureError} when the catalog is unavailable
  */
 export const listAiModelOffers = async (params: ModelParams): Promise<{ models: AiModelOffer[] }> => {
-	const requested = new Set(params.providers);
-	const listed = await normalizeCatalog((source) => requested.has(source.id));
+	const listed = await loadNormalizedCatalog();
 
+	const requested = new Set(params.providers);
 	const formats = new Set<AiWireFormat>(params.formats);
 	const models: AiModelOffer[] = [];
 
-	for (const { offers } of listed) {
+	for (const { offers, provider } of listed) {
+		if (!requested.has(provider.id)) {
+			continue;
+		}
+
 		for (const offer of offers) {
 			if (!formats.has(offer.format)) {
 				continue;
@@ -90,17 +99,28 @@ const covers = (available: readonly AiModality[], required: readonly AiModality[
 	return required.every((modality) => available.includes(modality));
 };
 
-const normalizeCatalog = async (
-	wanted: (source: ModelsDevProvider) => boolean,
-): Promise<NormalizedProvider[]> => {
-	const source = await loadModelsDevCatalog();
+const loadNormalizedCatalog = async (): Promise<NormalizedProvider[]> => {
+	const cached = await caches.default.match(CATALOG_CACHE_KEY);
+	if (cached) {
+		return await cached.json<NormalizedProvider[]>();
+	}
 
+	const listed = normalizeCatalog(await loadModelsDevCatalog());
+	waitUntil(
+		caches.default.put(
+			CATALOG_CACHE_KEY,
+			Response.json(listed, {
+				headers: { 'cache-control': `public, max-age=${CATALOG_CACHE_TTL}` },
+			}),
+		),
+	);
+
+	return listed;
+};
+
+const normalizeCatalog = (source: ModelsDevProvider[]): NormalizedProvider[] => {
 	const listed: NormalizedProvider[] = [];
 	for (const entry of source) {
-		if (!wanted(entry)) {
-			continue;
-		}
-
 		const normalized = normalizeProvider(entry);
 		if (normalized) {
 			listed.push(normalized);

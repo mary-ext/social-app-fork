@@ -4,7 +4,8 @@ import * as v from 'valibot';
 
 const CATALOG_URL = 'https://models.dev/api.json';
 
-const CATALOG_TTL_SECONDS = 15 * 60;
+/** keep the raw catalog cache shorter-lived than the normalized cache. */
+const CATALOG_TTL_SECONDS = 60;
 
 const CATALOG_TIMEOUT_MS = 10_000;
 
