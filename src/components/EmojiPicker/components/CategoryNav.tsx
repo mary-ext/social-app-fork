@@ -6,11 +6,7 @@ import { m } from '#/paraglide/messages';
 import { CATEGORIES } from '../categories';
 import * as styles from './CategoryNav.css';
 
-/**
- * horizontal strip of category toggles, one per {@link CATEGORIES}. clicking one scrolls the grid to that
- * section. the toggle for the section currently scrolled into view shows as pressed. the `recent` toggle is
- * disabled until {@link hasRecents}.
- */
+/** category navigation that preserves focus in the search input. */
 export function CategoryNav({
 	active,
 	hasRecents,
@@ -39,6 +35,7 @@ export function CategoryNav({
 					className={styles.navButton}
 					disabled={key === 'recent' && !hasRecents}
 					key={key}
+					onMouseDown={(event) => event.preventDefault()}
 					value={key}
 				>
 					<Icon className={styles.navIcon} />

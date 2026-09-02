@@ -8,13 +8,21 @@ import type { SkinTone } from '#/storage/schema';
 
 import { CATEGORY_LABELS } from '../categories';
 import type { EmojiDataset } from '../data';
-import { type EmojiLayout, GRID_HEIGHT, OVERSCAN } from '../layout';
+import {
+	type EmojiLayout,
+	GRID_HEIGHT,
+	GRID_SCROLL_PADDING_BOTTOM,
+	GRID_SCROLL_PADDING_TOP,
+	OVERSCAN,
+	SEARCH_INPUT_RADIUS,
+} from '../layout';
 import * as styles from './EmojiGrid.css';
 
 /** imperative handle the panel uses to drive the grid's scroll position. */
 export type EmojiGridHandle = {
 	ensureVisible: (index: number) => void;
 	scrollToSection: (key: string) => void;
+	scrollToTop: () => void;
 };
 
 type EmojiGridProps = {
@@ -49,36 +57,48 @@ export function EmojiGrid({
 				if (rowIndex == null || !el) {
 					return;
 				}
+
+				// virtualized rows may not have DOM nodes, so use layout offsets.
 				const row = layout.rows[rowIndex]!;
-				if (row.top < el.scrollTop) {
-					el.scrollTop = row.top;
-				} else if (row.top + row.height > el.scrollTop + GRID_HEIGHT) {
-					el.scrollTop = row.top + row.height - GRID_HEIGHT;
+
+				// keep an adjacent section header visible with its first row.
+				const header = layout.rows[rowIndex - 1];
+				const headed = header?.type === 'header';
+				const top = headed ? header.top : row.top;
+
+				const overflowTop = el.scrollTop + (headed ? SEARCH_INPUT_RADIUS : GRID_SCROLL_PADDING_TOP) - top;
+				const overflowBottom =
+					row.top + row.height - (el.scrollTop + el.clientHeight - GRID_SCROLL_PADDING_BOTTOM);
+
+				const overflowsTop = overflowTop > 0;
+				const overflowsBottom = overflowBottom > 0;
+
+				if (overflowsTop === overflowsBottom) {
+					return;
 				}
+
+				el.scrollTop += overflowsTop ? -overflowTop : overflowBottom;
 			},
 			scrollToSection(key) {
 				const rowIndex = layout.sectionRowIndex.get(key);
 				if (rowIndex == null || !scrollRef.current) {
 					return;
 				}
-				scrollRef.current.scrollTop = layout.rows[rowIndex]!.top;
+				// align the header with the grid's initial resting position.
+				scrollRef.current.scrollTop = layout.rows[rowIndex]!.top - SEARCH_INPUT_RADIUS;
+			},
+			scrollToTop() {
+				if (scrollRef.current) {
+					scrollRef.current.scrollTop = 0;
+				}
 			},
 		}),
 		[layout],
 	);
 
-	// reset to the top whenever the layout changes (a new search or a different category set)
-	useEffect(() => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollTop = 0;
-		}
-		// oxlint-disable-next-line react/set-state-in-effect -- reset after layout changes
-		setScrollTop(0);
-		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- layout triggers the reset
-	}, [layout]);
-
-	// the section whose header sits at (or just above) the top of the viewport — what the nav highlights.
+	// highlight the section at the top of the unobscured viewport.
 	// at the very bottom the last section wins even if its short body never reaches the top.
+	const visibleTop = scrollTop + SEARCH_INPUT_RADIUS + 1;
 	const sections = Array.from(layout.sectionRowIndex, ([key, rowIndex]) => {
 		return {
 			key,
@@ -93,7 +113,7 @@ export function EmojiGrid({
 		} else {
 			activeSection = sections[0]!.key;
 			for (const section of sections) {
-				if (section.top > scrollTop + 1) {
+				if (section.top > visibleTop) {
 					break;
 				}
 				activeSection = section.key;

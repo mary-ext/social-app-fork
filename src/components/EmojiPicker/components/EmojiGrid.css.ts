@@ -7,10 +7,11 @@ import {
 	GRID_HEIGHT,
 	GRID_PADDING,
 	GRID_PADDING_BOTTOM,
+	GRID_SCROLL_PADDING_BOTTOM,
+	GRID_SCROLL_PADDING_TOP,
 	HEADER_HEIGHT,
 	PER_LINE,
 	ROW_HEIGHT,
-	SEARCH_INPUT_RADIUS,
 } from '../layout';
 
 export const scroll = style({
@@ -19,8 +20,8 @@ export const scroll = style({
 	height: GRID_HEIGHT,
 	overflowY: 'auto',
 	overscrollBehavior: 'contain',
-	scrollPaddingTop: GRID_PADDING + SEARCH_INPUT_RADIUS,
-	scrollPaddingBottom: GRID_PADDING,
+	scrollPaddingTop: GRID_SCROLL_PADDING_TOP,
+	scrollPaddingBottom: GRID_SCROLL_PADDING_BOTTOM,
 	userSelect: 'none',
 });
 

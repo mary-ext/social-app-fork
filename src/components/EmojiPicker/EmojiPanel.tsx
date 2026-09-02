@@ -45,14 +45,16 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 	const pendingJump = useRef<string | null>(null);
 	const isSearchLoading = trimmed !== '' && isSearchPending;
 
-	// a category jump made while searching has to clear the query first; once the category layout is back,
-	// scroll to the requested section (child layout effects run before this, so the jump wins the scroll reset).
+	// search changes reset the grid unless a pending category jump takes precedence.
 	useEffect(() => {
-		if (!query && pendingJump.current) {
-			gridRef.current?.scrollToSection(pendingJump.current);
-			pendingJump.current = null;
+		const jump = pendingJump.current;
+		pendingJump.current = null;
+		if (jump && !trimmed) {
+			gridRef.current?.scrollToSection(jump);
+		} else {
+			gridRef.current?.scrollToTop();
 		}
-	}, [query]);
+	}, [trimmed]);
 
 	const model = useMemo(() => buildModel(data, search, trimmed, recents), [data, search, recents, trimmed]);
 
@@ -144,7 +146,7 @@ function buildModel(
 	data: EmojiDataset | undefined,
 	search: EmojiSearch | undefined,
 	query: string,
-	recents: string[],
+	recents: readonly string[],
 ) {
 	if (!data) {
 		return { cells: [] as number[], hasRecent: false, layout: buildEmojiLayout([]) };

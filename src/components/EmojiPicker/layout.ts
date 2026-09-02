@@ -18,6 +18,10 @@ export const GRID_PADDING_BOTTOM = 8;
  * compensate.
  */
 export const SEARCH_INPUT_RADIUS = 10;
+/** top scroll padding, including the area obscured by the search input. */
+export const GRID_SCROLL_PADDING_TOP = GRID_PADDING + SEARCH_INPUT_RADIUS;
+/** bottom scroll padding. */
+export const GRID_SCROLL_PADDING_BOTTOM = GRID_PADDING;
 /** inner content width: {@link PER_LINE} cells plus the grid's inline padding. */
 export const PANEL_WIDTH = PER_LINE * ROW_HEIGHT + GRID_PADDING * 2;
 
