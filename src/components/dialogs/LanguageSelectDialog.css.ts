@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space, zIndex } from '#/styles/tokens.css';
 
@@ -83,7 +84,9 @@ export const item = style({
 	paddingInline: DIALOG_PADDING,
 	width: '100%',
 	selectors: {
-		'&:hover:not([data-disabled])': { backgroundColor: colors.contrast_25 },
+		[hover(':not([data-disabled])')]: {
+			backgroundColor: colors.contrast_25,
+		},
 	},
 });
 

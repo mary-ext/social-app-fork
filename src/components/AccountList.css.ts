@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const avatarSize = 40;
@@ -26,7 +27,7 @@ export const rowInteractive = style({
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: colors.contrast_25 },
+		[hover()]: { backgroundColor: colors.contrast_25 },
 	},
 });
 
@@ -41,7 +42,9 @@ export const addAvatar = style({
 	height: avatarSize,
 	color: colors.textContrastLow,
 	selectors: {
-		[`${rowInteractive}:hover &`]: { backgroundColor: colors.contrast_50 },
+		[hoverWithin(rowInteractive)]: {
+			backgroundColor: colors.contrast_50,
+		},
 	},
 });
 

@@ -1,6 +1,7 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { fontSize, iconSize, space, zIndex } from '#/styles/tokens.css';
@@ -68,7 +69,7 @@ export const tab = style(
 		fontWeight: 600,
 		cursor: 'pointer',
 		selectors: {
-			'&:hover': { backgroundColor: vars.palette.contrast_25 },
+			[hover()]: { backgroundColor: vars.palette.contrast_25 },
 			'&[data-active]': { color: vars.palette.contrast_1000 },
 			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
 		},

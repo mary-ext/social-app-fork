@@ -5,6 +5,7 @@ import { HEADER_HEIGHT } from '#/components/web/Layout/const';
 import { driven, OVERLAP, SUPPORTS } from '#/components/web/Layout/scroll-away';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const height = `calc(${HEADER_HEIGHT}px + env(safe-area-inset-top, 0px))`;
@@ -41,7 +42,9 @@ export const outer = style({
 export const action = style([
 	{
 		selectors: {
-			'&:hover:not(:disabled)': { boxShadow: 'inset 0 0 0 999px rgb(from currentColor r g b / 0.15)' },
+			[hover(':not(:disabled)')]: {
+				boxShadow: 'inset 0 0 0 999px rgb(from currentColor r g b / 0.15)',
+			},
 		},
 	},
 	driven(unscrim, buttonOnSolid),

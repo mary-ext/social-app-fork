@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -20,8 +21,10 @@ export const button = recipe(
 			background: 'transparent',
 			textAlign: 'left',
 			cursor: 'pointer',
-			':hover': {
-				backgroundColor: colors.contrast_25,
+			selectors: {
+				[hover()]: {
+					backgroundColor: colors.contrast_25,
+				},
 			},
 		},
 		variants: {

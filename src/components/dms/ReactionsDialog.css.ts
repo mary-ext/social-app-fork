@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { emojiFontFamily, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
@@ -55,7 +56,7 @@ export const rowButton = style([
 		textAlign: 'left',
 		cursor: 'pointer',
 		selectors: {
-			'&:hover': { backgroundColor: colors.contrast_25 },
+			[hover()]: { backgroundColor: colors.contrast_25 },
 			'&:focus-visible': { outline: `2px solid ${colors.primary_500}`, outlineOffset: -2 },
 		},
 	},

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, iconSize, space } from '#/styles/tokens.css';
 
@@ -112,7 +113,7 @@ export const rowInteractive = style({
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover:not(:disabled):not([data-disabled])': { backgroundColor: vars.palette.contrast_50 },
+		[hover(':not(:disabled):not([data-disabled])')]: { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
@@ -127,7 +128,7 @@ export const rowInteractive = style({
 export const rowPrimarySubtle = style({
 	backgroundColor: vars.palette.primary_50,
 	selectors: {
-		'&:hover:not(:disabled):not([data-disabled])': {
+		[hover(':not(:disabled):not([data-disabled])')]: {
 			backgroundColor: vars.palette.primary_100,
 		},
 	},

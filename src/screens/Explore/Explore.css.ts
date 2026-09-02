@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const tabbedHeader = style({
@@ -42,7 +43,7 @@ export const loadMore = style({
 	color: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: colors.contrast_25 },
+		[hover()]: { backgroundColor: colors.contrast_25 },
 	},
 });
 

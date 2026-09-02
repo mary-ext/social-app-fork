@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client';
 
+import { initInputModality } from '#/lib/browser/input-modality';
+import { initPressFeedback } from '#/lib/browser/press';
 import { initServiceWorker } from '#/lib/service-worker';
 
 import { initAppearance } from '#/state/preferences/appearance';
@@ -16,6 +18,8 @@ overwriteGetLocale(() => LOCALE);
 document.documentElement.lang = LOCALE;
 
 initAppearance();
+initInputModality();
+initPressFeedback();
 prepareQueryCache();
 
 const rootEl = document.getElementById('root');

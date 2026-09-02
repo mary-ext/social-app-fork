@@ -64,7 +64,9 @@ export const cell = style({
 	height: ROW_HEIGHT,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover, &[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
+		[`&[data-highlighted]`]: {
+			backgroundColor: vars.palette.contrast_50,
+		},
 	},
 });
 

@@ -7,6 +7,7 @@ import { OUTER_SPACE } from '#/components/PostLayout.const';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 const PADDING_TIGHT = 8;
@@ -60,7 +61,7 @@ export const hoverable = style({
 	minWidth: 0,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': {
+		[hover()]: {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
 		},
 	},

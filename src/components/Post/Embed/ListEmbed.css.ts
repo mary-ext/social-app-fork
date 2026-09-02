@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
@@ -19,7 +20,7 @@ export const card = recipe(
 			interactive: {
 				true: {
 					selectors: {
-						'&:hover': { borderColor: vars.palette.contrast_300 },
+						[hover()]: { borderColor: vars.palette.contrast_300 },
 					},
 				},
 			},

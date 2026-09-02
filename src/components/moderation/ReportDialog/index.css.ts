@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 
 export const popup = style({
 	maxWidth: 500,
@@ -38,7 +39,7 @@ export const card = style({
 	textAlign: 'left',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { borderColor: vars.palette.contrast_300 },
+		[hover()]: { borderColor: vars.palette.contrast_300 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},
 });
@@ -58,7 +59,7 @@ export const changeLink = style({
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { textDecoration: 'underline' },
+		[hover()]: { textDecoration: 'underline' },
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,

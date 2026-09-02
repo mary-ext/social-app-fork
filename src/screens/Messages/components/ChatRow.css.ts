@@ -1,6 +1,7 @@
 import { createVar, globalStyle, style, styleVariants } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { MOUSE, PRESSED, TOUCH } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -13,17 +14,7 @@ export const root = style({
 	position: 'relative',
 	backgroundColor: rowBg,
 	selectors: {
-		'&:has(a:active)': {
-			vars: {
-				[rowBg]: colors.contrast_25,
-			},
-		},
-		'&:has(a:focus-visible)': {
-			vars: {
-				[rowBg]: colors.contrast_25,
-			},
-		},
-		'&:hover': {
+		[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &:hover`]: {
 			vars: {
 				[rowBg]: colors.contrast_25,
 			},
@@ -38,17 +29,7 @@ export const tone = styleVariants({
 			[rowBg]: colors.contrast_50,
 		},
 		selectors: {
-			'&:has(a:active)': {
-				vars: {
-					[rowBg]: colors.contrast_50,
-				},
-			},
-			'&:has(a:focus-visible)': {
-				vars: {
-					[rowBg]: colors.contrast_50,
-				},
-			},
-			'&:hover': {
+			[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &:hover`]: {
 				vars: {
 					[rowBg]: colors.contrast_50,
 				},
@@ -86,6 +67,11 @@ export const content = style({
 	justifyContent: 'center',
 	minWidth: 0,
 
+	selectors: {
+		[`${TOUCH} &`]: {
+			paddingRight: 25 + space.md,
+		},
+	},
 	'@media': {
 		'(width < 800px)': {
 			paddingRight: 25 + space.md,
@@ -174,7 +160,10 @@ export const menu = style({
 			transition: 'none',
 			opacity: 1,
 		},
-		[`${root}:hover &`]: {
+		[`${MOUSE} ${root}:hover &`]: {
+			opacity: 1,
+		},
+		[`${TOUCH} &`]: {
 			opacity: 1,
 		},
 	},

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 const rowBase = style({
@@ -20,8 +21,10 @@ export const row = style([
 		textDecoration: 'none',
 		color: 'inherit',
 		cursor: 'pointer',
-		':hover': {
-			backgroundColor: colors.contrast_25,
+		selectors: {
+			[hover()]: {
+				backgroundColor: colors.contrast_25,
+			},
 		},
 	},
 ]);

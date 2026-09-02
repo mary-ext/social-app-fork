@@ -1,6 +1,7 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { fontSize } from '#/styles/tokens.css';
@@ -50,7 +51,7 @@ export const input = style(
 		selectors: {
 			'&::placeholder': { color: vars.palette.contrast_500 },
 			'&:disabled': { opacity: 0.5, cursor: 'default' },
-			'&:hover': { borderColor: vars.palette.contrast_100 },
+			[hover()]: { borderColor: vars.palette.contrast_100 },
 			'&:focus': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 		},
 	}),
@@ -61,7 +62,7 @@ export const invalid = style(
 		borderColor: vars.palette.negative_300,
 		backgroundColor: vars.palette.negative_25,
 		selectors: {
-			'&:hover': { borderColor: vars.palette.negative_500 },
+			[hover()]: { borderColor: vars.palette.negative_500 },
 			'&:focus': { borderColor: vars.palette.negative_500, backgroundColor: vars.palette.negative_25 },
 		},
 	}),

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, iconSize } from '#/styles/tokens.css';
 
@@ -16,7 +17,7 @@ export const field = style({
 	width: '100%',
 	cursor: 'text',
 	selectors: {
-		'&:hover': { borderColor: vars.palette.contrast_100 },
+		[hover()]: { borderColor: vars.palette.contrast_100 },
 		'&:has(input:focus)': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 	},
 });
@@ -28,7 +29,7 @@ export const icon = style({
 	color: vars.palette.contrast_500,
 	pointerEvents: 'none',
 	selectors: {
-		[`${field}:hover &`]: { color: vars.palette.contrast_800 },
+		[hoverWithin(field)]: { color: vars.palette.contrast_800 },
 		[`${field}:has(input:focus) &`]: { color: vars.palette.primary_500 },
 	},
 });

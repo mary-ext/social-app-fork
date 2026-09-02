@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { MOUSE, PRESSING } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { space, zIndex } from '#/styles/tokens.css';
@@ -146,7 +147,9 @@ export const menuItem = style(
 		color: vars.palette.contrast_1000,
 		cursor: 'pointer',
 		selectors: {
-			'&:hover, &:focus-visible': { backgroundColor: vars.palette.contrast_25 },
+			[`${MOUSE} &:hover, &:focus-visible, ${PRESSING}`]: {
+				backgroundColor: vars.palette.contrast_25,
+			},
 			'&:focus-visible': { outline: 'none' },
 		},
 	}),

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 const row = style({
@@ -20,7 +21,7 @@ export const memberRow = style([
 				outlineOffset: -2,
 				backgroundColor: colors.contrast_25,
 			},
-			'&:hover': { backgroundColor: colors.contrast_25 },
+			[hover()]: { backgroundColor: colors.contrast_25 },
 		},
 	},
 ]);

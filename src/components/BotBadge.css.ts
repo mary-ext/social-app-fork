@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 
 export const icon = style({
 	display: 'inline-block',
@@ -17,5 +18,7 @@ export const button = style({
 	padding: 0,
 	color: colors.textContrastMedium,
 	cursor: 'pointer',
-	':hover': { transform: 'scale(1.1)' },
+	selectors: {
+		[hover()]: { transform: 'scale(1.1)' },
+	},
 });

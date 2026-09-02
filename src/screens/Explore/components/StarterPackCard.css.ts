@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const card = style({
@@ -17,8 +18,10 @@ export const card = style({
 	textDecoration: 'none',
 	color: 'inherit',
 	cursor: 'pointer',
-	':hover': {
-		backgroundColor: colors.contrast_25,
+	selectors: {
+		[hover()]: {
+			backgroundColor: colors.contrast_25,
+		},
 	},
 });
 

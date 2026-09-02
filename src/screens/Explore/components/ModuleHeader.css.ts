@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -71,8 +72,10 @@ export const feedLink = style({
 	textDecoration: 'none',
 	color: 'inherit',
 	cursor: 'pointer',
-	':hover': {
-		backgroundColor: colors.contrast_25,
+	selectors: {
+		[hover()]: {
+			backgroundColor: colors.contrast_25,
+		},
 	},
 });
 

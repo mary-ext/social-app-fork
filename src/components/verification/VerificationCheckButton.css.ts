@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 
 export const button = style({
 	display: 'inline-flex',
@@ -9,7 +10,9 @@ export const button = style({
 	background: 'none',
 	padding: 0,
 	cursor: 'pointer',
-	':hover': { transform: 'scale(1.1)' },
+	selectors: {
+		[hover()]: { transform: 'scale(1.1)' },
+	},
 });
 
 export const check = style({ color: colors.primary_500 });

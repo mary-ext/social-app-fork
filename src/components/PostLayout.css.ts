@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
@@ -22,7 +23,7 @@ export const frame = recipe(
 				true: {
 					cursor: 'pointer',
 					selectors: {
-						'&:hover': {
+						[hover()]: {
 							backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
 						},
 					},

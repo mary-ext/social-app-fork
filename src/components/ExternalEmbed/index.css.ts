@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover, hoverWithin, PRESSING } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -38,8 +39,8 @@ export const card = recipe(
 					{
 						cursor: 'pointer',
 						selectors: {
-							'&:hover': { borderColor: vars.palette.contrast_300 },
-							'&:active': { backgroundColor: colors.bg },
+							[hover()]: { borderColor: vars.palette.contrast_300 },
+							[PRESSING]: { backgroundColor: colors.bg },
 						},
 					},
 				],
@@ -64,7 +65,9 @@ export const bodyWithMedia = style({
 	borderTopStyle: 'solid',
 	borderTopColor: vars.palette.contrast_100,
 	selectors: {
-		[`${isInteractive}:hover &`]: { borderTopColor: vars.palette.contrast_300 },
+		[hoverWithin(isInteractive)]: {
+			borderTopColor: vars.palette.contrast_300,
+		},
 	},
 });
 
@@ -104,7 +107,9 @@ export const globe = style({
 	transitionProperty: 'color',
 	color: vars.palette.contrast_400,
 	selectors: {
-		[`${isInteractive}:hover &`]: { color: vars.palette.contrast_700 },
+		[hoverWithin(isInteractive)]: {
+			color: vars.palette.contrast_700,
+		},
 	},
 });
 
@@ -112,6 +117,8 @@ export const domain = style({
 	transitionProperty: 'color',
 	color: vars.palette.contrast_700,
 	selectors: {
-		[`${isInteractive}:hover &`]: { color: vars.palette.contrast_900 },
+		[hoverWithin(isInteractive)]: {
+			color: vars.palette.contrast_900,
+		},
 	},
 });

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const row = style({
@@ -24,7 +25,9 @@ export const row = style({
 			outlineOffset: -2,
 			backgroundColor: colors.contrast_25,
 		},
-		'&:hover:not(:disabled)': { backgroundColor: colors.contrast_25 },
+		[hover(':not(:disabled)')]: {
+			backgroundColor: colors.contrast_25,
+		},
 	},
 });
 
@@ -46,7 +49,9 @@ export const iconCircle = style({
 
 	selectors: {
 		[`${row}:focus-visible:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
-		[`${row}:hover:not(:disabled) &`]: { backgroundColor: colors.contrast_100 },
+		[hoverWithin(row, ':not(:disabled)')]: {
+			backgroundColor: colors.contrast_100,
+		},
 	},
 });
 

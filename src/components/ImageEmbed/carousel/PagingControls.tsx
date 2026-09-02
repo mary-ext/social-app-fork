@@ -2,7 +2,7 @@ import { type RefObject, useEffect, useEffectEvent, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { useMediaQuery } from '#/lib/browser/media-query';
+import { useInputModality } from '#/lib/browser/input-modality';
 
 import * as styles from '#/components/ImageEmbed/carousel/PagingControls.css';
 import { getTileOffset, getTiles, scrollToTile } from '#/components/ImageEmbed/carousel/tiles';
@@ -10,8 +10,6 @@ import { getTileOffset, getTiles, scrollToTile } from '#/components/ImageEmbed/c
 import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-
-const MOUSE_QUERY = '(hover: hover) and (pointer: fine)';
 
 // scroll snapping can stop at subpixel offsets
 const SCROLL_EPSILON = 1;
@@ -62,7 +60,8 @@ export function PagingControls({ onPage, scrollPaddingLeft, scrollRef }: PagingP
 }
 
 function usePaging({ onPage, scrollPaddingLeft, scrollRef }: PagingProps) {
-	const canHover = useMediaQuery(MOUSE_QUERY);
+	// keep rendering aligned with the mouse-gated styles
+	const canHover = useInputModality() === 'mouse';
 	const [canLeft, setCanLeft] = useState(false);
 	const [canRight, setCanRight] = useState(false);
 

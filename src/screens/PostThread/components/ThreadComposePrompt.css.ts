@@ -1,5 +1,6 @@
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
@@ -57,7 +58,7 @@ export const button = recipe(
 				true: {
 					backgroundColor: 'transparent',
 					selectors: {
-						'&:hover': {
+						[hover()]: {
 							backgroundColor: colors.contrast_25,
 						},
 						'&:focus-visible': {

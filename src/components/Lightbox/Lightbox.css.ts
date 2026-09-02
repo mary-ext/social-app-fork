@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
+import { hover } from '#/styles/interaction';
 import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
 
 const fadeIn = keyframes({
@@ -74,7 +75,7 @@ export const circle = style([
 		cursor: 'pointer',
 		pointerEvents: 'auto',
 		selectors: {
-			'&:hover': { background: 'rgba(0, 0, 0, 0.85)' },
+			[hover()]: { background: 'rgba(0, 0, 0, 0.85)' },
 		},
 	},
 ]);
@@ -103,7 +104,7 @@ export const navButton = style({
 	cursor: 'pointer',
 	pointerEvents: 'auto',
 	selectors: {
-		'&:hover': { background: 'rgba(0, 0, 0, 0.53)' },
+		[hover()]: { background: 'rgba(0, 0, 0, 0.53)' },
 		'&:disabled': { animation: 'none', opacity: 0, pointerEvents: 'none' },
 	},
 	'@media': {

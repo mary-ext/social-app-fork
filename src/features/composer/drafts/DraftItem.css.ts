@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover, MOUSE, PRESSED } from '#/styles/interaction';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -32,7 +33,7 @@ export const card = style({
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},
-		'&:hover': { borderColor: vars.palette.contrast_200 },
+		[hover()]: { borderColor: vars.palette.contrast_200 },
 		'.theme--light &': { backgroundColor: vars.palette.contrast_0 },
 		'.theme--dark &, .theme--dim &': {
 			backgroundColor: vars.palette.contrast_25,
@@ -81,12 +82,13 @@ export const menuButton = style({
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},
-		'.theme--light &:hover::before': {
+		[`${MOUSE}.theme--light &:hover::before, .theme--light &${PRESSED}::before`]: {
 			backgroundColor: vars.palette.contrast_50,
 		},
-		'.theme--dark &:hover::before, .theme--dim &:hover::before': {
-			backgroundColor: vars.palette.contrast_100,
-		},
+		[`${MOUSE}.theme--dark &:hover::before, .theme--dark &${PRESSED}::before, ${MOUSE}.theme--dim &:hover::before, .theme--dim &${PRESSED}::before`]:
+			{
+				backgroundColor: vars.palette.contrast_100,
+			},
 	},
 });
 

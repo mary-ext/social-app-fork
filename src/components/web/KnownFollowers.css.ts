@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hoverWithin, PRESSING } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
@@ -13,7 +14,7 @@ const linkBase = style({
 	textDecoration: 'none',
 	cursor: 'pointer',
 	selectors: {
-		'&:active': { opacity: 0.5 },
+		[PRESSING]: { opacity: 0.5 },
 	},
 });
 
@@ -34,7 +35,7 @@ export const link = recipe(
 export const text = style({
 	flexShrink: 1,
 	selectors: {
-		[`${linkBase}:hover &`]: {
+		[hoverWithin(linkBase)]: {
 			textDecorationColor: colors.textContrastMedium,
 			textDecorationLine: 'underline',
 		},

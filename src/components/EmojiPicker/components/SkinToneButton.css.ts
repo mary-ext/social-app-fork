@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { emojiFontFamily, zIndex } from '#/styles/tokens.css';
 
 export const trigger = style({
@@ -17,7 +18,7 @@ export const trigger = style({
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_100 },
+		[hover()]: { backgroundColor: vars.palette.contrast_100 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}` },
 	},
 });

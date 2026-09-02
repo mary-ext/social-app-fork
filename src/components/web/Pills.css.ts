@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 
 export const row = recipe(
@@ -37,9 +38,8 @@ export const pill = recipe(
 			color: vars.palette.contrast_700,
 			cursor: 'pointer',
 			selectors: {
-				'&:active': { backgroundColor: vars.palette.contrast_50 },
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
-				'&:hover': { backgroundColor: vars.palette.contrast_50 },
+				[hover()]: { backgroundColor: vars.palette.contrast_50 },
 			},
 		},
 		defaultVariants: { bg: true, size: 'sm' },

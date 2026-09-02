@@ -5,12 +5,21 @@ import { MODIFIERS } from '@mary/keybinds';
 
 import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
 
+import { POINTER_ATTR } from '#/styles/interaction';
+
 /** the kind of input the user is currently driving the ui with */
 export type InputModality = 'keyboard' | 'mouse' | 'pen' | 'touch';
 
+/** pointer type last used */
+export type PointerModality = Exclude<InputModality, 'keyboard'>;
+
 const emitter = new SimpleEventEmitter<[]>();
 
-let modality: InputModality = IS_TOUCH_DEVICE ? 'touch' : 'mouse';
+const initial: PointerModality = IS_TOUCH_DEVICE ? 'touch' : 'mouse';
+
+let modality: InputModality = initial;
+// keyboard input must not clear pointer hover state
+let pointerModality: PointerModality = initial;
 
 const setModality = (next: InputModality) => {
 	if (next !== modality) {
@@ -20,7 +29,11 @@ const setModality = (next: InputModality) => {
 };
 
 const onPointerEvent = (evt: PointerEvent) => {
-	setModality(evt.pointerType === 'touch' || evt.pointerType === 'pen' ? evt.pointerType : 'mouse');
+	const next: PointerModality =
+		evt.pointerType === 'touch' || evt.pointerType === 'pen' ? evt.pointerType : 'mouse';
+
+	pointerModality = next;
+	setModality(next);
 };
 
 const onKeyDown = (evt: KeyboardEvent) => {
@@ -52,6 +65,20 @@ const subscribe = (listener: () => void) => {
 };
 
 const getSnapshot = () => modality;
+
+/** mirrors pointer modality onto `<html>` for input-aware styles */
+export const initInputModality = (): void => {
+	const root = document.documentElement;
+
+	const apply = () => {
+		if (root.getAttribute(POINTER_ATTR) !== pointerModality) {
+			root.setAttribute(POINTER_ATTR, pointerModality);
+		}
+	};
+
+	apply();
+	subscribe(apply);
+};
 
 /**
  * Reactive input modality hook, for behavior that has to follow the input in use rather than what the device

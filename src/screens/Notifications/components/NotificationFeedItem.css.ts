@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { iconSize } from '#/styles/tokens.css';
 
@@ -27,7 +28,9 @@ export const outer = recipe(
 			overflow: 'hidden',
 			cursor: 'pointer',
 			selectors: {
-				'&:hover': { backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover) },
+				[hover()]: {
+					backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+				},
 			},
 		},
 		variants: {
@@ -37,7 +40,7 @@ export const outer = recipe(
 					borderTopColor: colors.primary_100,
 					backgroundColor: colors.primary_25,
 					selectors: {
-						'&:hover': { backgroundColor: colors.primary_50 },
+						[hover()]: { backgroundColor: colors.primary_50 },
 					},
 				},
 			},

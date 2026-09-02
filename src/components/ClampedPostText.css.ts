@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize } from '#/styles/tokens.css';
 
@@ -27,6 +28,6 @@ export const showMore = style({
 	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': { outline: 'none', textDecoration: 'underline' },
-		'&:hover': { textDecoration: 'underline' },
+		[hover()]: { textDecoration: 'underline' },
 	},
 });

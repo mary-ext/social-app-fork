@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
+import { MOUSE, PRESSED } from '#/styles/interaction';
 
 export const activeMargin = style({
 	marginTop: 8,
@@ -77,7 +78,7 @@ export const quoteCard = style({
 export const quoteCardHover = style({
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': {
+		[`${MOUSE} &:hover, &:has(> ${PRESSED})`]: {
 			backgroundColor: colorMix(vars.palette.contrast_50, vars.opacity.hover),
 		},
 	},

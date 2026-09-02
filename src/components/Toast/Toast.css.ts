@@ -2,6 +2,7 @@ import { createVar, style, styleVariants } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { borderRadius, fontSize, fontWeight, iconSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
 const gap = 8;
@@ -162,6 +163,6 @@ export const action = style({
 	fontWeight: fontWeight.semiBold,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: colorMix('currentColor', '20%') },
+		[hover()]: { backgroundColor: colorMix('currentColor', '20%') },
 	},
 });

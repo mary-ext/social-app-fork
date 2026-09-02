@@ -4,6 +4,7 @@ import * as navBadge from '#/components/Shell/nav-badge.css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover, MOUSE, PRESSED, PRESSING } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
 import {
@@ -84,7 +85,7 @@ export const profileTrigger = style({
 	textAlign: 'left',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover, &:focus-visible, &[data-popup-open]': {
+		[`${MOUSE} &:hover, &:focus-visible, &[data-popup-open], ${PRESSING}`]: {
 			transitionDelay: '0ms',
 			backgroundColor: vars.palette.contrast_25,
 		},
@@ -99,7 +100,7 @@ export const profileTriggerMinimal = style({
 });
 
 const active = (child: string) =>
-	`${profileTrigger}:hover ${child}, ${profileTrigger}:focus-visible ${child}, ${profileTrigger}[data-popup-open] ${child}`;
+	`${MOUSE} ${profileTrigger}:hover ${child}, ${profileTrigger}:focus-visible ${child}, ${profileTrigger}[data-popup-open] ${child}, ${profileTrigger}${PRESSED} ${child}`;
 
 export const avatarWrap = style({
 	position: 'relative',
@@ -161,7 +162,7 @@ export const navItem = style({
 	padding: space.md,
 	textDecoration: 'none',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_25 },
+		[hover()]: { backgroundColor: vars.palette.contrast_25 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -1 },
 	},
 });

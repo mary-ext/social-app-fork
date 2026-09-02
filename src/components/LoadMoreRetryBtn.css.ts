@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { iconSize } from '#/styles/tokens.css';
 
 export const button = style({
@@ -21,7 +22,7 @@ export const button = style({
 	color: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_50 },
+		[hover()]: { backgroundColor: vars.palette.contrast_50 },
 	},
 });
 

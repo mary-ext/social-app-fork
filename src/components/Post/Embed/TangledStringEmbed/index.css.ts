@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 import { previewHeight } from './metrics';
@@ -44,8 +45,10 @@ export const filenameLink = style({
 export const filenameLinkInteractive = style([
 	filenameLink,
 	{
-		':hover': {
-			textDecoration: 'underline',
+		selectors: {
+			[hover()]: {
+				textDecoration: 'underline',
+			},
 		},
 	},
 ]);
@@ -54,9 +57,11 @@ export const domainLink = style({
 	display: 'flex',
 	flexShrink: 0,
 
-	':hover': {
-		textDecoration: 'underline',
-		textDecorationColor: colors.textContrastMedium,
+	selectors: {
+		[hover()]: {
+			textDecoration: 'underline',
+			textDecorationColor: colors.textContrastMedium,
+		},
 	},
 });
 
@@ -111,7 +116,7 @@ export const bylineInteractive = style([
 
 export const bylineHandle = style({
 	selectors: {
-		[`${bylineInteractive}:hover &`]: {
+		[hoverWithin(bylineInteractive)]: {
 			textDecoration: 'underline',
 			textDecorationColor: colors.textContrastMedium,
 		},

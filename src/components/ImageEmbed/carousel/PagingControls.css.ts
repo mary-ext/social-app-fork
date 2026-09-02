@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
+import { MOUSE } from '#/styles/interaction';
 import { borderRadius, iconSize } from '#/styles/tokens.css';
 
 export const navHost = style({ position: 'relative' });
@@ -26,9 +27,9 @@ export const navButton = style({
 	opacity: 0,
 	cursor: 'pointer',
 	selectors: {
-		[`${navHost}:hover &:enabled`]: { opacity: 1 },
+		[`${MOUSE} ${navHost}:hover &:enabled`]: { opacity: 1 },
 		'&:focus-visible': { opacity: 1 },
-		'&:hover': { background: 'rgba(0, 0, 0, 0.7)' },
+		[`${MOUSE} &:hover`]: { background: 'rgba(0, 0, 0, 0.7)' },
 		'&:disabled': { pointerEvents: 'none' },
 	},
 	'@media': {

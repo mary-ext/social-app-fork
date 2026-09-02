@@ -12,22 +12,13 @@ import {
 
 import { clsx } from 'clsx';
 
+import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import { isModifiedClick, navigateTo } from '#/components/web/Link';
 
 import { type RouteTarget, useRouter } from '#/router';
-
-// elements that handle their own press, plus regions that opt out via {@link noRowLink}; a click landing
-// on one must not also navigate the row
-const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-no-row-link]';
-
-/**
- * spread onto any element to exempt clicks within it from {@link BlockLink} row navigation. useful for regions
- * that handle their own clicks but are not semantic links or buttons.
- */
-export const noRowLink = { 'data-no-row-link': '' };
 
 type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
 	ref?: Ref<HTMLElement>;

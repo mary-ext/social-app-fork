@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { borderRadius, fontWeight, iconSize, space } from '#/styles/tokens.css';
 
 export const group = style({
@@ -31,7 +32,7 @@ export const item = style({
 	color: colors.textContrastMedium,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { color: colors.text },
+		[hover()]: { color: colors.text },
 		'&[data-pressed]': {
 			backgroundColor: colors.primary_50,
 			color: colors.text,

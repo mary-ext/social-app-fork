@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
 export const accountRow = style({
@@ -41,7 +42,7 @@ export const overflow = style({
 	color: vars.palette.contrast_500,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { background: vars.palette.contrast_100 },
+		[hover()]: { background: vars.palette.contrast_100 },
 	},
 });
 

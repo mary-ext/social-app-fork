@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 
 import { colors } from '#/styles/colors';
+import { hoverWithin } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
 export const rowTop = style({
@@ -34,7 +35,7 @@ export const icon = style({
 	height: iconSize.lg,
 	color: colors.textContrastMedium,
 	selectors: {
-		[`${link}:hover &`]: {
+		[hoverWithin(link)]: {
 			color: colors.textContrastHigh,
 		},
 		[`${link}:focus-visible &`]: {
@@ -45,7 +46,7 @@ export const icon = style({
 
 export const text = style({
 	selectors: {
-		[`${link}:hover &`]: {
+		[hoverWithin(link)]: {
 			textDecorationLine: 'underline',
 		},
 		[`${link}:focus-visible &`]: {

@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 export const outer = style({
@@ -14,7 +15,7 @@ export const outer = style({
 	paddingLeft: 16,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': {
+		[hover()]: {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
 		},
 	},

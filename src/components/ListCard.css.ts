@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
@@ -27,8 +28,7 @@ export const defaultRow = recipe(
 			paddingBlock: space.md,
 			paddingInline: space.lg,
 			selectors: {
-				'&:active': { backgroundColor: colors.contrast_25 },
-				'&:hover': { backgroundColor: colors.contrast_25 },
+				[hover()]: { backgroundColor: colors.contrast_25 },
 			},
 		},
 		defaultVariants: { topBorder: true },

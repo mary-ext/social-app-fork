@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hoverWithin } from '#/styles/interaction';
 import { iconSize } from '#/styles/tokens.css';
 
 export const root = style({
@@ -70,7 +71,9 @@ export const iconCircle = style({
 	width: ICON_CIRCLE_SIZE,
 	height: ICON_CIRCLE_SIZE,
 	selectors: {
-		[`${button}:hover:not(:disabled) &`]: { backgroundColor: vars.palette.contrast_50 },
+		[hoverWithin(button, ':not(:disabled)')]: {
+			backgroundColor: vars.palette.contrast_50,
+		},
 		[`${button}:focus-visible &`]: {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,

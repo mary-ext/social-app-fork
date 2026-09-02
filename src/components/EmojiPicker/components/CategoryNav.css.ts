@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
 export const nav = style({
@@ -26,7 +27,7 @@ export const navButton = style({
 	color: vars.palette.contrast_700,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_50 },
+		[hover()]: { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}` },
 		'&[data-disabled]': { opacity: 0.4, cursor: 'default' },
 		'&[data-pressed]': { color: vars.palette.primary_600 },

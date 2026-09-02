@@ -2,6 +2,7 @@ import { generateIdentifier, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { MOUSE, TOUCH } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, emojiFontFamily, iconSize, space } from '#/styles/tokens.css';
 
@@ -65,14 +66,16 @@ export const avatar = style({
 	alignSelf: 'end',
 });
 
+const bubbleRowBase = style({
+	gridArea: areas.content,
+	display: 'flex',
+	alignItems: 'center',
+	columnGap: space.xs,
+});
+
 export const bubbleRow = recipe(
 	{
-		base: {
-			gridArea: areas.content,
-			display: 'flex',
-			alignItems: 'center',
-			columnGap: space.xs,
-		},
+		base: [bubbleRowBase],
 		variants: {
 			fromSelf: {
 				true: { flexDirection: 'row-reverse' },
@@ -114,7 +117,11 @@ export const actions = recipe(
 					transition: 'none',
 					opacity: 1,
 				},
-				'div:hover > &': {
+				[`${MOUSE} ${bubbleRowBase}:hover > &`]: {
+					opacity: 1,
+				},
+				// touch users need persistent actions
+				[`${TOUCH} &`]: {
 					opacity: 1,
 				},
 			},

@@ -13,6 +13,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-casts';
+import { pressable } from '#/lib/browser/interactive';
 import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
 
@@ -121,7 +122,7 @@ function PostInner({
 	return (
 		<GalleryBleed>
 			<BlockLink to={itemTarget} onBeforePress={onBeforePress}>
-				<article className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
+				<article className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style} {...pressable}>
 					<PostLayout.Row>
 						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar

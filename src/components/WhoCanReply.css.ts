@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { MOUSE, PRESSED } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
 export const trigger = style({
@@ -24,7 +25,9 @@ export const triggerAuthor = style({
 
 export const label = style({
 	selectors: {
-		[`${trigger}:hover &, ${trigger}:focus-visible &`]: { textDecoration: 'underline' },
+		[`${MOUSE} ${trigger}:hover &, ${trigger}:focus-visible &, ${trigger}${PRESSED} &`]: {
+			textDecoration: 'underline',
+		},
 	},
 });
 

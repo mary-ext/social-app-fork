@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { MOUSE, PRESSING } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 export const row = style({
@@ -19,7 +20,7 @@ export const row = style({
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover, &:active, &:focus-visible': {
+		[`${MOUSE} &:hover, &:focus-visible, ${PRESSING}`]: {
 			backgroundColor: colors.contrast_25,
 		},
 	},

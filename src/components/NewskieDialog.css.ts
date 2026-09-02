@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { iconSize } from '#/styles/tokens.css';
 
 export const trigger = style({
@@ -15,7 +16,7 @@ export const trigger = style({
 	color: vars.palette.yellow,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover, &:active': { opacity: 0.5 },
+		[hover()]: { opacity: 0.5 },
 		'&:disabled': { cursor: 'default' },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},

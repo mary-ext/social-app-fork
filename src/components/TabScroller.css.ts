@@ -2,6 +2,7 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -59,7 +60,7 @@ export const tab = recipe(
 					outline: `2px solid ${colors.primary_500}`,
 					outlineOffset: -2,
 				},
-				'&:hover, &:active': activeColors,
+				[hover()]: activeColors,
 			},
 		},
 		defaultVariants: { active: false },

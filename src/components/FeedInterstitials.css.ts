@@ -2,6 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -48,7 +49,9 @@ export const seeMoreTrigger = style({
 
 export const seeMoreText = style({
 	selectors: {
-		[`${seeMoreTrigger}:hover &`]: { textDecoration: 'underline' },
+		[hoverWithin(seeMoreTrigger)]: {
+			textDecoration: 'underline',
+		},
 	},
 });
 
@@ -112,7 +115,7 @@ export const cardLink = style({
 	color: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover, &:active': { borderColor: colors.borderContrastHigh },
+		[hover()]: { borderColor: colors.borderContrastHigh },
 	},
 });
 
@@ -130,7 +133,7 @@ export const dismiss = style({
 	color: colors.textContrastMedium,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { color: colors.text },
+		[hover()]: { color: colors.text },
 	},
 });
 

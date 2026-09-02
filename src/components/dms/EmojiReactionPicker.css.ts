@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { emojiFontFamily, iconSize } from '#/styles/tokens.css';
 
 export const trigger = style({
@@ -17,7 +18,7 @@ export const trigger = style({
 	padding: 4,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_25 },
+		[hover()]: { backgroundColor: vars.palette.contrast_25 },
 	},
 });
 
@@ -57,7 +58,7 @@ export const reaction = style({
 	height: 34,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { transform: 'scale(1.1)' },
+		[hover()]: { transform: 'scale(1.1)' },
 		'&:focus-visible': { outline: 'none', borderColor: vars.palette.contrast_1000 },
 	},
 });
@@ -69,7 +70,7 @@ export const reactionSelected = style({
 export const reactionDisabled = style({
 	opacity: 0.7,
 	selectors: {
-		'&:hover': { transform: 'none' },
+		[hover()]: { transform: 'none' },
 	},
 });
 
@@ -92,7 +93,7 @@ export const expandButton = style({
 	color: vars.palette.contrast_700,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_100 },
+		[hover()]: { backgroundColor: vars.palette.contrast_100 },
 		'&:focus-visible': { outline: 'none', borderColor: vars.palette.contrast_1000 },
 	},
 });

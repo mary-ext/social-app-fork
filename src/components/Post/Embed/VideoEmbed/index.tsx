@@ -5,9 +5,9 @@ import type { Did } from '@atcute/lexicons';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { noRowLink } from '#/lib/browser/interactive';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 
-import { noRowLink } from '#/components/BlockLink';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 import {

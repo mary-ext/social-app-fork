@@ -1,12 +1,13 @@
 import { createVar, fallbackVar, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
 import { fontSize, fontWeight, iconSize, lineHeight } from '#/styles/tokens.css';
 
-const HOVER = '&:hover:not(:disabled)';
+const HOVER = hover(':not(:disabled)');
 
 export const SCRIM_BACKGROUND = 'rgba(0, 0, 0, 0.5)';
 

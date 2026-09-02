@@ -4,6 +4,8 @@ import type { HTMLAttributes, Ref } from 'react';
 
 import { clsx } from 'clsx';
 
+import { pressable } from '#/lib/browser/interactive';
+
 import * as css from './PostLayout.css';
 
 /**
@@ -30,7 +32,11 @@ export interface FrameProps extends DivProps {
  */
 export function Frame({ children, className, hoverable, rootPad, topBorder, ...rest }: FrameProps) {
 	return (
-		<div className={clsx(css.frame({ hoverable, rootPad, topBorder }), className)} {...rest}>
+		<div
+			className={clsx(css.frame({ hoverable, rootPad, topBorder }), className)}
+			{...rest}
+			{...(hoverable ? pressable : null)}
+		>
 			{children}
 		</div>
 	);

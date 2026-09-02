@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
+import { hover } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const root = style({
@@ -36,7 +37,9 @@ export const stepper = style({
 	color: '#fff',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover:not(:disabled)': { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+		[hover(':not(:disabled)')]: {
+			backgroundColor: 'rgba(255, 255, 255, 0.3)',
+		},
 		'&:disabled': { opacity: 0.4, cursor: 'default' },
 		'&:focus-visible': { outline: '2px solid #fff', outlineOffset: 2 },
 	},
@@ -114,7 +117,7 @@ export const preset = style({
 	color: '#fff',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+		[hover()]: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
 		'&[aria-pressed="true"]': { backgroundColor: '#fff', color: '#000' },
 		'&:focus-visible': { outline: '2px solid #fff', outlineOffset: 2 },
 	},

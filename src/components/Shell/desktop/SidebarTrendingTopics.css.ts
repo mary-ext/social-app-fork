@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
+import { hoverWithin } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const card = style({
@@ -54,7 +55,10 @@ export const topicName = style({
 	minWidth: 0,
 	color: colors.textContrastMedium,
 	selectors: {
-		[`${topicLink}:hover &`]: { textDecoration: 'underline', color: colors.text },
+		[hoverWithin(topicLink)]: {
+			textDecoration: 'underline',
+			color: colors.text,
+		},
 	},
 });
 

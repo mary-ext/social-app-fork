@@ -2,6 +2,7 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { MOUSE, PRESSED } from '#/styles/interaction';
 import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
@@ -30,7 +31,9 @@ export const bodyLink = style({
 	color: 'inherit',
 	selectors: {
 		[`${isInteractive} &`]: { cursor: 'pointer' },
-		[`${isInteractive} &:hover`]: { backgroundColor: colors.contrast_25 },
+		[`${MOUSE} ${isInteractive} &:hover, ${isInteractive} &${PRESSED}`]: {
+			backgroundColor: colors.contrast_25,
+		},
 		'&:focus-visible': { outline: 'none' },
 	},
 });
@@ -62,8 +65,8 @@ export const articleCard = recipe(
 					isInteractive,
 					{
 						selectors: {
-							[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
-							[`&:has(${bodyLink}:active)`]: { backgroundColor: colors.bg },
+							[`${MOUSE} &:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
+							[`&:has(${bodyLink}${PRESSED})`]: { backgroundColor: colors.bg },
 						},
 					},
 				],
@@ -86,7 +89,9 @@ export const bodyMedia = style({
 	borderTopStyle: 'solid',
 	borderTopColor: colors.borderContrastLow,
 	selectors: {
-		[`${isInteractive} ${bodyLink}:hover &`]: { borderTopColor: colors.borderContrastHigh },
+		[`${MOUSE} ${isInteractive} ${bodyLink}:hover &, ${isInteractive} ${bodyLink}${PRESSED} &`]: {
+			borderTopColor: colors.borderContrastHigh,
+		},
 	},
 });
 
@@ -231,7 +236,9 @@ export const footer = style({
 	justifyContent: 'space-between',
 	padding: space.md,
 	selectors: {
-		[`${isInteractive} ${bodyLink}:hover ~ &`]: { backgroundColor: colors.contrast_25 },
+		[`${MOUSE} ${isInteractive} ${bodyLink}:hover ~ &, ${isInteractive} ${bodyLink}${PRESSED} ~ &`]: {
+			backgroundColor: colors.contrast_25,
+		},
 	},
 	'@media': {
 		[gtPhone]: { flexDirection: 'row', gap: space.sm },
@@ -264,7 +271,8 @@ export const footerIdentity = style({
 
 export const footerTitle = style({
 	selectors: {
-		[`${isInteractive} ${footerFill}:hover ~ ${footerIdentity} &`]: { textDecoration: 'underline' },
+		[`${MOUSE} ${isInteractive} ${footerFill}:hover ~ ${footerIdentity} &, ${isInteractive} ${footerFill}${PRESSED} ~ ${footerIdentity} &`]:
+			{ textDecoration: 'underline' },
 	},
 });
 
@@ -302,11 +310,11 @@ export const publicationCard = recipe(
 					isInteractive,
 					{
 						selectors: {
-							[`&:has(${pubFill}:hover)`]: {
+							[`${MOUSE} &:has(${pubFill}:hover)`]: {
 								borderColor: colors.borderContrastHigh,
 								backgroundColor: colors.contrast_25,
 							},
-							[`&:has(${pubFill}:active)`]: { backgroundColor: colors.bg },
+							[`&:has(${pubFill}${PRESSED})`]: { backgroundColor: colors.bg },
 						},
 					},
 				],

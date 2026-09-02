@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 
 export const link = style({
 	display: 'flex',
@@ -13,7 +14,7 @@ export const link = style({
 	textDecoration: 'none',
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': {
+		[hover()]: {
 			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
 		},
 	},

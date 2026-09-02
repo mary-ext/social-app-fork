@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover, hoverWithin } from '#/styles/interaction';
 import { iconSize } from '#/styles/tokens.css';
 
 const viewBase = {
@@ -36,7 +37,7 @@ export const blurButton = style({
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
 		},
-		'&:hover, &:active': {
+		[hover()]: {
 			backgroundColor: vars.palette.contrast_50,
 		},
 	},
@@ -85,7 +86,7 @@ export const learnMoreLink = style({
 		[`${learnMoreButton}:focus-visible &`]: {
 			textDecoration: 'underline',
 		},
-		[`${learnMoreButton}:hover &`]: {
+		[hoverWithin(learnMoreButton)]: {
 			textDecoration: 'underline',
 		},
 	},

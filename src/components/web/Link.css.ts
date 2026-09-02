@@ -1,3 +1,4 @@
+import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 
@@ -22,7 +23,7 @@ export const inlineLink = recipe(
 				hover: {
 					selectors: {
 						'&:focus-visible': { textDecoration: 'underline' },
-						'&:hover': { textDecoration: 'underline' },
+						[hover()]: { textDecoration: 'underline' },
 					},
 				},
 				none: {},

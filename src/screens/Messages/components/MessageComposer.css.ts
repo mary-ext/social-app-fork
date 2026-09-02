@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -76,7 +77,7 @@ export const emojiButton = style({
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	selectors: {
-		'&:hover': { color: vars.palette.primary_500 },
+		[hover()]: { color: vars.palette.primary_500 },
 		'&:focus-visible': { color: vars.palette.primary_500 },
 		'&[data-popup-open]': { color: vars.palette.primary_500 },
 	},
