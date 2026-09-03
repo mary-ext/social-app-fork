@@ -7,6 +7,7 @@ trustPolicyIgnoreAfter: 10080
 
 overrides:
   '@types/estree': '1.0.6'
+  'rolldown': '1.2.5'
 
 allowBuilds:
   'core-js-pure': true
@@ -22,8 +23,6 @@ minimumReleaseAgeExclude:
   - '@mary-ext/*'
   - '@jsr/mary__*'
   - '@vitejs/plugin-react@6.1.0'
-  - 'rolldown'
-  - '@rolldown/*'
 
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
