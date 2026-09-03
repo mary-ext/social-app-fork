@@ -59,7 +59,7 @@
 			}
 		}
 	],
-	"screens.profile.feed.loadError": "Could not load feed",
+	"screens.profile.feed.loadError": "Couldn't load feed",
 	"screens.profile.feed.options": "Feed options",
 	"screens.profile.feed.pinnedToast": "Pinned {name} to home",
 	"screens.profile.feed.unpinnedToast": "Unpinned {name} from home",
@@ -122,7 +122,7 @@
 	"screens.profile.labeler.action.viewProfile": "View profile",
 	"screens.profile.labeler.availableLabels": "Available labels",
 	"screens.profile.labeler.blockHint": "Blocking does not prevent this labeler from placing labels on your account.",
-	"screens.profile.labeler.error.serviceLoad": "Hmmmm, we couldn't load that moderation service.",
+	"screens.profile.labeler.error.serviceLoad": "Moderation service unavailable",
 	"screens.profile.labeler.error.subscribeLimit": [
 		{
 			"declarations": ["input limit", "local n = limit: number"],
@@ -133,7 +133,7 @@
 		}
 	],
 	"screens.profile.labeler.error.subscribeLimitTitle": "Unable to subscribe",
-	"screens.profile.labeler.error.unavailable": "This moderation service is unavailable. See below for more details. If this issue persists, contact us.",
+	"screens.profile.labeler.error.unavailable": "Try again later. The service may be temporarily unavailable.",
 	"screens.profile.labeler.lastUpdated": "Last updated: {date}",
 	"screens.profile.labeler.noLabelsDeclared": "This labeler hasn't declared what labels it publishes, and may not be active.",
 	"screens.profile.labeler.subscribe.confirm.message": "Labels published by this service will start applying to accounts and posts, and some content may be hidden as a result.",

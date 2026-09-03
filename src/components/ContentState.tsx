@@ -95,7 +95,7 @@ export function ContentState({
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
-					<Layout.Header.TitleText>{headerTitle ?? m['common.error.heading']()}</Layout.Header.TitleText>
+					{headerTitle && <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>}
 				</Layout.Header.Content>
 			</Layout.Header.Outer>
 			{block}

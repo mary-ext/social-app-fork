@@ -73,7 +73,15 @@ function LoadFailed({ onRetry }: { onRetry: () => void }) {
 }
 
 function NotFound() {
-	return <NotFoundState standalone headerTitle={m['common.starterPack.label']()} actions={<GoHome />} />;
+	return (
+		<NotFoundState
+			standalone
+			headerTitle={m['common.starterPack.label']()}
+			title={m['screens.starterPack.error.notFoundTitle']()}
+			message={m['screens.starterPack.error.notFound']()}
+			actions={<GoHome />}
+		/>
+	);
 }
 
 export function StarterPackScreenShort() {

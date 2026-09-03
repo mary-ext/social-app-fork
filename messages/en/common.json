@@ -149,7 +149,7 @@
 	"common.error.oops": "Oops!",
 	"common.error.pageNotFound": "Page not found",
 	"common.error.serverContact": "There was an issue contacting the server",
-	"common.error.unexpected": "There was an unexpected issue in the application. Please let us know if this happened to you!",
+	"common.error.unexpected": "The app ran into an unexpected problem. Try reloading the page.",
 	"common.error.whoops": "Whoops!",
 	"common.feeds.action.add": "Add this feed to your feeds",
 	"common.feeds.action.applyRecommended": "Apply default recommended feeds",

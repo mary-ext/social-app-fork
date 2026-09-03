@@ -109,7 +109,13 @@ export function Wizard() {
 		if (!loadError || isNotFoundResponse(loadError)) {
 			return (
 				<Layout.Screen>
-					<NotFoundState actions={<GoHome />} headerTitle={m['common.starterPack.label']()} standalone />
+					<NotFoundState
+						standalone
+						headerTitle={m['common.starterPack.label']()}
+						title={m['screens.starterPack.error.notFoundTitle']()}
+						message={m['screens.starterPack.error.notFound']()}
+						actions={<GoHome />}
+					/>
 				</Layout.Screen>
 			);
 		}

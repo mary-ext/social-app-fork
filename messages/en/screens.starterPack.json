@@ -11,8 +11,8 @@
 	"screens.starterPack.error.create": "Failed to create starter pack",
 	"screens.starterPack.error.invalid": "Starter pack is invalid",
 	"screens.starterPack.error.invalidLong": "The starter pack that you are trying to view is invalid. You may delete this starter pack instead.",
-	"screens.starterPack.error.load": "Couldn't load this starter pack",
-	"screens.starterPack.error.notFound": "That starter pack could not be found.",
+	"screens.starterPack.error.load": "Couldn't load starter pack",
+	"screens.starterPack.error.notFound": "It may have been deleted or the link may be invalid.",
 	"screens.starterPack.feeds.addHint": "Add some feeds to your starter pack!",
 	"screens.starterPack.feeds.choose": "Choose feeds",
 	"screens.starterPack.feeds.max": [
@@ -120,6 +120,7 @@
 	"screens.starterPack.share.description": "My favorite feeds and people - join me!",
 	"screens.starterPack.share.descriptionNamed": "{name}'s favorite feeds and people - join me!",
 	"screens.starterPack.tagline": "Invites, but personal",
-	"screens.starterPack.error.cannotEdit": "You can't edit this starter pack",
-	"screens.starterPack.error.notOwner": "Starter packs can only be edited by the person who created them."
+	"screens.starterPack.error.cannotEdit": "Can't edit starter pack",
+	"screens.starterPack.error.notOwner": "Only the creator can edit this starter pack.",
+	"screens.starterPack.error.notFoundTitle": "Starter pack not found"
 }

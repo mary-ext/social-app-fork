@@ -148,7 +148,7 @@
 	"components.moderation.report.details.labelOptional": "Additional details (optional)",
 	"components.moderation.report.details.placeholder": "Add any context that would help the moderators.",
 	"components.moderation.report.error.accountSuspended": "Your account cannot submit reports while it is suspended.",
-	"components.moderation.report.error.dataInvalid": "Something wasn't quite right with the data you're trying to report. Please contact support.",
+	"components.moderation.report.error.dataInvalid": "This item can't be reported because its data is invalid.",
 	"components.moderation.report.error.detailsOverLimit": "Details are over the character limit.",
 	"components.moderation.report.error.invalidSubject": "Invalid report subject",
 	"components.moderation.report.error.mustSignIn": "You must be signed in to submit a report",

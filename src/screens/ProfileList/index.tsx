@@ -58,22 +58,15 @@ function ProfileListScreenInner() {
 	if (resolveError) {
 		return (
 			<ErrorState
-				headerTitle={m['screens.profileList.error.loadFailed']()}
-				message={m['screens.profileList.error.resolveFailed']({ handle: actor })}
 				standalone
 				title={m['screens.profileList.error.loadFailed']()}
+				message={m['screens.profileList.error.resolveFailed']()}
 			/>
 		);
 	}
 
 	if (listError) {
-		return (
-			<ErrorState
-				headerTitle={m['screens.profileList.error.loadFailed']()}
-				standalone
-				title={m['screens.profileList.error.loadFailed']()}
-			/>
-		);
+		return <ErrorState standalone title={m['screens.profileList.error.loadFailed']()} />;
 	}
 
 	if (!list || !moderationOpts || !preferences) {
