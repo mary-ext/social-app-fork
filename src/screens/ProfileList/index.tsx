@@ -3,7 +3,6 @@ import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bl
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { cleanError } from '#/lib/errors';
 import { useElementHeight } from '#/lib/hooks/use-element-height';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -20,6 +19,7 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
+import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
 import * as Hider from '#/components/moderation/Hider';
 import { Tabs } from '#/components/Tabs';
@@ -30,7 +30,6 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
 import { AboutSection } from './AboutSection';
-import { ErrorScreen } from './components/ErrorScreen';
 import { Header } from './components/Header';
 import { ListHiddenScreen } from './components/ListHiddenScreen';
 import { FeedSection } from './FeedSection';
@@ -58,33 +57,22 @@ function ProfileListScreenInner() {
 
 	if (resolveError) {
 		return (
-			<>
-				<Layout.Header.Outer>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content>
-						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
-					</Layout.Header.Content>
-				</Layout.Header.Outer>
-				<Layout.Content>
-					<ErrorScreen error={m['screens.profileList.error.resolveFailed']({ handle: actor })} />
-				</Layout.Content>
-			</>
+			<ErrorState
+				headerTitle={m['screens.profileList.error.loadFailed']()}
+				message={m['screens.profileList.error.resolveFailed']({ handle: actor })}
+				standalone
+				title={m['screens.profileList.error.loadFailed']()}
+			/>
 		);
 	}
 
 	if (listError) {
 		return (
-			<>
-				<Layout.Header.Outer>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content>
-						<Layout.Header.TitleText>{m['screens.profileList.error.loadFailed']()}</Layout.Header.TitleText>
-					</Layout.Header.Content>
-				</Layout.Header.Outer>
-				<Layout.Content>
-					<ErrorScreen error={cleanError(listError)} />
-				</Layout.Content>
-			</>
+			<ErrorState
+				headerTitle={m['screens.profileList.error.loadFailed']()}
+				standalone
+				title={m['screens.profileList.error.loadFailed']()}
+			/>
 		);
 	}
 

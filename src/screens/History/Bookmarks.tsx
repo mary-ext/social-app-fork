@@ -8,9 +8,10 @@ import { cleanError } from '#/lib/errors';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
+import { GoHome } from '#/components/GoHome';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
@@ -23,7 +24,6 @@ import BookmarkFilled from '#/icons/central/Bookmark_round_filled_radius1_stroke
 import BookmarkDeleteLarge from '#/icons/central/BookmarkDelete_round_outlined_radius3_stroke1.svg';
 import QuestionIcon from '#/icons/central/CircleQuestionmark_round_outlined_radius3_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
 
 import * as css from './Bookmarks.css';
 
@@ -62,7 +62,6 @@ function renderItem({ index, item }: ListRenderItemInfo<ListItem>) {
 const keyExtractor = (item: ListItem) => item.key;
 
 export function BookmarksTab() {
-	const router = useRouter();
 	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } = useBookmarksQuery();
 
 	const items =
@@ -89,7 +88,7 @@ export function BookmarksTab() {
 
 	if (items.length < 1) {
 		if (isError) {
-			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
@@ -97,18 +96,7 @@ export function BookmarksTab() {
 		}
 
 		return (
-			<ListEmpty
-				className={css.empty}
-				icon={BookmarkDeleteLarge}
-				message={m['screens.bookmarks.empty']()}
-				button={{
-					label: m['screens.bookmarks.backHome'](),
-					text: m['common.action.goHome'](),
-					onPress: () => router.navigate({ to: { name: 'Home' } }),
-					size: 'small',
-					color: 'secondary',
-				}}
-			/>
+			<BlankState actions={<GoHome />} icon={BookmarkDeleteLarge} message={m['screens.bookmarks.empty']()} />
 		);
 	}
 

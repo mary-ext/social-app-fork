@@ -2,7 +2,6 @@ import { type Ref, useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { ClientResponseError } from '@atcute/client';
 
 import { definite, mapDefined } from '@mary/array-fns';
 
@@ -10,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
+import { isNotFoundResponse } from '#/lib/errors';
 import { useElementHeight } from '#/lib/hooks/use-element-height';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
@@ -72,11 +72,6 @@ function LoadFailed({ onRetry }: { onRetry: () => void }) {
 	);
 }
 
-// missing packs may arrive as InvalidRequest with "not found" in the description
-function isMissingRecord(error: unknown) {
-	return error instanceof ClientResponseError && !!error.description?.includes('not found');
-}
-
 function NotFound() {
 	return <NotFoundState standalone headerTitle={m['common.starterPack.label']()} actions={<GoHome />} />;
 }
@@ -95,14 +90,7 @@ export function StarterPackScreenShort() {
 	if (isLoading || isError || !resolvedStarterPack) {
 		return (
 			<Layout.Screen>
-				{isLoading ? (
-					<ListLoading />
-				) : isError ? (
-					<LoadFailed onRetry={() => void refetch()} />
-				) : (
-					// `resolveShortLink` returns undefined for invalid links and fetch failures
-					<NotFound />
-				)}
+				{isLoading ? <ListLoading /> : isError ? <LoadFailed onRetry={() => void refetch()} /> : <NotFound />}
 			</Layout.Screen>
 		);
 	}
@@ -143,7 +131,7 @@ export function StarterPackScreenInner({
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		if (isErrorDid || isErrorStarterPack) {
 			// missing records are not retryable
-			if (isMissingRecord(didError) || isMissingRecord(starterPackError)) {
+			if (isNotFoundResponse(didError) || isNotFoundResponse(starterPackError)) {
 				return <NotFound />;
 			}
 

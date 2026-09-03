@@ -12,7 +12,7 @@ import { useProfileUpdateMutation } from '#/state/queries/profile';
 import * as Dialog from '#/components/Dialog';
 import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
-import { ErrorMessage } from '#/components/ErrorMessage';
+import { Notice } from '#/components/Notice';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
@@ -202,15 +202,9 @@ function DialogInner({
 				</div>
 
 				{isUpdateProfileError && (
-					<div className={styles.errorWrap}>
-						<ErrorMessage message={cleanError(updateProfileError)} />
-					</div>
+					<Notice className={styles.errorWrap}>{cleanError(updateProfileError)}</Notice>
 				)}
-				{imageError !== '' && (
-					<div className={styles.errorWrap}>
-						<ErrorMessage message={imageError} />
-					</div>
-				)}
+				{imageError !== '' && <Notice className={styles.errorWrap}>{imageError}</Notice>}
 
 				<div className={styles.fields}>
 					<TextField.Root isInvalid={displayNameTooLong}>

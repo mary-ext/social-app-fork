@@ -8,7 +8,7 @@ import { useTitle } from '#/state/use-title';
 
 import { SearchHeader } from '#/screens/Search/SearchHeader';
 
-import { EmptyState } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
 import * as Layout from '#/components/web/Layout';
 
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
@@ -43,13 +43,7 @@ export function ExploreScreen() {
 				{hasSession ? (
 					<Explore focusSearchInput={focusSearchInput} />
 				) : (
-					<EmptyState
-						icon={MagnifyingGlassIcon}
-						iconColor="textContrastMedium"
-						iconSize="_4xl"
-						message={m['screens.search.input.description']()}
-						messageColor="textContrastMedium"
-					/>
+					<BlankState icon={MagnifyingGlassIcon} message={m['screens.search.input.description']()} />
 				)}
 			</div>
 		</Layout.Screen>

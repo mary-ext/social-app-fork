@@ -5,6 +5,7 @@ import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeRecordUri } from '#/lib/at-uri';
+import { isAbortError } from '#/lib/errors';
 import type { Gif } from '#/lib/gif';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
@@ -72,7 +73,13 @@ export class EmbeddingDisabledError extends Error {
 export async function resolveLink(appview: Client, uri: string, signal?: AbortSignal): Promise<ResolvedLink> {
 	let link = resolveUrlToLink(uri);
 	if (link?.kind === 'bskyStarterPackCode') {
-		const expanded = await resolveShortLink(link.code, signal);
+		// propagate cancellation; treat other failures as unresolved links
+		const expanded = await resolveShortLink(link.code, signal).catch((err: unknown) => {
+			if (isAbortError(err)) {
+				throw err;
+			}
+			return undefined;
+		});
 
 		if (expanded) {
 			uri = expanded;

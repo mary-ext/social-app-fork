@@ -13,7 +13,7 @@ import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/lang
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { ErrorBoundaryFallback } from '#/components/ErrorBoundaryFallback';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Text';
@@ -237,21 +237,5 @@ function Empty({ message }: { message: string }) {
 }
 
 function DialogError({ handle, details }: { handle: Dialog.DialogHandle; details?: string }) {
-	return (
-		<div className={styles.error}>
-			<ErrorScreen
-				title={m['common.error.ohNo']()}
-				message={m['common.error.unexpected']()}
-				details={details}
-			/>
-			<Button
-				label={m['common.a11y.closeDialog']()}
-				onClick={() => handle.close()}
-				color="primary"
-				size="large"
-			>
-				<ButtonText>{m['common.action.close']()}</ButtonText>
-			</Button>
-		</div>
-	);
+	return <ErrorBoundaryFallback details={details} onClose={() => handle.close()} />;
 }

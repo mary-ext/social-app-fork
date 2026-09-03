@@ -13,7 +13,7 @@ import { definite } from '@mary/array-fns';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { combinedDisplayName, isInvalidHandle } from '#/lib/display-names';
-import { cleanError } from '#/lib/errors';
+import { isNotFoundResponse } from '#/lib/errors';
 import { useElementHeight } from '#/lib/hooks/use-element-height';
 import { profileTarget } from '#/lib/routes/targets';
 
@@ -35,9 +35,11 @@ import { ProfileCollectionsSection } from '#/screens/Profile/Sections/Collection
 import { ProfileMediaFilter, ProfileMediaSection } from '#/screens/Profile/Sections/Media';
 import { ProfilePostsFilter, ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
 
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
+import { GoHome } from '#/components/GoHome';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
+import { NotFoundState } from '#/components/NotFoundState';
 import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
@@ -112,14 +114,12 @@ function ProfileScreenInner() {
 		);
 	}
 	if (resolveError || profileError) {
-		return (
-			<ErrorScreen
-				title={profileError ? m['common.error.notFound']() : m['common.error.oops']()}
-				message={cleanError(resolveError || profileError)}
-				onPressTryAgain={onPressTryAgain}
-				showHeader
-			/>
-		);
+		// unresolved handles remain retryable
+		if (isNotFoundResponse(profileError)) {
+			return <NotFoundState standalone actions={<GoHome />} />;
+		}
+
+		return <ErrorState onRetry={onPressTryAgain} standalone />;
 	}
 	if (profile && moderationOpts) {
 		return (
@@ -131,14 +131,7 @@ function ProfileScreenInner() {
 		);
 	}
 	// should never happen
-	return (
-		<ErrorScreen
-			title="Oops!"
-			message="Something went wrong and we're not sure what."
-			onPressTryAgain={onPressTryAgain}
-			showHeader
-		/>
-	);
+	return <ErrorState onRetry={onPressTryAgain} standalone />;
 }
 
 function ProfileScreenLoaded({

@@ -21,7 +21,7 @@ import * as Dialog from '#/components/Dialog';
 import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
-import { Error } from '#/components/Error';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import * as Prompt from '#/components/Prompt';
@@ -92,7 +92,6 @@ export function MessagesConversationSettingsScreen() {
 }
 
 function SettingsInner({ convoId }: { convoId: string }) {
-	const router = useRouter();
 	const { currentAccount } = useSession();
 	const { data: convoData, error, refetch } = useConvoQuery({ convoId });
 
@@ -100,11 +99,7 @@ function SettingsInner({ convoId }: { convoId: string }) {
 
 	if (error) {
 		return (
-			<Error
-				title={m['common.error.generic']()}
-				message={m['screens.messages.chatSettings.loadError']()}
-				onRetry={() => refetch()}
-			/>
+			<ErrorState message={m['screens.messages.chatSettings.loadError']()} onRetry={() => void refetch()} />
 		);
 	}
 
@@ -118,16 +113,9 @@ function SettingsInner({ convoId }: { convoId: string }) {
 
 	if (convo.kind !== 'group') {
 		return (
-			<Error
-				title={m['screens.messages.conversation.wrongTypeError']()}
+			<ErrorState
 				message={m['screens.messages.conversation.groupOnlyError']()}
-				onGoBack={() => {
-					if (router.canGoBack) {
-						router.back();
-					} else {
-						router.navigate({ replace: true, to: { name: 'Messages' } });
-					}
-				}}
+				title={m['screens.messages.conversation.wrongTypeError']()}
 			/>
 		);
 	}

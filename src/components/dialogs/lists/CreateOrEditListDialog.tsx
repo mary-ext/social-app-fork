@@ -15,7 +15,7 @@ import { getClients } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
-import { ErrorMessage } from '#/components/ErrorMessage';
+import { Notice } from '#/components/Notice';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
@@ -295,21 +295,9 @@ function DialogInner({
 			</Dialog.Header.Outer>
 
 			<Dialog.Body>
-				{isUpdateListError && (
-					<div className={styles.errorWrap}>
-						<ErrorMessage message={cleanError(updateListError)} />
-					</div>
-				)}
-				{isCreateListError && (
-					<div className={styles.errorWrap}>
-						<ErrorMessage message={cleanError(createListError)} />
-					</div>
-				)}
-				{imageError !== '' && (
-					<div className={styles.errorWrap}>
-						<ErrorMessage message={imageError} />
-					</div>
-				)}
+				{isUpdateListError && <Notice className={styles.errorWrap}>{cleanError(updateListError)}</Notice>}
+				{isCreateListError && <Notice className={styles.errorWrap}>{cleanError(createListError)}</Notice>}
+				{imageError !== '' && <Notice className={styles.errorWrap}>{imageError}</Notice>}
 
 				<div className={styles.fields}>
 					<div>

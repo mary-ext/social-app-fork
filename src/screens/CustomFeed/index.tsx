@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { makeRecordUri } from '#/lib/at-uri';
 import { TRENDING_DID } from '#/lib/constants/feeds';
-import { cleanError } from '#/lib/errors';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
@@ -19,8 +18,8 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { CustomFeedHeader, CustomFeedHeaderSkeleton } from '#/screens/CustomFeed/components/CustomFeedHeader';
 
-import { EmptyState } from '#/components/EmptyState';
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
@@ -43,12 +42,7 @@ export function CustomFeedScreen() {
 	if (error && !isRefetching) {
 		return (
 			<Layout.Screen>
-				<ErrorScreen
-					showHeader
-					title={m['screens.profile.feed.loadError']()}
-					message={cleanError(error)}
-					onPressTryAgain={() => void refetch()}
-				/>
+				<ErrorState onRetry={() => void refetch()} standalone title={m['screens.profile.feed.loadError']()} />
 			</Layout.Screen>
 		);
 	}
@@ -70,7 +64,7 @@ export function CustomFeedScreen() {
 }
 
 function renderPostsEmpty() {
-	return <EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />;
+	return <BlankState icon={HashtagWideIcon} message={m['common.feeds.empty']()} />;
 }
 
 function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {

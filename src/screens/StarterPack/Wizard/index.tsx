@@ -6,6 +6,7 @@ import { useParams, useRoute } from '@oomfware/stacker';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
 import { sanitizeDisplayName } from '#/lib/display-names';
+import { isNotFoundResponse } from '#/lib/errors';
 import { prefetchImage } from '#/lib/media/prefetch';
 import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/starter-pack';
@@ -31,8 +32,10 @@ import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
 import * as Dialog from '#/components/Dialog';
 import { markStarterPackCreated } from '#/components/dialogs/starter-pack-dialog-reopen';
-import { ListError } from '#/components/List/ListError';
+import { ErrorState } from '#/components/ErrorState';
+import { GoHome } from '#/components/GoHome';
 import { ListLoading } from '#/components/List/ListLoading';
+import { NotFoundState } from '#/components/NotFoundState';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -64,38 +67,82 @@ export function Wizard() {
 	// Use targetDid if provided (from dialog), otherwise use current account
 	const profileDid = targetDid || currentAccount!.did;
 
-	const { data: starterPack, isLoading: isLoadingStarterPack } = useStarterPackQuery({
+	const {
+		data: starterPack,
+		error: starterPackError,
+		isLoading: isLoadingStarterPack,
+		refetch: refetchStarterPack,
+	} = useStarterPackQuery({
 		did: currentAccount!.did,
 		rkey,
 	});
 	const listUri = starterPack?.list?.uri;
 
-	const { data: listItems, isLoading: isLoadingProfiles } = useAllListMembersQuery(listUri);
+	const {
+		data: listItems,
+		error: listItemsError,
+		isLoading: isLoadingProfiles,
+		refetch: refetchListItems,
+	} = useAllListMembersQuery(listUri);
 
-	const { data: profile, isLoading: isLoadingProfile } = useProfileQuery({ did: profileDid });
+	const {
+		data: profile,
+		error: profileError,
+		isLoading: isLoadingProfile,
+		refetch: refetchProfile,
+	} = useProfileQuery({ did: profileDid });
 
 	const isEdit = !!rkey;
 	const isReady = (!isEdit || (isEdit && starterPack && listItems)) && profile && moderationOpts;
 
 	if (!isReady) {
+		if (isLoadingStarterPack || isLoadingProfiles || isLoadingProfile) {
+			return (
+				<Layout.Screen>
+					<ListLoading />
+				</Layout.Screen>
+			);
+		}
+
+		const loadError = starterPackError || listItemsError || profileError;
+
+		if (!loadError || isNotFoundResponse(loadError)) {
+			return (
+				<Layout.Screen>
+					<NotFoundState actions={<GoHome />} headerTitle={m['common.starterPack.label']()} standalone />
+				</Layout.Screen>
+			);
+		}
+
 		return (
 			<Layout.Screen>
-				{isLoadingStarterPack || isLoadingProfiles || isLoadingProfile ? (
-					<ListLoading />
-				) : (
-					<ListError
-						message={m['screens.starterPack.error.notFound']()}
-						title={m['common.error.pageNotFound']()}
-					/>
-				)}
+				<ErrorState
+					headerTitle={m['common.starterPack.label']()}
+					onRetry={() => {
+						if (starterPackError) {
+							void refetchStarterPack();
+						} else if (listItemsError) {
+							void refetchListItems();
+						} else {
+							void refetchProfile();
+						}
+					}}
+					standalone
+					title={m['screens.starterPack.error.load']()}
+				/>
 			</Layout.Screen>
 		);
-	} else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
+	}
+
+	if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
 		return (
 			<Layout.Screen>
-				<ListError
-					message={m['screens.starterPack.error.notFound']()}
-					title={m['common.error.pageNotFound']()}
+				<ErrorState
+					actions={<GoHome />}
+					headerTitle={m['common.starterPack.label']()}
+					message={m['screens.starterPack.error.notOwner']()}
+					standalone
+					title={m['screens.starterPack.error.cannotEdit']()}
 				/>
 			</Layout.Screen>
 		);

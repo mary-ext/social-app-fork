@@ -8,7 +8,6 @@ import { mapDefined, unique } from '@mary/array-fns';
 
 import { MAX_LABELERS } from '#/lib/constants/profile';
 import { combinedDisplayName, profileDisplayName } from '#/lib/display-names';
-import { cleanError } from '#/lib/errors';
 import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation/labelers';
 import { profileTarget } from '#/lib/routes/targets';
 
@@ -21,7 +20,7 @@ import { useTitle } from '#/state/use-title';
 import { dateTimeLong } from '#/locale/intl/datetime';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { ErrorState } from '#/components/ErrorState';
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
@@ -75,10 +74,9 @@ export function ProfileLabelsScreen() {
 					<LabelerDetails labeler={labeler} />
 				) : (
 					// a did that resolves but publishes no service arrives here without an error
-					<ErrorScreen
-						title={m['screens.profile.labeler.error.serviceLoad']()}
+					<ErrorState
 						message={m['screens.profile.labeler.error.unavailable']()}
-						details={cleanError(error) || m['common.error.generic']()}
+						title={m['screens.profile.labeler.error.serviceLoad']()}
 					/>
 				)}
 			</Layout.Content>

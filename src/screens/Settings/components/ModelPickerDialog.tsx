@@ -8,11 +8,11 @@ import type { AiModality, AiModelOffer } from '#/lib/lexicons';
 
 import { useAiModelsQuery } from '#/state/queries/ai-catalog';
 
+import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
 import type { ListMethods } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
@@ -225,7 +225,7 @@ const DialogInner = ({
 							)}
 							<Combobox.Empty>
 								{!isLoading && statusText === undefined && (
-									<ListEmpty icon={emptyIcon} message={emptyMessage} />
+									<BlankState icon={emptyIcon} message={emptyMessage} />
 								)}
 							</Combobox.Empty>
 						</>

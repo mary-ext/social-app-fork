@@ -48,24 +48,21 @@ export function errorToString(error: unknown): string {
  * @param str the stringified error
  * @returns the localized message, or undefined
  */
-function localizeError(str: string): string | undefined {
+function localizeError(error: unknown, str: string): string | undefined {
 	if (isNetworkError(str)) {
 		return m['lib.error.connectionFailed']();
 	}
-	if (
-		str.includes('Upstream Failure') ||
-		str.includes('NotEnoughResources') ||
-		str.includes('pipethrough network error')
-	) {
+	if (str.includes('Upstream Failure') || str.includes('NotEnoughResources')) {
 		return m['lib.error.serverIssues']();
 	}
 	if (str.includes('Rate Limit Exceeded')) {
 		return m['lib.error.rateLimit']();
 	}
-	if (str.includes('Account has been suspended')) {
+	// account status errors use declared names
+	if (isErrorNamed(error, 'AccountTakedown')) {
 		return m['lib.account.error.suspended']();
 	}
-	if (str.includes('Account is deactivated')) {
+	if (isErrorNamed(error, 'AccountDeactivated')) {
 		return m['lib.account.error.deactivated']();
 	}
 	if (str.includes('Profile not found')) {
@@ -75,6 +72,10 @@ function localizeError(str: string): string | undefined {
 		return m['lib.error.handleResolveFailed']();
 	}
 	return undefined;
+}
+
+function isErrorNamed(e: unknown, name: string) {
+	return e instanceof ClientResponseError && e.error === name;
 }
 
 /**
@@ -96,7 +97,7 @@ export function describeError(error: unknown): {
 	const str = errorToString(error);
 	return {
 		raw: str.startsWith('Error: ') ? str.slice('Error: '.length) : str,
-		clean: localizeError(str),
+		clean: localizeError(error, str),
 	};
 }
 
@@ -168,11 +169,21 @@ export function shouldRetryError(e: unknown) {
  * @returns whether the record was not found
  */
 export function isRecordNotFoundError(e: unknown) {
-	if (e instanceof ClientResponseError && e.error === 'RecordNotFound') {
+	if (isErrorNamed(e, 'RecordNotFound')) {
 		return true;
 	}
 	// older PDS versions report the miss only in the message.
 	return e instanceof Error && e.message.includes('Could not locate record');
+}
+
+/**
+ * checks whether a response reports a missing subject.
+ *
+ * @param e the thrown value to check
+ * @returns whether the subject was not found
+ */
+export function isNotFoundResponse(e: unknown) {
+	return e instanceof ClientResponseError && !!e.description?.includes('not found');
 }
 
 /**

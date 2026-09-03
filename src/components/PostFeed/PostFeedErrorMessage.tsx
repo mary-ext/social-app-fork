@@ -12,8 +12,8 @@ import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
-import { EmptyState } from '#/components/EmptyState';
-import { ErrorMessage } from '#/components/ErrorMessage';
+import { BlankState } from '#/components/BlankState';
+import { Notice } from '#/components/Notice';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -40,6 +40,14 @@ export function PostFeedErrorMessage({
 }) {
 	const knownError = detectKnownError(feedDesc, error);
 
+	if (knownError === PostFeedErrorCode.FeedTooManyRequests) {
+		return (
+			<Notice className={css.notice} onRetry={onPressTryAgain}>
+				{m['view.posts.feed.error.highTraffic']()}
+			</Notice>
+		);
+	}
+
 	if (
 		typeof knownError !== 'undefined' &&
 		knownError !== PostFeedErrorCode.Unknown &&
@@ -57,17 +65,14 @@ export function PostFeedErrorMessage({
 	}
 
 	if (knownError === PostFeedErrorCode.Block) {
-		return (
-			<EmptyState
-				icon={WarningIcon}
-				iconSize="_2xl"
-				message={m['view.posts.moderation.hidden']()}
-				className={css.empty}
-			/>
-		);
+		return <BlankState icon={WarningIcon} message={m['view.posts.moderation.hidden']()} />;
 	}
 
-	return <ErrorMessage message={cleanError(error)} onPressTryAgain={onPressTryAgain} />;
+	return (
+		<Notice className={css.notice} onRetry={onPressTryAgain}>
+			{cleanError(error)}
+		</Notice>
+	);
 }
 
 function FeedgenErrorMessage({
@@ -78,14 +83,13 @@ function FeedgenErrorMessage({
 	topBorder,
 }: {
 	feedDesc: Extract<FeedDescriptor, { type: 'feedgen' }>;
-	knownError: PostFeedErrorCode;
+	knownError: Exclude<PostFeedErrorCode, PostFeedErrorCode.FeedTooManyRequests | PostFeedErrorCode.Unknown>;
 	rawError?: Error;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	topBorder: boolean;
 }) {
 	const router = useRouter();
 	const msg = {
-		[PostFeedErrorCode.Unknown]: '',
 		[PostFeedErrorCode.Block]: '',
 		[PostFeedErrorCode.FeedgenDoesNotExist]: m['view.posts.feed.error.notFound'](),
 		[PostFeedErrorCode.FeedgenMisconfigured]: m['view.posts.feed.error.misconfigured'](),
@@ -93,7 +97,6 @@ function FeedgenErrorMessage({
 		[PostFeedErrorCode.FeedgenOffline]: m['view.posts.feed.error.offline'](),
 		[PostFeedErrorCode.FeedSignedInOnly]: m['view.posts.feed.requiresAccount'](),
 		[PostFeedErrorCode.FeedgenUnknown]: m['view.posts.feed.error.serverRequest'](),
-		[PostFeedErrorCode.FeedTooManyRequests]: m['view.posts.feed.error.highTraffic'](),
 	}[knownError];
 	const ownerDid = safeParseFeedgenOwnerDid(feedDesc.uri);
 	const removePromptHandle = Prompt.usePromptHandle();
@@ -216,13 +219,13 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): PostFeedErr
 	if (errorString.includes('feed unavailable')) {
 		return PostFeedErrorCode.FeedgenOffline;
 	}
-	if (errorString.includes('invalid did document')) {
-		return PostFeedErrorCode.FeedgenMisconfigured;
-	}
-	if (errorString.includes('could not resolve did document')) {
-		return PostFeedErrorCode.FeedgenMisconfigured;
-	}
-	if (errorString.includes('invalid feed generator service details in did document')) {
+	// resolver and appview errors use different messages
+	if (
+		errorString.includes('invalid did document') ||
+		errorString.includes('could not resolve did document') ||
+		errorString.includes('invalid feed generator service details in did document') ||
+		errorString.includes('could not resolve identity')
+	) {
 		return PostFeedErrorCode.FeedgenMisconfigured;
 	}
 	if (errorString.includes('invalid response')) {

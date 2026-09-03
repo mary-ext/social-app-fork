@@ -27,11 +27,14 @@ export type ContentStateProps = {
 /**
  * displays a centered state for a content region.
  *
+ * announces the state with the provided accessibility role.
+ *
  * @param actions additional actions
  * @param headerTitle standalone header title
  * @param icon optional icon
  * @param message body content
  * @param onRetry retry handler
+ * @param role accessibility role
  * @param standalone whether to render a header
  * @param title optional title
  * @returns a content state
@@ -42,9 +45,10 @@ export function ContentState({
 	icon: Icon,
 	message,
 	onRetry,
+	role = 'status',
 	standalone = false,
 	title,
-}: ContentStateProps) {
+}: ContentStateProps & { role?: 'alert' | 'status' }) {
 	const retry = onRetry && (
 		<Button
 			color="primary"
@@ -59,7 +63,7 @@ export function ContentState({
 	);
 
 	const block = (
-		<div className={css.outer}>
+		<div className={css.outer} role={role}>
 			{Icon && <Icon className={css.icon} />}
 
 			<Stack gap="xs">

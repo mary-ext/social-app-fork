@@ -13,7 +13,6 @@ import {
 	type GifCategory,
 	GifCategoryPills,
 } from '#/features/gifPicker/components/GifCategoryPills';
-import { GifPickerErrorBoundary } from '#/features/gifPicker/components/GifPickerErrorBoundary';
 import { type GifPickerGridHandle, GifPickerGrid } from '#/features/gifPicker/components/GifPickerGrid';
 import { GifPickerHeader } from '#/features/gifPicker/components/GifPickerHeader';
 import { GifPickerPlaceholder } from '#/features/gifPicker/components/GifPickerPlaceholder';
@@ -22,6 +21,7 @@ import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
 
 import * as Dialog from '#/components/Dialog';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
+import { ErrorBoundaryFallback } from '#/components/ErrorBoundaryFallback';
 
 export function GifPickerDialog({
 	handle,
@@ -50,7 +50,9 @@ export function GifPickerDialog({
 				<Dialog.Close variant="outer" />
 				<Dialog.Card scroll="body" label="GIFs" fullHeight>
 					<ErrorBoundary
-						renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
+						renderError={(error) => (
+							<ErrorBoundaryFallback details={String(error)} onClose={() => handle.close()} />
+						)}
 					>
 						<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
 					</ErrorBoundary>

@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { Text } from '#/components/Text';
 import { InlineButton } from '#/components/web/Link';
 
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as css from './Notice.css';
@@ -15,8 +16,9 @@ import * as css from './Notice.css';
  * @param actions additional actions
  * @param children message content
  * @param className class for the outer element
- * @param icon custom icon
+ * @param icon icon beside the message
  * @param onRetry retry handler
+ * @param role accessibility role
  * @param title optional title
  * @returns an inline notice
  */
@@ -24,19 +26,21 @@ export function Notice({
 	actions,
 	children,
 	className,
-	icon: Icon,
+	icon: Icon = WarningIcon,
 	onRetry,
+	role = 'alert',
 	title,
 }: {
 	actions?: ReactNode;
 	children: ReactNode;
 	className?: string;
-	icon: ComponentType<SVGProps<SVGSVGElement>>;
+	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 	onRetry?: () => void;
+	role?: 'alert' | 'status';
 	title?: string;
 }) {
 	return (
-		<div className={clsx(css.outer, className)}>
+		<div className={clsx(css.outer, className)} role={role}>
 			<Icon className={css.icon} />
 
 			<div className={css.body}>

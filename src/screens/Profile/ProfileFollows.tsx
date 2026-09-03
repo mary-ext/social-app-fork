@@ -9,16 +9,18 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
+import { ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
+import { LinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import PeopleRemoveIcon from '#/icons/central/PeopleRemove_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/router';
+import { useParams } from '#/router';
 
 export const ProfileFollowsScreen = () => {
 	const [{ actor }] = useParams('ProfileFollows');
@@ -63,12 +65,7 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 
 function ProfileFollows({ name, initialCount }: { name: string; initialCount?: number }) {
 	const { currentAccount } = useSession();
-	const router = useRouter();
 	const moderationOpts = useModerationOpts();
-
-	const onPressFindAccounts = () => {
-		router.navigate({ to: { name: 'Explore' } });
-	};
 
 	const { data: resolvedDid, error: resolveError } = useResolveDidQuery(name);
 	const isMe = resolvedDid === currentAccount?.did;
@@ -84,7 +81,7 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 
 	if (isError && follows.length < 1) {
-		return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
+		return <ErrorState onRetry={() => void refetch()} />;
 	}
 
 	// the paged query stays pending while the did resolves, so this covers both fetches
@@ -94,20 +91,24 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 
 	if (follows.length < 1) {
 		return (
-			<ListEmpty
+			<BlankState
+				actions={
+					<LinkButton
+						color="primary"
+						label={m['view.profile.action.seeSuggested']()}
+						size="small"
+						to={{ name: 'Explore' }}
+						variant="solid"
+					>
+						<ButtonText>{m['view.profile.action.seeSuggested']()}</ButtonText>
+					</LinkButton>
+				}
 				icon={PeopleRemoveIcon}
 				message={
 					isMe
 						? m['view.profile.followers.followingEmpty']()
 						: m['view.profile.followers.followingEmptyUser']()
 				}
-				button={{
-					label: m['view.profile.action.seeSuggested'](),
-					text: m['view.profile.action.seeSuggested'](),
-					onPress: onPressFindAccounts,
-					size: 'tiny',
-					color: 'primary',
-				}}
 			/>
 		);
 	}

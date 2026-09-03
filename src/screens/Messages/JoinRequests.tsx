@@ -20,7 +20,7 @@ import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { Error } from '#/components/Error';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -58,14 +58,12 @@ export function MessagesJoinRequestsScreen() {
 
 function JoinRequestsInner() {
 	const convoState = useConvo();
-	const router = useRouter();
 
 	if (convoState.status === ConvoStatus.Error) {
 		return (
 			<>
 				<Header />
-				<Error
-					title={m['common.error.generic']()}
+				<ErrorState
 					message={m['screens.messages.requests.error.load']()}
 					onRetry={() => convoState.error.retry()}
 				/>
@@ -86,16 +84,10 @@ function JoinRequestsInner() {
 
 	if (convoState.convo.kind !== 'group') {
 		return (
-			<Error
-				title={m['screens.messages.conversation.wrongTypeError']()}
+			<ErrorState
 				message={m['screens.messages.conversation.groupOnlyError']()}
-				onGoBack={() => {
-					if (router.canGoBack) {
-						router.back();
-					} else {
-						router.navigate({ replace: true, to: { name: 'Messages' } });
-					}
-				}}
+				standalone
+				title={m['screens.messages.conversation.wrongTypeError']()}
 			/>
 		);
 	}

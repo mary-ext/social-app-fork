@@ -43,10 +43,6 @@ export const deletedMessage = style({
 	fontStyle: 'italic',
 });
 
-export const empty = style({
-	paddingTop: 28,
-});
-
 export const questionIcon = style({
 	width: iconSize.xl,
 	height: iconSize.xl,

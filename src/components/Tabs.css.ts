@@ -106,8 +106,15 @@ export const tabIcon = style({
 	height: iconSize.sm,
 });
 
+/** let visible panels fill vertically while preserving the native `[hidden]` behavior. */
 export const panel = style(
 	layered(components, {
 		flex: 1,
+		selectors: {
+			'&:not([hidden])': {
+				display: 'flex',
+				flexDirection: 'column',
+			},
+		},
 	}),
 );

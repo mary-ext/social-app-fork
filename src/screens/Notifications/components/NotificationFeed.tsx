@@ -5,15 +5,14 @@ import { cleanError } from '#/lib/errors';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 
 import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import * as css from './NotificationFeed.css';
 import { NotificationFeedItem } from './NotificationFeedItem';
 import { NotificationFeedLoadingPlaceholder } from './NotificationFeedLoadingPlaceholder';
 
@@ -62,11 +61,11 @@ export function NotificationFeed({
 			renderItem={renderItem}
 			ListEmptyComponent={
 				isError ? (
-					<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
+					<ErrorState onRetry={() => void refetch()} />
 				) : isPending ? (
 					<NotificationFeedLoadingPlaceholder />
 				) : (
-					<ListEmpty className={css.emptyState} icon={BellIcon} message={m['view.notifications.empty']()} />
+					<BlankState icon={BellIcon} message={m['view.notifications.empty']()} />
 				)
 			}
 			ListHeaderComponent={ListHeaderComponent}

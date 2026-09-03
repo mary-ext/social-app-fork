@@ -6,7 +6,9 @@ import { FilterMenu } from '#/screens/Profile/components/FilterMenu';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 
 import * as Menu from '#/components/Menu';
+import { Button, ButtonText } from '#/components/web/Button';
 
+import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -60,16 +62,20 @@ export function ProfilePostsSection({ did, isMe }: { did: Did; isMe: boolean }) 
 			feed={{ type: 'author', did, view: 'posts', showReplies, showReposts }}
 			ignoreFilterFor={did}
 			emptyStateMessage={m['common.post.empty']()}
-			emptyStateButton={
-				isMe
-					? {
-							color: 'primary',
-							label: composeLabel,
-							onPress: () => openComposer({}),
-							text: composeLabel,
-						}
-					: undefined
+			emptyStateActions={
+				isMe && (
+					<Button
+						color="primary"
+						label={composeLabel}
+						onClick={() => openComposer({})}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>{composeLabel}</ButtonText>
+					</Button>
+				)
 			}
+			emptyStateIcon={EditIcon}
 		/>
 	);
 }

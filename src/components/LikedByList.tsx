@@ -4,9 +4,9 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useLikedByQuery } from '#/state/queries/post-liked-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -26,7 +26,7 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 	const likes = data?.pages ? data.pages.flatMap((page) => page.likes) : [];
 
 	if (isError && likes.length < 1) {
-		return <ListError message={cleanError(resolveError || error)} />;
+		return <ErrorState />;
 	}
 
 	// the paged query stays pending while the uri resolves, so this covers both fetches
@@ -35,7 +35,7 @@ export function LikedByList({ uri, initialCount }: { uri: string; initialCount?:
 	}
 
 	if (likes.length < 1) {
-		return <ListEmpty icon={HeartIcon} message={m['common.like.emptyPrompt']()} />;
+		return <BlankState icon={HeartIcon} message={m['common.like.emptyPrompt']()} />;
 	}
 
 	return (

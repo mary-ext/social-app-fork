@@ -6,8 +6,8 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyBlockedAccountsQuery } from '#/state/queries/my-blocked-accounts';
 import { useTitle } from '#/state/use-title';
 
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
@@ -38,11 +38,7 @@ export function ModerationBlockedAccounts() {
 			{isEmpty ? (
 				<div>
 					<Info />
-					{isError ? (
-						<ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />
-					) : (
-						<Empty />
-					)}
+					{isError ? <ErrorState onRetry={() => void refetch()} /> : <Empty />}
 				</div>
 			) : (
 				<List

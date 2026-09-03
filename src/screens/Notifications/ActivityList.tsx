@@ -1,10 +1,10 @@
 import { useTitle } from '#/state/use-title';
 
-import { EmptyState } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 import * as Layout from '#/components/web/Layout';
 
-import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
+import BellIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
@@ -25,7 +25,7 @@ export function NotificationsActivityListScreen() {
 				feed={{ type: 'posts', uris: posts }}
 				disablePoll
 				renderEmptyState={() => (
-					<EmptyState icon={EditIcon} iconSize="_2xl" message={m['view.notifications.activity.empty']()} />
+					<BlankState icon={BellIcon} message={m['view.notifications.activity.empty']()} />
 				)}
 			/>
 		</Layout.Screen>

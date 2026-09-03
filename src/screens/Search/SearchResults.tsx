@@ -1,10 +1,8 @@
-import type { ReactNode } from 'react';
-
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { definite, uniqueBy } from '@mary/array-fns';
 
-import { cleanError, isNetworkError, shouldRetryError } from '#/lib/errors';
+import { isNetworkError, shouldRetryError } from '#/lib/errors';
 import { normalizeSearchQuery } from '#/lib/search-query';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
@@ -16,13 +14,14 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
+import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { signinDialogHandle } from '#/components/dialogs/handles';
+import { ErrorState } from '#/components/ErrorState';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
-import { SearchError } from '#/components/SearchError';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
@@ -30,9 +29,9 @@ import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-
-import * as css from './SearchResults.css';
 
 export type SearchTabId = 'feeds' | 'latest' | 'people' | 'starterpacks' | 'top';
 
@@ -101,39 +100,18 @@ function Pending() {
 
 // only promise a retry when one could plausibly help; a rejected query would fail again the same way, and
 // telling someone to wait a few minutes for it just wastes their time.
+function canRetrySearch(error: unknown) {
+	return shouldRetryError(error) || isNetworkError(error);
+}
+
 function searchErrorText(error: unknown) {
-	return shouldRetryError(error) || isNetworkError(error)
+	return canRetrySearch(error)
 		? m['screens.search.results.error.failedRetryable']()
 		: m['screens.search.results.error.failed']();
 }
 
-function EmptyState({
-	children,
-	error,
-	messageText,
-}: {
-	children?: ReactNode;
-	error?: string;
-	messageText: ReactNode;
-}) {
-	return (
-		<Layout.Content>
-			<div className={css.emptyOuter}>
-				<div className={css.emptyBox}>
-					<Text size="md">{messageText}</Text>
-
-					{error && (
-						<>
-							<div className={css.emptyDivider} />
-							<Text color="textContrastMedium">{m['screens.search.results.error.generic']({ error })}</Text>
-						</>
-					)}
-
-					{children}
-				</div>
-			</div>
-		</Layout.Content>
-	);
+function searchRetry(error: unknown, refetch: () => void) {
+	return canRetrySearch(error) ? refetch : undefined;
 }
 
 function NoResultsText({ query }: { query: string }) {
@@ -173,6 +151,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
+		refetch,
 	} = useSearchPostsQuery({ query: normalizedQuery, sort });
 
 	const items = uniqueBy(results?.pages.flatMap((page) => page.posts) ?? [], (post) => post.uri);
@@ -186,8 +165,9 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 
 	if (!hasSession) {
 		return (
-			<SearchError title={m['common.search.loggedOutError']()}>
-				<Text align="center" size="md">
+			<BlankState
+				icon={XIcon}
+				message={
 					<Trans
 						markup={{
 							t0: ({ children }) => (
@@ -206,13 +186,14 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 						}}
 						message={m['common.search.signInPrompt']}
 					/>
-				</Text>
-			</SearchError>
+				}
+				title={m['common.search.loggedOutError']()}
+			/>
 		);
 	}
 
 	if (error) {
-		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
+		return <ErrorState message={searchErrorText(error)} onRetry={searchRetry(error, () => void refetch())} />;
 	}
 
 	if (!isFetched) {
@@ -220,7 +201,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 	}
 
 	if (!items.length) {
-		return <EmptyState messageText={<NoResultsText query={query} />} />;
+		return <BlankState icon={MagnifyingGlassIcon} message={<NoResultsText query={query} />} />;
 	}
 
 	return (
@@ -253,6 +234,7 @@ function UserResults({ query }: { query: string }) {
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
+		refetch,
 	} = useActorSearch({ query });
 
 	const profiles = results?.pages.flatMap((page) => page.actors) ?? [];
@@ -265,7 +247,7 @@ function UserResults({ query }: { query: string }) {
 	};
 
 	if (error) {
-		return <EmptyState error={error.toString()} messageText={searchErrorText(error)} />;
+		return <ErrorState message={searchErrorText(error)} onRetry={searchRetry(error, () => void refetch())} />;
 	}
 
 	if (!isFetched) {
@@ -273,7 +255,7 @@ function UserResults({ query }: { query: string }) {
 	}
 
 	if (!profiles.length) {
-		return <EmptyState messageText={<NoResultsText query={query} />} />;
+		return <BlankState icon={MagnifyingGlassIcon} message={<NoResultsText query={query} />} />;
 	}
 
 	return (
@@ -308,6 +290,7 @@ function StarterPackResults({ query }: { query: string }) {
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
+		refetch,
 	} = useStarterPackSearch({ query });
 
 	const starterPacks = results?.pages.flatMap((page) => page.starterPacks) ?? [];
@@ -320,7 +303,7 @@ function StarterPackResults({ query }: { query: string }) {
 	};
 
 	if (error) {
-		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
+		return <ErrorState message={searchErrorText(error)} onRetry={searchRetry(error, () => void refetch())} />;
 	}
 
 	if (!isFetched) {
@@ -328,7 +311,7 @@ function StarterPackResults({ query }: { query: string }) {
 	}
 
 	if (!starterPacks.length) {
-		return <EmptyState messageText={<NoResultsText query={query} />} />;
+		return <BlankState icon={MagnifyingGlassIcon} message={<NoResultsText query={query} />} />;
 	}
 
 	return (
@@ -355,6 +338,7 @@ function FeedsResults({ query }: { query: string }) {
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
+		refetch,
 	} = usePopularFeedsSearch({ query });
 
 	const feeds = results?.pages.flatMap((page) => page.feeds) ?? [];
@@ -367,7 +351,7 @@ function FeedsResults({ query }: { query: string }) {
 	};
 
 	if (error) {
-		return <EmptyState error={cleanError(error)} messageText={searchErrorText(error)} />;
+		return <ErrorState message={searchErrorText(error)} onRetry={searchRetry(error, () => void refetch())} />;
 	}
 
 	if (!isFetched) {
@@ -375,7 +359,7 @@ function FeedsResults({ query }: { query: string }) {
 	}
 
 	if (!feeds.length) {
-		return <EmptyState messageText={<NoResultsText query={query} />} />;
+		return <BlankState icon={MagnifyingGlassIcon} message={<NoResultsText query={query} />} />;
 	}
 
 	return (

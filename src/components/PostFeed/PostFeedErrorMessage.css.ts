@@ -32,4 +32,4 @@ export const cta = style({
 	alignItems: 'center',
 });
 
-export const empty = style({ paddingBlock: 40 });
+export const notice = style({ margin: space.lg });

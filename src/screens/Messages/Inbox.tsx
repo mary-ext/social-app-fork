@@ -11,27 +11,24 @@ import { useListConvoRequests } from '#/state/queries/messages/list-conversation
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 import { useTitle } from '#/state/use-title';
 
-import { EmptyState } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { List } from '#/components/List/List';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
-import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import InboxLargeIcon from '#/icons/central/Box2_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
 
 import { ChatListLoadingPlaceholder } from './components/ChatListLoadingPlaceholder';
 import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
 import * as splitViewCss from './components/splitView/MessagesSplitViewLayout.css';
-import * as css from './Inbox.css';
 import { useRequestMessagePollInterval } from './use-request-poll-interval';
 
 const REQUEST_ITEM_HEIGHT_ESTIMATE = 130;
@@ -88,7 +85,6 @@ function RequestList({
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>>;
 	conversations: RequestItem[];
 }) {
-	const router = useRouter();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 
@@ -101,12 +97,7 @@ function RequestList({
 	if (conversations.length < 1) {
 		if (isError) {
 			return (
-				<ListError
-					hideBackButton
-					message={cleanError(error) || m['screens.messages.chats.reload.error']()}
-					onRetry={() => void refetch()}
-					title={m['common.error.whoops']()}
-				/>
+				<ErrorState message={m['screens.messages.chats.reload.error']()} onRetry={() => void refetch()} />
 			);
 		}
 
@@ -114,34 +105,7 @@ function RequestList({
 			return <ChatListLoadingPlaceholder />;
 		}
 
-		return (
-			<EmptyState
-				message={m['screens.messages.chats.inboxZero']()}
-				icon={InboxLargeIcon}
-				iconSize="_4xl"
-				messageColor="text"
-				iconColor="text"
-				button={
-					isWithinSplitView
-						? undefined
-						: {
-								label: m['screens.messages.chats.back'](),
-								text: m['common.action.back'](),
-								onPress: () => {
-									if (router.canGoBack) {
-										router.back();
-									} else {
-										router.navigate({ to: { name: 'Messages' } });
-									}
-								},
-								size: 'small',
-								color: 'secondary',
-								icon: ArrowLeftIcon,
-							}
-				}
-				className={css.empty}
-			/>
-		);
+		return <BlankState icon={InboxLargeIcon} message={m['screens.messages.chats.inboxZero']()} />;
 	}
 
 	const list = (

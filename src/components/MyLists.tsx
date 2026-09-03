@@ -1,12 +1,10 @@
 import type { ReactNode } from 'react';
 
-import { cleanError } from '#/lib/errors';
-
 import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as ListCard from '#/components/ListCard';
 
@@ -17,7 +15,7 @@ const LIST_ITEM_HEIGHT_ESTIMATE = 120;
 
 /** Renders the viewer's own lists, one {@link ListCard.Default} row per list. */
 export function MyLists({ filter }: { filter: MyListsFilter }): ReactNode {
-	const { data, error, isError, isPending, refetch } = useMyListsQuery(filter);
+	const { data, isError, isPending, refetch } = useMyListsQuery(filter);
 
 	const emptyText = (() => {
 		switch (filter) {
@@ -37,14 +35,14 @@ export function MyLists({ filter }: { filter: MyListsFilter }): ReactNode {
 
 	if (lists.length < 1) {
 		if (isError) {
-			return <ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
 			return <ListCard.LoadingPlaceholder count={10} />;
 		}
 
-		return <ListEmpty icon={ListIcon} iconColor="textContrastMedium" message={emptyText} />;
+		return <BlankState icon={ListIcon} message={emptyText} />;
 	}
 
 	return (

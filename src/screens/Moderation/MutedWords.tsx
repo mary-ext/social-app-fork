@@ -2,8 +2,6 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { definite } from '@mary/array-fns';
 
-import { cleanError } from '#/lib/errors';
-
 import {
 	usePreferencesQuery,
 	useRemoveMutedWordMutation,
@@ -13,11 +11,11 @@ import { useTitle } from '#/state/use-title';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
+import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
-import { EmptyState } from '#/components/EmptyState';
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { ErrorState } from '#/components/ErrorState';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Settings from '#/components/SettingsCards';
@@ -68,7 +66,7 @@ export function MutedWordsScreen() {
 
 			<Layout.Content>
 				{error ? (
-					<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
+					<ErrorState onRetry={() => void refetch()} />
 				) : !preferences ? (
 					<CenteredSpinner label={m['screens.moderation.mutedWord.loading']()} fill />
 				) : mutedWords?.length ? (
@@ -83,7 +81,7 @@ export function MutedWordsScreen() {
 						</Settings.Section>
 					</Settings.List>
 				) : (
-					<EmptyState icon={Mute} message={m['screens.moderation.mutedWord.empty']()} />
+					<BlankState icon={Mute} message={m['screens.moderation.mutedWord.empty']()} />
 				)}
 			</Layout.Content>
 

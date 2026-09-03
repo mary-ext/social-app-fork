@@ -6,7 +6,7 @@ import { softReset } from '#/state/events';
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 
-import { EmptyState } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
@@ -16,8 +16,6 @@ import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stro
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect } from '#/router';
-
-import * as css from './FeedSection.css';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;
@@ -43,20 +41,24 @@ export function FeedSection({ feed, isOwner, onPressAddUser }: FeedSectionProps)
 
 	const renderPostsEmpty = () => {
 		return (
-			<div className={css.emptyState}>
-				<EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />
-				{isOwner && (
-					<Button
-						color="primary"
-						label={m['screens.profileList.members.startAdding']()}
-						onClick={onPressAddUser}
-						size="small"
-					>
-						<ButtonIcon icon={PersonPlusIcon} />
-						<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
-					</Button>
-				)}
-			</div>
+			<BlankState
+				actions={
+					isOwner && (
+						<Button
+							color="primary"
+							label={m['screens.profileList.members.startAdding']()}
+							onClick={onPressAddUser}
+							size="small"
+							variant="solid"
+						>
+							<ButtonIcon icon={PersonPlusIcon} />
+							<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
+						</Button>
+					)
+				}
+				icon={HashtagWideIcon}
+				message={m['common.feeds.empty']()}
+			/>
 		);
 	};
 

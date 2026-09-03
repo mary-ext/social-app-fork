@@ -8,9 +8,9 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -59,7 +59,7 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
 	if (isError && followers.length < 1) {
-		return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
+		return <ErrorState onRetry={() => void refetch()} />;
 	}
 
 	// the paged query stays pending while the did resolves, so this covers both fetches
@@ -69,7 +69,7 @@ function ProfileKnownFollowers({ name }: { name: string }) {
 
 	if (followers.length < 1) {
 		return (
-			<ListEmpty icon={PeopleIcon} message={m['screens.profile.follow.knownFollowers.empty']({ name })} />
+			<BlankState icon={PeopleIcon} message={m['screens.profile.follow.knownFollowers.empty']({ name })} />
 		);
 	}
 

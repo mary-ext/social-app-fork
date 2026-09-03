@@ -7,15 +7,16 @@ import { cleanError } from '#/lib/errors';
 import { useProfileListsQuery } from '#/state/queries/profile-lists';
 import { useSession } from '#/state/session';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as ListCard from '#/components/ListCard';
+import { ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
 
 const LIST_ITEM_HEIGHT_ESTIMATE = 120;
 
@@ -27,7 +28,6 @@ interface ProfileListsProps {
 export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } =
 		useProfileListsQuery(did);
-	const router = useRouter();
 	const { currentAccount } = useSession();
 	const isSelf = currentAccount?.did === did;
 
@@ -35,7 +35,7 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 
 	if (lists.length < 1) {
 		if (isError) {
-			return <ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
@@ -43,20 +43,22 @@ export function ProfileLists({ did, listCount }: ProfileListsProps): ReactNode {
 		}
 
 		return (
-			<ListEmpty
+			<BlankState
+				actions={
+					isSelf && (
+						<LinkButton
+							color="primary"
+							label={m['common.list.create']()}
+							size="small"
+							to={{ name: 'Lists' }}
+							variant="solid"
+						>
+							<ButtonText>{m['common.list.create']()}</ButtonText>
+						</LinkButton>
+					)
+				}
 				icon={ListIcon}
 				message={isSelf ? m['common.list.empty']() : m['common.list.emptyUser']()}
-				button={
-					isSelf
-						? {
-								label: m['common.list.create'](),
-								text: m['common.list.create'](),
-								onPress: () => router.navigate({ to: { name: 'Lists' } }),
-								size: 'small',
-								color: 'primary',
-							}
-						: undefined
-				}
 			/>
 		);
 	}

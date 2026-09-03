@@ -16,7 +16,7 @@ import { RequestStatus } from '#/screens/Messages/components/RequestStatus';
 import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter';
 import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
 import type { ConvoWithDetails } from '#/components/dms/util';
-import { Error } from '#/components/Error';
+import { ErrorState } from '#/components/ErrorState';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -65,10 +65,9 @@ function Inner() {
 				<div className={css.full}>
 					<MessagesListHeader convo={convo} />
 				</div>
-				<Error
+				<ErrorState
 					message={m['screens.messages.conversation.loadError']()}
 					onRetry={() => convoState.error.retry()}
-					title={m['common.error.generic']()}
 				/>
 			</>
 		);

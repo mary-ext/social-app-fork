@@ -11,7 +11,8 @@ import { useProfileListsQuery } from '#/state/queries/profile-lists';
 
 import { formatCount } from '#/locale/intl/number';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
+import type { ContentStateIcon } from '#/components/ContentState';
 import * as FeedCard from '#/components/FeedCard';
 import * as ListCard from '#/components/ListCard';
 import { Notice } from '#/components/Notice';
@@ -25,11 +26,10 @@ import { LinkButton } from '#/components/web/Link';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
-import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import FeedIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
 import StarterPackIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
-import { type RouteTarget, useParams, useRouter } from '#/router';
+import { type RouteTarget, useParams } from '#/router';
 
 import * as css from './Collections.css';
 
@@ -54,7 +54,6 @@ export function ProfileCollectionsSection({
 	listCount,
 	starterPackCount,
 }: ProfileCollectionsProps): ReactNode {
-	const router = useRouter();
 	const [{ actor }] = useParams('Profile');
 
 	const { data: preferences } = usePreferencesQuery();
@@ -70,15 +69,18 @@ export function ProfileCollectionsSection({
 		<>
 			<CollectionGroup
 				count={feedCount}
-				emptyButton={
-					isMe
-						? {
-								color: 'secondary',
-								label: m['view.feeds.discover.browse'](),
-								onPress: () => router.navigate({ to: { name: 'Feeds' } }),
-								text: m['view.feeds.discover.browse'](),
-							}
-						: undefined
+				emptyActions={
+					isMe && (
+						<LinkButton
+							color="secondary"
+							label={m['view.feeds.discover.browse']()}
+							size="small"
+							to={{ name: 'Feeds' }}
+							variant="solid"
+						>
+							<ButtonText>{m['view.feeds.discover.browse']()}</ButtonText>
+						</LinkButton>
+					)
 				}
 				emptyMessage={isMe ? m['view.feeds.saved.empty.message']() : m['view.feeds.saved.empty.title']()}
 				error={feeds.isError ? cleanError(feeds.error) : undefined}
@@ -98,15 +100,18 @@ export function ProfileCollectionsSection({
 
 			<CollectionGroup
 				count={starterPackCount}
-				emptyButton={
-					isMe
-						? {
-								color: 'primary',
-								label: m['common.starterPack.action.create'](),
-								onPress: () => router.navigate({ to: { name: 'StarterPackWizard' } }),
-								text: m['common.starterPack.action.create'](),
-							}
-						: undefined
+				emptyActions={
+					isMe && (
+						<LinkButton
+							color="primary"
+							label={m['common.starterPack.action.create']()}
+							size="small"
+							to={{ name: 'StarterPackWizard' }}
+							variant="solid"
+						>
+							<ButtonText>{m['common.starterPack.action.create']()}</ButtonText>
+						</LinkButton>
+					)
 				}
 				emptyMessage={isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()}
 				error={starterPacks.isError ? cleanError(starterPacks.error) : undefined}
@@ -126,15 +131,18 @@ export function ProfileCollectionsSection({
 
 			<CollectionGroup
 				count={listCount}
-				emptyButton={
-					isMe
-						? {
-								color: 'primary',
-								label: m['common.list.create'](),
-								onPress: () => router.navigate({ to: { name: 'Lists' } }),
-								text: m['common.list.create'](),
-							}
-						: undefined
+				emptyActions={
+					isMe && (
+						<LinkButton
+							color="primary"
+							label={m['common.list.create']()}
+							size="small"
+							to={{ name: 'Lists' }}
+							variant="solid"
+						>
+							<ButtonText>{m['common.list.create']()}</ButtonText>
+						</LinkButton>
+					)
 				}
 				emptyMessage={isMe ? m['common.list.empty']() : m['common.list.emptyUser']()}
 				error={lists.isError ? cleanError(lists.error) : undefined}
@@ -157,11 +165,11 @@ export function ProfileCollectionsSection({
 
 interface CollectionGroupProps<Item> {
 	count: number;
-	emptyButton: EmptyStateButtonProps | undefined;
+	emptyActions: ReactNode;
 	emptyMessage: string;
 	error: string | undefined;
 	hasMore: boolean;
-	icon: EmptyStateIcon;
+	icon: ContentStateIcon;
 	isMe: boolean;
 	isPending: boolean;
 	items: Item[];
@@ -174,7 +182,7 @@ interface CollectionGroupProps<Item> {
 
 function CollectionGroup<Item>({
 	count,
-	emptyButton,
+	emptyActions,
 	emptyMessage,
 	error,
 	hasMore,
@@ -202,21 +210,17 @@ function CollectionGroup<Item>({
 
 	let body: ReactNode;
 	if (isCountEmpty) {
-		body = (
-			<EmptyState button={emptyButton} icon={Icon} message={emptyMessage} messageColor="textContrastMedium" />
-		);
+		body = <BlankState actions={emptyActions} icon={Icon} message={emptyMessage} />;
 	} else if (error && items.length === 0) {
 		body = (
-			<Notice className={css.notice} icon={WarningIcon} onRetry={onRetry}>
+			<Notice className={css.notice} onRetry={onRetry}>
 				{error}
 			</Notice>
 		);
 	} else if (isPending) {
 		body = placeholder;
 	} else if (isEmpty) {
-		body = (
-			<EmptyState button={emptyButton} icon={Icon} message={emptyMessage} messageColor="textContrastMedium" />
-		);
+		body = <BlankState actions={emptyActions} icon={Icon} message={emptyMessage} />;
 	} else {
 		body = items.slice(0, PREVIEW_LIMIT).map(renderItem);
 	}

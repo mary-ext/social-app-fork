@@ -57,7 +57,7 @@
 					"Toast.Action",
 					"Toggle.Action"
 				],
-				"impliedTextProps": [],
+				"impliedTextProps": ["BlankState message", "ContentState message", "ErrorState message"],
 				"suggestedTextWrappers": {
 					"Button": "ButtonText"
 				}

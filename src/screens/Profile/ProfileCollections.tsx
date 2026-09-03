@@ -4,8 +4,6 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 import type { ActorIdentifier } from '@atcute/lexicons/syntax';
 
-import { cleanError } from '#/lib/errors';
-
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
@@ -15,7 +13,7 @@ import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
 import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { ErrorScreen } from '#/components/ErrorScreen';
+import { ErrorState } from '#/components/ErrorState';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
 import * as Layout from '#/components/web/Layout';
 
@@ -147,7 +145,7 @@ function CollectionScreen({
 	owner: CollectionOwner;
 	title: string;
 }) {
-	const { did, error, isPending, profile } = owner;
+	const { did, isPending, profile } = owner;
 
 	let body: ReactNode;
 	if (did && profile) {
@@ -155,13 +153,7 @@ function CollectionScreen({
 	} else if (isPending) {
 		body = <CenteredSpinner label={m['common.status.loading']()} size="_2xl" />;
 	} else {
-		body = (
-			<ErrorScreen
-				title={m['common.error.oops']()}
-				message={cleanError(error) || m['common.error.generic']()}
-				onPressTryAgain={owner.retry}
-			/>
-		);
+		body = <ErrorState onRetry={owner.retry} />;
 	}
 
 	return (

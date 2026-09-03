@@ -8,10 +8,10 @@ import type { AiProvider } from '#/lib/lexicons';
 
 import { useAiProvidersQuery } from '#/state/queries/ai-catalog';
 
+import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
-import { ListEmpty } from '#/components/List/ListEmpty';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
@@ -133,7 +133,10 @@ const DialogInner = ({
 
 					<Autocomplete.Empty>
 						{!isPending && statusText === undefined && (
-							<ListEmpty icon={MagnifyingGlassIcon} message={m['screens.settings.ai.provider.noMatches']()} />
+							<BlankState
+								icon={MagnifyingGlassIcon}
+								message={m['screens.settings.ai.provider.noMatches']()}
+							/>
 						)}
 					</Autocomplete.Empty>
 

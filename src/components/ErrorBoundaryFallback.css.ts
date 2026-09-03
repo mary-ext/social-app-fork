@@ -1,9 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, monoFontFamily, space } from '#/styles/tokens.css';
 
-export const root = style({
+export const outer = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
@@ -24,7 +25,7 @@ export const details = style({
 	textAlign: 'left',
 	whiteSpace: 'pre-wrap',
 	wordBreak: 'break-word',
-	color: vars.palette.contrast_500,
+	color: colors.textContrastHigh,
 	fontFamily: monoFontFamily,
-	fontSize: 12,
+	fontSize: 13,
 });

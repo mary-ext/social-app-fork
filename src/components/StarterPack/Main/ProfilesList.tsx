@@ -5,14 +5,13 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { cleanError } from '#/lib/errors';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListError } from '#/components/List/ListError';
 import { ListLoading } from '#/components/List/ListLoading';
 import * as ListTail from '#/components/List/ListTail';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -30,11 +29,11 @@ interface ProfilesListProps {
 
 export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const { currentAccount } = useSession();
-	const { data, error, isError, isPending, refetch } = useAllListMembersQuery(listUri);
+	const { data, isError, isPending, refetch } = useAllListMembersQuery(listUri);
 
 	if (!data) {
 		if (isError) {
-			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		return isPending ? <ListLoading /> : null;

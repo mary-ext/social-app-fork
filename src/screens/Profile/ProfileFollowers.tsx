@@ -9,16 +9,16 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import PeopleRemoveIcon from '#/icons/central/PeopleRemove_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useParams, useRouter } from '#/router';
+import { useParams } from '#/router';
 
 export const ProfileFollowersScreen = () => {
 	const [{ actor }] = useParams('ProfileFollowers');
@@ -62,7 +62,6 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 }
 
 function ProfileFollowers({ name, initialCount }: { name: string; initialCount?: number }) {
-	const router = useRouter();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 
@@ -80,7 +79,7 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 	const followers = data?.pages ? data.pages.flatMap((page) => page.followers) : [];
 
 	if (isError && followers.length < 1) {
-		return <ListError message={cleanError(resolveError || error)} onRetry={() => void refetch()} />;
+		return <ErrorState onRetry={() => void refetch()} />;
 	}
 
 	// the paged query stays pending while the did resolves, so this covers both fetches
@@ -90,22 +89,13 @@ function ProfileFollowers({ name, initialCount }: { name: string; initialCount?:
 
 	if (followers.length < 1) {
 		return (
-			<ListEmpty
+			<BlankState
 				icon={PeopleRemoveIcon}
 				message={
 					isMe
 						? m['view.profile.followers.followersEmpty']()
 						: m['view.profile.followers.followersEmptyUser']()
 				}
-				button={{
-					label: m['common.action.goBack'](),
-					text: m['common.action.goBack'](),
-					color: 'secondary',
-					size: 'small',
-					onPress: () => {
-						router.back();
-					},
-				}}
 			/>
 		);
 	}

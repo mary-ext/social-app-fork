@@ -14,7 +14,7 @@ import { HomeHeaderLayout } from '#/screens/Home/components/HomeHeaderLayout';
 import { NoFeedsPinned } from '#/screens/Home/components/NoFeedsPinned';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { Error } from '#/components/Error';
+import { ErrorState } from '#/components/ErrorState';
 import type { Section } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
@@ -105,11 +105,9 @@ export function HomeScreen() {
 		}
 	} else if (preferences.isError || pinnedFeeds.isError) {
 		body = (
-			<Error
-				hideBackButton
+			<ErrorState
 				message={m['screens.home.error.load']()}
-				onRetry={() => Promise.all([preferences.refetch(), pinnedFeeds.refetch()])}
-				title={m['common.error.oops']()}
+				onRetry={() => void Promise.all([preferences.refetch(), pinnedFeeds.refetch()])}
 			/>
 		);
 	} else {

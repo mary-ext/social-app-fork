@@ -18,7 +18,8 @@ import { Trans } from '#/locale/Trans';
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
-import { EmptyState, type EmptyStateIcon } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
+import type { ContentStateIcon } from '#/components/ContentState';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -41,7 +42,7 @@ const ROW_HEIGHT_ESTIMATE = 65;
 
 type Slice =
 	| { type: 'about'; key: string }
-	| { type: 'emptyDropZone'; key: string; icon: EmptyStateIcon; message: string; section: Section }
+	| { type: 'emptyDropZone'; key: string; icon: ContentStateIcon; message: string; section: Section }
 	| { type: 'feed'; key: string; feed: SavedFeed; index: number; isLast: boolean; section: Section }
 	| { type: 'header'; key: string; title: string }
 	| { type: 'noFollowingFeed'; key: string }
@@ -266,7 +267,7 @@ function EmptyDropZone({
 	section,
 }: {
 	dnd: DndChannel<DragData, DropData>;
-	icon: EmptyStateIcon;
+	icon: ContentStateIcon;
 	message: string;
 	section: Section;
 }) {
@@ -288,7 +289,7 @@ function EmptyDropZone({
 
 	return (
 		<div ref={ref} className={css.emptyDropZone({ active: isOver })}>
-			<EmptyState icon={icon} message={message} />
+			<BlankState icon={icon} message={message} />
 		</div>
 	);
 }

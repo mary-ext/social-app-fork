@@ -23,11 +23,11 @@ import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListCard from '#/components/ListCard';
+import { Notice } from '#/components/Notice';
 import { Text } from '#/components/Text';
 import { ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
@@ -257,7 +257,7 @@ export function FeedsScreen() {
 	const renderItem = ({ index, item }: ListRenderItemInfo<FlatlistSlice>) => {
 		switch (item.type) {
 			case 'error': {
-				return <ErrorMessage message={item.error} />;
+				return <Notice className={css.error}>{item.error}</Notice>;
 			}
 			case 'savedFeedsHeader': {
 				return (

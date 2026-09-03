@@ -8,9 +8,9 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List, type ListMethods } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -51,7 +51,7 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	};
 
 	if (isError && items.length === 0) {
-		return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+		return <ErrorState onRetry={() => void refetch()} />;
 	}
 
 	if (isPending || !moderationOpts) {
@@ -60,21 +60,23 @@ export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 
 	if (items.length === 0) {
 		return (
-			<ListEmpty
+			<BlankState
+				actions={
+					isOwner && (
+						<Button
+							color="primary"
+							label={m['screens.profileList.members.startAdding']()}
+							onClick={onPressAddUser}
+							size="small"
+							variant="solid"
+						>
+							<ButtonIcon icon={PersonPlusIcon} />
+							<ButtonText>{m['screens.profileList.members.startAddingCta']()}</ButtonText>
+						</Button>
+					)
+				}
 				icon={ListIcon}
 				message={m['screens.profileList.members.empty']()}
-				button={
-					isOwner
-						? {
-								label: m['screens.profileList.members.startAdding'](),
-								text: m['screens.profileList.members.startAddingCta'](),
-								icon: PersonPlusIcon,
-								onPress: onPressAddUser,
-								size: 'small',
-								color: 'primary',
-							}
-						: undefined
-				}
 			/>
 		);
 	}

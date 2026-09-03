@@ -6,9 +6,9 @@ import { cleanError } from '#/lib/errors';
 
 import { useMyLikesQuery } from '#/state/queries/my-likes';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
@@ -30,14 +30,14 @@ export function LikesTab() {
 
 	if (posts.length < 1) {
 		if (isError) {
-			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
 			return <PostFeedLoadingPlaceholder />;
 		}
 
-		return <ListEmpty icon={HeartIcon} message={m['common.like.empty']()} />;
+		return <BlankState icon={HeartIcon} message={m['common.like.empty']()} />;
 	}
 
 	return (

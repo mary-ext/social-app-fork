@@ -13,17 +13,17 @@ import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
-import { EmptyState } from '#/components/EmptyState';
+import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
 import { List, type ListMethods } from '#/components/List/List';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import NewChatIcon from '#/icons/central-custom/MessagePlus_round_outlined_radius1_stroke2.svg';
@@ -57,6 +57,35 @@ function renderItem({ item }: { item: ListItem }) {
 	return <ChatListItem convo={item.conversation} selected={item.selected} />;
 }
 
+function SayHiBlankState({
+	chatDisabled,
+	onStartChat,
+}: {
+	chatDisabled: boolean | undefined;
+	onStartChat: () => void;
+}) {
+	return (
+		<BlankState
+			actions={
+				!chatDisabled && (
+					<Button
+						color="primary"
+						label={m['common.chat.action.new']()}
+						onClick={onStartChat}
+						size="small"
+						variant="solid"
+					>
+						<ButtonIcon icon={NewChatIcon} />
+						<ButtonText>{m['common.chat.action.new']()}</ButtonText>
+					</Button>
+				)
+			}
+			icon={BubbleSmileIcon}
+			message={m['screens.messages.conversation.sayHi']()}
+		/>
+	);
+}
+
 function keyExtractor(item: ListItem) {
 	return item.conversation.id;
 }
@@ -76,25 +105,9 @@ export function MessagesScreen() {
 	if (isWithinSplitView) {
 		return (
 			<>
-				<EmptyState
-					message={m['screens.messages.conversation.sayHi']()}
-					icon={BubbleSmileIcon}
-					messageColor="text"
-					iconColor="text"
-					iconSize="_4xl"
-					button={
-						chatStatus?.chatDisabled
-							? undefined
-							: {
-									label: m['common.chat.action.new'](),
-									text: m['common.chat.action.new'](),
-									onPress: () => newChatHandle.open(null),
-									size: 'small',
-									color: 'primary',
-									icon: NewChatIcon,
-								}
-					}
-					className={css.empty}
+				<SayHiBlankState
+					chatDisabled={chatStatus?.chatDisabled}
+					onStartChat={() => newChatHandle.open(null)}
 				/>
 				<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 			</>
@@ -170,42 +183,11 @@ export function ChatList({
 				{isPending ? (
 					<ChatListLoadingPlaceholder />
 				) : isError ? (
-					<ListError
-						hideBackButton
-						message={cleanError(error) || m['screens.messages.chats.reload.error']()}
-						onRetry={() => void refetch()}
-						title={m['common.error.whoops']()}
-					/>
+					<ErrorState message={m['screens.messages.chats.reload.error']()} onRetry={() => void refetch()} />
 				) : isWithinSplitView ? (
-					<EmptyState
-						message={m['screens.messages.chats.inboxEmpty']()}
-						icon={InboxIcon}
-						iconSize="_4xl"
-						messageColor="text"
-						iconColor="text"
-						className={css.emptyTall}
-					/>
+					<BlankState icon={InboxIcon} message={m['screens.messages.chats.inboxEmpty']()} />
 				) : (
-					<EmptyState
-						message={m['screens.messages.conversation.sayHi']()}
-						icon={BubbleSmileIcon}
-						iconSize="_4xl"
-						messageColor="text"
-						iconColor="text"
-						button={
-							chatStatus?.chatDisabled
-								? undefined
-								: {
-										label: m['common.chat.action.new'](),
-										text: m['common.chat.action.new'](),
-										onPress: openChatControl,
-										size: 'small',
-										color: 'primary',
-										icon: NewChatIcon,
-									}
-						}
-						className={css.emptyTall}
-					/>
+					<SayHiBlankState chatDisabled={chatStatus?.chatDisabled} onStartChat={openChatControl} />
 				)}
 			</>
 		);

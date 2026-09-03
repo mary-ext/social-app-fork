@@ -6,6 +6,7 @@ import { FilterMenu } from '#/screens/Profile/components/FilterMenu';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 
 import * as Menu from '#/components/Menu';
+import { Button, ButtonText } from '#/components/web/Button';
 
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke1.svg';
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
@@ -61,15 +62,18 @@ export function ProfileMediaSection({ did, isMe }: { did: Did; isMe: boolean }) 
 			feed={{ type: 'author', did, view: 'media', media: view }}
 			ignoreFilterFor={did}
 			emptyStateMessage={isVideos ? m['common.video.empty']() : m['common.media.empty']()}
-			emptyStateButton={
-				isMe
-					? {
-							color: 'primary',
-							label: composeLabel,
-							onPress: () => openComposer({}),
-							text: composeLabel,
-						}
-					: undefined
+			emptyStateActions={
+				isMe && (
+					<Button
+						color="primary"
+						label={composeLabel}
+						onClick={() => openComposer({})}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>{composeLabel}</ButtonText>
+					</Button>
+				)
 			}
 			emptyStateIcon={isVideos ? VideoIcon : ImageIcon}
 		/>

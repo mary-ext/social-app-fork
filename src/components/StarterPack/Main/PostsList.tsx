@@ -2,7 +2,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 
-import { EmptyState } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
@@ -13,7 +13,7 @@ interface PostsListProps {
 }
 
 function renderPostsEmpty() {
-	return <EmptyState icon={HashtagWideIcon} iconSize="_2xl" message={m['common.feeds.empty']()} />;
+	return <BlankState icon={HashtagWideIcon} message={m['common.feeds.empty']()} />;
 }
 
 export function PostsList({ listUri }: PostsListProps) {

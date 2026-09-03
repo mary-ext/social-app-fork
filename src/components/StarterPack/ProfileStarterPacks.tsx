@@ -6,15 +6,16 @@ import { cleanError } from '#/lib/errors';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import {
 	Default as StarterPackCard,
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,
 } from '#/components/StarterPack/StarterPackCard';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import CircleAndSquareIcon from '#/icons/original/CircleAndSquare.svg';
@@ -32,7 +33,6 @@ interface ProfileStarterPacksProps {
 }
 
 export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStarterPacksProps): ReactNode {
-	const router = useRouter();
 	const { data, error, fetchNextPage, hasNextPage, isError, isFetchingNextPage, isPending, refetch } =
 		useActorStarterPacksQuery({ did });
 
@@ -40,7 +40,7 @@ export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStar
 
 	if (starterPacks.length < 1) {
 		if (isError) {
-			return <ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
@@ -48,20 +48,22 @@ export function ProfileStarterPacks({ did, isMe, starterPackCount }: ProfileStar
 		}
 
 		return (
-			<ListEmpty
+			<BlankState
+				actions={
+					isMe && (
+						<LinkButton
+							color="primary"
+							label={m['common.starterPack.action.create']()}
+							size="small"
+							to={{ name: 'StarterPackWizard' }}
+							variant="solid"
+						>
+							<ButtonText>{m['common.starterPack.action.create']()}</ButtonText>
+						</LinkButton>
+					)
+				}
 				icon={CircleAndSquareIcon}
 				message={isMe ? m['components.starterPack.list.empty']() : m['common.starterPack.empty']()}
-				button={
-					isMe
-						? {
-								label: m['common.starterPack.action.create'](),
-								text: m['common.starterPack.action.create'](),
-								onPress: () => router.navigate({ to: { name: 'StarterPackWizard' } }),
-								size: 'small',
-								color: 'primary',
-							}
-						: undefined
-				}
 			/>
 		);
 	}

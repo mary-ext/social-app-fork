@@ -9,9 +9,9 @@ import { usePostRepostedByQuery } from '#/state/queries/post-reposted-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -61,7 +61,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 	const moderationOpts = useModerationOpts();
 
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(uri);
-	const { data, isPending, isFetchingNextPage, fetchNextPage, error } = usePostRepostedByQuery(
+	const { data, isPending, isFetchingNextPage, fetchNextPage, error, refetch } = usePostRepostedByQuery(
 		resolvedUri?.uri,
 	);
 
@@ -70,7 +70,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 	const repostedBy = data?.pages ? data.pages.flatMap((page) => page.repostedBy) : [];
 
 	if (isError && repostedBy.length < 1) {
-		return <ListError message={cleanError(resolveError || error)} />;
+		return <ErrorState onRetry={() => void refetch()} />;
 	}
 
 	// the paged query stays pending while the uri resolves, so this covers both fetches
@@ -79,7 +79,7 @@ function PostRepostedBy({ uri, initialCount }: { uri: string; initialCount?: num
 	}
 
 	if (repostedBy.length < 1) {
-		return <ListEmpty icon={RepostIcon} message={m['screens.postThread.engagement.repost.emptyPrompt']()} />;
+		return <BlankState icon={RepostIcon} message={m['screens.postThread.engagement.repost.emptyPrompt']()} />;
 	}
 
 	return (

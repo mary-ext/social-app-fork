@@ -19,7 +19,6 @@ import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
-import { SearchError } from '#/components/SearchError';
 import { shareUrl } from '#/components/sharing';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
@@ -28,6 +27,7 @@ import * as Layout from '#/components/web/Layout';
 import { InlineButton } from '#/components/web/Link';
 
 import Share from '#/icons/central/ArrowOutOfBox_round_outlined_radius1_stroke2.svg';
+import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
@@ -125,8 +125,9 @@ function HashtagScreenTab({
 
 	if (!hasSession) {
 		return (
-			<SearchError title={m['common.search.loggedOutError']()}>
-				<Text align="center" leading="snug" size="md">
+			<BlankState
+				icon={XIcon}
+				message={
 					<Trans
 						message={m['common.search.signInPrompt']}
 						markup={{
@@ -142,8 +143,9 @@ function HashtagScreenTab({
 							t2: ({ children }) => <Text color="textContrastMedium">{children}</Text>,
 						}}
 					/>
-				</Text>
-			</SearchError>
+				}
+				title={m['common.search.loggedOutError']()}
+			/>
 		);
 	}
 

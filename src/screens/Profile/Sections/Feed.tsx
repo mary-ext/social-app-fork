@@ -1,4 +1,4 @@
-import { type ReactElement, useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -6,29 +6,27 @@ import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 
-import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
+import { BlankState } from '#/components/BlankState';
+import type { ContentStateIcon } from '#/components/ContentState';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
 import { PostFeed } from '#/components/PostFeed/PostFeed';
 
-import EditIcon from '#/icons/central/EditBig_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
-
-import * as css from './Feed.css';
 
 interface FeedSectionProps {
 	feed: FeedDescriptor;
 	ignoreFilterFor?: string;
 	emptyStateMessage?: string;
-	emptyStateButton?: EmptyStateButtonProps;
-	emptyStateIcon?: EmptyStateIcon | ReactElement;
+	emptyStateActions?: ReactNode;
+	emptyStateIcon: ContentStateIcon;
 }
 
 export function ProfileFeedSection({
 	feed,
 	ignoreFilterFor,
 	emptyStateMessage,
-	emptyStateButton,
+	emptyStateActions,
 	emptyStateIcon,
 }: FeedSectionProps) {
 	const queryClient = useQueryClient();
@@ -47,14 +45,11 @@ export function ProfileFeedSection({
 
 	const renderPostsEmpty = () => {
 		return (
-			<div className={css.emptyContainer}>
-				<EmptyState
-					icon={emptyStateIcon || EditIcon}
-					iconSize="_3xl"
-					message={emptyStateMessage || m['common.post.empty']()}
-					button={emptyStateButton}
-				/>
-			</div>
+			<BlankState
+				actions={emptyStateActions}
+				icon={emptyStateIcon}
+				message={emptyStateMessage || m['common.post.empty']()}
+			/>
 		);
 	};
 

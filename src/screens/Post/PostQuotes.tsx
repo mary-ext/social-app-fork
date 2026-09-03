@@ -11,9 +11,9 @@ import { usePostQuotesQuery } from '#/state/queries/post-quotes';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
@@ -69,9 +69,8 @@ function keyExtractor(item: { post: AppBskyFeedDefs.PostView }) {
 
 function PostQuotes({ uri }: { uri: string }) {
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(uri);
-	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, error } = usePostQuotesQuery(
-		resolvedUri?.uri,
-	);
+	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, error, refetch } =
+		usePostQuotesQuery(resolvedUri?.uri);
 
 	const moderationOpts = useModerationOpts();
 
@@ -89,7 +88,7 @@ function PostQuotes({ uri }: { uri: string }) {
 
 	if (quotes.length < 1) {
 		if (isError) {
-			return <ListError message={cleanError(resolveError || error)} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending || !moderationOpts) {
@@ -97,7 +96,7 @@ function PostQuotes({ uri }: { uri: string }) {
 		}
 
 		return (
-			<ListEmpty icon={CloseQuoteIcon} message={m['screens.postThread.engagement.quote.emptyPrompt']()} />
+			<BlankState icon={CloseQuoteIcon} message={m['screens.postThread.engagement.quote.emptyPrompt']()} />
 		);
 	}
 

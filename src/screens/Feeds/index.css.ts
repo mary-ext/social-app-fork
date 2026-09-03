@@ -102,3 +102,5 @@ export const chevronRightIcon = style({
 	height: iconSize.sm,
 	color: colors.textContrastLow,
 });
+
+export const error = style({ margin: space.lg });

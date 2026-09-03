@@ -17,5 +17,5 @@ export type ErrorStateProps = Omit<ContentStateProps, 'icon' | 'message'> & {
  * @returns an error content state
  */
 export function ErrorState({ message = m['common.error.generic'](), ...props }: ErrorStateProps) {
-	return <ContentState {...props} icon={WarningIcon} message={message} />;
+	return <ContentState {...props} icon={WarningIcon} message={message} role="alert" />;
 }

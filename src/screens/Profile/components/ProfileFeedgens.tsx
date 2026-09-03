@@ -7,15 +7,16 @@ import { cleanError } from '#/lib/errors';
 import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
 import { useSession } from '#/state/session';
 
+import { BlankState } from '#/components/BlankState';
+import { ErrorState } from '#/components/ErrorState';
 import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
+import { ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 import HashtagWideIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke1.svg';
 import { m } from '#/paraglide/messages';
-import { useRouter } from '#/router';
 
 const FEEDGEN_ITEM_HEIGHT_ESTIMATE = 120;
 
@@ -25,7 +26,6 @@ interface ProfileFeedgensProps {
 }
 
 export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): ReactNode {
-	const router = useRouter();
 	const { currentAccount } = useSession();
 
 	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } =
@@ -37,7 +37,7 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 
 	if (feeds.length < 1) {
 		if (isError) {
-			return <ListError hideBackButton message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
@@ -45,20 +45,22 @@ export function ProfileFeedgens({ did, feedCount }: ProfileFeedgensProps): React
 		}
 
 		return (
-			<ListEmpty
+			<BlankState
+				actions={
+					isSelf && (
+						<LinkButton
+							color="secondary"
+							label={m['view.feeds.discover.browse']()}
+							size="small"
+							to={{ name: 'Feeds' }}
+							variant="solid"
+						>
+							<ButtonText>{m['view.feeds.discover.browse']()}</ButtonText>
+						</LinkButton>
+					)
+				}
 				icon={HashtagWideIcon}
 				message={isSelf ? m['view.feeds.saved.empty.message']() : m['view.feeds.saved.empty.title']()}
-				button={
-					isSelf
-						? {
-								label: m['view.feeds.discover.browse'](),
-								text: m['view.feeds.discover.browse'](),
-								onPress: () => router.navigate({ to: { name: 'Feeds' } }),
-								size: 'small',
-								color: 'secondary',
-							}
-						: undefined
-				}
 			/>
 		);
 	}
