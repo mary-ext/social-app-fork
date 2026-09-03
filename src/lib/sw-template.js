@@ -2,8 +2,13 @@
 
 const SHELL = '/';
 
+const RECOVERY_MARKER = '/__sw-recovery';
+
 const PRECACHE_CONCURRENCY = 6;
-const isShellFallback = (response) => !!response.headers.get('content-type')?.startsWith('text/html');
+const isHtml = (response) => !!response.headers.get('content-type')?.startsWith('text/html');
+
+// missing assets may return the shell with 200 text/html.
+const isAssetGone = (response) => response.status === 404 || (response.ok && isHtml(response));
 
 const precache = async (cache) => {
 	const queue = PRECACHE.slice();
@@ -13,7 +18,7 @@ const precache = async (cache) => {
 			let url;
 			while ((url = queue.pop()) !== undefined) {
 				const response = await fetch(url);
-				if (!response.ok || isShellFallback(response)) {
+				if (!response.ok || isHtml(response)) {
 					throw new Error(`precache failed: ${url} (${response.status})`);
 				}
 
@@ -21,6 +26,52 @@ const precache = async (cache) => {
 			}
 		}),
 	);
+};
+
+const reloadOntoCurrentShell = async (clientId) => {
+	const client = await self.clients.get(clientId);
+	if (client?.type !== 'window') {
+		return;
+	}
+
+	const response = await fetch(new Request(SHELL, { cache: 'reload' }));
+	if (!response.ok || response.redirected || !isHtml(response)) {
+		return;
+	}
+
+	const cache = await self.caches.open(CACHE);
+	const shell = await response.clone().text();
+
+	// avoid retrying recovery for the same shell.
+	const marker = await cache.match(RECOVERY_MARKER);
+	if (marker && (await marker.text()) === shell) {
+		return;
+	}
+
+	// seed the cache before reloading to avoid a stale http-cached shell.
+	await cache.put(SHELL, response);
+	await cache.put(RECOVERY_MARKER, new Response(shell));
+
+	await client.navigate(client.url);
+};
+
+const recovering = new Map();
+const recover = (clientId) => {
+	if (!clientId) {
+		return;
+	}
+
+	let pending = recovering.get(clientId);
+	if (!pending) {
+		// coalesce concurrent failures and allow retries after settlement.
+		pending = reloadOntoCurrentShell(clientId)
+			.catch(() => {})
+			.finally(() => recovering.delete(clientId));
+
+		recovering.set(clientId, pending);
+	}
+
+	return pending;
 };
 
 self.addEventListener('install', (event) => {
@@ -77,7 +128,13 @@ self.addEventListener('fetch', (event) => {
 				}
 
 				const response = await fetch(request);
-				if (response.ok && !isShellFallback(response)) {
+				if (isAssetGone(response)) {
+					// don't serve the shell as a module; recover the window.
+					event.waitUntil(recover(event.clientId));
+					return Response.error();
+				}
+
+				if (response.ok) {
 					event.waitUntil(cache.put(request, response.clone()));
 				}
 
