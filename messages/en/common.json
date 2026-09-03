@@ -144,7 +144,7 @@
 	"common.error.issueWithDetail": "There was an issue! {error}",
 	"common.error.network": "A network error occurred. Please check your internet connection.",
 	"common.error.notFound": "Not found",
-	"common.error.notFoundDescription": "We're sorry! We can't find the page you were looking for.",
+	"common.error.notFoundMessage": "We couldn't find what you're looking for.",
 	"common.error.ohNo": "Oh no!",
 	"common.error.oops": "Oops!",
 	"common.error.pageNotFound": "Page not found",

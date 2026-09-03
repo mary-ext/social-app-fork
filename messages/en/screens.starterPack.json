@@ -11,6 +11,7 @@
 	"screens.starterPack.error.create": "Failed to create starter pack",
 	"screens.starterPack.error.invalid": "Starter pack is invalid",
 	"screens.starterPack.error.invalidLong": "The starter pack that you are trying to view is invalid. You may delete this starter pack instead.",
+	"screens.starterPack.error.load": "Couldn't load this starter pack",
 	"screens.starterPack.error.notFound": "That starter pack could not be found.",
 	"screens.starterPack.feeds.addHint": "Add some feeds to your starter pack!",
 	"screens.starterPack.feeds.choose": "Choose feeds",

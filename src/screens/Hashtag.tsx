@@ -12,10 +12,10 @@ import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
+import { BlankState } from '#/components/BlankState';
 import { signinDialogHandle } from '#/components/dialogs/handles';
+import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
-import { ListEmpty } from '#/components/List/ListEmpty';
-import { ListError } from '#/components/List/ListError';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
@@ -151,14 +151,14 @@ function HashtagScreenTab({
 
 	if (posts.length < 1) {
 		if (isError) {
-			return <ListError message={cleanError(error)} onRetry={() => void refetch()} />;
+			return <ErrorState onRetry={() => void refetch()} />;
 		}
 
 		if (isPending) {
 			return <PostFeedLoadingPlaceholder />;
 		}
 
-		return <ListEmpty icon={MagnifyingGlassIcon} message={m['screens.hashtag.empty']()} />;
+		return <BlankState icon={MagnifyingGlassIcon} message={m['screens.hashtag.empty']()} />;
 	}
 
 	return (

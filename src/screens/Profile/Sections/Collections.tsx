@@ -12,9 +12,9 @@ import { useProfileListsQuery } from '#/state/queries/profile-lists';
 import { formatCount } from '#/locale/intl/number';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/components/EmptyState';
-import { ErrorMessage } from '#/components/ErrorMessage';
 import * as FeedCard from '#/components/FeedCard';
 import * as ListCard from '#/components/ListCard';
+import { Notice } from '#/components/Notice';
 import {
 	Default as StarterPackCard,
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,
@@ -25,6 +25,7 @@ import { LinkButton } from '#/components/web/Link';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import FeedIcon from '#/icons/central/Hashtag_round_outlined_radius1_stroke2.svg';
 import StarterPackIcon from '#/icons/original/CircleAndSquare.svg';
 import { m } from '#/paraglide/messages';
@@ -205,7 +206,11 @@ function CollectionGroup<Item>({
 			<EmptyState button={emptyButton} icon={Icon} message={emptyMessage} messageColor="textContrastMedium" />
 		);
 	} else if (error && items.length === 0) {
-		body = <ErrorMessage message={error} onPressTryAgain={onRetry} />;
+		body = (
+			<Notice className={css.notice} icon={WarningIcon} onRetry={onRetry}>
+				{error}
+			</Notice>
+		);
 	} else if (isPending) {
 		body = placeholder;
 	} else if (isEmpty) {

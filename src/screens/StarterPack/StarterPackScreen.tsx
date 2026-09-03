@@ -2,6 +2,7 @@ import { type Ref, useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { ClientResponseError } from '@atcute/client';
 
 import { definite, mapDefined } from '@mary/array-fns';
 
@@ -27,8 +28,10 @@ import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';
-import { ListError } from '#/components/List/ListError';
+import { ErrorState } from '#/components/ErrorState';
+import { GoHome } from '#/components/GoHome';
 import { ListLoading } from '#/components/List/ListLoading';
+import { NotFoundState } from '#/components/NotFoundState';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
@@ -57,10 +60,25 @@ export function StarterPackScreen() {
 	);
 }
 
-function NotFound() {
+function LoadFailed({ onRetry }: { onRetry: () => void }) {
 	return (
-		<ListError message={m['screens.starterPack.error.notFound']()} title={m['common.error.pageNotFound']()} />
+		<ErrorState
+			standalone
+			headerTitle={m['common.starterPack.label']()}
+			actions={<GoHome />}
+			onRetry={onRetry}
+			title={m['screens.starterPack.error.load']()}
+		/>
 	);
+}
+
+// missing packs may arrive as InvalidRequest with "not found" in the description
+function isMissingRecord(error: unknown) {
+	return error instanceof ClientResponseError && !!error.description?.includes('not found');
+}
+
+function NotFound() {
+	return <NotFoundState standalone headerTitle={m['common.starterPack.label']()} actions={<GoHome />} />;
 }
 
 export function StarterPackScreenShort() {
@@ -69,12 +87,24 @@ export function StarterPackScreenShort() {
 		data: resolvedStarterPack,
 		isLoading,
 		isError,
+		refetch,
 	} = useResolvedStarterPackShortLink({
 		code,
 	});
 
 	if (isLoading || isError || !resolvedStarterPack) {
-		return <Layout.Screen>{isLoading ? <ListLoading /> : <NotFound />}</Layout.Screen>;
+		return (
+			<Layout.Screen>
+				{isLoading ? (
+					<ListLoading />
+				) : isError ? (
+					<LoadFailed onRetry={() => void refetch()} />
+				) : (
+					// `resolveShortLink` returns undefined for invalid links and fetch failures
+					<NotFound />
+				)}
+			</Layout.Screen>
+		);
 	}
 	return (
 		<Layout.Screen className={Layout.ScrollAway.scope}>
@@ -98,8 +128,13 @@ export function StarterPackScreenInner({
 	useTitle(m['common.starterPack.label']());
 
 	const moderationOpts = useModerationOpts();
-	const { data: did, isError: isErrorDid } = useResolveDidQuery(actor);
-	const { data: starterPack, isError: isErrorStarterPack } = useStarterPackQuery({ did, rkey });
+	const { data: did, error: didError, isError: isErrorDid, refetch: refetchDid } = useResolveDidQuery(actor);
+	const {
+		data: starterPack,
+		error: starterPackError,
+		isError: isErrorStarterPack,
+		refetch: refetchStarterPack,
+	} = useStarterPackQuery({ did, rkey });
 
 	const isValid =
 		starterPack !== undefined &&
@@ -107,7 +142,12 @@ export function StarterPackScreenInner({
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		if (isErrorDid || isErrorStarterPack) {
-			return <NotFound />;
+			// missing records are not retryable
+			if (isMissingRecord(didError) || isMissingRecord(starterPackError)) {
+				return <NotFound />;
+			}
+
+			return <LoadFailed onRetry={() => void (isErrorDid ? refetchDid() : refetchStarterPack())} />;
 		}
 
 		if (!did || !starterPack || !moderationOpts) {

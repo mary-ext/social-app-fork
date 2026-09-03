@@ -7,6 +7,10 @@ export const group = style({
 	marginBottom: space._2xl,
 });
 
+export const notice = style({
+	marginInline: space.lg,
+});
+
 export const header = style({
 	display: 'flex',
 	alignItems: 'center',
