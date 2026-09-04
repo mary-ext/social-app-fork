@@ -20,8 +20,6 @@ import * as styles from '#/features/gifPicker/GifPickerDialog.css';
 import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
 
 import * as Dialog from '#/components/Dialog';
-import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { ErrorBoundaryFallback } from '#/components/ErrorBoundaryFallback';
 
 export function GifPickerDialog({
 	handle,
@@ -49,13 +47,7 @@ export function GifPickerDialog({
 			<Dialog.Viewport>
 				<Dialog.Close variant="outer" />
 				<Dialog.Card scroll="body" label="GIFs" fullHeight>
-					<ErrorBoundary
-						renderError={(error) => (
-							<ErrorBoundaryFallback details={String(error)} onClose={() => handle.close()} />
-						)}
-					>
-						<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
-					</ErrorBoundary>
+					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
 				</Dialog.Card>
 			</Dialog.Viewport>
 		</Dialog.Root>

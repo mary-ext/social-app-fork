@@ -126,10 +126,3 @@ export const emptyMessage = style({
 export const doneButton = style({
 	width: '100%',
 });
-
-export const error = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	padding: space.xl,
-});

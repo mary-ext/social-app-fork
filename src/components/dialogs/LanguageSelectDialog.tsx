@@ -12,8 +12,6 @@ import { type Language, LANGUAGES, LANGUAGES_MAP, langCode } from '#/locale/lang
 
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
-import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { ErrorBoundaryFallback } from '#/components/ErrorBoundaryFallback';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Text';
@@ -46,14 +44,10 @@ type Props = {
 export function LanguageSelectDialog(props: Props) {
 	const { handle, titleText } = props;
 
-	const renderErrorBoundary = (error: unknown) => <DialogError handle={handle} details={String(error)} />;
-
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup className={styles.popup} label={titleText} scroll="body">
-				<ErrorBoundary renderError={renderErrorBoundary}>
-					<DialogInner {...props} />
-				</ErrorBoundary>
+				<DialogInner {...props} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -234,8 +228,4 @@ function Empty({ message }: { message: string }) {
 			</Text>
 		</div>
 	);
-}
-
-function DialogError({ handle, details }: { handle: Dialog.DialogHandle; details?: string }) {
-	return <ErrorBoundaryFallback details={details} onClose={() => handle.close()} />;
 }
