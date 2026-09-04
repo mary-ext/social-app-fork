@@ -15,7 +15,7 @@ export const avatarWrap = style({
 
 export const errorWrap = style({
 	marginTop: 20,
-	paddingInline: 20,
+	marginInline: 20,
 });
 
 export const errorText = style({
