@@ -32,8 +32,3 @@ export const fields = style({
 	paddingBottom: 24,
 	paddingInline: 20,
 });
-
-export const errorWrap = style({
-	marginTop: 20,
-	paddingInline: 20,
-});

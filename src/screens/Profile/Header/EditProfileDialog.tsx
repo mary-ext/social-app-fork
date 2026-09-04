@@ -201,12 +201,10 @@ function DialogInner({
 					</div>
 				</div>
 
-				{isUpdateProfileError && (
-					<Notice className={styles.errorWrap}>{cleanError(updateProfileError)}</Notice>
-				)}
-				{imageError !== '' && <Notice className={styles.errorWrap}>{imageError}</Notice>}
-
 				<div className={styles.fields}>
+					{isUpdateProfileError && <Notice>{cleanError(updateProfileError)}</Notice>}
+					{imageError !== '' && <Notice>{imageError}</Notice>}
+
 					<TextField.Root isInvalid={displayNameTooLong}>
 						<TextField.LabelText>{m['screens.profile.editProfile.displayName.label']()}</TextField.LabelText>
 						<TextField.Input
