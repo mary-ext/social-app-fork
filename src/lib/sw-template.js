@@ -2,13 +2,23 @@
 
 const SHELL = '/';
 
-const RECOVERY_MARKER = '/__sw-recovery';
+const STALE_MARKER = '/__sw-stale';
 
 const PRECACHE_CONCURRENCY = 6;
 const isHtml = (response) => !!response.headers.get('content-type')?.startsWith('text/html');
 
 // missing assets may return the shell with 200 text/html.
 const isAssetGone = (response) => response.status === 404 || (response.ok && isHtml(response));
+
+let opening;
+const openCache = () => (opening ??= self.caches.open(CACHE));
+
+const unavailable = () =>
+	new Response(null, {
+		status: 503,
+		statusText: 'Stale Service Worker Cache',
+		headers: { 'cache-control': 'no-store' },
+	});
 
 const precache = async (cache) => {
 	const queue = PRECACHE.slice();
@@ -28,56 +38,42 @@ const precache = async (cache) => {
 	);
 };
 
-const reloadOntoCurrentShell = async (clientId) => {
+const markStaleAndReload = async (clientId) => {
+	const cache = await openCache();
+
+	// persist before looking up the client.
+	if (await cache.match(STALE_MARKER)) {
+		return;
+	}
+
+	await cache.put(STALE_MARKER, new Response());
+
+	if (!clientId) {
+		return;
+	}
+
 	const client = await self.clients.get(clientId);
 	if (client?.type !== 'window') {
 		return;
 	}
 
-	const response = await fetch(new Request(SHELL, { cache: 'reload' }));
-	if (!response.ok || response.redirected || !isHtml(response)) {
-		return;
-	}
-
-	const cache = await self.caches.open(CACHE);
-	const shell = await response.clone().text();
-
-	// avoid retrying recovery for the same shell.
-	const marker = await cache.match(RECOVERY_MARKER);
-	if (marker && (await marker.text()) === shell) {
-		return;
-	}
-
-	// seed the cache before reloading to avoid a stale http-cached shell.
-	await cache.put(SHELL, response);
-	await cache.put(RECOVERY_MARKER, new Response(shell));
-
 	await client.navigate(client.url);
 };
 
-const recovering = new Map();
+let recovering;
 const recover = (clientId) => {
-	if (!clientId) {
-		return;
-	}
+	// coalesce attempts; the marker survives worker restarts.
+	recovering ??= markStaleAndReload(clientId).catch((err) => {
+		console.error('service worker recovery failed', err);
+	});
 
-	let pending = recovering.get(clientId);
-	if (!pending) {
-		// coalesce concurrent failures and allow retries after settlement.
-		pending = reloadOntoCurrentShell(clientId)
-			.catch(() => {})
-			.finally(() => recovering.delete(clientId));
-
-		recovering.set(clientId, pending);
-	}
-
-	return pending;
+	return recovering;
 };
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
-			const cache = await self.caches.open(CACHE);
+			const cache = await openCache();
 
 			await precache(cache);
 			await cache.add(new Request(SHELL, { cache: 'reload' }));
@@ -90,6 +86,11 @@ self.addEventListener('activate', (event) => {
 		(async () => {
 			const keys = await self.caches.keys();
 			await Promise.all(keys.filter((key) => key !== CACHE).map((key) => self.caches.delete(key)));
+
+			// clear a marker left by a previous worker.
+			const cache = await openCache();
+			await cache.delete(STALE_MARKER);
+
 			await self.clients.claim();
 		})(),
 	);
@@ -101,6 +102,52 @@ self.addEventListener('message', (event) => {
 		self.skipWaiting();
 	}
 });
+
+const serveAsset = async (event) => {
+	const request = event.request;
+	const cache = await openCache();
+
+	const cached = await cache.match(request);
+	if (cached) {
+		return cached;
+	}
+
+	const response = await fetch(request);
+	if (isAssetGone(response)) {
+		// don't serve the shell as a module; recover the window.
+		event.waitUntil(recover(event.clientId));
+		return unavailable();
+	}
+
+	if (response.ok) {
+		// cache without delaying the response.
+		event.waitUntil(cache.put(request, response.clone()));
+	}
+
+	return response;
+};
+
+const serveNavigation = async (request) => {
+	const cache = await openCache();
+	const [stale, cached] = await Promise.all([cache.match(STALE_MARKER), cache.match(SHELL)]);
+
+	// don't use a redirect as the shell.
+	const shell = cached?.redirected ? undefined : cached;
+	if (!shell) {
+		return fetch(request);
+	}
+
+	// try the network after a stale asset; use the shell offline.
+	if (stale) {
+		try {
+			return await fetch(request);
+		} catch {
+			// use the cached shell offline.
+		}
+	}
+
+	return shell;
+};
 
 self.addEventListener('fetch', (event) => {
 	const request = event.request;
@@ -120,37 +167,13 @@ self.addEventListener('fetch', (event) => {
 
 	// serve content-hashed assets cache-first.
 	if (url.pathname.startsWith(ASSETS)) {
-		event.respondWith(
-			self.caches.open(CACHE).then(async (cache) => {
-				const cached = await cache.match(request);
-				if (cached) {
-					return cached;
-				}
-
-				const response = await fetch(request);
-				if (isAssetGone(response)) {
-					// don't serve the shell as a module; recover the window.
-					event.waitUntil(recover(event.clientId));
-					return Response.error();
-				}
-
-				if (response.ok) {
-					event.waitUntil(cache.put(request, response.clone()));
-				}
-
-				return response;
-			}),
-		);
-
+		event.respondWith(serveAsset(event));
 		return;
 	}
 
-	// serve the cached shell for navigations, except redirected responses.
+	// use the network after a stale asset.
 	if (request.mode === 'navigate') {
-		event.respondWith(
-			self.caches.match(SHELL).then((cached) => (cached && !cached.redirected ? cached : fetch(request))),
-		);
-
+		event.respondWith(serveNavigation(request));
 		return;
 	}
 });
