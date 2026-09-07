@@ -109,7 +109,7 @@ we use conventional commits with these rules:
 
 ### documentation
 
-"documentation" here means READMEs, code comments, and commit messages.
+"documentation" here means READMEs, code comments, JSDoc, and commit messages.
 
 - write in lowercase, except for proper nouns, acronyms, and 'I'. public-facing interfaces (web UI)
   are exempt
@@ -132,12 +132,3 @@ we use conventional commits with these rules:
   and may be wiped or absent in any future session, so committed source code (including comments,
   docstrings, commit messages, READMEs, or other docs) must not reference paths under `.research/`
   or rely on its contents existing
-- this document is intentionally incomplete; discover everything else by exploring the repo
-- explore the code first when unsure about plans, requirements, or existing behavior. ask for
-  clarification when exploration leaves the question unresolved
-- when debugging, isolate the root cause before attempting fixes: add logging, reproduce the issue,
-  narrow down the scope, and confirm the exact source of the problem
-- find and read code yourself with Grep/Glob/Read — they locate things directly and return the real
-  source. a subagent hands back only its paraphrase of what it saw, so you'd have to verify it
-  against the source anyway, and the round-trip rarely pays off: even 'where does X live?' is
-  usually one search away. reserve subagents for genuinely large parallel sweeps
