@@ -18,7 +18,7 @@ export const header = style({
 	flexShrink: 0,
 	alignItems: 'center',
 	justifyContent: 'space-between',
-	borderBottom: `1px solid ${colors.borderContrastLow}`,
+	borderBottom: `1px solid ${colors.borderContrastMedium}`,
 	backgroundColor: vars.palette.contrast_0,
 	padding: DIALOG_PADDING,
 });
