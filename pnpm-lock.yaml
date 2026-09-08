@@ -112,9 +112,6 @@ importers:
       '@mary/exif-rm':
         specifier: jsr:^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
-      '@mary/keybinds':
-        specifier: jsr:^0.1.2
-        version: '@jsr/mary__keybinds@0.1.2'
       '@oomfware/cropper':
         specifier: ^0.1.0
         version: 0.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -824,9 +821,6 @@ packages:
 
   '@jsr/mary__exif-rm@0.2.2':
     resolution: {integrity: sha512-+ZpLaC+1CyqWhH608Sqd6/yTG0pOlokn2tCXha7s1SMQ+GLKo4Nn/PskTeeP9Pt+6gNYSu6ednoSlRvXb2ZGxg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__exif-rm/0.2.2.tgz}
-
-  '@jsr/mary__keybinds@0.1.2':
-    resolution: {integrity: sha512-IGRtExxYepo5OEgyKLrdkteQy6pt71YoTb/7yJwGPfKb1gGzfz/GLjIXXZpdNjM0K9PucYaixB+irNik3H4Uag==, tarball: https://npm.jsr.io/~/11/@jsr/mary__keybinds/0.1.2.tgz}
 
   '@lix-js/sdk-darwin-arm64@0.12.3':
     resolution: {integrity: sha512-YeMJyYGk+QwvQe8O4AAcBMgfNm68IjAGDvuvZHr1U1rIb3GC2kYFStajqf4mT4BGc+cN65/P/2kkqEo+Igu/sA==}
@@ -2668,8 +2662,6 @@ snapshots:
   '@jsr/mary__date-fns@0.1.4': {}
 
   '@jsr/mary__exif-rm@0.2.2': {}
-
-  '@jsr/mary__keybinds@0.1.2': {}
 
   '@lix-js/sdk-darwin-arm64@0.12.3':
     optional: true

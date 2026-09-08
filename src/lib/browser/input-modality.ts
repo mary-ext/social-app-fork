@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
-import { MODIFIERS } from '@mary/keybinds';
 
 import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
 
@@ -37,7 +36,7 @@ const onPointerEvent = (evt: PointerEvent) => {
 };
 
 const onKeyDown = (evt: KeyboardEvent) => {
-	if (MODIFIERS.includes(evt.key)) {
+	if (['Alt', 'Control', 'Meta', 'Shift'].includes(evt.key)) {
 		return;
 	}
 
