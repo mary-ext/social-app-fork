@@ -2,6 +2,7 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
@@ -14,6 +15,7 @@ export const outer = style({
 	display: 'flex',
 	position: 'relative',
 	flexDirection: 'row',
+	minWidth: 0,
 });
 
 export const scroller = style({
@@ -32,26 +34,28 @@ export const scroller = style({
 });
 
 const activeColors = {
-	borderColor: colors.borderContrastMedium,
-	backgroundColor: colors.contrast_25,
-	color: colors.text,
+	borderColor: vars.palette.primary_500,
+	backgroundColor: vars.palette.primary_500,
+	color: vars.palette.white,
 };
 
 export const tab = recipe(
 	{
 		base: {
 			appearance: 'none',
+			boxSizing: 'border-box',
 			display: 'flex',
 			flexShrink: 0,
 			// gap only shows through with multiple children (e.g. a label beside a count); single-label pills are unaffected.
 			gap: space.sm,
 			alignItems: 'center',
 			margin: 0,
-			border: `1px solid ${colors.borderContrastLow}`,
+			border: `1px solid ${colors.borderContrastMedium}`,
 			borderRadius: borderRadius.full,
 			backgroundColor: colors.bg,
-			paddingBlock: space.sm,
+			paddingBlock: 0,
 			paddingInline: space.lg,
+			height: 33,
 			whiteSpace: 'nowrap',
 			color: colors.textContrastMedium,
 			cursor: 'pointer',
@@ -60,7 +64,8 @@ export const tab = recipe(
 					outline: `2px solid ${colors.primary_500}`,
 					outlineOffset: -2,
 				},
-				[hover()]: activeColors,
+				[hover(':not(:disabled):not([data-active="true"])')]: { backgroundColor: colors.contrast_50 },
+				'&:disabled': { cursor: 'default', opacity: 0.5 },
 			},
 		},
 		defaultVariants: { active: false },

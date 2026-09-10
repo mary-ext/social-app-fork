@@ -11,7 +11,6 @@ import type { SessionAccount } from '#/state/session/types';
 import * as Dialog from '#/components/Dialog';
 import { filterBlockedReactions } from '#/components/dms/util';
 import * as TabScroller from '#/components/TabScroller';
-import { tabLabel } from '#/components/TabScroller.css';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -124,12 +123,8 @@ function DialogInner({
 							key={tab.key}
 							onClick={() => setSelected(tab.key)}
 						>
-							<Text className={tabLabel} size="md_sub" weight="medium">
-								{tab.value}
-							</Text>
-							<Text className={tabLabel} size="md_sub" weight="medium">
-								{tab.count}
-							</Text>
+							<TabScroller.TabText>{tab.value}</TabScroller.TabText>
+							<TabScroller.TabText>{tab.count}</TabScroller.TabText>
 						</TabScroller.Tab>
 					))}
 				</TabScroller.Root>

@@ -1,6 +1,4 @@
 import * as TabScroller from '#/components/TabScroller';
-import { tabLabel } from '#/components/TabScroller.css';
-import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
@@ -36,9 +34,7 @@ export function InterestTabs({
 						key={interest}
 						onClick={() => onSelectTab(interest)}
 					>
-						<Text className={tabLabel} size="md_sub" weight="medium">
-							{displayName}
-						</Text>
+						<TabScroller.TabText>{displayName}</TabScroller.TabText>
 					</TabScroller.Tab>
 				);
 			})}

@@ -11,6 +11,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import * as css from '#/components/TabScroller.css';
+import { Text, type TextProps } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import ArrowLeft from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
@@ -26,18 +27,18 @@ const CONTINUOUS_SCROLL_SPEED = 6;
 const CONTINUOUS_SCROLL_DELAY = 500;
 
 /**
- * Horizontally-scrolling row of pills. Owns the scroll mechanics — drag-to-scroll, hidden scrollbar, edge
- * fade/scroll buttons, and centering the active pill into view — while the pills themselves are supplied as
- * {@link Tab} children. Mark the selected child with `active`, and pass its key as `activeKey` so the row
- * re-centers when the selection changes.
+ * horizontally-scrolling row of pills.
+ *
+ * @param props pills, optional active key, and horizontal gutter width
+ * @returns the pill scroller and edge controls
  */
 export function Root({
 	activeKey,
 	children,
 	gutterWidth = space.lg,
 }: {
-	/** Key of the active tab; changing it re-centers the `active` pill into view. */
-	activeKey: string;
+	/** key of the active tab that it should center to. */
+	activeKey?: string;
 	children: ReactNode;
 	/** Horizontal inset of the scroller and its edge fades. */
 	gutterWidth?: number;
@@ -77,6 +78,9 @@ export function Root({
 
 	// center the active pill — scoped to the row's own scrollLeft so it doesn't nudge ancestors (e.g. the page)
 	useEffect(() => {
+		if (activeKey === undefined) {
+			return;
+		}
 		const el = scrollerRef.current;
 		const active = el?.querySelector('[data-active="true"]');
 		if (!el || !active) {
@@ -238,3 +242,21 @@ export function Tab({
 		</button>
 	);
 }
+
+/**
+ * text inside a pill
+ *
+ * @param props text content and typography overrides
+ * @returns styled pill text
+ */
+export const TabText = ({ className, ...props }: Omit<TextProps, 'color'>) => {
+	return (
+		<Text
+			selectable={false}
+			size="md_sub"
+			weight="medium"
+			{...props}
+			className={clsx(css.tabLabel, className)}
+		/>
+	);
+};
