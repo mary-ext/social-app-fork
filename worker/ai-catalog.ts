@@ -1,6 +1,7 @@
 import { waitUntil } from 'cloudflare:workers';
 
 import type * as v from '@atcute/lexicons/validations';
+import { UpstreamFailureError } from '@atcute/xrpc-server';
 
 import { AI_FORMAT_HEADERS } from '../src/lib/ai/wire/headers';
 import {
@@ -14,7 +15,13 @@ import {
 } from '../src/lib/lexicons';
 import { type CorsProbeTarget, selectCorsAllowedUrls } from './ai-cors';
 import { type AiProviderOverlay, PROVIDER_OVERLAYS } from './ai-overlay';
-import { loadModelsDevCatalog, type ModelsDevModel, type ModelsDevProvider } from './models-dev';
+import {
+	loadModelsDevCatalog,
+	type ModelsDevCatalog,
+	type ModelsDevModel,
+	type ModelsDevProvider,
+	revalidateModelsDevCatalog,
+} from './models-dev';
 
 /** maps AI SDK packages to their wire format. */
 const PACKAGE_FORMATS: Record<string, AiWireFormat> = {
@@ -44,8 +51,10 @@ const KNOWN_MODALITIES = new Set<string>(AI_MODALITIES);
 
 type NormalizedProvider = { offers: AiModelOffer[]; provider: AiProvider };
 
-const CATALOG_CACHE_TTL = 15 * 60;
-const CATALOG_CACHE_KEY = 'https://ai-catalog.invalid/1';
+const CATALOG_CACHE_TTL = 365 * 24 * 60 * 60;
+const CATALOG_CACHE_KEY = 'https://ai-catalog.invalid/2';
+
+const CATALOG_ETAG_HEADER = 'x-upstream-etag';
 
 /**
  * lists providers with at least one supported model.
@@ -54,7 +63,7 @@ const CATALOG_CACHE_KEY = 'https://ai-catalog.invalid/1';
  * @throws {UpstreamFailureError} when the catalog is unavailable
  */
 export const listAiProviderCatalog = async (): Promise<{ providers: AiProvider[] }> => {
-	const listed = await loadNormalizedCatalog();
+	const listed = await loadAdvertisedCatalog();
 	return { providers: listed.map((entry) => entry.provider) };
 };
 
@@ -68,7 +77,7 @@ type ModelParams = v.InferOutput<(typeof listAiModels)['params']>;
  * @throws {UpstreamFailureError} when the catalog is unavailable
  */
 export const listAiModelOffers = async (params: ModelParams): Promise<{ models: AiModelOffer[] }> => {
-	const listed = await loadNormalizedCatalog();
+	const listed = await loadAdvertisedCatalog();
 
 	const requested = new Set(params.providers);
 	const formats = new Set<AiWireFormat>(params.formats);
@@ -105,22 +114,75 @@ const covers = (available: readonly AiModality[], required: readonly AiModality[
 	return required.every((modality) => available.includes(modality));
 };
 
+const loadAdvertisedCatalog = async (): Promise<NormalizedProvider[]> => {
+	return await dropCorsBlocked(await loadNormalizedCatalog());
+};
+
 const loadNormalizedCatalog = async (): Promise<NormalizedProvider[]> => {
-	const cached = await caches.default.match(CATALOG_CACHE_KEY);
-	if (cached) {
-		return await cached.json<NormalizedProvider[]>();
+	const stored = await readStoredCatalog();
+	if (stored === undefined) {
+		return await buildCatalog();
 	}
 
-	const listed = await dropCorsBlocked(normalizeCatalog(await loadModelsDevCatalog()));
-	waitUntil(
-		caches.default.put(
-			CATALOG_CACHE_KEY,
-			Response.json(listed, {
-				headers: { 'cache-control': `public, max-age=${CATALOG_CACHE_TTL}` },
-			}),
-		),
-	);
+	const { etag, listed } = stored;
 
+	let fetched: ModelsDevCatalog | undefined;
+	try {
+		fetched = etag !== null ? await revalidateModelsDevCatalog(etag) : await loadModelsDevCatalog();
+	} catch (error: unknown) {
+		console.error('models.dev catalog revalidation failed:', error);
+		return listed;
+	}
+
+	return fetched !== undefined ? normalizeAndCacheCatalog(fetched) : listed;
+};
+
+type StoredCatalog = { etag: string | null; listed: NormalizedProvider[] };
+
+const readStoredCatalog = async (): Promise<StoredCatalog | undefined> => {
+	const cached = await caches.default.match(CATALOG_CACHE_KEY);
+	if (cached === undefined) {
+		return undefined;
+	}
+
+	try {
+		return {
+			etag: cached.headers.get(CATALOG_ETAG_HEADER),
+			listed: await cached.json<NormalizedProvider[]>(),
+		};
+	} catch (error: unknown) {
+		console.error('discarding unreadable catalog cache entry:', error);
+		return undefined;
+	}
+};
+
+/** @throws {UpstreamFailureError} when the catalog is unavailable */
+const buildCatalog = async (): Promise<NormalizedProvider[]> => {
+	let fetched: ModelsDevCatalog;
+	try {
+		fetched = await loadModelsDevCatalog();
+	} catch (error: unknown) {
+		// do not expose upstream errors to clients.
+		console.error('models.dev catalog unavailable:', error);
+
+		throw new UpstreamFailureError({
+			error: 'CatalogUnavailable',
+			message: 'the model catalog could not be reached',
+		});
+	}
+
+	return normalizeAndCacheCatalog(fetched);
+};
+
+const normalizeAndCacheCatalog = (fetched: ModelsDevCatalog): NormalizedProvider[] => {
+	const listed = normalizeCatalog(fetched.providers);
+
+	const headers = new Headers({ 'cache-control': `public, max-age=${CATALOG_CACHE_TTL}` });
+	if (fetched.etag !== undefined) {
+		headers.set(CATALOG_ETAG_HEADER, fetched.etag);
+	}
+
+	waitUntil(caches.default.put(CATALOG_CACHE_KEY, Response.json(listed, { headers })));
 	return listed;
 };
 

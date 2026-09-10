@@ -1,13 +1,11 @@
-import { UpstreamFailureError } from '@atcute/xrpc-server';
-
 import * as v from 'valibot';
 
 const CATALOG_URL = 'https://models.dev/api.json';
 
-/** keep the raw catalog cache shorter-lived than the normalized cache. */
-const CATALOG_TTL_SECONDS = 60;
+const HEADERS_TIMEOUT_MS = 2_000;
 
-const CATALOG_TIMEOUT_MS = 10_000;
+// allow longer for the multi-megabyte body than for response headers.
+const BODY_TIMEOUT_MS = 10_000;
 
 const routeOverrideSchema = v.object({
 	api: v.optional(v.string()),
@@ -44,41 +42,79 @@ const catalogSchema = v.record(v.string(), providerSchema);
 export type ModelsDevModel = v.InferOutput<typeof modelSchema>;
 export type ModelsDevProvider = v.InferOutput<typeof providerSchema>;
 
+export type ModelsDevCatalog = {
+	/** upstream ETag, if provided; pass to {@link revalidateModelsDevCatalog}. */
+	etag: string | undefined;
+	/** providers in catalog order. */
+	providers: ModelsDevProvider[];
+};
+
 /**
  * fetches and validates the models.dev catalog.
  *
- * @returns providers in catalog order
- * @throws {UpstreamFailureError} when the catalog is unavailable or invalid
+ * @returns the catalog and its validator
+ * @throws {Error} when the catalog is unreachable or invalid
  */
-export const loadModelsDevCatalog = async (): Promise<ModelsDevProvider[]> => {
-	let catalog: ModelsDevProvider[];
-	try {
-		const response = await fetch(CATALOG_URL, {
-			cf: { cacheEverything: true, cacheTtl: CATALOG_TTL_SECONDS },
-			signal: AbortSignal.timeout(CATALOG_TIMEOUT_MS),
-		});
-		if (!response.ok) {
-			await response.body?.cancel().catch(() => {});
-			throw new Error(`models.dev returned ${response.status}`);
-		}
-
-		catalog = Object.values(v.parse(catalogSchema, await response.json()));
-	} catch (error: unknown) {
-		return unavailable(error);
+export const loadModelsDevCatalog = async (): Promise<ModelsDevCatalog> => {
+	const fetched = await requestCatalog(undefined);
+	if (fetched === undefined) {
+		throw new Error('models.dev reported no change for an unconditional request');
 	}
 
-	if (catalog.length === 0) {
-		return unavailable(new Error('models.dev returned no providers'));
-	}
-	return catalog;
+	return fetched;
 };
 
-const unavailable = (cause: unknown): never => {
-	// do not expose upstream errors to clients.
-	console.error('models.dev catalog unavailable:', cause);
+/**
+ * fetches and validates the models.dev catalog if its ETag has changed.
+ *
+ * @param etag previously received ETag
+ * @returns the updated catalog, or `undefined` if unchanged
+ * @throws {Error} when the catalog is unreachable or invalid
+ */
+export const revalidateModelsDevCatalog = (etag: string): Promise<ModelsDevCatalog | undefined> => {
+	return requestCatalog(etag);
+};
 
-	throw new UpstreamFailureError({
-		error: 'CatalogUnavailable',
-		message: 'the model catalog could not be reached',
-	});
+const requestCatalog = async (etag: string | undefined): Promise<ModelsDevCatalog | undefined> => {
+	const controller = new AbortController();
+
+	let response: Response;
+	{
+		const expire = setTimeout(() => controller.abort(), HEADERS_TIMEOUT_MS);
+		try {
+			response = await fetch(CATALOG_URL, {
+				headers: etag !== undefined ? { 'if-none-match': etag } : undefined,
+				signal: controller.signal,
+			});
+		} finally {
+			clearTimeout(expire);
+		}
+	}
+
+	if (response.status === 304) {
+		await response.body?.cancel().catch(() => {});
+		return undefined;
+	}
+
+	if (!response.ok) {
+		await response.body?.cancel().catch(() => {});
+		throw new Error(`models.dev returned ${response.status}`);
+	}
+
+	let source: unknown;
+	{
+		const expire = setTimeout(() => controller.abort(), BODY_TIMEOUT_MS);
+		try {
+			source = await response.json();
+		} finally {
+			clearTimeout(expire);
+		}
+	}
+
+	const providers = Object.values(v.parse(catalogSchema, source));
+	if (providers.length === 0) {
+		throw new Error('models.dev returned no providers');
+	}
+
+	return { etag: response.headers.get('etag') ?? undefined, providers };
 };
