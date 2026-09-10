@@ -9,11 +9,17 @@ import { useTitle } from '#/state/use-title';
 import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
+import * as Menu from '#/components/Menu';
+import { UnmuteAllPrompt } from '#/components/moderation/unmute-all-prompt';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
+import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as profileCardCss from '#/components/web/ProfileCard.css';
 
+import DotsHorizontal from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import Unmute from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './MutedAccounts.css';
@@ -35,6 +41,11 @@ export function ModerationMutedAccounts() {
 				<Layout.Header.Content>
 					<Layout.Header.TitleText>{m['common.mute.accountsTitle']()}</Layout.Header.TitleText>
 				</Layout.Header.Content>
+				{!isEmpty && (
+					<Layout.Header.EndSlot>
+						<OverflowMenu />
+					</Layout.Header.EndSlot>
+				)}
 			</Layout.Header.Outer>
 			{isEmpty ? (
 				<div>
@@ -85,6 +96,42 @@ function MutedRow({ index, profile }: { index: number; profile: ActorDefs.Profil
 				<ProfileCard.Description profile={profile} />
 			</ProfileCard.Outer>
 		</ProfileCard.Link>
+	);
+}
+
+function OverflowMenu() {
+	const clearHandle = Prompt.usePromptHandle();
+
+	return (
+		<>
+			<Menu.Root>
+				<Menu.Trigger
+					render={
+						<Button
+							color="secondary"
+							label={m['common.a11y.moreOptions']()}
+							shape="round"
+							size="small"
+							variant="ghost"
+						>
+							<ButtonIcon icon={DotsHorizontal} size="lg" />
+						</Button>
+					}
+				/>
+				<Menu.Popup align="end" label={m['common.a11y.moreOptions']()}>
+					<Menu.Item
+						destructive
+						label={m['screens.moderation.mute.unmuteAll.action']()}
+						onClick={() => clearHandle.open(null)}
+					>
+						<Menu.ItemText>{m['screens.moderation.mute.unmuteAll.action']()}</Menu.ItemText>
+						<Menu.ItemIcon icon={Unmute} position="right" />
+					</Menu.Item>
+				</Menu.Popup>
+			</Menu.Root>
+
+			<UnmuteAllPrompt handle={clearHandle} />
+		</>
 	);
 }
 

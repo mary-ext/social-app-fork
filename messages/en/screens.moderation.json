@@ -22,6 +22,40 @@
 	"screens.moderation.mute.description": "View your muted accounts",
 	"screens.moderation.mute.hint": "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private.",
 	"screens.moderation.mute.title": "Muted accounts",
+	"screens.moderation.mute.unmuteAll.action": "Unmute all",
+	"screens.moderation.mute.unmuteAll.description": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "This will unmute {n} account. You can mute it again at any time.",
+				"cp=other": "This will unmute {n} accounts. You can mute them again at any time."
+			}
+		}
+	],
+	"screens.moderation.mute.unmuteAll.empty": "You have no muted accounts.",
+	"screens.moderation.mute.unmuteAll.error": "Couldn't unmute your accounts. Try again.",
+	"screens.moderation.mute.unmuteAll.partialError": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Couldn't unmute {n} account. It's still muted.",
+				"cp=other": "Couldn't unmute {n} accounts. They're still muted."
+			}
+		}
+	],
+	"screens.moderation.mute.unmuteAll.title": "Unmute all accounts?",
+	"screens.moderation.mute.unmuteAll.unmutedToast": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Unmuted {n} account",
+				"cp=other": "Unmuted {n} accounts"
+			}
+		}
+	],
 	"screens.moderation.mutedWord.changeDuration": "Change duration",
 	"screens.moderation.mutedWord.description": "View your muted words",
 	"screens.moderation.mutedWord.empty": "You haven't muted any words or tags yet.",
