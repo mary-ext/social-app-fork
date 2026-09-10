@@ -13,7 +13,7 @@ const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
 
 // TODO refactor invalidate on mutate?
-const RQKEY_ROOT = 'profile-follows';
+export const RQKEY_ROOT = 'profile-follows';
 // the sort is part of the key: the two orderings are different lists and must not share pages.
 export const RQKEY = (did: string, sort: 'latest' | 'top' = DEFAULT_SORT) => [RQKEY_ROOT, did, sort];
 

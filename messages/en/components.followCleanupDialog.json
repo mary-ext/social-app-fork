@@ -1,0 +1,85 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"components.followCleanupDialog.action.clearSelection": "Clear",
+	"components.followCleanupDialog.action.scan": "Scan my follows",
+	"components.followCleanupDialog.action.selectAll": "Select all shown",
+	"components.followCleanupDialog.action.unfollow": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Unfollow {n} account",
+				"cp=other": "Unfollow {n} accounts"
+			}
+		}
+	],
+	"components.followCleanupDialog.confirm.message": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "This removes {n} follow from your account and cannot be undone.",
+				"cp=other": "This removes {n} follows from your account and cannot be undone."
+			}
+		}
+	],
+	"components.followCleanupDialog.confirm.title": "Unfollow these accounts?",
+	"components.followCleanupDialog.empty": "Nothing to clean up. Every account you follow is still reachable.",
+	"components.followCleanupDialog.followedAt": "Followed {date}",
+	"components.followCleanupDialog.issue.blockedBy": "Blocked you",
+	"components.followCleanupDialog.issue.blocking": "You blocked them",
+	"components.followCleanupDialog.issue.deactivated": "Deactivated",
+	"components.followCleanupDialog.issue.hidden": "Hidden by a moderation service",
+	"components.followCleanupDialog.issue.self": "Yourself",
+	"components.followCleanupDialog.issue.suspended": "Suspended",
+	"components.followCleanupDialog.issue.unavailable": "Unavailable",
+	"components.followCleanupDialog.progress.checking": [
+		{
+			"declarations": ["input done", "input total", "local n1 = done: number", "local n2 = total: number"],
+			"selectors": [],
+			"match": {
+				"": "Checking {n1} of {n2}"
+			}
+		}
+	],
+	"components.followCleanupDialog.progress.listing": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "Reading your follows: {n}"
+			}
+		}
+	],
+	"components.followCleanupDialog.selectionCount": [
+		{
+			"declarations": ["input count", "local n = count: number"],
+			"selectors": [],
+			"match": {
+				"": "{n} selected"
+			}
+		}
+	],
+	"components.followCleanupDialog.summary": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Found {n} follow worth reviewing.",
+				"cp=other": "Found {n} follows worth reviewing."
+			}
+		}
+	],
+	"components.followCleanupDialog.title": "Clean up following",
+	"components.followCleanupDialog.unfollowedToast": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Unfollowed {n} account",
+				"cp=other": "Unfollowed {n} accounts"
+			}
+		}
+	],
+	"components.followCleanupDialog.unfollowError": "Couldn't complete unfollowing selected accounts, some follows might still remain. Try again to start a fresh scan and review what's left."
+}

@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
@@ -10,26 +11,33 @@ import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { BlankState } from '#/components/BlankState';
+import * as Dialog from '#/components/Dialog';
 import { ErrorState } from '#/components/ErrorState';
+import { FollowCleanupDialog } from '#/components/FollowCleanupDialog';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
-import { ButtonText } from '#/components/web/Button';
+import * as Menu from '#/components/Menu';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 import { LinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import DotGridIcon from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
+import PeopleRemoveRoundIcon from '#/icons/central/PeopleRemove_round_outlined_radius1_stroke2.svg';
 import PeopleRemoveIcon from '#/icons/central/PeopleRemove_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
 export const ProfileFollowsScreen = () => {
 	const [{ actor }] = useParams('ProfileFollows');
-	const { data: resolvedDid } = useResolveDidQuery(actor);
+	const { currentAccount } = useSession();
+	const { data: resolvedDid, error: resolveError, refetch: refetchResolve } = useResolveDidQuery(actor);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
 	});
 
 	const followsCount = profile?.followsCount;
+	const isMe = !!resolvedDid && resolvedDid === currentAccount?.did;
 
 	useTitle(
 		profile
@@ -51,11 +59,56 @@ export const ProfileFollowsScreen = () => {
 						</>
 					)}
 				</Layout.Header.Content>
+				{isMe && (
+					<Layout.Header.EndSlot>
+						<OverflowMenu />
+					</Layout.Header.EndSlot>
+				)}
 			</Layout.Header.Outer>
-			<ProfileFollows name={actor} initialCount={followsCount} />
+			{resolveError ? (
+				<ErrorState onRetry={() => void refetchResolve()} />
+			) : (
+				<ProfileFollows initialCount={followsCount} isMe={isMe} resolvedDid={resolvedDid} />
+			)}
 		</Layout.Screen>
 	);
 };
+
+function OverflowMenu() {
+	const cleanupHandle = Dialog.useDialogHandle();
+
+	return (
+		<>
+			<Menu.Root>
+				<Menu.Trigger
+					render={
+						<Button
+							label={m['common.a11y.moreOptions']()}
+							color="secondary"
+							shape="round"
+							size="small"
+							variant="ghost"
+						>
+							<ButtonIcon icon={DotGridIcon} size="lg" />
+						</Button>
+					}
+				/>
+				<Menu.Popup align="end" label={m['common.a11y.moreOptions']()}>
+					<Menu.Group>
+						<Menu.Item
+							label={m['components.followCleanupDialog.title']()}
+							onClick={() => cleanupHandle.open(null)}
+						>
+							<Menu.ItemText>{m['components.followCleanupDialog.title']()}</Menu.ItemText>
+							<Menu.ItemIcon icon={PeopleRemoveRoundIcon} position="right" />
+						</Menu.Item>
+					</Menu.Group>
+				</Menu.Popup>
+			</Menu.Root>
+			<FollowCleanupDialog handle={cleanupHandle} />
+		</>
+	);
+}
 
 const PROFILE_ITEM_HEIGHT_ESTIMATE = 130;
 
@@ -63,12 +116,16 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 	return item.did;
 }
 
-function ProfileFollows({ name, initialCount }: { name: string; initialCount?: number }) {
-	const { currentAccount } = useSession();
+function ProfileFollows({
+	initialCount,
+	isMe,
+	resolvedDid,
+}: {
+	initialCount?: number;
+	isMe: boolean;
+	resolvedDid: Did | undefined;
+}) {
 	const moderationOpts = useModerationOpts();
-
-	const { data: resolvedDid, error: resolveError } = useResolveDidQuery(name);
-	const isMe = resolvedDid === currentAccount?.did;
 
 	const sort = isMe ? 'latest' : 'top';
 	const { data, isPending, isFetchingNextPage, fetchNextPage, error, refetch } = useProfileFollowsQuery(
@@ -76,7 +133,7 @@ function ProfileFollows({ name, initialCount }: { name: string; initialCount?: n
 		{ sort },
 	);
 
-	const isError = !!resolveError || !!error;
+	const isError = !!error;
 
 	const follows = data?.pages ? data.pages.flatMap((page) => page.follows) : [];
 

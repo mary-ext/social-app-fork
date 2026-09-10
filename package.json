@@ -30,6 +30,7 @@
 		"@atcute/cid": "^2.4.2",
 		"@atcute/client": "^5.1.1",
 		"@atcute/germ": "^1.0.2",
+		"@atcute/identity": "^2.0.2",
 		"@atcute/identity-resolver": "^2.0.1",
 		"@atcute/lexicons": "^2.1.0",
 		"@atcute/microcosm": "^2.0.2",

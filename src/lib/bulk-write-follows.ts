@@ -1,11 +1,21 @@
 import type { ComAtprotoRepoApplyWrites, ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
-import type { ActorIdentifier, Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import { chunked } from '@mary/array-fns';
 
 import { until } from '#/lib/utils/until';
+
+/** keep batches below applyWrites' 200-write limit. */
+const APPLY_WRITES_BATCH_SIZE = 50;
+
+const applyWrites = async (pds: Client, did: Did, writes: ComAtprotoRepoApplyWrites.$input['writes']) => {
+	for (const batch of chunked(writes, APPLY_WRITES_BATCH_SIZE)) {
+		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: batch } }));
+	}
+};
 
 /**
  * Creates follow records in chunks and waits until at least one follow indexes.
@@ -34,10 +44,7 @@ export async function bulkWriteFollows(
 		},
 	}));
 
-	const chunks = chunked(followWrites, 50);
-	for (const batch of chunks) {
-		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: batch } }));
-	}
+	await applyWrites(pds, did, followWrites);
 	await whenFollowsIndexed(appview, did, (res) => !!res.follows.length);
 
 	const followUris = new Map<string, string>();
@@ -45,6 +52,39 @@ export async function bulkWriteFollows(
 		followUris.set(item.did, `at://${did}/app.bsky.graph.follow/${item.rkey}`);
 	}
 	return followUris;
+}
+
+/**
+ * deletes follow records in batches, continuing after failed batches without retrying them.
+ *
+ * @param clients PDS client and repo DID.
+ * @param uris follow record URIs in the repo.
+ * @param onDeleted receives the confirmed deleted URIs after each successful batch.
+ * @throws {AggregateError} after all batches are attempted if any failed; successful batches remain deleted.
+ */
+export async function bulkDeleteFollows(
+	{ did, pds }: { did: Did; pds: Client },
+	uris: readonly ResourceUri[],
+	onDeleted: (uris: readonly ResourceUri[]) => void,
+): Promise<void> {
+	const errors: unknown[] = [];
+	for (const batch of chunked(uris, APPLY_WRITES_BATCH_SIZE)) {
+		const writes: ComAtprotoRepoApplyWrites.$input['writes'] = batch.map((uri) => ({
+			$type: 'com.atproto.repo.applyWrites#delete',
+			collection: 'app.bsky.graph.follow',
+			rkey: parseCanonicalResourceUri(uri).rkey,
+		}));
+		try {
+			await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes } }));
+		} catch (error) {
+			errors.push(error);
+			continue;
+		}
+		onDeleted(batch);
+	}
+	if (errors.length > 0) {
+		throw new AggregateError(errors, `Some follow deletion batches failed`);
+	}
 }
 
 async function whenFollowsIndexed(
