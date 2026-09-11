@@ -6,6 +6,8 @@ import * as TID from '@atcute/tid';
 
 import { chunked } from '@mary/array-fns';
 
+import { isAbortError } from '#/lib/errors';
+import type { RateLimitBudget } from '#/lib/rate-limit-budget';
 import { until } from '#/lib/utils/until';
 
 /** keep batches below applyWrites' 200-write limit. */
@@ -57,31 +59,46 @@ export async function bulkWriteFollows(
 /**
  * deletes follow records in batches, continuing after failed batches without retrying them.
  *
- * @param clients PDS client and repo DID.
+ * may wait for rate limit resets between batches. cancellation preserves completed deletions.
+ *
+ * @param context PDS client, repo DID, and shared rate limit budget.
  * @param uris follow record URIs in the repo.
- * @param onDeleted receives the confirmed deleted URIs after each successful batch.
+ * @param options callback receiving deleted URIs after each successful batch, and cancellation signal.
  * @throws {AggregateError} after all batches are attempted if any failed; successful batches remain deleted.
+ * @throws the signal's reason when cancelled.
  */
 export async function bulkDeleteFollows(
-	{ did, pds }: { did: Did; pds: Client },
+	{ budget, did, pds }: { budget: RateLimitBudget; did: Did; pds: Client },
 	uris: readonly ResourceUri[],
-	onDeleted: (uris: readonly ResourceUri[]) => void,
+	{ onDeleted, signal }: { onDeleted: (uris: readonly ResourceUri[]) => void; signal: AbortSignal },
 ): Promise<void> {
 	const errors: unknown[] = [];
+
 	for (const batch of chunked(uris, APPLY_WRITES_BATCH_SIZE)) {
 		const writes: ComAtprotoRepoApplyWrites.$input['writes'] = batch.map((uri) => ({
 			$type: 'com.atproto.repo.applyWrites#delete',
 			collection: 'app.bsky.graph.follow',
 			rkey: parseCanonicalResourceUri(uri).rkey,
 		}));
+
 		try {
-			await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes } }));
+			await ok(
+				budget.attempt({
+					pacing: 'bulk',
+					request: () => pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes }, signal }),
+					signal,
+				}),
+			);
 		} catch (error) {
+			if (isAbortError(error)) {
+				throw error;
+			}
 			errors.push(error);
 			continue;
 		}
 		onDeleted(batch);
 	}
+
 	if (errors.length > 0) {
 		throw new AggregateError(errors, `Some follow deletion batches failed`);
 	}

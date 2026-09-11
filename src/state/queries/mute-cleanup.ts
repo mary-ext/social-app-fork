@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import type { AppBskyGraphGetMutes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
@@ -6,6 +8,7 @@ import { mapDefined } from '@mary/array-fns';
 
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { RateLimitBudget } from '#/lib/rate-limit-budget';
 import { accumulate } from '#/lib/utils/accumulate';
 import { networkRetry } from '#/lib/utils/retry';
 import { limitConcurrency } from '#/lib/utils/task';
@@ -24,13 +27,26 @@ const NETWORK_RETRIES = 3;
 const MAX_PAGES = 1000;
 const UNMUTE_CONCURRENCY = 6;
 
+type BulkUnmuteResult = {
+	cleared: Did[];
+	/** count of failed requests, including those with unknown server outcomes. */
+	failed: number;
+};
+
 /**
  * scans every muted account, reporting the running count as pages arrive.
  *
+ * @param budget rate limit budget shared with unmutes.
  * @param onProgress receives the running count.
  * @returns the scan query.
  */
-export function useMutedAccountsScanQuery({ onProgress }: { onProgress: (count: number) => void }) {
+export function useMutedAccountsScanQuery({
+	budget,
+	onProgress,
+}: {
+	budget: RateLimitBudget;
+	onProgress: (count: number) => void;
+}) {
 	const { appview } = getClients();
 	return useQuery<Did[]>({
 		queryKey: RQKEY(),
@@ -40,11 +56,17 @@ export function useMutedAccountsScanQuery({ onProgress }: { onProgress: (count: 
 		async queryFn({ signal }) {
 			let count = 0;
 			return await accumulate<Did>(async (cursor) => {
+				// charge each retry separately.
 				const data = await networkRetry(NETWORK_RETRIES, () =>
 					ok(
-						appview.get('app.bsky.graph.getMutes', {
+						budget.attempt({
+							pacing: 'burst',
+							request: () =>
+								appview.get('app.bsky.graph.getMutes', {
+									signal,
+									params: { cursor, limit: MUTES_PAGE_SIZE },
+								}),
 							signal,
-							params: { cursor, limit: MUTES_PAGE_SIZE },
 						}),
 					),
 				);
@@ -59,19 +81,39 @@ export function useMutedAccountsScanQuery({ onProgress }: { onProgress: (count: 
 /**
  * unmutes the given accounts, tolerating individual failures.
  *
+ * waits for rate limit capacity. unmounting cancels pending work; completed unmutes persist.
+ *
+ * @param budget rate limit budget shared with the scan.
  * @returns the unmute mutation.
  */
-export function useBulkUnmuteMutation() {
+export function useBulkUnmuteMutation({ budget }: { budget: RateLimitBudget }) {
 	const queryClient = useQueryClient();
 	const { appview } = getClients();
-	return useMutation<{ cleared: Did[]; failed: number }, Error, { dids: Did[] }>({
+	const running = useRef<AbortController>(null);
+
+	useEffect(() => () => running.current?.abort(), []);
+
+	return useMutation<BulkUnmuteResult, Error, { dids: Did[] }>({
 		retry: false,
 		async mutationFn({ dids }) {
+			const controller = new AbortController();
+			const signal = controller.signal;
+			running.current = controller;
+
 			const unmute = limitConcurrency(UNMUTE_CONCURRENCY, async (did: Did) => {
+				// cancellation may occur while waiting for a concurrency slot.
+				signal.throwIfAborted();
+
 				await ok(
-					appview.post('app.bsky.graph.unmuteActor', {
-						as: null,
-						input: { actor: did },
+					budget.attempt({
+						pacing: 'bulk',
+						request: () =>
+							appview.post('app.bsky.graph.unmuteActor', {
+								as: null,
+								input: { actor: did },
+								signal,
+							}),
+						signal,
 					}),
 				);
 				return did;

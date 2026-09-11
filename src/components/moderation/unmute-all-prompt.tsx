@@ -3,6 +3,8 @@ import { useState } from 'react';
 import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
+import { useConstant } from '#/lib/hooks/use-constant';
+import { createRateLimitBudget } from '#/lib/rate-limit-budget';
 
 import { useBulkUnmuteMutation, useMutedAccountsScanQuery } from '#/state/queries/mute-cleanup';
 
@@ -29,8 +31,11 @@ export function UnmuteAllPrompt({ handle }: { handle: Prompt.PromptHandle }) {
 
 function UnmuteAllPromptContent({ handle }: { handle: Prompt.PromptHandle }) {
 	const [scanned, setScanned] = useState(0);
-	const { data: dids, error } = useMutedAccountsScanQuery({ onProgress: setScanned });
-	const { mutateAsync: unmuteAll, isPending: isUnmuting } = useBulkUnmuteMutation();
+
+	// scans and unmutes share the per-IP limit.
+	const budget = useConstant(() => createRateLimitBudget());
+	const { data: dids, error } = useMutedAccountsScanQuery({ budget, onProgress: setScanned });
+	const { mutateAsync: unmuteAll, isPending: isUnmuting } = useBulkUnmuteMutation({ budget });
 
 	const isScanning = !dids && !error;
 

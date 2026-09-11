@@ -9,6 +9,8 @@ import {
 	followIssuesBySeverity,
 	type ScanProgress,
 } from '#/lib/follow-cleanup';
+import { useConstant } from '#/lib/hooks/use-constant';
+import { createRateLimitBudget } from '#/lib/rate-limit-budget';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useBulkUnfollowMutation, useFollowCleanupScanQuery } from '#/state/queries/follow-cleanup';
@@ -85,6 +87,8 @@ const CleanupFlow = () => {
 	const [selected, setSelected] = useState<ReadonlySet<Did>>(() => new Set());
 	const [filters, setFilters] = useState<readonly FollowIssue[]>([]);
 
+	// scans and deletions share the per-IP limit.
+	const budget = useConstant(() => createRateLimitBudget());
 	const moderationOpts = useModerationOpts();
 	const confirmHandle = Prompt.usePromptHandle();
 	const {
@@ -92,9 +96,10 @@ const CleanupFlow = () => {
 		isError: unfollowFailed,
 		isPending: isUnfollowing,
 		reset: resetUnfollow,
-	} = useBulkUnfollowMutation();
+	} = useBulkUnfollowMutation({ budget });
 
 	const { data, error, isFetching, refetch } = useFollowCleanupScanQuery({
+		budget,
 		enabled: true,
 		onProgress: setProgress,
 	});

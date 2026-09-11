@@ -133,9 +133,10 @@ interface ListRecordsOptions<K extends RecordType> {
 	signal?: AbortSignal;
 }
 
-type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'records'> & {
+/** `com.atproto.repo.listRecords` output with values typed by collection. */
+export type ListRecordsOutput<K extends RecordType> = Omit<ComAtprotoRepoListRecords.$output, 'records'> & {
 	cursor?: string;
-	records: { cid: Cid; uri: ResourceUri; value: T }[];
+	records: { cid: Cid; uri: ResourceUri; value: InferInput<Records[K]> }[];
 };
 
 /**
@@ -148,7 +149,7 @@ type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'records'> &
 export const listRecords = async <K extends RecordType>(
 	client: Client,
 	options: ListRecordsOptions<K>,
-): Promise<ListRecordsOutput<InferInput<Records[K]>>> => {
+): Promise<ListRecordsOutput<K>> => {
 	const data = await ok(
 		client.get('com.atproto.repo.listRecords', {
 			signal: options.signal,
@@ -162,7 +163,7 @@ export const listRecords = async <K extends RecordType>(
 	);
 
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the requested collection pins each `value`, which the wire type leaves `unknown`
-	return data as ListRecordsOutput<InferInput<Records[K]>>;
+	return data as ListRecordsOutput<K>;
 };
 
 /**
