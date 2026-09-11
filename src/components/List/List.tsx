@@ -75,9 +75,7 @@ export type ListProps<ItemT> = {
 	scrollRoot?: RefObject<HTMLElement | null>;
 };
 
-/**
- * renders a vertical list. set `estimateHeight` to virtualize off-screen rows.
- */
+/** renders a vertical list. set `estimateHeight` to virtualize off-screen rows. */
 export function List<ItemT>({
 	data,
 	keyExtractor,

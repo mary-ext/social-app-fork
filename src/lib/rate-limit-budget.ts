@@ -70,8 +70,8 @@ type Bucket = {
 /**
  * creates a request budget that waits when reported rate limits reach their reserves.
  *
- * share one budget across a cleanup's reads and writes that use the same rate limits.
- * other clients and unreported limits can still cause 429 responses, which are returned without retrying.
+ * share one budget across a cleanup's reads and writes that use the same rate limits. other clients and
+ * unreported limits can still cause 429 responses, which are returned without retrying.
  *
  * @returns the budget
  */

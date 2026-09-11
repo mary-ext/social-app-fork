@@ -39,10 +39,7 @@ export function ProgressCircle({
 	);
 }
 
-/**
- * A pie chart: a bordered circle filled by a sector that grows clockwise from the top as `progress` goes 0 →
- * 1.
- */
+/** A pie chart: a bordered circle filled by a sector that grows clockwise from the top as `progress` goes 0 → 1. */
 export function ProgressPie({
 	borderColor,
 	borderWidth,
