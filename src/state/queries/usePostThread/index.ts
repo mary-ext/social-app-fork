@@ -208,7 +208,6 @@ export function usePostThread({ anchor }: { anchor?: ResourceUri }) {
 	return {
 		context,
 		state: {
-			isFetching: query.isFetching,
 			isPlaceholderData: query.isPlaceholderData,
 			error: query.error,
 			sort,

@@ -17,6 +17,11 @@ import {
 } from '#/state/queries/usePostThread/utils';
 import * as views from '#/state/queries/usePostThread/views';
 
+const DEFAULT_SKELETON_REPLIES = 4;
+
+// cap loading placeholders so high reply counts don't inflate the scroll range.
+const MAX_SKELETON_REPLIES = 20;
+
 export function sortAndAnnotateThreadItems(
 	thread: ApiThreadItem[],
 	{
@@ -320,7 +325,9 @@ export function buildThread({
 	if (isLoading) {
 		const anchorPost = items.at(0);
 		const hasAnchorFromCache = anchorPost && anchorPost.type === 'threadPost';
-		const skeletonReplies = hasAnchorFromCache ? (anchorPost.value.post.replyCount ?? 4) : 4;
+		const skeletonReplies = hasAnchorFromCache
+			? Math.min(anchorPost.value.post.replyCount ?? DEFAULT_SKELETON_REPLIES, MAX_SKELETON_REPLIES)
+			: DEFAULT_SKELETON_REPLIES;
 
 		if (!items.length) {
 			items.push(

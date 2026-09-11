@@ -39,9 +39,6 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect } from '#/router';
 
-const PARENT_CHUNK_SIZE = 20;
-const CHILDREN_CHUNK_SIZE = 50;
-
 /** Height the trailing spacer falls back to when the thread has no parents. */
 const FALLBACK_FOOTER_HEIGHT = 180;
 
@@ -110,17 +107,9 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	});
 
 	const canReply = !anchor?.value.post?.viewer?.replyDisabled;
-	const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE);
-	const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE);
 
-	// withhold parents until the anchor has painted as the first item: avoids the cold-load flash of the
-	// thread top before the scroll-to-anchor, and gates initial pagination until layout settles. re-armed on
-	// view/sort changes.
+	// hide parents until the anchor paints to avoid flashing the thread top before scrolling.
 	const [deferParents, setDeferParents] = useState(true);
-
-	// gates pagination until the initial anchor sequence finishes, so an early edge hit can't grow the list
-	// while the viewport is still settling onto the anchor.
-	const [initialAnchorSettled, setInitialAnchorSettled] = useState(false);
 
 	// a view/sort change releases parents synchronously here; the initial mount uses the scroll-before-prepend
 	// pass in the effect below instead, so this stays disarmed for it.
@@ -139,9 +128,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 
 		// make the anchor the first item again so the virtualizer can preserve it when the new parents return.
 		setDeferParents(true);
-		setInitialAnchorSettled(false);
-		// reset this to a lower value for faster re-render
-		setMaxChildrenCount(CHILDREN_CHUNK_SIZE);
 	};
 
 	const setSortWrapped = (sort: string) => {
@@ -154,97 +140,11 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		thread.actions.setView(view);
 	};
 
-	// total parents/children around the anchor post (depth === 0), used to short-circuit pagination once all
-	// items are loaded. derived from the items rather than stashed in refs, so it stays off the render path.
-	let totalParents: number;
-	let totalChildren: number;
-	{
-		const anchorIndex = thread.data.items.findIndex((item) => 'depth' in item && item.depth === 0);
-		if (anchorIndex === -1) {
-			totalParents = 0;
-			totalChildren = thread.data.items.length;
-		} else {
-			totalParents = anchorIndex;
-			totalChildren = thread.data.items.length - 1 - anchorIndex;
-		}
-	}
-
-	const onStartReached = () => {
-		if (thread.state.isFetching) {
-			return;
-		}
-		// gated until the initial anchor sequence settles
-		if (!initialAnchorSettled) {
-			return;
-		}
-		// prevent any state mutations if we know we're done
-		if (maxParentCount >= totalParents) {
-			return;
-		}
-		setMaxParentCount((n) => n + PARENT_CHUNK_SIZE);
-	};
-
-	const onEndReached = () => {
-		if (thread.state.isFetching) {
-			return;
-		}
-		// gated until the initial anchor sequence settles
-		if (!initialAnchorSettled) {
-			return;
-		}
-		// prevent any state mutations if we know we're done
-		if (maxChildrenCount >= totalChildren) {
-			return;
-		}
-		setMaxChildrenCount((prev) => prev + CHILDREN_CHUNK_SIZE);
-	};
-
-	const slices: ThreadItem[] = [];
-	if (thread.data.items.length) {
-		/*
-		 * Pagination hack, tracks the # of items below the anchor post.
-		 */
-		let childrenCount = 0;
-
-		for (let i = 0; i < thread.data.items.length; i++) {
-			const item = thread.data.items[i]!;
-			/*
-			 * Need to check `depth`, since not found or blocked posts are not
-			 * `threadPost`s, but still have `depth`.
-			 */
-			const hasDepth = 'depth' in item;
-
-			/*
-			 * Handle anchor post.
-			 */
-			if (hasDepth && item.depth === 0) {
-				slices.push(item);
-
-				/*
-				 * Walk up the parents, limiting by `maxParentCount`
-				 */
-				if (!deferParents) {
-					const start = i - 1;
-					if (start >= 0) {
-						const limit = Math.max(0, start - maxParentCount);
-						for (let pi = start; pi >= limit; pi--) {
-							slices.unshift(thread.data.items[pi]!);
-						}
-					}
-				}
-			} else {
-				// ignore any parent items
-				if (item.type === 'readMoreUp' || (hasDepth && item.depth < 0)) {
-					continue;
-				}
-				// can exit early if we've reached the max children count
-				if (childrenCount > maxChildrenCount) {
-					break;
-				}
-
-				slices.push(item);
-				childrenCount++;
-			}
+	let slices = thread.data.items;
+	if (deferParents) {
+		const itemsAnchorIndex = slices.findIndex(isAnchorItem);
+		if (itemsAnchorIndex > 0) {
+			slices = slices.slice(itemsAnchorIndex);
 		}
 	}
 
@@ -261,7 +161,7 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 	const deferredSlices = showReplySkeletons
 		? slices
 		: slices.filter((item) => !(item.type === 'skeleton' && item.item === 'reply'));
-	const anchorIndex = deferredSlices.findIndex((item) => 'depth' in item && item.depth === 0);
+	const anchorIndex = deferredSlices.findIndex(isAnchorItem);
 
 	// pass 1 scrolls the anchor-only list to the anchor before parents exist, then releases them; pass 2 does
 	// the final correction. pinning the viewport to the anchor first is what stops prepend anchoring from
@@ -289,7 +189,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 			}
 
 			needsInitialAnchor.current = false;
-			setInitialAnchorSettled(true);
 		});
 		return () => cancelAnimationFrame(animationFrame);
 	});
@@ -419,10 +318,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					estimateHeight={ITEM_HEIGHT_ESTIMATE}
-					onStartReached={initialAnchorSettled ? onStartReached : undefined}
-					onStartReachedThreshold={1}
-					onEndReached={initialAnchorSettled ? onEndReached : undefined}
-					onEndReachedThreshold={4}
 					ListFooterComponent={
 						<div
 							className={clsx(css.footer, isTombstoneView && css.footerNoBorder)}
@@ -446,4 +341,9 @@ function MobileComposePrompt({ onPressReply }: { onPressReply: () => unknown }) 
 
 const keyExtractor = (item: ThreadItem) => {
 	return item.key;
+};
+
+// blocked and not-found posts can also be the anchor.
+const isAnchorItem = (item: ThreadItem) => {
+	return 'depth' in item && item.depth === 0;
 };

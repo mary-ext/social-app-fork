@@ -63,9 +63,6 @@ export type ListProps<ItemT> = {
 	onItemSeen?: (item: ItemT) => void;
 	/** Fires when the list scrolls past (or back above) the top of its content. */
 	onScrolledDownChange?: (isScrolledDown: boolean) => void;
-	onStartReached?: () => void;
-	/** Lookahead before the start, in multiples of the viewport height. */
-	onStartReachedThreshold?: number;
 	/** number of extra rows rendered before and after the visible range. */
 	overscanCount?: number;
 	ref?: Ref<ListMethods>;
@@ -79,8 +76,7 @@ export type ListProps<ItemT> = {
 };
 
 /**
- * renders `data` as a vertical list, calling the `on*` callbacks as rows approach the scroll edges. set
- * `estimateHeight` to virtualize off-screen rows.
+ * renders a vertical list. set `estimateHeight` to virtualize off-screen rows.
  */
 export function List<ItemT>({
 	data,
@@ -94,8 +90,6 @@ export function List<ItemT>({
 	onEndReachedThreshold,
 	onItemSeen,
 	onScrolledDownChange,
-	onStartReached,
-	onStartReachedThreshold,
 	overscanCount = 3,
 	ref,
 	renderItem,
@@ -139,11 +133,6 @@ export function List<ItemT>({
 		[scrollRoot],
 	);
 
-	const onStartVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
-		if (isVisible) {
-			onStartReached?.();
-		}
-	});
 	const onEndVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
 		if (isVisible) {
 			onEndReached?.();
@@ -221,16 +210,6 @@ export function List<ItemT>({
 				/>
 			)}
 
-			{onStartReached && !isEmpty && (
-				<Visibility
-					key={`start-${itemCount}`}
-					enabled={isFocused}
-					onVisibleChange={onStartVisibleChange}
-					root={scrollRoot}
-					topMargin={thresholdMargin(onStartReachedThreshold)}
-				/>
-			)}
-
 			{ListHeaderComponent}
 
 			{children}
@@ -258,14 +237,12 @@ function Visibility({
 	enabled,
 	onVisibleChange,
 	root,
-	topMargin = '0px',
 }: {
 	bottomMargin?: string;
 	className?: string;
 	enabled: boolean;
 	onVisibleChange: (isVisible: boolean) => void;
 	root?: RefObject<Element | null>;
-	topMargin?: string;
 }) {
 	const isIntersecting = useRef<boolean | undefined>(undefined);
 	const nodeRef = useRef<HTMLDivElement | null>(null);
@@ -291,13 +268,13 @@ function Visibility({
 			},
 			{
 				root: root?.current ?? null,
-				rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+				rootMargin: `0px 0px ${bottomMargin} 0px`,
 			},
 		);
 
 		observer.observe(node);
 		return () => observer.disconnect();
-	}, [bottomMargin, enabled, onVisibleChange, root, topMargin]);
+	}, [bottomMargin, enabled, onVisibleChange, root]);
 
 	return <div ref={nodeRef} className={className} />;
 }
