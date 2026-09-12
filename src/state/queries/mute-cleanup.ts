@@ -8,6 +8,7 @@ import { mapDefined } from '@mary/array-fns';
 
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { isAbortError } from '#/lib/errors';
 import type { RateLimitBudget } from '#/lib/rate-limit-budget';
 import { accumulate } from '#/lib/utils/accumulate';
 import { networkRetry } from '#/lib/utils/retry';
@@ -28,6 +29,8 @@ const MAX_PAGES = 1000;
 const UNMUTE_CONCURRENCY = 6;
 
 type BulkUnmuteResult = {
+	/** whether cancellation was requested. */
+	cancelled: boolean;
 	cleared: Did[];
 	/** count of failed requests, including those with unknown server outcomes. */
 	failed: number;
@@ -81,62 +84,94 @@ export function useMutedAccountsScanQuery({
 /**
  * unmutes the given accounts, tolerating individual failures.
  *
- * waits for rate limit capacity. unmounting cancels pending work; completed unmutes persist.
+ * respects rate limits. cancellation or unmounting stops pending work; completed unmutes persist.
  *
  * @param budget rate limit budget shared with the scan.
- * @returns the unmute mutation.
+ * @param onProgress receives the count of settled, non-aborted attempts.
+ * @returns the unmute mutation with a cancellation function.
  */
-export function useBulkUnmuteMutation({ budget }: { budget: RateLimitBudget }) {
+export function useBulkUnmuteMutation({
+	budget,
+	onProgress,
+}: {
+	budget: RateLimitBudget;
+	onProgress: (attempted: number) => void;
+}) {
 	const queryClient = useQueryClient();
 	const { appview } = getClients();
 	const running = useRef<AbortController>(null);
 
 	useEffect(() => () => running.current?.abort(), []);
 
-	return useMutation<BulkUnmuteResult, Error, { dids: Did[] }>({
+	const mutation = useMutation<BulkUnmuteResult, Error, { dids: Did[] }>({
 		retry: false,
 		async mutationFn({ dids }) {
 			const controller = new AbortController();
 			const signal = controller.signal;
 			running.current = controller;
 
+			let attempted = 0;
 			const unmute = limitConcurrency(UNMUTE_CONCURRENCY, async (did: Did) => {
 				// cancellation may occur while waiting for a concurrency slot.
 				signal.throwIfAborted();
 
-				await ok(
-					budget.attempt({
-						pacing: 'bulk',
-						request: () =>
-							appview.post('app.bsky.graph.unmuteActor', {
-								as: null,
-								input: { actor: did },
-								signal,
-							}),
-						signal,
-					}),
-				);
+				try {
+					await ok(
+						budget.attempt({
+							pacing: 'bulk',
+							request: () =>
+								appview.post('app.bsky.graph.unmuteActor', {
+									as: null,
+									input: { actor: did },
+									signal,
+								}),
+							signal,
+						}),
+					);
+				} catch (err) {
+					// aborts must not advance progress.
+					if (!isAbortError(err)) {
+						onProgress(++attempted);
+					}
+					throw err;
+				}
+
+				onProgress(++attempted);
 				return did;
 			});
 
 			// an in-flight page could otherwise resolve against pre-patch data and reinstate removed rows.
 			await queryClient.cancelQueries({ queryKey: MUTED_ACCOUNTS_RQKEY() });
 
-			const results = await Promise.allSettled(dids.map((did) => unmute(did)));
-			const cleared = mapDefined(results, (result) =>
-				result.status === 'fulfilled' ? result.value : undefined,
-			);
-			return { cleared, failed: results.length - cleared.length };
+			try {
+				const results = await Promise.allSettled(dids.map((did) => unmute(did)));
+				const cleared = mapDefined(results, (result) =>
+					result.status === 'fulfilled' ? result.value : undefined,
+				);
+				const failed = results.filter(
+					(result) => result.status === 'rejected' && !isAbortError(result.reason),
+				).length;
+				return { cancelled: signal.aborted, cleared, failed };
+			} finally {
+				running.current = null;
+			}
 		},
-		onSuccess({ cleared }) {
+		onSuccess({ cancelled, cleared, failed }) {
 			if (cleared.length === 0) {
 				return;
 			}
 
-			const clearedDids = new Set(cleared);
 			for (const did of cleared) {
 				updateProfileShadow(queryClient, did, { muted: false, mutedOnlyReposts: false });
 			}
+
+			// filtering could empty loaded pages while muted accounts remain on later pages.
+			if (cancelled || failed > 0) {
+				void queryClient.invalidateQueries({ queryKey: MUTED_ACCOUNTS_RQKEY() });
+				return;
+			}
+
+			const clearedDids = new Set(cleared);
 			queryClient.setQueriesData<InfiniteData<AppBskyGraphGetMutes.$output>>(
 				{ queryKey: MUTED_ACCOUNTS_RQKEY() },
 				(old) =>
@@ -152,4 +187,10 @@ export function useBulkUnmuteMutation({ budget }: { budget: RateLimitBudget }) {
 			void queryClient.invalidateQueries({ queryKey: MUTED_ACCOUNTS_RQKEY(), refetchType: 'none' });
 		},
 	});
+
+	return {
+		...mutation,
+		/** stops pending work without reverting completed unmutes. */
+		cancel: () => running.current?.abort(),
+	};
 }

@@ -8,15 +8,17 @@ import { createRateLimitBudget } from '#/lib/rate-limit-budget';
 
 import { useBulkUnmuteMutation, useMutedAccountsScanQuery } from '#/state/queries/mute-cleanup';
 
+import { ProgressBar } from '#/components/ProgressBar';
 import * as Prompt from '#/components/Prompt';
-import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonSpinner } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
+import * as styles from './unmute-all-prompt.css';
+
 /**
- * confirms unmuting every muted account, scanning the list first to report how many there are.
+ * confirms unmuting all accounts and displays scan and unmute progress.
  *
  * @param handle prompt handle for closing the prompt once unmuting settles
  * @returns the unmute-all confirmation prompt
@@ -31,35 +33,65 @@ export function UnmuteAllPrompt({ handle }: { handle: Prompt.PromptHandle }) {
 
 function UnmuteAllPromptContent({ handle }: { handle: Prompt.PromptHandle }) {
 	const [scanned, setScanned] = useState(0);
+	const [attempted, setAttempted] = useState(0);
 
 	// scans and unmutes share the per-IP limit.
 	const budget = useConstant(() => createRateLimitBudget());
 	const { data: dids, error } = useMutedAccountsScanQuery({ budget, onProgress: setScanned });
-	const { mutateAsync: unmuteAll, isPending: isUnmuting } = useBulkUnmuteMutation({ budget });
+	const {
+		cancel: stopUnmuting,
+		isPending: isUnmuting,
+		mutateAsync: unmuteAll,
+	} = useBulkUnmuteMutation({ budget, onProgress: setAttempted });
 
 	const isScanning = !dids && !error;
 
-	const description = error
-		? cleanError(error)
-		: dids?.length === 0
-			? m['screens.moderation.mute.unmuteAll.empty']()
-			: m['screens.moderation.mute.unmuteAll.description']({ count: dids?.length ?? scanned });
-
 	const onConfirm = async (targets: Did[]) => {
 		try {
-			const { cleared, failed } = await unmuteAll({ dids: targets });
-			if (failed > 0) {
+			const { cancelled, failed } = await unmuteAll({ dids: targets });
+			if (!cancelled && failed > 0) {
 				Toast.show(m['screens.moderation.mute.unmuteAll.partialError']({ count: failed }), {
 					type: 'error',
 				});
-			} else {
-				Toast.show(m['screens.moderation.mute.unmuteAll.unmutedToast']({ count: cleared.length }));
 			}
 			handle.close();
 		} catch {
 			Toast.show(m['screens.moderation.mute.unmuteAll.error'](), { type: 'error' });
 		}
 	};
+
+	if (isUnmuting) {
+		const total = dids?.length ?? 0;
+		const progressLabel = m['screens.moderation.mute.unmuteAll.progressLabel']();
+		const progressText = m['screens.moderation.mute.unmuteAll.progress']({ done: attempted, total });
+
+		return (
+			<>
+				<Prompt.Content>
+					<Prompt.TitleText>{progressLabel}</Prompt.TitleText>
+					<Prompt.DescriptionText>{progressText}</Prompt.DescriptionText>
+					<div className={styles.progress}>
+						<ProgressBar label={progressLabel} max={total} value={attempted} valueText={progressText} />
+					</div>
+				</Prompt.Content>
+
+				<Prompt.Actions>
+					<Prompt.Action
+						color="secondary"
+						cta={m['screens.moderation.mute.unmuteAll.stop']()}
+						onPress={stopUnmuting}
+						shouldCloseOnPress={false}
+					/>
+				</Prompt.Actions>
+			</>
+		);
+	}
+
+	const description = error
+		? cleanError(error)
+		: dids?.length === 0
+			? m['screens.moderation.mute.unmuteAll.empty']()
+			: m['screens.moderation.mute.unmuteAll.description']({ count: dids?.length ?? scanned });
 
 	return (
 		<>
@@ -83,10 +115,10 @@ function UnmuteAllPromptContent({ handle }: { handle: Prompt.PromptHandle }) {
 					<Prompt.Action
 						color="negative"
 						cta={m['screens.moderation.mute.unmuteAll.action']()}
-						disabled={isUnmuting || !dids?.length}
-						icon={isUnmuting ? UnmuteSpinner : undefined}
+						disabled={!dids?.length}
 						onPress={() => {
 							if (dids?.length) {
+								setAttempted(0);
 								void onConfirm(dids);
 							}
 						}}
@@ -97,8 +129,4 @@ function UnmuteAllPromptContent({ handle }: { handle: Prompt.PromptHandle }) {
 			</Prompt.Actions>
 		</>
 	);
-}
-
-function UnmuteSpinner() {
-	return <Spinner color="white" label={m['common.status.loading']()} size="sm" />;
 }

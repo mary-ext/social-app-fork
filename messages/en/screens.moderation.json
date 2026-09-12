@@ -45,17 +45,25 @@
 			}
 		}
 	],
-	"screens.moderation.mute.unmuteAll.title": "Unmute all accounts?",
-	"screens.moderation.mute.unmuteAll.unmutedToast": [
+	"screens.moderation.mute.unmuteAll.progress": [
 		{
-			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"declarations": [
+				"input done",
+				"input total",
+				"local cp = total: plural",
+				"local n1 = done: number",
+				"local n2 = total: number"
+			],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "Unmuted {n} account",
-				"cp=other": "Unmuted {n} accounts"
+				"cp=one": "{n1} of {n2} account",
+				"cp=other": "{n1} of {n2} accounts"
 			}
 		}
 	],
+	"screens.moderation.mute.unmuteAll.progressLabel": "Unmuting accounts",
+	"screens.moderation.mute.unmuteAll.stop": "Stop",
+	"screens.moderation.mute.unmuteAll.title": "Unmute all accounts?",
 	"screens.moderation.mutedWord.changeDuration": "Change duration",
 	"screens.moderation.mutedWord.description": "View your muted words",
 	"screens.moderation.mutedWord.empty": "You haven't muted any words or tags yet.",
