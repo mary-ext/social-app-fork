@@ -6,6 +6,7 @@ import { VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { isNetworkError } from '#/lib/errors';
 import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
+import { canTranscodeGif, transcodeGifToWebm } from '#/lib/media/video/gif-transcode/transcode';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { assertVideoWithinLimit } from '#/lib/media/video/validate';
@@ -18,6 +19,11 @@ import { advanceVideoProgress } from './video-progress';
 type CaptionsTrack = { lang: string; file: File };
 
 export type VideoAction =
+	| {
+			type: 'compressingToUploading';
+			compressionSkipped: boolean;
+			signal: AbortSignal;
+	  }
 	| {
 			type: 'uploadingToProcessing';
 			jobId: string;
@@ -74,10 +80,23 @@ type ErrorState = {
 	captions: CaptionsTrack[];
 };
 
+type CompressingState = {
+	status: 'compressing';
+	progress: number;
+	abortController: AbortController;
+	asset: VideoAsset;
+	jobId?: undefined;
+	pendingPublish?: undefined;
+	altText: string;
+	captions: CaptionsTrack[];
+};
+
 type UploadingState = {
 	status: 'uploading';
 	progress: number;
+	compressionSkipped: boolean;
 	abortController: AbortController;
+	/** original asset; its mime type determines the published post's GIF presentation. */
 	asset: VideoAsset;
 	jobId?: undefined;
 	pendingPublish?: undefined;
@@ -108,12 +127,31 @@ type DoneState = {
 	captions: CaptionsTrack[];
 };
 
-export type VideoState = ErrorState | UploadingState | ProcessingState | DoneState;
+export type VideoState = ErrorState | CompressingState | UploadingState | ProcessingState | DoneState;
 
-export function createVideoState(asset: VideoAsset, abortController: AbortController): UploadingState {
+function willCompress(asset: VideoAsset): boolean {
+	return asset.mimeType === 'image/gif' && canTranscodeGif();
+}
+
+export function createVideoState(
+	asset: VideoAsset,
+	abortController: AbortController,
+): CompressingState | UploadingState {
+	if (willCompress(asset)) {
+		return {
+			status: 'compressing',
+			progress: 0,
+			abortController,
+			asset,
+			altText: '',
+			captions: [],
+		};
+	}
+
 	return {
 		status: 'uploading',
 		progress: 0,
+		compressionSkipped: true,
 		abortController,
 		asset,
 		altText: '',
@@ -138,10 +176,31 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			captions: state.captions,
 		};
 	} else if (action.type === 'updateProgress') {
-		if (state.status === 'uploading') {
+		if (state.status === 'compressing' || state.status === 'uploading') {
+			const phase =
+				state.status === 'uploading' && state.compressionSkipped
+					? 'uploadingWithoutCompression'
+					: state.status;
 			return {
 				...state,
-				progress: advanceVideoProgress(state.progress, 'uploading', action.progress),
+				progress: advanceVideoProgress(state.progress, phase, action.progress),
+			};
+		}
+	} else if (action.type === 'compressingToUploading') {
+		if (state.status === 'compressing') {
+			return {
+				status: 'uploading',
+				// keep progress from rewinding when compression falls back to the original asset.
+				progress: advanceVideoProgress(
+					state.progress,
+					action.compressionSkipped ? 'uploadingWithoutCompression' : 'uploading',
+					0,
+				),
+				compressionSkipped: action.compressionSkipped,
+				abortController: state.abortController,
+				asset: state.asset,
+				altText: state.altText,
+				captions: state.captions,
 			};
 		}
 	} else if (action.type === 'updateAltText') {
@@ -207,8 +266,19 @@ export async function processVideo(
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
 		assertVideoWithinLimit(asset);
+
+		const compressing = willCompress(asset);
+		const compressed = compressing ? await compressAsset(asset, dispatch, signal) : undefined;
+
+		if (compressing) {
+			dispatch({ type: 'compressingToUploading', compressionSkipped: compressed === undefined, signal });
+		}
+
+		// the compressor only returns output smaller than its input, so the limit still holds.
+		const payload = compressed ?? asset;
+
 		uploadResponse = await uploadVideo({
-			video: asset,
+			video: payload,
 			pds,
 			dispatchUrl: pdsUrl,
 			signal,
@@ -300,6 +370,27 @@ export async function processVideo(
 
 		return; // Exit async loop
 	}
+}
+
+/** returns a smaller upload asset, or `undefined` to use the original. */
+async function compressAsset(
+	asset: VideoAsset,
+	dispatch: (action: VideoAction) => void,
+	signal: AbortSignal,
+): Promise<VideoAsset | undefined> {
+	const transcoded = await transcodeGifToWebm({
+		blob: asset.blob,
+		signal,
+		setProgress: (p) => {
+			dispatch({ type: 'updateProgress', progress: p, signal });
+		},
+	});
+
+	if (!transcoded) {
+		return undefined;
+	}
+
+	return { ...asset, blob: transcoded.blob, mimeType: 'video/webm', duration: transcoded.duration };
 }
 
 function getProcessingErrorMessage(failureCode: string | undefined, error: string | undefined): string {

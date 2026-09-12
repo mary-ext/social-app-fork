@@ -157,6 +157,9 @@ importers:
       lowlight:
         specifier: ^3.3.0
         version: 3.3.0
+      mediabunny:
+        specifier: ^1.56.1
+        version: 1.56.1
       tldts:
         specifier: ^7.4.12
         version: 7.4.12
@@ -1431,6 +1434,12 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
+  '@types/dom-mediacapture-transform@0.1.12':
+    resolution: {integrity: sha512-d7/QsLRwF864A5mgIM/YrfiglHoYn7zgCcAoJgW404r+2DwnNr7EBbLnCWpmOMgH8y0te73L1AV6H1bmauaWFw==}
+
+  '@types/dom-webcodecs@0.1.13':
+    resolution: {integrity: sha512-O5hkiFIcjjszPIYyUSyvScyvrBoV3NOEEZx/pMlsu44TKzWNkLVBBxnxJz42in5n3QIolYOcBYFCPZZ0h8SkwQ==}
+
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
 
@@ -1865,6 +1874,9 @@ packages:
 
   media-query-parser@2.0.2:
     resolution: {integrity: sha512-1N4qp+jE0pL5Xv4uEcwVUhIkwdUO3S/9gML90nqKA7v7FcOS5vUtatfzok9S9U1EJU8dHWlcv95WLnKmmxZI9w==}
+
+  mediabunny@1.56.1:
+    resolution: {integrity: sha512-DNOm0bRBmeOxJgCK/g3LxNWbxY5morTauNdlychujGmJ9L37ezVezkNoI1WtO2Xdb4WlWWJlYfIKnOEzd5phRw==}
 
   miniflare@5.20260908.0-alpha:
     resolution: {integrity: sha512-BHIknb0u6vLIvb+R8PsUAzgoWWk3OlW85DrV2SG0EydfSpIba28YT0rH6xZThjnSwDxzNuW3FDRNSWvbiI/DVw==}
@@ -3007,6 +3019,12 @@ snapshots:
       '@tanstack/query-core': 5.102.8
       react: 19.2.8
 
+  '@types/dom-mediacapture-transform@0.1.12':
+    dependencies:
+      '@types/dom-webcodecs': 0.1.13
+
+  '@types/dom-webcodecs@0.1.13': {}
+
   '@types/hast@3.0.5':
     dependencies:
       '@types/unist': 3.0.3
@@ -3333,6 +3351,11 @@ snapshots:
   media-query-parser@2.0.2:
     dependencies:
       '@babel/runtime': 7.29.7
+
+  mediabunny@1.56.1:
+    dependencies:
+      '@types/dom-mediacapture-transform': 0.1.12
+      '@types/dom-webcodecs': 0.1.13
 
   miniflare@5.20260908.0-alpha:
     dependencies:

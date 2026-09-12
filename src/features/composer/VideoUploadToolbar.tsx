@@ -14,6 +14,10 @@ export function VideoUploadToolbar({ state }: { state: VideoState }) {
 	const isGif = state.asset?.mimeType === 'image/gif';
 
 	switch (state.status) {
+		case 'compressing': {
+			text = isGif ? m['view.composer.gif.compressing']() : m['view.composer.video.compressing']();
+			break;
+		}
 		case 'uploading': {
 			text = isGif ? m['view.composer.gif.uploading']() : m['view.composer.video.uploading']();
 			break;

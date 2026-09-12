@@ -66,6 +66,7 @@
 		"highlight.js": "^11.12.0",
 		"idb-keyval": "^6.3.0",
 		"lowlight": "^3.3.0",
+		"mediabunny": "^1.56.1",
 		"tldts": "^7.4.12",
 		"valibot": "^1.5.0"
 	},
