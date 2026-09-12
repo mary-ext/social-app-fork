@@ -4,56 +4,67 @@ import { sleep } from '#/lib/utils/sleep';
 
 // #region types
 
-/** response headers must remain accessible on HTTP errors. */
-export type BudgetedResponse = { headers: Headers };
-
-/** `burst` favors scan speed; `bulk` leaves more capacity for browsing during writes. */
-export type Pacing = 'burst' | 'bulk';
-
-export type AttemptOptions<T> = {
-	pacing: Pacing;
-	request: () => Promise<T>;
-	signal: AbortSignal;
-};
+/** HTTP errors must expose headers and status rather than throw. */
+type BudgetedResponse = { headers: Headers; status: number };
 
 export type RateLimitBudget = {
 	/**
-	 * paces one request and records its rate limit headers. does not retry failures.
+	 * paces a request.
 	 *
-	 * may wait until a rate limit resets; abort the signal to cancel queued work.
+	 * may wait for a rate limit reset.
 	 *
-	 * @param options the request to send, how to pace it, and a cancellation signal
-	 * @returns the response
+	 * @param request called for each attempt; must return HTTP errors without throwing
+	 * @param signal cancels budget waits; pass it to the request to cancel in-flight work
+	 * @returns the final response, including HTTP errors
 	 * @throws request errors or the signal's abort reason
 	 */
-	attempt<T extends BudgetedResponse>(options: AttemptOptions<T>): Promise<T>;
+	attempt<T extends BudgetedResponse>(request: () => Promise<T>, signal: AbortSignal): Promise<T>;
 };
 
 // #endregion
 
 // #region constants
 
-const REQUESTS_PER_SECOND: Record<Pacing, number> = {
-	burst: 10,
-	bulk: 2,
-};
+const TOO_MANY_REQUESTS = 429;
 
-const SHORT_WINDOW_SECONDS = 15 * 60;
-
-// reserve more for browsing in short windows; smaller reserves avoid long waits in daily limits.
-const reserveFor = (windowSeconds: number): number => {
-	return windowSeconds <= SHORT_WINDOW_SECONDS ? 0.4 : 0.1;
-};
+// reserve capacity for other app requests.
+const RESERVE = 0.2;
 
 // allow for clock skew when comparing server reset times to the local clock.
 const RESET_MARGIN_MS = 5_000;
 
+// prevent bursts even when rate limit headers are absent.
+const MIN_DISPATCH_INTERVAL_MS = 100;
+
+// fallback when a 429 has no valid Retry-After header.
+const BLIND_RETRY_MS = 10_000;
+
+const RATE_LIMIT_ATTEMPTS = 3;
+
+// recheck limits periodically and avoid setTimeout overflow.
+const MAX_NAP_MS = 60_000;
+
 const POLICY_WINDOW_RE = /;\s*w=(\d+)/;
 
-// use the policy window length as the bucket key.
 const parsePolicyWindow = (policy: string | null): number | undefined => {
 	const match = policy?.match(POLICY_WINDOW_RE);
 	return match ? Number(match[1]) : undefined;
+};
+
+// the header is either a delay in seconds or an HTTP date.
+const parseRetryAt = (headers: Headers): number | undefined => {
+	const value = headers.get('retry-after');
+	if (!value) {
+		return undefined;
+	}
+
+	const seconds = Number(value);
+	if (Number.isFinite(seconds)) {
+		return Date.now() + seconds * 1000;
+	}
+
+	const date = Date.parse(value);
+	return Number.isNaN(date) ? undefined : date;
 };
 
 // #endregion
@@ -65,21 +76,25 @@ type Bucket = {
 	remaining: number;
 	/** server reset time in unix milliseconds. */
 	resetAt: number;
+	/** policy window in seconds, if reported. */
+	window: number | undefined;
 };
 
 /**
- * creates a request budget that waits when reported rate limits reach their reserves.
+ * creates a request budget that reserves 20% of the reported limit.
  *
- * share one budget across a cleanup's reads and writes that use the same rate limits. other clients and
- * unreported limits can still cause 429 responses, which are returned without retrying.
+ * share across requests to the same service. tracks one reported limit at a time; HTTP 429 retries also
+ * respect `Retry-After`.
  *
  * @returns the budget
  */
 export function createRateLimitBudget(): RateLimitBudget {
-	const buckets = new Map<number, Bucket>();
-
+	let bucket: Bucket | undefined;
+	let blockedUntil = 0;
 	let lastDispatchAt = 0;
 	let admissions: Promise<unknown> = Promise.resolve();
+
+	const reserveOf = (current: Bucket): number => Math.ceil(current.limit * RESERVE);
 
 	const observe = (headers: Headers) => {
 		const info = parseRateLimitHeaders(headers);
@@ -87,62 +102,59 @@ export function createRateLimitBudget(): RateLimitBudget {
 			return;
 		}
 
-		const window = parsePolicyWindow(info.policy);
-		if (window === undefined) {
-			return;
-		}
-
 		const resetAt = info.reset.getTime();
-		const known = buckets.get(window);
+		const window = parsePolicyWindow(info.policy);
 
 		// ignore stale responses from earlier windows.
-		if (known && resetAt < known.resetAt) {
+		if (bucket && resetAt < bucket.resetAt) {
 			return;
 		}
 
-		buckets.set(window, {
-			limit: info.limit,
+		let remaining = info.remaining;
+		if (bucket && bucket.resetAt === resetAt && bucket.window === window) {
 			// out-of-order responses must not restore spent capacity.
-			remaining: known?.resetAt === resetAt ? Math.min(known.remaining, info.remaining) : info.remaining,
-			resetAt,
-		});
-	};
-
-	const blockedUntil = (): number | undefined => {
-		const at = Date.now();
-		let until: number | undefined;
-
-		for (const [window, bucket] of buckets) {
-			// discard expired limits until fresh headers arrive; do not assume they refilled.
-			if (at > bucket.resetAt + RESET_MARGIN_MS) {
-				buckets.delete(window);
-				continue;
-			}
-			if (bucket.remaining <= Math.ceil(bucket.limit * reserveFor(window))) {
-				until = Math.max(until ?? 0, bucket.resetAt + RESET_MARGIN_MS);
-			}
+			remaining = Math.min(bucket.remaining, remaining);
 		}
 
-		return until;
+		bucket = { limit: info.limit, remaining, resetAt, window };
+	};
+
+	// discard expired limits rather than assume they refilled.
+	const liveBucket = (now: number): Bucket | undefined => {
+		if (bucket && now > bucket.resetAt + RESET_MARGIN_MS) {
+			bucket = undefined;
+		}
+		return bucket;
+	};
+
+	const waitFor = (now: number): number => {
+		if (blockedUntil > now) {
+			return blockedUntil - now;
+		}
+
+		const current = liveBucket(now);
+		if (current && current.remaining <= reserveOf(current)) {
+			return current.resetAt + RESET_MARGIN_MS - now;
+		}
+
+		return lastDispatchAt + MIN_DISPATCH_INTERVAL_MS - now;
 	};
 
 	// serialize admission, not requests, so delayed background-tab timers cannot dispatch a burst.
-	const admit = (pacing: Pacing, signal: AbortSignal): Promise<void> => {
+	const admit = (signal: AbortSignal): Promise<void> => {
 		const turn = admissions.then(async () => {
 			signal.throwIfAborted();
 
 			for (;;) {
-				const until = blockedUntil();
-				if (until === undefined) {
+				const wait = waitFor(Date.now());
+				if (wait <= 0) {
 					break;
 				}
-				await sleep(until - Date.now(), signal);
+
+				// in-flight responses may change the limit while we wait.
+				await sleep(Math.min(wait, MAX_NAP_MS), signal);
 			}
 
-			const delay = lastDispatchAt + 1000 / REQUESTS_PER_SECOND[pacing] - Date.now();
-			if (delay > 0) {
-				await sleep(delay, signal);
-			}
 			lastDispatchAt = Date.now();
 		});
 
@@ -152,12 +164,20 @@ export function createRateLimitBudget(): RateLimitBudget {
 	};
 
 	return {
-		async attempt<T extends BudgetedResponse>({ pacing, request, signal }: AttemptOptions<T>): Promise<T> {
-			await admit(pacing, signal);
+		async attempt<T extends BudgetedResponse>(request: () => Promise<T>, signal: AbortSignal): Promise<T> {
+			for (let attempts = 1; ; attempts++) {
+				await admit(signal);
 
-			const response = await request();
-			observe(response.headers);
-			return response;
+				const response = await request();
+				observe(response.headers);
+
+				if (response.status !== TOO_MANY_REQUESTS || attempts >= RATE_LIMIT_ATTEMPTS) {
+					return response;
+				}
+
+				// apply the cooldown to queued requests too.
+				blockedUntil = Math.max(blockedUntil, parseRetryAt(response.headers) ?? Date.now() + BLIND_RETRY_MS);
+			}
 		},
 	};
 }

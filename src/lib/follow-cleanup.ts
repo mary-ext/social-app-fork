@@ -131,9 +131,8 @@ export async function scanFollows(
 			// charge each retry separately.
 			const data = await networkRetry(NETWORK_RETRIES, () =>
 				ok(
-					budget.attempt({
-						pacing: 'burst',
-						request: () =>
+					budget.attempt(
+						() =>
 							pds.get('com.atproto.repo.listRecords', {
 								signal,
 								params: {
@@ -144,7 +143,7 @@ export async function scanFollows(
 								},
 							}),
 						signal,
-					}),
+					),
 				),
 			);
 			listed += data.records.length;
@@ -155,15 +154,14 @@ export async function scanFollows(
 		accumulate(async (cursor) => {
 			const data = await networkRetry(NETWORK_RETRIES, () =>
 				ok(
-					budget.attempt({
-						pacing: 'burst',
-						request: () =>
+					budget.attempt(
+						() =>
 							appview.get('app.bsky.graph.getFollows', {
 								signal,
 								params: { actor: did, cursor, limit: FOLLOWS_PAGE_SIZE },
 							}),
 						signal,
-					}),
+					),
 				),
 			);
 			return { cursor: data.cursor, items: data.follows };
@@ -210,11 +208,10 @@ export async function scanFollows(
 
 		const { profiles } = await networkRetry(NETWORK_RETRIES, () =>
 			ok(
-				budget.attempt({
-					pacing: 'burst',
-					request: () => appview.get('app.bsky.actor.getProfiles', { signal, params: { actors: batch } }),
+				budget.attempt(
+					() => appview.get('app.bsky.actor.getProfiles', { signal, params: { actors: batch } }),
 					signal,
-				}),
+				),
 			),
 		);
 
@@ -251,15 +248,14 @@ export async function scanFollows(
 		try {
 			const profile = await networkRetry(NETWORK_RETRIES, () =>
 				ok(
-					budget.attempt({
-						pacing: 'burst',
-						request: () =>
+					budget.attempt(
+						() =>
 							appview.get('app.bsky.actor.getProfile', {
 								signal: lookupSignal,
 								params: { actor: subject },
 							}),
-						signal: lookupSignal,
-					}),
+						lookupSignal,
+					),
 				),
 			);
 			return { issues: blockIssues(profile.viewer), profile };

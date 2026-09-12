@@ -57,7 +57,7 @@ export async function bulkWriteFollows(
 }
 
 /**
- * deletes follow records in batches, continuing after failed batches without retrying them.
+ * deletes follow records in batches.
  *
  * may wait for rate limit resets between batches. cancellation preserves completed deletions.
  *
@@ -83,11 +83,10 @@ export async function bulkDeleteFollows(
 
 		try {
 			await ok(
-				budget.attempt({
-					pacing: 'bulk',
-					request: () => pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes }, signal }),
+				budget.attempt(
+					() => pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes }, signal }),
 					signal,
-				}),
+				),
 			);
 		} catch (error) {
 			if (isAbortError(error)) {

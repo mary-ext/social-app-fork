@@ -62,15 +62,14 @@ export function useMutedAccountsScanQuery({
 				// charge each retry separately.
 				const data = await networkRetry(NETWORK_RETRIES, () =>
 					ok(
-						budget.attempt({
-							pacing: 'burst',
-							request: () =>
+						budget.attempt(
+							() =>
 								appview.get('app.bsky.graph.getMutes', {
 									signal,
 									params: { cursor, limit: MUTES_PAGE_SIZE },
 								}),
 							signal,
-						}),
+						),
 					),
 				);
 				count += data.mutes.length;
@@ -117,16 +116,15 @@ export function useBulkUnmuteMutation({
 
 				try {
 					await ok(
-						budget.attempt({
-							pacing: 'bulk',
-							request: () =>
+						budget.attempt(
+							() =>
 								appview.post('app.bsky.graph.unmuteActor', {
 									as: null,
 									input: { actor: did },
 									signal,
 								}),
 							signal,
-						}),
+						),
 					);
 				} catch (err) {
 					// aborts must not advance progress.
