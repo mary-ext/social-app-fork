@@ -25,6 +25,7 @@ import { VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
+import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
@@ -1006,16 +1007,21 @@ const ComposerPost = memo(function ComposerPost({
 
 	const onPhotoPasted = async (blob: Blob) => {
 		const mimeType = blob.type;
-		if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
+
+		const gif =
+			mimeType === 'image/gif' ? readGifMetadata(new Uint8Array(await blob.arrayBuffer())) : undefined;
+		const animatedGif = gif !== undefined && gif.frames > 1;
+
+		if (mimeType.startsWith('video/') || animatedGif) {
 			if (!VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType)) {
 				Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
 					type: 'error',
 				});
 				return;
 			}
-			if (mimeType === 'image/gif') {
+			if (gif) {
 				const { width, height } = await getImageDimensions(blob);
-				onSelectVideo(post.id, { blob, width, height, mimeType, duration: null });
+				onSelectVideo(post.id, { blob, width, height, mimeType, duration: gif.durationUs / 1000 });
 			} else {
 				const { width, height, duration } = await getVideoMetadata(blob);
 				onSelectVideo(post.id, { blob, width, height, mimeType, duration });
