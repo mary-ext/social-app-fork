@@ -3,6 +3,8 @@ import {
 	VIDEO_MAX_DURATION_MS,
 	VIDEO_MAX_SIZE,
 	VIDEO_MAX_SIZE_MB,
+	VIDEO_UPLOAD_MIME_TYPES,
+	type VideoUploadMimeType,
 } from '#/lib/constants/video';
 import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
@@ -48,10 +50,8 @@ enum SelectedAssetError {
 	MaxGIFs = 'MaxGIFs',
 }
 
-const SUPPORTED_VIDEO_MIME_TYPES = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'] as const;
-type SupportedVideoMimeType = (typeof SUPPORTED_VIDEO_MIME_TYPES)[number];
-function isSupportedVideoMimeType(mimeType: string): mimeType is SupportedVideoMimeType {
-	return SUPPORTED_VIDEO_MIME_TYPES.some((supported) => supported === mimeType);
+function isSupportedVideoMimeType(mimeType: string): mimeType is VideoUploadMimeType {
+	return VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType);
 }
 
 const SUPPORTED_IMAGE_MIME_TYPES = [
@@ -67,32 +67,11 @@ function isSupportedImageMimeType(mimeType: string): mimeType is SupportedImageM
 	return SUPPORTED_IMAGE_MIME_TYPES.some((supported) => supported === mimeType);
 }
 
-/** Fallback mime types inferred from a file extension, for files the browser left untyped. */
-const extensionToMimeType: Record<string, string> = {
-	gif: 'image/gif',
-	heic: 'image/heic',
-	jpeg: 'image/jpeg',
-	jpg: 'image/jpeg',
-	mov: 'video/quicktime',
-	mp4: 'video/mp4',
-	png: 'image/png',
-	svg: 'image/svg+xml',
-	webm: 'video/webm',
-	webp: 'image/webp',
-};
-
-/** Bucket a file into one of our known asset types, inferring the mime type when the browser omits it. */
+/** Bucket a file into one of our known asset types. */
 async function classifyFile(
 	file: File,
 ): Promise<{ type: AssetType; mimeType: string; duration?: number } | undefined> {
-	let mimeType = file.type;
-	if (!mimeType) {
-		const extension = file.name.split('.').pop()?.toLowerCase();
-		mimeType = extensionToMimeType[extension || ''] ?? '';
-	}
-	if (!mimeType) {
-		return undefined;
-	}
+	const mimeType = file.type;
 
 	if (mimeType === 'image/gif') {
 		const { frames, durationUs } = readGifMetadata(new Uint8Array(await file.arrayBuffer()));
