@@ -1,6 +1,7 @@
 import { type ComponentType, type MouseEvent, type SVGProps, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { mapDefined } from '@mary/array-fns';
 
@@ -11,6 +12,7 @@ import { useBreakpoints, useLayoutBreakpoints } from '#/lib/hooks/use-breakpoint
 import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useFetchHandle } from '#/state/queries/handle';
 import { useUnreadMessageCount } from '#/state/queries/messages/get-unread-counts';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
@@ -65,6 +67,14 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 	const profiles = data?.profiles;
 	const signOutPromptHandle = Prompt.usePromptHandle();
 	const profile = profiles?.find((p) => p.did === currentAccount!.did);
+	const moderationOpts = useModerationOpts();
+	const displayName =
+		profile && moderationOpts
+			? sanitizeDisplayName(
+					profile.displayName ?? '',
+					getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileBio),
+				)
+			: '';
 	const otherAccounts = mapDefined(accounts, (account) => {
 		if (account.did === currentAccount!.did) {
 			return;
@@ -83,7 +93,14 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 						render={
 							<button
 								type="button"
-								aria-label={m['common.account.switcher.currentLabel']({ handle: `@${profile.handle}` })}
+								aria-label={
+									displayName
+										? m['common.account.switcher.currentLabelWithName']({
+												displayName,
+												handle: `@${profile.handle}`,
+											})
+										: m['common.account.switcher.currentLabel']({ handle: `@${profile.handle}` })
+								}
 								className={clsx(css.profileTrigger, minimal && css.profileTriggerMinimal)}
 							>
 								<div className={css.avatarWrap}>
@@ -101,9 +118,9 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 												{profile.handle}
 											</Text>
 
-											{profile.displayName ? (
+											{displayName ? (
 												<Text size="xs" color="textContrastMedium" numberOfLines={1}>
-													{sanitizeDisplayName(profile.displayName)}
+													{displayName}
 												</Text>
 											) : null}
 										</div>

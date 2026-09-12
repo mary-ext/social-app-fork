@@ -1,10 +1,14 @@
 import type { ComponentType, SVGProps } from 'react';
 
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import { clsx } from 'clsx';
 
+import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
@@ -152,10 +156,26 @@ function DrawerProfileCard({
 	const { data: profile } = useProfileQuery({ did: account.did });
 	const { isActive: live } = useActorStatus(profile);
 
+	const moderationOpts = useModerationOpts();
+	const displayName =
+		profile && moderationOpts
+			? sanitizeDisplayName(
+					profile.displayName ?? '',
+					getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileBio),
+				)
+			: '';
+
 	return (
 		<div className={styles.profileCardWrap}>
 			<button
-				aria-label={m['common.account.profile.currentLabel']({ handle: account.handle })}
+				aria-label={
+					displayName
+						? m['common.account.profile.currentLabelWithName']({
+								displayName,
+								handle: `@${account.handle}`,
+							})
+						: m['common.account.profile.currentLabel']({ handle: `@${account.handle}` })
+				}
 				className={styles.profileCard}
 				onClick={onPressProfile}
 				type="button"
@@ -169,7 +189,7 @@ function DrawerProfileCard({
 				<div>
 					<div className={styles.profileNameRow}>
 						<Text numberOfLines={1} size="xl" weight="bold">
-							{profile?.displayName || account.handle}
+							{displayName || account.handle}
 						</Text>
 						{profile && <ProfileBadges profile={profile} size="lg" />}
 					</div>
