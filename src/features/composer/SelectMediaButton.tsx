@@ -4,6 +4,7 @@ import {
 	VIDEO_MAX_SIZE,
 	VIDEO_MAX_SIZE_MB,
 } from '#/lib/constants/video';
+import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
@@ -14,7 +15,6 @@ import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.sv
 import { m } from '#/paraglide/messages';
 
 import { ComposerToolbarButton } from './ComposerToolbarButton';
-import { isAnimatedGif } from './videos/isAnimatedGif';
 
 /** Generic asset classes, or buckets, that we support. */
 export type AssetType = 'video' | 'image' | 'gif';
@@ -82,7 +82,9 @@ const extensionToMimeType: Record<string, string> = {
 };
 
 /** Bucket a file into one of our known asset types, inferring the mime type when the browser omits it. */
-async function classifyFile(file: File): Promise<{ type: AssetType; mimeType: string } | undefined> {
+async function classifyFile(
+	file: File,
+): Promise<{ type: AssetType; mimeType: string; duration?: number } | undefined> {
 	let mimeType = file.type;
 	if (!mimeType) {
 		const extension = file.name.split('.').pop()?.toLowerCase();
@@ -93,8 +95,13 @@ async function classifyFile(file: File): Promise<{ type: AssetType; mimeType: st
 	}
 
 	if (mimeType === 'image/gif') {
-		const { isAnimated } = isAnimatedGif(await file.arrayBuffer());
-		return { type: isAnimated ? 'gif' : 'image', mimeType };
+		const { frames, durationUs } = readGifMetadata(new Uint8Array(await file.arrayBuffer()));
+
+		if (frames <= 1) {
+			return { type: 'image', mimeType };
+		}
+
+		return { type: 'gif', mimeType, duration: durationUs / 1000 };
 	}
 	if (mimeType.startsWith('video/')) {
 		return { type: 'video', mimeType };
@@ -124,7 +131,7 @@ async function processFiles(
 ): Promise<SelectedAssets & { errorCodes: Set<SelectedAssetError> }> {
 	const errors = new Set<SelectedAssetError>();
 	let selectableAssetType = allowedAssetTypes;
-	const supported: { file: File; type: AssetType; mimeType: string }[] = [];
+	const supported: { file: File; type: AssetType; mimeType: string; duration?: number }[] = [];
 
 	for (const file of files) {
 		const classified = await classifyFile(file);
@@ -133,7 +140,7 @@ async function processFiles(
 			continue;
 		}
 
-		const { type, mimeType } = classified;
+		const { type, mimeType, duration } = classified;
 		selectableAssetType ||= type;
 		if (type !== selectableAssetType) {
 			errors.add(SelectedAssetError.MixedTypes);
@@ -153,7 +160,7 @@ async function processFiles(
 			continue;
 		}
 
-		supported.push({ file, type, mimeType });
+		supported.push({ file, type, mimeType, duration });
 	}
 
 	const empty: SelectedAssets & { errorCodes: Set<SelectedAssetError> } = {
@@ -201,7 +208,7 @@ async function processFiles(
 		if (supported.length > 1) {
 			errors.add(SelectedAssetError.MaxGIFs);
 		}
-		const { file, mimeType } = supported[0]!;
+		const { file, mimeType, duration } = supported[0]!;
 		const dims = await getImageDimensions(file).catch(() => undefined);
 		if (!dims) {
 			errors.add(SelectedAssetError.Unsupported);
@@ -209,7 +216,7 @@ async function processFiles(
 		}
 		return {
 			...empty,
-			video: { blob: file, width: dims.width, height: dims.height, mimeType, duration: null },
+			video: { blob: file, width: dims.width, height: dims.height, mimeType, duration: duration ?? null },
 		};
 	}
 
