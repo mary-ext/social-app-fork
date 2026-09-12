@@ -188,12 +188,21 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			};
 		}
 		case 'updatePost': {
-			let nextPosts = state.thread.posts;
 			const postIndex = state.thread.posts.findIndex((p) => p.id === action.postId);
-			if (postIndex !== -1) {
-				nextPosts = state.thread.posts.slice();
-				nextPosts[postIndex] = postReducer(state.thread.posts[postIndex]!, action.postAction);
+			if (postIndex === -1) {
+				return state;
 			}
+
+			const prevPost = state.thread.posts[postIndex]!;
+			const nextPost = postReducer(prevPost, action.postAction);
+			// ignored actions must not mark the composer dirty.
+			if (nextPost === prevPost) {
+				return state;
+			}
+
+			const nextPosts = state.thread.posts.slice();
+			nextPosts[postIndex] = nextPost;
+
 			return {
 				...state,
 				isDirty: true,
@@ -413,20 +422,22 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			};
 		}
 		case 'embedUpdateVideo': {
-			const videoAction = action.videoAction;
 			const prevMedia = state.embed.media;
-			let nextMedia = prevMedia;
-			if (prevMedia?.type === 'video') {
-				nextMedia = {
-					...prevMedia,
-					video: videoReducer(prevMedia.video, videoAction),
-				};
+			if (prevMedia?.type !== 'video') {
+				return state;
 			}
+
+			const nextVideo = videoReducer(prevMedia.video, action.videoAction);
+			// preserve identity to avoid re-renders for stale progress updates.
+			if (nextVideo === prevMedia.video) {
+				return state;
+			}
+
 			return {
 				...state,
 				embed: {
 					...state.embed,
-					media: nextMedia,
+					media: { ...prevMedia, video: nextVideo },
 				},
 			};
 		}
