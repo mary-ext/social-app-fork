@@ -21,6 +21,8 @@
 	"common.account.automated": "Automated account",
 	"common.account.deleted": "Deleted account",
 	"common.account.privacy": "Account & privacy",
+	"common.account.profile.currentLabel": "{handle}, view your profile",
+	"common.account.switcher.currentLabel": "{handle}, switch accounts",
 	"common.account.switcher.label": "Switch accounts",
 	"common.action.add": "Add",
 	"common.action.addPeople": "Add people",

@@ -155,7 +155,7 @@ function DrawerProfileCard({
 	return (
 		<div className={styles.profileCardWrap}>
 			<button
-				aria-label={m['common.nav.profile']()}
+				aria-label={m['common.account.profile.currentLabel']({ handle: account.handle })}
 				className={styles.profileCard}
 				onClick={onPressProfile}
 				type="button"

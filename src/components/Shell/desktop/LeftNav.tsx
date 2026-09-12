@@ -83,7 +83,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 						render={
 							<button
 								type="button"
-								aria-label={m['common.account.switcher.label']()}
+								aria-label={m['common.account.switcher.currentLabel']({ handle: `@${profile.handle}` })}
 								className={clsx(css.profileTrigger, minimal && css.profileTriggerMinimal)}
 							>
 								<div className={css.avatarWrap}>
