@@ -12,7 +12,24 @@ export type TranscodedAsset = {
 	duration: number;
 };
 
-export type MainToWorker = { kind: VideoAssetKind; blob: Blob };
+/** deinterleaved audio, one array per channel, all the same length. */
+export type PcmAudio = {
+	channels: Float32Array<ArrayBuffer>[];
+	/** sample rate in hertz */
+	sampleRate: number;
+};
+
+export type VoiceClipInput = {
+	audio: PcmAudio;
+	/** avatar artwork; must not taint a canvas */
+	avatar: ImageBitmap;
+	/** localized text for the bottom-right corner */
+	label: string;
+	/** halo animation seed */
+	seed: string;
+};
+
+export type MainToWorker = { type: VideoAssetKind; blob: Blob } | ({ type: 'voice' } & VoiceClipInput);
 
 export type WorkerToMain =
 	| { type: 'progress'; progress: number }

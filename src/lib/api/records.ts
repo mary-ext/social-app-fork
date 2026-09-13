@@ -183,3 +183,16 @@ export async function uploadBlob(client: Client, blob: Blob, encoding?: string):
 	);
 	return data.blob;
 }
+
+/**
+ * builds a PDS `com.atproto.sync.getBlob` URL.
+ *
+ * @param options the PDS URL, the repo's DID, and the blob's CID
+ * @returns the blob's URL
+ */
+export const syncBlobUrl = ({ pdsUrl, did, cid }: { pdsUrl: string; did: Did; cid: string }): URL => {
+	const url = new URL('/xrpc/com.atproto.sync.getBlob', pdsUrl);
+	url.searchParams.set('did', did);
+	url.searchParams.set('cid', cid);
+	return url;
+};

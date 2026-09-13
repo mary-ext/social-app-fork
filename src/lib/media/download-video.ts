@@ -1,5 +1,6 @@
 import type { Did } from '@atcute/lexicons';
 
+import { syncBlobUrl } from '#/lib/api/records';
 import { isAbortError } from '#/lib/errors';
 import { downloadUrl } from '#/lib/utils/download';
 
@@ -38,9 +39,7 @@ export async function downloadVideo({
 	did: Did;
 	pdsUrl: string;
 }): Promise<boolean> {
-	const url = new URL('/xrpc/com.atproto.sync.getBlob', pdsUrl);
-	url.searchParams.set('did', did);
-	url.searchParams.set('cid', cid);
+	const url = syncBlobUrl({ pdsUrl, did, cid });
 
 	const filename = `bluesky-${cid}.mp4`;
 	const file = await pickSaveFile(filename);

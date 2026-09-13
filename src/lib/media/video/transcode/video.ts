@@ -1,8 +1,6 @@
 import {
 	BlobSource,
-	canEncodeVideo,
 	Conversion,
-	getFirstEncodableAudioCodec,
 	Input,
 	MATROSKA,
 	MP4,
@@ -11,72 +9,20 @@ import {
 	QTFF,
 	Quality,
 	WEBM,
-	type AudioCodec,
-	type InputAudioTrack,
-	type VideoCodec,
 } from 'mediabunny';
 
 import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 
 import { createBlobTarget } from './blob-target';
-import { CONTAINERS, type ContainerName } from './containers';
-import { planEncode, type EncodePlan } from './plan';
+import { pickCodecs } from './codecs';
+import { CONTAINERS } from './containers';
+import { KEY_FRAME_INTERVAL, planEncode } from './plan';
 import type { TranscodeOutcome } from './protocol';
 
 const INPUT_FORMATS = [MP4, QTFF, MATROSKA, WEBM, MPEG_TS];
 
-// prefer AVC to match the service's H.264 output; fall back to WebM codecs.
-// omit HEVC because the service cannot segment it.
-const COMBOS: { container: ContainerName; video: VideoCodec; audio: AudioCodec[] }[] = [
-	{ container: 'mp4', video: 'avc', audio: ['aac'] },
-	{ container: 'webm', video: 'vp9', audio: ['opus', 'vorbis'] },
-	{ container: 'webm', video: 'vp8', audio: ['opus', 'vorbis'] },
-];
-
-// keyframe interval in seconds, chosen for the service's segmenter.
-const KEY_FRAME_INTERVAL = 3;
-
 // packet sample size for bitrate and frame rate estimates.
 const STATS_PACKETS = 100;
-
-type Combo = {
-	container: ContainerName;
-	video: VideoCodec;
-	audio: AudioCodec | null;
-};
-
-const pickCombo = async (plan: EncodePlan, audioTrack: InputAudioTrack | null): Promise<Combo | null> => {
-	const quality = new Quality({ bitrate: plan.videoBitrate });
-
-	const [needsAudio, encodableVideo] = await Promise.all([
-		audioTrack?.canDecode() ?? false,
-		Promise.all(
-			COMBOS.map((combo) => canEncodeVideo(combo.video, { width: plan.width, height: plan.height, quality })),
-		),
-	]);
-
-	// require compatible audio too; AVC without AAC support must fall back to WebM.
-	for (const [index, combo] of COMBOS.entries()) {
-		if (!encodableVideo[index]) {
-			continue;
-		}
-
-		if (!needsAudio || audioTrack === null) {
-			return { ...combo, audio: null };
-		}
-
-		const [numberOfChannels, sampleRate] = await Promise.all([
-			audioTrack.getNumberOfChannels(),
-			audioTrack.getSampleRate(),
-		]);
-		const audio = await getFirstEncodableAudioCodec(combo.audio, { numberOfChannels, sampleRate });
-		if (audio !== null) {
-			return { ...combo, audio };
-		}
-	}
-
-	return null;
-};
 
 /**
  * compresses oversized videos and tone-maps HDR to SDR at any size.
@@ -127,7 +73,16 @@ export async function transcodeVideo(
 			sourceBitrate: Number.isFinite(stats.averageBitrate) ? Math.round(stats.averageBitrate) : null,
 		});
 
-		const combo = await pickCombo(plan, audioTrack);
+		let audio = null;
+		if (audioTrack !== null && (await audioTrack.canDecode())) {
+			const [numberOfChannels, sampleRate] = await Promise.all([
+				audioTrack.getNumberOfChannels(),
+				audioTrack.getSampleRate(),
+			]);
+			audio = { numberOfChannels, sampleRate };
+		}
+
+		const combo = await pickCodecs(plan, audio);
 		if (combo === null) {
 			throw new Error('no encodable codec combination');
 		}

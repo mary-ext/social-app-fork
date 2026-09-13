@@ -1,6 +1,7 @@
 import { transcodeGif } from './gif';
 import type { MainToWorker, TranscodeOutcome, WorkerToMain } from './protocol';
 import { transcodeVideo } from './video';
+import { encodeVoiceClip } from './voice/encode';
 
 declare const self: {
 	postMessage: (message: WorkerToMain, transfer?: Transferable[]) => void;
@@ -27,12 +28,15 @@ const onProgress = (progress: number) => {
 };
 
 const run = (request: MainToWorker): Promise<TranscodeOutcome> => {
-	switch (request.kind) {
+	switch (request.type) {
 		case 'gif': {
 			return transcodeGif(request.blob, onProgress);
 		}
 		case 'video': {
 			return transcodeVideo(request.blob, onProgress);
+		}
+		case 'voice': {
+			return encodeVoiceClip(request, onProgress);
 		}
 	}
 };

@@ -11,6 +11,9 @@ const SIZE_BUDGET = 0.9;
 
 const FALLBACK_FRAME_RATE = 30;
 
+/** keyframe interval in seconds, chosen for the service's segmenter. */
+export const KEY_FRAME_INTERVAL = 3;
+
 /** audio bitrate budget and encoder target, in bits per second. */
 export const AUDIO_BITRATE = 128_000;
 
