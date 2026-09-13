@@ -7,9 +7,14 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
-import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
-import { gifUrlParams, klipyHostname, stripGifUrlParams, tenorHostname } from '#/lib/media/gif-embed';
+import {
+	gifUrlParams,
+	klipyHostname,
+	stripGifUrlParams,
+	tenorHostname,
+} from '#/lib/media/external-gif/embed';
+import type { Gif } from '#/lib/media/external-gif/types';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/client';
 import type { VideoAsset } from '#/lib/media/video/types';

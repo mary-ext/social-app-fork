@@ -4,7 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import type { VoiceAsset } from '#/lib/media/read-attachment';
-import { FALLBACK_BACKGROUND, toCssColor } from '#/lib/media/video/transcode/voice/palette';
+import { FALLBACK_BACKGROUND, toCssColor } from '#/lib/media/transcode/voice/palette';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';

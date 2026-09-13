@@ -1,4 +1,4 @@
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { getCurrentDid } from '#/state/session';
 

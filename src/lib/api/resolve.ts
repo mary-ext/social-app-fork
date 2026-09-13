@@ -6,14 +6,14 @@ import { isDid, parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeRecordUri } from '#/lib/at-uri';
 import { isAbortError } from '#/lib/errors';
-import type { Gif } from '#/lib/gif';
-import { createGIFDescription } from '#/lib/gif-alt-text';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/compress-image';
-import { gifUrlParams, klipyHostname } from '#/lib/media/gif-embed';
+import { createGIFDescription } from '#/lib/media/external-gif/alt-text';
+import { gifUrlParams, klipyHostname } from '#/lib/media/external-gif/embed';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 type ResolvedExternalLink = {
 	type: 'external';

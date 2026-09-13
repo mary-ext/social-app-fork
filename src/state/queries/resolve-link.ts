@@ -3,7 +3,7 @@ import type { Client } from '@atcute/client';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { resolveGif, resolveLink } from '#/lib/api/resolve';
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { STALE } from '#/state/queries/index';
 import { RQKEY_GIF, RQKEY_LINK } from '#/state/queries/resolve-link-key';

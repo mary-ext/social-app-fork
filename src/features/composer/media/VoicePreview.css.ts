@@ -13,7 +13,7 @@ import {
 	LOBE_OPACITY,
 	MARGIN,
 	PULSE_PERIOD,
-} from '#/lib/media/video/transcode/voice/spec';
+} from '#/lib/media/transcode/voice/spec';
 
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 

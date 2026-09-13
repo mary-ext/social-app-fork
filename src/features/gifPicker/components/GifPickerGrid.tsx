@@ -1,7 +1,7 @@
 import { type Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 
 import { cleanError } from '#/lib/errors';
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';

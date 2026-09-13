@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { GifAltTextDialog } from '#/features/composer/GifAltTextDialog';
 

@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 
-import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { CharProgress } from '#/features/composer/char-progress/CharProgress';
 
@@ -13,7 +13,7 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerFooter.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
-import { MediaUploadToolbar } from './MediaUploadToolbar';
+import { MediaUploadToolbar } from './media/MediaUploadToolbar';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { SelectMediaButton } from './SelectMediaButton';

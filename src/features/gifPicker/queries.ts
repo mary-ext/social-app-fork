@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { gifKlipyFeaturedUrl, gifKlipySearchUrl } from '#/lib/constants/services';
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { deviceLocales } from '#/locale/deviceLocales';
 

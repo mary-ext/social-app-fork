@@ -1,4 +1,4 @@
-import { toProxiedGifUrl } from '#/lib/media/gif-embed';
+import { toProxiedGifUrl } from '#/lib/media/external-gif/embed';
 
 export const gifPreviewUrl = (gifUrl: string) => {
 	try {

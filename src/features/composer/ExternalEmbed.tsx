@@ -5,8 +5,8 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { cleanError } from '#/lib/errors';
-import type { Gif } from '#/lib/gif';
 import { toNiceDomain } from '#/lib/links/nice-domain';
+import type { Gif } from '#/lib/media/external-gif/types';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';

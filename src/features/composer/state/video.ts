@@ -4,9 +4,9 @@ import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 import { VIDEO_MAX_DURATION_MINUTES } from '#/lib/constants/video';
 import { isAbortError } from '#/lib/errors';
 import type { VoiceAsset } from '#/lib/media/read-attachment';
-import { canTranscode } from '#/lib/media/video/transcode/capabilities';
-import { TranscodeError } from '#/lib/media/video/transcode/errors';
-import { renderVoiceClip, transcodeForUpload } from '#/lib/media/video/transcode/transcode';
+import { canTranscode } from '#/lib/media/transcode/capabilities';
+import { TranscodeError } from '#/lib/media/transcode/errors';
+import { renderVoiceClip, transcodeForUpload } from '#/lib/media/transcode/transcode';
 import { toVideoPayload, type VideoAsset, type VideoPayload } from '#/lib/media/video/types';
 
 import { m } from '#/paraglide/messages';

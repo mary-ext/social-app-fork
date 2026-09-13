@@ -4,7 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import type { GifEmbedParams } from '#/lib/media/gif-embed';
+import type { GifEmbedParams } from '#/lib/media/external-gif/embed';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 

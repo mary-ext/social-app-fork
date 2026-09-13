@@ -1,10 +1,10 @@
 import type { AppBskyActorDefs, AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { Gif } from '#/lib/gif';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 import type { ComposerImage } from '#/lib/media/composer-image';
+import type { Gif } from '#/lib/media/external-gif/types';
 import { insertMentionAt } from '#/lib/mentions';
 import type { SelfLabel } from '#/lib/moderation/self-labels';
 import { getShortenedLength } from '#/lib/rich-text';

@@ -1,3 +1,5 @@
+import { getVideoSourceKind, type VideoState } from '#/features/composer/state/video';
+
 import { ProgressCircle } from '#/components/ProgressCircle';
 import { Text } from '#/components/Text';
 
@@ -6,7 +8,6 @@ import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import * as styles from './MediaUploadToolbar.css';
-import { getVideoSourceKind, type VideoState } from './state/video';
 
 const getGifStatusText = (status: Exclude<VideoState['status'], 'error'>): string => {
 	switch (status) {

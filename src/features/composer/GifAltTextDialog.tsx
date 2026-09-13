@@ -1,9 +1,9 @@
 import { type ReactNode, useId, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
-import type { Gif } from '#/lib/gif';
-import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
-import { type GifEmbedParams, parseGifEmbedFromUrl } from '#/lib/media/gif-embed';
+import { parseAltFromGIFDescription } from '#/lib/media/external-gif/alt-text';
+import { type GifEmbedParams, parseGifEmbedFromUrl } from '#/lib/media/external-gif/embed';
+import type { Gif } from '#/lib/media/external-gif/types';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 import { trimText } from '#/lib/utils/text';
 

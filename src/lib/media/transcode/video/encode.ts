@@ -13,11 +13,11 @@ import {
 
 import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 
-import { createBlobTarget } from './blob-target';
-import { pickCodecs } from './codecs';
-import { CONTAINERS } from './containers';
-import { KEY_FRAME_INTERVAL, planEncode } from './plan';
-import type { TranscodeOutcome } from './protocol';
+import { createBlobTarget } from '../blob-target';
+import { pickCodecs } from '../codecs';
+import { CONTAINERS } from '../containers';
+import { KEY_FRAME_INTERVAL, planEncode } from '../plan';
+import type { TranscodeOutcome } from '../protocol';
 
 const INPUT_FORMATS = [MP4, QTFF, MATROSKA, WEBM, MPEG_TS];
 

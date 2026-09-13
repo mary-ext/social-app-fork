@@ -1,7 +1,7 @@
 import { TranscodeError } from './errors';
-import { transcodeGif } from './gif';
+import { transcodeGif } from './gif/encode';
 import type { MainToWorker, TranscodeOutcome, WorkerToMain } from './protocol';
-import { transcodeVideo } from './video';
+import { transcodeVideo } from './video/encode';
 import { encodeVoiceClip } from './voice/encode';
 
 declare const self: {

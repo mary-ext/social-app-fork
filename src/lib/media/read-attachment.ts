@@ -1,7 +1,7 @@
 import { VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getAudioDuration, getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
-import { canRenderVoiceClip } from '#/lib/media/video/transcode/capabilities';
+import { canRenderVoiceClip } from '#/lib/media/transcode/capabilities';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { isVideoDurationAdmissible, isVideoSizeAdmissible } from '#/lib/media/video/validate';
 

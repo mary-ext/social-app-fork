@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { uniqueBy } from '@mary/array-fns';
 
-import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import { addRecentGif, useRecentGifs } from '#/state/preferences/recent-gifs';
 

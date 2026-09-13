@@ -1,10 +1,10 @@
 import type { PostAction } from '#/features/composer/state/composer';
 import type { VideoState } from '#/features/composer/state/video';
-import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
-import { VideoPreview } from '#/features/composer/videos/VideoPreview';
-import { VoicePreview } from '#/features/composer/videos/VoicePreview';
 
+import { SubtitleDialogBtn } from './SubtitleDialog';
 import * as styles from './VideoAttachmentEditor.css';
+import { VideoPreview } from './VideoPreview';
+import { VoicePreview } from './VoicePreview';
 
 /**
  * previews a post's video, GIF, or voice clip with its alt text and captions controls.

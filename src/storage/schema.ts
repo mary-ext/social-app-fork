@@ -4,7 +4,7 @@ import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 import type { JsonValue } from 'type-fest';
 
 import type { AiModelSelection, AiProviderConfigs } from '#/lib/ai/config';
-import type { Gif } from '#/lib/gif';
+import type { Gif } from '#/lib/media/external-gif/types';
 
 import type { Locale } from '#/paraglide/runtime';
 

@@ -8,7 +8,7 @@ import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { clsx } from 'clsx';
 
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
-import { isGifEmbed } from '#/lib/media/gif-embed';
+import { isGifEmbed } from '#/lib/media/external-gif/embed';
 
 import * as styles from '#/components/MediaPreview.css';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';

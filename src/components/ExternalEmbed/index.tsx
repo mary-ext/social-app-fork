@@ -2,9 +2,9 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { clsx } from 'clsx';
 
-import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { toNiceDomain } from '#/lib/links/nice-domain';
-import { parseGifEmbedFromUrl } from '#/lib/media/gif-embed';
+import { parseAltFromGIFDescription } from '#/lib/media/external-gif/alt-text';
+import { parseGifEmbedFromUrl } from '#/lib/media/external-gif/embed';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';

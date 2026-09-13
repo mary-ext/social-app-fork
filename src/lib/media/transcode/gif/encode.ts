@@ -10,10 +10,10 @@ import {
 import { CLAMPED_GIF_DELAY_US, readGifMetadata } from '#/lib/media/gif-metadata';
 import { clamp } from '#/lib/utils/numbers';
 
-import { createBlobTarget } from './blob-target';
-import { CONTAINERS } from './containers';
-import { bitrateBudget, MIN_VIDEO_BITRATE } from './plan';
-import type { TranscodeOutcome } from './protocol';
+import { createBlobTarget } from '../blob-target';
+import { CONTAINERS } from '../containers';
+import { bitrateBudget, MIN_VIDEO_BITRATE } from '../plan';
+import type { TranscodeOutcome } from '../protocol';
 
 // prefer VP9 for GIFs' flat colours and hard edges; fall back to VP8.
 const CODECS: VideoCodec[] = ['vp9', 'vp8'];
