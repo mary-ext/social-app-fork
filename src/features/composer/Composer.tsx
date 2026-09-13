@@ -22,8 +22,6 @@ import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
-import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import { getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
@@ -38,11 +36,8 @@ import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 import { GifAltText } from '#/features/composer/GifAltText';
-import {
-	getAttachmentRejectionMessage,
-	getSelectionErrorMessage,
-} from '#/features/composer/media/attachment-messages';
-import { selectAttachments } from '#/features/composer/media/select-attachments';
+import { usePostAttachments } from '#/features/composer/media/use-post-attachments';
+import { VideoAttachmentEditor } from '#/features/composer/media/VideoAttachmentEditor';
 import {
 	closeComposer,
 	COMPOSER_DIALOG_ID,
@@ -55,9 +50,6 @@ import { SuggestedLanguage } from '#/features/composer/select-language/Suggested
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import { TextInput } from '#/features/composer/text-input/TextInput';
-import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
-import { VideoPreview } from '#/features/composer/videos/VideoPreview';
-import { VoicePreview } from '#/features/composer/videos/VoicePreview';
 
 import * as Dialog from '#/components/Dialog';
 import { closeAllDialogs } from '#/components/Dialog/registry';
@@ -77,19 +69,13 @@ import * as ComposerError from './ComposerError';
 import { ComposerFooter } from './ComposerFooter';
 import { ComposerPills } from './ComposerPills';
 import { ComposerTopBar } from './ComposerTopBar';
-import {
-	draftToComposerPosts,
-	extractLocalRefs,
-	getDraftSaveBlocker,
-	type RestoredVideo,
-} from './drafts/state/api';
+import { draftToComposerPosts, extractLocalRefs, getDraftSaveBlocker } from './drafts/state/api';
 import {
 	loadDraftMedia,
 	useCleanupPublishedDraftMutation,
 	useSaveDraftMutation,
 } from './drafts/state/queries';
 import type { DraftSummary } from './drafts/state/schema';
-import { createAddImagesWithCap } from './gallery-cap';
 import {
 	type ComposerAction,
 	composerReducer,
@@ -100,7 +86,6 @@ import {
 	type PostDraft,
 	type ThreadDraft,
 } from './state/composer';
-import { processVideo, type VideoAttachment } from './state/video';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
@@ -129,7 +114,7 @@ export const ComposePost = ({
 	cancelRef?: RefObject<CancelRef | null>;
 }) => {
 	const { currentAccount } = useSession();
-	const { appview, pds, pdsUrl } = getClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const requireAltTextEnabled = useRequireAltTextEnabled();
@@ -205,33 +190,12 @@ export const ComposePost = ({
 		});
 	};
 
-	// follow-up actions must carry the returned signal to pass the reducer's stale-action check.
-	const selectVideo = (postId: string, attachment: VideoAttachment): AbortSignal => {
-		const abortController = new AbortController();
-		const signal = abortController.signal;
-		composerDispatch({
-			type: 'updatePost',
-			postId,
-			postAction: { type: 'embedAddVideo', attachment, abortController },
-		});
-		if (pds && pdsUrl) {
-			void processVideo({
-				attachment,
-				did: currentDid,
-				dispatch: (videoAction) => {
-					composerDispatch({
-						type: 'updatePost',
-						postId,
-						postAction: { type: 'embedUpdateVideo', videoAction },
-					});
-				},
-				pds,
-				pdsUrl,
-				signal,
-			});
-		}
-		return signal;
-	};
+	const {
+		addAttachments: onAddAttachments,
+		clearVideo,
+		restoreVideo,
+		selectVideo,
+	} = usePostAttachments({ composerDispatch, onError: setError });
 
 	const onInitVideo = useEffectEvent(() => {
 		if (initVideoUri) {
@@ -242,123 +206,6 @@ export const ComposePost = ({
 	useEffect(() => {
 		onInitVideo();
 	}, []);
-
-	const clearVideo = (postId: string) => {
-		composerDispatch({
-			type: 'updatePost',
-			postId: postId,
-			postAction: {
-				type: 'embedRemoveVideo',
-			},
-		});
-	};
-
-	const addAttachments = async (post: PostDraft, blobs: Blob[]) => {
-		const { selection, errors } = await selectAttachments(blobs, post.embed.media);
-
-		for (const message of new Set(errors.map(getSelectionErrorMessage))) {
-			Toast.show(message, { type: 'warning' });
-		}
-
-		switch (selection?.type) {
-			case 'images': {
-				const results = await Promise.allSettled(selection.blobs.map((blob) => createComposerImage(blob)));
-
-				const images: ComposerImage[] = [];
-				for (const [index, result] of results.entries()) {
-					if (result.status === 'fulfilled') {
-						images.push(result.value);
-					} else {
-						const blob = selection.blobs[index]!;
-						console.error('createComposerImage failed', blob.type, blob.size, result.reason);
-					}
-				}
-
-				if (images.length > 0) {
-					const imageCount =
-						post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
-							? post.embed.media.images.length
-							: 0;
-					createAddImagesWithCap(imageCount, (postAction) => {
-						composerDispatch({ type: 'updatePost', postId: post.id, postAction });
-					})(images);
-				}
-
-				const failed = selection.blobs.length - images.length;
-				if (failed > 0) {
-					setError(m['view.composer.gallery.error.notAdded']({ failed }));
-				}
-				break;
-			}
-			case 'video':
-			case 'voice': {
-				selectVideo(post.id, selection);
-				break;
-			}
-		}
-	};
-
-	const onAddAttachments = (post: PostDraft, blobs: Blob[]) => {
-		void addAttachments(post, blobs);
-	};
-
-	const restoreVideo = async (postId: string, videoInfo: RestoredVideo) => {
-		try {
-			// legacy drafts may have stored the file without a MIME type.
-			const blob =
-				videoInfo.blob.type === videoInfo.mimeType
-					? videoInfo.blob
-					: new Blob([videoInfo.blob], { type: videoInfo.mimeType });
-
-			const result = await readAttachment(blob);
-			if (!result.ok) {
-				setError(getAttachmentRejectionMessage(result.rejection));
-				return;
-			}
-			if (result.attachment.type !== 'video') {
-				setError(
-					getAttachmentRejectionMessage({
-						reason: 'unsupported',
-						kind: getAttachmentKind(result.attachment),
-						mimeType: blob.type,
-					}),
-				);
-				return;
-			}
-			const signal = selectVideo(postId, result.attachment);
-
-			if (videoInfo.altText) {
-				composerDispatch({
-					type: 'updatePost',
-					postId,
-					postAction: {
-						type: 'embedUpdateVideo',
-						videoAction: { type: 'updateAltText', altText: videoInfo.altText, signal },
-					},
-				});
-			}
-
-			// Restore captions (web only - captions use File objects)
-			if (videoInfo.captions.length > 0) {
-				const captionTracks = videoInfo.captions.map((c) => ({
-					lang: c.lang,
-					file: new File([c.content], `caption-${c.lang}.vtt`, {
-						type: 'text/vtt',
-					}),
-				}));
-				composerDispatch({
-					type: 'updatePost',
-					postId,
-					postAction: {
-						type: 'embedUpdateVideo',
-						videoAction: { type: 'updateCaptions', updater: () => captionTracks, signal },
-					},
-				});
-			}
-		} catch (e) {
-			console.error('Failed to restore video from draft', postId, e);
-		}
-	};
 
 	const handleSelectDraft = async (draftSummary: DraftSummary) => {
 		// Load local media files for the draft
@@ -384,8 +231,7 @@ export const ComposePost = ({
 		// Initiate video processing for any restored videos
 		// This is async but we don't await - videos process in the background
 		for (const [postIndex, videoInfo] of restoredVideos) {
-			const postId = posts[postIndex]!.id;
-			void restoreVideo(postId, videoInfo);
+			restoreVideo(posts[postIndex]!.id, videoInfo);
 		}
 	};
 
@@ -1168,34 +1014,7 @@ function ComposerEmbeds({
 				</div>
 			)}
 			{video && (
-				<div className={styles.videoContainer}>
-					{video.source.type === 'voice' ? (
-						<VoicePreview
-							asset={video.source.asset}
-							avatar={avatar}
-							background={video.source.background}
-							clear={clearVideo}
-						/>
-					) : (
-						<VideoPreview asset={video.source.asset} clear={clearVideo} />
-					)}
-					<SubtitleDialogBtn
-						defaultAltText={video.altText}
-						saveAltText={(altText) => {
-							dispatch({
-								type: 'embedUpdateVideo',
-								videoAction: { type: 'updateAltText', altText, signal: video.abortController.signal },
-							});
-						}}
-						captions={video.captions}
-						setCaptions={(updater) => {
-							dispatch({
-								type: 'embedUpdateVideo',
-								videoAction: { type: 'updateCaptions', updater, signal: video.abortController.signal },
-							});
-						}}
-					/>
-				</div>
+				<VideoAttachmentEditor avatar={avatar} dispatch={dispatch} onClear={clearVideo} video={video} />
 			)}
 			{embed.quote?.uri ? (
 				<div className={video ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>

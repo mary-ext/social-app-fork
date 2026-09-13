@@ -75,11 +75,6 @@ export const linkContainer = style({
 	marginTop: space.lg,
 });
 
-export const videoContainer = style({
-	marginTop: space.lg,
-	width: '100%',
-});
-
 export const quoteContainer = style({
 	position: 'relative',
 	paddingBottom: space.md,
