@@ -14,10 +14,11 @@ import { m } from '#/paraglide/messages';
 import * as styles from './ComposerFooter.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { MediaUploadToolbar } from './media/MediaUploadToolbar';
+import { getMediaCapacity } from './media/select-attachments';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { SelectMediaButton } from './SelectMediaButton';
-import { getPostVideo, MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
+import { getPostVideo, type PostAction, type PostDraft } from './state/composer';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 export function ComposerFooter({
@@ -47,11 +48,6 @@ export function ComposerFooter({
 	const media = post.embed.media;
 	const video = getPostVideo(post);
 
-	const isMediaSelectionDisabled =
-		media?.type === 'images' || media?.type === 'gallery'
-			? media.images.length >= MAX_GALLERY_IMAGES
-			: media !== undefined;
-
 	const onSelectGif = (gif: Gif) => {
 		dispatch({ type: 'embedAddExternalGif', gif });
 	};
@@ -63,7 +59,7 @@ export function ComposerFooter({
 			) : (
 				<div className={styles.left}>
 					<SelectMediaButton
-						disabled={isMediaSelectionDisabled}
+						disabled={getMediaCapacity(media).full}
 						onSelectFiles={(files) => onAddAttachments(post, files)}
 					/>
 					<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />

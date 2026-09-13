@@ -4,7 +4,6 @@ import { readVideoAttachment } from '#/lib/media/read-attachment';
 import { getClients, useSession } from '#/state/session';
 
 import type { RestoredVideo } from '#/features/composer/drafts/state/api';
-import { createAddImagesWithCap } from '#/features/composer/gallery-cap';
 import type { ComposerAction, PostDraft } from '#/features/composer/state/composer';
 import { processVideo, type VideoAttachment } from '#/features/composer/state/video';
 
@@ -89,15 +88,11 @@ export const usePostAttachments = ({ composerDispatch, onError }: PostAttachment
 					}
 				}
 
-				if (images.length > 0) {
-					const imageCount =
-						post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
-							? post.embed.media.images.length
-							: 0;
-					createAddImagesWithCap(imageCount, (postAction) => {
-						composerDispatch({ type: 'updatePost', postId: post.id, postAction });
-					})(images);
-				}
+				composerDispatch({
+					type: 'updatePost',
+					postId: post.id,
+					postAction: { type: 'embedAddImages', images },
+				});
 
 				const failed = selection.blobs.length - images.length;
 				if (failed > 0) {

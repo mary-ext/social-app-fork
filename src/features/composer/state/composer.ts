@@ -354,8 +354,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			}
 			const prevMedia = state.embed.media;
 			let nextMedia = prevMedia;
-			// callers (applyGalleryCap in Composer) trim to the cap and surface a toast; the hard slice in
-			// imagesToMediaVariant still drops any excess, so the cap holds either way.
+			// reapply the cap: the post may have changed since selection.
 			if (!prevMedia) {
 				nextMedia = imagesToMediaVariant(action.images);
 			} else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {

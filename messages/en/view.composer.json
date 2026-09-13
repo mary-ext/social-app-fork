@@ -119,34 +119,6 @@
 	"view.composer.gallery.action.remove": "Remove image",
 	"view.composer.gallery.dropToAdd": "Drop to add images",
 	"view.composer.gallery.error.altMissing": "One or more images is missing alt text.",
-	"view.composer.gallery.error.limit": [
-		{
-			"declarations": [
-				"input count",
-				"input accepted",
-				"input total",
-				"input max",
-				"local cp = count: plural",
-				"local na = accepted: number",
-				"local nt = total: number",
-				"local nm = max: number"
-			],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "Only {na} of {nt} image added; limit is {nm}",
-				"cp=other": "Only {na} of {nt} images added; limit is {nm}"
-			}
-		}
-	],
-	"view.composer.gallery.error.maxAdd": [
-		{
-			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=other": "You can only add up to {n} images per post"
-			}
-		}
-	],
 	"view.composer.gallery.error.maxSelect": [
 		{
 			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
