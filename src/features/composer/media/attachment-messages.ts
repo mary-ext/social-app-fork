@@ -1,5 +1,5 @@
 import { VIDEO_MAX_DURATION_MINUTES, VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
-import type { AttachmentKind, AttachmentRejection } from '#/lib/media/read-attachment';
+import type { AttachmentKind, AttachmentRejection, VideoAttachmentKind } from '#/lib/media/read-attachment';
 
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
@@ -23,7 +23,7 @@ const getUnsupportedMessage = (kind: AttachmentKind | undefined, mimeType: strin
 	}
 };
 
-const getTooLongMessage = (kind: 'gif' | 'video' | 'voice'): string => {
+const getTooLongMessage = (kind: VideoAttachmentKind): string => {
 	const minutes = VIDEO_MAX_DURATION_MINUTES;
 	switch (kind) {
 		case 'gif': {
@@ -38,7 +38,7 @@ const getTooLongMessage = (kind: 'gif' | 'video' | 'voice'): string => {
 	}
 };
 
-const getOneOnlyMessage = (kind: 'gif' | 'video' | 'voice'): string => {
+const getOneOnlyMessage = (kind: VideoAttachmentKind): string => {
 	switch (kind) {
 		case 'gif': {
 			return m['view.composer.gif.error.oneOnly']();

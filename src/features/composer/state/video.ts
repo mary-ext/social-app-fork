@@ -3,11 +3,11 @@ import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 
 import { VIDEO_MAX_DURATION_MINUTES } from '#/lib/constants/video';
 import { isAbortError } from '#/lib/errors';
-import type { VoiceAsset } from '#/lib/media/read-attachment';
+import type { Attachment, VideoAttachmentKind } from '#/lib/media/read-attachment';
 import { canTranscode } from '#/lib/media/transcode/capabilities';
 import { TranscodeError } from '#/lib/media/transcode/errors';
 import { renderVoiceClip, transcodeForUpload } from '#/lib/media/transcode/transcode';
-import { toVideoPayload, type VideoAsset, type VideoPayload } from '#/lib/media/video/types';
+import { toVideoPayload, type VideoAsset, type VideoPayload, type VoiceAsset } from '#/lib/media/video/types';
 
 import { m } from '#/paraglide/messages';
 
@@ -20,10 +20,10 @@ import {
 } from './video-upload';
 
 /** a validated file that publishes as a video embed. */
-export type VideoAttachment = { type: 'video'; asset: VideoAsset } | { type: 'voice'; asset: VoiceAsset };
+export type VideoAttachment = Exclude<Attachment, { type: 'image' }>;
 
 /** original media and preview state, retained after encoding. */
-export type VideoSource =
+type VideoSource =
 	| { type: 'video'; asset: VideoAsset }
 	| {
 			type: 'voice';
@@ -105,10 +105,10 @@ export type VideoState = PreparingState | UploadingState | ProcessingState | Don
 /**
  * identifies the source media, including GIFs stored as video attachments.
  *
- * @param source the attachment's source
+ * @param source the attachment or its retained source
  * @returns `gif` for animated GIFs, `voice` for voice clips, `video` otherwise
  */
-export const getVideoSourceKind = (source: VideoSource): 'gif' | 'video' | 'voice' => {
+export const getVideoSourceKind = (source: VideoAttachment): VideoAttachmentKind => {
 	switch (source.type) {
 		case 'video': {
 			return source.asset.kind;

@@ -1,4 +1,3 @@
-/** source attachment kind, preserved after transcoding. still GIFs are image attachments, not video assets. */
 export type VideoAssetKind = 'gif' | 'video';
 
 /** source video before transcoding */
@@ -9,6 +8,13 @@ export type VideoAsset = {
 	height: number;
 	mimeType: string;
 	/** duration in milliseconds, or null when it could not be determined */
+	duration: number | null;
+};
+
+/** source audio for voice clip rendering. */
+export type VoiceAsset = {
+	blob: Blob;
+	/** duration in milliseconds, or null if unknown */
 	duration: number | null;
 };
 

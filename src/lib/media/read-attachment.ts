@@ -2,15 +2,8 @@ import { VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getAudioDuration, getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { canRenderVoiceClip } from '#/lib/media/transcode/capabilities';
-import type { VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset, VoiceAsset } from '#/lib/media/video/types';
 import { isVideoDurationAdmissible, isVideoSizeAdmissible } from '#/lib/media/video/validate';
-
-/** an audio file to be rendered as a voice clip. */
-export type VoiceAsset = {
-	blob: Blob;
-	/** duration in milliseconds, or null when the browser could not determine it */
-	duration: number | null;
-};
 
 export type Attachment =
 	| { type: 'image'; blob: Blob }
@@ -21,6 +14,9 @@ export type Attachment =
 /** distinguishes animated GIFs from other videos. */
 export type AttachmentKind = 'gif' | 'image' | 'video' | 'voice';
 
+/** kinds of attachments that publish as video embeds. */
+export type VideoAttachmentKind = Exclude<AttachmentKind, 'image'>;
+
 export type AttachmentRejection =
 	| {
 			reason: 'unsupported';
@@ -29,9 +25,9 @@ export type AttachmentRejection =
 			mimeType: string;
 	  }
 	| { reason: 'tooLarge'; kind: 'gif' | 'video' }
-	| { reason: 'tooLong'; kind: 'gif' | 'video' | 'voice' };
+	| { reason: 'tooLong'; kind: VideoAttachmentKind };
 
-export type AttachmentReadResult =
+type AttachmentReadResult =
 	| { ok: true; attachment: Attachment }
 	| { ok: false; rejection: AttachmentRejection };
 
