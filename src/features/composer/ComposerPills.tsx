@@ -16,8 +16,7 @@ export function ComposerPills({
 	dispatch: (action: ComposerAction) => void;
 }) {
 	const media = post.embed.media;
-	const hasMedia =
-		media?.type === 'images' || media?.type === 'gallery' || media?.type === 'gif' || media?.type === 'video';
+	const hasMedia = media !== undefined;
 	const hasLink = !!post.embed.link;
 
 	// Don't render anything if no pills are going to be displayed

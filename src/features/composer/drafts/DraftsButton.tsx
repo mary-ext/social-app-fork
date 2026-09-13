@@ -7,8 +7,25 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 import { DraftsListDialog } from './DraftsListDialog';
+import type { DraftSaveBlocker } from './state/api';
 import { useSaveDraftMutation } from './state/queries';
 import type { DraftSummary } from './state/schema';
+
+const getBeforeViewingMessage = (blocker: DraftSaveBlocker | undefined, isEditingDraft: boolean): string => {
+	switch (blocker) {
+		case 'tooLong': {
+			return m['view.composer.drafts.beforeViewing.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH });
+		}
+		case 'voiceClip': {
+			return m['view.composer.drafts.beforeViewing.voiceClip']();
+		}
+		case undefined: {
+			return isEditingDraft
+				? m['view.composer.drafts.beforeViewing.unsaved']()
+				: m['view.composer.drafts.beforeViewing.save']();
+		}
+	}
+};
 
 export function DraftsButton({
 	onSelectDraft,
@@ -17,7 +34,7 @@ export function DraftsButton({
 	isEmpty,
 	isDirty,
 	isEditingDraft,
-	canSaveDraft,
+	draftSaveBlocker,
 }: {
 	onSelectDraft: (draft: DraftSummary) => void;
 	onSaveDraft: () => Promise<{ success: boolean }>;
@@ -25,8 +42,9 @@ export function DraftsButton({
 	isEmpty: boolean;
 	isDirty: boolean;
 	isEditingDraft: boolean;
-	canSaveDraft: boolean;
+	draftSaveBlocker: DraftSaveBlocker | undefined;
 }) {
+	const canSaveDraft = draftSaveBlocker === undefined;
 	const draftsDialogHandle = Dialog.useDialogHandle();
 	const savePromptHandle = Prompt.usePromptHandle();
 	const { isPending: isSaving } = useSaveDraftMutation();
@@ -77,11 +95,7 @@ export function DraftsButton({
 							: m['view.composer.drafts.discard.title']()}
 					</Prompt.TitleText>
 					<Prompt.DescriptionText>
-						{canSaveDraft
-							? isEditingDraft
-								? m['view.composer.drafts.beforeViewing.unsaved']()
-								: m['view.composer.drafts.beforeViewing.save']()
-							: m['view.composer.drafts.beforeViewing.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH })}
+						{getBeforeViewingMessage(draftSaveBlocker, isEditingDraft)}
 					</Prompt.DescriptionText>
 				</Prompt.Content>
 				<Prompt.Actions>

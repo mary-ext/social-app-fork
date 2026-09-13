@@ -11,6 +11,7 @@ import type { VideoAsset } from '#/lib/media/video/types';
 import { isVideoDurationAdmissible, isVideoSizeAdmissible } from '#/lib/media/video/validate';
 
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
+import { readVoiceAsset, type VoiceAsset } from '#/features/composer/state/voice';
 
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -18,7 +19,7 @@ import { m } from '#/paraglide/messages';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
 
 /** Generic asset classes, or buckets, that we support. */
-export type AssetType = 'video' | 'image' | 'gif';
+export type AssetType = 'video' | 'image' | 'gif' | 'voice';
 
 /** The outcome of a media selection, reported back to the composer. */
 export type SelectedAssets = {
@@ -27,6 +28,8 @@ export type SelectedAssets = {
 	images: File[];
 	/** The selected video or animated GIF, when `type` is `video` or `gif`. */
 	video: VideoAsset | undefined;
+	/** the selected audio file, when `type` is `voice`. */
+	voice: VoiceAsset | undefined;
 	errors: string[];
 };
 
@@ -47,6 +50,8 @@ enum SelectedAssetError {
 	VideoTooLong = 'VideoTooLong',
 	FileTooBig = 'FileTooBig',
 	MaxGIFs = 'MaxGIFs',
+	MaxVoiceClips = 'MaxVoiceClips',
+	VoiceClipTooLong = 'VoiceClipTooLong',
 }
 
 function isSupportedVideoMimeType(mimeType: string): mimeType is VideoUploadMimeType {
@@ -86,6 +91,9 @@ async function classifyFile(
 	}
 	if (mimeType.startsWith('image/')) {
 		return { type: 'image', mimeType };
+	}
+	if (mimeType.startsWith('audio/')) {
+		return { type: 'voice', mimeType };
 	}
 	return undefined;
 }
@@ -145,6 +153,7 @@ async function processFiles(
 		type: selectableAssetType,
 		images: [],
 		video: undefined,
+		voice: undefined,
 		errors: [],
 		errorCodes: errors,
 	};
@@ -212,6 +221,24 @@ async function processFiles(
 		};
 	}
 
+	if (selectableAssetType === 'voice') {
+		if (supported.length > 1) {
+			errors.add(SelectedAssetError.MaxVoiceClips);
+		}
+		const voice = await readVoiceAsset(supported[0]!.file);
+		switch (voice) {
+			case 'tooLong': {
+				errors.add(SelectedAssetError.VoiceClipTooLong);
+				return empty;
+			}
+			case 'unsupported': {
+				errors.add(SelectedAssetError.Unsupported);
+				return empty;
+			}
+		}
+		return { ...empty, voice };
+	}
+
 	return empty;
 }
 
@@ -229,7 +256,7 @@ export function SelectMediaButton({
 			return;
 		}
 
-		const { type, images, video, errorCodes } = await processFiles(files, {
+		const { type, images, video, voice, errorCodes } = await processFiles(files, {
 			selectionCountRemaining,
 			allowedAssetTypes,
 		});
@@ -249,10 +276,14 @@ export function SelectMediaButton({
 				[SelectedAssetError.FileTooBig]: m['view.composer.video.error.fileTooLarge']({
 					max: VIDEO_MAX_SIZE_MB,
 				}),
+				[SelectedAssetError.MaxVoiceClips]: m['view.composer.voice.error.oneOnly'](),
+				[SelectedAssetError.VoiceClipTooLong]: m['view.composer.voice.error.tooLong']({
+					minutes: VIDEO_MAX_DURATION_MINUTES,
+				}),
 			}[error];
 		});
 
-		void onSelectAssets({ type, images, video, errors });
+		void onSelectAssets({ type, images, video, voice, errors });
 	};
 
 	return (

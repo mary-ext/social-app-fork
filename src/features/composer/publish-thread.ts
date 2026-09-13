@@ -24,6 +24,7 @@ import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { isNetworkError } from '#/lib/errors';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { compressImage } from '#/lib/media/composer-image';
+import type { VideoAsset } from '#/lib/media/video/types';
 import type { Richtext } from '#/lib/rich-text';
 import { task } from '#/lib/utils/task';
 import { trimText } from '#/lib/utils/text';
@@ -35,6 +36,7 @@ import {
 } from '#/state/queries/threadgate';
 
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
+import type { CaptionsTrack } from '#/features/composer/state/video-upload';
 
 import { m } from '#/paraglide/messages';
 
@@ -290,6 +292,41 @@ async function resolveEmbed(
 	return undefined;
 }
 
+async function createVideoEmbed(
+	pds: Client,
+	{
+		altText,
+		asset,
+		blobRef,
+		captions: captionTracks,
+	}: { altText: string; asset: VideoAsset; blobRef: AtpBlob; captions: CaptionsTrack[] },
+): Promise<$type.enforce<AppBskyEmbedVideo.Main>> {
+	const captions = await Promise.all(
+		mapDefined(captionTracks, (caption) => {
+			if (caption.lang === '') {
+				return;
+			}
+
+			return uploadBlob(pds, caption.file, 'text/vtt').then((file) => ({ file, lang: caption.lang }));
+		}),
+	);
+
+	const width = Math.round(asset.width);
+	const height = Math.round(asset.height);
+
+	// the lexicon rejects nonpositive aspect ratios.
+	const aspectRatio = width > 0 && height > 0 ? { height, width } : undefined;
+
+	return {
+		$type: 'app.bsky.embed.video',
+		alt: trimText(altText) || undefined,
+		aspectRatio,
+		captions: captions.length === 0 ? undefined : captions,
+		presentation: asset.kind === 'gif' ? 'gif' : 'default',
+		video: blobRef,
+	};
+}
+
 async function resolveMedia(
 	appview: Client,
 	pds: Client,
@@ -338,33 +375,12 @@ async function resolveMedia(
 		};
 	}
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {
-		const videoDraft = embedDraft.media.video;
-		const captions = await Promise.all(
-			mapDefined(videoDraft.captions, (caption) => {
-				if (caption.lang === '') {
-					return;
-				}
-
-				return uploadBlob(pds, caption.file, 'text/vtt').then((file) => ({ file, lang: caption.lang }));
-			}),
-		);
-
-		// lexicon numbers must be floats
-		const width = Math.round(videoDraft.asset.width);
-		const height = Math.round(videoDraft.asset.height);
-
-		// aspect ratio values must be >0 - better to leave as unset otherwise
-		// posting will fail if aspect ratio is set to 0
-		const aspectRatio = width > 0 && height > 0 ? { height, width } : undefined;
-
-		return {
-			$type: 'app.bsky.embed.video',
-			alt: trimText(videoDraft.altText) || undefined,
-			aspectRatio,
-			captions: captions.length === 0 ? undefined : captions,
-			presentation: videoDraft.asset.kind === 'gif' ? 'gif' : 'default',
-			video: videoDraft.pendingPublish.blobRef,
-		};
+		const { altText, asset, captions, pendingPublish } = embedDraft.media.video;
+		return createVideoEmbed(pds, { altText, asset, blobRef: pendingPublish.blobRef, captions });
+	}
+	if (embedDraft.media?.type === 'voice' && embedDraft.media.voice.status === 'done') {
+		const { altText, captions, pendingPublish, rendered } = embedDraft.media.voice;
+		return createVideoEmbed(pds, { altText, asset: rendered, blobRef: pendingPublish.blobRef, captions });
 	}
 	if (embedDraft.media?.type === 'gif') {
 		const gifDraft = embedDraft.media;

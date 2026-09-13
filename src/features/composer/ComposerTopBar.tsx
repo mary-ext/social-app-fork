@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 
 import { DraftsButton } from '#/features/composer/drafts/DraftsButton';
+import type { DraftSaveBlocker } from '#/features/composer/drafts/state/api';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';
@@ -26,7 +27,7 @@ export function ComposerTopBar({
 	isEmpty,
 	isDirty,
 	isEditingDraft,
-	canSaveDraft,
+	draftSaveBlocker,
 }: {
 	border?: boolean;
 	isPublishing: boolean;
@@ -42,7 +43,7 @@ export function ComposerTopBar({
 	isEmpty: boolean;
 	isDirty: boolean;
 	isEditingDraft: boolean;
-	canSaveDraft: boolean;
+	draftSaveBlocker: DraftSaveBlocker | undefined;
 }) {
 	return (
 		<Dialog.Header.Outer border={false} className={clsx(styles.header, border && styles.headerScrolled)}>
@@ -72,7 +73,7 @@ export function ComposerTopBar({
 								isEmpty={isEmpty}
 								isDirty={isDirty}
 								isEditingDraft={isEditingDraft}
-								canSaveDraft={canSaveDraft}
+								draftSaveBlocker={draftSaveBlocker}
 							/>
 						)}
 

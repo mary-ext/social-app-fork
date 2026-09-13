@@ -88,6 +88,7 @@
 	"view.composer.drafts.beforeViewing.save": "Would you like to save this as a draft before viewing your drafts?",
 	"view.composer.drafts.beforeViewing.tooLong": "You can only save drafts up to {max} characters. Would you like to discard this post before viewing your drafts?",
 	"view.composer.drafts.beforeViewing.unsaved": "You have unsaved changes. Would you like to save them before viewing your drafts?",
+	"view.composer.drafts.beforeViewing.voiceClip": "Voice clips can’t be saved to drafts. Would you like to discard this post before viewing your drafts?",
 	"view.composer.drafts.discard.message": "This draft will be permanently deleted.",
 	"view.composer.drafts.discard.title": "Discard draft?",
 	"view.composer.drafts.empty": "No drafts yet",
@@ -104,6 +105,7 @@
 		}
 	],
 	"view.composer.drafts.error.tooLongFixed": "You can only save drafts up to {max} characters.",
+	"view.composer.drafts.error.voiceClip": "Voice clips can’t be saved to drafts.",
 	"view.composer.drafts.loading": "Loading drafts",
 	"view.composer.drafts.opensDraft": "Opens this draft in the composer",
 	"view.composer.drafts.save.message": "Would you like to save this as a draft to edit later?",
@@ -295,5 +297,17 @@
 	"view.composer.video.processing": "Processing video...",
 	"view.composer.video.settingsTitle": "Video settings",
 	"view.composer.video.uploaded": "Video uploaded",
-	"view.composer.video.uploading": "Uploading video..."
+	"view.composer.video.uploading": "Uploading video...",
+	"view.composer.voice.a11y.pause": "Pause voice clip",
+	"view.composer.voice.a11y.play": "Play voice clip",
+	"view.composer.voice.cardLabel": "Voice",
+	"view.composer.voice.error.altMissing": "One or more voice clips is missing alt text.",
+	"view.composer.voice.error.oneOnly": "You can only select one audio file at a time.",
+	"view.composer.voice.error.render": "Your audio couldn’t be turned into a voice clip.",
+	"view.composer.voice.error.tooLong": "Voice clips must be {minutes} minutes or less.",
+	"view.composer.voice.error.unsupportedType": "Unsupported audio type: {mimeType}",
+	"view.composer.voice.processing": "Processing voice clip...",
+	"view.composer.voice.rendering": "Preparing voice clip...",
+	"view.composer.voice.uploaded": "Voice clip uploaded",
+	"view.composer.voice.uploading": "Uploading voice clip..."
 }

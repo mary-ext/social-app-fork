@@ -31,22 +31,6 @@ export type VideoAction =
 			signal: AbortSignal;
 	  };
 
-const noopController = new AbortController();
-noopController.abort();
-
-export const NO_VIDEO = Object.freeze({
-	status: 'idle',
-	progress: 0,
-	abortController: noopController,
-	asset: undefined,
-	jobId: undefined,
-	pendingPublish: undefined,
-	altText: '',
-	captions: [],
-});
-
-export type NoVideoState = typeof NO_VIDEO;
-
 type ErrorState = {
 	status: 'error';
 	progress: number;

@@ -204,12 +204,16 @@ export function TextInput({
 	);
 }
 
+function isMediaType(type: string) {
+	return type.startsWith('image/') || type.startsWith('video/') || type.startsWith('audio/');
+}
+
 function hasMediaTransfer(transfer: DataTransfer) {
 	const items = transfer.items;
 	for (let index = 0; index < items.length; index++) {
 		const type = items[index]!.type;
 
-		if (type.startsWith('image/') || type.startsWith('video/')) {
+		if (isMediaType(type)) {
 			return true;
 		}
 	}
@@ -238,7 +242,7 @@ function handleTransferItems(
 							const response = await fetch(itemString);
 							const blob = await response.blob();
 
-							if (blob.type.startsWith('image/') || blob.type.startsWith('video/')) {
+							if (isMediaType(blob.type)) {
 								onMedia(blob);
 							}
 						} catch (err) {
@@ -246,7 +250,7 @@ function handleTransferItems(
 						}
 					})(),
 			);
-		} else if (type.startsWith('image/') || type.startsWith('video/')) {
+		} else if (isMediaType(type)) {
 			const file = item.getAsFile();
 
 			if (file) {

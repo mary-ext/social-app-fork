@@ -40,12 +40,12 @@ function pickFiles({ accept, multiple }: PickFilesOptions): Promise<File[]> {
 }
 
 /**
- * Opens a file picker for images and videos, allowing multiple selections.
+ * opens a multi-select picker for images, videos, and audio.
  *
  * @returns the selected files, or an empty array if the picker was dismissed
  */
 export function openMediaPicker(): Promise<File[]> {
-	return pickFiles({ accept: 'image/*,video/*', multiple: true });
+	return pickFiles({ accept: 'image/*,video/*,audio/*', multiple: true });
 }
 
 /**

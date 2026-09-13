@@ -14,14 +14,13 @@ import {
 
 import { ClientResponseError, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
-import { isGraphemeLengthInRange } from '@atcute/util-text';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
-import { VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
+import { VIDEO_MAX_DURATION_MINUTES, VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
@@ -56,6 +55,7 @@ import { SuggestedLanguage } from '#/features/composer/select-language/Suggested
 import { TextInput } from '#/features/composer/text-input/TextInput';
 import { SubtitleDialogBtn } from '#/features/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/features/composer/videos/VideoPreview';
+import { VoicePreview } from '#/features/composer/videos/VoicePreview';
 
 import * as Dialog from '#/components/Dialog';
 import { closeAllDialogs } from '#/components/Dialog/registry';
@@ -75,7 +75,12 @@ import * as ComposerError from './ComposerError';
 import { ComposerFooter } from './ComposerFooter';
 import { ComposerPills } from './ComposerPills';
 import { ComposerTopBar } from './ComposerTopBar';
-import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
+import {
+	draftToComposerPosts,
+	extractLocalRefs,
+	getDraftSaveBlocker,
+	type RestoredVideo,
+} from './drafts/state/api';
 import {
 	loadDraftMedia,
 	useCleanupPublishedDraftMutation,
@@ -88,11 +93,13 @@ import {
 	composerReducer,
 	createComposerState,
 	type EmbedDraft,
+	getMediaUpload,
 	type PostAction,
 	type PostDraft,
 	type ThreadDraft,
 } from './state/composer';
-import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './state/video';
+import { processVideo, type VideoAction } from './state/video';
+import { processVoice, readVoiceAsset, type VoiceAsset } from './state/voice';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
@@ -104,6 +111,8 @@ const getDraftSaveError = (error: unknown): string => {
 	}
 	return m['view.composer.drafts.error.save']();
 };
+
+type DisplayedError = { error: string; detail?: string; onDismiss: () => void };
 
 type Props = ComposerOpts;
 export const ComposePost = ({
@@ -183,11 +192,7 @@ export const ComposePost = ({
 
 	const thread = composerState.thread;
 
-	// Clear error when composer content changes, but only if all posts are
-	// back within the character limit.
-	const allPostsWithinLimit = thread.posts.every((post) =>
-		isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
-	);
+	const draftSaveBlocker = getDraftSaveBlocker(thread.posts);
 
 	const activePost = thread.posts[composerState.activePostIndex]!;
 	const nextPost: PostDraft | undefined = thread.posts[composerState.activePostIndex + 1];
@@ -248,6 +253,40 @@ export const ComposePost = ({
 			postAction: {
 				type: 'embedRemoveVideo',
 			},
+		});
+	};
+
+	const selectVoice = (postId: string, asset: VoiceAsset) => {
+		const abortController = new AbortController();
+		composerDispatch({
+			type: 'updatePost',
+			postId,
+			postAction: { type: 'embedAddVoice', asset, abortController },
+		});
+		if (!pds || !pdsUrl) {
+			return;
+		}
+		void processVoice({
+			asset,
+			did: currentDid,
+			dispatch: (voiceAction) => {
+				composerDispatch({
+					type: 'updatePost',
+					postId,
+					postAction: { type: 'embedUpdateVoice', voiceAction },
+				});
+			},
+			pds,
+			pdsUrl,
+			signal: abortController.signal,
+		});
+	};
+
+	const clearVoice = (postId: string) => {
+		composerDispatch({
+			type: 'updatePost',
+			postId,
+			postAction: { type: 'embedRemoveVoice' },
 		});
 	};
 
@@ -374,20 +413,25 @@ export const ComposePost = ({
 	const [uploadCompletionPublishRequest, setUploadCompletionPublishRequest] = useState(0);
 	const handledUploadCompletionPublishRequestRef = useRef(0);
 
-	const validateDraftTextOrError = (): boolean => {
-		const tooLong = composerState.thread.posts.some(
-			(post) => !isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH),
-		);
-		if (tooLong) {
-			setError(m['view.composer.drafts.error.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH }));
-			return false;
+	const validateDraftOrError = (): boolean => {
+		switch (draftSaveBlocker) {
+			case 'tooLong': {
+				setError(m['view.composer.drafts.error.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH }));
+				return false;
+			}
+			case 'voiceClip': {
+				setError(m['view.composer.drafts.error.voiceClip']());
+				return false;
+			}
+			case undefined: {
+				return true;
+			}
 		}
-		return true;
 	};
 
 	const handleSaveDraft = async () => {
 		setError('');
-		if (!validateDraftTextOrError()) {
+		if (!validateDraftOrError()) {
 			return;
 		}
 		try {
@@ -409,7 +453,7 @@ export const ComposePost = ({
 		success: boolean;
 	}> => {
 		setError('');
-		if (!validateDraftTextOrError()) {
+		if (!validateDraftOrError()) {
 			return { success: false };
 		}
 		try {
@@ -498,6 +542,9 @@ export const ComposePost = ({
 				if (media.type === 'video' && media.video.status !== 'error' && !media.video.altText) {
 					return m['view.composer.video.error.altMissing']();
 				}
+				if (media.type === 'voice' && media.voice.status !== 'error' && !media.voice.altText) {
+					return m['view.composer.voice.error.altMissing']();
+				}
 			}
 		}
 	})();
@@ -509,7 +556,7 @@ export const ComposePost = ({
 			(post) =>
 				isEmptyPost(post) ||
 				(post.shortenedGraphemeLength <= MAX_POST_GRAPHEME_LENGTH &&
-					!(post.embed.media?.type === 'video' && post.embed.media.video.status === 'error')),
+					getMediaUpload(post.embed.media)?.status !== 'error'),
 		);
 
 	const getFilteredThread = (): {
@@ -557,12 +604,10 @@ export const ComposePost = ({
 		}
 
 		if (
-			filteredThread.posts.some(
-				(post) =>
-					post.embed.media?.type === 'video' &&
-					post.embed.media.video.asset &&
-					post.embed.media.video.status !== 'done',
-			)
+			filteredThread.posts.some((post) => {
+				const upload = getMediaUpload(post.embed.media);
+				return upload !== undefined && upload.status !== 'done';
+			})
 		) {
 			setPublishOnUpload(true);
 			return;
@@ -691,10 +736,11 @@ export const ComposePost = ({
 			if (isEmptyPost(post)) {
 				continue;
 			}
-			if (post.embed.media?.type !== 'video') {
+			const upload = getMediaUpload(post.embed.media);
+			if (!upload) {
 				continue;
 			}
-			switch (post.embed.media.video.status) {
+			switch (upload.status) {
 				case 'done': {
 					break;
 				}
@@ -742,33 +788,48 @@ export const ComposePost = ({
 
 	// TODO: It might make more sense to display this error per-post.
 	// Right now we're just displaying the first one.
-	let erroredVideoPostId: string | undefined;
-	let erroredVideo: VideoState | NoVideoState = NO_VIDEO;
-	for (let i = 0; i < thread.posts.length; i++) {
-		const post = thread.posts[i]!;
-		if (post.embed.media?.type === 'video' && post.embed.media.video.status === 'error') {
-			erroredVideoPostId = post.id;
-			erroredVideo = post.embed.media.video;
+	let uploadError: DisplayedError | undefined;
+	for (const post of thread.posts) {
+		const upload = getMediaUpload(post.embed.media);
+		if (upload?.status === 'error') {
+			const clear = post.embed.media?.type === 'voice' ? clearVoice : clearVideo;
+			uploadError = {
+				error: upload.error,
+				detail: upload.jobId ? m['view.composer.video.jobId']({ jobId: upload.jobId }) : undefined,
+				onDismiss: () => clear(post.id),
+			};
 			break;
 		}
 	}
 
 	// The single error to surface: an explicit error string wins over a video-upload error.
-	const displayedError: { error: string; detail?: string; onDismiss: () => void } | undefined = error
+	const displayedError: DisplayedError | undefined = error
 		? { error, onDismiss: () => setError('') }
-		: erroredVideo.status === 'error'
-			? {
-					error: erroredVideo.error,
-					detail: erroredVideo.jobId
-						? m['view.composer.video.jobId']({ jobId: erroredVideo.jobId })
-						: undefined,
-					onDismiss: () => {
-						if (erroredVideoPostId) {
-							clearVideo(erroredVideoPostId);
-						}
-					},
-				}
-			: undefined;
+		: uploadError;
+
+	let discardPromptTitle: string;
+	let discardPromptMessage: string;
+	switch (draftSaveBlocker) {
+		case 'tooLong': {
+			discardPromptTitle = m['view.composer.discard.title']();
+			discardPromptMessage = m['view.composer.drafts.error.tooLongFixed']({ max: MAX_DRAFT_GRAPHEME_LENGTH });
+			break;
+		}
+		case 'voiceClip': {
+			discardPromptTitle = m['view.composer.discard.title']();
+			discardPromptMessage = m['view.composer.drafts.error.voiceClip']();
+			break;
+		}
+		case undefined: {
+			discardPromptTitle = composerState.draftId
+				? m['view.composer.drafts.saveChanges.title']()
+				: m['view.composer.drafts.save.title']();
+			discardPromptMessage = composerState.draftId
+				? m['view.composer.drafts.saveChanges.message']()
+				: m['view.composer.drafts.save.message']();
+			break;
+		}
+	}
 
 	const scrollViewRef = useRef<HTMLDivElement | null>(null);
 	// focus the text input once per focus request. the reducer bumps `activePostFocusRequestId` on
@@ -810,6 +871,7 @@ export const ComposePost = ({
 				showAddButton={!isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))}
 				onError={setError}
 				onSelectVideo={selectVideo}
+				onSelectVoice={selectVoice}
 				onAddPost={() => {
 					composerDispatch({
 						type: 'addPost',
@@ -841,7 +903,7 @@ export const ComposePost = ({
 				isEmpty={isComposerEmpty}
 				isDirty={composerState.isDirty}
 				isEditingDraft={!!composerState.draftId}
-				canSaveDraft={allPostsWithinLimit}
+				draftSaveBlocker={draftSaveBlocker}
 			/>
 			{/* The composer owns its own scrolling (the `Dialog.Body` / `scrollContainer` below) */}
 			<Dialog.Body className={styles.dialogBody}>
@@ -872,6 +934,8 @@ export const ComposePost = ({
 								canRemoveQuote={index > 0 || !initQuote}
 								onSelectVideo={selectVideo}
 								onClearVideo={clearVideo}
+								onSelectVoice={selectVoice}
+								onClearVoice={clearVoice}
 								onPublish={onComposerPostPublish}
 								onError={setError}
 							/>
@@ -895,23 +959,11 @@ export const ComposePost = ({
 			) : (
 				<Prompt.Outer handle={discardPromptHandle}>
 					<Prompt.Content>
-						<Prompt.TitleText>
-							{allPostsWithinLimit
-								? composerState.draftId
-									? m['view.composer.drafts.saveChanges.title']()
-									: m['view.composer.drafts.save.title']()
-								: m['view.composer.discard.title']()}
-						</Prompt.TitleText>
-						<Prompt.DescriptionText>
-							{allPostsWithinLimit
-								? composerState.draftId
-									? m['view.composer.drafts.saveChanges.message']()
-									: m['view.composer.drafts.save.message']()
-								: m['view.composer.drafts.error.tooLongFixed']({ max: MAX_DRAFT_GRAPHEME_LENGTH })}
-						</Prompt.DescriptionText>
+						<Prompt.TitleText>{discardPromptTitle}</Prompt.TitleText>
+						<Prompt.DescriptionText>{discardPromptMessage}</Prompt.DescriptionText>
 					</Prompt.Content>
 					<Prompt.Actions>
-						{allPostsWithinLimit && (
+						{draftSaveBlocker === undefined && (
 							<Prompt.Action
 								cta={
 									composerState.draftId
@@ -957,6 +1009,8 @@ const ComposerPost = memo(function ComposerPost({
 	canRemoveQuote,
 	onClearVideo,
 	onSelectVideo,
+	onClearVoice,
+	onSelectVoice,
 	onError,
 	onPublish,
 }: {
@@ -972,6 +1026,8 @@ const ComposerPost = memo(function ComposerPost({
 	canRemoveQuote: boolean;
 	onClearVideo: (postId: string) => void;
 	onSelectVideo: (postId: string, asset: VideoAsset) => void;
+	onClearVoice: (postId: string) => void;
+	onSelectVoice: (postId: string, asset: VoiceAsset) => void;
 	onError: (error: string) => void;
 	onPublish: (text: string) => void;
 }) {
@@ -1008,6 +1064,24 @@ const ComposerPost = memo(function ComposerPost({
 
 	const onPhotoPasted = async (blob: Blob) => {
 		const mimeType = blob.type;
+
+		if (mimeType.startsWith('audio/')) {
+			const voice = await readVoiceAsset(blob);
+			switch (voice) {
+				case 'tooLong': {
+					Toast.show(m['view.composer.voice.error.tooLong']({ minutes: VIDEO_MAX_DURATION_MINUTES }), {
+						type: 'error',
+					});
+					return;
+				}
+				case 'unsupported': {
+					Toast.show(m['view.composer.voice.error.unsupportedType']({ mimeType }), { type: 'error' });
+					return;
+				}
+			}
+			onSelectVoice(post.id, voice);
+			return;
+		}
 
 		const gif =
 			mimeType === 'image/gif' ? readGifMetadata(new Uint8Array(await blob.arrayBuffer())) : undefined;
@@ -1134,6 +1208,8 @@ const ComposerPost = memo(function ComposerPost({
 						embed={post.embed}
 						dispatch={dispatchPost}
 						clearVideo={() => onClearVideo(post.id)}
+						clearVoice={() => onClearVoice(post.id)}
+						avatar={currentProfile?.avatar}
 						text={post.text}
 					/>
 				</div>
@@ -1146,16 +1222,30 @@ function ComposerEmbeds({
 	embed,
 	dispatch,
 	clearVideo,
+	clearVoice,
+	avatar,
 	canRemoveQuote,
 	text,
 }: {
 	embed: EmbedDraft;
 	dispatch: (action: PostAction) => void;
 	clearVideo: () => void;
+	clearVoice: () => void;
+	avatar: string | undefined;
 	canRemoveQuote: boolean;
 	text: string;
 }) {
 	const video = embed.media?.type === 'video' ? embed.media.video : null;
+	const voice = embed.media?.type === 'voice' ? embed.media.voice : null;
+	const upload = video ?? voice;
+
+	const updateUpload = (action: Extract<VideoAction, { type: 'updateAltText' | 'updateCaptions' }>) => {
+		if (video) {
+			dispatch({ type: 'embedUpdateVideo', videoAction: action });
+		} else {
+			dispatch({ type: 'embedUpdateVoice', voiceAction: action });
+		}
+	};
 	return (
 		<>
 			{(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
@@ -1182,37 +1272,24 @@ function ComposerEmbeds({
 					/>
 				</div>
 			)}
-			{video && (
+			{upload && (
 				<div className={styles.videoContainer}>
-					{video.asset ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
+					{video?.asset ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
+					{voice ? <VoicePreview avatar={avatar} clear={clearVoice} voice={voice} /> : null}
 					<SubtitleDialogBtn
-						defaultAltText={video.altText}
+						defaultAltText={upload.altText}
 						saveAltText={(altText) =>
-							dispatch({
-								type: 'embedUpdateVideo',
-								videoAction: {
-									type: 'updateAltText',
-									altText,
-									signal: video.abortController.signal,
-								},
-							})
+							updateUpload({ type: 'updateAltText', altText, signal: upload.abortController.signal })
 						}
-						captions={video.captions}
+						captions={upload.captions}
 						setCaptions={(updater) => {
-							dispatch({
-								type: 'embedUpdateVideo',
-								videoAction: {
-									type: 'updateCaptions',
-									updater,
-									signal: video.abortController.signal,
-								},
-							});
+							updateUpload({ type: 'updateCaptions', updater, signal: upload.abortController.signal });
 						}}
 					/>
 				</div>
 			)}
 			{embed.quote?.uri ? (
-				<div className={video ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
+				<div className={upload ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
 					<div style={{ position: 'relative' }}>
 						<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
 						{canRemoveQuote && (

@@ -1,10 +1,12 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import type { GenericUri } from '@atcute/lexicons';
+import { isGraphemeLengthInRange } from '@atcute/util-text';
 
 import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
+import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 import type { Gif } from '#/lib/gif';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import { gifUrlParams, klipyHostname, stripGifUrlParams, tenorHostname } from '#/lib/media/gif-embed';
@@ -49,14 +51,41 @@ function parseVideoMimeType(localRefPath: string): string {
 	return 'video/mp4'; // Default for legacy drafts
 }
 
+export type DraftSaveBlocker = 'tooLong' | 'voiceClip';
+
 /**
- * Convert ComposerState to server Draft format for saving. Returns both the draft and a map of localRef paths
- * to their media blobs.
+ * checks whether posts can be saved as a draft.
+ *
+ * @param posts the thread's posts
+ * @returns why the posts can't be saved, or undefined if they can
+ */
+export const getDraftSaveBlocker = (posts: PostDraft[]): DraftSaveBlocker | undefined => {
+	// the draft format has no voice clip representation.
+	if (posts.some((post) => post.embed.media?.type === 'voice')) {
+		return 'voiceClip';
+	}
+	if (!posts.every((post) => isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH))) {
+		return 'tooLong';
+	}
+	return undefined;
+};
+
+/**
+ * converts composer state to a server draft.
+ *
+ * @param state composer state to save
+ * @returns the draft and media blobs keyed by localRef path
+ * @throws if posts contain voice clips or exceed the draft text limit
  */
 export async function composerStateToDraft(state: ComposerState): Promise<{
 	draft: AppBskyDraftDefs.Draft;
 	localRefPaths: Map<string, Blob>;
 }> {
+	const blocker = getDraftSaveBlocker(state.thread.posts);
+	if (blocker !== undefined) {
+		throw new Error(`draft can't be saved: ${blocker}`);
+	}
+
 	const localRefPaths = new Map<string, Blob>();
 
 	const posts: AppBskyDraftDefs.DraftPost[] = await Promise.all(

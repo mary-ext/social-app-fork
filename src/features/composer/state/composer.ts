@@ -16,6 +16,7 @@ import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
+import { createVoiceState, type VoiceAction, type VoiceAsset, voiceReducer, type VoiceState } from './voice';
 
 /** the gated post doesn't exist until publish; `src/lib/api` swaps in the real at-uri then. */
 const PLACEHOLDER_POST_URI: ResourceUri = 'at://placeholder.invalid';
@@ -30,9 +31,15 @@ type GalleryMedia = {
 	images: ComposerImage[];
 };
 
-type VideoMedia = {
+export type VideoMedia = {
 	type: 'video';
 	video: VideoState;
+};
+
+/** voice clips publish as video embeds. */
+export type VoiceMedia = {
+	type: 'voice';
+	voice: VoiceState;
 };
 
 type GifMedia = {
@@ -51,9 +58,27 @@ type Link = {
 export type EmbedDraft = {
 	// We'll always submit quote and actual media (images, video, gifs) chosen by the user.
 	quote: Link | undefined;
-	media: ImagesMedia | GalleryMedia | VideoMedia | GifMedia | undefined;
+	media: ImagesMedia | GalleryMedia | VideoMedia | VoiceMedia | GifMedia | undefined;
 	// This field may end up ignored if we have more important things to display than a link card:
 	link: Link | undefined;
+};
+
+/**
+ * gets the video-service upload state for a video or voice clip.
+ *
+ * @param media the post's media
+ * @returns the video or voice clip state, or undefined for other media
+ */
+export const getMediaUpload = (media: EmbedDraft['media']): VideoState | VoiceState | undefined => {
+	switch (media?.type) {
+		case 'video': {
+			return media.video;
+		}
+		case 'voice': {
+			return media.voice;
+		}
+	}
+	return undefined;
 };
 
 export type PostDraft = {
@@ -77,6 +102,9 @@ export type PostAction =
 	  }
 	| { type: 'embedRemoveVideo' }
 	| { type: 'embedUpdateVideo'; videoAction: VideoAction }
+	| { type: 'embedAddVoice'; asset: VoiceAsset; abortController: AbortController }
+	| { type: 'embedRemoveVoice' }
+	| { type: 'embedUpdateVoice'; voiceAction: VoiceAction }
 	| { type: 'embedAddUri'; uri: string }
 	| { type: 'embedRemoveQuote' }
 	| { type: 'embedRemoveLink' }
@@ -244,9 +272,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			const nextPosts = [...state.thread.posts];
 			if (indexToRemove !== -1) {
 				const postToRemove = state.thread.posts[indexToRemove]!;
-				if (postToRemove.embed.media?.type === 'video') {
-					postToRemove.embed.media.video.abortController.abort(new AbortError());
-				}
+				getMediaUpload(postToRemove.embed.media)?.abortController.abort(new AbortError());
 				nextPosts.splice(indexToRemove, 1);
 				nextActivePostIndex = Math.max(0, indexToRemove - 1);
 			}
@@ -458,6 +484,56 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 				embed: {
 					...state.embed,
 					media: nextMedia,
+				},
+			};
+		}
+		case 'embedAddVoice': {
+			if (state.embed.media) {
+				return state;
+			}
+			return {
+				...state,
+				embed: {
+					...state.embed,
+					media: {
+						type: 'voice',
+						voice: createVoiceState(action.asset, action.abortController),
+					},
+				},
+			};
+		}
+		case 'embedUpdateVoice': {
+			const prevMedia = state.embed.media;
+			if (prevMedia?.type !== 'voice') {
+				return state;
+			}
+
+			const nextVoice = voiceReducer(prevMedia.voice, action.voiceAction);
+			if (nextVoice === prevMedia.voice) {
+				return state;
+			}
+
+			return {
+				...state,
+				embed: {
+					...state.embed,
+					media: { ...prevMedia, voice: nextVoice },
+				},
+			};
+		}
+		case 'embedRemoveVoice': {
+			const prevMedia = state.embed.media;
+			if (prevMedia?.type !== 'voice') {
+				return state;
+			}
+
+			prevMedia.voice.abortController.abort(new AbortError());
+			return {
+				...state,
+				labels: state.embed.link ? state.labels : [],
+				embed: {
+					...state.embed,
+					media: undefined,
 				},
 			};
 		}

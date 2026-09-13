@@ -5,7 +5,8 @@ export type Rgb = {
 	b: number;
 };
 
-const FALLBACK_BACKGROUND: Rgb = { r: 34, g: 138, b: 199 };
+/** background used when the avatar has no usable color. */
+export const FALLBACK_BACKGROUND: Rgb = { r: 34, g: 138, b: 199 };
 
 // downsample to limit quantization cost.
 const SAMPLE_SIZE = 64;

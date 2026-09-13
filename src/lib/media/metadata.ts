@@ -56,6 +56,17 @@ const durationOf = (element: HTMLMediaElement): number | null => {
 };
 
 /**
+ * reads the duration of an audio blob.
+ *
+ * @param blob audio blob
+ * @returns duration in milliseconds, or null when it could not be determined
+ * @throws if the browser cannot load the audio's metadata
+ */
+export function getAudioDuration(blob: Blob): Promise<number | null> {
+	return readMediaMetadata(document.createElement('audio'), blob, durationOf);
+}
+
+/**
  * reads a video blob's dimensions and duration.
  *
  * @param blob video blob

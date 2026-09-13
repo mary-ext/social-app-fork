@@ -17,12 +17,13 @@ import { m } from '#/paraglide/messages';
 import * as styles from './ComposerFooter.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { createAddImagesWithCap } from './gallery-cap';
+import { MediaUploadToolbar } from './MediaUploadToolbar';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
-import { MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
+import { getMediaUpload, MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
+import type { VoiceAsset } from './state/voice';
 import type { TextInputRef } from './text-input/TextInput.types';
-import { VideoUploadToolbar } from './VideoUploadToolbar';
 
 export function ComposerFooter({
 	post,
@@ -30,6 +31,7 @@ export function ComposerFooter({
 	showAddButton,
 	onError,
 	onSelectVideo,
+	onSelectVoice,
 	onAddPost,
 	currentLanguages,
 	onSelectLanguage,
@@ -41,6 +43,7 @@ export function ComposerFooter({
 	showAddButton: boolean;
 	onError: (error: string) => void;
 	onSelectVideo: (postId: string, asset: VideoAsset) => void;
+	onSelectVoice: (postId: string, asset: VoiceAsset) => void;
 	onAddPost: () => void;
 	currentLanguages: string[];
 	onSelectLanguage?: (language: string) => void;
@@ -57,9 +60,8 @@ export function ComposerFooter({
 
 	const media = post.embed.media;
 	const images = media?.type === 'images' || media?.type === 'gallery' ? media.images : [];
-	const video = media?.type === 'video' ? media.video : null;
+	const uploadMedia = media?.type === 'video' || media?.type === 'voice' ? media : undefined;
 	const isMaxImages = images.length >= MAX_GALLERY_IMAGES;
-	const isMaxVideos = !!video;
 
 	let selectedAssetsCount = 0;
 	let isMediaSelectionDisabled = false;
@@ -67,8 +69,8 @@ export function ComposerFooter({
 	if (media?.type === 'images' || media?.type === 'gallery') {
 		isMediaSelectionDisabled = isMaxImages;
 		selectedAssetsCount = images.length;
-	} else if (media?.type === 'video') {
-		isMediaSelectionDisabled = isMaxVideos;
+	} else if (uploadMedia) {
+		isMediaSelectionDisabled = true;
 		selectedAssetsCount = 1;
 	} else {
 		isMediaSelectionDisabled = !!media;
@@ -91,6 +93,7 @@ export function ComposerFooter({
 		type,
 		images: assetImages,
 		video: assetVideo,
+		voice: assetVoice,
 		errors,
 	}) => {
 		setSelectedAssetsType(type);
@@ -119,6 +122,8 @@ export function ComposerFooter({
 			}
 		} else if ((type === 'video' || type === 'gif') && assetVideo) {
 			onSelectVideo(post.id, assetVideo);
+		} else if (type === 'voice' && assetVoice) {
+			onSelectVoice(post.id, assetVoice);
 		}
 
 		errors.map((error) => {
@@ -130,8 +135,8 @@ export function ComposerFooter({
 
 	return (
 		<div className={styles.footer}>
-			{video && video.status !== 'done' ? (
-				<VideoUploadToolbar state={video} />
+			{uploadMedia && getMediaUpload(uploadMedia)?.status !== 'done' ? (
+				<MediaUploadToolbar media={uploadMedia} />
 			) : (
 				<div className={styles.left}>
 					<SelectMediaButton
