@@ -1,5 +1,9 @@
+import type { Did } from '@atcute/lexicons';
+
 import type { VideoUploadMimeType } from '#/lib/constants/video';
 import type { VideoAssetKind } from '#/lib/media/video/types';
+
+import type { TranscodeErrorCode } from './errors';
 
 export type TranscodedAsset = {
 	/** source kind, preserved for post presentation */
@@ -12,19 +16,15 @@ export type TranscodedAsset = {
 	duration: number;
 };
 
-/** deinterleaved audio, one array per channel, all the same length. */
-export type PcmAudio = {
-	channels: Float32Array<ArrayBuffer>[];
-	/** sample rate in hertz */
-	sampleRate: number;
-};
-
 export type VoiceClipInput = {
-	audio: PcmAudio;
-	/** avatar artwork; must not taint a canvas */
-	avatar: ImageBitmap;
+	/** audio file in any container mediabunny can read */
+	audio: Blob;
+	/** account whose avatar the card shows */
+	did: Did;
 	/** localized text for the bottom-right corner */
 	label: string;
+	/** URL of the account's PDS */
+	pdsUrl: string;
 	/** halo animation seed */
 	seed: string;
 };
@@ -33,8 +33,10 @@ export type MainToWorker = { type: VideoAssetKind; blob: Blob } | ({ type: 'voic
 
 export type WorkerToMain =
 	| { type: 'progress'; progress: number }
+	/** a voice clip card's CSS background color, sent once its avatar loads */
+	| { type: 'voiceBackground'; color: string }
 	| { type: 'skipped'; reason: string }
 	| { type: 'done'; asset: TranscodedAsset }
-	| { type: 'error'; message: string };
+	| { type: 'error'; code: TranscodeErrorCode; message: string };
 
 export type TranscodeOutcome = Extract<WorkerToMain, { type: 'done' | 'skipped' }>;

@@ -1,3 +1,4 @@
+import { TranscodeError } from './errors';
 import { transcodeGif } from './gif';
 import type { MainToWorker, TranscodeOutcome, WorkerToMain } from './protocol';
 import { transcodeVideo } from './video';
@@ -36,13 +37,19 @@ const run = (request: MainToWorker): Promise<TranscodeOutcome> => {
 			return transcodeVideo(request.blob, onProgress);
 		}
 		case 'voice': {
-			return encodeVoiceClip(request, onProgress);
+			return encodeVoiceClip(request, onProgress, (color) => {
+				post({ type: 'voiceBackground', color });
+			});
 		}
 	}
 };
 
 self.addEventListener('message', (event) => {
 	void run(event.data).then(post, (err: unknown) => {
-		post({ type: 'error', message: err instanceof Error ? err.message : String(err) });
+		post({
+			type: 'error',
+			code: err instanceof TranscodeError ? err.code : 'unknown',
+			message: err instanceof Error ? err.message : String(err),
+		});
 	});
 });

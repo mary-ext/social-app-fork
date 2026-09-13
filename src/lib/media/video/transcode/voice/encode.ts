@@ -1,11 +1,24 @@
 import interFontUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import { AudioSample, AudioSampleSource, CanvasSource, Output, Quality } from 'mediabunny';
+import {
+	ALL_FORMATS,
+	AudioSampleSink,
+	AudioSampleSource,
+	BlobSource,
+	CanvasSource,
+	Input,
+	Output,
+	Quality,
+} from 'mediabunny';
+
+import { VIDEO_MAX_DURATION_MS } from '#/lib/constants/video';
 
 import { createBlobTarget } from '../blob-target';
 import { pickCodecs } from '../codecs';
 import { CONTAINERS } from '../containers';
+import { TranscodeError } from '../errors';
 import { AUDIO_BITRATE, KEY_FRAME_INTERVAL } from '../plan';
-import type { PcmAudio, TranscodeOutcome, VoiceClipInput } from '../protocol';
+import type { TranscodeOutcome, VoiceClipInput } from '../protocol';
+import { loadVoiceClipAvatar } from './avatar';
 import { dominantColor, toCssColor } from './palette';
 import { createPulseSchedule } from './pulse';
 import { createCard, FONT_FAMILY, type Card } from './render';
@@ -23,25 +36,8 @@ const AUDIO_SAMPLE_RATE = 48_000;
 // mostly static artwork needs little bitrate.
 const VIDEO_BITRATE = 600_000;
 
-// small chunks keep audio and video interleaved.
-const AUDIO_CHUNK_SECONDS = 0.2;
-
 // tolerate float error when the duration lands on a frame boundary.
 const FRAME_EPSILON = 1e-6;
-
-const planarSlice = ({ channels }: PcmAudio, start: number, end: number): Float32Array<ArrayBuffer> => {
-	const [first] = channels;
-	if (first && channels.length === 1) {
-		return first.subarray(start, end);
-	}
-
-	const frames = end - start;
-	const data = new Float32Array(frames * channels.length);
-	for (const [index, channel] of channels.entries()) {
-		data.set(channel.subarray(start, end), index * frames);
-	}
-	return data;
-};
 
 // workers need their own fonts; system fonts are the fallback.
 const loadFont = async (): Promise<void> => {
@@ -59,22 +55,57 @@ const loadFont = async (): Promise<void> => {
 /**
  * renders a voice clip card with the given audio.
  *
- * @param input validated audio, avatar, label, and animation seed; closes the avatar when done
+ * @param input audio, avatar account and PDS URL, label, and animation seed
  * @param onProgress called with progress from 0 to 1
+ * @param onBackground called with the card's CSS background color once the avatar loads
  * @returns a done outcome containing the encoded video
+ * @throws {TranscodeError} if audio validation fails
  * @throws if rendering or encoding fails, including unsupported codecs
  */
 export const encodeVoiceClip = async (
-	{ audio, avatar, label, seed }: VoiceClipInput,
+	{ audio, did, label, pdsUrl, seed }: VoiceClipInput,
 	onProgress: (progress: number) => void,
+	onBackground: (color: string) => void,
 ): Promise<Extract<TranscodeOutcome, { type: 'done' }>> => {
+	const input = new Input({ source: new BlobSource(audio), formats: ALL_FORMATS });
+	let avatar: ImageBitmap | undefined;
 	let card: Card | undefined;
 	let output: Output | undefined;
 	let started = false;
 
 	try {
-		const sampleCount = audio.channels[0]?.length ?? 0;
-		const duration = sampleCount / audio.sampleRate;
+		const [track, loadedAvatar] = await Promise.all([
+			input.getPrimaryAudioTrack(),
+			loadVoiceClipAvatar({ did, pdsUrl }),
+		]);
+		avatar = loadedAvatar;
+
+		const background = toCssColor(dominantColor(avatar));
+		onBackground(background);
+
+		if (!track) {
+			throw new TranscodeError('audioUnreadable', 'no audio track');
+		}
+
+		const [decodable, numberOfChannels, sampleRate, start, end] = await Promise.all([
+			track.canDecode(),
+			track.getNumberOfChannels(),
+			track.getSampleRate(),
+			track.getFirstTimestamp(),
+			track.computeDuration(),
+		]);
+		if (!decodable) {
+			throw new TranscodeError('audioUnreadable', 'audio track cannot be decoded');
+		}
+
+		// exclude the source timestamp offset from the clip's duration.
+		const duration = end - start;
+		if (!(duration > 0)) {
+			throw new TranscodeError('audioUnreadable', 'audio has no samples');
+		}
+		if (duration * 1000 > VIDEO_MAX_DURATION_MS) {
+			throw new TranscodeError('audioTooLong', 'audio exceeds the maximum video duration');
+		}
 
 		const [combo] = await Promise.all([
 			pickCodecs(
@@ -95,7 +126,7 @@ export const encodeVoiceClip = async (
 
 		card = createCard({
 			avatar,
-			background: toCssColor(dominantColor(avatar)),
+			background,
 			duration,
 			label,
 			pulse: createPulseSchedule(duration, seed),
@@ -106,7 +137,7 @@ export const encodeVoiceClip = async (
 		const target = createBlobTarget(mimeType);
 		output = new Output({ format: createFormat(), target: target.target });
 
-		const needsRemix = audio.channels.length !== AUDIO_CHANNELS || audio.sampleRate !== AUDIO_SAMPLE_RATE;
+		const needsRemix = numberOfChannels !== AUDIO_CHANNELS || sampleRate !== AUDIO_SAMPLE_RATE;
 		const video = new CanvasSource(canvas, {
 			codec: combo.video,
 			quality: new Quality({ bitrate: VIDEO_BITRATE }),
@@ -125,44 +156,38 @@ export const encodeVoiceClip = async (
 
 		// include a partial final frame so video ends with the audio.
 		const frameCount = Math.max(1, Math.ceil(duration * FRAME_RATE - FRAME_EPSILON));
-		const chunkSamples = Math.round(AUDIO_CHUNK_SECONDS * audio.sampleRate);
 		let frameIndex = 0;
-		let sampleOffset = 0;
 
-		while (frameIndex < frameCount || sampleOffset < sampleCount) {
-			const videoTime = frameIndex / FRAME_RATE;
-			const audioTime = sampleOffset / audio.sampleRate;
-
-			if (frameIndex < frameCount && (sampleOffset >= sampleCount || videoTime <= audioTime)) {
-				card.draw(context, videoTime);
+		const addFramesUntil = async (time: number) => {
+			while (frameIndex < frameCount && frameIndex / FRAME_RATE <= time) {
+				const videoTime = frameIndex / FRAME_RATE;
+				card!.draw(context, videoTime);
 				await video.add(videoTime, Math.min(1 / FRAME_RATE, duration - videoTime));
 				frameIndex++;
-			} else {
-				const end = Math.min(sampleOffset + chunkSamples, sampleCount);
-				const sample = new AudioSample({
-					data: planarSlice(audio, sampleOffset, end),
-					format: 'f32-planar',
-					numberOfChannels: audio.channels.length,
-					sampleRate: audio.sampleRate,
-					timestamp: audioTime,
-				});
-
-				try {
-					await sound.add(sample);
-				} finally {
-					// add() does not take ownership of the sample.
-					sample.close();
-				}
-
-				sampleOffset = end;
 			}
+		};
 
-			// hold completion until the output is finalized.
-			const progress = Math.min(frameIndex / frameCount, sampleOffset / sampleCount);
-			if (progress < 1) {
-				onProgress(progress);
+		for await (const sample of new AudioSampleSink(track).samples()) {
+			try {
+				// interleave audio and video in timestamp order.
+				const time = sample.timestamp - start;
+				await addFramesUntil(time);
+
+				sample.setTimestamp(time);
+				await sound.add(sample);
+
+				// hold completion until the output is finalized.
+				const progress = Math.min(frameIndex / frameCount, (time + sample.duration) / duration);
+				if (progress < 1) {
+					onProgress(progress);
+				}
+			} finally {
+				// add() does not take ownership of the sample.
+				sample.close();
 			}
 		}
+
+		await addFramesUntil(Infinity);
 
 		video.close();
 		sound.close();
@@ -182,10 +207,11 @@ export const encodeVoiceClip = async (
 			},
 		};
 	} finally {
-		avatar.close();
+		avatar?.close();
 		card?.close();
 		if (started) {
 			await output?.cancel();
 		}
+		input.dispose();
 	}
 };

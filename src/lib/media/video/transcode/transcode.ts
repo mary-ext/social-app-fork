@@ -1,19 +1,24 @@
-import { VIDEO_MAX_DURATION_MS } from '#/lib/constants/video';
 import type { VideoAssetKind } from '#/lib/media/video/types';
 import { abortReason } from '#/lib/utils/abort-error';
 
-import type { MainToWorker, PcmAudio, TranscodedAsset, VoiceClipInput, WorkerToMain } from './protocol';
+import { TranscodeError } from './errors';
+import type { MainToWorker, TranscodedAsset, VoiceClipInput, WorkerToMain } from './protocol';
 
-type WorkerResult = Exclude<WorkerToMain, { type: 'progress' }>;
+type WorkerResult = Exclude<WorkerToMain, { type: 'progress' | 'voiceBackground' }>;
 
 type RunOptions = {
 	request: MainToWorker;
-	transfer: Transferable[];
 	setProgress: (progress: number) => void;
+	setVoiceBackground?: (color: string) => void;
 	signal: AbortSignal;
 };
 
-const runWorker = async ({ request, transfer, setProgress, signal }: RunOptions): Promise<WorkerResult> => {
+const runWorker = async ({
+	request,
+	setProgress,
+	setVoiceBackground,
+	signal,
+}: RunOptions): Promise<WorkerResult> => {
 	signal.throwIfAborted();
 
 	const worker = new Worker(new URL('./transcode-worker.ts', import.meta.url), {
@@ -31,10 +36,19 @@ const runWorker = async ({ request, transfer, setProgress, signal }: RunOptions)
 				'message',
 				(event: MessageEvent<WorkerToMain>) => {
 					const message = event.data;
-					if (message.type === 'progress') {
-						setProgress(message.progress);
-					} else {
-						resolve(message);
+					switch (message.type) {
+						case 'progress': {
+							setProgress(message.progress);
+							break;
+						}
+						case 'voiceBackground': {
+							setVoiceBackground?.(message.color);
+							break;
+						}
+						default: {
+							resolve(message);
+							break;
+						}
 					}
 				},
 				{ signal: teardown.signal },
@@ -43,12 +57,12 @@ const runWorker = async ({ request, transfer, setProgress, signal }: RunOptions)
 			worker.addEventListener(
 				'error',
 				(event) => {
-					resolve({ type: 'error', message: event.message });
+					resolve({ type: 'error', code: 'unknown', message: event.message });
 				},
 				{ signal: teardown.signal },
 			);
 
-			worker.postMessage(request, transfer);
+			worker.postMessage(request, []);
 		});
 	} finally {
 		teardown.abort();
@@ -103,7 +117,7 @@ export async function transcodeForUpload({
 	setProgress,
 	signal,
 }: TranscodeOptions): Promise<TranscodedAsset | undefined> {
-	const result = await runWorker({ request: { type: kind, blob }, transfer: [], setProgress, signal });
+	const result = await runWorker({ request: { type: kind, blob }, setProgress, signal });
 	switch (result.type) {
 		case 'done': {
 			return result.asset;
@@ -121,27 +135,9 @@ export async function transcodeForUpload({
 
 type VoiceClipOptions = VoiceClipInput & {
 	setProgress: (progress: number) => void;
+	/** receives the card's CSS background color once the avatar loads */
+	setBackground: (color: string) => void;
 	signal: AbortSignal;
-};
-
-const MIN_SAMPLE_RATE = 8_000;
-const MAX_SAMPLE_RATE = 384_000;
-
-const assertPlayable = ({ channels, sampleRate }: PcmAudio): void => {
-	if (!Number.isInteger(sampleRate) || sampleRate < MIN_SAMPLE_RATE || sampleRate > MAX_SAMPLE_RATE) {
-		throw new RangeError(`unsupported sample rate ${sampleRate}`);
-	}
-
-	const [first, ...rest] = channels;
-	if (!first || first.length === 0) {
-		throw new RangeError('audio has no samples');
-	}
-	if (rest.some((channel) => channel.length !== first.length)) {
-		throw new RangeError('audio channels differ in length');
-	}
-	if ((first.length / sampleRate) * 1000 > VIDEO_MAX_DURATION_MS) {
-		throw new RangeError('audio exceeds the maximum video duration');
-	}
 };
 
 /**
@@ -152,40 +148,33 @@ const assertPlayable = ({ channels, sampleRate }: PcmAudio): void => {
 export function canRenderVoiceClip(): boolean {
 	return (
 		typeof OffscreenCanvas !== 'undefined' &&
-		typeof VideoEncoder !== 'undefined' &&
-		typeof AudioEncoder !== 'undefined'
+		typeof AudioDecoder !== 'undefined' &&
+		typeof AudioEncoder !== 'undefined' &&
+		typeof VideoEncoder !== 'undefined'
 	);
 }
 
 /**
  * renders audio as an avatar video with a pulsing halo.
  *
- * transfers ownership of the audio buffers and avatar; the caller cannot reuse them.
+ * uses the default avatar if the account's avatar is unavailable.
  *
- * @param options clip input, progress callback (0–1), and cancellation signal
+ * @param options clip input, progress (0–1) and background callbacks, and cancellation signal
  * @returns the encoded asset
- * @throws {RangeError} before transfer for empty or unequal-length channels, duration over the upload limit,
- *   or a sample rate that is non-integer or outside 8–384 kHz
  * @throws the signal's abort reason if `signal` aborts
- * @throws if worker setup or encoding fails, including unsupported codecs
+ * @throws {TranscodeError} on rendering failure, with a code identifying the cause
+ * @throws if the worker cannot be created
  */
 export async function renderVoiceClip({
 	setProgress,
+	setBackground,
 	signal,
 	...input
 }: VoiceClipOptions): Promise<TranscodedAsset> {
-	assertPlayable(input.audio);
-
-	// channels may share a buffer, which can be transferred only once.
-	const transfer = new Set<Transferable>([
-		input.avatar,
-		...input.audio.channels.map((channel) => channel.buffer),
-	]);
-
 	const result = await runWorker({
 		request: { type: 'voice', ...input },
-		transfer: [...transfer],
 		setProgress,
+		setVoiceBackground: setBackground,
 		signal,
 	});
 	switch (result.type) {
@@ -193,10 +182,10 @@ export async function renderVoiceClip({
 			return result.asset;
 		}
 		case 'skipped': {
-			throw new Error(`voice clip was skipped: ${result.reason}`);
+			throw new TranscodeError('unknown', `voice clip was skipped: ${result.reason}`);
 		}
 		case 'error': {
-			throw new Error(`failed to render voice clip: ${result.message}`);
+			throw new TranscodeError(result.code, `failed to render voice clip: ${result.message}`);
 		}
 	}
 }
