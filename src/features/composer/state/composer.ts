@@ -206,6 +206,10 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 		case 'updatePost': {
 			const postIndex = state.thread.posts.findIndex((p) => p.id === action.postId);
 			if (postIndex === -1) {
+				if (action.postAction.type === 'embedAddVideo') {
+					action.postAction.abortController.abort(new AbortError());
+				}
+
 				return state;
 			}
 
@@ -419,19 +423,19 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 			return state;
 		}
 		case 'embedAddVideo': {
-			const prevMedia = state.embed.media;
-			let nextMedia = prevMedia;
-			if (!prevMedia) {
-				nextMedia = {
-					type: 'video',
-					video: createVideoState(action.attachment, action.abortController),
-				};
+			if (state.embed.media) {
+				action.abortController.abort(new AbortError());
+				return state;
 			}
+
 			return {
 				...state,
 				embed: {
 					...state.embed,
-					media: nextMedia,
+					media: {
+						type: 'video',
+						video: createVideoState(action.attachment, action.abortController),
+					},
 				},
 			};
 		}
