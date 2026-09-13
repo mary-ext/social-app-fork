@@ -60,13 +60,8 @@ export function VideoEmbedInnerWeb({
 		videoRef,
 		focused,
 		canLoad,
+		lastKnownTime,
 	});
-
-	useEffect(() => {
-		if (lastKnownTime.current && videoRef.current) {
-			videoRef.current.currentTime = lastKnownTime.current;
-		}
-	}, [lastKnownTime]);
 
 	return (
 		<div className={styles.root} aria-label={m['components.post.video.a11y.player']()}>
@@ -79,10 +74,6 @@ export function VideoEmbedInnerWeb({
 						playsInline
 						muted={isGif || !focused}
 						aria-labelledby={embed.alt ? figId : undefined}
-						onTimeUpdate={(e) => {
-							// oxlint-disable-next-line react/immutability -- mutable output ref
-							lastKnownTime.current = e.currentTarget.currentTime;
-						}}
 						loop
 					/>
 					{embed.alt && (
@@ -119,12 +110,14 @@ function useHlsPlayer({
 	videoRef,
 	focused,
 	canLoad,
+	lastKnownTime,
 }: {
 	playlist: string;
 	setError: (v: Error | null) => void;
 	videoRef: RefObject<HTMLVideoElement | null>;
 	focused: boolean;
 	canLoad: boolean;
+	lastKnownTime: RefObject<number | undefined>;
 }) {
 	const playerRef = useRef<PlayerHandle | undefined>(undefined);
 	const [renditions, setRenditions] = useState<Rendition[]>([]);
@@ -159,7 +152,7 @@ function useHlsPlayer({
 			return;
 		}
 
-		const player = attachHlsPlayer(video, playlist);
+		const player = attachHlsPlayer(video, playlist, lastKnownTime.current ?? 0);
 		playerRef.current = player;
 
 		player.onRenditions((available, selected) => {
@@ -176,6 +169,8 @@ function useHlsPlayer({
 		});
 
 		return () => {
+			// oxlint-disable-next-line react/immutability -- mutable output ref
+			lastKnownTime.current = video.currentTime;
 			playerRef.current = undefined;
 			player.destroy();
 			// clear data from the previous playlist
@@ -185,7 +180,7 @@ function useHlsPlayer({
 			setPreferredSubtitleTrack(0);
 			setStatus('loading');
 		};
-	}, [canLoad, playlist, setError, videoRef]);
+	}, [canLoad, lastKnownTime, playlist, setError, videoRef]);
 
 	useEffect(() => {
 		playerRef.current?.setBufferAhead(focused ? BUFFER_AHEAD.focused : BUFFER_AHEAD.background);

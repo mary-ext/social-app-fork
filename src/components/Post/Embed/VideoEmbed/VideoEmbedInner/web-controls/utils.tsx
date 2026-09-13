@@ -7,6 +7,8 @@ import { getVideoVolume, subscribeVideoVolume } from '#/components/Post/Embed/Vi
 
 const TIME_EVENTS = ['timeupdate', 'seeking', 'seeked', 'loadedmetadata', 'emptied'] as const;
 
+const STATE_EVENTS = ['durationchange', 'emptied', 'loadstart', 'pause', 'play', 'volumechange'] as const;
+
 /**
  * subscribes to a video's quantized playback position.
  *
@@ -87,7 +89,8 @@ export function useVideoElement(
 	}, [ref, speedControlled]);
 
 	useEffect(() => {
-		if (!ref.current) {
+		const element = ref.current;
+		if (!element) {
 			return;
 		}
 
@@ -97,10 +100,14 @@ export function useVideoElement(
 			return Math.round(num * 100) / 100;
 		}
 
-		// Initial values
-		setDuration(round(ref.current.duration) || 0);
-		setMuted(ref.current.muted);
-		setPlaying(!ref.current.paused);
+		// loading can discard queued state events, so also resync on emptied/loadstart.
+		const syncState = () => {
+			setDuration(round(element.duration) || 0);
+			setMuted(element.muted);
+			setPlaying(!element.paused);
+		};
+
+		syncState();
 
 		const clearBuffering = () => {
 			if (bufferingTimeout) {
@@ -121,28 +128,6 @@ export function useVideoElement(
 		// Safari can emit `stalled` while segments advance.
 		const handleSafariProgress = clearBuffering;
 
-		const handleDurationChange = () => {
-			if (!ref.current) {
-				return;
-			}
-			setDuration(round(ref.current.duration) || 0);
-		};
-
-		const handlePlay = () => {
-			setPlaying(true);
-		};
-
-		const handlePause = () => {
-			setPlaying(false);
-		};
-
-		const handleVolumeChange = () => {
-			if (!ref.current) {
-				return;
-			}
-			setMuted(ref.current.muted);
-		};
-
 		const handleError = () => {
 			setError(true);
 		};
@@ -150,22 +135,17 @@ export function useVideoElement(
 		const handleCanPlay = async () => {
 			clearBuffering();
 
-			if (!ref.current) {
-				return;
-			}
 			if (playWhenReadyRef.current) {
 				try {
-					await ref.current.play();
+					await element.play();
 				} catch (e) {
-					const message = e instanceof Error ? e.message : String(e);
-					if (
-						!message.includes(`The request is not allowed by the user agent`) &&
-						!message.includes(`The play() request was interrupted by a call to pause()`)
-					) {
+					// ignore autoplay denial and pause/load interruptions.
+					if (!(e instanceof DOMException) || (e.name !== 'NotAllowedError' && e.name !== 'AbortError')) {
 						throw e;
 					}
+				} finally {
+					playWhenReadyRef.current = false;
 				}
-				playWhenReadyRef.current = false;
 			}
 		};
 
@@ -175,51 +155,26 @@ export function useVideoElement(
 		};
 
 		const handleEnded = () => {
-			setPlaying(false);
 			setBuffering(false);
 			setError(false);
 		};
 
 		const abortController = new AbortController();
+		const signal = abortController.signal;
 
 		if (IS_SAFARI) {
-			ref.current.addEventListener('timeupdate', handleSafariProgress, {
-				signal: abortController.signal,
-			});
+			element.addEventListener('timeupdate', handleSafariProgress, { signal });
 		}
-		ref.current.addEventListener('durationchange', handleDurationChange, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('play', handlePlay, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('pause', handlePause, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('volumechange', handleVolumeChange, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('error', handleError, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('canplay', () => void handleCanPlay(), {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('canplaythrough', clearBuffering, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('waiting', deferBuffering, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('playing', handlePlaying, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('stalled', deferBuffering, {
-			signal: abortController.signal,
-		});
-		ref.current.addEventListener('ended', handleEnded, {
-			signal: abortController.signal,
-		});
+		for (const type of STATE_EVENTS) {
+			element.addEventListener(type, syncState, { signal });
+		}
+		element.addEventListener('error', handleError, { signal });
+		element.addEventListener('canplay', () => void handleCanPlay(), { signal });
+		element.addEventListener('canplaythrough', clearBuffering, { signal });
+		element.addEventListener('waiting', deferBuffering, { signal });
+		element.addEventListener('playing', handlePlaying, { signal });
+		element.addEventListener('stalled', deferBuffering, { signal });
+		element.addEventListener('ended', handleEnded, { signal });
 
 		return () => {
 			abortController.abort();

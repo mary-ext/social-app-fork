@@ -126,10 +126,15 @@ type BufferWindow = { back: number; forward: number; minimum: number };
  *
  * @param video video element to attach
  * @param playlist the master playlist url
+ * @param startTime initial playback position in seconds
  * @returns player controls and listeners
  * @throws when Media Source Extensions are unavailable
  */
-export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): PlayerHandle => {
+export const attachHlsPlayer = (
+	video: HTMLVideoElement,
+	playlist: string,
+	startTime: number,
+): PlayerHandle => {
 	if (!MediaSourceClass) {
 		throw new Error('no MediaSource implementation');
 	}
@@ -143,6 +148,8 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 	// iOS Safari requires this before ManagedMediaSource can open.
 	video.disableRemotePlayback = true;
 	video.src = objectUrl;
+	// set after src resets playback; before metadata, currentTime stores the start position.
+	video.currentTime = startTime;
 
 	const worker = acquireWorker();
 
@@ -515,7 +522,7 @@ export const attachHlsPlayer = (video: HTMLVideoElement, playlist: string): Play
 				});
 
 				onRenditions?.(renditions, tallest.index);
-				selectRendition(tallest.index, 0);
+				selectRendition(tallest.index, video.currentTime);
 				break;
 			}
 			case 'duration': {
