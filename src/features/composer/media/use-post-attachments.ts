@@ -1,5 +1,5 @@
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import { getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
+import { readVideoAttachment } from '#/lib/media/read-attachment';
 
 import { getClients, useSession } from '#/state/session';
 
@@ -115,28 +115,12 @@ export const usePostAttachments = ({ composerDispatch, onError }: PostAttachment
 
 	const restoreVideo = async (postId: string, videoInfo: RestoredVideo) => {
 		try {
-			// legacy drafts may have stored the file without a MIME type.
-			const blob =
-				videoInfo.blob.type === videoInfo.mimeType
-					? videoInfo.blob
-					: new Blob([videoInfo.blob], { type: videoInfo.mimeType });
-
-			const result = await readAttachment(blob);
+			const result = await readVideoAttachment(videoInfo.blob);
 			if (!result.ok) {
 				onError(getAttachmentRejectionMessage(result.rejection));
 				return;
 			}
-			if (result.attachment.type !== 'video') {
-				onError(
-					getAttachmentRejectionMessage({
-						reason: 'unsupported',
-						kind: getAttachmentKind(result.attachment),
-						mimeType: blob.type,
-					}),
-				);
-				return;
-			}
-			const signal = selectVideo(postId, result.attachment);
+			const signal = selectVideo(postId, { type: 'video', asset: result.asset });
 
 			if (videoInfo.altText) {
 				composerDispatch({
@@ -149,7 +133,6 @@ export const usePostAttachments = ({ composerDispatch, onError }: PostAttachment
 				});
 			}
 
-			// Restore captions (web only - captions use File objects)
 			if (videoInfo.captions.length > 0) {
 				const captionTracks = videoInfo.captions.map((c) => ({
 					lang: c.lang,

@@ -1,4 +1,4 @@
-import { getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
+import { readVideoAttachment } from '#/lib/media/read-attachment';
 
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
@@ -30,26 +30,15 @@ export function useComposeIntent() {
 					return;
 				}
 
-				const result = await readAttachment(blob);
+				const result = await readVideoAttachment(blob);
 				if (!result.ok) {
 					Toast.show(getAttachmentRejectionMessage(result.rejection), { type: 'error' });
-					return;
-				}
-				if (result.attachment.type !== 'video') {
-					Toast.show(
-						getAttachmentRejectionMessage({
-							reason: 'unsupported',
-							kind: getAttachmentKind(result.attachment),
-							mimeType: blob.type,
-						}),
-						{ type: 'error' },
-					);
 					return;
 				}
 
 				openComposer({
 					text: text ?? undefined,
-					videoUri: result.attachment.asset,
+					videoUri: result.asset,
 				});
 			})();
 			return;

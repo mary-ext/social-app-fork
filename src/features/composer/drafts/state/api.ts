@@ -36,14 +36,11 @@ import type { CaptionsTrack } from '#/features/composer/state/video-upload';
 import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';
 
-/**
- * Video data from a draft that needs to be restored by re-processing. Contains the local file blob, alt text,
- * mime type, and captions to restore.
- */
+/** draft video awaiting reprocessing. */
 export type RestoredVideo = {
+	/** the local file, with its MIME type set */
 	blob: Blob;
 	altText: string;
-	mimeType: string;
 	localRefPath: string;
 	captions: Array<{ lang: string; content: string }>;
 };
@@ -531,9 +528,9 @@ export async function draftToComposerPosts(
 				if (videoBlob) {
 					const mimeType = parseVideoMimeType(vid.localRef.path);
 					restoredVideos.set(index, {
-						blob: videoBlob,
+						// legacy drafts may have stored the file without a MIME type.
+						blob: videoBlob.type === mimeType ? videoBlob : new Blob([videoBlob], { type: mimeType }),
 						altText: vid.alt || '',
-						mimeType,
 						localRefPath: vid.localRef.path,
 						captions: vid.captions?.map((c) => ({ lang: c.lang, content: c.content })) ?? [],
 					});

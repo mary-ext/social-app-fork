@@ -174,3 +174,28 @@ export const readAttachment = async (blob: Blob): Promise<AttachmentReadResult> 
 
 	return reject({ reason: 'unsupported', kind: undefined, mimeType });
 };
+
+/**
+ * validates a video or animated GIF, rejecting other media.
+ *
+ * @param blob the file, with its MIME type set
+ * @returns a video asset or rejection reason
+ * @throws if the GIF blob cannot be read
+ */
+export const readVideoAttachment = async (
+	blob: Blob,
+): Promise<{ ok: true; asset: VideoAsset } | { ok: false; rejection: AttachmentRejection }> => {
+	const result = await readAttachment(blob);
+	if (!result.ok) {
+		return result;
+	}
+
+	const { attachment } = result;
+	if (attachment.type !== 'video') {
+		return {
+			ok: false,
+			rejection: { reason: 'unsupported', kind: getAttachmentKind(attachment), mimeType: blob.type },
+		};
+	}
+	return { ok: true, asset: attachment.asset };
+};

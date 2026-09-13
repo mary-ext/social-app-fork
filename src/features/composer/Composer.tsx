@@ -228,8 +228,6 @@ export const ComposePost = ({
 			originalLocalRefs,
 		});
 
-		// Initiate video processing for any restored videos
-		// This is async but we don't await - videos process in the background
 		for (const [postIndex, videoInfo] of restoredVideos) {
 			restoreVideo(posts[postIndex]!.id, videoInfo);
 		}
