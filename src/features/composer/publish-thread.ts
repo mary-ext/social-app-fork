@@ -36,6 +36,7 @@ import {
 } from '#/state/queries/threadgate';
 
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
+import { getVideoSourceKind } from '#/features/composer/state/video';
 import type { CaptionsTrack } from '#/features/composer/state/video-upload';
 
 import { m } from '#/paraglide/messages';
@@ -382,23 +383,13 @@ async function resolveMedia(
 		};
 	}
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {
-		const { altText, asset, captions, payload, pendingPublish } = embedDraft.media.video;
+		const { altText, captions, payload, pendingPublish, source } = embedDraft.media.video;
 		return createVideoEmbed(pds, {
 			altText,
 			blobRef: pendingPublish.blobRef,
 			captions,
 			payload,
-			presentation: asset.kind === 'gif' ? 'gif' : 'default',
-		});
-	}
-	if (embedDraft.media?.type === 'voice' && embedDraft.media.voice.status === 'done') {
-		const { altText, captions, payload, pendingPublish } = embedDraft.media.voice;
-		return createVideoEmbed(pds, {
-			altText,
-			blobRef: pendingPublish.blobRef,
-			captions,
-			payload,
-			presentation: 'default',
+			presentation: getVideoSourceKind(source) === 'gif' ? 'gif' : 'default',
 		});
 	}
 	if (embedDraft.media?.type === 'gif') {

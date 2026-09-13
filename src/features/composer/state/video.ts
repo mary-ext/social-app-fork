@@ -1,9 +1,15 @@
 import type { Client } from '@atcute/client';
-import type { Blob as AtpBlob } from '@atcute/lexicons';
+import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 
+import { VIDEO_MAX_DURATION_MINUTES } from '#/lib/constants/video';
+import { isAbortError } from '#/lib/errors';
+import type { VoiceAsset } from '#/lib/media/read-attachment';
 import { canTranscode } from '#/lib/media/video/transcode/capabilities';
-import { transcodeForUpload } from '#/lib/media/video/transcode/transcode';
+import { TranscodeError } from '#/lib/media/video/transcode/errors';
+import { renderVoiceClip, transcodeForUpload } from '#/lib/media/video/transcode/transcode';
 import { toVideoPayload, type VideoAsset, type VideoPayload } from '#/lib/media/video/types';
+
+import { m } from '#/paraglide/messages';
 
 import { advanceVideoProgress } from './video-progress';
 import {
@@ -13,270 +19,380 @@ import {
 	type VideoUploadAction,
 } from './video-upload';
 
+/** a validated file that publishes as a video embed. */
+export type VideoAttachment = { type: 'video'; asset: VideoAsset } | { type: 'voice'; asset: VoiceAsset };
+
+/** original media and preview state, retained after encoding. */
+export type VideoSource =
+	| { type: 'video'; asset: VideoAsset }
+	| {
+			type: 'voice';
+			asset: VoiceAsset;
+			/** CSS color derived from the avatar, or null until the avatar loads */
+			background: string | null;
+	  };
+
 export type VideoAction =
 	| VideoUploadAction
 	| {
-			type: 'compressingToUploading';
-			compressionSkipped: boolean;
+			type: 'preparingToUploading';
 			payload: VideoPayload;
+			/** true when uploading the original file */
+			preparationSkipped: boolean;
 			signal: AbortSignal;
 	  }
-	| {
-			type: 'updateAltText';
-			altText: string;
-			signal: AbortSignal;
-	  }
+	| { type: 'updateAltText'; altText: string; signal: AbortSignal }
+	| { type: 'updateBackground'; background: string; signal: AbortSignal }
 	| {
 			type: 'updateCaptions';
 			updater: (prev: CaptionsTrack[]) => CaptionsTrack[];
 			signal: AbortSignal;
 	  };
 
-type ErrorState = {
+type VideoBase = {
+	abortController: AbortController;
+	altText: string;
+	captions: CaptionsTrack[];
+	source: VideoSource;
+};
+
+/** transcoding a video or GIF, or rendering a voice clip */
+type PreparingState = VideoBase & {
+	status: 'preparing';
+	progress: number;
+	payload?: undefined;
+	jobId?: undefined;
+	pendingPublish?: undefined;
+};
+
+type UploadingState = VideoBase & {
+	status: 'uploading';
+	progress: number;
+	/** true when uploading the original file */
+	preparationSkipped: boolean;
+	payload: VideoPayload;
+	jobId?: undefined;
+	pendingPublish?: undefined;
+};
+
+type ProcessingState = VideoBase & {
+	status: 'processing';
+	progress: number;
+	payload: VideoPayload;
+	jobId: string;
+	pendingPublish?: undefined;
+};
+
+type DoneState = VideoBase & {
+	status: 'done';
+	progress: 1;
+	payload: VideoPayload;
+	jobId?: undefined;
+	pendingPublish: { blobRef: AtpBlob };
+};
+
+type ErrorState = VideoBase & {
 	status: 'error';
 	progress: number;
-	abortController: AbortController;
-	asset: VideoAsset;
 	payload: VideoPayload | null;
 	jobId: string | null;
 	error: string;
 	pendingPublish?: undefined;
-	altText: string;
-	captions: CaptionsTrack[];
 };
 
-type CompressingState = {
-	status: 'compressing';
-	progress: number;
-	abortController: AbortController;
-	asset: VideoAsset;
-	payload?: undefined;
-	jobId?: undefined;
-	pendingPublish?: undefined;
-	altText: string;
-	captions: CaptionsTrack[];
+export type VideoState = PreparingState | UploadingState | ProcessingState | DoneState | ErrorState;
+
+/**
+ * identifies the source media, including GIFs stored as video attachments.
+ *
+ * @param source the attachment's source
+ * @returns `gif` for animated GIFs, `voice` for voice clips, `video` otherwise
+ */
+export const getVideoSourceKind = (source: VideoSource): 'gif' | 'video' | 'voice' => {
+	switch (source.type) {
+		case 'video': {
+			return source.asset.kind;
+		}
+		case 'voice': {
+			return 'voice';
+		}
+	}
 };
 
-type UploadingState = {
-	status: 'uploading';
-	progress: number;
-	compressionSkipped: boolean;
-	abortController: AbortController;
-	/** original source, retained for GIF presentation */
-	asset: VideoAsset;
-	payload: VideoPayload;
-	jobId?: undefined;
-	pendingPublish?: undefined;
-	altText: string;
-	captions: CaptionsTrack[];
+const baseOf = ({ abortController, altText, captions, source }: VideoState): VideoBase => ({
+	abortController,
+	altText,
+	captions,
+	source,
+});
+
+const toSource = (attachment: VideoAttachment): VideoSource => {
+	switch (attachment.type) {
+		case 'video': {
+			return attachment;
+		}
+		case 'voice': {
+			return { ...attachment, background: null };
+		}
+	}
 };
 
-type ProcessingState = {
-	status: 'processing';
-	progress: number;
-	abortController: AbortController;
-	asset: VideoAsset;
-	payload: VideoPayload;
-	jobId: string;
-	pendingPublish?: undefined;
-	altText: string;
-	captions: CaptionsTrack[];
-};
+/**
+ * initializes preparation, or direct upload when transcoding APIs are unavailable.
+ *
+ * @param attachment the selected file
+ * @param abortController controls the attachment's processing
+ * @returns a preparing or uploading state
+ */
+export function createVideoState(attachment: VideoAttachment, abortController: AbortController): VideoState {
+	const base: VideoBase = { abortController, altText: '', captions: [], source: toSource(attachment) };
 
-type DoneState = {
-	status: 'done';
-	progress: 1;
-	abortController: AbortController;
-	asset: VideoAsset;
-	payload: VideoPayload;
-	jobId?: undefined;
-	pendingPublish: { blobRef: AtpBlob };
-	altText: string;
-	captions: CaptionsTrack[];
-};
-
-export type VideoState = ErrorState | CompressingState | UploadingState | ProcessingState | DoneState;
-
-// codec support and whether encoding is needed are checked by the worker.
-const willCompress = (asset: VideoAsset) => canTranscode(asset.kind);
-
-export function createVideoState(
-	asset: VideoAsset,
-	abortController: AbortController,
-): CompressingState | UploadingState {
-	if (willCompress(asset)) {
+	if (attachment.type === 'video' && !canTranscode(attachment.asset.kind)) {
 		return {
-			status: 'compressing',
+			...base,
+			status: 'uploading',
 			progress: 0,
-			abortController,
-			asset,
-			altText: '',
-			captions: [],
+			preparationSkipped: true,
+			payload: toVideoPayload(attachment.asset),
 		};
 	}
 
-	return {
-		status: 'uploading',
-		progress: 0,
-		compressionSkipped: true,
-		abortController,
-		asset,
-		payload: toVideoPayload(asset),
-		altText: '',
-		captions: [],
-	};
+	return { ...base, status: 'preparing', progress: 0 };
 }
 
+/**
+ * applies a video action, ignoring aborted or superseded processing.
+ *
+ * @param state current attachment state
+ * @param action action to apply
+ * @returns the next state, or `state` itself when nothing changed
+ */
 export function videoReducer(state: VideoState, action: VideoAction): VideoState {
 	if (action.signal.aborted || action.signal !== state.abortController.signal) {
-		// This action is stale and the process that spawned it is no longer relevant.
 		return state;
 	}
-	if (action.type === 'toError') {
-		return {
-			status: 'error',
-			progress: state.progress,
-			abortController: state.abortController,
-			error: action.error,
-			asset: state.asset,
-			payload: state.payload ?? null,
-			jobId: state.jobId ?? null,
-			altText: state.altText,
-			captions: state.captions,
-		};
-	} else if (action.type === 'updateProgress') {
-		if (state.status === 'compressing' || state.status === 'uploading') {
-			const phase =
-				state.status === 'uploading' && state.compressionSkipped
-					? 'uploadingWithoutCompression'
-					: state.status;
-			const progress = advanceVideoProgress(state.progress, phase, action.progress);
+
+	switch (action.type) {
+		case 'toError': {
+			return {
+				...baseOf(state),
+				status: 'error',
+				progress: state.progress,
+				payload: state.payload ?? null,
+				jobId: state.jobId ?? null,
+				error: action.error,
+			};
+		}
+		case 'updateAltText': {
+			return { ...state, altText: action.altText };
+		}
+		case 'updateBackground': {
+			if (state.source.type === 'voice') {
+				return { ...state, source: { ...state.source, background: action.background } };
+			}
+			break;
+		}
+		case 'updateCaptions': {
+			return { ...state, captions: action.updater(state.captions) };
+		}
+		case 'updateProgress': {
+			let progress = state.progress;
+			switch (state.status) {
+				case 'preparing': {
+					progress = advanceVideoProgress(state.progress, 'preparing', action.progress);
+					break;
+				}
+				case 'uploading': {
+					const phase = state.preparationSkipped ? 'uploadingWithoutPreparation' : 'uploading';
+					progress = advanceVideoProgress(state.progress, phase, action.progress);
+					break;
+				}
+				default: {
+					console.error(`Unexpected video action (${action.type}) while in ${state.status} state`);
+					return state;
+				}
+			}
 			// preserve state identity so the composer reducer can skip unchanged progress.
 			if (progress === state.progress) {
 				return state;
 			}
 			return { ...state, progress };
 		}
-	} else if (action.type === 'compressingToUploading') {
-		if (state.status === 'compressing') {
-			return {
-				status: 'uploading',
-				// keep progress from rewinding when compression falls back to the original asset.
-				progress: advanceVideoProgress(
-					state.progress,
-					action.compressionSkipped ? 'uploadingWithoutCompression' : 'uploading',
-					0,
-				),
-				compressionSkipped: action.compressionSkipped,
-				abortController: state.abortController,
-				asset: state.asset,
-				payload: action.payload,
-				altText: state.altText,
-				captions: state.captions,
-			};
-		}
-	} else if (action.type === 'updateAltText') {
-		return {
-			...state,
-			altText: action.altText,
-		};
-	} else if (action.type === 'updateCaptions') {
-		return {
-			...state,
-			captions: action.updater(state.captions),
-		};
-	} else if (action.type === 'uploadingToProcessing') {
-		if (state.status === 'uploading') {
-			return {
-				status: 'processing',
-				progress: advanceVideoProgress(state.progress, 'processing', 0),
-				abortController: state.abortController,
-				asset: state.asset,
-				payload: state.payload,
-				jobId: action.jobId,
-				altText: state.altText,
-				captions: state.captions,
-			};
-		}
-	} else if (action.type === 'updateJobStatus') {
-		if (state.status === 'processing') {
-			const { progress } = action.jobStatus;
-			const nextProgress =
-				progress !== undefined
-					? advanceVideoProgress(state.progress, 'processing', progress / 100)
-					: state.progress;
-			if (nextProgress === state.progress) {
-				return state;
+		case 'preparingToUploading': {
+			if (state.status === 'preparing') {
+				const phase = action.preparationSkipped ? 'uploadingWithoutPreparation' : 'uploading';
+				return {
+					...baseOf(state),
+					status: 'uploading',
+					// fallback uploads must not reset progress already reported by preparation.
+					progress: advanceVideoProgress(state.progress, phase, 0),
+					preparationSkipped: action.preparationSkipped,
+					payload: action.payload,
+				};
 			}
-			return { ...state, progress: nextProgress };
+			break;
 		}
-	} else if (action.type === 'toDone') {
-		if (state.status === 'uploading' || state.status === 'processing') {
-			return {
-				status: 'done',
-				progress: 1,
-				abortController: state.abortController,
-				asset: state.asset,
-				payload: state.payload,
-				pendingPublish: {
-					blobRef: action.blobRef,
-				},
-				altText: state.altText,
-				captions: state.captions,
-			};
+		case 'uploadingToProcessing': {
+			if (state.status === 'uploading') {
+				return {
+					...baseOf(state),
+					status: 'processing',
+					progress: advanceVideoProgress(state.progress, 'processing', 0),
+					payload: state.payload,
+					jobId: action.jobId,
+				};
+			}
+			break;
+		}
+		case 'updateJobStatus': {
+			if (state.status === 'processing') {
+				const { progress } = action.jobStatus;
+				const nextProgress =
+					progress !== undefined
+						? advanceVideoProgress(state.progress, 'processing', progress / 100)
+						: state.progress;
+				if (nextProgress === state.progress) {
+					return state;
+				}
+				return { ...state, progress: nextProgress };
+			}
+			break;
+		}
+		case 'toDone': {
+			if (state.status === 'uploading' || state.status === 'processing') {
+				return {
+					...baseOf(state),
+					status: 'done',
+					progress: 1,
+					payload: state.payload,
+					pendingPublish: { blobRef: action.blobRef },
+				};
+			}
+			break;
 		}
 	}
-	console.error('Unexpected video action (' + action.type + ') while in ' + state.status + ' state');
+
+	console.error(`Unexpected video action (${action.type}) while in ${state.status} state`);
 	return state;
 }
 
-export async function processVideo(
-	asset: VideoAsset,
-	dispatch: (action: VideoAction) => void,
-	pdsUrl: string,
-	pds: Client,
-	signal: AbortSignal,
-) {
-	let payload: VideoPayload;
-	try {
-		const compressing = willCompress(asset);
-		const compressed = compressing ? await compressAsset(asset, dispatch, signal) : undefined;
+// #region processing
 
-		payload = compressed ?? toVideoPayload(asset);
-		if (compressing) {
-			dispatch({
-				type: 'compressingToUploading',
-				compressionSkipped: compressed === undefined,
-				payload,
-				signal,
-			});
-		}
+type ProcessVideoOptions = {
+	attachment: VideoAttachment;
+	/** the posting account, whose avatar appears in voice clips */
+	did: Did;
+	dispatch: (action: VideoAction) => void;
+	pds: Client;
+	pdsUrl: string;
+	signal: AbortSignal;
+};
+
+const prepareVideo = async (
+	asset: VideoAsset,
+	{ dispatch, signal }: ProcessVideoOptions,
+): Promise<VideoPayload | undefined> => {
+	// createVideoState already selects uploading when these APIs are unavailable.
+	if (!canTranscode(asset.kind)) {
+		return toVideoPayload(asset);
+	}
+
+	let transcoded;
+	try {
+		transcoded = await transcodeForUpload({
+			kind: asset.kind,
+			blob: asset.blob,
+			signal,
+			setProgress: (progress) => {
+				dispatch({ type: 'updateProgress', progress, signal });
+			},
+		});
 	} catch (e) {
 		const message = getUploadErrorMessage(e);
 		if (message !== null) {
-			dispatch({
-				type: 'toError',
-				error: message,
-				signal,
-			});
+			dispatch({ type: 'toError', error: message, signal });
 		}
-		return;
+		return undefined;
 	}
 
-	await uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, signal });
+	const payload = transcoded ?? toVideoPayload(asset);
+	dispatch({ type: 'preparingToUploading', payload, preparationSkipped: transcoded === undefined, signal });
+	return payload;
+};
+
+const getRenderErrorMessage = (err: unknown, asset: VoiceAsset): string => {
+	switch (err instanceof TranscodeError ? err.code : 'unknown') {
+		case 'audioTooLong': {
+			return m['view.composer.voice.error.tooLong']({ minutes: VIDEO_MAX_DURATION_MINUTES });
+		}
+		case 'audioUnreadable': {
+			return m['view.composer.voice.error.unsupportedType']({ mimeType: asset.blob.type });
+		}
+		case 'unknown': {
+			return m['view.composer.voice.error.render']();
+		}
+	}
+};
+
+const prepareVoice = async (
+	asset: VoiceAsset,
+	{ did, dispatch, pdsUrl, signal }: ProcessVideoOptions,
+): Promise<VideoPayload | undefined> => {
+	let payload;
+	try {
+		payload = await renderVoiceClip({
+			audio: asset.blob,
+			did,
+			label: m['view.composer.voice.cardLabel'](),
+			pdsUrl,
+			seed: crypto.randomUUID(),
+			setBackground: (background) => {
+				dispatch({ type: 'updateBackground', background, signal });
+			},
+			setProgress: (progress) => {
+				dispatch({ type: 'updateProgress', progress, signal });
+			},
+			signal,
+		});
+	} catch (e) {
+		if (isAbortError(e)) {
+			return undefined;
+		}
+
+		console.error('Failed to render voice clip', e);
+		dispatch({ type: 'toError', error: getRenderErrorMessage(e, asset), signal });
+		return undefined;
+	}
+
+	dispatch({ type: 'preparingToUploading', payload, preparationSkipped: false, signal });
+	return payload;
+};
+
+/**
+ * prepares, uploads, and waits for server processing; dispatches progress and errors.
+ *
+ * @param options source, account, upload clients, dispatcher, and cancellation signal
+ * @returns resolves after completion, failure, or cancellation; cancellation dispatches no error
+ */
+export async function processVideo(options: ProcessVideoOptions) {
+	const { attachment } = options;
+
+	let payload: VideoPayload | undefined;
+	switch (attachment.type) {
+		case 'video': {
+			payload = await prepareVideo(attachment.asset, options);
+			break;
+		}
+		case 'voice': {
+			payload = await prepareVoice(attachment.asset, options);
+			break;
+		}
+	}
+
+	if (payload !== undefined) {
+		const { dispatch, pds, pdsUrl, signal } = options;
+		await uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, signal });
+	}
 }
 
-function compressAsset(
-	asset: VideoAsset,
-	dispatch: (action: VideoAction) => void,
-	signal: AbortSignal,
-): Promise<VideoPayload | undefined> {
-	return transcodeForUpload({
-		kind: asset.kind,
-		blob: asset.blob,
-		signal,
-		setProgress: (p) => {
-			dispatch({ type: 'updateProgress', progress: p, signal });
-		},
-	});
-}
+// #endregion

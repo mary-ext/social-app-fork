@@ -12,6 +12,7 @@ import type { ComposerImage } from '#/lib/media/composer-image';
 import { gifUrlParams, klipyHostname, stripGifUrlParams, tenorHostname } from '#/lib/media/gif-embed';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/client';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
@@ -19,8 +20,13 @@ import { getDeviceId } from '#/state/preferences/device-id';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { getClients } from '#/state/session';
 
-import type { ComposerState, EmbedDraft, PostDraft } from '#/features/composer/state/composer';
-import type { VideoState } from '#/features/composer/state/video';
+import {
+	type ComposerState,
+	type EmbedDraft,
+	getPostVideo,
+	type PostDraft,
+} from '#/features/composer/state/composer';
+import type { CaptionsTrack } from '#/features/composer/state/video-upload';
 
 import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';
@@ -61,7 +67,7 @@ export type DraftSaveBlocker = 'tooLong' | 'voiceClip';
  */
 export const getDraftSaveBlocker = (posts: PostDraft[]): DraftSaveBlocker | undefined => {
 	// the draft format has no voice clip representation.
-	if (posts.some((post) => post.embed.media?.type === 'voice')) {
+	if (posts.some((post) => getPostVideo(post)?.source.type === 'voice')) {
 		return 'voiceClip';
 	}
 	if (!posts.every((post) => isGraphemeLengthInRange(post.text, 0, MAX_DRAFT_GRAPHEME_LENGTH))) {
@@ -138,7 +144,12 @@ async function postDraftToServerPost(
 				items: serializeImages(post.embed.media.images, localRefPaths),
 			};
 		} else if (post.embed.media.type === 'video') {
-			draftPost.embedVideos = [await serializeVideo(post.embed.media.video, localRefPaths)];
+			const { altText, captions, source } = post.embed.media.video;
+			if (source.type === 'video') {
+				draftPost.embedVideos = [
+					await serializeVideo({ altText, asset: source.asset, captions }, localRefPaths),
+				];
+			}
 		} else if (post.embed.media.type === 'gif') {
 			const external = serializeGif(post.embed.media);
 			if (external) {
@@ -242,18 +253,22 @@ function serializeImages(
  * `video:${mimeType}:${uuid}`
  */
 async function serializeVideo(
-	videoState: VideoState,
+	{
+		altText,
+		asset,
+		captions: captionTracks,
+	}: { altText: string; asset: VideoAsset; captions: CaptionsTrack[] },
 	localRefPaths: Map<string, Blob>,
 ): Promise<AppBskyDraftDefs.DraftEmbedVideo> {
 	// Encode mime type in the path for restoration
-	const mimeType = videoState.asset.mimeType || 'video/mp4';
+	const mimeType = asset.mimeType || 'video/mp4';
 	const ext = mimeToExt(mimeType);
 	const localRefPath = `video:${mimeType}:${crypto.randomUUID()}.${ext}`;
-	localRefPaths.set(localRefPath, videoState.asset.blob);
+	localRefPaths.set(localRefPath, asset.blob);
 
 	// Read caption file contents as text
 	const captions = await Promise.all(
-		mapDefined(videoState.captions, (caption) => {
+		mapDefined(captionTracks, (caption) => {
 			if (!caption.lang) {
 				return;
 			}
@@ -271,7 +286,7 @@ async function serializeVideo(
 			$type: 'app.bsky.draft.defs#draftEmbedLocalRef',
 			path: localRefPath,
 		},
-		alt: videoState.altText || undefined,
+		alt: altText || undefined,
 		captions: captions.length > 0 ? captions : undefined,
 	};
 }

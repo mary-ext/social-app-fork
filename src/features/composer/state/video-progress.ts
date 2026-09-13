@@ -1,17 +1,11 @@
 import { clamp } from '#/lib/utils/numbers';
 
-export type VideoProgressPhase =
-	| 'compressing'
-	| 'rendering'
-	| 'uploading'
-	| 'uploadingWithoutCompression'
-	| 'processing';
+export type VideoProgressPhase = 'preparing' | 'uploading' | 'uploadingWithoutPreparation' | 'processing';
 
 const PHASE_RANGES: Record<VideoProgressPhase, [start: number, end: number]> = {
-	compressing: [0, 0.375],
-	rendering: [0, 0.375],
+	preparing: [0, 0.375],
 	uploading: [0.375, 0.75],
-	uploadingWithoutCompression: [0, 0.75],
+	uploadingWithoutPreparation: [0, 0.75],
 	processing: [0.75, 1],
 };
 

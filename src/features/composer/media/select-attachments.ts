@@ -3,16 +3,12 @@ import {
 	type AttachmentRejection,
 	getAttachmentKind,
 	readAttachment,
-	type VoiceAsset,
 } from '#/lib/media/read-attachment';
-import type { VideoAsset } from '#/lib/media/video/types';
 
 import { type EmbedDraft, MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
+import { getVideoSourceKind, type VideoAttachment } from '#/features/composer/state/video';
 
-export type AttachmentSelection =
-	| { type: 'images'; blobs: Blob[] }
-	| { type: 'video'; asset: VideoAsset }
-	| { type: 'voice'; asset: VoiceAsset };
+export type AttachmentSelection = { type: 'images'; blobs: Blob[] } | VideoAttachment;
 
 export type SelectionError =
 	| { type: 'rejected'; rejection: AttachmentRejection }
@@ -38,10 +34,7 @@ const getCapacity = (
 			return { kind: 'image', imageSlots: MAX_GALLERY_IMAGES - media.images.length, full: false };
 		}
 		case 'video': {
-			return { kind: media.video.asset.kind, imageSlots: 0, full: true };
-		}
-		case 'voice': {
-			return { kind: 'voice', imageSlots: 0, full: true };
+			return { kind: getVideoSourceKind(media.video.source), imageSlots: 0, full: true };
 		}
 		case 'gif': {
 			return { kind: 'externalGif', imageSlots: 0, full: true };
@@ -105,10 +98,7 @@ export const selectAttachments = async (
 					continue;
 				}
 				full = true;
-				selection =
-					attachment.type === 'voice'
-						? { type: 'voice', asset: attachment.asset }
-						: { type: 'video', asset: attachment.asset };
+				selection = attachment;
 				break;
 			}
 		}

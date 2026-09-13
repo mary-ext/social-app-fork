@@ -23,8 +23,7 @@ import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/const
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import { getAttachmentKind, readAttachment, type VoiceAsset } from '#/lib/media/read-attachment';
-import type { VideoAsset } from '#/lib/media/video/types';
+import { getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
@@ -96,13 +95,12 @@ import {
 	composerReducer,
 	createComposerState,
 	type EmbedDraft,
-	getMediaUpload,
+	getPostVideo,
 	type PostAction,
 	type PostDraft,
 	type ThreadDraft,
 } from './state/composer';
-import { processVideo, type VideoAction } from './state/video';
-import { processVoice } from './state/voice';
+import { processVideo, type VideoAttachment } from './state/video';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
@@ -207,41 +205,37 @@ export const ComposePost = ({
 		});
 	};
 
-	const selectVideo = (postId: string, asset: VideoAsset) => {
+	// follow-up actions must carry the returned signal to pass the reducer's stale-action check.
+	const selectVideo = (postId: string, attachment: VideoAttachment): AbortSignal => {
 		const abortController = new AbortController();
+		const signal = abortController.signal;
 		composerDispatch({
 			type: 'updatePost',
-			postId: postId,
-			postAction: {
-				type: 'embedAddVideo',
-				asset,
-				abortController,
-			},
+			postId,
+			postAction: { type: 'embedAddVideo', attachment, abortController },
 		});
-		if (!pds || !pdsUrl) {
-			return;
+		if (pds && pdsUrl) {
+			void processVideo({
+				attachment,
+				did: currentDid,
+				dispatch: (videoAction) => {
+					composerDispatch({
+						type: 'updatePost',
+						postId,
+						postAction: { type: 'embedUpdateVideo', videoAction },
+					});
+				},
+				pds,
+				pdsUrl,
+				signal,
+			});
 		}
-		void processVideo(
-			asset,
-			(videoAction) => {
-				composerDispatch({
-					type: 'updatePost',
-					postId: postId,
-					postAction: {
-						type: 'embedUpdateVideo',
-						videoAction,
-					},
-				});
-			},
-			pdsUrl,
-			pds,
-			abortController.signal,
-		);
+		return signal;
 	};
 
 	const onInitVideo = useEffectEvent(() => {
 		if (initVideoUri) {
-			selectVideo(activePost.id, initVideoUri);
+			selectVideo(activePost.id, { type: 'video', asset: initVideoUri });
 		}
 	});
 
@@ -256,40 +250,6 @@ export const ComposePost = ({
 			postAction: {
 				type: 'embedRemoveVideo',
 			},
-		});
-	};
-
-	const selectVoice = (postId: string, asset: VoiceAsset) => {
-		const abortController = new AbortController();
-		composerDispatch({
-			type: 'updatePost',
-			postId,
-			postAction: { type: 'embedAddVoice', asset, abortController },
-		});
-		if (!pds || !pdsUrl) {
-			return;
-		}
-		void processVoice({
-			asset,
-			did: currentDid,
-			dispatch: (voiceAction) => {
-				composerDispatch({
-					type: 'updatePost',
-					postId,
-					postAction: { type: 'embedUpdateVoice', voiceAction },
-				});
-			},
-			pds,
-			pdsUrl,
-			signal: abortController.signal,
-		});
-	};
-
-	const clearVoice = (postId: string) => {
-		composerDispatch({
-			type: 'updatePost',
-			postId,
-			postAction: { type: 'embedRemoveVoice' },
 		});
 	};
 
@@ -330,12 +290,9 @@ export const ComposePost = ({
 				}
 				break;
 			}
-			case 'video': {
-				selectVideo(post.id, selection.asset);
-				break;
-			}
+			case 'video':
 			case 'voice': {
-				selectVoice(post.id, selection.asset);
+				selectVideo(post.id, selection);
 				break;
 			}
 		}
@@ -368,32 +325,15 @@ export const ComposePost = ({
 				);
 				return;
 			}
-			const asset = result.attachment.asset;
+			const signal = selectVideo(postId, result.attachment);
 
-			// Start video processing using existing flow
-			const abortController = new AbortController();
-			composerDispatch({
-				type: 'updatePost',
-				postId,
-				postAction: {
-					type: 'embedAddVideo',
-					asset,
-					abortController,
-				},
-			});
-
-			// Restore alt text immediately
 			if (videoInfo.altText) {
 				composerDispatch({
 					type: 'updatePost',
 					postId,
 					postAction: {
 						type: 'embedUpdateVideo',
-						videoAction: {
-							type: 'updateAltText',
-							altText: videoInfo.altText,
-							signal: abortController.signal,
-						},
+						videoAction: { type: 'updateAltText', altText: videoInfo.altText, signal },
 					},
 				});
 			}
@@ -411,35 +351,10 @@ export const ComposePost = ({
 					postId,
 					postAction: {
 						type: 'embedUpdateVideo',
-						videoAction: {
-							type: 'updateCaptions',
-							updater: () => captionTracks,
-							signal: abortController.signal,
-						},
+						videoAction: { type: 'updateCaptions', updater: () => captionTracks, signal },
 					},
 				});
 			}
-
-			// Start video upload
-			if (!pds || !pdsUrl) {
-				return;
-			}
-			void processVideo(
-				asset,
-				(videoAction) => {
-					composerDispatch({
-						type: 'updatePost',
-						postId,
-						postAction: {
-							type: 'embedUpdateVideo',
-							videoAction,
-						},
-					});
-				},
-				pdsUrl,
-				pds,
-				abortController.signal,
-			);
 		} catch (e) {
 			console.error('Failed to restore video from draft', postId, e);
 		}
@@ -608,10 +523,9 @@ export const ComposePost = ({
 					return m['view.composer.gif.error.altMissing']();
 				}
 				if (media.type === 'video' && media.video.status !== 'error' && !media.video.altText) {
-					return m['view.composer.video.error.altMissing']();
-				}
-				if (media.type === 'voice' && media.voice.status !== 'error' && !media.voice.altText) {
-					return m['view.composer.voice.error.altMissing']();
+					return media.video.source.type === 'voice'
+						? m['view.composer.voice.error.altMissing']()
+						: m['view.composer.video.error.altMissing']();
 				}
 			}
 		}
@@ -623,8 +537,7 @@ export const ComposePost = ({
 		thread.posts.every(
 			(post) =>
 				isEmptyPost(post) ||
-				(post.shortenedGraphemeLength <= MAX_POST_GRAPHEME_LENGTH &&
-					getMediaUpload(post.embed.media)?.status !== 'error'),
+				(post.shortenedGraphemeLength <= MAX_POST_GRAPHEME_LENGTH && getPostVideo(post)?.status !== 'error'),
 		);
 
 	const getFilteredThread = (): {
@@ -673,8 +586,8 @@ export const ComposePost = ({
 
 		if (
 			filteredThread.posts.some((post) => {
-				const upload = getMediaUpload(post.embed.media);
-				return upload !== undefined && upload.status !== 'done';
+				const video = getPostVideo(post);
+				return video !== undefined && video.status !== 'done';
 			})
 		) {
 			setPublishOnUpload(true);
@@ -804,11 +717,11 @@ export const ComposePost = ({
 			if (isEmptyPost(post)) {
 				continue;
 			}
-			const upload = getMediaUpload(post.embed.media);
-			if (!upload) {
+			const video = getPostVideo(post);
+			if (!video) {
 				continue;
 			}
-			switch (upload.status) {
+			switch (video.status) {
 				case 'done': {
 					break;
 				}
@@ -858,13 +771,12 @@ export const ComposePost = ({
 	// Right now we're just displaying the first one.
 	let uploadError: DisplayedError | undefined;
 	for (const post of thread.posts) {
-		const upload = getMediaUpload(post.embed.media);
-		if (upload?.status === 'error') {
-			const clear = post.embed.media?.type === 'voice' ? clearVoice : clearVideo;
+		const video = getPostVideo(post);
+		if (video?.status === 'error') {
 			uploadError = {
-				error: upload.error,
-				detail: upload.jobId ? m['view.composer.video.jobId']({ jobId: upload.jobId }) : undefined,
-				onDismiss: () => clear(post.id),
+				error: video.error,
+				detail: video.jobId ? m['view.composer.video.jobId']({ jobId: video.jobId }) : undefined,
+				onDismiss: () => clearVideo(post.id),
 			};
 			break;
 		}
@@ -1000,7 +912,6 @@ export const ComposePost = ({
 								canRemoveQuote={index > 0 || !initQuote}
 								onAddAttachments={onAddAttachments}
 								onClearVideo={clearVideo}
-								onClearVoice={clearVoice}
 								onPublish={onComposerPostPublish}
 								onError={setError}
 							/>
@@ -1074,7 +985,6 @@ const ComposerPost = memo(function ComposerPost({
 	canRemoveQuote,
 	onAddAttachments,
 	onClearVideo,
-	onClearVoice,
 	onError,
 	onPublish,
 }: {
@@ -1090,7 +1000,6 @@ const ComposerPost = memo(function ComposerPost({
 	canRemoveQuote: boolean;
 	onAddAttachments: (post: PostDraft, blobs: Blob[]) => void;
 	onClearVideo: (postId: string) => void;
-	onClearVoice: (postId: string) => void;
 	onError: (error: string) => void;
 	onPublish: (text: string) => void;
 }) {
@@ -1206,7 +1115,6 @@ const ComposerPost = memo(function ComposerPost({
 						embed={post.embed}
 						dispatch={dispatchPost}
 						clearVideo={() => onClearVideo(post.id)}
-						clearVoice={() => onClearVoice(post.id)}
 						avatar={currentProfile?.avatar}
 						text={post.text}
 					/>
@@ -1220,7 +1128,6 @@ function ComposerEmbeds({
 	embed,
 	dispatch,
 	clearVideo,
-	clearVoice,
 	avatar,
 	canRemoveQuote,
 	text,
@@ -1228,22 +1135,12 @@ function ComposerEmbeds({
 	embed: EmbedDraft;
 	dispatch: (action: PostAction) => void;
 	clearVideo: () => void;
-	clearVoice: () => void;
 	avatar: string | undefined;
 	canRemoveQuote: boolean;
 	text: string;
 }) {
-	const video = embed.media?.type === 'video' ? embed.media.video : null;
-	const voice = embed.media?.type === 'voice' ? embed.media.voice : null;
-	const upload = video ?? voice;
+	const video = embed.media?.type === 'video' ? embed.media.video : undefined;
 
-	const updateUpload = (action: Extract<VideoAction, { type: 'updateAltText' | 'updateCaptions' }>) => {
-		if (video) {
-			dispatch({ type: 'embedUpdateVideo', videoAction: action });
-		} else {
-			dispatch({ type: 'embedUpdateVoice', voiceAction: action });
-		}
-	};
 	return (
 		<>
 			{(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
@@ -1270,24 +1167,38 @@ function ComposerEmbeds({
 					/>
 				</div>
 			)}
-			{upload && (
+			{video && (
 				<div className={styles.videoContainer}>
-					{video ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
-					{voice ? <VoicePreview avatar={avatar} clear={clearVoice} voice={voice} /> : null}
+					{video.source.type === 'voice' ? (
+						<VoicePreview
+							asset={video.source.asset}
+							avatar={avatar}
+							background={video.source.background}
+							clear={clearVideo}
+						/>
+					) : (
+						<VideoPreview asset={video.source.asset} clear={clearVideo} />
+					)}
 					<SubtitleDialogBtn
-						defaultAltText={upload.altText}
-						saveAltText={(altText) =>
-							updateUpload({ type: 'updateAltText', altText, signal: upload.abortController.signal })
-						}
-						captions={upload.captions}
+						defaultAltText={video.altText}
+						saveAltText={(altText) => {
+							dispatch({
+								type: 'embedUpdateVideo',
+								videoAction: { type: 'updateAltText', altText, signal: video.abortController.signal },
+							});
+						}}
+						captions={video.captions}
 						setCaptions={(updater) => {
-							updateUpload({ type: 'updateCaptions', updater, signal: upload.abortController.signal });
+							dispatch({
+								type: 'embedUpdateVideo',
+								videoAction: { type: 'updateCaptions', updater, signal: video.abortController.signal },
+							});
 						}}
 					/>
 				</div>
 			)}
 			{embed.quote?.uri ? (
-				<div className={upload ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
+				<div className={video ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
 					<div style={{ position: 'relative' }}>
 						<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
 						{canRemoveQuote && (

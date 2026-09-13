@@ -3,11 +3,11 @@ import { useRef, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import type { VoiceAsset } from '#/lib/media/read-attachment';
 import { FALLBACK_BACKGROUND, toCssColor } from '#/lib/media/video/transcode/voice/palette';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
-import type { VoiceState } from '#/features/composer/state/voice';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { formatTime } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils';
@@ -29,22 +29,25 @@ const LOBES = [
 /**
  * previews the voice card with source-audio playback.
  *
+ * @param props.asset the source audio
  * @param props.avatar the posting account's avatar URL, if any
+ * @param props.background CSS background color; null uses the fallback color
  * @param props.clear removes the voice clip
- * @param props.voice the voice clip's state
+ * @returns the voice preview
  */
 export function VoicePreview({
+	asset,
 	avatar,
+	background,
 	clear,
-	voice,
 }: {
+	asset: VoiceAsset;
 	avatar: string | undefined;
+	background: string | null;
 	clear: () => void;
-	voice: VoiceState;
 }) {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
-	const { asset } = voice;
 
 	const togglePlayback = () => {
 		const audio = audioRef.current;
@@ -65,7 +68,7 @@ export function VoicePreview({
 		<div
 			className={css.container}
 			style={assignInlineVars({
-				[css.backgroundVar]: voice.background ?? toCssColor(FALLBACK_BACKGROUND),
+				[css.backgroundVar]: background ?? toCssColor(FALLBACK_BACKGROUND),
 			})}
 		>
 			<button

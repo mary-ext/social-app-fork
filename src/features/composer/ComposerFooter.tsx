@@ -17,7 +17,7 @@ import { MediaUploadToolbar } from './MediaUploadToolbar';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { SelectMediaButton } from './SelectMediaButton';
-import { getMediaUpload, MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
+import { getPostVideo, MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 export function ComposerFooter({
@@ -45,7 +45,7 @@ export function ComposerFooter({
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
 
 	const media = post.embed.media;
-	const uploadMedia = media?.type === 'video' || media?.type === 'voice' ? media : undefined;
+	const video = getPostVideo(post);
 
 	const isMediaSelectionDisabled =
 		media?.type === 'images' || media?.type === 'gallery'
@@ -58,8 +58,8 @@ export function ComposerFooter({
 
 	return (
 		<div className={styles.footer}>
-			{uploadMedia && getMediaUpload(uploadMedia)?.status !== 'done' ? (
-				<MediaUploadToolbar media={uploadMedia} />
+			{video && video.status !== 'done' ? (
+				<MediaUploadToolbar video={video} />
 			) : (
 				<div className={styles.left}>
 					<SelectMediaButton
