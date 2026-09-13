@@ -181,10 +181,12 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				state.status === 'uploading' && state.compressionSkipped
 					? 'uploadingWithoutCompression'
 					: state.status;
-			return {
-				...state,
-				progress: advanceVideoProgress(state.progress, phase, action.progress),
-			};
+			const progress = advanceVideoProgress(state.progress, phase, action.progress);
+			// preserve state identity so the composer reducer can skip unchanged progress.
+			if (progress === state.progress) {
+				return state;
+			}
+			return { ...state, progress };
 		}
 	} else if (action.type === 'compressingToUploading') {
 		if (state.status === 'compressing') {
