@@ -38,7 +38,7 @@ const getCapacity = (
 			return { kind: 'image', imageSlots: MAX_GALLERY_IMAGES - media.images.length, full: false };
 		}
 		case 'video': {
-			return { kind: media.video.asset?.kind ?? 'video', imageSlots: 0, full: true };
+			return { kind: media.video.asset.kind, imageSlots: 0, full: true };
 		}
 		case 'voice': {
 			return { kind: 'voice', imageSlots: 0, full: true };

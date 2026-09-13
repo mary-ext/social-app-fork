@@ -6,7 +6,7 @@ import { isAbortError } from '#/lib/errors';
 import type { VoiceAsset } from '#/lib/media/read-attachment';
 import { TranscodeError } from '#/lib/media/video/transcode/errors';
 import { renderVoiceClip } from '#/lib/media/video/transcode/transcode';
-import type { VideoAsset } from '#/lib/media/video/types';
+import type { VideoPayload } from '#/lib/media/video/types';
 
 import { m } from '#/paraglide/messages';
 
@@ -15,7 +15,7 @@ import { type CaptionsTrack, uploadAndProcessVideo, type VideoUploadAction } fro
 
 export type VoiceAction =
 	| VideoUploadAction
-	| { type: 'renderingToUploading'; rendered: VideoAsset; signal: AbortSignal }
+	| { type: 'renderingToUploading'; payload: VideoPayload; signal: AbortSignal }
 	| { type: 'updateAltText'; altText: string; signal: AbortSignal }
 	| { type: 'updateBackground'; background: string; signal: AbortSignal }
 	| {
@@ -36,7 +36,7 @@ type VoiceBase = {
 type RenderingState = VoiceBase & {
 	status: 'rendering';
 	progress: number;
-	rendered?: undefined;
+	payload?: undefined;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 };
@@ -44,7 +44,7 @@ type RenderingState = VoiceBase & {
 type UploadingState = VoiceBase & {
 	status: 'uploading';
 	progress: number;
-	rendered: VideoAsset;
+	payload: VideoPayload;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 };
@@ -52,7 +52,7 @@ type UploadingState = VoiceBase & {
 type ProcessingState = VoiceBase & {
 	status: 'processing';
 	progress: number;
-	rendered: VideoAsset;
+	payload: VideoPayload;
 	jobId: string;
 	pendingPublish?: undefined;
 };
@@ -60,7 +60,7 @@ type ProcessingState = VoiceBase & {
 type DoneState = VoiceBase & {
 	status: 'done';
 	progress: 1;
-	rendered: VideoAsset;
+	payload: VideoPayload;
 	jobId?: undefined;
 	pendingPublish: { blobRef: AtpBlob };
 };
@@ -68,7 +68,7 @@ type DoneState = VoiceBase & {
 type ErrorState = VoiceBase & {
 	status: 'error';
 	progress: number;
-	rendered: VideoAsset | null;
+	payload: VideoPayload | null;
 	jobId: string | null;
 	error: string;
 	pendingPublish?: undefined;
@@ -121,7 +121,7 @@ export function voiceReducer(state: VoiceState, action: VoiceAction): VoiceState
 				...baseOf(state),
 				status: 'error',
 				progress: state.progress,
-				rendered: state.rendered ?? null,
+				payload: state.payload ?? null,
 				jobId: state.jobId ?? null,
 				error: action.error,
 			};
@@ -151,7 +151,7 @@ export function voiceReducer(state: VoiceState, action: VoiceAction): VoiceState
 					...baseOf(state),
 					status: 'uploading',
 					progress: advanceVideoProgress(state.progress, 'uploading', 0),
-					rendered: action.rendered,
+					payload: action.payload,
 				};
 			}
 			break;
@@ -162,7 +162,7 @@ export function voiceReducer(state: VoiceState, action: VoiceAction): VoiceState
 					...baseOf(state),
 					status: 'processing',
 					progress: advanceVideoProgress(state.progress, 'processing', 0),
-					rendered: state.rendered,
+					payload: state.payload,
 					jobId: action.jobId,
 				};
 			}
@@ -188,7 +188,7 @@ export function voiceReducer(state: VoiceState, action: VoiceAction): VoiceState
 					...baseOf(state),
 					status: 'done',
 					progress: 1,
-					rendered: state.rendered,
+					payload: state.payload,
 					pendingPublish: { blobRef: action.blobRef },
 				};
 			}
@@ -232,9 +232,9 @@ type ProcessVoiceOptions = {
  * @param options audio, posting account, action dispatcher, PDS client and URL, and cancellation signal
  */
 export async function processVoice({ asset, did, dispatch, pds, pdsUrl, signal }: ProcessVoiceOptions) {
-	let rendered: VideoAsset;
+	let payload: VideoPayload;
 	try {
-		rendered = await renderVoiceClip({
+		payload = await renderVoiceClip({
 			audio: asset.blob,
 			did,
 			label: m['view.composer.voice.cardLabel'](),
@@ -258,6 +258,6 @@ export async function processVoice({ asset, did, dispatch, pds, pdsUrl, signal }
 		return;
 	}
 
-	dispatch({ type: 'renderingToUploading', rendered, signal });
-	await uploadAndProcessVideo({ asset: rendered, dispatch, pds, pdsUrl, signal });
+	dispatch({ type: 'renderingToUploading', payload, signal });
+	await uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, signal });
 }

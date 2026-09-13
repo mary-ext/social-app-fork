@@ -2,7 +2,7 @@ import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 
 import { ServerError, serviceMessage } from '#/lib/media/video/errors';
-import type { VideoAsset } from '#/lib/media/video/types';
+import type { VideoPayload } from '#/lib/media/video/types';
 import { sleep } from '#/lib/utils/sleep';
 
 import { m } from '#/paraglide/messages';
@@ -23,7 +23,7 @@ const ABORT_TIMEOUT_MS = 10_000;
 const FINISHING_POLL_MS = 1000;
 
 type UploadOptions = {
-	video: VideoAsset;
+	video: VideoPayload;
 	pds: Client;
 	dispatchUrl: string;
 	setProgress: (progress: number) => void;

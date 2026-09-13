@@ -1272,7 +1272,7 @@ function ComposerEmbeds({
 			)}
 			{upload && (
 				<div className={styles.videoContainer}>
-					{video?.asset ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
+					{video ? <VideoPreview asset={video.asset} clear={clearVideo} /> : null}
 					{voice ? <VoicePreview avatar={avatar} clear={clearVoice} voice={voice} /> : null}
 					<SubtitleDialogBtn
 						defaultAltText={upload.altText}

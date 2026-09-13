@@ -198,7 +198,6 @@ export const encodeVoiceClip = async (
 		return {
 			type: 'done',
 			asset: {
-				kind: 'video',
 				blob: target.read(),
 				mimeType,
 				width: DESIGN_WIDTH,

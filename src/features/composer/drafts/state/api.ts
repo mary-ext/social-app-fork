@@ -138,10 +138,7 @@ async function postDraftToServerPost(
 				items: serializeImages(post.embed.media.images, localRefPaths),
 			};
 		} else if (post.embed.media.type === 'video') {
-			const video = await serializeVideo(post.embed.media.video, localRefPaths);
-			if (video) {
-				draftPost.embedVideos = [video];
-			}
+			draftPost.embedVideos = [await serializeVideo(post.embed.media.video, localRefPaths)];
 		} else if (post.embed.media.type === 'gif') {
 			const external = serializeGif(post.embed.media);
 			if (external) {
@@ -247,11 +244,7 @@ function serializeImages(
 async function serializeVideo(
 	videoState: VideoState,
 	localRefPaths: Map<string, Blob>,
-): Promise<AppBskyDraftDefs.DraftEmbedVideo | undefined> {
-	if (!videoState.asset) {
-		return undefined;
-	}
-
+): Promise<AppBskyDraftDefs.DraftEmbedVideo> {
 	// Encode mime type in the path for restoration
 	const mimeType = videoState.asset.mimeType || 'video/mp4';
 	const ext = mimeToExt(mimeType);

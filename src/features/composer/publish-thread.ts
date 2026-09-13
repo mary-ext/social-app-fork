@@ -24,7 +24,7 @@ import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { isNetworkError } from '#/lib/errors';
 import { createGIFDescription } from '#/lib/gif-alt-text';
 import { compressImage } from '#/lib/media/composer-image';
-import type { VideoAsset } from '#/lib/media/video/types';
+import type { VideoPayload } from '#/lib/media/video/types';
 import type { Richtext } from '#/lib/rich-text';
 import { task } from '#/lib/utils/task';
 import { trimText } from '#/lib/utils/text';
@@ -296,10 +296,17 @@ async function createVideoEmbed(
 	pds: Client,
 	{
 		altText,
-		asset,
 		blobRef,
 		captions: captionTracks,
-	}: { altText: string; asset: VideoAsset; blobRef: AtpBlob; captions: CaptionsTrack[] },
+		payload,
+		presentation,
+	}: {
+		altText: string;
+		blobRef: AtpBlob;
+		captions: CaptionsTrack[];
+		payload: VideoPayload;
+		presentation: 'default' | 'gif';
+	},
 ): Promise<$type.enforce<AppBskyEmbedVideo.Main>> {
 	const captions = await Promise.all(
 		mapDefined(captionTracks, (caption) => {
@@ -311,8 +318,8 @@ async function createVideoEmbed(
 		}),
 	);
 
-	const width = Math.round(asset.width);
-	const height = Math.round(asset.height);
+	const width = Math.round(payload.width);
+	const height = Math.round(payload.height);
 
 	// the lexicon rejects nonpositive aspect ratios.
 	const aspectRatio = width > 0 && height > 0 ? { height, width } : undefined;
@@ -322,7 +329,7 @@ async function createVideoEmbed(
 		alt: trimText(altText) || undefined,
 		aspectRatio,
 		captions: captions.length === 0 ? undefined : captions,
-		presentation: asset.kind === 'gif' ? 'gif' : 'default',
+		presentation,
 		video: blobRef,
 	};
 }
@@ -375,12 +382,24 @@ async function resolveMedia(
 		};
 	}
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {
-		const { altText, asset, captions, pendingPublish } = embedDraft.media.video;
-		return createVideoEmbed(pds, { altText, asset, blobRef: pendingPublish.blobRef, captions });
+		const { altText, asset, captions, payload, pendingPublish } = embedDraft.media.video;
+		return createVideoEmbed(pds, {
+			altText,
+			blobRef: pendingPublish.blobRef,
+			captions,
+			payload,
+			presentation: asset.kind === 'gif' ? 'gif' : 'default',
+		});
 	}
 	if (embedDraft.media?.type === 'voice' && embedDraft.media.voice.status === 'done') {
-		const { altText, captions, pendingPublish, rendered } = embedDraft.media.voice;
-		return createVideoEmbed(pds, { altText, asset: rendered, blobRef: pendingPublish.blobRef, captions });
+		const { altText, captions, payload, pendingPublish } = embedDraft.media.voice;
+		return createVideoEmbed(pds, {
+			altText,
+			blobRef: pendingPublish.blobRef,
+			captions,
+			payload,
+			presentation: 'default',
+		});
 	}
 	if (embedDraft.media?.type === 'gif') {
 		const gifDraft = embedDraft.media;

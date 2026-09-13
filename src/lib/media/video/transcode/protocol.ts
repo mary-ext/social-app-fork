@@ -6,8 +6,6 @@ import type { VideoAssetKind } from '#/lib/media/video/types';
 import type { TranscodeErrorCode } from './errors';
 
 export type TranscodedAsset = {
-	/** source kind, preserved for post presentation */
-	kind: VideoAssetKind;
 	blob: Blob;
 	width: number;
 	height: number;

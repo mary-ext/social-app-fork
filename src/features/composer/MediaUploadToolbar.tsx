@@ -9,7 +9,7 @@ import * as styles from './MediaUploadToolbar.css';
 import type { VideoMedia, VoiceMedia } from './state/composer';
 
 const getVideoStatusText = ({ video }: VideoMedia): string => {
-	const isGif = video.asset?.kind === 'gif';
+	const isGif = video.asset.kind === 'gif';
 
 	switch (video.status) {
 		case 'compressing': {

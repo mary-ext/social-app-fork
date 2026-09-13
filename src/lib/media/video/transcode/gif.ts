@@ -122,7 +122,7 @@ export async function transcodeGif(
 
 		return {
 			type: 'done',
-			asset: { kind: 'gif', blob: encoded, mimeType, width, height, duration: timestampUs / 1000 },
+			asset: { blob: encoded, mimeType, width, height, duration: timestampUs / 1000 },
 		};
 	} finally {
 		firstImage?.close();

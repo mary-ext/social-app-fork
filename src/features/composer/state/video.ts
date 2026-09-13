@@ -3,7 +3,7 @@ import type { Blob as AtpBlob } from '@atcute/lexicons';
 
 import { canTranscode } from '#/lib/media/video/transcode/capabilities';
 import { transcodeForUpload } from '#/lib/media/video/transcode/transcode';
-import type { VideoAsset } from '#/lib/media/video/types';
+import { toVideoPayload, type VideoAsset, type VideoPayload } from '#/lib/media/video/types';
 
 import { advanceVideoProgress } from './video-progress';
 import {
@@ -18,6 +18,7 @@ export type VideoAction =
 	| {
 			type: 'compressingToUploading';
 			compressionSkipped: boolean;
+			payload: VideoPayload;
 			signal: AbortSignal;
 	  }
 	| {
@@ -35,7 +36,8 @@ type ErrorState = {
 	status: 'error';
 	progress: number;
 	abortController: AbortController;
-	asset: VideoAsset | null;
+	asset: VideoAsset;
+	payload: VideoPayload | null;
 	jobId: string | null;
 	error: string;
 	pendingPublish?: undefined;
@@ -48,6 +50,7 @@ type CompressingState = {
 	progress: number;
 	abortController: AbortController;
 	asset: VideoAsset;
+	payload?: undefined;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 	altText: string;
@@ -59,8 +62,9 @@ type UploadingState = {
 	progress: number;
 	compressionSkipped: boolean;
 	abortController: AbortController;
-	/** original asset; its mime type determines the published post's GIF presentation. */
+	/** original source, retained for GIF presentation */
 	asset: VideoAsset;
+	payload: VideoPayload;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 	altText: string;
@@ -72,6 +76,7 @@ type ProcessingState = {
 	progress: number;
 	abortController: AbortController;
 	asset: VideoAsset;
+	payload: VideoPayload;
 	jobId: string;
 	pendingPublish?: undefined;
 	altText: string;
@@ -83,6 +88,7 @@ type DoneState = {
 	progress: 1;
 	abortController: AbortController;
 	asset: VideoAsset;
+	payload: VideoPayload;
 	jobId?: undefined;
 	pendingPublish: { blobRef: AtpBlob };
 	altText: string;
@@ -115,6 +121,7 @@ export function createVideoState(
 		compressionSkipped: true,
 		abortController,
 		asset,
+		payload: toVideoPayload(asset),
 		altText: '',
 		captions: [],
 	};
@@ -131,7 +138,8 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 			progress: state.progress,
 			abortController: state.abortController,
 			error: action.error,
-			asset: state.asset ?? null,
+			asset: state.asset,
+			payload: state.payload ?? null,
 			jobId: state.jobId ?? null,
 			altText: state.altText,
 			captions: state.captions,
@@ -162,6 +170,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				compressionSkipped: action.compressionSkipped,
 				abortController: state.abortController,
 				asset: state.asset,
+				payload: action.payload,
 				altText: state.altText,
 				captions: state.captions,
 			};
@@ -183,6 +192,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				progress: advanceVideoProgress(state.progress, 'processing', 0),
 				abortController: state.abortController,
 				asset: state.asset,
+				payload: state.payload,
 				jobId: action.jobId,
 				altText: state.altText,
 				captions: state.captions,
@@ -207,6 +217,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				progress: 1,
 				abortController: state.abortController,
 				asset: state.asset,
+				payload: state.payload,
 				pendingPublish: {
 					blobRef: action.blobRef,
 				},
@@ -226,16 +237,20 @@ export async function processVideo(
 	pds: Client,
 	signal: AbortSignal,
 ) {
-	let payload: VideoAsset;
+	let payload: VideoPayload;
 	try {
 		const compressing = willCompress(asset);
 		const compressed = compressing ? await compressAsset(asset, dispatch, signal) : undefined;
 
+		payload = compressed ?? toVideoPayload(asset);
 		if (compressing) {
-			dispatch({ type: 'compressingToUploading', compressionSkipped: compressed === undefined, signal });
+			dispatch({
+				type: 'compressingToUploading',
+				compressionSkipped: compressed === undefined,
+				payload,
+				signal,
+			});
 		}
-
-		payload = compressed ?? asset;
 	} catch (e) {
 		const message = getUploadErrorMessage(e);
 		if (message !== null) {
@@ -248,14 +263,14 @@ export async function processVideo(
 		return;
 	}
 
-	await uploadAndProcessVideo({ asset: payload, dispatch, pds, pdsUrl, signal });
+	await uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, signal });
 }
 
 function compressAsset(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
 	signal: AbortSignal,
-): Promise<VideoAsset | undefined> {
+): Promise<VideoPayload | undefined> {
 	return transcodeForUpload({
 		kind: asset.kind,
 		blob: asset.blob,

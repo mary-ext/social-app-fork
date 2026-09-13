@@ -135,7 +135,6 @@ export async function transcodeVideo(
 		return {
 			type: 'done',
 			asset: {
-				kind: 'video',
 				blob: encoded,
 				mimeType,
 				width: plan.width,

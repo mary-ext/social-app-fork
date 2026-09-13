@@ -6,7 +6,7 @@ import { VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { isNetworkError } from '#/lib/errors';
 import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
-import type { VideoAsset } from '#/lib/media/video/types';
+import type { VideoPayload } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 import { AbortError } from '#/lib/utils/abort-error';
@@ -35,8 +35,7 @@ export type VideoUploadAction =
 	  };
 
 type UploadOptions = {
-	/** upload-ready payload after transcoding or rendering */
-	asset: VideoAsset;
+	payload: VideoPayload;
 	dispatch: (action: VideoUploadAction) => void;
 	pds: Client;
 	pdsUrl: string;
@@ -50,14 +49,14 @@ type UploadOptions = {
  *
  * @param options payload, action dispatcher, PDS client and URL, and cancellation signal
  */
-export async function uploadAndProcessVideo({ asset, dispatch, pds, pdsUrl, signal }: UploadOptions) {
+export async function uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, signal }: UploadOptions) {
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
 		// oversized sources are allowed before transcoding, so check the final payload.
-		assertVideoWithinLimit(asset);
+		assertVideoWithinLimit(payload);
 
 		uploadResponse = await uploadVideo({
-			video: asset,
+			video: payload,
 			pds,
 			dispatchUrl: pdsUrl,
 			signal,

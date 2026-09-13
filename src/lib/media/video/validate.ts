@@ -2,7 +2,7 @@ import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { VideoTooLargeError } from '#/lib/media/video/errors';
 import { canRescueOversized } from '#/lib/media/video/transcode/capabilities';
 
-import type { VideoAsset, VideoAssetKind } from './types';
+import type { VideoAssetKind, VideoPayload } from './types';
 
 /**
  * checks attachment size, allowing oversized videos when transcoding is available.
@@ -28,13 +28,13 @@ export function isVideoDurationAdmissible(duration: number): boolean {
 }
 
 /**
- * checks that a selected video is small enough for the video service to accept.
+ * checks the payload against the video service's size limit.
  *
- * @param asset the selected video
+ * @param payload video to upload
  * @throws {VideoTooLargeError} if the video exceeds the upload size limit
  */
-export function assertVideoWithinLimit(asset: VideoAsset): void {
-	if (asset.blob.size > VIDEO_MAX_SIZE) {
+export function assertVideoWithinLimit(payload: VideoPayload): void {
+	if (payload.blob.size > VIDEO_MAX_SIZE) {
 		throw new VideoTooLargeError();
 	}
 }
