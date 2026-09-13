@@ -362,7 +362,7 @@ async function resolveMedia(
 			alt: trimText(videoDraft.altText) || undefined,
 			aspectRatio,
 			captions: captions.length === 0 ? undefined : captions,
-			presentation: videoDraft.asset.mimeType === 'image/gif' ? 'gif' : 'default',
+			presentation: videoDraft.asset.kind === 'gif' ? 'gif' : 'default',
 			video: videoDraft.pendingPublish.blobRef,
 		};
 	}

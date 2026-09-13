@@ -1,4 +1,5 @@
 import { getVideoMetadata } from '#/lib/media/metadata';
+import { videoAssetKind } from '#/lib/media/video/types';
 
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
@@ -25,6 +26,7 @@ export function useComposeIntent() {
 					openComposer({
 						text: text ?? undefined,
 						videoUri: {
+							kind: videoAssetKind(blob.type),
 							blob,
 							width: meta.width,
 							height: meta.height,

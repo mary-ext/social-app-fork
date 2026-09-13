@@ -27,7 +27,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
-import type { VideoAsset } from '#/lib/media/video/types';
+import { videoAssetKind, type VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
@@ -255,6 +255,7 @@ export const ComposePost = ({
 		try {
 			const meta = await getVideoMetadata(videoInfo.blob);
 			const asset: VideoAsset = {
+				kind: videoAssetKind(videoInfo.mimeType),
 				blob: videoInfo.blob,
 				width: meta.width,
 				height: meta.height,
@@ -1021,10 +1022,17 @@ const ComposerPost = memo(function ComposerPost({
 			}
 			if (gif) {
 				const { width, height } = await getImageDimensions(blob);
-				onSelectVideo(post.id, { blob, width, height, mimeType, duration: gif.durationUs / 1000 });
+				onSelectVideo(post.id, {
+					kind: 'gif',
+					blob,
+					width,
+					height,
+					mimeType,
+					duration: gif.durationUs / 1000,
+				});
 			} else {
 				const { width, height, duration } = await getVideoMetadata(blob);
-				onSelectVideo(post.id, { blob, width, height, mimeType, duration });
+				onSelectVideo(post.id, { kind: 'video', blob, width, height, mimeType, duration });
 			}
 		} else {
 			let image: ComposerImage;

@@ -38,7 +38,7 @@ export function VideoPreview({ asset, clear }: { asset: VideoAsset; clear: () =>
 
 	return (
 		<div className={css.container} style={assignInlineVars({ [css.ratioVar]: String(constrained || 1) })}>
-			{asset.mimeType === 'image/gif' ? (
+			{asset.kind === 'gif' ? (
 				<img src={url} className={css.media} alt="GIF" />
 			) : previewFailed ? (
 				<div className={css.previewUnavailable}>

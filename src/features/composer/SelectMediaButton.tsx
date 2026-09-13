@@ -179,7 +179,14 @@ async function processFiles(
 		}
 		return {
 			...empty,
-			video: { blob: file, width: meta.width, height: meta.height, mimeType, duration: meta.duration },
+			video: {
+				kind: 'video',
+				blob: file,
+				width: meta.width,
+				height: meta.height,
+				mimeType,
+				duration: meta.duration,
+			},
 		};
 	}
 
@@ -195,7 +202,14 @@ async function processFiles(
 		}
 		return {
 			...empty,
-			video: { blob: file, width: dims.width, height: dims.height, mimeType, duration: duration ?? null },
+			video: {
+				kind: 'gif',
+				blob: file,
+				width: dims.width,
+				height: dims.height,
+				mimeType,
+				duration: duration ?? null,
+			},
 		};
 	}
 

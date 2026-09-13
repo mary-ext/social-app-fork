@@ -11,7 +11,7 @@ import * as styles from './VideoUploadToolbar.css';
 export function VideoUploadToolbar({ state }: { state: VideoState }) {
 	let text = '';
 
-	const isGif = state.asset?.mimeType === 'image/gif';
+	const isGif = state.asset?.kind === 'gif';
 
 	switch (state.status) {
 		case 'compressing': {
