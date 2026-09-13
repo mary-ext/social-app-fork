@@ -226,32 +226,15 @@ function handleTransferItems(
 	onMedia: (blobs: Blob[]) => void,
 	onError: (err: string) => void,
 ) {
-	// batch files so selection limits apply across the transfer.
-	const files: File[] = [];
+	// batch media so selection limits apply across the transfer.
+	const files: Blob[] = [];
+	const fetches: Promise<Blob | undefined>[] = [];
 	for (let index = 0; index < items.length; index++) {
 		const item = items[index]!;
 		const type = item.type;
 
 		if (type === 'text/plain') {
-			item.getAsString(
-				(itemString) =>
-					void (async () => {
-						if (!isUriImage(itemString)) {
-							return;
-						}
-
-						try {
-							const response = await fetch(itemString);
-							const blob = await response.blob();
-
-							if (isMediaType(blob.type)) {
-								onMedia([blob]);
-							}
-						} catch (err) {
-							onError(String(err));
-						}
-					})(),
-			);
+			fetches.push(fetchTransferUri(item, onError));
 		} else if (isMediaType(type)) {
 			const file = item.getAsFile();
 
@@ -261,7 +244,29 @@ function handleTransferItems(
 		}
 	}
 
-	if (files.length > 0) {
-		onMedia(files);
+	void Promise.all(fetches).then((fetched) => {
+		const blobs = [...files, ...fetched.filter((blob) => blob !== undefined)];
+		if (blobs.length > 0) {
+			onMedia(blobs);
+		}
+	});
+}
+
+async function fetchTransferUri(item: DataTransferItem, onError: (err: string) => void) {
+	const itemString = await new Promise<string>((resolve) => item.getAsString(resolve));
+	if (!isUriImage(itemString)) {
+		return undefined;
 	}
+
+	try {
+		const response = await fetch(itemString);
+		const blob = await response.blob();
+
+		if (isMediaType(blob.type)) {
+			return blob;
+		}
+	} catch (err) {
+		onError(String(err));
+	}
+	return undefined;
 }
