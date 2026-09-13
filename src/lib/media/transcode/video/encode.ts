@@ -16,6 +16,7 @@ import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { createBlobTarget } from '../blob-target';
 import { pickCodecs } from '../codecs';
 import { CONTAINERS } from '../containers';
+import { TranscodeError } from '../errors';
 import { KEY_FRAME_INTERVAL, planEncode } from '../plan';
 import type { TranscodeOutcome } from '../protocol';
 
@@ -27,11 +28,12 @@ const STATS_PACKETS = 100;
 /**
  * compresses oversized videos and tone-maps HDR to SDR at any size.
  *
- * skips SDR within the limit, or HDR whose encoded output exceeds the limit while the source fits.
+ * skips videos within the size limit if SDR, undecodable, or too large after tone-mapping.
  *
  * @param blob the source video
  * @param onProgress called with progress from 0 to 1
  * @returns encoded video or a skipped outcome; callers must check the output size
+ * @throws {TranscodeError} with code `videoUndecodable` if an oversized video cannot be decoded
  * @throws if reading or encoding fails, or an audio/video track is discarded
  */
 export async function transcodeVideo(
@@ -53,6 +55,13 @@ export async function transcodeVideo(
 		const isHdr = await videoTrack.hasHighDynamicRange();
 		if (!oversized && !isHdr) {
 			return { type: 'skipped', reason: 'within the size limit and not HDR' };
+		}
+
+		if (!(await videoTrack.canDecode())) {
+			if (oversized) {
+				throw new TranscodeError('videoUndecodable', 'oversized video track cannot be decoded');
+			}
+			return { type: 'skipped', reason: 'the HDR video track cannot be decoded' };
 		}
 
 		const [audioTrack, width, height, stats, metadataDuration] = await Promise.all([

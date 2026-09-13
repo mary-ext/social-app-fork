@@ -259,6 +259,7 @@
 		}
 	],
 	"view.composer.video.error.tooLong": "Videos must be {minutes} minutes or less.",
+	"view.composer.video.error.undecodable": "We couldn’t decode the selected video.",
 	"view.composer.video.error.unsupportedType": "Unsupported video type: {mimeType}",
 	"view.composer.video.compressing": "Compressing video...",
 	"view.composer.video.error.upload": "An error occurred while uploading the video. {message}",

@@ -84,6 +84,7 @@ type TranscodeOptions = {
  *
  * @param options source kind and blob, progress callback (0–1), and cancellation signal
  * @returns the encoded asset, or `undefined` if encoding fails or is skipped
+ * @throws {TranscodeError} with code `videoUndecodable` if an oversized video cannot be decoded
  * @throws the signal's abort reason if `signal` aborts
  * @throws if the worker cannot be created
  */
@@ -103,6 +104,10 @@ export async function transcodeForUpload({
 			return undefined;
 		}
 		case 'error': {
+			// preserve the decode error for the composer's localized message.
+			if (result.code === 'videoUndecodable') {
+				throw new TranscodeError(result.code, `failed to transcode media: ${result.message}`);
+			}
 			console.error('Failed to transcode media', result.message);
 			return undefined;
 		}

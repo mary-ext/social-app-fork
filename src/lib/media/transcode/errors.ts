@@ -3,9 +3,10 @@
  *
  * - `audioTooLong`: the decoded audio exceeds the upload duration limit
  * - `audioUnreadable`: the audio has no decodable track or no samples
- * - `unknown`: any other failure, including unsupported codecs
+ * - `videoUndecodable`: an oversized video cannot be decoded for compression
+ * - `unknown`: any other failure, including unsupported output codecs
  */
-export type TranscodeErrorCode = 'audioTooLong' | 'audioUnreadable' | 'unknown';
+export type TranscodeErrorCode = 'audioTooLong' | 'audioUnreadable' | 'videoUndecodable' | 'unknown';
 
 /** a transcode failure carrying a {@link TranscodeErrorCode}. */
 export class TranscodeError extends Error {

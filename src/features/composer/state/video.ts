@@ -313,7 +313,12 @@ const prepareVideo = async (
 			},
 		});
 	} catch (e) {
-		const message = getUploadErrorMessage(e);
+		let message;
+		if (e instanceof TranscodeError && e.code === 'videoUndecodable') {
+			message = m['view.composer.video.error.undecodable']();
+		} else {
+			message = getUploadErrorMessage(e);
+		}
 		if (message !== null) {
 			dispatch({ type: 'toError', error: message, signal });
 		}
@@ -333,7 +338,8 @@ const getRenderErrorMessage = (err: unknown, asset: VoiceAsset): string => {
 		case 'audioUnreadable': {
 			return m['view.composer.voice.error.unsupportedType']({ mimeType: asset.blob.type });
 		}
-		case 'unknown': {
+		case 'unknown':
+		case 'videoUndecodable': {
 			return m['view.composer.voice.error.render']();
 		}
 	}
