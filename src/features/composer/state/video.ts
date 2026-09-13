@@ -1,4 +1,3 @@
-import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { Blob as AtpBlob } from '@atcute/lexicons';
 
@@ -90,7 +89,6 @@ type ProcessingState = {
 	abortController: AbortController;
 	asset: VideoAsset;
 	jobId: string;
-	jobStatus: AppBskyVideoDefs.JobStatus | null;
 	pendingPublish?: undefined;
 	altText: string;
 	captions: CaptionsTrack[];
@@ -202,21 +200,21 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				abortController: state.abortController,
 				asset: state.asset,
 				jobId: action.jobId,
-				jobStatus: null,
 				altText: state.altText,
 				captions: state.captions,
 			};
 		}
 	} else if (action.type === 'updateJobStatus') {
 		if (state.status === 'processing') {
-			return {
-				...state,
-				jobStatus: action.jobStatus,
-				progress:
-					action.jobStatus.progress !== undefined
-						? advanceVideoProgress(state.progress, 'processing', action.jobStatus.progress / 100)
-						: state.progress,
-			};
+			const { progress } = action.jobStatus;
+			const nextProgress =
+				progress !== undefined
+					? advanceVideoProgress(state.progress, 'processing', progress / 100)
+					: state.progress;
+			if (nextProgress === state.progress) {
+				return state;
+			}
+			return { ...state, progress: nextProgress };
 		}
 	} else if (action.type === 'toDone') {
 		if (state.status === 'uploading' || state.status === 'processing') {
