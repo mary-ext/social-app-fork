@@ -392,7 +392,7 @@ async function resolveMedia(
 			presentation: getVideoSourceKind(source) === 'gif' ? 'gif' : 'default',
 		});
 	}
-	if (embedDraft.media?.type === 'gif') {
+	if (embedDraft.media?.type === 'externalGif') {
 		const gifDraft = embedDraft.media;
 		const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif);
 		let blob: AtpBlob | undefined;

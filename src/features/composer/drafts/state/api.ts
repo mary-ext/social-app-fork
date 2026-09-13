@@ -150,8 +150,8 @@ async function postDraftToServerPost(
 					await serializeVideo({ altText, asset: source.asset, captions }, localRefPaths),
 				];
 			}
-		} else if (post.embed.media.type === 'gif') {
-			const external = serializeGif(post.embed.media);
+		} else if (post.embed.media.type === 'externalGif') {
+			const external = serializeExternalGif(post.embed.media);
 			if (external) {
 				draftPost.embedExternals = [external];
 			}
@@ -295,8 +295,8 @@ async function serializeVideo(
  * Serialize GIF to server format as external embed. URL format:
  * https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH&alt=ALT_TEXT
  */
-function serializeGif(gifMedia: {
-	type: 'gif';
+function serializeExternalGif(gifMedia: {
+	type: 'externalGif';
 	gif: Gif;
 	alt: string;
 }): AppBskyDraftDefs.DraftEmbedExternal | undefined {
@@ -381,7 +381,7 @@ export function draftViewToSummary({ view }: { view: AppBskyDraftDefs.DraftView 
 		// Process externals (check for GIFs)
 		if (post.embedExternals) {
 			for (const ext of post.embedExternals) {
-				const gifData = parseGifFromUrl(ext.uri);
+				const gifData = parseExternalGifFromUrl(ext.uri);
 				if (gifData) {
 					meta.mediaCount++;
 					meta.hasMedia = true;
@@ -418,7 +418,7 @@ export function draftViewToSummary({ view }: { view: AppBskyDraftDefs.DraftView 
  * Parse GIF data from a Tenor URL. URL format:
  * https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH&alt=ALT_TEXT
  */
-function parseGifFromUrl(
+function parseExternalGifFromUrl(
 	uri: string,
 ): { url: string; width: number; height: number; alt: string } | undefined {
 	try {
@@ -484,7 +484,7 @@ export async function draftToComposerPosts(
 			// Restore GIF from external embed
 			if (post.embedExternals) {
 				for (const ext of post.embedExternals) {
-					const gifData = parseGifFromUrl(ext.uri);
+					const gifData = parseExternalGifFromUrl(ext.uri);
 					if (gifData) {
 						// Reconstruct a Gif object with all required properties
 						const mediaObject = {
@@ -494,7 +494,7 @@ export async function draftToComposerPosts(
 							size: 0,
 						};
 						embed.media = {
-							type: 'gif',
+							type: 'externalGif',
 							gif: {
 								id: '',
 								created: 0,
@@ -547,7 +547,7 @@ export async function draftToComposerPosts(
 			// Restore link embed (only if not a GIF)
 			if (post.embedExternals && !embed.media) {
 				for (const ext of post.embedExternals) {
-					const gifData = parseGifFromUrl(ext.uri);
+					const gifData = parseExternalGifFromUrl(ext.uri);
 					if (!gifData) {
 						embed.link = { type: 'link', uri: ext.uri };
 						break;

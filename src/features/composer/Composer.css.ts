@@ -65,7 +65,7 @@ export const remove = style({
 	zIndex: 2,
 });
 
-export const gifContainer = style({
+export const externalGifContainer = style({
 	position: 'relative',
 	marginTop: space.lg,
 });

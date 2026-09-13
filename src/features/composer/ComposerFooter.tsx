@@ -53,7 +53,7 @@ export function ComposerFooter({
 			: media !== undefined;
 
 	const onSelectGif = (gif: Gif) => {
-		dispatch({ type: 'embedAddGif', gif });
+		dispatch({ type: 'embedAddExternalGif', gif });
 	};
 
 	return (

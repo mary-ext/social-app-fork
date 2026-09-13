@@ -36,7 +36,7 @@ const getCapacity = (
 		case 'video': {
 			return { kind: getVideoSourceKind(media.video.source), imageSlots: 0, full: true };
 		}
-		case 'gif': {
+		case 'externalGif': {
 			return { kind: 'externalGif', imageSlots: 0, full: true };
 		}
 	}

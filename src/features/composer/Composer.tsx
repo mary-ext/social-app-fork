@@ -365,7 +365,7 @@ export const ComposePost = ({
 				if ((media.type === 'images' || media.type === 'gallery') && media.images.some((img) => !img.alt)) {
 					return m['view.composer.gallery.error.altMissing']();
 				}
-				if (media.type === 'gif' && !media.alt) {
+				if (media.type === 'externalGif' && !media.alt) {
 					return m['view.composer.gif.error.altMissing']();
 				}
 				if (media.type === 'video' && media.video.status !== 'error' && !media.video.altText) {
@@ -992,14 +992,17 @@ function ComposerEmbeds({
 			{(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
 				<Gallery images={embed.media.images} dispatch={dispatch} text={text} />
 			)}
-			{embed.media?.type === 'gif' && (
-				<div className={styles.gifContainer} key={embed.media.gif.url}>
-					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embedRemoveGif' })} />
+			{embed.media?.type === 'externalGif' && (
+				<div className={styles.externalGifContainer} key={embed.media.gif.url}>
+					<ExternalEmbedGif
+						gif={embed.media.gif}
+						onRemove={() => dispatch({ type: 'embedRemoveExternalGif' })}
+					/>
 					<GifAltText
 						gif={embed.media.gif}
 						altText={embed.media.alt ?? ''}
 						onSubmit={(altText: string) => {
-							dispatch({ type: 'embedUpdateGif', alt: altText });
+							dispatch({ type: 'embedUpdateExternalGif', alt: altText });
 						}}
 					/>
 				</div>
