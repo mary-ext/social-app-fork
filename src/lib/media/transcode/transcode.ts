@@ -78,7 +78,7 @@ type TranscodeOptions = {
 };
 
 /**
- * compresses oversized videos, tone-maps HDR to SDR, and converts animated GIFs to WebM.
+ * compresses oversized videos, tone-maps HDR to SDR, and converts animated GIFs to video.
  *
  * check `canTranscode` first. on `undefined`, validate the original's size before uploading.
  *

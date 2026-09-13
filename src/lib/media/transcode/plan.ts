@@ -38,7 +38,13 @@ export type PlanInput = {
 	sourceBitrate: number | null;
 };
 
-const roundToEven = (value: number) => Math.max(2, Math.round(value / 2) * 2);
+/**
+ * rounds a pixel dimension for AVC compatibility.
+ *
+ * @param value dimension in pixels
+ * @returns the nearest even dimension, at least 2
+ */
+export const roundToEven = (value: number) => Math.max(2, Math.round(value / 2) * 2);
 
 const scaleToShortEdge = (width: number, height: number, shortEdge: number) => {
 	const scale = shortEdge / Math.min(width, height);

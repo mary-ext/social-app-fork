@@ -1,46 +1,33 @@
-import {
-	getFirstEncodableVideoCodec,
-	Output,
-	Quality,
-	VideoSample,
-	VideoSampleSource,
-	type VideoCodec,
-} from 'mediabunny';
+import { Output, Quality, VideoSample, VideoSampleSource } from 'mediabunny';
 
 import { CLAMPED_GIF_DELAY_US, readGifMetadata } from '#/lib/media/gif-metadata';
 import { clamp } from '#/lib/utils/numbers';
 
 import { createBlobTarget } from '../blob-target';
+import { pickCodecs } from '../codecs';
 import { CONTAINERS } from '../containers';
-import { bitrateBudget, MIN_VIDEO_BITRATE } from '../plan';
+import { bitrateBudget, KEY_FRAME_INTERVAL, MIN_VIDEO_BITRATE, roundToEven } from '../plan';
 import type { TranscodeOutcome } from '../protocol';
 
-// prefer VP9 for GIFs' flat colours and hard edges; fall back to VP8.
-const CODECS: VideoCodec[] = ['vp9', 'vp8'];
-
-// ~3 Mbps at 1080p, adjusted for resolution and VP9 efficiency.
 const REFERENCE_BITRATE = 3_000_000;
 const REFERENCE_PIXELS = 1920 * 1080;
-const VP9_EFFICIENCY = 0.6;
 
 const MAX_BITRATE = 4_000_000;
 
-const { mimeType, createFormat } = CONTAINERS.webm;
-
 /** scales bitrate by resolution, capped by the upload size budget. */
 const targetBitrate = (width: number, height: number, durationUs: number): number => {
-	const scaled = REFERENCE_BITRATE * Math.pow((width * height) / REFERENCE_PIXELS, 0.95) * VP9_EFFICIENCY;
+	const scaled = REFERENCE_BITRATE * Math.pow((width * height) / REFERENCE_PIXELS, 0.95);
 	const ceiling = Math.min(MAX_BITRATE, bitrateBudget(durationUs / 1e6));
 
 	return Math.round(clamp(scaled, MIN_VIDEO_BITRATE, ceiling));
 };
 
 /**
- * re-encodes an animated GIF as WebM to cut upload size.
+ * compresses an animated GIF to MP4, falling back to WebM if AVC is unavailable.
  *
  * @param blob the source GIF
  * @param onProgress called with progress from 0 to 1
- * @returns a WebM video, or a skipped outcome
+ * @returns the encoded video, or a skipped outcome if it is no smaller than the GIF
  * @throws if decoding or encoding fails
  */
 export async function transcodeGif(
@@ -68,23 +55,37 @@ export async function transcodeGif(
 		const { frameCount } = track;
 		firstImage = (await decoder.decode({ frameIndex: 0 })).image;
 
-		const { displayWidth: width, displayHeight: height } = firstImage;
-		if (width <= 0 || height <= 0) {
+		if (firstImage.displayWidth <= 0 || firstImage.displayHeight <= 0) {
 			throw new Error('GIF decoded to an empty frame');
 		}
 
-		// an explicit bitrate selects VBR; quantizer mode can inflate dithered GIFs.
-		const quality = new Quality({ bitrate: targetBitrate(width, height, durationUs) });
+		// AVC requires even dimensions.
+		const width = roundToEven(firstImage.displayWidth);
+		const height = roundToEven(firstImage.displayHeight);
 
-		const codec = await getFirstEncodableVideoCodec(CODECS, { width, height, quality });
-		if (codec === null) {
+		// avoid redrawing every frame unless resizing is needed.
+		const needsResize = width !== firstImage.displayWidth || height !== firstImage.displayHeight;
+
+		const videoBitrate = targetBitrate(width, height, durationUs);
+		const combo = await pickCodecs({ width, height, videoBitrate }, null);
+		if (combo === null) {
 			throw new Error('no encodable video codec');
 		}
 
+		const { mimeType, createFormat } = CONTAINERS[combo.container];
+
 		const target = createBlobTarget(mimeType);
 		output = new Output({ format: createFormat(), target: target.target });
-		// tolerate malformed GIFs that change frame dimensions.
-		const source = new VideoSampleSource({ codec, quality, sizeChangeBehavior: 'contain' });
+
+		const source = new VideoSampleSource({
+			codec: combo.video,
+			// an explicit bitrate selects VBR; quantizer mode can inflate dithered GIFs.
+			quality: new Quality({ bitrate: videoBitrate }),
+			keyFrameInterval: KEY_FRAME_INTERVAL,
+			// tolerate malformed GIFs that change frame dimensions.
+			sizeChangeBehavior: 'contain',
+			transform: needsResize ? { width, height } : undefined,
+		});
 
 		output.addVideoTrack(source);
 		await output.start();
