@@ -166,7 +166,6 @@
 			}
 		}
 	],
-	"view.composer.gallery.error.paste": "The pasted image couldn't be added to your post.",
 	"view.composer.gallery.moreCount": [
 		{
 			"declarations": ["input count", "local n = count: number"],
@@ -181,6 +180,7 @@
 	"view.composer.gif.compressing": "Compressing GIF...",
 	"view.composer.gif.error.altMissing": "One or more GIFs is missing alt text.",
 	"view.composer.gif.error.oneOnly": "You can only select one GIF at a time.",
+	"view.composer.gif.error.tooLong": "GIFs must be {minutes} minutes or less.",
 	"view.composer.gif.processing": "Processing GIF...",
 	"view.composer.gif.uploaded": "GIF uploaded",
 	"view.composer.gif.uploading": "Uploading GIF...",

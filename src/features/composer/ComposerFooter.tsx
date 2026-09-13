@@ -1,14 +1,11 @@
-import { type RefObject, useState } from 'react';
+import type { RefObject } from 'react';
 
 import type { Gif } from '#/lib/gif';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import type { VideoAsset } from '#/lib/media/video/types';
 
 import { CharProgress } from '#/features/composer/char-progress/CharProgress';
 
 import * as EmojiPicker from '#/components/EmojiPicker';
-import * as Toast from '#/components/Toast';
 
 import EmojiSmileIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
@@ -16,22 +13,18 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './ComposerFooter.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
-import { createAddImagesWithCap } from './gallery-cap';
 import { MediaUploadToolbar } from './MediaUploadToolbar';
 import { SelectGifBtn } from './photos/SelectGifBtn';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
-import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
+import { SelectMediaButton } from './SelectMediaButton';
 import { getMediaUpload, MAX_GALLERY_IMAGES, type PostAction, type PostDraft } from './state/composer';
-import type { VoiceAsset } from './state/voice';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 export function ComposerFooter({
 	post,
 	dispatch,
 	showAddButton,
-	onError,
-	onSelectVideo,
-	onSelectVoice,
+	onAddAttachments,
 	onAddPost,
 	currentLanguages,
 	onSelectLanguage,
@@ -41,9 +34,7 @@ export function ComposerFooter({
 	post: PostDraft;
 	dispatch: (action: PostAction) => void;
 	showAddButton: boolean;
-	onError: (error: string) => void;
-	onSelectVideo: (postId: string, asset: VideoAsset) => void;
-	onSelectVoice: (postId: string, asset: VoiceAsset) => void;
+	onAddAttachments: (post: PostDraft, blobs: Blob[]) => void;
 	onAddPost: () => void;
 	currentLanguages: string[];
 	onSelectLanguage?: (language: string) => void;
@@ -52,85 +43,17 @@ export function ComposerFooter({
 }) {
 	const { gtPhone } = useBreakpoints();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
-	/*
-	 * Once we've allowed a certain type of asset to be selected, we don't allow
-	 * other types of media to be selected.
-	 */
-	const [selectedAssetsType, setSelectedAssetsType] = useState<AssetType | undefined>(undefined);
 
 	const media = post.embed.media;
-	const images = media?.type === 'images' || media?.type === 'gallery' ? media.images : [];
 	const uploadMedia = media?.type === 'video' || media?.type === 'voice' ? media : undefined;
-	const isMaxImages = images.length >= MAX_GALLERY_IMAGES;
 
-	let selectedAssetsCount = 0;
-	let isMediaSelectionDisabled = false;
-
-	if (media?.type === 'images' || media?.type === 'gallery') {
-		isMediaSelectionDisabled = isMaxImages;
-		selectedAssetsCount = images.length;
-	} else if (uploadMedia) {
-		isMediaSelectionDisabled = true;
-		selectedAssetsCount = 1;
-	} else {
-		isMediaSelectionDisabled = !!media;
-	}
-
-	const onImageAdd = createAddImagesWithCap(images.length, dispatch);
+	const isMediaSelectionDisabled =
+		media?.type === 'images' || media?.type === 'gallery'
+			? media.images.length >= MAX_GALLERY_IMAGES
+			: media !== undefined;
 
 	const onSelectGif = (gif: Gif) => {
 		dispatch({ type: 'embedAddGif', gif });
-	};
-
-	/*
-	 * Reset if the user clears any selected media
-	 */
-	if (selectedAssetsType !== undefined && !media) {
-		setSelectedAssetsType(undefined);
-	}
-
-	const onSelectAssets: SelectMediaButtonProps['onSelectAssets'] = async ({
-		type,
-		images: assetImages,
-		video: assetVideo,
-		voice: assetVoice,
-		errors,
-	}) => {
-		setSelectedAssetsType(type);
-
-		if (type === 'image' && assetImages.length) {
-			const results = await Promise.allSettled(assetImages.map((image) => createComposerImage(image)));
-
-			const selectedImages: ComposerImage[] = [];
-			let failed = 0;
-
-			for (const [index, result] of results.entries()) {
-				if (result.status === 'fulfilled') {
-					selectedImages.push(result.value);
-				} else {
-					failed++;
-					const file = assetImages[index]!;
-					console.error('createComposerImage failed', file.type, file.size, result.reason);
-				}
-			}
-
-			if (selectedImages.length) {
-				onImageAdd(selectedImages);
-			}
-			if (failed > 0) {
-				onError(m['view.composer.gallery.error.notAdded']({ failed }));
-			}
-		} else if ((type === 'video' || type === 'gif') && assetVideo) {
-			onSelectVideo(post.id, assetVideo);
-		} else if (type === 'voice' && assetVoice) {
-			onSelectVoice(post.id, assetVoice);
-		}
-
-		errors.map((error) => {
-			Toast.show(error, {
-				type: 'warning',
-			});
-		});
 	};
 
 	return (
@@ -141,9 +64,7 @@ export function ComposerFooter({
 				<div className={styles.left}>
 					<SelectMediaButton
 						disabled={isMediaSelectionDisabled}
-						allowedAssetTypes={selectedAssetsType}
-						selectedAssetsCount={selectedAssetsCount}
-						onSelectAssets={onSelectAssets}
+						onSelectFiles={(files) => onAddAttachments(post, files)}
 					/>
 					<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
 					{gtPhone ? (

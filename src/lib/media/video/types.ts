@@ -11,13 +11,3 @@ export type VideoAsset = {
 	/** duration in milliseconds, or null when it could not be determined */
 	duration: number | null;
 };
-
-/**
- * classifies a video attachment by its original MIME type. callers must exclude still GIFs first.
- *
- * @param mimeType source MIME type before transcoding
- * @returns source attachment kind
- */
-export function videoAssetKind(mimeType: string): VideoAssetKind {
-	return mimeType === 'image/gif' ? 'gif' : 'video';
-}

@@ -20,13 +20,11 @@ import { clsx } from 'clsx';
 
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
-import { VIDEO_MAX_DURATION_MINUTES, VIDEO_UPLOAD_MIME_TYPES } from '#/lib/constants/video';
 import { cleanError } from '#/lib/errors';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
-import { readGifMetadata } from '#/lib/media/gif-metadata';
-import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
-import { videoAssetKind, type VideoAsset } from '#/lib/media/video/types';
+import { getAttachmentKind, readAttachment, type VoiceAsset } from '#/lib/media/read-attachment';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
@@ -41,6 +39,11 @@ import { ComposerReplyTo } from '#/features/composer/ComposerReplyTo';
 import { ExternalEmbedGif, ExternalEmbedLink } from '#/features/composer/ExternalEmbed';
 import { ExternalEmbedRemoveBtn } from '#/features/composer/ExternalEmbedRemoveBtn';
 import { GifAltText } from '#/features/composer/GifAltText';
+import {
+	getAttachmentRejectionMessage,
+	getSelectionErrorMessage,
+} from '#/features/composer/media/attachment-messages';
+import { selectAttachments } from '#/features/composer/media/select-attachments';
 import {
 	closeComposer,
 	COMPOSER_DIALOG_ID,
@@ -99,7 +102,7 @@ import {
 	type ThreadDraft,
 } from './state/composer';
 import { processVideo, type VideoAction } from './state/video';
-import { processVoice, readVoiceAsset, type VoiceAsset } from './state/voice';
+import { processVoice } from './state/voice';
 import type { TextInputRef } from './text-input/TextInput.types';
 
 /** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
@@ -290,17 +293,82 @@ export const ComposePost = ({
 		});
 	};
 
+	const addAttachments = async (post: PostDraft, blobs: Blob[]) => {
+		const { selection, errors } = await selectAttachments(blobs, post.embed.media);
+
+		for (const message of new Set(errors.map(getSelectionErrorMessage))) {
+			Toast.show(message, { type: 'warning' });
+		}
+
+		switch (selection?.type) {
+			case 'images': {
+				const results = await Promise.allSettled(selection.blobs.map((blob) => createComposerImage(blob)));
+
+				const images: ComposerImage[] = [];
+				for (const [index, result] of results.entries()) {
+					if (result.status === 'fulfilled') {
+						images.push(result.value);
+					} else {
+						const blob = selection.blobs[index]!;
+						console.error('createComposerImage failed', blob.type, blob.size, result.reason);
+					}
+				}
+
+				if (images.length > 0) {
+					const imageCount =
+						post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
+							? post.embed.media.images.length
+							: 0;
+					createAddImagesWithCap(imageCount, (postAction) => {
+						composerDispatch({ type: 'updatePost', postId: post.id, postAction });
+					})(images);
+				}
+
+				const failed = selection.blobs.length - images.length;
+				if (failed > 0) {
+					setError(m['view.composer.gallery.error.notAdded']({ failed }));
+				}
+				break;
+			}
+			case 'video': {
+				selectVideo(post.id, selection.asset);
+				break;
+			}
+			case 'voice': {
+				selectVoice(post.id, selection.asset);
+				break;
+			}
+		}
+	};
+
+	const onAddAttachments = (post: PostDraft, blobs: Blob[]) => {
+		void addAttachments(post, blobs);
+	};
+
 	const restoreVideo = async (postId: string, videoInfo: RestoredVideo) => {
 		try {
-			const meta = await getVideoMetadata(videoInfo.blob);
-			const asset: VideoAsset = {
-				kind: videoAssetKind(videoInfo.mimeType),
-				blob: videoInfo.blob,
-				width: meta.width,
-				height: meta.height,
-				mimeType: videoInfo.mimeType,
-				duration: meta.duration,
-			};
+			// legacy drafts may have stored the file without a MIME type.
+			const blob =
+				videoInfo.blob.type === videoInfo.mimeType
+					? videoInfo.blob
+					: new Blob([videoInfo.blob], { type: videoInfo.mimeType });
+
+			const result = await readAttachment(blob);
+			if (!result.ok) {
+				setError(getAttachmentRejectionMessage(result.rejection));
+				return;
+			}
+			if (result.attachment.type !== 'video') {
+				setError(
+					getAttachmentRejectionMessage({
+						reason: 'unsupported',
+						kind: getAttachmentKind(result.attachment),
+						mimeType: blob.type,
+					}),
+				);
+				return;
+			}
+			const asset = result.attachment.asset;
 
 			// Start video processing using existing flow
 			const abortController = new AbortController();
@@ -869,9 +937,7 @@ export const ComposePost = ({
 				post={activePost}
 				dispatch={dispatch}
 				showAddButton={!isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))}
-				onError={setError}
-				onSelectVideo={selectVideo}
-				onSelectVoice={selectVoice}
+				onAddAttachments={onAddAttachments}
 				onAddPost={() => {
 					composerDispatch({
 						type: 'addPost',
@@ -932,9 +998,8 @@ export const ComposePost = ({
 								isActive={post.id === activePost.id}
 								canRemovePost={thread.posts.length > 1}
 								canRemoveQuote={index > 0 || !initQuote}
-								onSelectVideo={selectVideo}
+								onAddAttachments={onAddAttachments}
 								onClearVideo={clearVideo}
-								onSelectVoice={selectVoice}
 								onClearVoice={clearVoice}
 								onPublish={onComposerPostPublish}
 								onError={setError}
@@ -1007,10 +1072,9 @@ const ComposerPost = memo(function ComposerPost({
 	isPartOfThread,
 	canRemovePost,
 	canRemoveQuote,
+	onAddAttachments,
 	onClearVideo,
-	onSelectVideo,
 	onClearVoice,
-	onSelectVoice,
 	onError,
 	onPublish,
 }: {
@@ -1024,10 +1088,9 @@ const ComposerPost = memo(function ComposerPost({
 	isPartOfThread: boolean;
 	canRemovePost: boolean;
 	canRemoveQuote: boolean;
+	onAddAttachments: (post: PostDraft, blobs: Blob[]) => void;
 	onClearVideo: (postId: string) => void;
-	onSelectVideo: (postId: string, asset: VideoAsset) => void;
 	onClearVoice: (postId: string) => void;
-	onSelectVoice: (postId: string, asset: VoiceAsset) => void;
 	onError: (error: string) => void;
 	onPublish: (text: string) => void;
 }) {
@@ -1052,73 +1115,8 @@ const ComposerPost = memo(function ComposerPost({
 		});
 	};
 
-	const postImagesCount =
-		post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
-			? post.embed.media.images.length
-			: 0;
-	const onImageAdd = createAddImagesWithCap(postImagesCount, dispatchPost);
-
 	const onNewLink = (uri: string) => {
 		dispatchPost({ type: 'embedAddUri', uri });
-	};
-
-	const onPhotoPasted = async (blob: Blob) => {
-		const mimeType = blob.type;
-
-		if (mimeType.startsWith('audio/')) {
-			const voice = await readVoiceAsset(blob);
-			switch (voice) {
-				case 'tooLong': {
-					Toast.show(m['view.composer.voice.error.tooLong']({ minutes: VIDEO_MAX_DURATION_MINUTES }), {
-						type: 'error',
-					});
-					return;
-				}
-				case 'unsupported': {
-					Toast.show(m['view.composer.voice.error.unsupportedType']({ mimeType }), { type: 'error' });
-					return;
-				}
-			}
-			onSelectVoice(post.id, voice);
-			return;
-		}
-
-		const gif =
-			mimeType === 'image/gif' ? readGifMetadata(new Uint8Array(await blob.arrayBuffer())) : undefined;
-		const animatedGif = gif !== undefined && gif.frames > 1;
-
-		if (mimeType.startsWith('video/') || animatedGif) {
-			if (!VIDEO_UPLOAD_MIME_TYPES.some((supported) => supported === mimeType)) {
-				Toast.show(m['view.composer.video.error.unsupportedType']({ mimeType }), {
-					type: 'error',
-				});
-				return;
-			}
-			if (gif) {
-				const { width, height } = await getImageDimensions(blob);
-				onSelectVideo(post.id, {
-					kind: 'gif',
-					blob,
-					width,
-					height,
-					mimeType,
-					duration: gif.durationUs / 1000,
-				});
-			} else {
-				const { width, height, duration } = await getVideoMetadata(blob);
-				onSelectVideo(post.id, { kind: 'video', blob, width, height, mimeType, duration });
-			}
-		} else {
-			let image: ComposerImage;
-			try {
-				image = await createComposerImage(blob);
-			} catch (e) {
-				console.error('createComposerImage failed', blob.type, blob.size, e);
-				onError(m['view.composer.gallery.error.paste']());
-				return;
-			}
-			onImageAdd([image]);
-		}
 	};
 
 	return (
@@ -1149,7 +1147,7 @@ const ComposerPost = memo(function ComposerPost({
 								postId: post.id,
 							});
 						}}
-						onPhotoPasted={(blob) => void onPhotoPasted(blob)}
+						onMediaPasted={(blobs) => onAddAttachments(post, blobs)}
 						onNewLink={onNewLink}
 						onError={onError}
 						onPressPublish={onPublish}

@@ -1,10 +1,12 @@
-import { getVideoMetadata } from '#/lib/media/metadata';
-import { videoAssetKind } from '#/lib/media/video/types';
+import { getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
 
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
 
+import { getAttachmentRejectionMessage } from '#/features/composer/media/attachment-messages';
 import { useOpenComposer } from '#/features/composer/open-composer';
+
+import * as Toast from '#/components/Toast';
 
 export function useComposeIntent() {
 	const { openComposer } = useOpenComposer();
@@ -20,21 +22,35 @@ export function useComposeIntent() {
 		if (videoUri) {
 			const uri = videoUri.split('|')[0]!;
 			void (async () => {
+				let blob: Blob;
 				try {
-					const blob = await fetch(uri).then((res) => res.blob());
-					const meta = await getVideoMetadata(blob);
-					openComposer({
-						text: text ?? undefined,
-						videoUri: {
-							kind: videoAssetKind(blob.type),
-							blob,
-							width: meta.width,
-							height: meta.height,
+					blob = await fetch(uri).then((res) => res.blob());
+				} catch (e) {
+					console.error('Failed to fetch shared video', e);
+					return;
+				}
+
+				const result = await readAttachment(blob);
+				if (!result.ok) {
+					Toast.show(getAttachmentRejectionMessage(result.rejection), { type: 'error' });
+					return;
+				}
+				if (result.attachment.type !== 'video') {
+					Toast.show(
+						getAttachmentRejectionMessage({
+							reason: 'unsupported',
+							kind: getAttachmentKind(result.attachment),
 							mimeType: blob.type,
-							duration: meta.duration,
-						},
-					});
-				} catch {}
+						}),
+						{ type: 'error' },
+					);
+					return;
+				}
+
+				openComposer({
+					text: text ?? undefined,
+					videoUri: result.attachment.asset,
+				});
 			})();
 			return;
 		}

@@ -27,7 +27,7 @@ export function TextInput({
 	hasRightPadding,
 	isActive,
 	setText,
-	onPhotoPasted,
+	onMediaPasted,
 	onPressPublish,
 	onNewLink,
 	onError,
@@ -87,7 +87,7 @@ export function TextInput({
 		const handleDrop = (event: DragEvent) => {
 			const transfer = event.dataTransfer;
 			if (transfer) {
-				handleTransferItems(transfer.items, onPhotoPasted, onError);
+				handleTransferItems(transfer.items, onMediaPasted, onError);
 			}
 
 			event.preventDefault();
@@ -117,7 +117,7 @@ export function TextInput({
 			document.body.removeEventListener('dragover', handleDragEnter);
 			document.body.removeEventListener('dragleave', handleDragLeave);
 		};
-	}, [isActive, onError, onPhotoPasted]);
+	}, [isActive, onError, onMediaPasted]);
 
 	useImperativeHandle(ref, () => ({
 		focus: () => {
@@ -158,7 +158,7 @@ export function TextInput({
 			if (hasMediaTransfer(transfer)) {
 				event.preventDefault();
 			}
-			handleTransferItems(transfer.items, onPhotoPasted, onError);
+			handleTransferItems(transfer.items, onMediaPasted, onError);
 		}
 	};
 
@@ -223,9 +223,11 @@ function hasMediaTransfer(transfer: DataTransfer) {
 
 function handleTransferItems(
 	items: DataTransferItemList,
-	onMedia: (blob: Blob) => void,
+	onMedia: (blobs: Blob[]) => void,
 	onError: (err: string) => void,
 ) {
+	// batch files so selection limits apply across the transfer.
+	const files: File[] = [];
 	for (let index = 0; index < items.length; index++) {
 		const item = items[index]!;
 		const type = item.type;
@@ -243,7 +245,7 @@ function handleTransferItems(
 							const blob = await response.blob();
 
 							if (isMediaType(blob.type)) {
-								onMedia(blob);
+								onMedia([blob]);
 							}
 						} catch (err) {
 							onError(String(err));
@@ -254,8 +256,12 @@ function handleTransferItems(
 			const file = item.getAsFile();
 
 			if (file) {
-				onMedia(file);
+				files.push(file);
 			}
 		}
+	}
+
+	if (files.length > 0) {
+		onMedia(files);
 	}
 }

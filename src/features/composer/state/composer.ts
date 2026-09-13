@@ -5,6 +5,7 @@ import type { Gif } from '#/lib/gif';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 import type { ComposerImage } from '#/lib/media/composer-image';
+import type { VoiceAsset } from '#/lib/media/read-attachment';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { insertMentionAt } from '#/lib/mentions';
 import type { SelfLabel } from '#/lib/moderation/self-labels';
@@ -16,7 +17,7 @@ import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
-import { createVoiceState, type VoiceAction, type VoiceAsset, voiceReducer, type VoiceState } from './voice';
+import { createVoiceState, type VoiceAction, voiceReducer, type VoiceState } from './voice';
 
 /** the gated post doesn't exist until publish; `src/lib/api` swaps in the real at-uri then. */
 const PLACEHOLDER_POST_URI: ResourceUri = 'at://placeholder.invalid';

@@ -3,50 +3,15 @@ import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 
 import { VIDEO_MAX_DURATION_MINUTES } from '#/lib/constants/video';
 import { isAbortError } from '#/lib/errors';
-import { getAudioDuration } from '#/lib/media/metadata';
-import { canRenderVoiceClip } from '#/lib/media/video/transcode/capabilities';
+import type { VoiceAsset } from '#/lib/media/read-attachment';
 import { TranscodeError } from '#/lib/media/video/transcode/errors';
 import { renderVoiceClip } from '#/lib/media/video/transcode/transcode';
 import type { VideoAsset } from '#/lib/media/video/types';
-import { isVideoDurationAdmissible } from '#/lib/media/video/validate';
 
 import { m } from '#/paraglide/messages';
 
 import { advanceVideoProgress } from './video-progress';
 import { type CaptionsTrack, uploadAndProcessVideo, type VideoUploadAction } from './video-upload';
-
-export type VoiceAsset = {
-	blob: Blob;
-	/** duration in milliseconds, or null when the browser could not determine it */
-	duration: number | null;
-};
-
-export type VoiceAssetError = 'tooLong' | 'unsupported';
-
-/**
- * checks browser support and audio duration before attaching a voice clip.
- *
- * @param blob the audio file
- * @returns the asset, or why the file can't be used
- */
-export const readVoiceAsset = async (blob: Blob): Promise<VoiceAsset | VoiceAssetError> => {
-	if (!canRenderVoiceClip()) {
-		return 'unsupported';
-	}
-
-	let duration: number | null;
-	try {
-		duration = await getAudioDuration(blob);
-	} catch {
-		return 'unsupported';
-	}
-
-	// the renderer checks the decoded length when the browser can't report one.
-	if (duration !== null && !isVideoDurationAdmissible(duration)) {
-		return 'tooLong';
-	}
-	return { blob, duration };
-};
 
 export type VoiceAction =
 	| VideoUploadAction

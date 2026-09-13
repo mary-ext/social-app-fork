@@ -19,7 +19,7 @@ export type TextInputProps = {
 	hasRightPadding: boolean;
 	isActive: boolean;
 	setText: (v: string) => void;
-	onPhotoPasted: (blob: Blob) => void;
+	onMediaPasted: (blobs: Blob[]) => void;
 	onPressPublish: (text: string) => void;
 	onNewLink: (uri: string) => void;
 	onError: (err: string) => void;
