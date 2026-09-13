@@ -4,7 +4,6 @@ import type { Blob as AtpBlob } from '@atcute/lexicons';
 import { canTranscode } from '#/lib/media/video/transcode/capabilities';
 import { transcodeForUpload } from '#/lib/media/video/transcode/transcode';
 import type { VideoAsset } from '#/lib/media/video/types';
-import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 
 import { advanceVideoProgress } from './video-progress';
 import {
@@ -236,9 +235,7 @@ export async function processVideo(
 			dispatch({ type: 'compressingToUploading', compressionSkipped: compressed === undefined, signal });
 		}
 
-		// compression may bring an oversized source under the limit.
 		payload = compressed ?? asset;
-		assertVideoWithinLimit(payload);
 	} catch (e) {
 		const message = getUploadErrorMessage(e);
 		if (message !== null) {

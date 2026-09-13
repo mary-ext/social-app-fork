@@ -8,6 +8,7 @@ import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
+import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 import { AbortError } from '#/lib/utils/abort-error';
 
 import { m } from '#/paraglide/messages';
@@ -34,7 +35,7 @@ export type VideoUploadAction =
 	  };
 
 type UploadOptions = {
-	/** the final payload, already within the upload limit */
+	/** upload-ready payload after transcoding or rendering */
 	asset: VideoAsset;
 	dispatch: (action: VideoUploadAction) => void;
 	pds: Client;
@@ -52,6 +53,9 @@ type UploadOptions = {
 export async function uploadAndProcessVideo({ asset, dispatch, pds, pdsUrl, signal }: UploadOptions) {
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
+		// oversized sources are allowed before transcoding, so check the final payload.
+		assertVideoWithinLimit(asset);
+
 		uploadResponse = await uploadVideo({
 			video: asset,
 			pds,
