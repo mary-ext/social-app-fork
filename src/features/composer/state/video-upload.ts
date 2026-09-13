@@ -10,6 +10,7 @@ import type { VideoPayload } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { assertVideoWithinLimit } from '#/lib/media/video/validate';
 import { AbortError } from '#/lib/utils/abort-error';
+import { sleep } from '#/lib/utils/sleep';
 
 import { m } from '#/paraglide/messages';
 
@@ -85,6 +86,8 @@ export async function uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, si
 
 	// polling needs no auth; omitting it avoids token expiry during long jobs.
 	const videoClient = createVideoClient();
+	// settles early on abort; the loop's abort check then exits.
+	const wait = (ms: number) => sleep(ms, signal).catch(() => {});
 
 	let pollFailures = 0;
 	while (true) {
@@ -95,7 +98,12 @@ export async function uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, si
 		let status: AppBskyVideoDefs.JobStatus | undefined;
 		let blob: AtpBlob | undefined;
 		try {
-			const response = await ok(videoClient.get('app.bsky.video.getJobStatus', { params: { jobId } }));
+			const response = await ok(
+				videoClient.get('app.bsky.video.getJobStatus', {
+					signal,
+					params: { jobId },
+				}),
+			);
 			status = response.jobStatus;
 			pollFailures = 0;
 
@@ -109,10 +117,14 @@ export async function uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, si
 				throw new Error(status.error ?? 'Job failed to process');
 			}
 		} catch (e) {
+			if (signal.aborted) {
+				return;
+			}
+
 			if (!status) {
 				pollFailures++;
 				if (pollFailures < 50) {
-					await new Promise((resolve) => setTimeout(resolve, 5000));
+					await wait(5000);
 					continue;
 				}
 			}
@@ -141,7 +153,7 @@ export async function uploadAndProcessVideo({ payload, dispatch, pds, pdsUrl, si
 		}
 
 		if (status.state !== 'JOB_STATE_COMPLETED' && status.state !== 'JOB_STATE_FAILED') {
-			await new Promise((resolve) => setTimeout(resolve, 1500));
+			await wait(1500);
 			continue;
 		}
 
