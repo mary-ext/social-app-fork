@@ -6,7 +6,7 @@ import { VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
 import { isNetworkError } from '#/lib/errors';
 import { createVideoClient } from '#/lib/media/video/client';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
-import { canTranscodeGif, transcodeGifToWebm } from '#/lib/media/video/gif-transcode/transcode';
+import { canTranscode, transcodeForUpload } from '#/lib/media/video/transcode/transcode';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { assertVideoWithinLimit } from '#/lib/media/video/validate';
@@ -129,9 +129,8 @@ type DoneState = {
 
 export type VideoState = ErrorState | CompressingState | UploadingState | ProcessingState | DoneState;
 
-function willCompress(asset: VideoAsset): boolean {
-	return asset.mimeType === 'image/gif' && canTranscodeGif();
-}
+// codec support and whether encoding is needed are checked by the worker.
+const willCompress = (asset: VideoAsset) => canTranscode(asset.kind);
 
 export function createVideoState(
 	asset: VideoAsset,
@@ -267,8 +266,6 @@ export async function processVideo(
 ) {
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
-		assertVideoWithinLimit(asset);
-
 		const compressing = willCompress(asset);
 		const compressed = compressing ? await compressAsset(asset, dispatch, signal) : undefined;
 
@@ -276,8 +273,9 @@ export async function processVideo(
 			dispatch({ type: 'compressingToUploading', compressionSkipped: compressed === undefined, signal });
 		}
 
-		// the compressor only returns output smaller than its input, so the limit still holds.
+		// compression may bring an oversized source under the limit.
 		const payload = compressed ?? asset;
+		assertVideoWithinLimit(payload);
 
 		uploadResponse = await uploadVideo({
 			video: payload,
@@ -374,25 +372,19 @@ export async function processVideo(
 	}
 }
 
-/** returns a smaller upload asset, or `undefined` to use the original. */
-async function compressAsset(
+function compressAsset(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
 	signal: AbortSignal,
 ): Promise<VideoAsset | undefined> {
-	const transcoded = await transcodeGifToWebm({
+	return transcodeForUpload({
+		kind: asset.kind,
 		blob: asset.blob,
 		signal,
 		setProgress: (p) => {
 			dispatch({ type: 'updateProgress', progress: p, signal });
 		},
 	});
-
-	if (!transcoded) {
-		return undefined;
-	}
-
-	return { ...asset, blob: transcoded.blob, mimeType: 'video/webm', duration: transcoded.duration };
 }
 
 function getProcessingErrorMessage(failureCode: string | undefined, error: string | undefined): string {

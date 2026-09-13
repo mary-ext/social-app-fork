@@ -1,7 +1,5 @@
 import {
 	VIDEO_MAX_DURATION_MINUTES,
-	VIDEO_MAX_DURATION_MS,
-	VIDEO_MAX_SIZE,
 	VIDEO_MAX_SIZE_MB,
 	VIDEO_UPLOAD_MIME_TYPES,
 	type VideoUploadMimeType,
@@ -10,6 +8,7 @@ import { readGifMetadata } from '#/lib/media/gif-metadata';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
+import { isVideoDurationAdmissible, isVideoSizeAdmissible } from '#/lib/media/video/validate';
 
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
@@ -134,7 +133,7 @@ async function processFiles(
 			errors.add(SelectedAssetError.Unsupported);
 			continue;
 		}
-		if ((type === 'video' || type === 'gif') && file.size > VIDEO_MAX_SIZE) {
+		if ((type === 'video' || type === 'gif') && !isVideoSizeAdmissible(type, file.size)) {
 			errors.add(SelectedAssetError.FileTooBig);
 			continue;
 		}
@@ -173,7 +172,7 @@ async function processFiles(
 			errors.add(SelectedAssetError.Unsupported);
 			return empty;
 		}
-		if (meta.duration > VIDEO_MAX_DURATION_MS) {
+		if (!isVideoDurationAdmissible(meta.duration)) {
 			errors.add(SelectedAssetError.VideoTooLong);
 			return empty;
 		}

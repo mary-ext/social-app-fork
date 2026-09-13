@@ -1,24 +1,19 @@
 import {
-	BufferTarget,
 	getFirstEncodableVideoCodec,
 	Output,
 	Quality,
 	VideoSample,
 	VideoSampleSource,
-	WebMOutputFormat,
 	type VideoCodec,
 } from 'mediabunny';
 
-import { VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { CLAMPED_GIF_DELAY_US, readGifMetadata } from '#/lib/media/gif-metadata';
 import { clamp } from '#/lib/utils/numbers';
 
-import type { MainToWorker, WorkerToMain } from './protocol';
-
-declare const self: {
-	postMessage: (message: WorkerToMain, transfer?: Transferable[]) => void;
-	addEventListener: (type: 'message', listener: (event: MessageEvent<MainToWorker>) => void) => void;
-};
+import { createBlobTarget } from './blob-target';
+import { CONTAINERS } from './containers';
+import { bitrateBudget, MIN_VIDEO_BITRATE } from './plan';
+import type { TranscodeOutcome } from './protocol';
 
 // prefer VP9 for GIFs' flat colours and hard edges; fall back to VP8.
 const CODECS: VideoCodec[] = ['vp9', 'vp8'];
@@ -28,35 +23,36 @@ const REFERENCE_BITRATE = 3_000_000;
 const REFERENCE_PIXELS = 1920 * 1080;
 const VP9_EFFICIENCY = 0.6;
 
-const MIN_BITRATE = 300_000;
 const MAX_BITRATE = 4_000_000;
 
-// reserve 10% of the upload limit for bitrate overshoot.
-const SIZE_BUDGET = 0.9;
-
-const PROGRESS_INTERVAL_MS = 150;
-
-const post = (message: WorkerToMain, transfer: Transferable[] = []) => {
-	self.postMessage(message, transfer);
-};
+const { mimeType, createFormat } = CONTAINERS.webm;
 
 /** scales bitrate by resolution, capped by the upload size budget. */
 const targetBitrate = (width: number, height: number, durationUs: number): number => {
 	const scaled = REFERENCE_BITRATE * Math.pow((width * height) / REFERENCE_PIXELS, 0.95) * VP9_EFFICIENCY;
+	const ceiling = Math.min(MAX_BITRATE, bitrateBudget(durationUs / 1e6));
 
-	const durationS = durationUs / 1e6;
-	const ceiling = durationS > 0 ? (VIDEO_MAX_SIZE * 8 * SIZE_BUDGET) / durationS : MAX_BITRATE;
-
-	return Math.round(clamp(scaled, MIN_BITRATE, Math.min(MAX_BITRATE, ceiling)));
+	return Math.round(clamp(scaled, MIN_VIDEO_BITRATE, ceiling));
 };
 
-const transcode = async (blob: Blob) => {
+/**
+ * re-encodes an animated GIF as WebM to cut upload size.
+ *
+ * @param blob the source GIF
+ * @param onProgress called with progress from 0 to 1
+ * @returns a WebM video, or a skipped outcome
+ * @throws if decoding or encoding fails
+ */
+export async function transcodeGif(
+	blob: Blob,
+	onProgress: (progress: number) => void,
+): Promise<TranscodeOutcome> {
 	const bytes = new Uint8Array(await blob.arrayBuffer());
 	const { durationUs } = readGifMetadata(bytes);
 	const decoder = new ImageDecoder({ type: 'image/gif', data: bytes });
 
 	let firstImage: VideoFrame | undefined;
-	let output: Output<WebMOutputFormat, BufferTarget> | undefined;
+	let output: Output | undefined;
 	let started = false;
 
 	try {
@@ -72,26 +68,21 @@ const transcode = async (blob: Blob) => {
 		const { frameCount } = track;
 		firstImage = (await decoder.decode({ frameIndex: 0 })).image;
 
-		if (firstImage.displayWidth <= 0 || firstImage.displayHeight <= 0) {
+		const { displayWidth: width, displayHeight: height } = firstImage;
+		if (width <= 0 || height <= 0) {
 			throw new Error('GIF decoded to an empty frame');
 		}
 
 		// an explicit bitrate selects VBR; quantizer mode can inflate dithered GIFs.
-		const quality = new Quality({
-			bitrate: targetBitrate(firstImage.displayWidth, firstImage.displayHeight, durationUs),
-		});
+		const quality = new Quality({ bitrate: targetBitrate(width, height, durationUs) });
 
-		const codec = await getFirstEncodableVideoCodec(CODECS, {
-			width: firstImage.displayWidth,
-			height: firstImage.displayHeight,
-			quality,
-		});
-
+		const codec = await getFirstEncodableVideoCodec(CODECS, { width, height, quality });
 		if (codec === null) {
 			throw new Error('no encodable video codec');
 		}
 
-		output = new Output({ format: new WebMOutputFormat(), target: new BufferTarget() });
+		const target = createBlobTarget(mimeType);
+		output = new Output({ format: createFormat(), target: target.target });
 		// tolerate malformed GIFs that change frame dimensions.
 		const source = new VideoSampleSource({ codec, quality, sizeChangeBehavior: 'contain' });
 
@@ -100,7 +91,6 @@ const transcode = async (blob: Blob) => {
 		started = true;
 
 		let timestampUs = 0;
-		let lastProgressAt = 0;
 
 		for (let index = 0; index < frameCount; index++) {
 			// reuse frame 0; the decoder may return the same frame after it has been closed.
@@ -119,24 +109,21 @@ const transcode = async (blob: Blob) => {
 			}
 
 			timestampUs = startUs + frameDurationUs;
-
-			const now = performance.now();
-			if (now - lastProgressAt >= PROGRESS_INTERVAL_MS || index === frameCount - 1) {
-				lastProgressAt = now;
-				post({ type: 'progress', progress: (index + 1) / frameCount });
-			}
+			onProgress((index + 1) / frameCount);
 		}
 
 		await output.finalize();
 		started = false;
 
-		const buffer = output.target.buffer;
-		if (!buffer) {
-			throw new Error('transcode produced no output');
+		const encoded = target.read();
+		if (encoded.size >= blob.size) {
+			return { type: 'skipped', reason: `${encoded.size} bytes is no better than ${blob.size}` };
 		}
 
-		// send a Blob to avoid copying the buffer during structured clone.
-		post({ type: 'done', blob: new Blob([buffer], { type: 'video/webm' }), durationMs: timestampUs / 1000 });
+		return {
+			type: 'done',
+			asset: { kind: 'gif', blob: encoded, mimeType, width, height, duration: timestampUs / 1000 },
+		};
 	} finally {
 		firstImage?.close();
 		if (started) {
@@ -144,10 +131,4 @@ const transcode = async (blob: Blob) => {
 		}
 		decoder.close();
 	}
-};
-
-self.addEventListener('message', (event) => {
-	void transcode(event.data.blob).catch((err: unknown) => {
-		post({ type: 'error', message: err instanceof Error ? err.message : String(err) });
-	});
-});
+}
