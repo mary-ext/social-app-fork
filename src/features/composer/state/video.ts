@@ -56,11 +56,16 @@ type VideoBase = {
 	source: VideoSource;
 };
 
+// retain dimensions without keeping the transcoded blob in state.
+type PayloadDimensions = Pick<VideoPayload, 'height' | 'width'>;
+
+const getPayloadDimensions = ({ height, width }: VideoPayload): PayloadDimensions => ({ height, width });
+
 /** transcoding a video or GIF, or rendering a voice clip */
 type PreparingState = VideoBase & {
 	status: 'preparing';
 	progress: number;
-	payload?: undefined;
+	dimensions?: undefined;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 };
@@ -70,7 +75,7 @@ type UploadingState = VideoBase & {
 	progress: number;
 	/** true when uploading the original file */
 	preparationSkipped: boolean;
-	payload: VideoPayload;
+	dimensions: PayloadDimensions;
 	jobId?: undefined;
 	pendingPublish?: undefined;
 };
@@ -78,7 +83,7 @@ type UploadingState = VideoBase & {
 type ProcessingState = VideoBase & {
 	status: 'processing';
 	progress: number;
-	payload: VideoPayload;
+	dimensions: PayloadDimensions;
 	jobId: string;
 	pendingPublish?: undefined;
 };
@@ -86,7 +91,7 @@ type ProcessingState = VideoBase & {
 type DoneState = VideoBase & {
 	status: 'done';
 	progress: 1;
-	payload: VideoPayload;
+	dimensions: PayloadDimensions;
 	jobId?: undefined;
 	pendingPublish: { blobRef: AtpBlob };
 };
@@ -94,7 +99,7 @@ type DoneState = VideoBase & {
 type ErrorState = VideoBase & {
 	status: 'error';
 	progress: number;
-	payload: VideoPayload | null;
+	dimensions: PayloadDimensions | null;
 	jobId: string | null;
 	error: string;
 	pendingPublish?: undefined;
@@ -153,7 +158,7 @@ export function createVideoState(attachment: VideoAttachment, abortController: A
 			status: 'uploading',
 			progress: 0,
 			preparationSkipped: true,
-			payload: toVideoPayload(attachment.asset),
+			dimensions: getPayloadDimensions(toVideoPayload(attachment.asset)),
 		};
 	}
 
@@ -178,7 +183,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 				...baseOf(state),
 				status: 'error',
 				progress: state.progress,
-				payload: state.payload ?? null,
+				dimensions: state.dimensions ?? null,
 				jobId: state.jobId ?? null,
 				error: action.error,
 			};
@@ -227,7 +232,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 					// fallback uploads must not reset progress already reported by preparation.
 					progress: advanceVideoProgress(state.progress, phase, 0),
 					preparationSkipped: action.preparationSkipped,
-					payload: action.payload,
+					dimensions: getPayloadDimensions(action.payload),
 				};
 			}
 			break;
@@ -238,7 +243,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 					...baseOf(state),
 					status: 'processing',
 					progress: advanceVideoProgress(state.progress, 'processing', 0),
-					payload: state.payload,
+					dimensions: state.dimensions,
 					jobId: action.jobId,
 				};
 			}
@@ -264,7 +269,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 					...baseOf(state),
 					status: 'done',
 					progress: 1,
-					payload: state.payload,
+					dimensions: state.dimensions,
 					pendingPublish: { blobRef: action.blobRef },
 				};
 			}

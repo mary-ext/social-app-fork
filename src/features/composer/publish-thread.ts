@@ -299,13 +299,13 @@ async function createVideoEmbed(
 		altText,
 		blobRef,
 		captions: captionTracks,
-		payload,
+		dimensions,
 		presentation,
 	}: {
 		altText: string;
 		blobRef: AtpBlob;
 		captions: CaptionsTrack[];
-		payload: VideoPayload;
+		dimensions: Pick<VideoPayload, 'height' | 'width'>;
 		presentation: 'default' | 'gif';
 	},
 ): Promise<$type.enforce<AppBskyEmbedVideo.Main>> {
@@ -319,8 +319,8 @@ async function createVideoEmbed(
 		}),
 	);
 
-	const width = Math.round(payload.width);
-	const height = Math.round(payload.height);
+	const width = Math.round(dimensions.width);
+	const height = Math.round(dimensions.height);
 
 	// the lexicon rejects nonpositive aspect ratios.
 	const aspectRatio = width > 0 && height > 0 ? { height, width } : undefined;
@@ -383,12 +383,12 @@ async function resolveMedia(
 		};
 	}
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {
-		const { altText, captions, payload, pendingPublish, source } = embedDraft.media.video;
+		const { altText, captions, dimensions, pendingPublish, source } = embedDraft.media.video;
 		return createVideoEmbed(pds, {
 			altText,
 			blobRef: pendingPublish.blobRef,
 			captions,
-			payload,
+			dimensions,
 			presentation: getVideoSourceKind(source) === 'gif' ? 'gif' : 'default',
 		});
 	}
