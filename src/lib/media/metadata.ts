@@ -22,39 +22,50 @@ export async function getImageDimensions(blob: Blob): Promise<Dimensions> {
 	return { width: image.naturalWidth, height: image.naturalHeight };
 }
 
-/**
- * Reads the dimensions and duration of a video blob.
- *
- * @param blob video blob
- * @returns the video's dimensions and duration
- * @throws if the blob's metadata could not be loaded
- */
-export function getVideoMetadata(blob: Blob): Promise<VideoMetadata> {
+const readMediaMetadata = <E extends HTMLMediaElement, T>(
+	element: E,
+	blob: Blob,
+	read: (element: E) => T,
+): Promise<T> => {
 	return new Promise((resolve, reject) => {
 		const url = URL.createObjectURL(blob);
-		const video = document.createElement('video');
 
-		video.preload = 'metadata';
-		video.addEventListener(
+		element.preload = 'metadata';
+		element.addEventListener(
 			'loadedmetadata',
 			() => {
 				URL.revokeObjectURL(url);
-				resolve({
-					width: video.videoWidth,
-					height: video.videoHeight,
-					duration: Number.isFinite(video.duration) ? video.duration * 1000 : null,
-				});
+				resolve(read(element));
 			},
 			{ once: true },
 		);
-		video.addEventListener(
+		element.addEventListener(
 			'error',
 			() => {
 				URL.revokeObjectURL(url);
-				reject(new Error('Failed to load video metadata'));
+				reject(new Error(`failed to load media metadata`));
 			},
 			{ once: true },
 		);
-		video.src = url;
+		element.src = url;
 	});
+};
+
+const durationOf = (element: HTMLMediaElement): number | null => {
+	return Number.isFinite(element.duration) ? element.duration * 1000 : null;
+};
+
+/**
+ * reads a video blob's dimensions and duration.
+ *
+ * @param blob video blob
+ * @returns dimensions in pixels and duration in milliseconds (`null` if unknown)
+ * @throws if the blob's metadata could not be loaded
+ */
+export function getVideoMetadata(blob: Blob): Promise<VideoMetadata> {
+	return readMediaMetadata(document.createElement('video'), blob, (video) => ({
+		width: video.videoWidth,
+		height: video.videoHeight,
+		duration: durationOf(video),
+	}));
 }
