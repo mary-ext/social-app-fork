@@ -78,33 +78,9 @@ type TranscodeOptions = {
 };
 
 /**
- * checks for the browser APIs needed to transcode the source.
- *
- * @param kind source attachment kind
- * @returns whether the APIs exist; codec support is checked separately for each source
- */
-export function canTranscode(kind: VideoAssetKind): boolean {
-	if (kind === 'gif') {
-		return typeof ImageDecoder !== 'undefined' && typeof VideoEncoder !== 'undefined';
-	}
-	return typeof VideoDecoder !== 'undefined' && typeof VideoEncoder !== 'undefined';
-}
-
-/**
- * checks whether an oversized source is eligible for transcoding.
- *
- * @param kind source attachment kind
- * @returns whether the source is a video with the required browser APIs available
- */
-export function canRescueOversized(kind: VideoAssetKind): boolean {
-	// GIF decoding loads the entire source into memory, so retain its input size limit.
-	return kind !== 'gif' && canTranscode(kind);
-}
-
-/**
  * compresses oversized videos, tone-maps HDR to SDR, and converts animated GIFs to WebM.
  *
- * call {@link canTranscode} first. on `undefined`, validate the original's size before uploading.
+ * check `canTranscode` first. on `undefined`, validate the original's size before uploading.
  *
  * @param options source kind and blob, progress callback (0–1), and cancellation signal
  * @returns the encoded asset, or `undefined` if encoding fails or is skipped
@@ -139,20 +115,6 @@ type VoiceClipOptions = VoiceClipInput & {
 	setBackground: (color: string) => void;
 	signal: AbortSignal;
 };
-
-/**
- * checks for the browser APIs needed to render a voice clip.
- *
- * @returns whether the APIs exist; codec support is checked when rendering
- */
-export function canRenderVoiceClip(): boolean {
-	return (
-		typeof OffscreenCanvas !== 'undefined' &&
-		typeof AudioDecoder !== 'undefined' &&
-		typeof AudioEncoder !== 'undefined' &&
-		typeof VideoEncoder !== 'undefined'
-	);
-}
 
 /**
  * renders audio as an avatar video with a pulsing halo.

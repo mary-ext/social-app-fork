@@ -4,8 +4,9 @@ import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 import { VIDEO_MAX_DURATION_MINUTES } from '#/lib/constants/video';
 import { isAbortError } from '#/lib/errors';
 import { getAudioDuration } from '#/lib/media/metadata';
+import { canRenderVoiceClip } from '#/lib/media/video/transcode/capabilities';
 import { TranscodeError } from '#/lib/media/video/transcode/errors';
-import { canRenderVoiceClip, renderVoiceClip } from '#/lib/media/video/transcode/transcode';
+import { renderVoiceClip } from '#/lib/media/video/transcode/transcode';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { isVideoDurationAdmissible } from '#/lib/media/video/validate';
 

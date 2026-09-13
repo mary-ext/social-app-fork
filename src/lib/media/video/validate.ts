@@ -1,6 +1,6 @@
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE } from '#/lib/constants/video';
 import { VideoTooLargeError } from '#/lib/media/video/errors';
-import { canRescueOversized } from '#/lib/media/video/transcode/transcode';
+import { canRescueOversized } from '#/lib/media/video/transcode/capabilities';
 
 import type { VideoAsset, VideoAssetKind } from './types';
 
