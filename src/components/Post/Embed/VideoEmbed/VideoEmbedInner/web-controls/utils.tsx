@@ -136,6 +136,7 @@ export function useVideoElement(
 			clearBuffering();
 
 			if (playWhenReadyRef.current) {
+				playWhenReadyRef.current = false;
 				try {
 					await element.play();
 				} catch (e) {
@@ -143,8 +144,6 @@ export function useVideoElement(
 					if (!(e instanceof DOMException) || (e.name !== 'NotAllowedError' && e.name !== 'AbortError')) {
 						throw e;
 					}
-				} finally {
-					playWhenReadyRef.current = false;
 				}
 			}
 		};
