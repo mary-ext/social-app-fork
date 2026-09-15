@@ -22,19 +22,7 @@ import { m } from '#/paraglide/messages';
 
 import { LanguageButton } from './LanguageButton';
 
-export function PostLanguageSelect({
-	currentLanguages: currentLanguagesProp,
-	onSelectLanguage,
-	nudgeAt = 0,
-}: {
-	currentLanguages?: string[];
-	onSelectLanguage?: (language: string) => void;
-	/**
-	 * timestamp (ms) of the last honored language-detection nudge. each time this changes, the button flashes a
-	 * transient hint and fades.
-	 */
-	nudgeAt?: number;
-}) {
+export function PostLanguageSelect() {
 	const postLanguage = usePostLanguage();
 	const postLanguageHistory = usePostLanguageHistory();
 	const primaryLanguage = usePrimaryLanguage();
@@ -42,7 +30,7 @@ export function PostLanguageSelect({
 
 	const dedupedHistory = unique([...postLanguageHistory, postLanguage]);
 
-	const currentLanguages = currentLanguagesProp ?? toPostLanguages(postLanguage);
+	const currentLanguages = toPostLanguages(postLanguage);
 
 	const onSelectLanguages = (languages: string[]) => {
 		let langsString = languages.join(',');
@@ -50,7 +38,6 @@ export function PostLanguageSelect({
 			langsString = primaryLanguage;
 		}
 		setPostLanguage(langsString);
-		onSelectLanguage?.(langsString);
 	};
 
 	const dialog = (
@@ -71,7 +58,7 @@ export function PostLanguageSelect({
 			<>
 				<LanguageButton
 					label={m['view.composer.language.a11y.selection']()}
-					nudgeAt={nudgeAt}
+					currentLanguages={currentLanguages}
 					onClick={() => languageDialogHandle.open(null)}
 				/>
 				{dialog}
@@ -87,7 +74,6 @@ export function PostLanguageSelect({
 						<LanguageButton
 							label={m['view.composer.language.selectPost']()}
 							currentLanguages={currentLanguages}
-							nudgeAt={nudgeAt}
 						/>
 					}
 				/>
@@ -105,7 +91,6 @@ export function PostLanguageSelect({
 									label={m['view.composer.language.a11y.select']({ language: langName })}
 									onClick={() => {
 										setPostLanguage(historyItem);
-										onSelectLanguage?.(historyItem);
 									}}
 								>
 									<Menu.ItemText>{langName}</Menu.ItemText>

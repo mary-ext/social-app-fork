@@ -50,13 +50,6 @@ function InnerApp() {
 }
 
 function App() {
-	useEffect(() => {
-		// prewarm without adding the detector to the initial chunk.
-		void import('#/lib/language-detection').then(({ initializeLanguageDetection }) => {
-			void initializeLanguageDetection();
-		});
-	}, []);
-
 	/*
 	 * NOTE: nothing here can depend on other data or session state, since that
 	 * is set up in the InnerApp component above.

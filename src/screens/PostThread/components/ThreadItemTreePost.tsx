@@ -180,7 +180,6 @@ function ThreadItemTreePostInner({
 				author: post.author,
 				embed: post.embed,
 				moderation,
-				langs: post.record.langs,
 			},
 			onPostSuccess: onPostSuccess,
 		});

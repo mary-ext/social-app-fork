@@ -364,7 +364,8 @@ export class FeedTuner {
 	}
 
 	/**
-	 * filters feed slices based on whether they contain text in a preferred language.
+	 * keeps slices containing a post tagged with a preferred language or a textless post. keeps all slices if
+	 * no languages are preferred or none of the slices match.
 	 *
 	 * @param preferredLangsCode2 preferred language codes in ISO 639-1 or ISO 639-2 format
 	 * @returns a filter function for feed slices

@@ -20,7 +20,6 @@ export interface ComposerOptsPostRef {
 	uri: ResourceUri;
 	cid: string;
 	text: string;
-	langs?: string[];
 	author: AppBskyActorDefs.ProfileViewBasic;
 	embed?: AppBskyFeedDefs.PostView['embed'];
 	moderation?: ModerationDecision;

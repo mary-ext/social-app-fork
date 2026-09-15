@@ -118,9 +118,6 @@ importers:
       '@oomfware/cropper':
         specifier: ^0.1.0
         version: 0.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@oomfware/lang-detect':
-        specifier: ^0.2.1
-        version: 0.2.1
       '@oomfware/lightbox':
         specifier: ^0.1.9
         version: 0.1.9(@base-ui/react@1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -862,9 +859,6 @@ packages:
     peerDependencies:
       react: '>=19.2'
       react-dom: '>=19.2'
-
-  '@oomfware/lang-detect@0.2.1':
-    resolution: {integrity: sha512-ZVs+CYEIuDXV7GDib6LGCBvE4bglnCO9UMJRj/PeB/9W0az3sdkXNr4VIKfvprYyTZGhynhy13FVNV3ysDuNog==}
 
   '@oomfware/lightbox@0.1.9':
     resolution: {integrity: sha512-FifZ1AOuc0a3c31BMRQc68p4kyYzt1UaSsm+dMYT4sXbWDTh3jps5FApNA3HoPf3WallWkMEXCIqlgVnI5XiFg==}
@@ -2707,8 +2701,6 @@ snapshots:
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-
-  '@oomfware/lang-detect@0.2.1': {}
 
   '@oomfware/lightbox@0.1.9(@base-ui/react@1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:

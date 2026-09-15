@@ -27,9 +27,6 @@ export function ComposerFooter({
 	showAddButton,
 	onAddAttachments,
 	onAddPost,
-	currentLanguages,
-	onSelectLanguage,
-	languageNudgeAt,
 	textInputRef,
 }: {
 	post: PostDraft;
@@ -37,9 +34,6 @@ export function ComposerFooter({
 	showAddButton: boolean;
 	onAddAttachments: (post: PostDraft, blobs: Blob[]) => void;
 	onAddPost: () => void;
-	currentLanguages: string[];
-	onSelectLanguage?: (language: string) => void;
-	languageNudgeAt: number;
 	textInputRef: RefObject<TextInputRef | null>;
 }) {
 	const { gtPhone } = useBreakpoints();
@@ -87,11 +81,7 @@ export function ComposerFooter({
 						icon={PlusIcon}
 					/>
 				)}
-				<PostLanguageSelect
-					currentLanguages={currentLanguages}
-					onSelectLanguage={onSelectLanguage}
-					nudgeAt={languageNudgeAt}
-				/>
+				<PostLanguageSelect />
 
 				<CharProgress count={post.shortenedGraphemeLength} className={styles.charProgress} />
 			</div>

@@ -91,7 +91,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 				author: post.author,
 				embed: post.embed,
 				moderation: anchor.moderation,
-				langs: post.record.langs,
 			},
 			onPostSuccess: optimisticOnPostReply,
 		});

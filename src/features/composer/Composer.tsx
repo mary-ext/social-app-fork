@@ -46,7 +46,6 @@ import {
 } from '#/features/composer/open-composer';
 import { Gallery } from '#/features/composer/photos/Gallery';
 import { publishThread, ReplyDeletedError } from '#/features/composer/publish-thread';
-import { SuggestedLanguage } from '#/features/composer/select-language/SuggestedLanguage';
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import { TextInput } from '#/features/composer/text-input/TextInput';
@@ -88,9 +87,6 @@ import {
 } from './state/composer';
 import type { TextInputRef } from './text-input/TextInput.types';
 
-/** Minimum gap between honored language-detection nudges, so rapid detector firings don't re-pulse the button. */
-const NUDGE_COOLDOWN_MS = 10_000;
-
 const getDraftSaveError = (error: unknown): string => {
 	if (error instanceof ClientResponseError && error.error === 'DraftLimitReached') {
 		return m['view.composer.drafts.error.max']();
@@ -130,40 +126,6 @@ export const ComposePost = ({
 
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [error, setError] = useState('');
-
-	/**
-	 * A temporary local reference to a language suggestion that the user has accepted. This overrides the
-	 * global post language preference, but is not stored permanently.
-	 */
-	const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<string | null>(null);
-
-	/** The language(s) of the post being replied to. */
-	const [replyToLanguages, setReplyToLanguages] = useState<string[]>(replyTo?.langs || []);
-
-	/**
-	 * The currently selected languages of the post. Prefer local temporary language suggestion over global lang
-	 * prefs, if available.
-	 */
-	const currentLanguages = acceptedLanguageSuggestion
-		? [acceptedLanguageSuggestion]
-		: toPostLanguages(postLanguage);
-
-	/**
-	 * clear temporary and suggested languages when the user selects a language from the composer language
-	 * selector
-	 */
-	const onSelectLanguage = () => {
-		setAcceptedLanguageSuggestion(null);
-		setReplyToLanguages([]);
-	};
-
-	/** timestamp (ms) of the last honored nudge from language detection, used to rate-limit the pulse animation. */
-	const [languageNudgeAt, setLanguageNudgeAt] = useState(0);
-	const onLanguageNudge = () => {
-		const now = Date.now();
-		// only update state (and therefore re-pulse) once the cooldown has elapsed
-		setLanguageNudgeAt((prev) => (now - prev > NUDGE_COOLDOWN_MS ? now : prev));
-	};
 
 	const [composerState, composerDispatch] = useReducer(
 		composerReducer,
@@ -448,7 +410,7 @@ export const ComposePost = ({
 				await publishThread({ appview, did: currentDid, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
-					langs: currentLanguages,
+					langs: toPostLanguages(postLanguage),
 				})
 			).uris[0];
 		} catch (e: unknown) {
@@ -676,13 +638,6 @@ export const ComposePost = ({
 
 	const footer = (
 		<>
-			<SuggestedLanguage
-				text={activePost.text}
-				replyToLanguages={replyToLanguages}
-				currentLanguages={currentLanguages}
-				onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
-				onNudge={onLanguageNudge}
-			/>
 			<ComposerPills
 				isReply={!!replyTo}
 				post={activePost}
@@ -699,9 +654,6 @@ export const ComposePost = ({
 						type: 'addPost',
 					});
 				}}
-				currentLanguages={currentLanguages}
-				onSelectLanguage={onSelectLanguage}
-				languageNudgeAt={languageNudgeAt}
 				textInputRef={textInputRef}
 			/>
 		</>
