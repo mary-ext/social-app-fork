@@ -11,6 +11,8 @@ import * as css from './index.css';
 import { PostOverflowMenu } from './PostMenu';
 
 type Props = {
+	/** bypass the language check when offering translation. */
+	alwaysShowTranslate?: boolean;
 	feedContext?: string | undefined;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	post: Shadow<AppBskyFeedDefs.PostView>;
@@ -25,6 +27,7 @@ type Props = {
  * top-right rather than the trailing action bar. reuses the compact {@link PostControls} button chrome.
  */
 export function PostOverflowMenuButton({
+	alwaysShowTranslate,
 	feedContext,
 	onShowLess,
 	post,
@@ -35,6 +38,7 @@ export function PostOverflowMenuButton({
 }: Props) {
 	return (
 		<PostOverflowMenu
+			alwaysShowTranslate={alwaysShowTranslate}
 			post={post}
 			postFeedContext={feedContext}
 			postReqId={reqId}

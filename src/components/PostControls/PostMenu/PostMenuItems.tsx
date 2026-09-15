@@ -64,6 +64,7 @@ import { useRouter } from '#/router';
 const MenuSpinner = () => <Spinner color="default" label={m['common.status.loading']()} size="lg" />;
 
 function PostMenuItems({
+	alwaysShowTranslate,
 	post,
 	postFeedContext,
 	postReqId,
@@ -72,6 +73,7 @@ function PostMenuItems({
 	threadgateRecord,
 	onShowLess,
 }: {
+	alwaysShowTranslate?: boolean;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
@@ -239,7 +241,8 @@ function PostMenuItems({
 
 	const canHideReplyForEveryone = !isAuthor && isRootPostAuthor && isReply;
 	const canDetachQuote = quoteEmbed !== undefined && quoteEmbed.isOwnedByViewer;
-	const canTranslate = hasSession && record.text !== '' && !isPostInLanguage(post, [primaryLanguage]);
+	const canTranslate =
+		hasSession && record.text !== '' && (alwaysShowTranslate || !isPostInLanguage(post, [primaryLanguage]));
 
 	const onToggleReplyVisibility = async () => {
 		// TODO no threadgate?

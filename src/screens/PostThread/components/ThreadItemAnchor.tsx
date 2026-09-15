@@ -270,6 +270,7 @@ function ThreadItemAnchorInner({
 							<ThreadItemAnchorFollowButton did={post.author.did} enabled={showFollowButton} />
 
 							<PostOverflowMenuButton
+								alwaysShowTranslate
 								post={postShadow}
 								record={record}
 								richText={richText}

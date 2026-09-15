@@ -18,6 +18,7 @@ import { PostMenuItems } from './PostMenuItems';
 export const PostOverflowMenu = ({
 	render,
 	tooltip,
+	alwaysShowTranslate,
 	post,
 	postFeedContext,
 	postReqId,
@@ -29,6 +30,8 @@ export const PostOverflowMenu = ({
 	render: ReactElement;
 	/** Hover/focus hint for the trigger; the tooltip wraps the menu trigger so it survives the menu wiring. */
 	tooltip: string;
+	/** bypass the language check when offering translation. */
+	alwaysShowTranslate?: boolean;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
@@ -53,6 +56,7 @@ export const PostOverflowMenu = ({
 			</Tooltip>
 			{hasBeenOpen && (
 				<PostMenuItems
+					alwaysShowTranslate={alwaysShowTranslate}
 					post={post}
 					postFeedContext={postFeedContext}
 					postReqId={postReqId}
