@@ -146,8 +146,8 @@
 			"declarations": ["input count", "input formatted", "local cp = count: plural"],
 			"selectors": ["cp"],
 			"match": {
-				"cp=one": "{#t0}{formatted}{/t0} post",
-				"cp=other": "{#t0}{formatted}{/t0} posts"
+				"cp=one": "{formatted} post",
+				"cp=other": "{formatted} posts"
 			}
 		}
 	],

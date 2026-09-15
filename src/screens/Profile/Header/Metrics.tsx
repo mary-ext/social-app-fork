@@ -9,7 +9,7 @@ import { m } from '#/paraglide/messages';
 import { useProfileHeader } from './Context';
 import * as css from './Metrics.css';
 
-/** Follower / following / post counts, the first two linking to their respective lists. */
+/** Follower / following counts, linking to their respective lists. */
 export function ProfileHeaderMetrics() {
 	const {
 		state: { profile },
@@ -17,10 +17,28 @@ export function ProfileHeaderMetrics() {
 
 	const followersCount = profile.followersCount || 0;
 	const followsCount = profile.followsCount || 0;
-	const postsCount = profile.postsCount || 0;
 
 	return (
 		<div className={css.row}>
+			<InlineLinkText
+				color="text"
+				label={m['screens.profile.follow.following.countLabel']({ count: followsCount })}
+				to={{ name: 'ProfileFollows', actor: profile.did }}
+			>
+				<Text color="textContrastMedium" size="md">
+					<Trans
+						inputs={{ count: followsCount, formatted: formatCount(followsCount) }}
+						markup={{
+							t0: ({ children }) => (
+								<Text color="text" size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followingCount']}
+					/>
+				</Text>
+			</InlineLinkText>
 			<InlineLinkText
 				color="text"
 				label={m['common.follow.followersCount']({
@@ -43,38 +61,6 @@ export function ProfileHeaderMetrics() {
 					/>
 				</Text>
 			</InlineLinkText>
-			<InlineLinkText
-				color="text"
-				label={m['screens.profile.follow.following.countLabel']({ count: followsCount })}
-				to={{ name: 'ProfileFollows', actor: profile.did }}
-			>
-				<Text color="textContrastMedium" size="md">
-					<Trans
-						inputs={{ count: followsCount, formatted: formatCount(followsCount) }}
-						markup={{
-							t0: ({ children }) => (
-								<Text color="text" size="md" weight="semiBold">
-									{children}
-								</Text>
-							),
-						}}
-						message={m['view.profile.followers.followingCount']}
-					/>
-				</Text>
-			</InlineLinkText>
-			<Text color="textContrastMedium" size="md">
-				<Trans
-					inputs={{ count: postsCount, formatted: formatCount(postsCount) }}
-					markup={{
-						t0: ({ children }) => (
-							<Text color="text" size="md" weight="semiBold">
-								{children}
-							</Text>
-						),
-					}}
-					message={m['screens.profile.posts.count']}
-				/>
-			</Text>
 		</div>
 	);
 }

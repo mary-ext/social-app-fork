@@ -200,21 +200,6 @@ function DrawerProfileCard({
 				<Text color="textContrastMedium" size="md">
 					<Trans
 						inputs={{
-							count: profile?.followersCount || 0,
-							formatted: formatCount(profile?.followersCount ?? 0),
-						}}
-						markup={{
-							t0: ({ children }) => (
-								<Text size="md" weight="semiBold">
-									{children}
-								</Text>
-							),
-						}}
-						message={m['view.profile.followers.followersCount']}
-					/>{' '}
-					&middot;{' '}
-					<Trans
-						inputs={{
 							count: profile?.followsCount || 0,
 							formatted: formatCount(profile?.followsCount ?? 0),
 						}}
@@ -226,6 +211,21 @@ function DrawerProfileCard({
 							),
 						}}
 						message={m['view.profile.followers.followingCount']}
+					/>{' '}
+					&middot;{' '}
+					<Trans
+						inputs={{
+							count: profile?.followersCount || 0,
+							formatted: formatCount(profile?.followersCount ?? 0),
+						}}
+						markup={{
+							t0: ({ children }) => (
+								<Text size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followersCount']}
 					/>
 				</Text>
 			</button>
