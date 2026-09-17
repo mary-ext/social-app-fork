@@ -1,7 +1,7 @@
 import { createVar, style, styleVariants } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { borderRadius, fontSize, fontWeight, iconSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
@@ -154,7 +154,7 @@ export const action = style({
 	marginBlock: -4,
 	border: 0,
 	borderRadius: borderRadius.sm,
-	backgroundColor: colorMix('currentColor', '12%'),
+	backgroundColor: withAlpha('currentColor', '12%'),
 	padding: '4px 8px',
 	lineHeight: firstLineVar,
 	color: 'inherit',
@@ -163,6 +163,6 @@ export const action = style({
 	fontWeight: fontWeight.semiBold,
 	cursor: 'pointer',
 	selectors: {
-		[hover()]: { backgroundColor: colorMix('currentColor', '20%') },
+		[hover()]: { backgroundColor: withAlpha('currentColor', '20%') },
 	},
 });

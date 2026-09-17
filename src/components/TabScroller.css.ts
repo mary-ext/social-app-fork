@@ -1,8 +1,8 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
@@ -96,7 +96,7 @@ export const edgeLeft = style([
 	{
 		left: 0,
 		justifyContent: 'flex-start',
-		background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
+		background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
 		paddingRight: space.md,
 		paddingLeft: gutterVar,
 	},
@@ -107,7 +107,7 @@ export const edgeRight = style([
 	{
 		right: 0,
 		justifyContent: 'flex-end',
-		background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${colorMix(colors.bg, '0%')} 100%)`,
+		background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
 		paddingRight: gutterVar,
 		paddingLeft: space.md,
 	},

@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 
 const hairline = style({
 	boxSizing: 'border-box',
@@ -18,7 +18,7 @@ export const mediaBorder = style([
 		borderColor: vars.palette.contrast_100,
 		selectors: {
 			'.theme--dark &, .theme--dim &': {
-				borderColor: colorMix(vars.palette.contrast_300, '60%'),
+				borderColor: withAlpha(vars.palette.contrast_300, '60%'),
 			},
 		},
 	},

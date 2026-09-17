@@ -1,5 +1,5 @@
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
@@ -27,7 +27,7 @@ export const outer = recipe(
 					paddingBottom: space.xs,
 				},
 				false: {
-					backgroundImage: `linear-gradient(to bottom, transparent, ${colorMix(colors.bg, '80%')} 80%, ${colors.bg})`,
+					backgroundImage: `linear-gradient(to bottom, transparent, ${withAlpha(colors.bg, '80%')} 80%, ${colors.bg})`,
 					paddingBottom: `calc(${space.sm}px + env(safe-area-inset-bottom, 0px))`,
 				},
 			},

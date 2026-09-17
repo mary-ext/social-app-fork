@@ -1,8 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { iconSize } from '#/styles/tokens.css';
@@ -29,7 +29,7 @@ export const outer = recipe(
 			cursor: 'pointer',
 			selectors: {
 				[hover()]: {
-					backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+					backgroundColor: withAlpha(colors.contrast_50, vars.opacity.hover),
 				},
 			},
 		},

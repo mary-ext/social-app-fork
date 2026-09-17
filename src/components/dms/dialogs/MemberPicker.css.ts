@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { withAlpha } from '#/styles/functions';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
 
@@ -38,7 +38,7 @@ export const closeButton = style({
 
 export const search = style({
 	zIndex: zIndex.raised,
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
+	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
 });

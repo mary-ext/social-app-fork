@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { MOUSE, PRESSED } from '#/styles/interaction';
 
 export const activeMargin = style({
@@ -79,7 +79,7 @@ export const quoteCardHover = style({
 	cursor: 'pointer',
 	selectors: {
 		[`${MOUSE} &:hover, &:has(> ${PRESSED})`]: {
-			backgroundColor: colorMix(vars.palette.contrast_50, vars.opacity.hover),
+			backgroundColor: withAlpha(vars.palette.contrast_50, vars.opacity.hover),
 		},
 	},
 });

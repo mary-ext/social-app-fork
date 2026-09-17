@@ -4,9 +4,9 @@ import { TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { OUTER_SPACE } from '#/components/PostLayout.const';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { borderRadius, space } from '#/styles/tokens.css';
 
@@ -62,7 +62,7 @@ export const hoverable = style({
 	cursor: 'pointer',
 	selectors: {
 		[hover()]: {
-			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+			backgroundColor: withAlpha(colors.contrast_50, vars.opacity.hover),
 		},
 	},
 });

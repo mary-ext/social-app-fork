@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { withAlpha } from '#/styles/functions';
 import { space, zIndex } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
@@ -38,7 +38,7 @@ export const search = style({
 	zIndex: zIndex.raised,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,
 	backgroundColor: 'transparent',
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${colorMix(colors.bg, '0%')})`,
+	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
 	paddingInline: DIALOG_PADDING,
 });
 
