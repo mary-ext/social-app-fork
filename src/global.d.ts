@@ -15,6 +15,15 @@ declare module '*.webp' {
 	export default src;
 }
 
+// remove when TypeScript's DOM lib includes OpaqueRange and createValueRange.
+interface OpaqueRange extends AbstractRange {
+	disconnect(): void;
+}
+
+interface HTMLInputElement {
+	createValueRange(start: number, end: number): OpaqueRange;
+}
+
 interface ImportMetaEnv {
 	DEV: boolean;
 	PROD: boolean;

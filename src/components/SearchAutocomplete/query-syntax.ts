@@ -353,6 +353,70 @@ export const getDateConstraints = (tokens: Token[], op: OperatorName, today: Dat
 
 // #endregion
 
+// #region highlighting
+
+export type SyntaxKind = 'hashtag' | 'negation' | 'operator' | 'operatorValue' | 'quoted';
+
+export interface SyntaxRange {
+	kind: SyntaxKind;
+	/** inclusive UTF-16 offset in the query */
+	start: number;
+	/** exclusive UTF-16 offset in the query */
+	end: number;
+}
+
+const HASHTAG_RE = /^#[^:]+$/;
+
+/**
+ * locates recognized operators (including colons) and their values, hashtags, quoted phrases, and negation
+ * markers.
+ *
+ * @param tokens the tokenized query
+ * @returns syntax spans in query order
+ */
+export const getSyntaxRanges = (tokens: Token[]): SyntaxRange[] => {
+	const ranges: SyntaxRange[] = [];
+	let offset = 0;
+
+	for (const token of tokens) {
+		const start = offset;
+		offset += token.value.length;
+
+		switch (token.type) {
+			case 'negation': {
+				ranges.push({ kind: 'negation', start, end: offset });
+				break;
+			}
+			case 'quoted': {
+				ranges.push({ kind: 'quoted', start, end: offset });
+				break;
+			}
+			case 'word': {
+				if (HASHTAG_RE.test(token.value)) {
+					ranges.push({ kind: 'hashtag', start, end: offset });
+					break;
+				}
+
+				const [op, arg] = splitOperator(token.value);
+				// unknown operators are plain text to the search backend.
+				if (arg !== undefined && isOperatorName(op)) {
+					const valueStart = start + op.length + 1;
+
+					ranges.push({ kind: 'operator', start, end: valueStart });
+					if (arg !== '') {
+						ranges.push({ kind: 'operatorValue', start: valueStart, end: offset });
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	return ranges;
+};
+
+// #endregion
+
 // #region navigation
 
 // require a dotted host-like value so dates and bare words do not match.

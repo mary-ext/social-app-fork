@@ -31,6 +31,7 @@ import { Autocomplete } from '@base-ui/react/autocomplete';
 
 import { isInvalidHandle } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
+import { useInputHighlights } from '#/lib/hooks/use-input-highlights';
 
 import { focusSearch } from '#/state/events';
 import {
@@ -55,6 +56,7 @@ import {
 	findActiveToken,
 	getDateConstraints,
 	getOperatorSuggestions,
+	getSyntaxRanges,
 	isNegated,
 	type OperatorName,
 	parseStartDate,
@@ -288,6 +290,17 @@ function ActiveSearchAutocomplete({
 	const tokens = useMemo(() => tokenize(query), [query]);
 	const active = useMemo(() => findActiveToken(tokens, caret), [tokens, caret]);
 	const mode = useMemo(() => classifyActiveToken(active), [active]);
+
+	const syntaxHighlights = useMemo(() => {
+		return getSyntaxRanges(tokens).map(({ kind, start, end }) => ({
+			name: styles.syntaxHighlights[kind],
+			start,
+			end,
+		}));
+	}, [tokens]);
+
+	useInputHighlights(inputRef, syntaxHighlights);
+
 	const operatorSuggestions = getOperatorSuggestions(tokens, active, fixedFilters);
 	const fromActive =
 		fixedFilters.includes('from') ||
