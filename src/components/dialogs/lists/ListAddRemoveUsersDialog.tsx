@@ -43,7 +43,12 @@ export function ListAddRemoveUsersDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} scroll="body" label={m['components.dialogs.list.addPeopleTitle']()}>
+			<Dialog.Popup
+				height="fixed"
+				label={m['components.dialogs.list.addPeopleTitle']()}
+				scroll="body"
+				size="wide"
+			>
 				<DialogInner handle={handle} list={list} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>

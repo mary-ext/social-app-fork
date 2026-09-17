@@ -8,11 +8,6 @@ const DIALOG_PADDING = space.lg;
 const SEARCH_NEGATIVE_MARGIN = 42;
 const ROW_BLOCK_PADDING = space.md;
 
-export const popup = style({
-	maxWidth: 500,
-	height: 600,
-});
-
 export const header = style({
 	boxSizing: 'border-box',
 	display: 'flex',

@@ -15,7 +15,7 @@ const FollowCleanupDialogContent = lazy(() =>
 export const FollowCleanupDialog = ({ handle }: { handle: Dialog.DialogHandle }) => {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup fullHeight scroll="body" label={m['components.followCleanupDialog.title']()}>
+			<Dialog.Popup height="tall" label={m['components.followCleanupDialog.title']()} scroll="body">
 				<Suspense
 					fallback={
 						<Dialog.Body className={styles.loading}>

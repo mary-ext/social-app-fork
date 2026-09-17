@@ -46,7 +46,7 @@ export function LanguageSelectDialog(props: Props) {
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={titleText} scroll="body">
+			<Dialog.Popup height="fixed" label={titleText} scroll="body" size="wide">
 				<DialogInner {...props} />
 			</Dialog.Popup>
 		</Dialog.Root>

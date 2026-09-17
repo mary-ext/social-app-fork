@@ -39,7 +39,7 @@ export function UserAddRemoveListsDialog({
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} scroll="body" label={title}>
+			<Dialog.Popup height="fixed" label={title} scroll="body" size="wide">
 				<DialogInner handle={handle} onChange={onChange} profile={profile} title={title} />
 			</Dialog.Popup>
 		</Dialog.Root>

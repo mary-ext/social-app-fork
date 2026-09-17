@@ -33,9 +33,10 @@ export function SuggestedFollowsDialog({ handle }: { handle: Dialog.DialogHandle
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup
-				className={css.popup}
+				height="fixed"
 				label={m['components.dialogs.suggestedFollows.title']()}
 				scroll="body"
+				size="wide"
 			>
 				<DialogInner handle={handle} />
 			</Dialog.Popup>

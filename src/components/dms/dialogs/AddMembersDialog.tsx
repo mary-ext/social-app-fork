@@ -7,7 +7,6 @@ import { useListConvoMembersQuery } from '#/state/queries/messages/list-convo-me
 
 import * as Dialog from '#/components/Dialog';
 import { SelectMembersStep } from '#/components/dms/dialogs/MemberPicker';
-import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -28,7 +27,7 @@ export function AddMembersDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} label={title} scroll="body">
+			<Dialog.Popup height="fixed" label={title} scroll="body" size="wide">
 				<DialogInner
 					convo={convo}
 					handle={handle}

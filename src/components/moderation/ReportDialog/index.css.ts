@@ -3,10 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 
-export const popup = style({
-	maxWidth: 500,
-});
-
 export const body = style({
 	display: 'flex',
 	flexDirection: 'column',

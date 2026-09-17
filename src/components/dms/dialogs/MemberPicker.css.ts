@@ -10,11 +10,6 @@ const ROW_BLOCK_PADDING = space.sm;
 const SEARCH_HEIGHT = 42;
 const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING - 1);
 
-export const popup = style({
-	maxWidth: 500,
-	height: 600,
-});
-
 export const header = style({
 	boxSizing: 'border-box',
 	display: 'flex',

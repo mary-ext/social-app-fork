@@ -16,20 +16,22 @@ const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagatio
 
 type CardProps = {
 	children: ReactNode;
-	size?: 'default' | 'medium' | 'narrow' | 'wide' | 'xwide';
+	className?: string;
+	/**
+	 * defaults to content height. `fixed` (600px) and `tall` (80vh) prevent resizing between loading and
+	 * content states. with `scroll="body"`, capped at 80vh.
+	 */
+	height?: 'content' | 'fixed' | 'tall';
+	/** accessible name when the dialog has no `Title`. */
+	label?: string;
 	/** `none` drops the card's own padding, for full-bleed content that reapplies padding per-section. */
 	padding?: 'default' | 'none';
 	/**
-	 * body strategy. `viewport` (default) is a padded card that grows to its content while the viewport
-	 * scrolls. `body` is a height-bounded flex column whose `Body`/`List` child scrolls internally, with pinned
+	 * `viewport` (default) scrolls the whole card. `body` scrolls its `Body`/`List` child with pinned
 	 * `Header`/`Footer` slots.
 	 */
 	scroll?: 'body' | 'viewport';
-	/** `body`-scroll only: lock to max height so it doesn't shrink to fit transient loading/empty states. */
-	fullHeight?: boolean;
-	className?: string;
-	/** Accessible name for the dialog. Redundant when the popup renders a `Title`. */
-	label?: string;
+	size?: 'default' | 'medium' | 'narrow' | 'wide' | 'xwide';
 };
 
 /**
@@ -54,17 +56,17 @@ export function Viewport({ children }: { children: ReactNode }) {
  */
 export function Card({
 	children,
-	size = 'default',
+	className,
+	height = 'content',
+	label,
 	padding = 'default',
 	scroll = 'viewport',
-	fullHeight,
-	className,
-	label,
+	size = 'default',
 }: CardProps) {
 	return (
 		<BaseDialog.Popup
 			aria-label={label}
-			className={clsx(styles.popup({ fullHeight, padding, scroll, size }), className)}
+			className={clsx(styles.popup({ height, padding, scroll, size }), className)}
 		>
 			{children}
 		</BaseDialog.Popup>
@@ -151,9 +153,8 @@ export function Divider() {
 }
 
 /**
- * Close (×) button. `default` is static/in-flow — place it in a {@link TitleRow}. `floating` pins it to the
- * popup's top-right corner (media/full-bleed dialogs with no header row); `outer` pins it to the screen
- * corner outside the card (full-height dialogs like the GIF picker).
+ * close button. `default` sits in a {@link TitleRow}; `floating` sits at the card's top-right corner. `outer`
+ * sits at the screen's top-right corner.
  */
 export function Close({ variant }: { variant?: 'default' | 'floating' | 'outer' } = {}) {
 	return (

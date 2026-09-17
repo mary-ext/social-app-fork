@@ -43,7 +43,7 @@ export function StarterPackDialog({ handle, targetDid }: StarterPackDialogProps)
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} scroll="body" label={m['common.starterPack.action.add']()}>
+			<Dialog.Popup height="fixed" label={m['common.starterPack.action.add']()} scroll="body" size="wide">
 				<DialogInner handle={handle} targetDid={targetDid} />
 			</Dialog.Popup>
 		</Dialog.Root>

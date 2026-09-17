@@ -38,7 +38,7 @@ export function ReactionsDialog({ handle }: { handle: Dialog.DialogHandle<ChatBs
 		<Dialog.Root handle={handle}>
 			{({ payload }: { payload: ChatBskyConvoDefs.MessageView | undefined }) =>
 				payload ? (
-					<Dialog.Popup size="medium" label={m['components.dms.reaction.title']()} scroll="body">
+					<Dialog.Popup label={m['components.dms.reaction.title']()} scroll="body" size="medium">
 						<DialogInner close={() => handle.close()} message={payload} />
 					</Dialog.Popup>
 				) : null

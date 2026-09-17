@@ -7,11 +7,6 @@ import { iconSize, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 
-export const popup = style({
-	maxWidth: 500,
-	height: 600,
-});
-
 export const header = style({
 	boxSizing: 'border-box',
 	display: 'flex',

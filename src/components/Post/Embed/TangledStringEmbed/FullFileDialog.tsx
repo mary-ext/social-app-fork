@@ -18,7 +18,7 @@ type FullFileDialogProps = {
 export function FullFileDialog({ contents, filename, handle, onOpen, uri }: FullFileDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup fullHeight scroll="body" size="xwide">
+			<Dialog.Popup height="tall" scroll="body" size="xwide">
 				<DialogInner contents={contents} filename={filename} onOpen={onOpen} uri={uri} />
 			</Dialog.Popup>
 		</Dialog.Root>

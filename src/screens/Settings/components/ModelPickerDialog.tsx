@@ -56,7 +56,7 @@ type Props = {
 export const ModelPickerDialog = ({ handle, ...props }: Props) => {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} scroll="body" label={props.titleText}>
+			<Dialog.Popup height="fixed" label={props.titleText} scroll="body" size="wide">
 				<DialogInner {...props} close={() => handle.close()} />
 			</Dialog.Popup>
 		</Dialog.Root>

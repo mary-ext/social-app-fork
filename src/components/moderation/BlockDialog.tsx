@@ -43,7 +43,7 @@ type BlockDialogProps = {
 export function BlockDialog({ handle, profile, onBlock, currentConvoId }: BlockDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} scroll="body">
+			<Dialog.Popup height="fixed" scroll="body" size="medium">
 				<BlockDialogInner
 					currentConvoId={currentConvoId}
 					handle={handle}

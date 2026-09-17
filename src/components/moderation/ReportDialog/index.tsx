@@ -25,7 +25,7 @@ export function GlobalReportDialog() {
 		<Dialog.Root handle={reportDialogHandle}>
 			{({ payload }: { payload: { subject: ReportSubject } | undefined }) =>
 				payload ? (
-					<Dialog.Popup className={styles.popup} scroll="body">
+					<Dialog.Popup scroll="body" size="wide">
 						<Suspense fallback={<ContentFallback />}>
 							<Content close={() => reportDialogHandle.close()} subject={payload.subject} />
 						</Suspense>
@@ -56,7 +56,7 @@ export function ReportDialog({
 				}
 			}}
 		>
-			<Dialog.Popup className={styles.popup} scroll="body">
+			<Dialog.Popup scroll="body" size="wide">
 				<Suspense fallback={<ContentFallback />}>
 					<Content close={() => handle.close()} onAfterSubmit={onAfterSubmit} subject={subject} />
 				</Suspense>

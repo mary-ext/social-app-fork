@@ -30,7 +30,6 @@ import {
 	searchRows,
 	SectionLabel,
 } from '#/components/dms/dialogs/MemberPicker';
-import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { canBeMessaged } from '#/components/dms/util';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -54,7 +53,7 @@ export function NewChatDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={css.popup} label={m['common.chat.action.new']()} scroll="body">
+			<Dialog.Popup height="fixed" label={m['common.chat.action.new']()} scroll="body" size="wide">
 				<ChatCreationFlow handle={handle} onChatReady={onNewChat} pickStep={SelectChatStep} />
 			</Dialog.Popup>
 		</Dialog.Root>

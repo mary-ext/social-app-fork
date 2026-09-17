@@ -43,7 +43,7 @@ export const viewport = style(
 		overflowY: 'auto',
 
 		'@media': {
-			'(min-width: 800px)': {
+			'(width >= 800px)': {
 				paddingBlock: '10vh',
 			},
 		},
@@ -68,10 +68,12 @@ export const popup = recipe(
 				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
 			},
 		},
-		defaultVariants: { fullHeight: false, padding: 'default', scroll: 'viewport', size: 'default' },
+		defaultVariants: { height: 'content', padding: 'default', scroll: 'viewport', size: 'default' },
 		variants: {
-			fullHeight: {
-				true: { height: '80vh' },
+			height: {
+				content: {},
+				fixed: { height: 600 },
+				tall: { height: '80vh' },
 			},
 			padding: {
 				default: {},

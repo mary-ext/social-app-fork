@@ -35,7 +35,7 @@ export function ComposerDialog() {
 			}}
 		>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" label={m['common.compose.action.write']()}>
+				<Dialog.Popup label={m['common.compose.action.write']()} scroll="body">
 					{payload && (
 						<Suspense
 							fallback={

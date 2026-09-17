@@ -46,7 +46,7 @@ export function GifPickerDialog({
 		>
 			<Dialog.Viewport>
 				<Dialog.Close variant="outer" />
-				<Dialog.Card scroll="body" label="GIFs" fullHeight>
+				<Dialog.Card height="tall" label="GIFs" scroll="body">
 					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
 				</Dialog.Card>
 			</Dialog.Viewport>

@@ -38,7 +38,7 @@ export const AiProviderPickerDialog = ({ handle, ...props }: Props) => {
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} scroll="body" label={titleText}>
+			<Dialog.Popup height="fixed" label={titleText} scroll="body" size="wide">
 				<DialogInner {...props} close={() => handle.close()} titleText={titleText} />
 			</Dialog.Popup>
 		</Dialog.Root>
