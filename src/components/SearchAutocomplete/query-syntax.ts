@@ -9,7 +9,16 @@ import { min } from '@mary/date-fns';
 const OPERATOR_RE = /^([a-z-]+):(.*)$/;
 
 /**
- * splits tokens into free text and `operator:value` filters.
+ * checks whether a token is negated.
+ *
+ * @param tokens the tokenized query
+ * @param index index of the token to check
+ * @returns whether the token is negated
+ */
+export const isNegated = (tokens: Token[], index: number): boolean => tokens[index - 1]?.type === 'negation';
+
+/**
+ * splits tokens into free text and `operator:value` filters, preserving `-` in negated filter keys.
  *
  * @param tokens the tokenized query
  * @returns a tuple of the non-filter tokens and the collected filters
@@ -18,11 +27,20 @@ export const splitFilters = (tokens: Token[]): [remains: Token[], filters: Map<s
 	const filters = new Map<string, string>();
 	const remaining: Token[] = [];
 
-	for (const token of tokens) {
+	for (let index = 0, len = tokens.length; index < len; index++) {
+		const token = tokens[index]!;
+
 		if (token.type === 'word') {
 			const match = OPERATOR_RE.exec(token.value);
 			if (match) {
-				filters.set(match[1]!, match[2]!);
+				let name = match[1]!;
+				if (isNegated(tokens, index)) {
+					// the marker belongs to the filter, not the free text.
+					remaining.pop();
+					name = `-${name}`;
+				}
+
+				filters.set(name, match[2]!);
 				continue;
 			}
 		}
@@ -162,18 +180,18 @@ const splitOperator = (value: string): [op: string, query: string | undefined] =
 };
 
 export interface ActiveToken {
-	/** the caret offset relative to the start of the token. */
-	relativePos: number;
+	/** whether the token is preceded by a negation marker. */
+	negated: boolean;
 	token: Token;
 	tokenIndex: number;
 }
 
 /**
- * finds the token under the caret.
+ * finds the token under the caret. a caret on a negation marker resolves to the term it negates.
  *
  * @param tokens the tokenized query
  * @param caret the caret offset within the whole query
- * @returns the active token and its position, or `undefined` if the query is empty
+ * @returns the token, index, and negation state, or `undefined` if no token contains the caret
  */
 export const findActiveToken = (tokens: Token[], caret: number): ActiveToken | undefined => {
 	let start = 0;
@@ -183,7 +201,12 @@ export const findActiveToken = (tokens: Token[], caret: number): ActiveToken | u
 		const end = start + token.value.length;
 
 		if (caret >= start && caret <= end) {
-			return { relativePos: caret - start, token, tokenIndex: index };
+			const term = token.type === 'negation' ? tokens[index + 1] : undefined;
+			if (term !== undefined) {
+				return { negated: true, token: term, tokenIndex: index + 1 };
+			}
+
+			return { negated: isNegated(tokens, index), token, tokenIndex: index };
 		}
 
 		start = end;
@@ -205,7 +228,8 @@ export type SuggestionMode =
  * @returns the suggestion mode to render
  */
 export const classifyActiveToken = (active: ActiveToken | undefined): SuggestionMode => {
-	if (!active || active.token.type !== 'word') {
+	// negated operators have no value pickers.
+	if (!active || active.negated || active.token.type !== 'word') {
 		return { kind: 'default' };
 	}
 
@@ -258,13 +282,15 @@ export const getOperatorSuggestions = (
 	fixedFilters: readonly OperatorName[],
 ): SearchOperator[] => {
 	const token = active?.token;
-	if (token?.type === 'quoted') {
+	if (active?.negated || token?.type === 'quoted') {
 		return [];
 	}
 
 	const [, present] = splitFilters(tokens);
 	// inspect tokens directly because the filter map keeps only the last value.
-	const followingSet = tokens.some((t) => t.type === 'word' && t.value === 'from:following');
+	const followingSet = tokens.some(
+		(t, index) => t.type === 'word' && t.value === 'from:following' && !isNegated(tokens, index),
+	);
 
 	return SEARCH_OPERATORS.filter(({ multiple, name }) => {
 		if (fixedFilters.includes(name)) {
@@ -303,8 +329,9 @@ export const getDateConstraints = (tokens: Token[], op: OperatorName, today: Dat
 	let minDate: Date | undefined;
 	let maxDate: Date | undefined;
 
-	for (const token of tokens) {
-		if (token.type !== 'word') {
+	for (let index = 0, len = tokens.length; index < len; index++) {
+		const token = tokens[index]!;
+		if (token.type !== 'word' || isNegated(tokens, index)) {
 			continue;
 		}
 

@@ -55,6 +55,7 @@ import {
 	findActiveToken,
 	getDateConstraints,
 	getOperatorSuggestions,
+	isNegated,
 	type OperatorName,
 	parseStartDate,
 	splitFilters,
@@ -292,7 +293,10 @@ function ActiveSearchAutocomplete({
 		fixedFilters.includes('from') ||
 		tokens.some(
 			(token, index) =>
-				index !== active?.tokenIndex && token.type === 'word' && token.value.startsWith('from:'),
+				index !== active?.tokenIndex &&
+				token.type === 'word' &&
+				token.value.startsWith('from:') &&
+				!isNegated(tokens, index),
 		);
 
 	// the selectable date range for the active `since`/`until` picker (day-granular bounds).

@@ -33,9 +33,8 @@ export interface LiftedQuery {
 	text: string;
 }
 
-// a leading `-` negates the operator (`-from:` → excludeAuthors); `#tag` / `-#tag` are hashtags.
-const LIFT_OPERATOR_RE = /^(-)?([a-z]+):(.*)$/;
-const LIFT_HASHTAG_RE = /^(-)?#([^:]+)$/;
+const LIFT_OPERATOR_RE = /^([a-z]+):(.*)$/;
+const LIFT_HASHTAG_RE = /^#([^:]+)$/;
 // only full ISO dates lift; partials stay in the text for the backend to parse.
 const LIFT_DATE_RE = /^\d{4}-\d{2}-\d{2}/;
 
@@ -68,33 +67,43 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 
 	const filters: SearchPostsFilters = {};
 
+	// the tokenizer emits negation markers only when a term follows immediately.
+	let pendingNegation = false;
 	for (const token of tokenize(query)) {
 		if (token.type === 'whitespace') {
 			continue;
 		}
-		if (token.type === 'quoted') {
-			kept.push(token.value);
+		if (token.type === 'negation') {
+			pendingNegation = true;
 			continue;
 		}
 
+		const negated = pendingNegation;
+		pendingNegation = false;
+
 		const value = token.value;
+		const text = negated ? `-${value}` : value;
+
+		if (token.type === 'quoted') {
+			kept.push(text);
+			continue;
+		}
 
 		const hashtag = LIFT_HASHTAG_RE.exec(value);
 		if (hashtag) {
-			(hashtag[1] ? excludeHashtags : hashtags).push(hashtag[2]!);
+			(negated ? excludeHashtags : hashtags).push(hashtag[1]!);
 			continue;
 		}
 
 		const operator = LIFT_OPERATOR_RE.exec(value);
 		// leave valueless operators in the text while they are being typed.
-		if (!operator || operator[3] === '') {
-			kept.push(value);
+		if (!operator || operator[2] === '') {
+			kept.push(text);
 			continue;
 		}
 
-		const negated = operator[1] !== undefined;
-		const name = operator[2]!;
-		const arg = operator[3]!;
+		const name = operator[1]!;
+		const arg = operator[2]!;
 
 		let handled = true;
 		switch (name) {
@@ -183,7 +192,7 @@ export const liftSearchQuery = (query: string, options?: { viewerDid?: Did }): L
 		}
 
 		if (!handled) {
-			kept.push(value);
+			kept.push(text);
 		}
 	}
 
