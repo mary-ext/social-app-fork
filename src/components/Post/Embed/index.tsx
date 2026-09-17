@@ -201,6 +201,7 @@ function RecordEmbed({
 			return (
 				<QuoteEmbed
 					{...rest}
+					className={rest.viewContext !== PostEmbedViewContext.ChatMessage ? css.quoteOuterGap : undefined}
 					embed={record}
 					viewContext={rest.viewContext}
 					isWithinQuote={rest.isWithinQuote}
@@ -247,10 +248,12 @@ export function QuoteEmbed({
 	isWithinQuote: parentIsWithinQuote,
 	allowNestedQuotes: parentAllowNestedQuotes,
 	viewContext,
+	className,
 }: Omit<CommonProps, 'viewContext'> & {
 	embed: AppBskyEmbedRecord.ViewRecord;
 	viewContext?: PostEmbedViewContext;
 	linkDisabled?: boolean;
+	className?: string;
 }) {
 	const moderationOpts = useModerationOpts();
 	// a quoted record is a post view under different field names; reshape it to reuse the post path
@@ -316,12 +319,7 @@ export function QuoteEmbed({
 
 	return (
 		<GalleryBleed>
-			<div
-				className={clsx(
-					css.quoteOuter,
-					viewContext !== PostEmbedViewContext.ChatMessage && css.quoteOuterGap,
-				)}
-			>
+			<div className={clsx(css.quoteOuter, className)}>
 				<ContentHider
 					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
 					className={clsx(css.quoteCard, !linkDisabled && css.quoteCardHover)}

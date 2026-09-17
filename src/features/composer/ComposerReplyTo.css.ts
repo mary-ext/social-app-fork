@@ -52,6 +52,10 @@ export const flexGrow = style({
 	flexGrow: 1,
 });
 
+export const quote = style({
+	marginTop: space.sm,
+});
+
 export const imagesContainer = style({
 	display: 'flex',
 	position: 'relative',

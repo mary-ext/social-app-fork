@@ -9,13 +9,6 @@ export const container = style({
 	overflow: 'hidden',
 });
 
-export const linkContainer = style([
-	container,
-	{
-		marginBottom: space.md,
-	},
-]);
-
 export const contentContainer = style({
 	display: 'flex',
 	alignItems: 'center',

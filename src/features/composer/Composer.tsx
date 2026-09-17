@@ -958,28 +958,25 @@ function ComposerEmbeds({
 				</div>
 			)}
 			{!embed.media && embed.link && (
-				<div className={styles.linkContainer} key={embed.link.uri}>
-					<ExternalEmbedLink
-						uri={embed.link.uri}
-						hasQuote={!!embed.quote}
-						onRemove={() => dispatch({ type: 'embedRemoveLink' })}
-					/>
-				</div>
+				<ExternalEmbedLink
+					key={embed.link.uri}
+					uri={embed.link.uri}
+					hasQuote={!!embed.quote}
+					onRemove={() => dispatch({ type: 'embedRemoveLink' })}
+				/>
 			)}
 			{video && (
 				<VideoAttachmentEditor avatar={avatar} dispatch={dispatch} onClear={clearVideo} video={video} />
 			)}
 			{embed.quote?.uri ? (
-				<div className={video ? styles.quoteContainerWithVideo : styles.quoteContainerWithoutVideo}>
-					<div style={{ position: 'relative' }}>
-						<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
-						{canRemoveQuote && (
-							<ExternalEmbedRemoveBtn
-								onRemove={() => dispatch({ type: 'embedRemoveQuote' })}
-								className={styles.externalEmbedRemoveBtn}
-							/>
-						)}
-					</div>
+				<div className={styles.quoteContainer}>
+					<LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
+					{canRemoveQuote && (
+						<ExternalEmbedRemoveBtn
+							onRemove={() => dispatch({ type: 'embedRemoveQuote' })}
+							className={styles.externalEmbedRemoveBtn}
+						/>
+					)}
 				</div>
 			) : null}
 		</>

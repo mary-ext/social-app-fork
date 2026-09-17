@@ -168,7 +168,7 @@ export const ExternalEmbedLink = ({
 
 	return (
 		<div
-			className={styles.linkContainer}
+			className={styles.container}
 			role="group"
 			aria-label={m['view.composer.embed.a11y.linkPreview']({ niceUrl: toNiceDomain(uri) })}
 		>

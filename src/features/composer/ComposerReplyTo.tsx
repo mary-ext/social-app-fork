@@ -93,7 +93,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 						) && <ComposerReplyToImages images={images} totalNumber={totalNumber} />}
 				</div>
 
-				{showFull && quoteEmbed && <QuoteEmbed embed={quoteEmbed} linkDisabled />}
+				{showFull && quoteEmbed && <QuoteEmbed embed={quoteEmbed} linkDisabled className={styles.quote} />}
 			</div>
 		</div>
 	);

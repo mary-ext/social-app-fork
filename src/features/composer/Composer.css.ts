@@ -40,7 +40,7 @@ export const postContainer = style({
 	gap: space.md,
 	zIndex: 0,
 	paddingRight: space.lg,
-	paddingBottom: space.md,
+	paddingBottom: space.lg,
 	paddingLeft: space.lg,
 
 	selectors: {
@@ -54,7 +54,7 @@ export const col = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flexGrow: 1,
-	gap: space.md,
+	gap: space.lg,
 	minWidth: 0,
 });
 
@@ -67,32 +67,11 @@ export const remove = style({
 
 export const externalGifContainer = style({
 	position: 'relative',
-	marginTop: space.lg,
-});
-
-export const linkContainer = style({
-	position: 'relative',
-	marginTop: space.lg,
 });
 
 export const quoteContainer = style({
 	position: 'relative',
-	paddingBottom: space.md,
 });
-
-export const quoteContainerWithVideo = style([
-	quoteContainer,
-	{
-		paddingTop: space.md,
-	},
-]);
-
-export const quoteContainerWithoutVideo = style([
-	quoteContainer,
-	{
-		paddingTop: space.xl,
-	},
-]);
 
 export const externalEmbedRemoveBtn = style({
 	position: 'absolute',
