@@ -1,10 +1,12 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { REMOVE_BUTTON_SIZE, removeButtonEnd, rowBlockPadding } from './shared.css';
+
+// matches the row's first line height.
+const LINE_HEIGHT = 20;
 
 export const remove = style({
 	position: 'absolute',
-	// row paddingBlock + lineHeight/2 - buttonHeight/2
-	top: 8 + 20 / 2 - 25 / 2,
-	right: space.sm,
+	top: `calc(${rowBlockPadding} + ${(LINE_HEIGHT - REMOVE_BUTTON_SIZE) / 2}px)`,
+	right: removeButtonEnd,
 });

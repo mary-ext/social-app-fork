@@ -3,13 +3,15 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { iconSize, space } from '#/styles/tokens.css';
 
+import { rowInsetPadding } from './shared.css';
+
 export const hero = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.md,
 	alignItems: 'center',
 	paddingBlock: space._2xl,
-	paddingInline: space.md,
+	paddingInline: rowInsetPadding,
 	textAlign: 'center',
 });
 

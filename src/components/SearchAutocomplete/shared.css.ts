@@ -1,7 +1,15 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { iconSize, space } from '#/styles/tokens.css';
+
+/** row padding override for touch layouts. */
+export const rowBlock = createVar();
+/** shared inset for rows, labels and dividers. */
+export const rowInset = createVar();
+
+export const rowBlockPadding = fallbackVar(rowBlock, '8px');
+export const rowInsetPadding = fallbackVar(rowInset, `${space.md}px`);
 
 export const row = style({
 	boxSizing: 'border-box',
@@ -9,8 +17,8 @@ export const row = style({
 	gap: space.sm,
 	outline: 'none',
 	backgroundColor: 'transparent',
-	paddingBlock: 8,
-	paddingInline: space.md,
+	paddingBlock: rowBlockPadding,
+	paddingInline: rowInsetPadding,
 	width: '100%',
 	textAlign: 'start',
 	color: vars.palette.contrast_1000,
@@ -37,7 +45,15 @@ export const label = style({
 	minWidth: 0,
 });
 
-export const recentItem = style([row, { paddingInlineEnd: space.sm * 2 + 25 }]);
+/** matches Button size="tiny", in pixels. */
+export const REMOVE_BUTTON_SIZE = 25;
+// offset the button's padding to align its icon with the row inset.
+export const removeButtonEnd = `calc(${rowInsetPadding} - 4px)`;
+
+export const recentItem = style([
+	row,
+	{ paddingInlineEnd: `calc(${removeButtonEnd} + ${REMOVE_BUTTON_SIZE + space.sm}px)` },
+]);
 
 export const recentRow = style({
 	position: 'relative',

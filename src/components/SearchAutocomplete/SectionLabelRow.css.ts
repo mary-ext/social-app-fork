@@ -2,10 +2,12 @@ import { style } from '@vanilla-extract/css';
 
 import { fontSize, space } from '#/styles/tokens.css';
 
+import { rowInsetPadding } from './shared.css';
+
 export const label = style({
 	paddingTop: space.sm,
 	paddingBottom: space._2xs,
-	paddingInline: space.md,
+	paddingInline: rowInsetPadding,
 	textTransform: 'uppercase',
 	letterSpacing: 0.4,
 	fontSize: fontSize.xs,
