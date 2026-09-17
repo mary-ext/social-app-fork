@@ -21,6 +21,7 @@ import { clsx } from 'clsx';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 import { cleanError } from '#/lib/errors';
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
@@ -109,6 +110,8 @@ export const ComposePost = ({
 }: Props & {
 	cancelRef?: RefObject<CancelRef | null>;
 }) => {
+	const { gtMobile } = useBreakpoints();
+
 	const { currentAccount } = useSession();
 	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
@@ -659,7 +662,7 @@ export const ComposePost = ({
 		</>
 	);
 
-	const IS_WEBFooterSticky = thread.posts.length > 1;
+	const isFooterInline = gtMobile && thread.posts.length > 1;
 	return (
 		<>
 			<ComposerTopBar
@@ -711,14 +714,14 @@ export const ComposePost = ({
 								onPublish={onComposerPostPublish}
 								onError={setError}
 							/>
-							{IS_WEBFooterSticky && post.id === activePost.id && (
+							{isFooterInline && post.id === activePost.id && (
 								<div className={styles.stickyFooterWeb}>{footer}</div>
 							)}
 						</Fragment>
 					))}
 				</div>
 			</Dialog.Body>
-			{!IS_WEBFooterSticky && footer}
+			{!isFooterInline && footer}
 
 			{replyTo ? (
 				<Prompt.Basic
