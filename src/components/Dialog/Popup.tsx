@@ -1,9 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import type { HTMLAttributes, ReactNode, Ref } from 'react';
+import { type HTMLAttributes, type ReactNode, type Ref, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
+
+import { useVisualViewportVars } from '#/lib/browser/visual-viewport';
 
 import * as styles from '#/components/Dialog/Popup.css';
 import { NavigationEnabled } from '#/components/NavigationDisabled';
@@ -19,7 +21,7 @@ type CardProps = {
 	className?: string;
 	/**
 	 * defaults to content height. `fixed` (600px) and `tall` (80vh) prevent resizing between loading and
-	 * content states. with `scroll="body"`, capped at 80vh.
+	 * content states. with `scroll="body"`, capped at 80vh on wide screens; ignored below 800px.
 	 */
 	height?: 'content' | 'fixed' | 'tall';
 	/** accessible name when the dialog has no `Title`. */
@@ -28,7 +30,8 @@ type CardProps = {
 	padding?: 'default' | 'none';
 	/**
 	 * `viewport` (default) scrolls the whole card. `body` scrolls its `Body`/`List` child with pinned
-	 * `Header`/`Footer` slots.
+	 * `Header`/`Footer` slots. below 800px, `body` fills the visual viewport above the keyboard. provide an
+	 * in-card close control: `outer` {@link Close} is hidden below 800px.
 	 */
 	scroll?: 'body' | 'viewport';
 	size?: 'default' | 'medium' | 'narrow' | 'wide' | 'xwide';
@@ -63,8 +66,12 @@ export function Card({
 	scroll = 'viewport',
 	size = 'default',
 }: CardProps) {
+	const ref = useRef<HTMLDivElement>(null);
+	useVisualViewportVars(ref, { enabled: scroll === 'body' });
+
 	return (
 		<BaseDialog.Popup
+			ref={ref}
 			aria-label={label}
 			className={clsx(styles.popup({ height, padding, scroll, size }), className)}
 		>
@@ -154,7 +161,7 @@ export function Divider() {
 
 /**
  * close button. `default` sits in a {@link TitleRow}; `floating` sits at the card's top-right corner. `outer`
- * sits at the screen's top-right corner.
+ * sits at the screen's top-right corner and is hidden below 800px; provide an in-card alternative.
  */
 export function Close({ variant }: { variant?: 'default' | 'floating' | 'outer' } = {}) {
 	return (

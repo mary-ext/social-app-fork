@@ -3,7 +3,9 @@ import type { Ref } from 'react';
 import * as styles from '#/features/gifPicker/components/GifPickerHeader.css';
 
 import { SearchInput } from '#/components/forms/SearchInput';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
+import ArrowLeft from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function GifPickerHeader({
@@ -11,16 +13,26 @@ export function GifPickerHeader({
 	value,
 	onChangeText,
 	onClear,
-	onEscape,
+	onClose,
 }: {
 	inputRef: Ref<HTMLInputElement>;
 	value: string;
 	onChangeText: (text: string) => void;
 	onClear: () => void;
-	onEscape: () => void;
+	onClose: () => void;
 }) {
 	return (
 		<div className={styles.root}>
+			<Button
+				className={styles.back}
+				color="secondary"
+				label={m['common.action.goBack']()}
+				onClick={onClose}
+				shape="round"
+				variant="ghost"
+			>
+				<ButtonIcon icon={ArrowLeft} size="lg" />
+			</Button>
 			<SearchInput
 				inputRef={inputRef}
 				autoFocus
@@ -30,7 +42,7 @@ export function GifPickerHeader({
 				onClear={onClear}
 				onKeyDown={(e) => {
 					if (e.key === 'Escape') {
-						onEscape();
+						onClose();
 					}
 				}}
 				placeholder={m['features.gifPicker.search.placeholder']()}

@@ -97,6 +97,37 @@ export const popup = recipe(
 				xwide: { maxWidth: 920 },
 			},
 		},
+		compoundVariants: [
+			{
+				scroll: 'body',
+				style: {
+					'@media': {
+						'(width < 800px)': {
+							position: 'fixed',
+							top: 'var(--visual-viewport-top, 0px)',
+							left: 0,
+							transitionDuration: '250ms',
+							border: 'none',
+							borderRadius: 0,
+							boxShadow: 'none',
+							paddingTop: 'env(safe-area-inset-top, 0px)',
+							paddingRight: 'env(safe-area-inset-right, 0px)',
+							paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+							paddingLeft: 'env(safe-area-inset-left, 0px)',
+							maxWidth: 'none',
+							height: 'var(--visual-viewport-height, 100dvh)',
+							maxHeight: 'none',
+							selectors: {
+								'&[data-starting-style], &[data-ending-style]': {
+									transform: 'translateY(32px)',
+									opacity: 0,
+								},
+							},
+						},
+					},
+				},
+			},
+		],
 	},
 	{ debugId: 'popup', layer: components },
 );
@@ -252,6 +283,9 @@ export const close = recipe(
 					zIndex: zIndex.raised,
 					selectors: {
 						[`${viewport}[data-starting-style] &, ${viewport}[data-ending-style] &`]: { opacity: 0 },
+					},
+					'@media': {
+						'(width < 800px)': { display: 'none' },
 					},
 				},
 			},

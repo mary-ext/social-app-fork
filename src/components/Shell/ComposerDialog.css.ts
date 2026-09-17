@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 export const placeholder = style({
 	display: 'flex',
 	alignItems: 'center',
+	flex: 1,
 	justifyContent: 'center',
-	height: 312,
+	minHeight: 312,
 });

@@ -150,7 +150,7 @@ function GifPickerBody({
 					value={rawSearch}
 					onChangeText={onChangeSearch}
 					onClear={onClearSearch}
-					onEscape={() => handle.close()}
+					onClose={() => handle.close()}
 				/>
 				{showPills && (
 					<GifCategoryPills
