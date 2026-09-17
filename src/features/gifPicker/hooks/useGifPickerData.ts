@@ -1,19 +1,16 @@
 import { useFeaturedGifsQuery, useGifSearchQuery } from '#/features/gifPicker/queries';
 
 /**
- * Single entry point for the GIF picker's data layer. Routes between the featured and search endpoints so the
- * UI only ever consumes one query result.
+ * loads a KLIPY feed: search results for `query`, or the featured feed when it's empty.
+ *
+ * @param query search terms
+ * @returns the active infinite query
  */
-export function useGifPickerData(query: string, { enabled = true }: { enabled?: boolean } = {}) {
+export function useGifPickerData(query: string) {
 	const isSearching = query.length > 0;
 
-	const featured = useFeaturedGifsQuery({ enabled: enabled && !isSearching });
-	const search = useGifSearchQuery(query, { enabled: enabled && isSearching });
+	const featured = useFeaturedGifsQuery({ enabled: !isSearching });
+	const search = useGifSearchQuery(query, { enabled: isSearching });
 
-	const active = isSearching ? search : featured;
-
-	return {
-		...active,
-		isSearching,
-	};
+	return isSearching ? search : featured;
 }

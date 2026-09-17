@@ -5,9 +5,23 @@ import { gifPreviewUrl } from '#/features/gifPicker/utils';
 
 import { m } from '#/paraglide/messages';
 
-export function GifPickerItem({ gif, onSelectGif }: { gif: Gif; onSelectGif: (gif: Gif) => void }) {
-	const [width, height] = gif.media_formats.tinygif.dims;
-	const aspectRatio = width > 0 && height > 0 ? width / height : 1;
+export function GifPickerItem({
+	gif,
+	onSelectGif,
+	shape = 'intrinsic',
+}: {
+	gif: Gif;
+	onSelectGif: (gif: Gif) => void;
+	/** `square` crops the preview to fill a square tile. */
+	shape?: 'intrinsic' | 'square';
+}) {
+	let aspectRatio = 1;
+	if (shape === 'intrinsic') {
+		const [width, height] = gif.media_formats.tinygif.dims;
+		if (width > 0 && height > 0) {
+			aspectRatio = width / height;
+		}
+	}
 
 	return (
 		<button

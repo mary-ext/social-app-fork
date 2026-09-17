@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 
 import { gifKlipyFeaturedUrl, gifKlipySearchUrl } from '#/lib/constants/services';
 import type { Gif } from '#/lib/media/external-gif/types';
@@ -14,22 +14,39 @@ const searchGifs = createKlipyApi<{ q: string }>(gifKlipySearchUrl);
 
 export function useFeaturedGifsQuery(options?: { enabled?: boolean }) {
 	return useInfiniteQuery({
-		queryKey: RQKEY_FEATURED,
+		...featuredGifsOptions,
 		enabled: options?.enabled,
-		// Klipy serves time-of-day-sensitive trending; drop cache as soon as the
-		// picker closes so every reopen issues a fresh request instead of showing
-		// stale results while a background refetch runs.
-		gcTime: 0,
-		queryFn: ({ pageParam, signal }) => getTrendingGifs({ pos: pageParam }, signal),
-		initialPageParam: undefined as string | undefined,
-		getNextPageParam: (lastPage) => lastPage.next,
 	});
 }
+
+/**
+ * loads and retains the featured feed without subscribing to updates. call for the picker's lifetime to
+ * preserve results between views.
+ */
+export function useRetainFeaturedGifs() {
+	useInfiniteQuery({
+		...featuredGifsOptions,
+		notifyOnChangeProps: [],
+	});
+}
+
+const featuredGifsOptions = infiniteQueryOptions({
+	queryKey: RQKEY_FEATURED,
+	// discard trending results when the picker closes so reopening loads fresh results.
+	gcTime: 0,
+	// preserve loaded pages when navigation remounts a view.
+	staleTime: Infinity,
+	queryFn: ({ pageParam, signal }) => getTrendingGifs({ pos: pageParam }, signal),
+	initialPageParam: undefined as string | undefined,
+	getNextPageParam: (lastPage) => lastPage.next,
+});
 
 export function useGifSearchQuery(query: string, options?: { enabled?: boolean }) {
 	return useInfiniteQuery({
 		queryKey: RQKEY_SEARCH(query),
 		enabled: !!query && options?.enabled !== false,
+		// preserve loaded pages when navigation remounts a view.
+		staleTime: Infinity,
 		queryFn: ({ pageParam, signal }) => searchGifs({ q: query, pos: pageParam }, signal),
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (lastPage) => lastPage.next,

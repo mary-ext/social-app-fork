@@ -1,31 +1,80 @@
-import { style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
+import { DIALOG_PADDING, SEARCH_FADE, SEARCH_HEIGHT } from '#/features/gifPicker/layout';
+
+import { colors } from '#/styles/colors';
+import { withAlpha } from '#/styles/functions';
+import { recipe } from '#/styles/recipe';
+import { space, zIndex } from '#/styles/tokens.css';
 
 export const header = style({
+	boxSizing: 'border-box',
+	display: 'flex',
 	flexShrink: 0,
-	backgroundColor: vars.palette.contrast_0,
-	paddingTop: space.xl,
-	paddingInline: space.xl,
-	'@media': {
-		'(min-width: 800px)': {
-			paddingTop: space._2xl,
-			paddingInline: space._2xl,
-		},
-	},
+	gap: space.lg,
+	alignItems: 'center',
+	backgroundColor: colors.bg,
+	paddingTop: DIALOG_PADDING,
+	paddingBottom: space.md,
+	paddingInline: DIALOG_PADDING,
 });
 
-export const placeholder = style({
-	boxSizing: 'border-box',
+// overlaps the top of the views so scrolled GIFs fade out beneath the field.
+export const search = style({
+	flexShrink: 0,
+	zIndex: zIndex.raised,
+	marginBottom: -(SEARCH_HEIGHT + SEARCH_FADE),
+	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
+	paddingBottom: SEARCH_FADE,
+	paddingInline: DIALOG_PADDING,
+});
+
+export const views = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	paddingInline: space.xl,
+	overflow: 'hidden',
 	minHeight: 0,
+});
+
+const push = keyframes({
+	from: { transform: 'translateX(40px)', opacity: 0 },
+});
+
+const pop = keyframes({
+	from: { transform: 'translateX(-40px)', opacity: 0 },
+});
+
+const fade = keyframes({
+	from: { opacity: 0 },
+});
+
+const animated = (animation: string) => ({
+	animation,
 	'@media': {
-		'(min-width: 800px)': {
-			paddingInline: space._2xl,
-		},
+		'(prefers-reduced-motion: reduce)': { animation: 'none' },
 	},
 });
+
+export const view = recipe(
+	{
+		base: {
+			display: 'flex',
+			flex: 1,
+			flexDirection: 'column',
+			minHeight: 0,
+			selectors: {
+				'&[hidden]': { display: 'none' },
+			},
+		},
+		variants: {
+			transition: {
+				fade: animated(`${fade} 150ms ease-out`),
+				none: {},
+				pop: animated(`${pop} 240ms cubic-bezier(0.16, 1, 0.3, 1)`),
+				push: animated(`${push} 240ms cubic-bezier(0.16, 1, 0.3, 1)`),
+			},
+		},
+	},
+	{ debugId: 'view' },
+);

@@ -1,41 +1,32 @@
-import { type Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 
-import { cleanError } from '#/lib/errors';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
 
-import { CenteredSpinner } from '#/components/CenteredSpinner';
-import { Text } from '#/components/Text';
-import { Button, ButtonText } from '#/components/web/Button';
-
-import { m } from '#/paraglide/messages';
-
-export type GifPickerGridHandle = {
-	scrollToTop: () => void;
-};
-
 type Props = {
+	/** shown in place of the columns while `items` is empty. */
+	empty: ReactNode;
+	/** content below the columns. */
+	footer?: ReactNode;
+	/** scrollable content above the columns. */
+	header?: ReactNode;
 	items: Gif[];
 	numColumns: number;
-	isFetchingNextPage: boolean;
-	error: unknown;
-	fetchNextPage: () => Promise<unknown>;
-	onEndReached: () => void;
+	/** called as the end of the content nears the viewport. */
+	onEndReached?: () => void;
 	onSelectGif: (gif: Gif) => void;
-	ref?: Ref<GifPickerGridHandle>;
 };
 
 export function GifPickerGrid({
+	empty,
+	footer,
+	header,
 	items,
 	numColumns,
-	isFetchingNextPage,
-	error,
-	fetchNextPage,
 	onEndReached,
 	onSelectGif,
-	ref,
 }: Props) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const sentinelRef = useRef<HTMLDivElement>(null);
@@ -48,8 +39,6 @@ export function GifPickerGrid({
 		onEndReachedRef.current = onEndReached;
 	});
 
-	useImperativeHandle(ref, () => ({ scrollToTop: () => scrollRef.current?.scrollTo({ top: 0 }) }), []);
-
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
 		const root = scrollRef.current;
@@ -59,7 +48,7 @@ export function GifPickerGrid({
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries.some((entry) => entry.isIntersecting)) {
-					onEndReachedRef.current();
+					onEndReachedRef.current?.();
 				}
 			},
 			// prefetch roughly a screen ahead, mirroring the FlatList's onEndReachedThreshold of 1.
@@ -74,33 +63,22 @@ export function GifPickerGrid({
 	return (
 		<div ref={scrollRef} className={styles.scroll}>
 			<div className={styles.content}>
-				<div className={styles.columns}>
-					{columns.map((column, i) => (
-						// oxlint-disable-next-line react/no-array-index-key -- fixed column count; gifs keyed by id
-						<div key={i} className={styles.column}>
-							{column.map((gif) => (
-								<GifPickerItem key={gif.id} gif={gif} onSelectGif={onSelectGif} />
-							))}
-						</div>
-					))}
-				</div>
-				{isFetchingNextPage ? (
-					<CenteredSpinner label={m['features.gifPicker.load.loading']()} size="_2xl" />
-				) : error ? (
-					<div className={styles.footer}>
-						<Text size="sm" color="textContrastMedium" align="center">
-							{cleanError(error)}
-						</Text>
-						<Button
-							label={m['common.action.retry']()}
-							size="small"
-							color="secondary"
-							onClick={() => void fetchNextPage()}
-						>
-							<ButtonText>{m['common.action.retry']()}</ButtonText>
-						</Button>
+				{header}
+				{items.length > 0 ? (
+					<div className={styles.columns}>
+						{columns.map((column, i) => (
+							// oxlint-disable-next-line react/no-array-index-key -- fixed column count; gifs keyed by id
+							<div key={i} className={styles.column}>
+								{column.map((gif) => (
+									<GifPickerItem key={gif.id} gif={gif} onSelectGif={onSelectGif} />
+								))}
+							</div>
+						))}
 					</div>
-				) : null}
+				) : (
+					empty
+				)}
+				{footer}
 				<div ref={sentinelRef} aria-hidden />
 			</div>
 		</div>

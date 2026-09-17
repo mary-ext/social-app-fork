@@ -1,40 +1,41 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 
-import { uniqueBy } from '@mary/array-fns';
-
-import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';
 import type { Gif } from '#/lib/media/external-gif/types';
 
-import { addRecentGif, useRecentGifs } from '#/state/preferences/recent-gifs';
+import { addRecentGif } from '#/state/preferences/recent-gifs';
 
-import {
-	GIF_CATEGORIES,
-	type GifCategory,
-	GifCategoryPills,
-} from '#/features/gifPicker/components/GifCategoryPills';
-import { type GifPickerGridHandle, GifPickerGrid } from '#/features/gifPicker/components/GifPickerGrid';
-import { GifPickerHeader } from '#/features/gifPicker/components/GifPickerHeader';
-import { GifPickerPlaceholder } from '#/features/gifPicker/components/GifPickerPlaceholder';
+import { type GifCategoryId, getGifCategory } from '#/features/gifPicker/categories';
+import { GifPickerFeed, RecentGifsFeed } from '#/features/gifPicker/components/GifPickerFeed';
+import { GifPickerHome } from '#/features/gifPicker/components/GifPickerHome';
 import * as styles from '#/features/gifPicker/GifPickerDialog.css';
-import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
+import { useRetainFeaturedGifs } from '#/features/gifPicker/queries';
 
 import * as Dialog from '#/components/Dialog';
+import { SearchInput } from '#/components/forms/SearchInput';
+import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
+import { Text } from '#/components/Text';
+
+import { m } from '#/paraglide/messages';
+
+type GifPickerRoutes = {
+	category: { id: GifCategoryId };
+	home: undefined;
+	recents: undefined;
+	search: undefined;
+};
+
+const GifPickerNavigator = createNavigator<GifPickerRoutes>();
 
 export function GifPickerDialog({
 	handle,
 	onClose,
-	onSelectGif: onSelectGifProp,
+	onSelectGif,
 }: {
 	handle: Dialog.DialogHandle;
 	onClose?: () => void;
 	onSelectGif: (gif: Gif) => void;
 }) {
-	const onSelectGif = (gif: Gif) => {
-		handle.close();
-		onSelectGifProp(gif);
-	};
-
 	return (
 		<Dialog.Root
 			handle={handle}
@@ -44,146 +45,145 @@ export function GifPickerDialog({
 				}
 			}}
 		>
-			<Dialog.Viewport>
-				<Dialog.Close variant="outer" />
-				<Dialog.Card height="tall" label="GIFs" scroll="body">
+			<Dialog.Popup height="fixed" label={m['features.gifPicker.title']()} scroll="body" size="wide">
+				<GifPickerNavigator.Provider initialRoute={{ name: 'home' }}>
 					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
-				</Dialog.Card>
-			</Dialog.Viewport>
+				</GifPickerNavigator.Provider>
+			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
 function GifPickerBody({
 	handle,
-	onSelectGif,
+	onSelectGif: onSelectGifProp,
 }: {
 	handle: Dialog.DialogHandle;
 	onSelectGif: (gif: Gif) => void;
 }) {
-	const { gtMobile } = useBreakpoints();
+	const { direction, key, pop, push, route } = GifPickerNavigator.useNavigator();
 	const inputRef = useRef<HTMLInputElement>(null);
-	const gridRef = useRef<GifPickerGridHandle>(null);
-	const [rawSearch, setRawSearch] = useState('');
-	const [activeCategory, setActiveCategory] = useState<string>('trending');
-	const search = useThrottledValue(rawSearch, 750);
-	const recentGifs = useRecentGifs();
+	const [query, setQuery] = useState('');
 
-	// Determine the effective search query:
-	// - If user is typing, use the throttled text
-	// - If user clears the input, immediately drop the search (don't wait for
-	//   the throttle to catch up — otherwise the previous query keeps driving
-	//   the visible results until the next interval tick)
-	// - If a non-trending category is active, use its searchterm
-	// - Otherwise (trending/recents), empty string triggers the featured endpoint
-	const activeCategorySearchterm = GIF_CATEGORIES.find((c) => c.id === activeCategory)?.searchterm ?? '';
-	const effectiveSearch = rawSearch.length > 0 && search.length > 0 ? search : activeCategorySearchterm;
+	useRetainFeaturedGifs();
 
-	const isRecentsActive = activeCategory === 'recents' && rawSearch.length === 0;
+	const isSearching = route.name === 'search';
 
-	const {
-		data,
-		fetchNextPage,
-		isFetchingNextPage,
-		hasNextPage,
-		error,
-		isPending,
-		isError,
-		isSearching,
-		refetch,
-	} = useGifPickerData(effectiveSearch, { enabled: !isRecentsActive });
-
-	const networkItems = uniqueBy(data?.pages.flatMap((page) => page.results) ?? [], (item) => item.id);
-	const items = isRecentsActive ? recentGifs : networkItems;
-	const hasData = items.length > 0;
-
-	const onEndReached = () => {
-		if (isRecentsActive) {
-			return;
-		}
-		if (isFetchingNextPage || !hasNextPage || error) {
-			return;
-		}
-		void fetchNextPage();
+	const onSelectGif = (gif: Gif) => {
+		addRecentGif(gif);
+		handle.close();
+		onSelectGifProp(gif);
 	};
 
-	// Scroll to top when the effective query/category changes, NOT on every keystroke.
-	useEffect(() => {
-		gridRef.current?.scrollToTop();
-		// oxlint-disable-next-line react/exhaustive-effect-dependencies -- query and category trigger the reset
-	}, [effectiveSearch, isRecentsActive]);
+	const onChangeQuery = (text: string) => {
+		setQuery(text);
+		if (!isSearching && text.length > 0) {
+			push({ name: 'search' });
+		} else if (isSearching && text.length === 0) {
+			pop();
+		}
+	};
 
-	const onClearSearch = () => {
-		setRawSearch('');
-		setActiveCategory('trending');
+	const onClearQuery = () => {
+		onChangeQuery('');
 		inputRef.current?.focus();
 	};
 
-	const onGoBack = () => {
-		if (isSearching || activeCategory !== 'trending') {
-			onClearSearch();
-		} else {
-			handle.close();
+	let title: string;
+	let view: ReactNode;
+	switch (route.name) {
+		case 'category': {
+			const category = getGifCategory(route.params.id);
+			title = category.label();
+			view = (
+				<GifPickerFeed
+					emptyMessage={m['features.gifPicker.feed.empty']()}
+					onSelectGif={onSelectGif}
+					query={category.query}
+				/>
+			);
+			break;
 		}
-	};
-
-	const onChangeSearch = (text: string) => {
-		setRawSearch(text);
-	};
-
-	const onSelectCategory = (category: GifCategory) => {
-		setActiveCategory(category.id);
-	};
-
-	const handleSelectGif = (gif: Gif) => {
-		addRecentGif(gif);
-		onSelectGif(gif);
-	};
-
-	const showPills = rawSearch.length === 0;
+		case 'home': {
+			title = m['features.gifPicker.title']();
+			view = (
+				<GifPickerFeed
+					emptyMessage={m['features.gifPicker.feed.empty']()}
+					header={
+						<GifPickerHome
+							onOpenCategory={(id) => push({ name: 'category', params: { id } })}
+							onOpenRecents={() => push({ name: 'recents' })}
+							onSelectGif={onSelectGif}
+						/>
+					}
+					onSelectGif={onSelectGif}
+					query=""
+				/>
+			);
+			break;
+		}
+		case 'recents': {
+			title = m['features.gifPicker.recents.title']();
+			view = <RecentGifsFeed onGoBack={pop} onSelectGif={onSelectGif} />;
+			break;
+		}
+		case 'search': {
+			title = m['features.gifPicker.title']();
+			view = <GifPickerSearch onClearQuery={onClearQuery} onSelectGif={onSelectGif} query={query} />;
+			break;
+		}
+	}
 
 	return (
 		<>
 			<div className={styles.header}>
-				<GifPickerHeader
-					inputRef={inputRef}
-					value={rawSearch}
-					onChangeText={onChangeSearch}
-					onClear={onClearSearch}
-					onClose={() => handle.close()}
-				/>
-				{showPills && (
-					<GifCategoryPills
-						activeId={activeCategory}
-						onSelect={onSelectCategory}
-						hasRecents={recentGifs.length > 0}
-					/>
-				)}
+				<BackOrCloseButton closeLabel={m['common.a11y.closeDialog']()} onClose={() => handle.close()} />
+				<Text numberOfLines={1} size="lg" weight="semiBold">
+					{title}
+				</Text>
 			</div>
-			{hasData ? (
-				<GifPickerGrid
-					ref={gridRef}
-					items={items}
-					numColumns={gtMobile ? 3 : 2}
-					isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
-					error={isRecentsActive ? null : error}
-					fetchNextPage={fetchNextPage}
-					onEndReached={onEndReached}
-					onSelectGif={handleSelectGif}
+
+			<div className={styles.search}>
+				<SearchInput
+					autoFocus
+					inputRef={inputRef}
+					label={m['features.gifPicker.search.a11y']()}
+					maxLength={50}
+					onChangeText={onChangeQuery}
+					onClear={onClearQuery}
+					placeholder={m['features.gifPicker.search.placeholder']()}
+					value={isSearching ? query : ''}
 				/>
-			) : (
-				<div className={styles.placeholder}>
-					<GifPickerPlaceholder
-						isLoading={!isRecentsActive && isPending}
-						isError={!isRecentsActive && isError}
-						isSearching={isSearching}
-						isRecentsEmpty={isRecentsActive}
-						query={effectiveSearch}
-						onRetry={refetch}
-						onGoBack={onGoBack}
-					/>
+			</div>
+
+			<div className={styles.views}>
+				<div key={key} className={styles.view({ transition: isSearching ? 'fade' : direction })}>
+					{view}
 				</div>
-			)}
+			</div>
 		</>
+	);
+}
+
+// remount on each search visit so the throttle cannot show the previous query's results.
+function GifPickerSearch({
+	onClearQuery,
+	onSelectGif,
+	query,
+}: {
+	onClearQuery: () => void;
+	onSelectGif: (gif: Gif) => void;
+	query: string;
+}) {
+	const throttledQuery = useThrottledValue(query, 750);
+
+	return (
+		<GifPickerFeed
+			key={throttledQuery}
+			emptyMessage={m['features.gifPicker.search.empty']({ query: throttledQuery })}
+			onGoBack={onClearQuery}
+			onSelectGif={onSelectGif}
+			query={throttledQuery}
+		/>
 	);
 }

@@ -1,22 +1,27 @@
 import { style } from '@vanilla-extract/css';
 
+import { DIALOG_PADDING, SEARCH_HEIGHT } from '#/features/gifPicker/layout';
+
 import { space } from '#/styles/tokens.css';
+
+// the search field overlaps the top of the scroller, so content starts below it.
+const CONTENT_TOP = SEARCH_HEIGHT + space.md;
 
 export const scroll = style({
 	flex: 1,
 	minHeight: 0,
 	overflowY: 'auto',
+	scrollPaddingTop: CONTENT_TOP,
 });
 
 export const content = style({
 	boxSizing: 'border-box',
-	paddingBottom: space.xl,
-	paddingInline: space.xl,
-	'@media': {
-		'(min-width: 800px)': {
-			paddingInline: space._2xl,
-		},
-	},
+	display: 'flex',
+	flexDirection: 'column',
+	paddingTop: CONTENT_TOP,
+	paddingBottom: DIALOG_PADDING,
+	paddingInline: DIALOG_PADDING,
+	minHeight: '100%',
 });
 
 export const columns = style({
@@ -31,12 +36,4 @@ export const column = style({
 	flexDirection: 'column',
 	gap: space.sm,
 	minWidth: 0,
-});
-
-export const footer = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	alignItems: 'center',
-	paddingBlock: space.xl,
 });
