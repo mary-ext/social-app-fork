@@ -8,7 +8,7 @@ import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-/** Horizontal inset of the scroller and its edge fades; set per-consumer via `gutterWidth`. */
+/** horizontal inset set by `Root`'s `gutterWidth`, in pixels. */
 export const gutterVar = createVar();
 
 export const outer = style({
@@ -46,7 +46,6 @@ export const tab = recipe(
 			boxSizing: 'border-box',
 			display: 'flex',
 			flexShrink: 0,
-			// gap only shows through with multiple children (e.g. a label beside a count); single-label pills are unaffected.
 			gap: space.sm,
 			alignItems: 'center',
 			margin: 0,
@@ -64,7 +63,7 @@ export const tab = recipe(
 					outline: `2px solid ${colors.primary_500}`,
 					outlineOffset: -2,
 				},
-				[hover(':not(:disabled):not([data-active="true"])')]: { backgroundColor: colors.contrast_50 },
+				[hover(':not(:disabled):not([data-active])')]: { backgroundColor: colors.contrast_50 },
 				'&:disabled': { cursor: 'default', opacity: 0.5 },
 			},
 		},
@@ -83,36 +82,45 @@ export const tabLabel = style({
 	color: 'inherit',
 });
 
-const edgeBase = style({
+export const edge = style({
 	display: 'flex',
 	position: 'absolute',
 	top: 0,
 	bottom: 0,
+	// keep fades above pills that create stacking contexts
+	zIndex: 1,
 	alignItems: 'center',
+	opacity: 0,
+	// keep pills beneath the fade clickable
+	pointerEvents: 'none',
+	transition: 'opacity 150ms ease-out',
+	selectors: {
+		'&[data-visible]': { opacity: 1 },
+		'&[data-side="left"]': {
+			left: 0,
+			justifyContent: 'flex-start',
+			background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
+			paddingRight: space.md,
+			paddingLeft: gutterVar,
+		},
+		'&[data-side="right"]': {
+			right: 0,
+			justifyContent: 'flex-end',
+			background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
+			paddingRight: gutterVar,
+			paddingLeft: space.md,
+		},
+	},
+	'@media': {
+		'(prefers-reduced-motion: reduce)': {
+			transition: 'none',
+		},
+	},
 });
 
-export const edgeLeft = style([
-	edgeBase,
-	{
-		left: 0,
-		justifyContent: 'flex-start',
-		background: `linear-gradient(to right, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
-		paddingRight: space.md,
-		paddingLeft: gutterVar,
-	},
-]);
-
-export const edgeRight = style([
-	edgeBase,
-	{
-		right: 0,
-		justifyContent: 'flex-end',
-		background: `linear-gradient(to left, ${colors.bg} 0%, ${colors.bg} 70%, ${withAlpha(colors.bg, '0%')} 100%)`,
-		paddingRight: gutterVar,
-		paddingLeft: space.md,
-	},
-]);
-
-export const edgeButton = style({
+export const arrow = style({
 	borderColor: colors.borderContrastLow,
+	selectors: {
+		[`${edge}[data-visible] &`]: { pointerEvents: 'auto' },
+	},
 });

@@ -111,7 +111,7 @@ function DialogInner({
 			</div>
 
 			<div className={css.tabs}>
-				<TabScroller.Root activeKey={selected} gutterWidth={space.lg}>
+				<TabScroller.Root gutterWidth={space.lg}>
 					{tabs.map((tab) => (
 						<TabScroller.Tab
 							active={selected === tab.key}

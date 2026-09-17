@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
@@ -13,6 +13,7 @@ import { useSession } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { InterestTabs } from '#/components/InterestTabs';
+import type { ListMethods } from '#/components/List/List';
 import * as css from '#/components/SuggestedFollowsDialog.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -64,6 +65,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const [searchText, setSearchText] = useState(lastSearchText);
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
+	const listRef = useRef<ListMethods>(null);
 
 	useEffect(() => {
 		lastSearchText = searchText;
@@ -124,6 +126,12 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const onSelectTab = (interest: string) => {
 		setSelectedInterest(interest);
 		setSearchText('');
+		listRef.current?.scrollToTop();
+	};
+
+	const onChangeSearchText = (text: string) => {
+		setSearchText(text);
+		listRef.current?.scrollToTop();
 	};
 
 	const renderItem = ({ index, item: profile }: Dialog.ListRenderItemInfo<AnyProfileView>) =>
@@ -163,8 +171,8 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					autoFocus
 					label={m['common.search.action.profiles']()}
 					maxLength={50}
-					onChangeText={setSearchText}
-					onClear={() => setSearchText('')}
+					onChangeText={onChangeSearchText}
+					onClear={() => onChangeSearchText('')}
 					placeholder={m['components.dialogs.suggestedFollows.searchPlaceholder']()}
 					value={searchText}
 				/>
@@ -174,7 +182,6 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				className={css.list}
 				data={profiles}
 				estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
-				key={hasSearchText ? searchText : selectedInterest}
 				keyExtractor={(profile) => profile.did}
 				ListEmptyComponent={listEmpty}
 				ListHeaderComponent={
@@ -189,6 +196,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 						</div>
 					)
 				}
+				ref={listRef}
 				renderItem={renderItem}
 			/>
 		</>

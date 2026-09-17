@@ -4,8 +4,10 @@ import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 
 /**
- * Horizontally-scrolling row of category pills, scrolling the selected pill into view. Used for the interests
- * picker on the Explore screen and the find-follows flow.
+ * horizontally scrollable interest pills.
+ *
+ * @param props interests, display names, and selection handler and state
+ * @returns selectable interest pills
  */
 export function InterestTabs({
 	interests,
@@ -19,7 +21,7 @@ export function InterestTabs({
 	selectedInterest: string;
 }) {
 	return (
-		<TabScroller.Root activeKey={selectedInterest} gutterWidth={space.lg}>
+		<TabScroller.Root gutterWidth={space.lg}>
 			{interests.map((interest) => {
 				const active = interest === selectedInterest;
 				const displayName = interestsDisplayNames[interest]!();
