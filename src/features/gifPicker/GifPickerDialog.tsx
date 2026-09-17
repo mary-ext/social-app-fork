@@ -1,31 +1,15 @@
-import { type ReactNode, useRef, useState } from 'react';
+import { lazy, Suspense } from 'react';
 
-import { useThrottledValue } from '#/lib/hooks/use-debounce';
 import type { Gif } from '#/lib/media/external-gif/types';
 
-import { addRecentGif } from '#/state/preferences/recent-gifs';
-
-import { type GifCategoryId, getGifCategory } from '#/features/gifPicker/categories';
-import { GifPickerFeed, RecentGifsFeed } from '#/features/gifPicker/components/GifPickerFeed';
-import { GifPickerHome } from '#/features/gifPicker/components/GifPickerHome';
-import * as styles from '#/features/gifPicker/GifPickerDialog.css';
-import { useRetainFeaturedGifs } from '#/features/gifPicker/queries';
-
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
-import { SearchInput } from '#/components/forms/SearchInput';
-import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
-import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
-type GifPickerRoutes = {
-	category: { id: GifCategoryId };
-	home: undefined;
-	recents: undefined;
-	search: undefined;
-};
-
-const GifPickerNavigator = createNavigator<GifPickerRoutes>();
+const GifPickerDialogContent = lazy(() =>
+	import('./GifPickerDialogContent').then((mod) => ({ default: mod.GifPickerDialogContent })),
+);
 
 export function GifPickerDialog({
 	handle,
@@ -46,144 +30,10 @@ export function GifPickerDialog({
 			}}
 		>
 			<Dialog.Popup height="fixed" label={m['features.gifPicker.title']()} scroll="body" size="wide">
-				<GifPickerNavigator.Provider initialRoute={{ name: 'home' }}>
-					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
-				</GifPickerNavigator.Provider>
+				<Suspense fallback={<CenteredSpinner fill label={m['common.status.loading']()} size="xl" />}>
+					<GifPickerDialogContent handle={handle} onSelectGif={onSelectGif} />
+				</Suspense>
 			</Dialog.Popup>
 		</Dialog.Root>
-	);
-}
-
-function GifPickerBody({
-	handle,
-	onSelectGif: onSelectGifProp,
-}: {
-	handle: Dialog.DialogHandle;
-	onSelectGif: (gif: Gif) => void;
-}) {
-	const { direction, key, pop, push, route } = GifPickerNavigator.useNavigator();
-	const inputRef = useRef<HTMLInputElement>(null);
-	const [query, setQuery] = useState('');
-
-	useRetainFeaturedGifs();
-
-	const isSearching = route.name === 'search';
-
-	const onSelectGif = (gif: Gif) => {
-		addRecentGif(gif);
-		handle.close();
-		onSelectGifProp(gif);
-	};
-
-	const onChangeQuery = (text: string) => {
-		setQuery(text);
-		if (!isSearching && text.length > 0) {
-			push({ name: 'search' });
-		} else if (isSearching && text.length === 0) {
-			pop();
-		}
-	};
-
-	const onClearQuery = () => {
-		onChangeQuery('');
-		inputRef.current?.focus();
-	};
-
-	let title: string;
-	let view: ReactNode;
-	switch (route.name) {
-		case 'category': {
-			const category = getGifCategory(route.params.id);
-			title = category.label();
-			view = (
-				<GifPickerFeed
-					emptyMessage={m['features.gifPicker.feed.empty']()}
-					onSelectGif={onSelectGif}
-					query={category.query}
-				/>
-			);
-			break;
-		}
-		case 'home': {
-			title = m['features.gifPicker.title']();
-			view = (
-				<GifPickerFeed
-					emptyMessage={m['features.gifPicker.feed.empty']()}
-					header={
-						<GifPickerHome
-							onOpenCategory={(id) => push({ name: 'category', params: { id } })}
-							onOpenRecents={() => push({ name: 'recents' })}
-							onSelectGif={onSelectGif}
-						/>
-					}
-					onSelectGif={onSelectGif}
-					query=""
-				/>
-			);
-			break;
-		}
-		case 'recents': {
-			title = m['features.gifPicker.recents.title']();
-			view = <RecentGifsFeed onGoBack={pop} onSelectGif={onSelectGif} />;
-			break;
-		}
-		case 'search': {
-			title = m['features.gifPicker.title']();
-			view = <GifPickerSearch onClearQuery={onClearQuery} onSelectGif={onSelectGif} query={query} />;
-			break;
-		}
-	}
-
-	return (
-		<>
-			<div className={styles.header}>
-				<BackOrCloseButton closeLabel={m['common.a11y.closeDialog']()} onClose={() => handle.close()} />
-				<Text numberOfLines={1} size="lg" weight="semiBold">
-					{title}
-				</Text>
-			</div>
-
-			<div className={styles.search}>
-				<SearchInput
-					autoFocus
-					inputRef={inputRef}
-					label={m['features.gifPicker.search.a11y']()}
-					maxLength={50}
-					onChangeText={onChangeQuery}
-					onClear={onClearQuery}
-					placeholder={m['features.gifPicker.search.placeholder']()}
-					value={isSearching ? query : ''}
-				/>
-			</div>
-
-			<div className={styles.views}>
-				<div key={key} className={styles.view({ transition: isSearching ? 'fade' : direction })}>
-					{view}
-				</div>
-			</div>
-		</>
-	);
-}
-
-// remount on each search visit so the throttle cannot show the previous query's results.
-function GifPickerSearch({
-	onClearQuery,
-	onSelectGif,
-	query,
-}: {
-	onClearQuery: () => void;
-	onSelectGif: (gif: Gif) => void;
-	query: string;
-}) {
-	const throttledQuery = useThrottledValue(query, 750);
-
-	return (
-		<GifPickerFeed
-			key={throttledQuery}
-			emptyMessage={m['features.gifPicker.search.empty']({ query: throttledQuery })}
-			onGoBack={onClearQuery}
-			onSelectGif={onSelectGif}
-			query={throttledQuery}
-		/>
 	);
 }
