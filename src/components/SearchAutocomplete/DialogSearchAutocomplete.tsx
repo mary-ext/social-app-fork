@@ -2,8 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { tokenize } from '@atcute/bluesky-search-parser';
 
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-
 import { useInputHighlights } from '#/lib/hooks/use-input-highlights';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
@@ -11,7 +9,6 @@ import { focusSearch } from '#/state/events';
 
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
-import { NavigationEnabled } from '#/components/NavigationDisabled';
 import * as Layout from '#/components/web/Layout';
 
 import { useFocusEffect } from '#/router';
@@ -129,46 +126,42 @@ export function DialogSearchAutocomplete({
 			</SearchField.Root>
 
 			<Dialog.Root handle={handle}>
-				<BaseDialog.Portal className={styles.portal}>
-					<BaseDialog.Popup
-						aria-label={placeholder}
-						className={styles.popup}
-						// restoring trigger focus would reopen the dialog.
-						finalFocus={false}
-						// the search field restores its caret before focusing itself.
-						initialFocus={false}
+				<Dialog.Popup
+					// restoring trigger focus would reopen the dialog.
+					finalFocus={false}
+					// the search field restores its caret before focusing itself.
+					initialFocus={false}
+					label={placeholder}
+					scroll="body"
+				>
+					<SearchAutocompleteInput
+						{...props}
+						autoFocus
+						initialQuery={initialQuery}
+						initialSelection={selection}
+						inline
+						onNavigate={closeThen(onNavigate)}
+						onNavigateToProfile={closeThen(onNavigateToProfile)}
+						onSubmit={closeThen(onSubmit)}
+						placeholder={placeholder}
 					>
-						<NavigationEnabled>
-							<SearchAutocompleteInput
-								{...props}
-								autoFocus
-								initialQuery={initialQuery}
-								initialSelection={selection}
-								inline
-								onNavigate={closeThen(onNavigate)}
-								onNavigateToProfile={closeThen(onNavigateToProfile)}
-								onSubmit={closeThen(onSubmit)}
-								placeholder={placeholder}
-							>
-								{({ field, list }) => (
-									<>
-										<Layout.Header.Outer sticky={false} noBottomBorder>
-											<Layout.Header.BackButton
-												onClick={(event) => {
-													event.preventDefault();
-													handle.close();
-												}}
-											/>
-											<Layout.Header.Content>{field}</Layout.Header.Content>
-										</Layout.Header.Outer>
+						{({ field, list }) => (
+							<>
+								<Layout.Header.Outer sticky={false} noBottomBorder>
+									<Layout.Header.BackButton
+										onClick={(event) => {
+											event.preventDefault();
+											handle.close();
+										}}
+									/>
+									<Layout.Header.Content>{field}</Layout.Header.Content>
+								</Layout.Header.Outer>
 
-										<div className={styles.body}>{list}</div>
-									</>
-								)}
-							</SearchAutocompleteInput>
-						</NavigationEnabled>
-					</BaseDialog.Popup>
-				</BaseDialog.Portal>
+								<Dialog.Body className={styles.body}>{list}</Dialog.Body>
+							</>
+						)}
+					</SearchAutocompleteInput>
+				</Dialog.Popup>
 			</Dialog.Root>
 		</>
 	);

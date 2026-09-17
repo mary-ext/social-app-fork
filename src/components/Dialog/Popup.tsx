@@ -19,11 +19,15 @@ const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagatio
 type CardProps = {
 	children: ReactNode;
 	className?: string;
+	/** element focused when the dialog closes. `false` leaves focus where it is. */
+	finalFocus?: BaseDialog.Popup.Props['finalFocus'];
 	/**
 	 * defaults to content height. `fixed` (600px) and `tall` (80vh) prevent resizing between loading and
 	 * content states. with `scroll="body"`, capped at 80vh on wide screens; ignored below 800px.
 	 */
 	height?: 'content' | 'fixed' | 'tall';
+	/** element focused when the dialog opens. `false` lets the content manage its own focus. */
+	initialFocus?: BaseDialog.Popup.Props['initialFocus'];
 	/** accessible name when the dialog has no `Title`. */
 	label?: string;
 	/** `none` drops the card's own padding, for full-bleed content that reapplies padding per-section. */
@@ -60,7 +64,9 @@ export function Viewport({ children }: { children: ReactNode }) {
 export function Card({
 	children,
 	className,
+	finalFocus,
 	height = 'content',
+	initialFocus,
 	label,
 	padding = 'default',
 	scroll = 'viewport',
@@ -74,6 +80,8 @@ export function Card({
 			ref={ref}
 			aria-label={label}
 			className={clsx(styles.popup({ height, padding, scroll, size }), className)}
+			finalFocus={finalFocus}
+			initialFocus={initialFocus}
 		>
 			{children}
 		</BaseDialog.Popup>
