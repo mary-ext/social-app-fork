@@ -1,4 +1,4 @@
-import { useId, useMemo, useReducer, useState } from 'react';
+import { type ReactNode, useId, useMemo, useState } from 'react';
 
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
@@ -12,6 +12,7 @@ import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';
+import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
@@ -32,13 +33,20 @@ import {
 import { useCopyForSubject } from './copy';
 import { reportErrorMessage } from './errors';
 import * as styles from './index.css';
-import { initialState, reducer, stepFor } from './state';
 import type { ParsedReportSubject, ReportSubject } from './types';
 import { parseReportSubject } from './utils/parseReportSubject';
 import { type ReportCategoryConfig, type ReportOption, useReportOptions } from './utils/useReportOptions';
 
 /** Caps the free-text context; submission is blocked past this and the counter turns negative. */
 const MAX_DETAILS_LENGTH = 300;
+
+type ReportRoutes = {
+	categories: undefined;
+	form: { reason: ReportOption };
+	reasons: { category: ReportCategoryConfig };
+};
+
+const ReportNavigator = createNavigator<ReportRoutes>();
 
 export function Content({
 	close,
@@ -53,14 +61,18 @@ export function Content({
 	if (!parsed) {
 		return <Invalid />;
 	}
-	return <Inner close={close} onAfterSubmit={onAfterSubmit} subject={parsed} />;
+	return (
+		<ReportNavigator.Provider initialRoute={{ name: 'categories' }}>
+			<Inner close={close} onAfterSubmit={onAfterSubmit} subject={parsed} />
+		</ReportNavigator.Provider>
+	);
 }
 
 /** graceful fallback shown when the dialog receives an unrecognizable subject. */
 function Invalid() {
 	return (
 		<>
-			<Header title={m['common.action.report']()} />
+			<Header navButton={<Dialog.Header.Close />} title={m['common.action.report']()} />
 			<Dialog.Body>
 				<div className={styles.body}>
 					<Text size="lg" weight="bold">
@@ -89,25 +101,28 @@ function Inner({
 		refetch,
 	} = useMyLabelersQuery();
 	const copy = useCopyForSubject(subject);
-	const { categories, getCategory } = useReportOptions();
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const { categories } = useReportOptions();
+	const { push, route } = ReportNavigator.useNavigator();
 	const { mutateAsync: submitReport } = useSubmitReportMutation();
+	// preserve details when changing the report reason.
+	const [details, setDetails] = useState('');
+	const [error, setError] = useState<string>();
+	const [labelerOverride, setLabelerOverride] = useState<AppBskyLabelerDefs.LabelerViewDetailed>();
 	const [isPending, setIsPending] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	const step = stepFor(state);
+	const reason = route.name === 'form' ? route.params.reason : undefined;
 
 	// some reasons and some subjects route exclusively to Bluesky's moderation service
 	const isBskyOnly =
-		(state.reason ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.reason.reason) : false) ||
+		(reason ? BSKY_LABELER_ONLY_REPORT_REASONS.has(reason.reason) : false) ||
 		BSKY_LABELER_ONLY_SUBJECT_TYPES.has(subject.type);
 
 	/** Labelers that accept this subject, its collection, and the selected reason. */
 	const supportedLabelers = useMemo(() => {
-		if (!allLabelers || !state.reason) {
+		if (!allLabelers || !reason) {
 			return [];
 		}
-		const reason = state.reason.reason;
 		return allLabelers
 			.filter((labeler) => {
 				const subjectTypes: string[] | undefined = labeler.subjectTypes;
@@ -141,35 +156,51 @@ function Inner({
 					return true;
 				}
 				// accept either the new reason or its backwards-compatible old form
-				return reasonTypes.includes(reason) || reasonTypes.includes(NEW_TO_OLD_REASONS_MAP[reason]!);
+				return (
+					reasonTypes.includes(reason.reason) || reasonTypes.includes(NEW_TO_OLD_REASONS_MAP[reason.reason]!)
+				);
 			});
-	}, [allLabelers, isBskyOnly, state.reason, subject]);
+	}, [allLabelers, isBskyOnly, reason, subject]);
 
 	// default to the first supported labeler; honour an explicit override only while it stays supported
 	const selectedLabeler = useMemo(() => {
 		if (
-			state.labeler &&
-			supportedLabelers.some((labeler) => labeler.creator.did === state.labeler!.creator.did)
+			labelerOverride &&
+			supportedLabelers.some((labeler) => labeler.creator.did === labelerOverride.creator.did)
 		) {
-			return state.labeler;
+			return labelerOverride;
 		}
 		return supportedLabelers[0];
-	}, [state.labeler, supportedLabelers]);
+	}, [labelerOverride, supportedLabelers]);
 
-	const overLimit = state.details.length > MAX_DETAILS_LENGTH;
-	const canSubmit = !!state.reason && !!selectedLabeler && !overLimit && !isPending && !isSuccess;
+	const overLimit = details.length > MAX_DETAILS_LENGTH;
+	const canSubmit = !!reason && !!selectedLabeler && !overLimit && !isPending && !isSuccess;
 
-	const onSubmit = async () => {
-		if (!state.reason || !selectedLabeler) {
+	const onSelectReason = (option: ReportOption) => {
+		setLabelerOverride(undefined);
+		push({ name: 'form', params: { reason: option } });
+	};
+
+	const onSelectCategory = (category: ReportCategoryConfig) => {
+		// `other` has one reason, so skip the reason picker.
+		if (category.key === 'other') {
+			onSelectReason(category.options[0]!);
 			return;
 		}
-		dispatch({ type: 'clearError' });
+		push({ name: 'reasons', params: { category } });
+	};
+
+	const onSubmit = async () => {
+		if (!reason || !selectedLabeler) {
+			return;
+		}
+		setError(undefined);
 		try {
 			setIsPending(true);
 			await submitReport({
-				details: trimText(state.details) || undefined,
+				details: trimText(details) || undefined,
 				labeler: selectedLabeler,
-				reason: state.reason.reason,
+				reason: reason.reason,
 				subject,
 			});
 			setIsSuccess(true);
@@ -177,24 +208,16 @@ function Inner({
 			close();
 		} catch (e) {
 			console.error('Failed to submit report', e);
-			dispatch({ type: 'setError', error: reportErrorMessage(e) ?? m['common.error.generic']() });
+			setError(reportErrorMessage(e) ?? m['common.error.generic']());
 		}
 		setIsPending(false);
 	};
 
-	const title = copy.title;
-	let onBack: (() => void) | undefined;
-	if (step === 'reasons') {
-		onBack = () => dispatch({ type: 'clearCategory' });
-	} else if (step === 'form') {
-		// the `other` category skips the reason list, so its form steps back to the categories
-		onBack = () => dispatch({ type: state.category?.key === 'other' ? 'clearCategory' : 'clearReason' });
-	}
-
 	return (
 		<>
-			<Header onBack={onBack} title={title} />
-			{step === 'categories' && (
+			<Header navButton={<BackOrCloseButton />} title={copy.title} />
+
+			{route.name === 'categories' && (
 				<Dialog.Body>
 					<div className={styles.body}>
 						<Text className={styles.prompt} weight="semiBold">
@@ -205,49 +228,39 @@ function Inner({
 								<CategoryCard
 									key={category.key}
 									category={category}
-									onSelect={() =>
-										dispatch({
-											type: 'selectCategory',
-											category,
-											otherOption: getCategory('other').options[0]!,
-										})
-									}
+									onSelect={() => onSelectCategory(category)}
 								/>
 							))}
 						</div>
 					</div>
 				</Dialog.Body>
 			)}
-			{step === 'reasons' && state.category && (
+
+			{route.name === 'reasons' && (
 				<Dialog.Body>
 					<div className={styles.body}>
 						<Text className={styles.prompt} weight="semiBold">
-							{state.category.title}
+							{route.params.category.title}
 						</Text>
 						<div className={styles.options}>
-							{getCategory(state.category.key).options.map((option) => (
-								<OptionCard
-									key={option.reason}
-									onSelect={() => dispatch({ type: 'selectReason', reason: option })}
-									option={option}
-								/>
+							{route.params.category.options.map((option) => (
+								<OptionCard key={option.reason} onSelect={() => onSelectReason(option)} option={option} />
 							))}
 						</div>
 					</div>
 				</Dialog.Body>
 			)}
-			{step === 'form' && (
+
+			{route.name === 'form' && (
 				<>
 					<Dialog.Body>
 						<div className={styles.body}>
-							{state.reason && (
-								<div className={styles.summary}>
-									<Text color="textContrastMedium" size="sm">
-										{m['components.moderation.report.reportingFor']()}
-									</Text>
-									<Text weight="semiBold">{state.reason.title}</Text>
-								</div>
-							)}
+							<div className={styles.summary}>
+								<Text color="textContrastMedium" size="sm">
+									{m['components.moderation.report.reportingFor']()}
+								</Text>
+								<Text weight="semiBold">{route.params.reason.title}</Text>
+							</div>
 							{labelersLoading ? (
 								<div className={styles.center}>
 									<Spinner color="default" label={m['common.status.loading']()} size="xl" />
@@ -273,16 +286,13 @@ function Inner({
 								<>
 									<Recipient
 										labeler={selectedLabeler}
-										onChange={(labeler) => dispatch({ type: 'selectLabeler', labeler })}
+										onChange={setLabelerOverride}
 										options={supportedLabelers}
 									/>
-									<Details
-										onChange={(details) => dispatch({ type: 'setDetails', details })}
-										value={state.details}
-									/>
+									<Details onChange={setDetails} value={details} />
 								</>
 							)}
-							{state.error && <Admonition type="error">{state.error}</Admonition>}
+							{error && <Admonition type="error">{error}</Admonition>}
 						</div>
 					</Dialog.Body>
 					<Dialog.Footer>
@@ -313,10 +323,10 @@ function Inner({
 	);
 }
 
-function Header({ onBack, title }: { onBack?: () => void; title: string }) {
+function Header({ navButton, title }: { navButton: ReactNode; title: string }) {
 	return (
 		<Dialog.Header.Root border="scrolling">
-			{onBack ? <Dialog.Header.Back onClick={onBack} /> : <Dialog.Header.Close />}
+			{navButton}
 			<Dialog.Header.Title>{title}</Dialog.Header.Title>
 		</Dialog.Header.Root>
 	);
