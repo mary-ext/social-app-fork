@@ -200,7 +200,7 @@ function DialogInner({
 			</Dialog.Header.Root>
 
 			<div className={css.search}>
-				<SearchField.Root>
+				<SearchField.Root shape="round">
 					<SearchField.Icon />
 					<Combobox.Input
 						render={

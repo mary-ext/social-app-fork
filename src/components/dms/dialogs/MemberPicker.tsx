@@ -404,7 +404,7 @@ export function SearchSlot({
 }) {
 	return (
 		<div className={clsx(css.search, overlap && css.searchOverlap)}>
-			<SearchField.Root>
+			<SearchField.Root shape="round">
 				<SearchField.Icon />
 				{children}
 				{searchText.length > 0 && (

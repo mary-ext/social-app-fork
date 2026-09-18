@@ -7,8 +7,7 @@ import * as SearchField from '#/components/forms/SearchField';
 import { m } from '#/paraglide/messages';
 
 /**
- * search field with a leading magnifying-glass icon, a text input, and a trailing clear button shown when
- * `value` is non-empty and `onClear` is provided.
+ * pill-shaped search field. shows a clear button when `value` is non-empty and `onClear` is provided.
  */
 export function SearchInput({
 	autoFocus,
@@ -36,7 +35,7 @@ export function SearchInput({
 	value: string;
 }) {
 	return (
-		<SearchField.Root>
+		<SearchField.Root shape="round">
 			<SearchField.Icon />
 			<SearchField.Input
 				aria-label={label}

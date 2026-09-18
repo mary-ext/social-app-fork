@@ -182,7 +182,7 @@ const DialogInner = ({
 			</Dialog.Header.Root>
 
 			<div className={styles.search}>
-				<SearchField.Root>
+				<SearchField.Root shape="round">
 					<SearchField.Icon />
 					<Combobox.Input
 						render={
