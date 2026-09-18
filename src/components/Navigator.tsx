@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import * as Dialog from '#/components/Dialog';
+import { useDialogBackHandler } from '#/components/Dialog/Root';
 import * as styles from '#/components/Navigator.css';
 
 /** maps each route name to its params, or `undefined` for a route that takes none. */
@@ -46,13 +47,22 @@ type NavigationState<Routes extends RouteMap> = {
 	route: Route<Routes>;
 };
 
+const popState = <Routes extends RouteMap>(prev: NavigationState<Routes>): NavigationState<Routes> => {
+	const route = prev.history.at(-1);
+	if (!route) {
+		return prev;
+	}
+	return { direction: 'pop', history: prev.history.slice(0, -1), key: prev.key + 1, route };
+};
+
 const BaseContext = createContext<Pick<Navigator<RouteMap>, 'canGoBack' | 'key' | 'pop'> | null>(null);
 BaseContext.displayName = 'NavigatorBaseContext';
 
 /**
  * creates an in-memory navigation stack for a dialog or popover.
  *
- * Escape inside the provider goes back when possible without dismissing the enclosing layer.
+ * Escape goes back when history is available, as does Android back inside `Dialog.Root`. at the first route,
+ * both retain their normal dismissal behavior.
  *
  * @returns the `Provider` and a `useNavigator` hook typed against `Routes`
  */
@@ -70,20 +80,18 @@ export const createNavigator = <Routes extends RouteMap>() => {
 
 		const canGoBack = state.history.length > 0;
 
+		const pop = () => {
+			setState(popState);
+		};
+
+		useDialogBackHandler(canGoBack ? pop : undefined);
+
 		const navigator: Navigator<Routes> = {
 			canGoBack,
 			direction: state.direction,
 			key: state.key,
 			route: state.route,
-			pop: () => {
-				setState((prev) => {
-					const route = prev.history.at(-1);
-					if (!route) {
-						return prev;
-					}
-					return { direction: 'pop', history: prev.history.slice(0, -1), key: prev.key + 1, route };
-				});
-			},
+			pop,
 			push: (route) => {
 				setState((prev) => ({
 					direction: 'push',
@@ -104,7 +112,9 @@ export const createNavigator = <Routes extends RouteMap>() => {
 			}
 			// Base UI layers listen for Escape on the document, so stopping here keeps them open.
 			e.stopPropagation();
-			navigator.pop();
+			// prevent CloseWatcher from handling the same Escape and popping a second route.
+			e.preventDefault();
+			pop();
 		};
 
 		return (

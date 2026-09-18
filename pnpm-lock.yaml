@@ -9,7 +9,7 @@ overrides:
   rolldown: 1.2.8
 
 patchedDependencies:
-  '@base-ui/react': 5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22
+  '@base-ui/react': 272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517
   '@vanilla-extract/css': db5f4b15486aaa4226da06516bfb01460b8d79a52973e5b8695b3a3bbc9a4a98
 
 importers:
@@ -90,7 +90,7 @@ importers:
         version: 2.0.3(@atcute/cid@2.4.2)(@atcute/lexicons@2.1.0)(@typescript/typescript6@6.0.2)
       '@base-ui/react':
         specifier: ^1.8.0
-        version: 1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 1.8.0(patch_hash=272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@base-ui/utils':
         specifier: ^0.4.0
         version: 0.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -120,7 +120,7 @@ importers:
         version: 0.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@oomfware/lightbox':
         specifier: ^0.1.9
-        version: 0.1.9(@base-ui/react@1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 0.1.9(@base-ui/react@1.8.0(patch_hash=272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@oomfware/scion':
         specifier: ^0.1.7
         version: 0.1.7
@@ -2581,7 +2581,7 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@base-ui/react@1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@base-ui/react@1.8.0(patch_hash=272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@base-ui/utils': 0.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -3012,13 +3012,13 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@oomfware/lightbox@0.1.9(@base-ui/react@1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@oomfware/lightbox@0.1.9(@base-ui/react@1.8.0(patch_hash=272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.2
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
     optionalDependencies:
-      '@base-ui/react': 1.8.0(patch_hash=5a6f48385646e35372a602726fba35a0e25eee5bf666c16f05a869b25d93de22)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@base-ui/react': 1.8.0(patch_hash=272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
   '@oomfware/scion@0.1.7':
     dependencies:

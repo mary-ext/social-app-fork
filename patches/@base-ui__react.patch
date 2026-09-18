@@ -1,5 +1,5 @@
 diff --git a/autocomplete/root/AutocompleteRoot.d.mts b/autocomplete/root/AutocompleteRoot.d.mts
-index fe61e3a..21e5423 100644
+index fe61e3a06e1425b024d07a9061ab59b2e4e59004..21e54235ac19d10b7d2d417eb36f4d653dd5aaac 100644
 --- a/autocomplete/root/AutocompleteRoot.d.mts
 +++ b/autocomplete/root/AutocompleteRoot.d.mts
 @@ -29,6 +29,8 @@ export declare function AutocompleteRoot<ItemValue>(props: Omit<AutocompleteRoot
@@ -12,7 +12,7 @@ index fe61e3a..21e5423 100644
  export type AutocompleteRootChangeEventReason = AriaCombobox.ChangeEventReason;
  export type AutocompleteRootChangeEventDetails = BaseUIChangeEventDetails<AutocompleteRootChangeEventReason>;
 diff --git a/combobox/root/AriaCombobox.d.mts b/combobox/root/AriaCombobox.d.mts
-index 1eb1c09..7e96d76 100644
+index 1eb1c0994b53e32524ef7f7cb39abc6016dacf33..7e96d764833914bfd5a37afb4d74ef1814dd7e38 100644
 --- a/combobox/root/AriaCombobox.d.mts
 +++ b/combobox/root/AriaCombobox.d.mts
 @@ -111,6 +111,13 @@ interface ComboboxRootProps<ItemValue, Item = ItemValue> {
@@ -30,7 +30,7 @@ index 1eb1c09..7e96d76 100644
     * Callback fired when an item is highlighted or unhighlighted.
     * Receives the highlighted item value (or `undefined` if no item is highlighted) and event details with a `reason` property describing why the highlight changed.
 diff --git a/combobox/root/AriaCombobox.mjs b/combobox/root/AriaCombobox.mjs
-index 8c328b3..9036e31 100644
+index 8c328b3ef1ad7bebe608c3d9f983c9902a54b00b..9036e317f5d68eb2de00045b7a3726775bc4570a 100644
 --- a/combobox/root/AriaCombobox.mjs
 +++ b/combobox/root/AriaCombobox.mjs
 @@ -33,6 +33,7 @@ import { isScrollableY } from "../../utils/scrollable.mjs";
@@ -80,15 +80,21 @@ index 8c328b3..9036e31 100644
    useIsoLayoutEffect(function syncSelectedIndex() {
      const closeQueryReleased = previousCloseQueryRef.current !== null && closeQuery === null;
      previousCloseQueryRef.current = closeQuery;
-@@ -1278,4 +1289,4 @@ export function AriaCombobox(props) {
-       })
-     })
-   });
--}
-\ No newline at end of file
-+}
+diff --git a/dialog/root/DialogRoot.d.mts b/dialog/root/DialogRoot.d.mts
+index f34826dc8d179431198f2816b2cf9e55e4e6ae2c..55bccbf9d88e73621e6d13f95a0c4362660c5e0c 100644
+--- a/dialog/root/DialogRoot.d.mts
++++ b/dialog/root/DialogRoot.d.mts
+@@ -82,7 +82,7 @@ export interface DialogRootActions {
+   unmount: () => void;
+   close: () => void;
+ }
+-export type DialogRootChangeEventReason = typeof REASONS.triggerPress | typeof REASONS.outsidePress | typeof REASONS.escapeKey | typeof REASONS.closePress | typeof REASONS.focusOut | typeof REASONS.imperativeAction | typeof REASONS.none;
++export type DialogRootChangeEventReason = typeof REASONS.triggerPress | typeof REASONS.outsidePress | typeof REASONS.escapeKey | typeof REASONS.closeWatcher | typeof REASONS.closePress | typeof REASONS.focusOut | typeof REASONS.imperativeAction | typeof REASONS.none;
+ export type DialogRootChangeEventDetails = BaseUIChangeEventDetails<DialogRoot.ChangeEventReason> & {
+   preventUnmountOnClose(): void;
+ };
 diff --git a/dialog/root/useRenderDialogRoot.mjs b/dialog/root/useRenderDialogRoot.mjs
-index 49111df..177ff3a 100644
+index 49111df0463159391d3ade4c2cd767715695a7e4..8016656ea30125d8891c2048d4c38bfabcb407b0 100644
 --- a/dialog/root/useRenderDialogRoot.mjs
 +++ b/dialog/root/useRenderDialogRoot.mjs
 @@ -1,6 +1,9 @@
@@ -101,13 +107,15 @@ index 49111df..177ff3a 100644
  import { DialogInteractions } from "./useDialogRoot.mjs";
  import { DialogRootContext, useDialogRootContext } from "./DialogRootContext.mjs";
  import { DialogStore } from "../store/DialogStore.mjs";
-@@ -55,8 +58,33 @@ export function useRenderDialogRoot(mode, props) {
+@@ -55,8 +58,39 @@ export function useRenderDialogRoot(mode, props) {
    const open = store.useState('open');
    const mounted = store.useState('mounted');
    const payload = store.useState('payload');
 +  const popupElement = store.useState('popupElement');
 +  const nestedOpenDialogCount = store.useState('nestedOpenDialogCount');
 +  const isTopmost = nestedOpenDialogCount === 0;
++  // a watcher is spent once it fires, so a canceled close re-arms it with a fresh one.
++  const [closeWatcherGeneration, setCloseWatcherGeneration] = React.useState(0);
    usePopupRootSync(store, open);
    useImplicitActiveTrigger(store);
 +  React.useEffect(() => {
@@ -123,7 +131,11 @@ index 49111df..177ff3a 100644
 +      if (!store.select('open')) {
 +        return;
 +      }
-+      store.setOpen(false, createChangeEventDetails(REASONS.closeWatcher, event));
++      const details = createChangeEventDetails(REASONS.closeWatcher, event);
++      store.setOpen(false, details);
++      if (details.isCanceled) {
++        setCloseWatcherGeneration((generation) => generation + 1);
++      }
 +    }
 +    const closeWatcher = new CloseWatcherCtor();
 +    const unsubscribe = addEventListener(closeWatcher, 'close', handleCloseWatcher);
@@ -131,12 +143,12 @@ index 49111df..177ff3a 100644
 +      unsubscribe();
 +      closeWatcher.destroy();
 +    };
-+  }, [store, isTopmost, open, popupElement]);
++  }, [store, isTopmost, open, popupElement, closeWatcherGeneration]);
    const {
      forceUnmount
    } = useOpenStateTransitions(open, store);
 diff --git a/drawer/root/DrawerRoot.mjs b/drawer/root/DrawerRoot.mjs
-index 4ffbea9..dbe9b6c 100644
+index 4ffbea97c607d334e5e1cb71251f94abb30f1b4c..dbe9b6c48f635e333efe770bce8ce4547df39db2 100644
 --- a/drawer/root/DrawerRoot.mjs
 +++ b/drawer/root/DrawerRoot.mjs
 @@ -2,12 +2,9 @@
@@ -194,7 +206,7 @@ index 4ffbea9..dbe9b6c 100644
  }
 \ No newline at end of file
 diff --git a/menu/root/MenuRoot.mjs b/menu/root/MenuRoot.mjs
-index dc2a000..eb946e4 100644
+index dc2a000cd5854aaef53e72ed53207d4bcca7a62c..eb946e492d8f9a55c6ab2b9eb2fcb8fdb962da63 100644
 --- a/menu/root/MenuRoot.mjs
 +++ b/menu/root/MenuRoot.mjs
 @@ -152,7 +152,9 @@ export const MenuRoot = fastComponent(function MenuRoot(props) {
@@ -208,15 +220,8 @@ index dc2a000..eb946e4 100644
    const runOnceAnimationsFinish = useAnimationsFinished(store.context.popupRef);
  
    // An inherited `instantType` is only for the initial reveal. A later controlled `open` flip
-@@ -482,4 +484,4 @@ function useMenuRootStore(initialState, floatingId, nested) {
-   // through an event).
-   const store = useRefWithInit(() => new MenuStore(initialState, floatingId, nested)).current;
-   return store;
--}
-\ No newline at end of file
-+}
 diff --git a/package.json b/package.json
-index b4e25f1..d12fb2b 100644
+index b4e25f180ced51b65f88410935184f9bf019de7e..d12fb2b2e8c5072d94cdedab1c44abbf4ec1a160 100644
 --- a/package.json
 +++ b/package.json
 @@ -662,6 +662,16 @@
@@ -236,15 +241,8 @@ index b4e25f1..d12fb2b 100644
      "./unstable-use-media-query": {
        "import": {
          "types": "./unstable-use-media-query/index.d.mts",
-@@ -1233,4 +1243,4 @@
-   },
-   "main": "./index.js",
-   "types": "./index.d.ts"
--}
-\ No newline at end of file
-+}
 diff --git a/popover/root/PopoverRoot.mjs b/popover/root/PopoverRoot.mjs
-index 3fa11c3..99155f0 100644
+index 3fa11c331ee203e391daf01c83d7eaf73de1e035..99155f0ab676a9af850711d9dfac6032f4c5e9b0 100644
 --- a/popover/root/PopoverRoot.mjs
 +++ b/popover/root/PopoverRoot.mjs
 @@ -1,8 +1,11 @@
@@ -300,15 +298,8 @@ index 3fa11c3..99155f0 100644
    React.useImperativeHandle(props.actionsRef, () => ({
      unmount: forceUnmount,
      close: () => store.setOpen(false, createChangeEventDetails(REASONS.imperativeAction))
-@@ -130,4 +159,4 @@ function PopoverInteractions({
-     popupProps
-   });
-   return null;
--}
-\ No newline at end of file
-+}
 diff --git a/preview-card/root/PreviewCardRoot.mjs b/preview-card/root/PreviewCardRoot.mjs
-index fac4f14..85e2062 100644
+index fac4f14c150ddb1b4a914900342c136cef731369..85e2062b57f6f9ea0a6c13c098c49d01920d88cd 100644
 --- a/preview-card/root/PreviewCardRoot.mjs
 +++ b/preview-card/root/PreviewCardRoot.mjs
 @@ -43,6 +43,8 @@ function PreviewCardRootComponent(props) {
@@ -320,15 +311,8 @@ index fac4f14..85e2062 100644
    });
    useIsoLayoutEffect(() => {
      if (open) {
-@@ -102,4 +104,4 @@ export const PreviewCardRoot = fastComponent(function PreviewCardRoot(props) {
-     })
-   });
- });
--if (process.env.NODE_ENV !== "production") PreviewCardRoot.displayName = "PreviewCardRoot";
-\ No newline at end of file
-+if (process.env.NODE_ENV !== "production") PreviewCardRoot.displayName = "PreviewCardRoot";
 diff --git a/select/root/SelectRoot.mjs b/select/root/SelectRoot.mjs
-index 889b311..2a026c1 100644
+index 889b311d098a5dcd60676481822f194d0ea795b9..2a026c19f6de53daad7b816c491b5c96d1f6c9ee 100644
 --- a/select/root/SelectRoot.mjs
 +++ b/select/root/SelectRoot.mjs
 @@ -30,9 +30,9 @@ import { useValueChanged } from "../../internals/useValueChanged.mjs";
@@ -356,15 +340,8 @@ index 889b311..2a026c1 100644
    useOpenChangeComplete({
      enabled: !actionsRef,
      open,
-@@ -450,4 +457,4 @@ export function SelectRoot(props) {
-       suppressHydrationWarning: true
-     }), hiddenInputs]
-   });
--}
-\ No newline at end of file
-+}
 diff --git a/slider/control/SliderControl.mjs b/slider/control/SliderControl.mjs
-index 9a98402..adb1aa0 100644
+index 9a98402635d582f77de353bdcd0727b23509c5dd..adb1aa0314882163ba356082e9133dfc4f6c22a9 100644
 --- a/slider/control/SliderControl.mjs
 +++ b/slider/control/SliderControl.mjs
 @@ -316,13 +316,15 @@ export const SliderControl = /*#__PURE__*/React.forwardRef(function SliderContro
@@ -420,20 +397,20 @@ index 9a98402..adb1aa0 100644
      stateAttributesMapping: sliderStateAttributesMapping
 diff --git a/unstable-close-all-popups/index.d.mts b/unstable-close-all-popups/index.d.mts
 new file mode 100644
-index 0000000..bce2a13
+index 0000000000000000000000000000000000000000..bce2a136ad534f9636e2bd3aa095df3a9c87709b
 --- /dev/null
 +++ b/unstable-close-all-popups/index.d.mts
 @@ -0,0 +1 @@
 +export { closeAllPopups } from "../utils/popups/closeAllPopups.mjs";
 diff --git a/unstable-close-all-popups/index.mjs b/unstable-close-all-popups/index.mjs
 new file mode 100644
-index 0000000..bce2a13
+index 0000000000000000000000000000000000000000..bce2a136ad534f9636e2bd3aa095df3a9c87709b
 --- /dev/null
 +++ b/unstable-close-all-popups/index.mjs
 @@ -0,0 +1 @@
 +export { closeAllPopups } from "../utils/popups/closeAllPopups.mjs";
 diff --git a/utils/InternalBackdrop.mjs b/utils/InternalBackdrop.mjs
-index 574e6e4..0994b9e 100644
+index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
 --- a/utils/InternalBackdrop.mjs
 +++ b/utils/InternalBackdrop.mjs
 @@ -10,10 +10,6 @@ export const InternalBackdrop = /*#__PURE__*/React.forwardRef(function InternalB
@@ -449,7 +426,7 @@ index 574e6e4..0994b9e 100644
      role: "presentation"
 diff --git a/utils/popups/closeAllPopups.d.mts b/utils/popups/closeAllPopups.d.mts
 new file mode 100644
-index 0000000..426254b
+index 0000000000000000000000000000000000000000..426254b4993f50ec6350130cdc9ebd4357f4c943
 --- /dev/null
 +++ b/utils/popups/closeAllPopups.d.mts
 @@ -0,0 +1,4 @@
@@ -459,7 +436,7 @@ index 0000000..426254b
 +export declare function useRegisterPopupCloseAction(mounted: boolean, close: () => void): void;
 diff --git a/utils/popups/closeAllPopups.mjs b/utils/popups/closeAllPopups.mjs
 new file mode 100644
-index 0000000..90969e6
+index 0000000000000000000000000000000000000000..90969e6742fa7dd5a3467e518d583a9e4feb0e6d
 --- /dev/null
 +++ b/utils/popups/closeAllPopups.mjs
 @@ -0,0 +1,35 @@
@@ -499,7 +476,7 @@ index 0000000..90969e6
 +  }, [mounted, close]);
 +}
 diff --git a/utils/popups/popupStoreUtils.d.mts b/utils/popups/popupStoreUtils.d.mts
-index b1214d9..cdf1888 100644
+index b1214d95f2163001688edd20a86a9c4117f3cb26..cdf1888494530672c01fa876a5151bf457460e40 100644
 --- a/utils/popups/popupStoreUtils.d.mts
 +++ b/utils/popups/popupStoreUtils.d.mts
 @@ -149,7 +149,9 @@ export declare function useImplicitActiveTrigger<State extends PopupStoreState<u
@@ -513,15 +490,8 @@ index b1214d9..cdf1888 100644
    forceUnmount: () => void;
    transitionStatus: import("../../internals/useTransitionStatus.mjs").TransitionStatus;
  };
-@@ -158,4 +160,4 @@ export declare function usePopupInteractionProps<State extends PopupStoreState<u
- export declare function usePopupRootSync<State extends PopupStoreState<unknown> & {
-   openMethod: InteractionType | null;
- }>(store: ReactStore<State, PopupStoreContext<never>, typeof popupStoreSelectors>, open: boolean): void;
--export {};
-\ No newline at end of file
-+export {};
 diff --git a/utils/popups/popupStoreUtils.mjs b/utils/popups/popupStoreUtils.mjs
-index 4a4849e..29b394d 100644
+index 4a4849e3f827ab4392c26fb11381d15aaf6038a3..29b394dc94765aa9ae809447ffab6568be9ae0a6 100644
 --- a/utils/popups/popupStoreUtils.mjs
 +++ b/utils/popups/popupStoreUtils.mjs
 @@ -14,6 +14,7 @@ import { useTransitionStatus } from "../../internals/useTransitionStatus.mjs";
@@ -576,15 +546,8 @@ index 4a4849e..29b394d 100644
    useOpenChangeComplete({
      enabled: mounted && !open && !syncedPreventUnmountingOnClose,
      open,
-@@ -463,4 +463,4 @@ export function usePopupRootSync(store, open) {
-       store.set('openMethod', null);
-     }
-   }, [store]);
--}
-\ No newline at end of file
-+}
 diff --git a/utils/useAnchoredPopupScrollLock.mjs b/utils/useAnchoredPopupScrollLock.mjs
-index 98ccc07..e9fbbee 100644
+index 98ccc072b8e45f501a7bef87c665b25831c04c88..e9fbbeedc1be2f78f715f12b6e3c78c20ff67a6a 100644
 --- a/utils/useAnchoredPopupScrollLock.mjs
 +++ b/utils/useAnchoredPopupScrollLock.mjs
 @@ -27,5 +27,5 @@ export function useAnchoredPopupScrollLock(enabled, touchOpen, positionerElement
@@ -594,4 +557,3 @@ index 98ccc07..e9fbbee 100644
 -  useScrollLock(enabled && (!touchOpen || touchOpenShouldLockScroll), referenceElement);
 +  useScrollLock(enabled, referenceElement);
  }
-\ No newline at end of file

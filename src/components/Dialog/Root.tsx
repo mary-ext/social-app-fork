@@ -1,4 +1,4 @@
-import { type ReactNode, useId, useRef } from 'react';
+import { createContext, type ReactNode, use, useEffect, useId, useRef } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
@@ -42,6 +42,28 @@ export type RootProps<Payload = unknown> = {
 	onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
 };
 
+type RegisterBackHandler = (onBack: () => void) => () => void;
+
+const BackHandlerContext = createContext<RegisterBackHandler | null>(null);
+BackHandlerContext.displayName = 'DialogBackHandlerContext';
+
+/**
+ * handles Android back instead of closing the enclosing dialog. no-op outside a dialog. only the latest
+ * registration is used; removing it does not restore an earlier handler.
+ *
+ * @param onBack called in place of closing; `undefined` lets the dialog close as usual
+ */
+export function useDialogBackHandler(onBack: (() => void) | undefined) {
+	const register = use(BackHandlerContext);
+
+	useEffect(() => {
+		if (!register || !onBack) {
+			return;
+		}
+		return register(onBack);
+	}, [register, onBack]);
+}
+
 export function Root<Payload = unknown>({
 	children,
 	handle,
@@ -57,22 +79,43 @@ export function Root<Payload = unknown>({
 	const actionsRef = useRef<DialogActions>(null);
 	const registerOpen = useRegisterDialog(id, () => actionsRef.current?.close());
 
+	const backHandler = useRef<(() => void) | null>(null);
+	const registerBackHandler = useConstant((): RegisterBackHandler => (onBack) => {
+		backHandler.current = onBack;
+		return () => {
+			if (backHandler.current === onBack) {
+				backHandler.current = null;
+			}
+		};
+	});
+
 	return (
-		<BaseDialog.Root
-			actionsRef={actionsRef}
-			defaultOpen={defaultOpen}
-			disablePointerDismissal={disablePointerDismissal}
-			handle={handle}
-			modal={modal}
-			onOpenChange={(next, details) => {
-				onOpenChange?.(next, details);
-				if (!details.isCanceled) {
-					registerOpen(next);
-				}
-			}}
-			open={open}
-		>
-			{children}
-		</BaseDialog.Root>
+		<BackHandlerContext.Provider value={registerBackHandler}>
+			<BaseDialog.Root
+				actionsRef={actionsRef}
+				defaultOpen={defaultOpen}
+				disablePointerDismissal={disablePointerDismissal}
+				handle={handle}
+				modal={modal}
+				onOpenChange={(next, details) => {
+					if (!next && details.reason === 'close-watcher') {
+						const onBack = backHandler.current;
+						if (onBack) {
+							// the Base UI patch replaces the watcher after a canceled close.
+							details.cancel();
+							onBack();
+							return;
+						}
+					}
+					onOpenChange?.(next, details);
+					if (!details.isCanceled) {
+						registerOpen(next);
+					}
+				}}
+				open={open}
+			>
+				{children}
+			</BaseDialog.Root>
+		</BackHandlerContext.Provider>
 	);
 }

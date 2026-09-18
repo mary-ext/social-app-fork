@@ -39,6 +39,9 @@ dismissal to dialogs and alert dialogs, and adds the same behavior to non-nested
 registers only when it has no open nested dialog. the change remains Android-only so desktop
 dismissal continues through `useDismiss`.
 
+canceling a `close-watcher` request creates a new watcher because each watcher fires only once. this
+lets `Dialog.Root` handle repeated back gestures as navigation within the dialog.
+
 ## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts`: allow automatic unmounting with `actionsRef`
 
 passing `actionsRef` normally opts into manual unmounting after a closing animation. `autoUnmount`
