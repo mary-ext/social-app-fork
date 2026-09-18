@@ -16,6 +16,7 @@ export function DesktopSearch() {
 			onNavigate={(path) => navigateToPath(path, 'push')}
 			onNavigateToProfile={(profile: AnyProfileView) => router.navigate({ to: profileTarget(profile.did) })}
 			onSubmit={(query) => router.navigate({ to: { name: 'Search', q: query } })}
+			shape="round"
 		/>
 	);
 }

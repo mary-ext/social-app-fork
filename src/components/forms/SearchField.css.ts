@@ -1,9 +1,12 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { hover, hoverWithin } from '#/styles/interaction';
 import { roundToPx } from '#/styles/round';
 import { fontLeading, fontSize, iconSize } from '#/styles/tokens.css';
+
+const iconSizeVar = createVar();
+const inputPaddingVar = createVar();
 
 export const field = style({
 	boxSizing: 'border-box',
@@ -22,9 +25,19 @@ export const field = style({
 	},
 });
 
+export const shape = styleVariants({
+	default: {},
+	round: { borderRadius: 999, paddingInline: 14 },
+});
+
+export const size = styleVariants({
+	default: {},
+	small: { vars: { [iconSizeVar]: `${iconSize.md}px`, [inputPaddingVar]: '7px' } },
+});
+
 export const icon = style({
-	width: iconSize.lg,
-	height: iconSize.lg,
+	width: fallbackVar(iconSizeVar, `${iconSize.lg}px`),
+	height: fallbackVar(iconSizeVar, `${iconSize.lg}px`),
 	flexShrink: 0,
 	color: vars.palette.contrast_500,
 	pointerEvents: 'none',
@@ -41,7 +54,7 @@ export const input = style({
 	outline: 'none',
 	border: 'none',
 	backgroundColor: 'transparent',
-	paddingBlock: 10,
+	paddingBlock: fallbackVar(inputPaddingVar, '10px'),
 	paddingInline: 0,
 	minWidth: 0,
 	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),

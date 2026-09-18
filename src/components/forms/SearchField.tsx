@@ -16,19 +16,28 @@ import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_
 // the input. `input`/`textarea` are listed so a direct click keeps native caret placement.
 const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [role="button"], [role="link"]';
 
+export type SearchFieldShape = keyof typeof styles.shape;
+
+export type SearchFieldSize = keyof typeof styles.size;
+
 /**
- * search-field chrome: a flex container laying out a leading {@link Icon}, the {@link Input}, and trailing
- * controls ({@link Clear} and/or a {@link Slot}). clicking anywhere on the box that isn't an interactive
- * control focuses the input.
+ * search field container. clicking outside its interactive controls focuses the input.
+ *
+ * @param shape `default` for rounded corners; `round` for a pill shape
+ * @param size `default` for standard spacing; `small` for compact spacing
  */
 export function Root({
 	children,
 	className,
 	ref,
+	shape = 'default',
+	size = 'default',
 }: {
 	children: ReactNode;
 	className?: string;
 	ref?: Ref<HTMLDivElement>;
+	shape?: SearchFieldShape;
+	size?: SearchFieldSize;
 }) {
 	const innerRef = useRef<HTMLDivElement>(null);
 	// the input no longer fills the box, so restore "click anywhere to focus" over the padding and the
@@ -44,7 +53,11 @@ export function Root({
 	};
 
 	return (
-		<div className={clsx(styles.field, className)} onMouseDown={onMouseDown} ref={mergeRefs([innerRef, ref])}>
+		<div
+			className={clsx(styles.field, styles.shape[shape], styles.size[size], className)}
+			onMouseDown={onMouseDown}
+			ref={mergeRefs([innerRef, ref])}
+		>
 			{children}
 		</div>
 	);

@@ -31,6 +31,8 @@ import {
  * @param onNavigateToProfile open the selected profile
  * @param onSubmit run a search
  * @param placeholder text shown when empty
+ * @param shape corner shape for both fields
+ * @param size size preset for both fields
  * @returns the trigger field and search dialog
  */
 export function DialogSearchAutocomplete({
@@ -40,6 +42,8 @@ export function DialogSearchAutocomplete({
 	onNavigateToProfile,
 	onSubmit,
 	placeholder,
+	shape,
+	size,
 	...props
 }: SearchAutocompleteFieldProps) {
 	const handle = Dialog.useDialogHandle();
@@ -91,7 +95,7 @@ export function DialogSearchAutocomplete({
 
 	return (
 		<>
-			<SearchField.Root>
+			<SearchField.Root shape={shape} size={size}>
 				<SearchField.Icon />
 				<SearchField.Input
 					onBlur={() => {
@@ -144,6 +148,8 @@ export function DialogSearchAutocomplete({
 						onNavigateToProfile={closeThen(onNavigateToProfile)}
 						onSubmit={closeThen(onSubmit)}
 						placeholder={placeholder}
+						shape={shape}
+						size={size}
 					>
 						{({ field, list }) => (
 							<>

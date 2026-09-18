@@ -176,6 +176,8 @@ export type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
 	/** initial query; changing it resets the field. */
 	initialQuery?: string;
 	placeholder: string;
+	shape?: SearchField.SearchFieldShape;
+	size?: SearchField.SearchFieldSize;
 };
 
 /** a caret or selection range within the search input. */
@@ -207,6 +209,8 @@ export type SearchAutocompleteParts = {
  * @param onNavigateToProfile open the selected profile
  * @param onSubmit run a search
  * @param placeholder text shown when empty
+ * @param shape field corner shape
+ * @param size field size preset
  * @returns the caller's layout with autocomplete behavior
  */
 export function SearchAutocompleteInput({
@@ -220,6 +224,8 @@ export function SearchAutocompleteInput({
 	onNavigateToProfile,
 	onSubmit,
 	placeholder,
+	shape,
+	size,
 }: SearchAutocompleteFieldProps & {
 	autoFocus: boolean;
 	children: (parts: SearchAutocompleteParts) => ReactNode;
@@ -649,7 +655,7 @@ export function SearchAutocompleteInput({
 		>
 			{children({
 				field: (
-					<SearchField.Root ref={fieldRef}>
+					<SearchField.Root ref={fieldRef} shape={shape} size={size}>
 						<SearchField.Icon />
 						<Autocomplete.Input
 							onBlur={(event) => {

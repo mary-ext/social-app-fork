@@ -29,6 +29,8 @@ type PopoverSearchAutocompleteProps = SearchAutocompleteFieldProps & {
  * @param onNavigateToProfile open the selected profile
  * @param onSubmit run a search
  * @param placeholder text shown when empty
+ * @param shape field corner shape
+ * @param size field size preset
  * @returns the responsive search field
  */
 export function SearchAutocomplete({
@@ -50,6 +52,8 @@ function PopoverSearchAutocomplete({
 	eager,
 	initialQuery,
 	placeholder,
+	shape,
+	size,
 	...props
 }: PopoverSearchAutocompleteProps) {
 	const [active, setActive] = useState(eager ?? false);
@@ -70,6 +74,8 @@ function PopoverSearchAutocomplete({
 				initialQuery={initialQuery}
 				inline={false}
 				placeholder={placeholder}
+				shape={shape}
+				size={size}
 			>
 				{({ field, fieldRef, list, popupRef }) => (
 					<>
@@ -93,7 +99,7 @@ function PopoverSearchAutocomplete({
 	}
 
 	return (
-		<SearchField.Root>
+		<SearchField.Root shape={shape} size={size}>
 			<SearchField.Icon />
 			<SearchField.Input onFocus={() => setActive(true)} placeholder={placeholder} ref={placeholderRef} />
 		</SearchField.Root>

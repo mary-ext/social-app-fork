@@ -82,6 +82,8 @@ export function SearchHeader({
 					fixedFilters={fixedFilters}
 					initialQuery={initialQuery ? initialQuery + ' ' : initialQuery}
 					placeholder={placeholder}
+					shape="round"
+					size="small"
 					onNavigate={(path) => navigateToPath(path, 'push')}
 					onNavigateToProfile={navigateToProfile}
 					onSubmit={navigateToQuery}
