@@ -15,9 +15,8 @@ import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
-import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -95,10 +94,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
 		<Stack gap="lg">
 			<Stack gap="xs">
-				<Dialog.TitleRow>
-					<Dialog.Title>{m['common.mutedWord.action.add']()}</Dialog.Title>
-					<Dialog.Close />
-				</Dialog.TitleRow>
+				<Dialog.Title>{m['common.mutedWord.action.add']()}</Dialog.Title>
 
 				<Text size="md_sub" color="textContrastMedium">
 					{m['components.dialogs.mutedWord.description']()}
@@ -149,22 +145,6 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				</Settings.SwitchRow>
 			</Settings.Section>
 
-			<Button
-				className={styles.addButton}
-				color="primary"
-				disabled={isPending || !field}
-				label={m['components.dialogs.mutedWord.addSubmit']()}
-				size="large"
-				onClick={() => void submit()}
-			>
-				<ButtonText>{m['common.action.add']()}</ButtonText>
-				{isPending ? (
-					<ButtonSpinner color="white" label={m['components.dialogs.list.adding']()} />
-				) : (
-					<ButtonIcon icon={Plus} />
-				)}
-			</Button>
-
 			{error && (
 				<div className={styles.error}>
 					<Text className={styles.errorText} color="white">
@@ -172,6 +152,27 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					</Text>
 				</div>
 			)}
+
+			<Dialog.Actions>
+				<Button
+					color="secondary"
+					label={m['common.action.cancel']()}
+					onClick={() => handle.close()}
+					size="small"
+				>
+					<ButtonText>{m['common.action.cancel']()}</ButtonText>
+				</Button>
+				<Button
+					color="primary"
+					disabled={isPending || !field}
+					label={m['components.dialogs.mutedWord.addSubmit']()}
+					onClick={() => void submit()}
+					size="small"
+				>
+					<ButtonText>{m['common.action.add']()}</ButtonText>
+					{isPending && <ButtonSpinner color="white" label={m['components.dialogs.list.adding']()} />}
+				</Button>
+			</Dialog.Actions>
 		</Stack>
 	);
 }
