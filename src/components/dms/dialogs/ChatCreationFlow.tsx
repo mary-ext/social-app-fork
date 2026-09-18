@@ -28,9 +28,8 @@ import * as SearchField from '#/components/forms/SearchField';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 
-import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
