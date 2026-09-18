@@ -7,7 +7,7 @@ trustPolicyIgnoreAfter: 10080
 
 overrides:
   '@types/estree': '1.0.6'
-  'rolldown': '1.2.5'
+  'rolldown': '1.2.8'
 
 allowBuilds:
   'core-js-pure': true
