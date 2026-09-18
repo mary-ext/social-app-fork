@@ -25,6 +25,7 @@ import {
 	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import * as SearchField from '#/components/forms/SearchField';
+import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -50,28 +51,40 @@ export type PickStepProps = {
 	onStartGroup: () => void;
 };
 
-type Step = 'groupName' | 'pick' | 'selectMembers';
+type ChatCreationRoutes = {
+	groupName: undefined;
+	pick: undefined;
+	selectMembers: undefined;
+};
 
-/**
- * runs the shared chat-creation flow after a caller-specific picker.
- *
- * @param handle dialog to close after a conversation is selected or created
- * @param onChatReady called with the conversation id
- * @param pickStep picker for the first step
- */
-export function ChatCreationFlow({
-	handle,
-	onChatReady,
-	pickStep: PickStep,
-}: {
+const ChatCreationNavigator = createNavigator<ChatCreationRoutes>();
+
+type ChatCreationFlowProps = {
 	handle: Dialog.DialogHandle;
 	onChatReady: (convoId: string) => void;
 	pickStep: ComponentType<PickStepProps>;
-}) {
+};
+
+/**
+ * chat-creation flow with a custom initial picker.
+ *
+ * @param props.handle dialog to close after a conversation is selected or created
+ * @param props.onChatReady called with the conversation id
+ * @param props.pickStep picker for the first step
+ */
+export function ChatCreationFlow(props: ChatCreationFlowProps) {
+	return (
+		<ChatCreationNavigator.Provider initialRoute={{ name: 'pick' }}>
+			<ChatCreationSteps {...props} />
+		</ChatCreationNavigator.Provider>
+	);
+}
+
+function ChatCreationSteps({ handle, onChatReady, pickStep: PickStep }: ChatCreationFlowProps) {
+	const { push, route } = ChatCreationNavigator.useNavigator();
 	const accountTooNewHandle = Prompt.usePromptHandle();
 
 	// keep only members across steps; each step owns its transient fields.
-	const [step, setStep] = useState<Step>('pick');
 	const [members, setMembers] = useState<AnyProfileView[]>([]);
 
 	const { data: chatStatus } = useChatActorStatusQuery();
@@ -173,12 +186,9 @@ export function ChatCreationFlow({
 			accountTooNewHandle.open(null);
 			return;
 		}
-		setStep('selectMembers');
-	};
-
-	const onBackToPick = () => {
+		// discard selections from a previous group attempt.
 		setMembers([]);
-		setStep('pick');
+		push({ name: 'selectMembers' });
 	};
 
 	const onCreateGroup = (name: string) => {
@@ -199,7 +209,7 @@ export function ChatCreationFlow({
 
 	return (
 		<>
-			{step === 'pick' && (
+			{route.name === 'pick' && (
 				<PickStep
 					canCreateGroups={canCreateGroups}
 					onSelectConversation={onSelectConversation}
@@ -208,11 +218,11 @@ export function ChatCreationFlow({
 				/>
 			)}
 
-			{step === 'selectMembers' && (
+			{route.name === 'selectMembers' && (
 				<SelectMembersStep
 					memberLimit={memberLimit}
 					members={members}
-					onBack={onBackToPick}
+					navButton={<BackOrCloseButton />}
 					onMembersChange={onMembersChange}
 					onRemoveMember={removeMember}
 					primaryButton={
@@ -220,7 +230,7 @@ export function ChatCreationFlow({
 							color="primary"
 							disabled={members.length === 0}
 							label={m['components.dms.group.action.continueToName']()}
-							onClick={() => setStep('groupName')}
+							onClick={() => push({ name: 'groupName' })}
 							size="small"
 						>
 							<ButtonText>{m['common.action.next']()}</ButtonText>
@@ -230,9 +240,7 @@ export function ChatCreationFlow({
 				/>
 			)}
 
-			{step === 'groupName' && (
-				<NameGroupStep members={members} onBack={() => setStep('selectMembers')} onCreate={onCreateGroup} />
-			)}
+			{route.name === 'groupName' && <NameGroupStep members={members} onCreate={onCreateGroup} />}
 
 			<Prompt.Basic
 				confirmButtonCta={m['common.action.okay']()}
@@ -275,11 +283,9 @@ export function NewGroupChatRow({ dimmed, onClick }: { dimmed: boolean; onClick:
 
 function NameGroupStep({
 	members,
-	onBack,
 	onCreate,
 }: {
 	members: AnyProfileView[];
-	onBack: () => void;
 	onCreate: (name: string) => void;
 }) {
 	const moderationOpts = useModerationOpts();
@@ -302,7 +308,7 @@ function NameGroupStep({
 						<ButtonText>{m['common.action.create']()}</ButtonText>
 					</Button>
 				}
-				onBack={onBack}
+				navButton={<BackOrCloseButton />}
 				title={m['common.chat.groupName']()}
 			/>
 

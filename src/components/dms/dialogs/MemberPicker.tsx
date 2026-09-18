@@ -65,7 +65,7 @@ export function SelectMembersStep({
 	excludeDids,
 	memberLimit,
 	members,
-	onBack,
+	navButton,
 	onMembersChange,
 	onRemoveMember,
 	primaryButton,
@@ -74,7 +74,8 @@ export function SelectMembersStep({
 	excludeDids?: ReadonlySet<string>;
 	memberLimit: number | undefined;
 	members: AnyProfileView[];
-	onBack?: () => void;
+	/** header navigation button; defaults to close. */
+	navButton?: ReactNode;
 	onMembersChange: (next: AnyProfileView[]) => void;
 	onRemoveMember: (did: string) => void;
 	primaryButton: ReactNode;
@@ -137,7 +138,7 @@ export function SelectMembersStep({
 			open
 			value={members}
 		>
-			<StepHeader actions={primaryButton} onBack={onBack} title={title} />
+			<StepHeader actions={primaryButton} navButton={navButton} title={title} />
 
 			<SearchSlot onClear={() => setSearchText('')} overlap={!hasChips} searchText={searchText}>
 				<Combobox.Input
@@ -365,25 +366,25 @@ export function ProfilePickerRow({
 }
 
 /**
- * dialog step header with a back or close button.
+ * dialog step header.
  *
  * @param props.actions trailing action controls
- * @param props.onBack returns to the previous step; omitted on the first step to show close
+ * @param props.navButton navigation button; defaults to close
  * @param props.title heading text
  * @returns the step header
  */
 export function StepHeader({
 	actions,
-	onBack,
+	navButton,
 	title,
 }: {
 	actions?: ReactNode;
-	onBack?: () => void;
+	navButton?: ReactNode;
 	title: string;
 }) {
 	return (
 		<Dialog.Header.Root>
-			{onBack ? <Dialog.Header.Back onClick={onBack} /> : <Dialog.Header.Close />}
+			{navButton ?? <Dialog.Header.Close />}
 			<Dialog.Header.Title>{title}</Dialog.Header.Title>
 			{actions && <Dialog.Header.Actions>{actions}</Dialog.Header.Actions>}
 		</Dialog.Header.Root>
