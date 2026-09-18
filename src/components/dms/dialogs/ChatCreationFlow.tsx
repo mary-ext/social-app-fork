@@ -24,10 +24,10 @@ import {
 	SelectMembersStep,
 	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
-import * as SearchField from '#/components/forms/SearchField';
 import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -309,31 +309,29 @@ function NameGroupStep({
 					</Button>
 				}
 				navButton={<BackOrCloseButton />}
-				title={m['common.chat.groupName']()}
+				title={m['components.dms.group.title']()}
 			/>
 
-			<div className={css.groupNameSection}>
-				<SearchField.Root>
-					<SearchField.Input
-						aria-label={m['common.chat.groupName']()}
-						autoFocus
-						maxLength={50}
-						onChange={(event) => setGroupName(event.currentTarget.value)}
-						onKeyDown={(event) => {
-							if (event.key === 'Enter' && canCreate) {
-								onCreate(groupName);
-							}
-						}}
-						placeholder={m['common.chat.groupName']()}
-						value={groupName}
-					/>
-				</SearchField.Root>
+			<TextField.Root className={css.groupNameSection} isInvalid={tooLong}>
+				<TextField.LabelText>{m['common.chat.groupName']()}</TextField.LabelText>
+				<TextField.Input
+					autoFocus
+					label={m['common.chat.groupName']()}
+					maxLength={50}
+					onChangeText={setGroupName}
+					onKeyDown={(event) => {
+						if (event.key === 'Enter' && canCreate) {
+							onCreate(groupName);
+						}
+					}}
+					value={groupName}
+				/>
 				{tooLong && (
 					<Text className={css.error} size="sm" weight="semiBold">
 						{m['common.chat.error.groupNameTooLong']({ max: MAX_GROUP_NAME_GRAPHEME_LENGTH })}
 					</Text>
 				)}
-			</div>
+			</TextField.Root>
 
 			<Dialog.Body className={css.staticList}>
 				<SectionLabel message={m['components.dms.group.newGroupWith']()} />
