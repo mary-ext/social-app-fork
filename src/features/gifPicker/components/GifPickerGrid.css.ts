@@ -4,8 +4,7 @@ import { DIALOG_PADDING, SEARCH_HEIGHT } from '#/features/gifPicker/layout';
 
 import { space } from '#/styles/tokens.css';
 
-// the search field overlaps the top of the scroller, so content starts below it.
-const CONTENT_TOP = SEARCH_HEIGHT + space.md;
+const CONTENT_TOP = SEARCH_HEIGHT + space.md - 1;
 
 export const scroll = style({
 	flex: 1,

@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-import { DIALOG_PADDING, SEARCH_FADE, SEARCH_HEIGHT } from '#/features/gifPicker/layout';
+import { DIALOG_PADDING, SEARCH_FADE, SEARCH_OVERLAP } from '#/features/gifPicker/layout';
 
 import { colors } from '#/styles/colors';
 import { withAlpha } from '#/styles/functions';
@@ -23,7 +23,7 @@ export const header = style({
 export const search = style({
 	flexShrink: 0,
 	zIndex: zIndex.raised,
-	marginBottom: -(SEARCH_HEIGHT + SEARCH_FADE),
+	marginBottom: -SEARCH_OVERLAP,
 	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
 	paddingBottom: SEARCH_FADE,
 	paddingInline: DIALOG_PADDING,
