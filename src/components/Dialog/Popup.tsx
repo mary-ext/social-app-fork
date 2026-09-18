@@ -119,6 +119,18 @@ export function Body({
 	);
 }
 
+/**
+ * pinned search row below `Header` in a `body`-scroll popup. overlaps `Body`/`List` so content fades beneath
+ * the field. these handle the overlap inset; add 12px of top content padding for a 16px gap below the field.
+ *
+ * @param props.children a default-size search field
+ * @param props.overlap defaults to `true`; use `false` when pinned content separates the field and scroller
+ * @returns the search row
+ */
+export function Search({ children, overlap = true }: { children: ReactNode; overlap?: boolean }) {
+	return <div className={clsx(styles.search, overlap && styles.searchOverlap)}>{children}</div>;
+}
+
 /** Pinned action bar at the bottom of a `body`-scroll Popup. */
 export function Footer({ children }: { children: ReactNode }) {
 	return <div className={styles.footer}>{children}</div>;

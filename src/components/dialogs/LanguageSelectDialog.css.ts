@@ -1,32 +1,19 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
-import { space, zIndex } from '#/styles/tokens.css';
+import { space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.md;
-const SEARCH_HEIGHT = 42;
-const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING - 1);
 
 export const group = style({
 	display: 'contents',
 });
 
-export const search = style({
-	zIndex: zIndex.raised,
-	marginBottom: -SEARCH_NEGATIVE_MARGIN,
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
-	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	paddingInline: DIALOG_PADDING,
-});
-
 export const list = style({
-	paddingTop: SEARCH_NEGATIVE_MARGIN,
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 });
 

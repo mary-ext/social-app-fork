@@ -1,6 +1,9 @@
-import { generateIdentifier, style } from '@vanilla-extract/css';
+import { createVar, generateIdentifier, style } from '@vanilla-extract/css';
+
+import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
 
 import { vars } from '#/styles/contract.css';
+import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
@@ -9,6 +12,37 @@ import { iconSize, space, zIndex } from '#/styles/tokens.css';
 
 /** shared scroll timeline for `Body`/`List` and the header divider. */
 export const BODY_TIMELINE = `--${generateIdentifier('dialog-body')}`;
+
+// #region search
+
+const SEARCH_FADE = space.xs;
+
+// subtract 1px to avoid a gap at the fade's transparent edge.
+const SEARCH_OVERLAP = `calc(${FIELD_HEIGHT} + ${SEARCH_FADE - 1}px)`;
+
+/** top padding below an overlapping `Search`; otherwise `0px`. */
+export const searchInset = createVar();
+
+/** scroll padding to keep focused rows below `Search`; otherwise `0px`. */
+export const searchScrollInset = createVar();
+
+export const search = style(
+	layered(components, {
+		flexShrink: 0,
+		zIndex: zIndex.raised,
+		backgroundImage: `linear-gradient(${vars.palette.contrast_0} 50%, ${withAlpha(vars.palette.contrast_0, '0%')})`,
+		paddingBottom: SEARCH_FADE,
+		paddingInline: space.lg,
+	}),
+);
+
+export const searchOverlap = style(
+	layered(components, {
+		marginBottom: `calc(-1 * ${SEARCH_OVERLAP})`,
+	}),
+);
+
+// #endregion
 
 export const portal = style(
 	layered(components, {
@@ -90,6 +124,15 @@ export const popup = recipe(
 					maxHeight: '80vh',
 					overflow: 'hidden',
 					timelineScope: BODY_TIMELINE,
+					vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
+					selectors: {
+						[`&:has(${searchOverlap})`]: {
+							vars: {
+								[searchInset]: SEARCH_OVERLAP,
+								[searchScrollInset]: `calc(${SEARCH_OVERLAP} + ${SEARCH_FADE}px)`,
+							},
+						},
+					},
 				},
 				viewport: {},
 			},
@@ -139,8 +182,10 @@ export const popup = recipe(
 export const body = style(
 	layered(components, {
 		flex: 1,
+		paddingTop: searchInset,
 		minHeight: 0,
 		overflowY: 'auto',
+		scrollPaddingTop: searchScrollInset,
 		scrollTimelineName: BODY_TIMELINE,
 		scrollTimelineAxis: 'block',
 	}),

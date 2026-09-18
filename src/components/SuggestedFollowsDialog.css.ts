@@ -1,23 +1,12 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { withAlpha } from '#/styles/functions';
-import { space, zIndex } from '#/styles/tokens.css';
+import { space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
-const SEARCH_NEGATIVE_MARGIN = 42;
 const ROW_BLOCK_PADDING = space.md;
 
-export const search = style({
-	zIndex: zIndex.raised,
-	marginBottom: -SEARCH_NEGATIVE_MARGIN,
-	backgroundColor: 'transparent',
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
-	paddingInline: DIALOG_PADDING,
-});
-
 export const list = style({
-	paddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 });
 
@@ -25,7 +14,7 @@ export const tabs = style({
 	borderBottomWidth: 1,
 	borderBottomStyle: 'solid',
 	borderBottomColor: colors.borderContrastLow,
-	paddingTop: space.sm,
+	paddingTop: space.md,
 	paddingBottom: DIALOG_PADDING,
 });
 

@@ -1,21 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
-import { DIALOG_PADDING, SEARCH_FADE, SEARCH_OVERLAP } from '#/features/gifPicker/layout';
-
-import { colors } from '#/styles/colors';
-import { withAlpha } from '#/styles/functions';
 import { recipe } from '#/styles/recipe';
-import { zIndex } from '#/styles/tokens.css';
-
-// overlaps the top of the views so scrolled GIFs fade out beneath the field.
-export const search = style({
-	flexShrink: 0,
-	zIndex: zIndex.raised,
-	marginBottom: -SEARCH_OVERLAP,
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
-	paddingBottom: SEARCH_FADE,
-	paddingInline: DIALOG_PADDING,
-});
 
 export const views = style({
 	display: 'flex',

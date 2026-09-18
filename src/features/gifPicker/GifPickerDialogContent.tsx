@@ -133,7 +133,7 @@ function GifPickerBody({
 				<Dialog.Header.Title>{title}</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<div className={styles.search}>
+			<Dialog.Search>
 				<SearchInput
 					autoFocus
 					inputRef={inputRef}
@@ -144,7 +144,7 @@ function GifPickerBody({
 					placeholder={m['features.gifPicker.search.placeholder']()}
 					value={isSearching ? query : ''}
 				/>
-			</div>
+			</Dialog.Search>
 
 			<div className={styles.views}>
 				<div key={key} className={styles.view({ transition: isSearching ? 'fade' : direction })}>

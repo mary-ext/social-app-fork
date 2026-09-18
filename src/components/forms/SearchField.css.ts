@@ -8,12 +8,19 @@ import { fontLeading, fontSize, iconSize } from '#/styles/tokens.css';
 const iconSizeVar = createVar();
 const inputPaddingVar = createVar();
 
+const BORDER_WIDTH = 1;
+const INPUT_PADDING = 10;
+const LINE_HEIGHT = roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`);
+
+/** rendered height of a default-size field; follows the user's font scale. */
+export const FIELD_HEIGHT = `calc(${LINE_HEIGHT} + ${2 * (INPUT_PADDING + BORDER_WIDTH)}px)`;
+
 export const field = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	gap: 8,
 	alignItems: 'center',
-	border: '1px solid transparent',
+	border: `${BORDER_WIDTH}px solid transparent`,
 	borderRadius: 10,
 	backgroundColor: vars.palette.contrast_50,
 	paddingInline: 12,
@@ -54,10 +61,10 @@ export const input = style({
 	outline: 'none',
 	border: 'none',
 	backgroundColor: 'transparent',
-	paddingBlock: fallbackVar(inputPaddingVar, '10px'),
+	paddingBlock: fallbackVar(inputPaddingVar, `${INPUT_PADDING}px`),
 	paddingInline: 0,
 	minWidth: 0,
-	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
+	lineHeight: LINE_HEIGHT,
 	color: vars.palette.contrast_1000,
 	fontFamily: 'inherit',
 	fontSize: fontSize.md,

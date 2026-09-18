@@ -199,7 +199,7 @@ function DialogInner({
 				<Dialog.Header.Title>{m['components.dialogs.list.addPeopleTitle']()}</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<div className={css.search}>
+			<Dialog.Search>
 				<SearchField.Root shape="round">
 					<SearchField.Icon />
 					<Combobox.Input
@@ -216,7 +216,7 @@ function DialogInner({
 						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearchText('')} />
 					)}
 				</SearchField.Root>
-			</div>
+			</Dialog.Search>
 
 			<Dialog.Body className={css.list}>
 				{status}

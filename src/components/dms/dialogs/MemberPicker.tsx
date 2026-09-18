@@ -8,7 +8,6 @@ import { mapDefined } from '@mary/array-fns';
 
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { Combobox } from '@base-ui/react/combobox';
-import { clsx } from 'clsx';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -157,7 +156,7 @@ export function SelectMembersStep({
 				<MemberChips members={members} moderationOpts={moderationOpts} onRemove={onRemoveMember} />
 			)}
 
-			<Dialog.Body className={clsx(css.list, !hasChips && css.listOverlap)} tabIndex={-1}>
+			<Dialog.Body className={css.list} tabIndex={-1}>
 				<Combobox.List>
 					{rows.map((row) => (
 						<MemberRow
@@ -323,7 +322,7 @@ export function PickStepShell<Item>({
 			</SearchSlot>
 
 			{/* the input handles list navigation, so keep the scroller out of the tab order. */}
-			<Dialog.Body className={clsx(css.list, css.listOverlap)} tabIndex={-1}>
+			<Dialog.Body className={css.list} tabIndex={-1}>
 				<Autocomplete.List>{children}</Autocomplete.List>
 			</Dialog.Body>
 		</Autocomplete.Root>
@@ -403,7 +402,7 @@ export function SearchSlot({
 	searchText: string;
 }) {
 	return (
-		<div className={clsx(css.search, overlap && css.searchOverlap)}>
+		<Dialog.Search overlap={overlap}>
 			<SearchField.Root shape="round">
 				<SearchField.Icon />
 				{children}
@@ -411,7 +410,7 @@ export function SearchSlot({
 					<SearchField.Clear label={m['common.search.action.clear']()} onClick={onClear} />
 				)}
 			</SearchField.Root>
-		</div>
+		</Dialog.Search>
 	);
 }
 

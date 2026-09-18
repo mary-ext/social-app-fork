@@ -89,7 +89,7 @@ const DialogInner = ({
 				<Dialog.Header.Title>{titleText}</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<div className={styles.search}>
+			<Dialog.Search>
 				<SearchField.Root shape="round">
 					<SearchField.Icon />
 					<Autocomplete.Input
@@ -104,7 +104,7 @@ const DialogInner = ({
 					/>
 					<Autocomplete.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
 				</SearchField.Root>
-			</div>
+			</Dialog.Search>
 
 			<Dialog.Body className={styles.list} tabIndex={-1}>
 				<Autocomplete.List>

@@ -152,7 +152,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 				<Dialog.Header.Title>{m['components.dialogs.suggestedFollows.title']()}</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<div className={css.search}>
+			<Dialog.Search>
 				<SearchInput
 					autoFocus
 					label={m['common.search.action.profiles']()}
@@ -162,7 +162,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 					placeholder={m['components.dialogs.suggestedFollows.searchPlaceholder']()}
 					value={searchText}
 				/>
-			</div>
+			</Dialog.Search>
 
 			<Dialog.List
 				className={css.list}

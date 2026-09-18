@@ -144,7 +144,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 				</Dialog.Header.Actions>
 			</Dialog.Header.Root>
 
-			<div className={styles.search}>
+			<Dialog.Search>
 				<SearchInput
 					autoFocus
 					label={m['components.dialogs.language.search']()}
@@ -154,7 +154,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 					placeholder={m['components.dialogs.language.search']()}
 					value={search}
 				/>
-			</div>
+			</Dialog.Search>
 
 			<Dialog.List
 				className={styles.list}

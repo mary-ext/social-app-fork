@@ -1,34 +1,15 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { withAlpha } from '#/styles/functions';
 import { recipe } from '#/styles/recipe';
-import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.sm;
-const SEARCH_HEIGHT = 42;
-const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING - 1);
-
-export const search = style({
-	zIndex: zIndex.raised,
-	backgroundImage: `linear-gradient(${colors.bg} 50%, ${withAlpha(colors.bg, '0%')})`,
-	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	paddingInline: DIALOG_PADDING,
-});
-
-export const searchOverlap = style({
-	marginBottom: -SEARCH_NEGATIVE_MARGIN,
-});
 
 export const list = style({
-	paddingBlock: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
 	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-});
-
-export const listOverlap = style({
-	paddingTop: SEARCH_NEGATIVE_MARGIN,
-	scrollPaddingTop: SEARCH_NEGATIVE_MARGIN + (DIALOG_PADDING - ROW_BLOCK_PADDING),
 });
 
 export const label = style({
@@ -80,7 +61,8 @@ export const chips = style({
 	flexShrink: 0,
 	gap: space.sm,
 	backgroundColor: colors.bg,
-	paddingBottom: space.sm,
+	paddingTop: space.xs,
+	paddingBottom: DIALOG_PADDING,
 	paddingInline: DIALOG_PADDING,
 	overflowX: 'auto',
 	scrollbarWidth: 'none',

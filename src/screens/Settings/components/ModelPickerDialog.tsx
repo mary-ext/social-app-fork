@@ -181,7 +181,7 @@ const DialogInner = ({
 				</Dialog.Header.Actions>
 			</Dialog.Header.Root>
 
-			<div className={styles.search}>
+			<Dialog.Search>
 				<SearchField.Root shape="round">
 					<SearchField.Icon />
 					<Combobox.Input
@@ -198,7 +198,7 @@ const DialogInner = ({
 						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearch('')} />
 					)}
 				</SearchField.Root>
-			</div>
+			</Dialog.Search>
 
 			<Combobox.List className={styles.comboboxList}>
 				<Dialog.List

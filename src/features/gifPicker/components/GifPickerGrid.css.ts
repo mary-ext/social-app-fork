@@ -1,10 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
-import { DIALOG_PADDING, SEARCH_HEIGHT } from '#/features/gifPicker/layout';
+import { searchInset } from '#/components/Dialog/Popup.css';
 
 import { space } from '#/styles/tokens.css';
 
-const CONTENT_TOP = SEARCH_HEIGHT + space.md - 1;
+const CONTENT_TOP = `calc(${searchInset} + ${space.md}px)`;
 
 export const scroll = style({
 	flex: 1,
@@ -18,8 +18,8 @@ export const content = style({
 	display: 'flex',
 	flexDirection: 'column',
 	paddingTop: CONTENT_TOP,
-	paddingBottom: DIALOG_PADDING,
-	paddingInline: DIALOG_PADDING,
+	paddingBottom: space.lg,
+	paddingInline: space.lg,
 	minHeight: '100%',
 });
 
