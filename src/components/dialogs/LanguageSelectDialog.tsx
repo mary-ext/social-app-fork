@@ -167,7 +167,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 						return (
 							<Text
 								className={styles.sectionHeader({ topPadded: index !== 0 })}
-								color="textContrastLow"
+								color="textContrastMedium"
 								size="md_sub"
 								weight="semiBold"
 							>
