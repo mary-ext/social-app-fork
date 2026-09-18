@@ -217,6 +217,8 @@
 	],
 	"view.composer.thread.skipEmpty.message": "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.",
 	"view.composer.thread.skipEmpty.title": "Skip empty posts?",
+	"view.composer.title.post": "New post",
+	"view.composer.title.reply": "New reply",
 	"view.composer.video.error.accountTooYoung": "Your account is not yet old enough to upload videos. Please try again later.",
 	"view.composer.video.error.altMissing": "One or more videos is missing alt text.",
 	"view.composer.video.error.dailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",

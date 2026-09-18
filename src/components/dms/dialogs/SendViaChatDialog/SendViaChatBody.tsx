@@ -78,7 +78,6 @@ export function SendViaChatBody({
 
 function SelectShareTargetStep({
 	canCreateGroups,
-	onClose,
 	onSelectConversation,
 	onSelectRecipient,
 	onStartGroup,
@@ -129,7 +128,6 @@ function SelectShareTargetStep({
 		<PickStepShell
 			items={rows.filter(isShareTargetItem)}
 			itemToStringValue={shareItemToStringValue}
-			onClose={onClose}
 			onSearchTextChange={setSearchText}
 			placeholder={m['common.action.search']()}
 			searchText={searchText}

@@ -5,8 +5,6 @@ import { space } from '#/styles/tokens.css';
 
 export const errorText = style({ marginTop: space.xs });
 
-export const inactiveSave = style({ color: vars.palette.contrast_400 });
-
 export const bannerWrap = style({
 	position: 'relative',
 });

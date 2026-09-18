@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { generateIdentifier, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
@@ -6,6 +6,9 @@ import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { iconSize, space, zIndex } from '#/styles/tokens.css';
+
+/** shared scroll timeline for `Body`/`List` and the header divider. */
+export const BODY_TIMELINE = `--${generateIdentifier('dialog-body')}`;
 
 export const portal = style(
 	layered(components, {
@@ -86,6 +89,7 @@ export const popup = recipe(
 					padding: 0,
 					maxHeight: '80vh',
 					overflow: 'hidden',
+					timelineScope: BODY_TIMELINE,
 				},
 				viewport: {},
 			},
@@ -137,6 +141,8 @@ export const body = style(
 		flex: 1,
 		minHeight: 0,
 		overflowY: 'auto',
+		scrollTimelineName: BODY_TIMELINE,
+		scrollTimelineAxis: 'block',
 	}),
 );
 

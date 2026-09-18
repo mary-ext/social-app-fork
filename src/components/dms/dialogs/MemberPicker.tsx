@@ -20,10 +20,9 @@ import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
 import * as SearchField from '#/components/forms/SearchField';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -67,7 +66,6 @@ export function SelectMembersStep({
 	memberLimit,
 	members,
 	onBack,
-	onClose,
 	onMembersChange,
 	onRemoveMember,
 	primaryButton,
@@ -77,7 +75,6 @@ export function SelectMembersStep({
 	memberLimit: number | undefined;
 	members: AnyProfileView[];
 	onBack?: () => void;
-	onClose: () => void;
 	onMembersChange: (next: AnyProfileView[]) => void;
 	onRemoveMember: (did: string) => void;
 	primaryButton: ReactNode;
@@ -140,7 +137,7 @@ export function SelectMembersStep({
 			open
 			value={members}
 		>
-			<StepHeader onClose={onClose} title={title} />
+			<StepHeader actions={primaryButton} onBack={onBack} title={title} />
 
 			<SearchSlot onClear={() => setSearchText('')} overlap={!hasChips} searchText={searchText}>
 				<Combobox.Input
@@ -172,8 +169,6 @@ export function SelectMembersStep({
 					))}
 				</Combobox.List>
 			</Dialog.Body>
-
-			<StepFooter onBack={onBack}>{primaryButton}</StepFooter>
 		</Combobox.Root>
 	);
 }
@@ -282,7 +277,6 @@ export function PickStepShell<Item>({
 	children,
 	items,
 	itemToStringValue,
-	onClose,
 	onSearchTextChange,
 	placeholder,
 	searchText,
@@ -291,7 +285,6 @@ export function PickStepShell<Item>({
 	children: ReactNode;
 	items: Item[];
 	itemToStringValue: (item: Item) => string;
-	onClose: () => void;
 	onSearchTextChange: (value: string) => void;
 	placeholder: string;
 	searchText: string;
@@ -313,7 +306,7 @@ export function PickStepShell<Item>({
 			open
 			value={searchText}
 		>
-			<StepHeader onClose={onClose} title={title} />
+			<StepHeader title={title} />
 
 			<SearchSlot onClear={() => onSearchTextChange('')} overlap searchText={searchText}>
 				<Autocomplete.Input
@@ -371,25 +364,29 @@ export function ProfilePickerRow({
 	);
 }
 
-export function StepHeader({ onClose, title }: { onClose: () => void; title: string }) {
+/**
+ * dialog step header with a back or close button.
+ *
+ * @param props.actions trailing action controls
+ * @param props.onBack returns to the previous step; omitted on the first step to show close
+ * @param props.title heading text
+ * @returns the step header
+ */
+export function StepHeader({
+	actions,
+	onBack,
+	title,
+}: {
+	actions?: ReactNode;
+	onBack?: () => void;
+	title: string;
+}) {
 	return (
-		<div className={css.header}>
-			<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-				{title}
-			</Text>
-
-			<Button
-				className={css.closeButton}
-				color="secondary"
-				label={m['common.action.close']()}
-				onClick={onClose}
-				shape="round"
-				size="small"
-				variant="ghost"
-			>
-				<ButtonIcon icon={XIcon} />
-			</Button>
-		</div>
+		<Dialog.Header.Root>
+			{onBack ? <Dialog.Header.Back onClick={onBack} /> : <Dialog.Header.Close />}
+			<Dialog.Header.Title>{title}</Dialog.Header.Title>
+			{actions && <Dialog.Header.Actions>{actions}</Dialog.Header.Actions>}
+		</Dialog.Header.Root>
 	);
 }
 
@@ -414,25 +411,6 @@ export function SearchSlot({
 				)}
 			</SearchField.Root>
 		</div>
-	);
-}
-
-export function StepFooter({ children, onBack }: { children: ReactNode; onBack?: () => void }) {
-	return (
-		<Dialog.Footer>
-			<div className={css.footerRow}>
-				<div>
-					{onBack ? (
-						<Button color="secondary" label={m['common.action.back']()} onClick={onBack} size="small">
-							<ButtonIcon icon={ArrowLeftIcon} />
-							<ButtonText>{m['common.action.back']()}</ButtonText>
-						</Button>
-					) : null}
-				</div>
-
-				<div>{children}</div>
-			</div>
-		</Dialog.Footer>
 	);
 }
 

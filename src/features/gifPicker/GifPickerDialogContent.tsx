@@ -11,10 +11,9 @@ import { GifPickerHome } from '#/features/gifPicker/components/GifPickerHome';
 import * as styles from '#/features/gifPicker/GifPickerDialog.css';
 import { useRetainFeaturedGifs } from '#/features/gifPicker/queries';
 
-import type * as Dialog from '#/components/Dialog';
+import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
-import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
@@ -129,12 +128,10 @@ function GifPickerBody({
 
 	return (
 		<>
-			<div className={styles.header}>
-				<BackOrCloseButton closeLabel={m['common.a11y.closeDialog']()} onClose={() => handle.close()} />
-				<Text numberOfLines={1} size="lg" weight="semiBold">
-					{title}
-				</Text>
-			</div>
+			<Dialog.Header.Root>
+				<BackOrCloseButton />
+				<Dialog.Header.Title>{title}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<div className={styles.search}>
 				<SearchInput

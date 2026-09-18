@@ -62,7 +62,7 @@ export function NewChatDialog({
 
 // #region new chat step
 
-function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGroup }: PickStepProps) {
+function SelectChatStep({ canCreateGroups, onSelectRecipient, onStartGroup }: PickStepProps) {
 	const moderationOpts = useModerationOpts();
 	const currentAccountDid = useSession().currentAccount?.did;
 	const [searchText, setSearchText] = useState('');
@@ -105,7 +105,6 @@ function SelectChatStep({ canCreateGroups, onClose, onSelectRecipient, onStartGr
 		<PickStepShell
 			items={rows.filter(isChatListItem)}
 			itemToStringValue={chatItemToStringValue}
-			onClose={onClose}
 			onSearchTextChange={setSearchText}
 			placeholder={m['components.dms.search.placeholder']()}
 			searchText={searchText}

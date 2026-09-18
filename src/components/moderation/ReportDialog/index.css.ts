@@ -7,7 +7,8 @@ export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 12,
-	padding: 16,
+	paddingBottom: 16,
+	paddingInline: 16,
 });
 
 export const prompt = style({

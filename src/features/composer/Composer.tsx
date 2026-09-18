@@ -634,7 +634,7 @@ export const ComposePost = ({
 	}, [composerState.activePostFocusRequestId]);
 
 	const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined;
-	const { scrollHandler, isScrolled } = useScrollTracker({
+	const { scrollHandler } = useScrollTracker({
 		scrollViewRef,
 		stickyBottom: isLastThreadedPost,
 	});
@@ -666,7 +666,6 @@ export const ComposePost = ({
 	return (
 		<>
 			<ComposerTopBar
-				border={isScrolled}
 				canPost={canPost}
 				isReply={!!replyTo}
 				isPublishQueued={publishOnUpload}
@@ -682,8 +681,7 @@ export const ComposePost = ({
 				isEditingDraft={!!composerState.draftId}
 				draftSaveBlocker={draftSaveBlocker}
 			/>
-			{/* The composer owns its own scrolling (the `Dialog.Body` / `scrollContainer` below) */}
-			<Dialog.Body className={styles.dialogBody}>
+			<div className={styles.dialogBody}>
 				<ComposerError.Root>
 					{missingAltError && <ComposerError.Box error={missingAltError} />}
 					{displayedError && (
@@ -694,7 +692,7 @@ export const ComposePost = ({
 						/>
 					)}
 				</ComposerError.Root>
-				<div ref={scrollViewRef} onScroll={scrollHandler} className={styles.scrollContainer}>
+				<Dialog.Body ref={scrollViewRef} onScroll={scrollHandler} className={styles.scrollContainer}>
 					{replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 					{thread.posts.map((post, index) => (
 						<Fragment key={post.id + (composerState.draftId ?? '')}>
@@ -719,8 +717,8 @@ export const ComposePost = ({
 							)}
 						</Fragment>
 					))}
-				</div>
-			</Dialog.Body>
+				</Dialog.Body>
+			</div>
 			{!isFooterInline && footer}
 
 			{replyTo ? (
@@ -993,7 +991,6 @@ function useScrollTracker({
 	scrollViewRef: RefObject<HTMLDivElement | null>;
 	stickyBottom: boolean;
 }) {
-	const [isScrolled, setIsScrolled] = useState(false);
 	const contentOffset = useRef(0);
 	const scrollViewHeight = useRef(Infinity);
 	const contentHeight = useRef(0);
@@ -1003,14 +1000,6 @@ function useScrollTracker({
 		contentOffset.current = Math.floor(el.scrollTop);
 		contentHeight.current = Math.floor(el.scrollHeight);
 		scrollViewHeight.current = Math.floor(el.clientHeight);
-
-		const scrolled = el.scrollTop > 0;
-		setIsScrolled((prev) => {
-			if (prev !== scrolled) {
-				return scrolled;
-			}
-			return prev;
-		});
 	};
 
 	useEffect(() => {
@@ -1051,7 +1040,6 @@ function useScrollTracker({
 
 	return {
 		scrollHandler,
-		isScrolled,
 	};
 }
 

@@ -3,9 +3,9 @@ import { style } from '@vanilla-extract/css';
 export const fields = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 20,
-	paddingBlock: 20,
-	paddingInline: 20,
+	gap: 16,
+	paddingBottom: 16,
+	paddingInline: 16,
 });
 
 export const avatarWrap = style({

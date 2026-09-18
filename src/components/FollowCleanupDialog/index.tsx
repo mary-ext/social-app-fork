@@ -23,7 +23,7 @@ export const FollowCleanupDialog = ({ handle }: { handle: Dialog.DialogHandle })
 						</Dialog.Body>
 					}
 				>
-					<FollowCleanupDialogContent handle={handle} />
+					<FollowCleanupDialogContent />
 				</Suspense>
 			</Dialog.Popup>
 		</Dialog.Root>

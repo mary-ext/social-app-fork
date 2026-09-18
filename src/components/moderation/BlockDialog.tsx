@@ -105,16 +105,16 @@ function BlockDialogInner({
 
 	return (
 		<>
-			<div className={css.header}>
-				<Dialog.TitleRow>
-					<Dialog.Title>
-						{isBlocking
-							? m['components.moderation.block.unblockTitle']()
-							: m['components.moderation.block.confirmTitle']()}
-					</Dialog.Title>
-					<Dialog.Close />
-				</Dialog.TitleRow>
+			<Dialog.Header.Root border="scrolling">
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>
+					{isBlocking
+						? m['components.moderation.block.unblockTitle']()
+						: m['components.moderation.block.confirmTitle']()}
+				</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
+			<div className={css.description}>
 				<Text color="textContrastMedium">
 					{isBlocking
 						? m['common.block.unblockHint']()

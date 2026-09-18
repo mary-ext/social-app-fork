@@ -16,27 +16,6 @@ export const comboboxList = style({
 	minHeight: 0,
 });
 
-export const header = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexShrink: 0,
-	alignItems: 'center',
-	justifyContent: 'space-between',
-	backgroundColor: colors.bg,
-	paddingTop: DIALOG_PADDING,
-	paddingBottom: space.md,
-	paddingInline: DIALOG_PADDING,
-});
-
-export const title = style({
-	display: 'flex',
-	minWidth: 0,
-});
-
-export const closeButton = style({
-	margin: -space.sm,
-});
-
 export const search = style({
 	zIndex: zIndex.raised,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,
@@ -99,8 +78,4 @@ export const status = style({
 	display: 'block',
 	paddingBlock: ROW_BLOCK_PADDING,
 	paddingInline: DIALOG_PADDING,
-});
-
-export const doneButton = style({
-	width: '100%',
 });

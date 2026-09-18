@@ -5,19 +5,7 @@ import { DIALOG_PADDING, SEARCH_FADE, SEARCH_OVERLAP } from '#/features/gifPicke
 import { colors } from '#/styles/colors';
 import { withAlpha } from '#/styles/functions';
 import { recipe } from '#/styles/recipe';
-import { space, zIndex } from '#/styles/tokens.css';
-
-export const header = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexShrink: 0,
-	gap: space.lg,
-	alignItems: 'center',
-	backgroundColor: colors.bg,
-	paddingTop: DIALOG_PADDING,
-	paddingBottom: space.md,
-	paddingInline: DIALOG_PADDING,
-});
+import { zIndex } from '#/styles/tokens.css';
 
 // overlaps the top of the views so scrolled GIFs fade out beneath the field.
 export const search = style({

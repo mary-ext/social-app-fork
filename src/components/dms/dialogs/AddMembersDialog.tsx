@@ -28,13 +28,7 @@ export function AddMembersDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup height="fixed" label={title} scroll="body" size="wide">
-				<DialogInner
-					convo={convo}
-					handle={handle}
-					isPending={isPending}
-					onAddMembers={onAddMembers}
-					title={title}
-				/>
+				<DialogInner convo={convo} isPending={isPending} onAddMembers={onAddMembers} title={title} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -42,13 +36,11 @@ export function AddMembersDialog({
 
 function DialogInner({
 	convo,
-	handle,
 	isPending,
 	onAddMembers,
 	title,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	handle: Dialog.DialogHandle;
 	isPending: boolean;
 	onAddMembers: (dids: Did[], profiles: AnyProfileView[]) => void;
 	title: string;
@@ -78,7 +70,6 @@ function DialogInner({
 			excludeDids={excludeDids}
 			memberLimit={remainingSlots}
 			members={members}
-			onClose={() => handle.close()}
 			onMembersChange={onMembersChange}
 			onRemoveMember={removeMember}
 			primaryButton={

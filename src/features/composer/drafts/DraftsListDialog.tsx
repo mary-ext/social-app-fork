@@ -1,7 +1,6 @@
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
-import { Button, ButtonText } from '#/components/web/Button';
 
 import PageXIcon from '#/icons/original/PageX.svg';
 import { m } from '#/paraglide/messages';
@@ -52,23 +51,11 @@ function DialogInner({ handle, onSelectDraft }: DraftsListDialogProps) {
 
 	return (
 		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot>
-					<Button
-						label={m['common.action.back']()}
-						onClick={() => handle.close()}
-						size="small"
-						color="primary"
-						variant="ghost"
-					>
-						<ButtonText size="md">{m['common.action.back']()}</ButtonText>
-					</Button>
-				</Dialog.Header.Slot>
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['view.composer.drafts.title']()}</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot />
-			</Dialog.Header.Outer>
+			<Dialog.Header.Root border>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['view.composer.drafts.title']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
+
 			<Dialog.List
 				className={styles.list}
 				data={drafts}

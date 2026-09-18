@@ -27,12 +27,17 @@ export function EditImageDialog(props: EditImageDialogProps) {
 			<Dialog.Popup scroll="body">
 				<Suspense
 					fallback={
-						<Dialog.Body>
-							<div className={styles.loadingHeader} />
-							<div className={styles.loadingBody}>
-								<Spinner color="default" label={m['common.status.loading']()} />
-							</div>
-						</Dialog.Body>
+						<>
+							<Dialog.Header.Root border>
+								<Dialog.Header.Close />
+								<Dialog.Header.Title>{m['view.composer.gallery.action.edit']()}</Dialog.Header.Title>
+							</Dialog.Header.Root>
+							<Dialog.Body>
+								<div className={styles.loadingBody}>
+									<Spinner color="default" label={m['common.status.loading']()} />
+								</div>
+							</Dialog.Body>
+						</>
 					}
 				>
 					<EditImageDialogInner {...props} />

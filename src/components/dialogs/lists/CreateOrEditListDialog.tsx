@@ -262,37 +262,24 @@ function DialogInner({
 
 	return (
 		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot>
+			<Dialog.Header.Root border="scrolling">
+				<Dialog.Header.Close onClick={onRequestClose} />
+				<Dialog.Header.Title>{title}</Dialog.Header.Title>
+				<Dialog.Header.Actions>
 					<Button
-						label={m['common.action.cancel']()}
-						variant="ghost"
 						color="primary"
-						size="small"
-						onClick={onRequestClose}
-					>
-						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
-					</Button>
-				</Dialog.Header.Slot>
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot>
-					<Button
-						label={m['common.action.save']()}
-						variant="ghost"
-						color="primary"
-						size="small"
 						disabled={!dirty || isCreatingList || isUpdatingList || displayNameTooLong || descriptionTooLong}
+						label={m['common.action.save']()}
 						onClick={() => void onPressSave()}
+						size="small"
 					>
-						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
+						<ButtonText>{m['common.action.save']()}</ButtonText>
 						{(isCreatingList || isUpdatingList) && (
 							<ButtonSpinner color="white" label={m['common.status.saving']()} />
 						)}
 					</Button>
-				</Dialog.Header.Slot>
-			</Dialog.Header.Outer>
+				</Dialog.Header.Actions>
+			</Dialog.Header.Root>
 
 			<Dialog.Body>
 				{isUpdateListError && <Notice className={styles.errorWrap}>{cleanError(updateListError)}</Notice>}

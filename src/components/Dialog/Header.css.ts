@@ -1,36 +1,74 @@
-import { style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
+import { BODY_TIMELINE } from '#/components/Dialog/Popup.css';
 
-export const outer = style({
-	boxSizing: 'border-box',
+import { colors } from '#/styles/colors';
+import { space, zIndex } from '#/styles/tokens.css';
+
+// keep the row height independent of the border.
+export const root = style({
+	boxSizing: 'content-box',
 	display: 'flex',
-	flexDirection: 'row',
 	flexShrink: 0,
-	gap: 8,
+	gap: space.lg,
 	alignItems: 'center',
-	borderBottom: `1px solid ${vars.palette.contrast_200}`,
-	backgroundColor: vars.palette.contrast_0,
-	paddingBlock: 6,
-	paddingInline: 6,
-	minHeight: 50,
+	backgroundColor: colors.bg,
+	paddingInline: space.lg,
+	height: 56,
 });
 
-export const borderless = style({
-	borderBottom: 'none',
+export const border = style({
+	borderBottom: `1px solid ${colors.contrast_200}`,
 });
 
-export const content = style({
-	flex: '0 1 auto',
+const divide = keyframes({
+	from: { opacity: 0 },
+	to: { opacity: 1 },
+});
+
+// overlay the divider to avoid layout shifts. browsers without scroll timelines leave it hidden.
+export const scrollingBorder = style({
+	position: 'relative',
+	zIndex: zIndex.raised,
+	'::after': {
+		position: 'absolute',
+		top: '100%',
+		right: 0,
+		left: 0,
+		opacity: 0,
+		backgroundColor: colors.contrast_200,
+		height: 1,
+		pointerEvents: 'none',
+		content: '""',
+	},
+	'@supports': {
+		'(animation-timeline: scroll())': {
+			selectors: {
+				'&::after': {
+					animationName: divide,
+					animationTimingFunction: 'linear',
+					animationFillMode: 'both',
+					animationTimeline: BODY_TIMELINE,
+					animationRange: '0px 16px',
+				},
+			},
+		},
+	},
+});
+
+// align the icon with the dialog padding without shrinking its hit area.
+export const leadingButton = style({
+	margin: -space.sm,
+});
+
+export const title = style({
+	flex: 1,
 	minWidth: 0,
 });
 
-export const slot = style({
+export const actions = style({
 	display: 'flex',
-	flex: 1,
+	flexShrink: 0,
+	gap: space.sm,
 	alignItems: 'center',
-	selectors: {
-		'&:first-child': { justifyContent: 'flex-start' },
-		'&:last-child': { justifyContent: 'flex-end' },
-	},
 });

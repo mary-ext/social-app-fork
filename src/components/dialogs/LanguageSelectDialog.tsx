@@ -15,9 +15,8 @@ import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 const LANGUAGE_ITEM_HEIGHT_ESTIMATE = 48;
@@ -68,7 +67,7 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 	const [checkedCodes, setCheckedCodes] = useState(currentLanguages);
 	const [search, setSearch] = useState('');
 
-	const onClose = () => {
+	const onDone = () => {
 		onSelectLanguages(checkedCodes);
 		handle.close();
 	};
@@ -135,23 +134,15 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 			type="checkbox"
 			values={checkedCodes}
 		>
-			<div className={styles.header}>
-				<Text className={styles.title} numberOfLines={1} size="lg" weight="semiBold">
-					{titleText}
-				</Text>
-
-				<Button
-					className={styles.closeButton}
-					color="secondary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={onClose}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{titleText}</Dialog.Header.Title>
+				<Dialog.Header.Actions>
+					<Button color="primary" label={m['common.action.done']()} onClick={onDone} size="small">
+						<ButtonText>{m['common.action.done']()}</ButtonText>
+					</Button>
+				</Dialog.Header.Actions>
+			</Dialog.Header.Root>
 
 			<div className={styles.search}>
 				<SearchInput
@@ -201,18 +192,6 @@ function DialogInner({ handle, titleText, currentLanguages, onSelectLanguages, m
 					);
 				}}
 			/>
-
-			<Dialog.Footer>
-				<Button
-					className={styles.doneButton}
-					color="primary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={onClose}
-					size="large"
-				>
-					<ButtonText>{m['common.action.done']()}</ButtonText>
-				</Button>
-			</Dialog.Footer>
 		</Toggle.Group>
 	);
 }

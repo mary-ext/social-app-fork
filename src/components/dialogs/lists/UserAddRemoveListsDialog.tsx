@@ -18,10 +18,9 @@ import * as ListCard from '#/components/ListCard';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function UserAddRemoveListsDialog({
@@ -40,7 +39,7 @@ export function UserAddRemoveListsDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup height="fixed" label={title} scroll="body" size="wide">
-				<DialogInner handle={handle} onChange={onChange} profile={profile} title={title} />
+				<DialogInner onChange={onChange} profile={profile} title={title} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
@@ -57,12 +56,10 @@ function keyExtractor(item: Item): string {
 }
 
 function DialogInner({
-	handle,
 	onChange,
 	profile,
 	title,
 }: {
-	handle: Dialog.DialogHandle;
 	onChange?: (type: 'add' | 'remove', list: AppBskyGraphDefs.ListView) => void;
 	profile: AnyProfileView;
 	title: string;
@@ -117,23 +114,10 @@ function DialogInner({
 
 	return (
 		<>
-			<div className={css.header}>
-				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-					{title}
-				</Text>
-
-				<Button
-					className={css.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={() => handle.close()}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root border>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{title}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<Dialog.List
 				data={items}

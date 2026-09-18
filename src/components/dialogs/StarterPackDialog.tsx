@@ -24,7 +24,6 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import StarterPack from '#/icons/original/StarterPack.svg';
 import { m } from '#/paraglide/messages';
@@ -90,22 +89,10 @@ function DialogInner({ handle, targetDid }: StarterPackDialogProps) {
 
 	return (
 		<>
-			<div className={css.header}>
-				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-					{m['common.starterPack.action.add']()}
-				</Text>
-				<Button
-					className={css.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={() => handle.close()}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['common.starterPack.action.add']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 			<Dialog.List
 				data={items}
 				estimateHeight={STARTER_PACK_ITEM_HEIGHT_ESTIMATE}

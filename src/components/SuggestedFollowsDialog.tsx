@@ -16,10 +16,8 @@ import { InterestTabs } from '#/components/InterestTabs';
 import type { ListMethods } from '#/components/List/List';
 import * as css from '#/components/SuggestedFollowsDialog.css';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 const FOR_YOU_TAB = 'all';
@@ -149,22 +147,10 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 
 	return (
 		<>
-			<div className={css.header}>
-				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-					{m['components.dialogs.suggestedFollows.title']()}
-				</Text>
-				<Button
-					className={css.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={() => handle.close()}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['components.dialogs.suggestedFollows.title']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<div className={css.search}>
 				<SearchInput

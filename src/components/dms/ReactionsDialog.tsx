@@ -13,10 +13,8 @@ import { filterBlockedReactions } from '#/components/dms/util';
 import * as TabScroller from '#/components/TabScroller';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { space } from '#/styles/tokens.css';
 
@@ -93,22 +91,10 @@ function DialogInner({
 
 	return (
 		<>
-			<div className={css.header}>
-				<Text className={css.title} numberOfLines={1} size="lg" weight="semiBold">
-					{m['components.dms.reaction.title']()}
-				</Text>
-				<Button
-					className={css.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={close}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['components.dms.reaction.title']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<div className={css.tabs}>
 				<TabScroller.Root gutterWidth={space.lg}>

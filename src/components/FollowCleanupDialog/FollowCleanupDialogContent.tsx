@@ -26,10 +26,9 @@ import { Spinner } from '#/components/Spinner';
 import * as TabScroller from '#/components/TabScroller';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PeopleRemoveIcon from '#/icons/central/PeopleRemove_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
 
@@ -54,28 +53,15 @@ const keyExtractor = (item: FlaggedFollow) => item.did;
 /**
  * renders the on-demand follow cleanup flow.
  *
- * @param props dialog handle for closing the flow
  * @returns the dialog header and cleanup content
  */
-export const FollowCleanupDialogContent = ({ handle }: { handle: Dialog.DialogHandle }) => {
+export const FollowCleanupDialogContent = () => {
 	return (
 		<>
-			<div className={styles.header}>
-				<Text className={styles.title} numberOfLines={1} size="lg" weight="semiBold">
-					{m['components.followCleanupDialog.title']()}
-				</Text>
-				<Button
-					className={styles.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={() => handle.close()}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root border="scrolling">
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['components.followCleanupDialog.title']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<CleanupFlow />
 		</>

@@ -20,8 +20,6 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
-import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
-import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PaperPlaneIcon from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -53,16 +51,16 @@ export function Content({
 }) {
 	const parsed = subject ? parseReportSubject(subject) : undefined;
 	if (!parsed) {
-		return <Invalid close={close} />;
+		return <Invalid />;
 	}
 	return <Inner close={close} onAfterSubmit={onAfterSubmit} subject={parsed} />;
 }
 
 /** graceful fallback shown when the dialog receives an unrecognizable subject. */
-function Invalid({ close }: { close: () => void }) {
+function Invalid() {
 	return (
 		<>
-			<Header close={close} title={m['common.action.report']()} />
+			<Header title={m['common.action.report']()} />
 			<Dialog.Body>
 				<div className={styles.body}>
 					<Text size="lg" weight="bold">
@@ -195,7 +193,7 @@ function Inner({
 
 	return (
 		<>
-			<Header close={close} onBack={onBack} title={title} />
+			<Header onBack={onBack} title={title} />
 			{step === 'categories' && (
 				<Dialog.Body>
 					<div className={styles.body}>
@@ -315,39 +313,12 @@ function Inner({
 	);
 }
 
-function Header({ close, onBack, title }: { close: () => void; onBack?: () => void; title: string }) {
+function Header({ onBack, title }: { onBack?: () => void; title: string }) {
 	return (
-		<Dialog.Header.Outer>
-			<Dialog.Header.Slot>
-				{onBack && (
-					<Button
-						color="secondary"
-						label={m['common.action.goBack']()}
-						onClick={onBack}
-						shape="round"
-						size="small"
-						variant="ghost"
-					>
-						<ButtonIcon icon={ChevronLeftIcon} />
-					</Button>
-				)}
-			</Dialog.Header.Slot>
-			<Dialog.Header.Content>
-				<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
-			</Dialog.Header.Content>
-			<Dialog.Header.Slot>
-				<Button
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={close}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={TimesIcon} />
-				</Button>
-			</Dialog.Header.Slot>
-		</Dialog.Header.Outer>
+		<Dialog.Header.Root border="scrolling">
+			{onBack ? <Dialog.Header.Back onClick={onBack} /> : <Dialog.Header.Close />}
+			<Dialog.Header.Title>{title}</Dialog.Header.Title>
+		</Dialog.Header.Root>
 	);
 }
 

@@ -5,7 +5,6 @@ import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/Sta
 
 import * as Dialog from '#/components/Dialog';
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
-import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
@@ -64,23 +63,10 @@ export function WizardEditListDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup scroll="body">
-				<Dialog.Header.Outer>
-					<Dialog.Header.Slot />
-					<Dialog.Header.Content>
-						<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
-					</Dialog.Header.Content>
-					<Dialog.Header.Slot>
-						<Button
-							label={m['common.action.close']()}
-							variant="ghost"
-							color="primary"
-							size="small"
-							onClick={() => handle.close()}
-						>
-							<ButtonText>{m['common.action.close']()}</ButtonText>
-						</Button>
-					</Dialog.Header.Slot>
-				</Dialog.Header.Outer>
+				<Dialog.Header.Root>
+					<Dialog.Header.Close />
+					<Dialog.Header.Title>{title}</Dialog.Header.Title>
+				</Dialog.Header.Root>
 				<Dialog.List
 					data={data}
 					estimateHeight={WIZARD_ITEM_HEIGHT_ESTIMATE}

@@ -9,27 +9,6 @@ const ROW_BLOCK_PADDING = space.md;
 const SEARCH_HEIGHT = 42;
 const SEARCH_NEGATIVE_MARGIN = SEARCH_HEIGHT + (DIALOG_PADDING - ROW_BLOCK_PADDING - 1);
 
-export const header = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexShrink: 0,
-	alignItems: 'center',
-	justifyContent: 'space-between',
-	backgroundColor: colors.bg,
-	paddingTop: DIALOG_PADDING,
-	paddingBottom: space.md,
-	paddingInline: DIALOG_PADDING,
-});
-
-export const title = style({
-	display: 'flex',
-	minWidth: 0,
-});
-
-export const closeButton = style({
-	margin: -space.sm,
-});
-
 export const search = style({
 	zIndex: zIndex.raised,
 	marginBottom: -SEARCH_NEGATIVE_MARGIN,

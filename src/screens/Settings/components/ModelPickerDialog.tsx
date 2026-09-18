@@ -14,10 +14,9 @@ import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
 import type { ListMethods } from '#/components/List/List';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import RobotIcon from '#/icons/central/Robot_round_outlined_radius0_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -100,7 +99,7 @@ const DialogInner = ({
 
 	const byKey = new Map((offers ?? []).map((offer) => [offerKey(offer), offer]));
 
-	const onClose = () => {
+	const onDone = () => {
 		const offer = byKey.get(selected);
 		const provider = offer && linked.get(offer.provider);
 		if (offer !== undefined && provider !== undefined) {
@@ -172,23 +171,15 @@ const DialogInner = ({
 			value={selectedEntry}
 			virtualized
 		>
-			<div className={styles.header}>
-				<Text className={styles.title} size="lg" weight="semiBold" numberOfLines={1}>
-					{titleText}
-				</Text>
-
-				<Button
-					className={styles.closeButton}
-					color="secondary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={onClose}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{titleText}</Dialog.Header.Title>
+				<Dialog.Header.Actions>
+					<Button color="primary" label={m['common.action.done']()} onClick={onDone} size="small">
+						<ButtonText>{m['common.action.done']()}</ButtonText>
+					</Button>
+				</Dialog.Header.Actions>
+			</Dialog.Header.Root>
 
 			<div className={styles.search}>
 				<SearchField.Root>
@@ -257,18 +248,6 @@ const DialogInner = ({
 					)}
 				/>
 			</Combobox.List>
-
-			<Dialog.Footer>
-				<Button
-					className={styles.doneButton}
-					color="primary"
-					label={m['common.action.done']()}
-					onClick={onClose}
-					size="large"
-				>
-					<ButtonText>{m['common.action.done']()}</ButtonText>
-				</Button>
-			</Dialog.Footer>
 		</Combobox.Root>
 	);
 };

@@ -25,11 +25,9 @@ import * as SearchField from '#/components/forms/SearchField';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function ListAddRemoveUsersDialog({
@@ -49,18 +47,16 @@ export function ListAddRemoveUsersDialog({
 				scroll="body"
 				size="wide"
 			>
-				<DialogInner handle={handle} list={list} onChange={onChange} />
+				<DialogInner list={list} onChange={onChange} />
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
 function DialogInner({
-	handle,
 	list,
 	onChange,
 }: {
-	handle: Dialog.DialogHandle;
 	list: AppBskyGraphDefs.ListView;
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void;
 }) {
@@ -198,23 +194,10 @@ function DialogInner({
 			open
 			value={memberProfiles}
 		>
-			<div className={css.header}>
-				<Text className={css.title} size="lg" weight="semiBold" numberOfLines={1}>
-					{m['components.dialogs.list.addPeopleTitle']()}
-				</Text>
-
-				<Button
-					className={css.closeButton}
-					color="secondary"
-					label={m['common.action.close']()}
-					onClick={() => handle.close()}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['components.dialogs.list.addPeopleTitle']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<div className={css.search}>
 				<SearchField.Root>

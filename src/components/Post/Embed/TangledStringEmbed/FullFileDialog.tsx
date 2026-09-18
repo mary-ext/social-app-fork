@@ -28,17 +28,10 @@ export function FullFileDialog({ contents, filename, handle, onOpen, uri }: Full
 function DialogInner({ contents, filename, onOpen, uri }: Omit<FullFileDialogProps, 'handle'>) {
 	return (
 		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot />
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{filename}</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot>
-					<span className={css.close}>
-						<Dialog.Close />
-					</span>
-				</Dialog.Header.Slot>
-			</Dialog.Header.Outer>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{filename}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<Dialog.Body className={css.body}>
 				<CodeBlock contents={contents} filename={filename} overflow="scroll" />

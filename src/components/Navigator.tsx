@@ -8,12 +8,8 @@ import {
 	useState,
 } from 'react';
 
+import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/Navigator.css';
-import { Button, ButtonIcon } from '#/components/web/Button';
-
-import ArrowLeftIcon from '#/icons/central/ArrowLeft_round_outlined_radius1_stroke2.svg';
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
-import { m } from '#/paraglide/messages';
 
 /** maps each route name to its params, or `undefined` for a route that takes none. */
 export type RouteMap = { [name: string]: object | undefined };
@@ -134,14 +130,12 @@ export const createNavigator = <Routes extends RouteMap>() => {
 };
 
 /**
- * goes back, or closes at the root. restores focus here if navigation removes the focused control.
+ * goes back, or closes the dialog at the root. receives focus if navigation removes the focused control.
  *
- * @param closeLabel accessible name at the root
- * @param onClose called when pressed at the root
  * @returns the back or close button
  * @throws if used outside a navigator provider
  */
-export function BackOrCloseButton({ closeLabel, onClose }: { closeLabel: string; onClose: () => void }) {
+export function BackOrCloseButton() {
 	const navigator = use(BaseContext);
 	if (!navigator) {
 		throw new Error(`BackOrCloseButton must be used within a navigator Provider`);
@@ -161,18 +155,9 @@ export function BackOrCloseButton({ closeLabel, onClose }: { closeLabel: string;
 		}
 	}, [key]);
 
-	return (
-		<Button
-			ref={ref}
-			className={styles.leadingButton}
-			color="secondary"
-			label={canGoBack ? m['common.action.back']() : closeLabel}
-			onClick={canGoBack ? pop : onClose}
-			shape="round"
-			size="small"
-			variant="ghost"
-		>
-			<ButtonIcon icon={canGoBack ? ArrowLeftIcon : XIcon} />
-		</Button>
-	);
+	if (canGoBack) {
+		return <Dialog.Header.Back ref={ref} onClick={pop} />;
+	}
+
+	return <Dialog.Header.Close ref={ref} />;
 }

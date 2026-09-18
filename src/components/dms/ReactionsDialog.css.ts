@@ -7,27 +7,6 @@ import { emojiFontFamily, space } from '#/styles/tokens.css';
 const DIALOG_PADDING = space.lg;
 const ROW_BLOCK_PADDING = space.md;
 
-export const header = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexShrink: 0,
-	alignItems: 'center',
-	justifyContent: 'space-between',
-	backgroundColor: colors.bg,
-	paddingTop: DIALOG_PADDING,
-	paddingBottom: space.md,
-	paddingInline: DIALOG_PADDING,
-});
-
-export const title = style({
-	display: 'flex',
-	minWidth: 0,
-});
-
-export const closeButton = style({
-	margin: -space.sm,
-});
-
 export const tabs = style({
 	borderBottomWidth: 1,
 	borderBottomStyle: 'solid',

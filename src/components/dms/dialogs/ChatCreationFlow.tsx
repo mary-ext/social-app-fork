@@ -22,7 +22,6 @@ import {
 	ProfileRowContent,
 	SectionLabel,
 	SelectMembersStep,
-	StepFooter,
 	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import * as SearchField from '#/components/forms/SearchField';
@@ -45,7 +44,6 @@ export const NEW_GROUP_CHAT_ROW: NewGroupChatRowModel = { kind: 'newGroupChat', 
 export type PickStepProps = {
 	/** whether the account can create groups. */
 	canCreateGroups: boolean;
-	onClose: () => void;
 	/** selects an existing conversation. */
 	onSelectConversation: (convoId: string) => void;
 	/** starts a direct conversation. */
@@ -161,8 +159,6 @@ export function ChatCreationFlow({
 		},
 	});
 
-	const onClose = () => handle.close();
-
 	const onSelectRecipient = (did: Did) => {
 		handle.close();
 		createChat([did]);
@@ -207,7 +203,6 @@ export function ChatCreationFlow({
 			{step === 'pick' && (
 				<PickStep
 					canCreateGroups={canCreateGroups}
-					onClose={onClose}
 					onSelectConversation={onSelectConversation}
 					onSelectRecipient={onSelectRecipient}
 					onStartGroup={onStartGroup}
@@ -219,7 +214,6 @@ export function ChatCreationFlow({
 					memberLimit={memberLimit}
 					members={members}
 					onBack={onBackToPick}
-					onClose={onClose}
 					onMembersChange={onMembersChange}
 					onRemoveMember={removeMember}
 					primaryButton={
@@ -231,7 +225,6 @@ export function ChatCreationFlow({
 							size="small"
 						>
 							<ButtonText>{m['common.action.next']()}</ButtonText>
-							<ButtonIcon icon={ArrowRightIcon} />
 						</Button>
 					}
 					title={m['components.dms.group.title']()}
@@ -239,12 +232,7 @@ export function ChatCreationFlow({
 			)}
 
 			{step === 'groupName' && (
-				<NameGroupStep
-					members={members}
-					onBack={() => setStep('selectMembers')}
-					onClose={onClose}
-					onCreate={onCreateGroup}
-				/>
+				<NameGroupStep members={members} onBack={() => setStep('selectMembers')} onCreate={onCreateGroup} />
 			)}
 
 			<Prompt.Basic
@@ -289,12 +277,10 @@ export function NewGroupChatRow({ dimmed, onClick }: { dimmed: boolean; onClick:
 function NameGroupStep({
 	members,
 	onBack,
-	onClose,
 	onCreate,
 }: {
 	members: AnyProfileView[];
 	onBack: () => void;
-	onClose: () => void;
 	onCreate: (name: string) => void;
 }) {
 	const moderationOpts = useModerationOpts();
@@ -305,7 +291,21 @@ function NameGroupStep({
 
 	return (
 		<>
-			<StepHeader onClose={onClose} title={m['common.chat.groupName']()} />
+			<StepHeader
+				actions={
+					<Button
+						color="primary"
+						disabled={!canCreate}
+						label={m['components.dms.group.action.create']()}
+						onClick={() => onCreate(groupName)}
+						size="small"
+					>
+						<ButtonText>{m['common.action.create']()}</ButtonText>
+					</Button>
+				}
+				onBack={onBack}
+				title={m['common.chat.groupName']()}
+			/>
 
 			<div className={css.groupNameSection}>
 				<SearchField.Root>
@@ -339,18 +339,6 @@ function NameGroupStep({
 						</div>
 					))}
 			</Dialog.Body>
-
-			<StepFooter onBack={onBack}>
-				<Button
-					color="primary"
-					disabled={!canCreate}
-					label={m['components.dms.group.action.create']()}
-					onClick={() => onCreate(groupName)}
-					size="small"
-				>
-					<ButtonText>{m['common.action.create']()}</ButtonText>
-				</Button>
-			</StepFooter>
 		</>
 	);
 }

@@ -1,18 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
-const DIALOG_PADDING = space._2xl;
+const DIALOG_PADDING = space.lg;
 
-export const header = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
+export const description = style({
 	flexShrink: 0,
-	gap: space.xs,
-	backgroundColor: colors.bg,
-	paddingTop: DIALOG_PADDING,
 	paddingBottom: space.lg,
 	paddingInline: DIALOG_PADDING,
 });

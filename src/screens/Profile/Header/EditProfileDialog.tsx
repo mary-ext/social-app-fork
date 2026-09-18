@@ -162,36 +162,22 @@ function DialogInner({
 
 	return (
 		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot>
+			<Dialog.Header.Root border>
+				<Dialog.Header.Close onClick={onRequestClose} />
+				<Dialog.Header.Title>{m['screens.profile.editProfile.action']()}</Dialog.Header.Title>
+				<Dialog.Header.Actions>
 					<Button
-						label={m['common.action.cancel']()}
-						variant="ghost"
 						color="primary"
-						size="small"
-						onClick={onRequestClose}
-					>
-						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
-					</Button>
-				</Dialog.Header.Slot>
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['screens.profile.editProfile.action']()}</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot>
-					<Button
-						label={m['common.action.save']()}
-						variant="ghost"
-						color="primary"
-						size="small"
-						className={!dirty ? styles.inactiveSave : undefined}
 						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
+						label={m['common.action.save']()}
 						onClick={() => void onPressSave()}
+						size="small"
 					>
-						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
-						{isUpdatingProfile && <ButtonSpinner color="default" label={m['common.status.saving']()} />}
+						<ButtonText>{m['common.action.save']()}</ButtonText>
+						{isUpdatingProfile && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
 					</Button>
-				</Dialog.Header.Slot>
-			</Dialog.Header.Outer>
+				</Dialog.Header.Actions>
+			</Dialog.Header.Root>
 
 			<Dialog.Body>
 				<div className={styles.bannerWrap}>

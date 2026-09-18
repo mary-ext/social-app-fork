@@ -1,5 +1,3 @@
-import { clsx } from 'clsx';
-
 import { DraftsButton } from '#/features/composer/drafts/DraftsButton';
 import type { DraftSaveBlocker } from '#/features/composer/drafts/state/api';
 
@@ -13,7 +11,6 @@ import * as styles from './ComposerTopBar.css';
 import type { DraftSummary } from './drafts/state/schema';
 
 export function ComposerTopBar({
-	border,
 	canPost,
 	isReply,
 	isPublishQueued,
@@ -29,7 +26,6 @@ export function ComposerTopBar({
 	isEditingDraft,
 	draftSaveBlocker,
 }: {
-	border?: boolean;
 	isPublishing: boolean;
 	canPost: boolean;
 	isReply: boolean;
@@ -45,26 +41,34 @@ export function ComposerTopBar({
 	isEditingDraft: boolean;
 	draftSaveBlocker: DraftSaveBlocker | undefined;
 }) {
+	let title: string;
+	let publishLabel: string;
+	let publishText: string;
+	if (isReply) {
+		title = m['view.composer.title.reply']();
+		publishLabel = isThread
+			? m['view.composer.publish.a11y.replies']()
+			: m['view.composer.publish.a11y.reply']();
+		publishText = m['common.action.reply']();
+	} else {
+		title = m['view.composer.title.post']();
+		publishLabel = isThread
+			? m['view.composer.publish.a11y.posts']()
+			: m['view.composer.publish.a11y.post']();
+		publishText = isThread ? m['view.composer.publish.action.all']() : m['navigation.post.title']();
+	}
+
 	return (
-		<Dialog.Header.Outer border={false} className={clsx(styles.header, border && styles.headerScrolled)}>
-			<Dialog.Header.Slot>
-				<Button.Button
-					label={m['common.action.cancel']()}
-					onClick={onCancel}
-					size="small"
-					color="primary"
-					variant="ghost"
-				>
-					<Button.ButtonText size="md">{m['common.action.cancel']()}</Button.ButtonText>
-				</Button.Button>
-			</Dialog.Header.Slot>
-			<Dialog.Header.Slot>
+		<Dialog.Header.Root border="scrolling">
+			<Dialog.Header.Close onClick={onCancel} />
+			<Dialog.Header.Title>{title}</Dialog.Header.Title>
+			<Dialog.Header.Actions>
 				{isPublishing ? (
 					<div className={styles.publishingRow}>
 						<Spinner color="default" label={m['view.composer.publish.publishing']()} size="lg" />
 					</div>
 				) : (
-					<div className={styles.buttonRow}>
+					<>
 						{!isReply && (
 							<DraftsButton
 								onSelectDraft={onSelectDraft}
@@ -78,31 +82,17 @@ export function ComposerTopBar({
 						)}
 
 						<Button.Button
-							label={
-								isReply
-									? isThread
-										? m['view.composer.publish.a11y.replies']()
-										: m['view.composer.publish.a11y.reply']()
-									: isThread
-										? m['view.composer.publish.a11y.posts']()
-										: m['view.composer.publish.a11y.post']()
-							}
+							label={publishLabel}
 							color="primary"
 							size="small"
 							onClick={onPublish}
 							disabled={!canPost || isPublishQueued}
 						>
-							<Button.ButtonText size="md">
-								{isReply
-									? m['common.action.reply']()
-									: isThread
-										? m['view.composer.publish.action.all']()
-										: m['navigation.post.title']()}
-							</Button.ButtonText>
+							<Button.ButtonText>{publishText}</Button.ButtonText>
 						</Button.Button>
-					</div>
+					</>
 				)}
-			</Dialog.Header.Slot>
-		</Dialog.Header.Outer>
+			</Dialog.Header.Actions>
+		</Dialog.Header.Root>
 	);
 }

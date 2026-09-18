@@ -13,10 +13,7 @@ export const dialogBody = style({
 
 export const scrollContainer = style({
 	display: 'flex',
-	flex: 1,
 	flexDirection: 'column',
-	minHeight: 0,
-	overflowY: 'auto',
 	scrollbarColor: `${vars.palette.contrast_200} transparent`,
 	scrollbarGutter: 'stable',
 });

@@ -13,9 +13,7 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon } from '#/components/web/Button';
 
-import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -86,23 +84,10 @@ const DialogInner = ({
 			open
 			value={search}
 		>
-			<div className={styles.header}>
-				<Text className={styles.title} size="lg" weight="semiBold" numberOfLines={1}>
-					{titleText}
-				</Text>
-
-				<Button
-					className={styles.closeButton}
-					color="secondary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={close}
-					shape="round"
-					size="small"
-					variant="ghost"
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
-			</div>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{titleText}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 
 			<div className={styles.search}>
 				<SearchField.Root>

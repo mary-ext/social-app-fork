@@ -92,35 +92,21 @@ const GifAltTextForm = ({
 
 	return (
 		<>
-			<Dialog.Header.Outer>
-				<Dialog.Header.Slot>
+			<Dialog.Header.Root>
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['view.composer.altText.action.add']()}</Dialog.Header.Title>
+				<Dialog.Header.Actions>
 					<Button
-						color="primary"
-						label={m['common.action.cancel']()}
-						onClick={() => handle.close()}
-						size="small"
-						variant="ghost"
-					>
-						<ButtonText size="md">{m['common.action.cancel']()}</ButtonText>
-					</Button>
-				</Dialog.Header.Slot>
-				<Dialog.Header.Content>
-					<Dialog.Header.TitleText>{m['view.composer.altText.action.add']()}</Dialog.Header.TitleText>
-				</Dialog.Header.Content>
-				<Dialog.Header.Slot>
-					<Button
-						className={canSave ? undefined : styles.inactiveSave}
 						color="primary"
 						disabled={!canSave}
 						label={m['common.action.save']()}
 						onClick={onSave}
 						size="small"
-						variant="ghost"
 					>
-						<ButtonText size="md">{m['common.action.save']()}</ButtonText>
+						<ButtonText>{m['common.action.save']()}</ButtonText>
 					</Button>
-				</Dialog.Header.Slot>
-			</Dialog.Header.Outer>
+				</Dialog.Header.Actions>
+			</Dialog.Header.Root>
 
 			<Dialog.Body>
 				<div className={styles.gifBox}>
