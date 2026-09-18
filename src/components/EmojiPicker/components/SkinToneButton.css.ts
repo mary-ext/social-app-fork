@@ -1,8 +1,15 @@
 import { style } from '@vanilla-extract/css';
 
+import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
+
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { emojiFontFamily, zIndex } from '#/styles/tokens.css';
+
+const INSET = 4;
+
+// keep the inset from the field's 1px border fixed as the font scales.
+const TRIGGER_SIZE = `calc(${FIELD_HEIGHT} - ${2 * (1 + INSET)}px)`;
 
 export const trigger = style({
 	appearance: 'none',
@@ -10,11 +17,13 @@ export const trigger = style({
 	flex: '0 0 auto',
 	alignItems: 'center',
 	justifyContent: 'center',
+	// account for the field's 12px padding and slot's -6px margin.
+	marginInlineEnd: -(6 - INSET),
 	border: '1px solid transparent',
 	borderRadius: 8,
 	background: 'transparent',
-	width: 30,
-	height: 30,
+	width: TRIGGER_SIZE,
+	height: TRIGGER_SIZE,
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	selectors: {
