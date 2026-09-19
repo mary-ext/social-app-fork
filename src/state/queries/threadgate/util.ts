@@ -56,6 +56,36 @@ export function threadgateRecordToAllowUISetting(
 	});
 }
 
+export type ThreadgateReplyMode = 'anyone' | 'nobody' | 'some';
+
+/**
+ * returns the reply mode using the same precedence as {@link threadgateAllowUISettingToAllowRecordValue}.
+ *
+ * @param settings allow UI settings
+ * @returns `anyone` when everybody can reply, `nobody` when replies are disabled (including an empty list),
+ *   otherwise `some`
+ */
+export function getThreadgateReplyMode(settings: ThreadgateAllowUISetting[]): ThreadgateReplyMode {
+	if (settings.some((v) => v.type === 'everybody')) {
+		return 'anyone';
+	}
+	if (settings.length === 0 || settings.some((v) => v.type === 'nobody')) {
+		return 'nobody';
+	}
+	return 'some';
+}
+
+/**
+ * allows everyone when no reply groups remain selected. this prevents deselecting the last group from
+ * disabling replies.
+ *
+ * @param settings allow UI settings built from the user's selected groups
+ * @returns `settings`, or `[{ type: 'everybody' }]` when it's empty
+ */
+export function coalesceAllowUISettings(settings: ThreadgateAllowUISetting[]): ThreadgateAllowUISetting[] {
+	return settings.length > 0 ? settings : [{ type: 'everybody' }];
+}
+
 /** converts threadgate allow UI settings to the AppBskyFeedThreadgate.Main allow prop */
 export function threadgateAllowUISettingToAllowRecordValue(
 	threadgate: ThreadgateAllowUISetting[],

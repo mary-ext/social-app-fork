@@ -32,6 +32,15 @@ export const indicator = style({
 	color: colors.primary_500,
 });
 
+export const indicatorInner = style({
+	display: 'flex',
+});
+
+export const checkIcon = style({
+	width: iconSize.sm,
+	height: iconSize.sm,
+});
+
 export const empty = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -43,9 +52,4 @@ export const empty = style({
 
 export const emptyMessage = style({
 	fontStyle: 'italic',
-});
-
-export const checkIcon = style({
-	width: iconSize.sm,
-	height: iconSize.sm,
 });

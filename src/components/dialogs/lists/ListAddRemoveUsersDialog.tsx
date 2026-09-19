@@ -4,7 +4,6 @@ import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { Combobox } from '@base-ui/react/combobox';
 import { useQueries } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
@@ -20,14 +19,10 @@ import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import * as css from '#/components/dialogs/lists/ListAddRemoveUsersDialog.css';
-import * as SearchField from '#/components/forms/SearchField';
-import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Text';
+import * as Picker from '#/components/Picker';
 import * as Toast from '#/components/Toast';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 export function ListAddRemoveUsersDialog({
@@ -164,34 +159,24 @@ function DialogInner({
 	// message. `null` while items are present or a search is still in flight.
 	const status = ((): ReactNode => {
 		if (isError) {
-			return <Empty message={m['components.dialogs.error.network']()} />;
+			return <Picker.Empty message={m['components.dialogs.error.network']()} />;
 		}
 		if (!searchText) {
 			return follows ? null : <ProfileCard.LoadingPlaceholder count={10} />;
 		}
-		return !isFetching && profiles.length === 0 ? <Empty message={m['common.search.empty']()} /> : null;
+		return !isFetching && profiles.length === 0 ? (
+			<Picker.Empty message={m['common.search.empty']()} />
+		) : null;
 	})();
 
 	return (
-		<Combobox.Root
-			filter={null}
-			inline
-			inputValue={searchText}
-			isItemEqualToValue={(a: AnyProfileView, b: AnyProfileView) => a.did === b.did}
+		<Picker.Root
+			isItemEqualToValue={(a, b) => a.did === b.did}
 			items={profiles}
-			itemToStringLabel={(profile: AnyProfileView) => profile.handle}
-			multiple
-			onInputValueChange={(value, details) => {
-				// only reflect real typing. selecting a user while filtering makes Base UI clear the input
-				// (reason `input-clear`, not `item-press`); ignoring every non-typing reason keeps the query put so
-				// several matches from the same search can be toggled in a row.
-				if (details.reason !== 'input-change') {
-					return;
-				}
-				setSearchText(value);
-			}}
+			itemToStringLabel={(profile) => profile.handle}
+			onSearchTextChange={setSearchText}
 			onValueChange={onValueChange}
-			open
+			searchText={searchText}
 			value={memberProfiles}
 		>
 			<Dialog.Header.Root>
@@ -199,41 +184,21 @@ function DialogInner({
 				<Dialog.Header.Title>{m['components.dialogs.list.addPeopleTitle']()}</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<Dialog.Search>
-				<SearchField.Root shape="round">
-					<SearchField.Icon />
-					<Combobox.Input
-						render={
-							<SearchField.Input
-								aria-label={m['common.search.action.profiles']()}
-								autoFocus
-								maxLength={50}
-								placeholder={m['common.action.search']()}
-							/>
-						}
-					/>
-					{searchText.length > 0 && (
-						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearchText('')} />
-					)}
-				</SearchField.Root>
-			</Dialog.Search>
+			<Picker.Search label={m['common.search.action.profiles']()} placeholder={m['common.action.search']()} />
 
-			<Dialog.Body className={css.list}>
-				{status}
-				<Combobox.List>
-					{(profile: AnyProfileView) =>
-						moderationOpts ? (
-							<UserResult
-								key={profile.did}
-								moderationOpts={moderationOpts}
-								pending={pendingDids.has(profile.did)}
-								profile={profile}
-							/>
-						) : null
-					}
-				</Combobox.List>
-			</Dialog.Body>
-		</Combobox.Root>
+			<Picker.List header={status}>
+				{(profile: AnyProfileView) =>
+					moderationOpts ? (
+						<UserResult
+							key={profile.did}
+							moderationOpts={moderationOpts}
+							pending={pendingDids.has(profile.did)}
+							profile={profile}
+						/>
+					) : null
+				}
+			</Picker.List>
+		</Picker.Root>
 	);
 }
 
@@ -247,33 +212,12 @@ function UserResult({
 	profile: AnyProfileView;
 }) {
 	return (
-		<Combobox.Item className={css.item} value={profile}>
+		<Picker.Item value={profile}>
 			<ProfileCard.Header>
 				<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
 				<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-				<div className={css.indicator}>
-					{pending ? (
-						<Spinner color="default" label={m['common.status.saving']()} size="sm" />
-					) : (
-						<Combobox.ItemIndicator>
-							<CheckIcon className={css.checkIcon} />
-						</Combobox.ItemIndicator>
-					)}
-				</div>
+				{pending ? <Picker.Pending label={m['common.status.saving']()} /> : <Picker.Check />}
 			</ProfileCard.Header>
-		</Combobox.Item>
-	);
-}
-
-function Empty({ message }: { message: string }) {
-	return (
-		<div className={css.empty}>
-			<Text className={css.emptyMessage} color="textContrastHigh" size="sm">
-				{message}
-			</Text>
-			<Text color="textContrastLow" size="xs">
-				(╯°□°)╯︵ ┻━┻
-			</Text>
-		</div>
+		</Picker.Item>
 	);
 }

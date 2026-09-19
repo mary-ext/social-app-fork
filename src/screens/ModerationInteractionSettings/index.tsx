@@ -13,10 +13,13 @@ import {
 } from '#/state/queries/threadgate';
 import { useTitle } from '#/state/use-title';
 
-import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog/SettingsBody';
+import * as Dialog from '#/components/Dialog';
+import { ListPicker } from '#/components/PostInteractionSettings/ListPicker';
+import { PostInteractionSettingsForm } from '#/components/PostInteractionSettings/SettingsForm';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';
@@ -54,6 +57,7 @@ export function Screen() {
 function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { isPending, mutateAsync: setPostInteractionSettings } = usePostInteractionSettingsMutation();
 	const [error, setError] = useState<string | undefined>(undefined);
+	const listsHandle = Dialog.useDialogHandle();
 
 	const allowUI = threadgateRecordToAllowUISetting({
 		allow: preferences.postInteractionSettings.threadgateAllowRules,
@@ -88,17 +92,38 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 
 	return (
 		<>
-			<PostInteractionSettingsForm
-				canSave={wasEdited}
-				isSaving={isPending}
-				onChangePostgate={setMaybeEditedPostgate}
-				onChangeThreadgateAllowUISettings={setMaybeEditedAllowUI}
-				onSave={() => void onSave()}
-				postgate={maybeEditedPostgate}
-				threadgateAllowUISettings={maybeEditedAllowUI}
-			/>
+			<div className={styles.formBleed}>
+				<PostInteractionSettingsForm
+					onChangePostgate={setMaybeEditedPostgate}
+					onChangeThreadgateAllowUISettings={setMaybeEditedAllowUI}
+					onOpenLists={() => listsHandle.open(null)}
+					postgate={maybeEditedPostgate}
+					threadgateAllowUISettings={maybeEditedAllowUI}
+				/>
+			</div>
+
+			<Button
+				color="primary"
+				disabled={!wasEdited || isPending}
+				label={m['common.action.save']()}
+				onClick={() => void onSave()}
+				size="large"
+			>
+				<ButtonText>{m['common.action.save']()}</ButtonText>
+				{isPending && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
+			</Button>
 
 			{error && <Admonition type="error">{error}</Admonition>}
+
+			<Dialog.Root handle={listsHandle}>
+				<Dialog.Popup height="fixed" scroll="body" size="medium">
+					<Dialog.Header.Root>
+						<Dialog.Header.Close />
+						<Dialog.Header.Title>{m['components.dialogs.reply.lists']()}</Dialog.Header.Title>
+					</Dialog.Header.Root>
+					<ListPicker onChange={setMaybeEditedAllowUI} settings={maybeEditedAllowUI} />
+				</Dialog.Popup>
+			</Dialog.Root>
 		</>
 	);
 }

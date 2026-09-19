@@ -1,12 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
-import { isResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useMyListsQuery } from '#/state/queries/my-lists';
 import { usePostgateQuery, useWritePostgateMutation } from '#/state/queries/postgate';
-import { createPostgateRecord, embeddingRules } from '#/state/queries/postgate/util';
+import { createPostgateRecord } from '#/state/queries/postgate/util';
 import {
 	type ThreadgateAllowUISetting,
 	threadgateViewToAllowUISetting,
@@ -15,23 +14,20 @@ import {
 } from '#/state/queries/threadgate';
 import { useSession } from '#/state/session';
 
-import { Trans } from '#/locale/Trans';
-
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';
-import { Stack } from '#/components/Stack';
+import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
+import { ListPicker } from '#/components/PostInteractionSettings/ListPicker';
+import {
+	PostInteractionSettingsForm,
+	type PostInteractionSettingsFormProps,
+} from '#/components/PostInteractionSettings/SettingsForm';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
-import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
-import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
-import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
-import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import * as styles from './SettingsBody.css';
 import { SettingsLoading } from './SettingsLoading';
 
 export type PostInteractionSettingsDialogProps = {
@@ -50,52 +46,64 @@ export type PostInteractionSettingsDialogProps = {
 	initialThreadgateView?: AppBskyFeedDefs.ThreadgateView;
 };
 
-export type PostInteractionSettingsFormProps = {
-	canSave?: boolean;
+type FlowProps = Omit<PostInteractionSettingsFormProps, 'onOpenLists'> & {
+	footer?: ReactNode;
+	isSaving: boolean;
 	onSave: () => void;
-	isSaving?: boolean;
-
-	isDirty?: boolean;
-	persist?: boolean;
-	onChangePersist?: (v: boolean) => void;
-
-	postgate: AppBskyFeedPostgate.Main;
-	onChangePostgate: (v: AppBskyFeedPostgate.Main) => void;
-
-	threadgateAllowUISettings: ThreadgateAllowUISetting[];
-	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
-
-	replySettingsDisabled?: boolean;
 };
+
+type SettingsRoutes = {
+	lists: undefined;
+	settings: undefined;
+};
+
+const SettingsNavigator = createNavigator<SettingsRoutes>();
 
 /** Threadgate settings dialog. Used in the composer. */
 export function PostInteractionSettingsControlledDialog({
 	handle,
+	isDirty,
+	persist,
+	onChangePersist,
 	...rest
-}: PostInteractionSettingsFormProps & {
+}: Omit<FlowProps, 'footer'> & {
 	handle: Dialog.DialogHandle;
+	isDirty: boolean;
+	persist: boolean;
+	onChangePersist: (v: boolean) => void;
 }) {
 	return (
 		<Dialog.Root
 			handle={handle}
 			onOpenChange={(open, details) => {
 				// preserve the old `preventDismiss` while there are unsaved changes pending a persist
-				if (!open && rest.isDirty && rest.persist && details.reason !== 'imperative-action') {
+				if (!open && isDirty && persist && details.reason !== 'imperative-action') {
 					details.cancel();
 				}
 			}}
 		>
-			<DialogInner {...rest} />
+			<Dialog.Popup height="fixed" scroll="body" size="medium">
+				<SettingsFlow
+					{...rest}
+					footer={
+						isDirty ? (
+							<Toggle.Item
+								checked={persist}
+								label={m['components.dialogs.mutedWord.saveOptions']()}
+								onChange={onChangePersist}
+							>
+								<Toggle.CheckboxIndicator />
+								<Text size="md">{m['components.dialogs.mutedWord.saveOptions']()}</Text>
+							</Toggle.Item>
+						) : (
+							<Text color="textContrastMedium" size="md">
+								{m['components.dialogs.mutedWord.defaultSettings']()}
+							</Text>
+						)
+					}
+				/>
+			</Dialog.Popup>
 		</Dialog.Root>
-	);
-}
-
-function DialogInner(props: PostInteractionSettingsFormProps) {
-	return (
-		<Dialog.Popup size="narrow">
-			<Header />
-			<PostInteractionSettingsForm {...props} />
-		</Dialog.Popup>
 	);
 }
 
@@ -184,298 +192,69 @@ export function SettingsBody({ handle, ...props }: PostInteractionSettingsDialog
 	}
 
 	return (
-		<Stack gap="lg">
-			<Header />
-			<PostInteractionSettingsForm
-				replySettingsDisabled={!isThreadgateOwnedByViewer}
-				isSaving={isSaving}
-				onSave={() => void onSave()}
-				postgate={postgateValue}
-				onChangePostgate={setEditedPostgate}
-				threadgateAllowUISettings={allowUIValue}
-				onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
-			/>
-		</Stack>
+		<SettingsFlow
+			isSaving={isSaving}
+			onChangePostgate={setEditedPostgate}
+			onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
+			onSave={() => void onSave()}
+			postgate={postgateValue}
+			replySettingsDisabled={!isThreadgateOwnedByViewer}
+			threadgateAllowUISettings={allowUIValue}
+		/>
 	);
 }
 
-export function PostInteractionSettingsForm({
-	canSave = true,
-	onSave,
-	isSaving,
-	postgate,
-	onChangePostgate,
-	threadgateAllowUISettings,
-	onChangeThreadgateAllowUISettings,
-	replySettingsDisabled,
-	isDirty,
-	persist,
-	onChangePersist,
-}: PostInteractionSettingsFormProps) {
-	const [showLists, setShowLists] = useState(false);
-	const { data: lists, isPending: isListsPending, isError: isListsError } = useMyListsQuery('curate');
-	const [quotesEnabled, setQuotesEnabled] = useState(
-		!(
-			postgate.embeddingRules &&
-			postgate.embeddingRules.find((v) => v.$type === embeddingRules.disableRule.$type)
-		),
-	);
-
-	const onChangeQuotesEnabled = (enabled: boolean) => {
-		setQuotesEnabled(enabled);
-		const nextEmbeddingRules: AppBskyFeedPostgate.Main['embeddingRules'] = enabled
-			? []
-			: [embeddingRules.disableRule];
-		onChangePostgate(createPostgateRecord({ ...postgate, embeddingRules: nextEmbeddingRules }));
-	};
-
-	const noOneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'nobody');
-	const everyoneCanReply = !!threadgateAllowUISettings.find((v) => v.type === 'everybody');
-	const numberOfListsSelected = threadgateAllowUISettings.filter((v) => v.type === 'list').length;
-
-	const toggleGroupValues = ((): string[] => {
-		const values: string[] = [];
-		for (const setting of threadgateAllowUISettings) {
-			switch (setting.type) {
-				case 'everybody':
-				case 'nobody': {
-					// no granularity, early return with nothing
-					return [];
-				}
-				case 'followers': {
-					values.push('followers');
-					break;
-				}
-				case 'following': {
-					values.push('following');
-					break;
-				}
-				case 'mention': {
-					values.push('mention');
-					break;
-				}
-				case 'list': {
-					values.push(`list:${setting.list}`);
-					break;
-				}
-				default: {
-					break;
-				}
-			}
-		}
-		return values;
-	})();
-
-	const toggleGroupOnChange = (values: string[]) => {
-		const settings: ThreadgateAllowUISetting[] = [];
-
-		if (values.length === 0) {
-			settings.push({ type: 'everybody' });
-		} else {
-			for (const value of values) {
-				if (value.startsWith('list:')) {
-					// the toggle group hands back plain strings; re-narrow the at-uri serialized above
-					const listUri = value.slice('list:'.length);
-					if (isResourceUri(listUri)) {
-						settings.push({ type: 'list', list: listUri });
-					}
-				} else if (value === 'followers' || value === 'following' || value === 'mention') {
-					settings.push({ type: value });
-				}
-			}
-		}
-
-		onChangeThreadgateAllowUISettings(settings);
-	};
-
+function SettingsFlow(props: FlowProps) {
 	return (
-		<div className={styles.form}>
-			<div className={styles.replySection}>
-				{replySettingsDisabled && (
-					<div className={styles.disabledNotice}>
-						<CircleInfo className={styles.disabledNoticeIcon} />
-						<Text className={styles.flex1} color="textContrastMedium" size="sm">
-							{m['components.dialogs.reply.authorControlled']()}
-						</Text>
-					</div>
-				)}
+		<SettingsNavigator.Provider initialRoute={{ name: 'settings' }}>
+			<SettingsFlowInner {...props} />
+		</SettingsNavigator.Provider>
+	);
+}
 
-				<div className={styles.replyBlock} style={{ opacity: replySettingsDisabled ? 0.3 : 1 }}>
-					<Text size="md" weight="medium">
-						{m['common.interaction.whoCanReply']()}
-					</Text>
+function SettingsFlowInner({ footer, isSaving, onSave, ...form }: FlowProps) {
+	const { push, route } = SettingsNavigator.useNavigator();
 
-					<Toggle.Group
-						className={styles.radioRow}
-						disabled={replySettingsDisabled}
-						label={m['components.dialogs.reply.description']()}
-						onChange={(val) => {
-							if (val.includes('everyone')) {
-								onChangeThreadgateAllowUISettings([{ type: 'everybody' }]);
-							} else if (val.includes('nobody')) {
-								onChangeThreadgateAllowUISettings([{ type: 'nobody' }]);
-							} else {
-								onChangeThreadgateAllowUISettings([{ type: 'mention' }]);
-							}
-						}}
-						type="radio"
-						values={everyoneCanReply ? ['everyone'] : noOneCanReply ? ['nobody'] : []}
-					>
-						<Toggle.RadioItem label={m['components.dialogs.reply.allowAnyone']()} value="everyone">
-							<Toggle.Panel>
-								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{m['components.dialogs.reply.anyone']()}</Toggle.PanelText>
-							</Toggle.Panel>
-						</Toggle.RadioItem>
-						<Toggle.RadioItem label={m['components.dialogs.reply.disableAll']()} value="nobody">
-							<Toggle.Panel>
-								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{m['components.dialogs.reply.nobody']()}</Toggle.PanelText>
-							</Toggle.Panel>
-						</Toggle.RadioItem>
-					</Toggle.Group>
-
-					<Toggle.Group
-						disabled={replySettingsDisabled}
-						label={m['components.dialogs.reply.advancedDescription']()}
-						onChange={toggleGroupOnChange}
-						type="checkbox"
-						values={toggleGroupValues}
-					>
-						<Toggle.PanelGroup>
-							<Toggle.Item label={m['components.dialogs.reply.allowFollowers']()} name="followers">
-								<Toggle.Panel adjacent="trailing">
-									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['components.dialogs.reply.followers']()}</Toggle.PanelText>
-								</Toggle.Panel>
-							</Toggle.Item>
-							<Toggle.Item label={m['components.dialogs.reply.allowFollows']()} name="following">
-								<Toggle.Panel adjacent="both">
-									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['components.dialogs.reply.peopleYouFollow']()}</Toggle.PanelText>
-								</Toggle.Panel>
-							</Toggle.Item>
-							<Toggle.Item label={m['components.dialogs.reply.allowMentions']()} name="mention">
-								<Toggle.Panel adjacent="both">
-									<Toggle.CheckboxIndicator />
-									<Toggle.PanelText>{m['components.dialogs.reply.peopleYouMention']()}</Toggle.PanelText>
-								</Toggle.Panel>
-							</Toggle.Item>
-
-							<Toggle.Action
-								label={
-									showLists
-										? m['components.dialogs.list.hide']()
-										: m['components.dialogs.list.showSelectA11y']()
-								}
-								onClick={() => {
-									setShowLists((s) => !s);
-								}}
-								pressed={showLists}
+	switch (route.name) {
+		case 'lists': {
+			return (
+				<>
+					<Dialog.Header.Root>
+						<BackOrCloseButton />
+						<Dialog.Header.Title>{m['components.dialogs.reply.lists']()}</Dialog.Header.Title>
+					</Dialog.Header.Root>
+					<ListPicker
+						onChange={form.onChangeThreadgateAllowUISettings}
+						settings={form.threadgateAllowUISettings}
+					/>
+				</>
+			);
+		}
+		case 'settings': {
+			return (
+				<>
+					<Dialog.Header.Root border="scrolling">
+						<BackOrCloseButton />
+						<Dialog.Header.Title>{m['components.dialogs.interaction.title']()}</Dialog.Header.Title>
+						<Dialog.Header.Actions>
+							<Button
+								color="primary"
+								disabled={isSaving}
+								label={m['common.action.save']()}
+								onClick={onSave}
+								size="small"
 							>
-								<Toggle.Panel active={numberOfListsSelected > 0} adjacent={showLists ? 'both' : 'leading'}>
-									<Toggle.PanelText>
-										{numberOfListsSelected === 0 ? (
-											m['components.dialogs.list.selectFromYours']()
-										) : (
-											<Trans
-												message={m['components.dialogs.list.selectFromYoursCount']}
-												inputs={{ count: numberOfListsSelected }}
-												markup={{
-													t0: ({ children }) => <span className={styles.listsCount}>{children}</span>,
-												}}
-											/>
-										)}
-									</Toggle.PanelText>
-									<Toggle.PanelIcon icon={showLists ? ChevronUpIcon : ChevronDownIcon} />
-								</Toggle.Panel>
-							</Toggle.Action>
-							{showLists &&
-								(isListsPending ? (
-									<Toggle.Panel>
-										<Toggle.PanelText>{m['components.dialogs.list.loading']()}</Toggle.PanelText>
-									</Toggle.Panel>
-								) : isListsError ? (
-									<Toggle.Panel>
-										<Toggle.PanelText>{m['components.dialogs.list.error.load']()}</Toggle.PanelText>
-									</Toggle.Panel>
-								) : lists.length === 0 ? (
-									<Toggle.Panel>
-										<Toggle.PanelText>{m['components.dialogs.list.empty']()}</Toggle.PanelText>
-									</Toggle.Panel>
-								) : (
-									lists.map((list, i) => (
-										<Toggle.Item
-											key={list.uri}
-											label={m['components.dialogs.reply.allowList']({ name: list.name })}
-											name={`list:${list.uri}`}
-										>
-											<Toggle.Panel adjacent={i === lists.length - 1 ? 'leading' : 'both'}>
-												<Toggle.CheckboxIndicator />
-												<UserAvatar size={24} type="list" avatar={list.avatar} />
-												<Toggle.PanelText>{list.name}</Toggle.PanelText>
-											</Toggle.Panel>
-										</Toggle.Item>
-									))
-								))}
-						</Toggle.PanelGroup>
-					</Toggle.Group>
-				</div>
-			</div>
-			<Toggle.Item
-				checked={quotesEnabled}
-				label={
-					quotesEnabled
-						? m['components.dialogs.interaction.quote.disable']()
-						: m['components.dialogs.interaction.quote.enable']()
-				}
-				onChange={onChangeQuotesEnabled}
-			>
-				<Toggle.Panel>
-					<Toggle.PanelText icon={QuoteIcon}>
-						{m['components.dialogs.interaction.quote.allow']()}
-					</Toggle.PanelText>
-					<Toggle.Switch />
-				</Toggle.Panel>
-			</Toggle.Item>
-			{typeof persist !== 'undefined' && (
-				<div className={styles.persistRow}>
-					{isDirty ? (
-						<Toggle.Item
-							checked={persist}
-							label={m['components.dialogs.mutedWord.saveOptions']()}
-							onChange={() => onChangePersist?.(!persist)}
-						>
-							<Toggle.CheckboxIndicator />
-							<Text size="md">{m['components.dialogs.mutedWord.saveOptions']()}</Text>
-						</Toggle.Item>
-					) : (
-						<Text color="textContrastMedium" size="md">
-							{m['components.dialogs.mutedWord.defaultSettings']()}
-						</Text>
-					)}
-				</div>
-			)}
-			<Button
-				className={styles.saveButton}
-				color="primary"
-				disabled={!canSave || isSaving}
-				label={m['common.action.save']()}
-				onClick={onSave}
-				size="large"
-			>
-				<ButtonText>{m['common.action.save']()}</ButtonText>
-				{isSaving && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
-			</Button>
-		</div>
-	);
-}
-
-function Header() {
-	return (
-		<Dialog.TitleRow>
-			<Dialog.Title>{m['components.dialogs.interaction.title']()}</Dialog.Title>
-			<Dialog.Close />
-		</Dialog.TitleRow>
-	);
+								<ButtonText>{m['common.action.save']()}</ButtonText>
+								{isSaving && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
+							</Button>
+						</Dialog.Header.Actions>
+					</Dialog.Header.Root>
+					<Dialog.Body>
+						<PostInteractionSettingsForm {...form} onOpenLists={() => push({ name: 'lists' })} />
+					</Dialog.Body>
+					{footer && <Dialog.Footer>{footer}</Dialog.Footer>}
+				</>
+			);
+		}
+	}
 }

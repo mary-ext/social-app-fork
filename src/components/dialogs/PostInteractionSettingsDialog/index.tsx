@@ -12,8 +12,6 @@ import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 
-import { m } from '#/paraglide/messages';
-
 import type { PostInteractionSettingsDialogProps } from './SettingsBody';
 import { SettingsLoading } from './SettingsLoading';
 
@@ -27,7 +25,7 @@ export type { PostInteractionSettingsDialogProps };
 export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup label={m['components.dialogs.interaction.title']()} size="narrow">
+			<Dialog.Popup height="fixed" scroll="body" size="medium">
 				<Suspense fallback={<SettingsLoading />}>
 					<SettingsBody handle={handle} {...props} />
 				</Suspense>

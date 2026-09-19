@@ -12,6 +12,11 @@ export const content = style({
 	width: '100%',
 });
 
+// offset container padding so row hover backgrounds reach the edges.
+export const formBleed = style({
+	marginInline: -space.lg,
+});
+
 export const loaderWrap = style({
 	display: 'flex',
 	alignItems: 'center',

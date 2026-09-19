@@ -15,8 +15,10 @@
 	"components.dialogs.interaction.editTitle": "Edit post interaction settings",
 	"components.dialogs.interaction.loading": "Loading post interaction settings...",
 	"components.dialogs.interaction.quote.allow": "Allow quote posts",
+	"components.dialogs.interaction.quote.description": "Others can quote this post",
 	"components.dialogs.interaction.quote.disable": "Disable quote posts of this post",
 	"components.dialogs.interaction.quote.enable": "Enable quote posts of this post",
+	"components.dialogs.interaction.quote.title": "Quotes",
 	"components.dialogs.interaction.title": "Post interaction settings",
 	"components.dialogs.language.all": "All languages",
 	"components.dialogs.language.search": "Search languages",
@@ -60,7 +62,6 @@
 			}
 		}
 	],
-	"components.dialogs.list.hide": "Hide lists",
 	"components.dialogs.list.loading": "Loading lists...",
 	"components.dialogs.list.memberCount": [
 		{
@@ -94,17 +95,7 @@
 	"components.dialogs.list.owner": "Owner",
 	"components.dialogs.list.removedToast": "Removed from list",
 	"components.dialogs.list.removeUser": "Remove user from list",
-	"components.dialogs.list.selectFromYours": "Select from your lists",
-	"components.dialogs.list.selectFromYoursCount": [
-		{
-			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=other": "Select from your lists {#t0}({n} selected){/t0}"
-			}
-		}
-	],
-	"components.dialogs.list.showSelectA11y": "Show lists of users to select from",
+	"components.dialogs.list.search": "Search your lists",
 	"components.dialogs.list.userCreatedToast": "User list created",
 	"components.dialogs.list.userList": "User list",
 	"components.dialogs.list.userLists": "User lists",
@@ -128,16 +119,22 @@
 	"components.dialogs.reply.allowAnyone": "Allow anyone to reply",
 	"components.dialogs.reply.allowFollowers": "Allow your followers to reply",
 	"components.dialogs.reply.allowFollows": "Allow people you follow to reply",
-	"components.dialogs.reply.allowList": "Allow users in {name} to reply",
 	"components.dialogs.reply.allowMentions": "Allow people you mention to reply",
 	"components.dialogs.reply.anyone": "Anyone",
+	"components.dialogs.reply.anyoneDescription": "Everyone can reply to this post",
 	"components.dialogs.reply.authorControlled": "Reply settings are chosen by the author of the thread",
 	"components.dialogs.reply.description": "Set who can reply to your post",
 	"components.dialogs.reply.disableAll": "Disable replies entirely",
 	"components.dialogs.reply.followers": "Your followers",
+	"components.dialogs.reply.lists": "Members of your lists",
+	"components.dialogs.reply.listsDescription": "Members of the lists you pick can reply.",
 	"components.dialogs.reply.nobody": "Nobody",
+	"components.dialogs.reply.nobodyDescription": "Replies are turned off",
 	"components.dialogs.reply.peopleYouFollow": "People you follow",
 	"components.dialogs.reply.peopleYouMention": "People you mention",
+	"components.dialogs.reply.some": "Only some people",
+	"components.dialogs.reply.someDescription": "Choose who can reply",
+	"components.dialogs.reply.somePickGroups": "Pick one or more groups below",
 	"components.dialogs.signin.description": "Sign in with your Bluesky account.",
 	"components.dialogs.signin.startError": "Unable to start sign in. Please try again.",
 	"components.dialogs.signin.title": "Sign in to Bluesky",
