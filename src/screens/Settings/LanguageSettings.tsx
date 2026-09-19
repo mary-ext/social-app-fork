@@ -15,7 +15,7 @@ import { APP_LANGUAGES, LANGUAGES, langCode } from '#/locale/languages';
 
 import * as Dialog from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import * as Layout from '#/components/web/Layout';
 
 import EarthIcon from '#/icons/central/Earth_round_outlined_radius1_stroke2.svg';

@@ -3,8 +3,6 @@ import { useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { clsx } from 'clsx';
-
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -18,14 +16,10 @@ import { AvatarStack } from '#/components/AvatarStack';
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
-import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
-import { Spinner } from '#/components/Spinner';
-import { Text } from '#/components/Text';
+import * as Settings from '#/components/Settings';
 import * as Toast from '#/components/Toast';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
-import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import DotsHorizontal from '#/icons/central/DotGrid1x3Horizontal_round_outlined_radius1_stroke2.svg';
 import PersonGroupIcon from '#/icons/central/Group3_round_outlined_radius1_stroke2.svg';
 import PersonPlusIcon from '#/icons/central/PeopleAdd_round_outlined_radius1_stroke2.svg';
@@ -72,40 +66,32 @@ export function AccountsSection() {
 }
 
 function CurrentAccountRow({
-	className,
 	moderationOpts,
 	profile,
 }: {
-	className?: string;
 	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const shadow = useProfileShadow(profile);
 
 	return (
-		<Settings.LinkRowRaw
-			className={clsx(cardStyles.rowPlain, className)}
-			label={m['screens.settings.account.viewProfile']()}
-			to={profileTarget(profile.did)}
-		>
+		<Settings.LinkRow label={m['screens.settings.account.viewProfile']()} to={profileTarget(profile.did)}>
 			<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={shadow} />
 			<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={shadow} />
-			<ChevronRightIcon className={cardStyles.chevron} />
-		</Settings.LinkRowRaw>
+		</Settings.LinkRow>
 	);
 }
 
-function CurrentAccountRowSkeleton({ className }: { className?: string }) {
+function CurrentAccountRowSkeleton() {
 	return (
-		<div className={clsx(cardStyles.rowPlain, className)}>
+		<Settings.StaticRow>
 			<ProfileCard.AvatarPlaceholder color="contrast_100" />
 			<ProfileCard.NameAndHandlePlaceholder color="contrast_100" />
-		</div>
+		</Settings.StaticRow>
 	);
 }
 
 function SwitchAccountDisclosure({
-	className,
 	moderationOpts,
 	onOpenChange,
 	onPressSwitchAccount,
@@ -114,7 +100,6 @@ function SwitchAccountDisclosure({
 	others,
 	pendingDid,
 }: {
-	className?: string;
 	moderationOpts: ModerationOptions | undefined;
 	onOpenChange: (open: boolean) => void;
 	onPressSwitchAccount: (account: SessionAccount) => void;
@@ -125,7 +110,6 @@ function SwitchAccountDisclosure({
 }) {
 	return (
 		<Settings.CollapsibleRow
-			className={className}
 			icon={PersonGroupIcon}
 			label={m['common.account.action.switch']()}
 			onOpenChange={onOpenChange}
@@ -175,18 +159,17 @@ function OtherAccountRow({
 	const profileView = profile ?? accountProfileView(account);
 
 	return (
-		<div className={styles.accountRow}>
-			<button
-				aria-label={m['screens.settings.account.switchTo']({ handle: account.handle })}
-				className={clsx(cardStyles.rowPlain, cardStyles.rowInteractive)}
-				onClick={() => {
+		<Settings.Item>
+			<Settings.ActionRow
+				label={m['screens.settings.account.switchTo']({ handle: account.handle })}
+				loading={pendingDid === account.did}
+				onPress={() => {
 					if (!pendingDid) {
 						onPressSwitchAccount(account);
 					}
 				}}
-				type="button"
 			>
-				<span className={styles.accountAvatar}>
+				<Settings.Leading>
 					{moderationOpts ? (
 						<ProfileCard.Avatar
 							disabledPreview
@@ -198,13 +181,11 @@ function OtherAccountRow({
 					) : (
 						<ProfileCard.AvatarPlaceholder size={28} />
 					)}
-				</span>
-				<ProfileCard.Handle className={styles.handle} profile={profileView} />
-
-				{pendingDid === account.did && (
-					<Spinner color="default" label={m['screens.settings.account.switching']()} size="sm" />
-				)}
-			</button>
+				</Settings.Leading>
+				<Settings.Label titleText={profileView.handle} />
+				{/* reserves room for the overflow menu, which can't nest inside the row's button */}
+				<span className={styles.menuSpace} />
+			</Settings.ActionRow>
 			{!pendingDid && (
 				<Menu.Root>
 					<Menu.Trigger aria-label={m['screens.settings.account.options']()} className={styles.overflow}>
@@ -232,22 +213,18 @@ function OtherAccountRow({
 				}}
 				title={m['screens.settings.account.quickAccess.remove.title']()}
 			/>
-		</div>
+		</Settings.Item>
 	);
 }
 
-function AddAccountRow({ className }: { className?: string }) {
+function AddAccountRow() {
 	return (
-		<button
-			aria-label={m['common.account.action.addAnother']()}
-			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
-			onClick={() => signinDialogHandle.openWithPayload({ showStoredAccounts: false })}
-			type="button"
+		<Settings.ActionRow
+			label={m['common.account.action.addAnother']()}
+			onPress={() => signinDialogHandle.openWithPayload({ showStoredAccounts: false })}
 		>
 			<Settings.Icon icon={PersonPlusIcon} />
-			<Text className={cardStyles.title} size="md" weight="medium">
-				{m['common.account.action.addAnother']()}
-			</Text>
-		</button>
+			<Settings.Label titleText={m['common.account.action.addAnother']()} />
+		</Settings.ActionRow>
 	);
 }

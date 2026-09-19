@@ -6,7 +6,7 @@ import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 

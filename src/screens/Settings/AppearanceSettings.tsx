@@ -10,7 +10,7 @@ import {
 } from '#/state/preferences/appearance';
 import { useTitle } from '#/state/use-title';
 
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import * as Layout from '#/components/web/Layout';
 
 import MoonIcon from '#/icons/central/Moon_round_outlined_radius1_stroke2.svg';

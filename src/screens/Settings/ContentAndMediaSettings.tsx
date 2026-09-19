@@ -8,7 +8,7 @@ import {
 } from '#/state/queries/preferences/useThreadPreferences';
 import { useTitle } from '#/state/use-title';
 
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import * as Layout from '#/components/web/Layout';
 
 import RepostIcon from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';

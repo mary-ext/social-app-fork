@@ -4,26 +4,16 @@ import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
-export const accountRow = style({
-	position: 'relative',
-});
-
 export const avatarStack = style({
 	display: 'flex',
 	marginBlock: -2,
 });
 
-export const accountAvatar = style({
-	display: 'flex',
-	flexShrink: 0,
-	alignItems: 'center',
-	marginBlock: -4,
-});
+const OVERFLOW_SIZE = iconSize.sm + space.xs * 2;
 
-export const handle = style({
-	flex: 1,
-	paddingInlineEnd: space._4xl,
-	minWidth: 0,
+export const menuSpace = style({
+	flexShrink: 0,
+	width: OVERFLOW_SIZE,
 });
 
 export const overflow = style({
@@ -38,7 +28,9 @@ export const overflow = style({
 	border: 'none',
 	borderRadius: 999,
 	background: 'transparent',
-	padding: space.xs,
+	padding: 0,
+	width: OVERFLOW_SIZE,
+	height: OVERFLOW_SIZE,
 	color: vars.palette.contrast_500,
 	cursor: 'pointer',
 	selectors: {

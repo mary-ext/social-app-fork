@@ -18,9 +18,7 @@ import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { ErrorState } from '#/components/ErrorState';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
-import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
-import { Text } from '#/components/Text';
+import * as Settings from '#/components/Settings';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
@@ -129,17 +127,10 @@ function MutedWordRow({ word }: { word: AppBskyActorDefs.MutedWord }) {
 				confirmButtonColor="negative"
 			/>
 
-			<div className={cardStyles.row}>
+			<Settings.StaticRow>
 				<Settings.Icon icon={isTagOnly ? Hashtag : PageText} />
-				<Text className={cardStyles.title} color="text" numberOfLines={1} size="md" weight="medium">
-					{word.value}
-				</Text>
-				{details && (
-					<Text className={cardStyles.subtitle} color="textContrastMedium" numberOfLines={1} size="md_sub">
-						{details}
-					</Text>
-				)}
-				<span className={cardStyles.trailing}>
+				<Settings.Label subtitleText={details || undefined} titleText={word.value} />
+				<Settings.Trailing>
 					<Menu.Root>
 						<Menu.Trigger
 							render={
@@ -185,8 +176,8 @@ function MutedWordRow({ word }: { word: AppBskyActorDefs.MutedWord }) {
 							</Menu.Item>
 						</Menu.Popup>
 					</Menu.Root>
-				</span>
-			</div>
+				</Settings.Trailing>
+			</Settings.StaticRow>
 		</>
 	);
 }

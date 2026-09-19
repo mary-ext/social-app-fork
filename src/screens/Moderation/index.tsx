@@ -5,8 +5,6 @@ import {
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
 
-import { clsx } from 'clsx';
-
 import { profileDisplayName } from '#/lib/display-names';
 import { isAppLabeler } from '#/lib/moderation/labelers';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
@@ -23,8 +21,7 @@ import {
 } from '#/state/queries/preferences';
 import { useTitle } from '#/state/use-title';
 
-import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
+import * as Settings from '#/components/Settings';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -33,7 +30,6 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import * as Layout from '#/components/web/Layout';
 
-import ChevronRight from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import CircleBanSign from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
 import CircleCheck from '#/icons/central/CircleCheck_round_outlined_radius1_stroke2.svg';
 import EditBig from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
@@ -241,23 +237,16 @@ function AdultContentLabelRow({ labelDefinition }: { labelDefinition: Interprete
 	);
 }
 
-function LabelerRow({
-	className,
-	labeler,
-}: {
-	className?: string;
-	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
-}) {
+function LabelerRow({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetailed }) {
 	const { creator } = labeler;
 	const title = profileDisplayName({ displayName: creator.displayName, handle: creator.handle });
 
 	return (
-		<Settings.LinkRowRaw
-			className={clsx(cardStyles.rowPlain, className)}
+		<Settings.LinkRow
 			label={m['screens.moderation.labeler.viewA11y']({ handle: creator.handle })}
 			to={labelsTarget(creator.did)}
 		>
-			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
+			<UserAvatar avatar={creator.avatar} size={40} type="labeler" />
 			<div className={styles.identity}>
 				<Text numberOfLines={1} size="md" weight="medium">
 					{title}
@@ -272,9 +261,6 @@ function LabelerRow({
 					</Text>
 				)}
 			</div>
-			<span className={clsx(cardStyles.chevron, styles.labelerChevron)}>
-				<ChevronRight className={styles.chevronRightIcon} />
-			</span>
-		</Settings.LinkRowRaw>
+		</Settings.LinkRow>
 	);
 }

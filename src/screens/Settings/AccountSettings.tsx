@@ -13,7 +13,7 @@ import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import * as Layout from '#/components/web/Layout';
 
 import BellRingingIcon from '#/icons/central-custom/BellRinging_round_outlined_radius1_stroke2.svg';
@@ -147,7 +147,6 @@ function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?:
 }
 
 const PrivacyRequestRow = ({
-	className,
 	descriptionText,
 	icon,
 	isError,
@@ -156,7 +155,6 @@ const PrivacyRequestRow = ({
 	titleText,
 	value,
 }: {
-	className?: string;
 	descriptionText: string;
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	isError: boolean;
@@ -174,7 +172,7 @@ const PrivacyRequestRow = ({
 
 	return (
 		<>
-			<Settings.ButtonRow className={className} label={titleText} onPress={() => handle.open(null)}>
+			<Settings.ButtonRow label={titleText} onPress={() => handle.open(null)}>
 				<Settings.Icon icon={icon} />
 				<Settings.Label loading={!isError && loading} subtitleText={subtitleText} titleText={titleText} />
 			</Settings.ButtonRow>

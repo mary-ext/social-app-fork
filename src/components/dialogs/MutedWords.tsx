@@ -10,7 +10,7 @@ import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';
 import type * as Select from '#/components/Select';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';

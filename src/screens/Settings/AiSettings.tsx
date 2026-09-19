@@ -14,7 +14,7 @@ import {
 import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 

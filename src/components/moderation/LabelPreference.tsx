@@ -13,7 +13,7 @@ import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/st
 import { LOCALE } from '#/locale/intl/locale';
 
 import * as Toggle from '#/components/forms/Toggle';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 
 import CircleInfo from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
@@ -34,7 +34,6 @@ const toggleValue = (pref: LabelPreference | undefined) => pref ?? INHERIT_VALUE
 /**
  * an expandable row for a labeler's label preference.
  *
- * @param className additional row class
  * @param disabled whether the preference can be changed
  * @param labelDefinition label definition
  * @param labelerDid labeler DID
@@ -42,14 +41,12 @@ const toggleValue = (pref: LabelPreference | undefined) => pref ?? INHERIT_VALUE
  * @param open whether the row is open
  */
 export function LabelerLabelRow({
-	className,
 	disabled,
 	labelDefinition,
 	labelerDid,
 	onOpenChange,
 	open,
 }: {
-	className?: string;
 	disabled: boolean;
 	labelDefinition: InterpretedLabelDefinition;
 	labelerDid: Did;
@@ -107,7 +104,6 @@ export function LabelerLabelRow({
 
 	return (
 		<Settings.CollapsibleRow
-			className={className}
 			label={labelStrings.name}
 			onOpenChange={onOpenChange}
 			open={open}

@@ -43,7 +43,6 @@
 	"screens.settings.account.quickAccess.remove.title": "Remove from quick access?",
 	"screens.settings.account.quickAccess.removedToast": "Account removed from quick access",
 	"screens.settings.account.remove": "Remove account",
-	"screens.settings.account.switching": "Switching account",
 	"screens.settings.account.switchTo": "Switch to @{handle}",
 	"screens.settings.account.title": "Accounts",
 	"screens.settings.account.viewProfile": "View your profile",

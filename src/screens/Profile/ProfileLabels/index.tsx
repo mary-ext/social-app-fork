@@ -26,7 +26,7 @@ import * as Menu from '#/components/Menu';
 import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';

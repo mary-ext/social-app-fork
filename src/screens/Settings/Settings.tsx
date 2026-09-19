@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { clsx } from 'clsx';
-
 import {
 	setDebugFeedContextEnabled,
 	useDebugFeedContextEnabled,
@@ -11,9 +9,7 @@ import { logoutEveryAccount } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import * as Prompt from '#/components/Prompt';
-import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
-import { Text } from '#/components/Text';
+import * as Settings from '#/components/Settings';
 import * as Layout from '#/components/web/Layout';
 
 import NotificationIcon from '#/icons/central/Bell_round_outlined_radius1_stroke2.svg';
@@ -98,16 +94,13 @@ export function SettingsScreen() {
 					<ServiceWorkerSection />
 
 					<Settings.Section>
-						<button
-							aria-label={m['common.session.action.signOut']()}
-							className={clsx(cardStyles.row, cardStyles.rowInteractive)}
-							onClick={() => signOutPromptHandle.open(null)}
-							type="button"
+						<Settings.ActionRow
+							color="negative"
+							label={m['common.session.action.signOut']()}
+							onPress={() => signOutPromptHandle.open(null)}
 						>
-							<Text className={cardStyles.title} color="negative_500" size="md" weight="medium">
-								{m['common.session.action.signOut']()}
-							</Text>
-						</button>
+							<Settings.Label titleText={m['common.session.action.signOut']()} />
+						</Settings.ActionRow>
 					</Settings.Section>
 
 					<Settings.Section>
@@ -129,14 +122,13 @@ export function SettingsScreen() {
 	);
 }
 
-function DevOptionsRow({ className }: { className?: string }) {
+function DevOptionsRow() {
 	const debugFeedContextEnabled = useDebugFeedContextEnabled();
 	const devModeEnabled = useDevMode();
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Settings.CollapsibleRow
-			className={className}
 			icon={CodeBracketsIcon}
 			label={m['screens.settings.developer.title']()}
 			onOpenChange={setOpen}

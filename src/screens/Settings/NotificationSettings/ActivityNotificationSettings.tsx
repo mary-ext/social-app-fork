@@ -18,7 +18,7 @@ import { SubscribeProfileDialog } from '#/components/activity-notifications/Subs
 import * as Dialog from '#/components/Dialog';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';

@@ -1,15 +1,12 @@
 import type { ReactNode } from 'react';
 
-import { clsx } from 'clsx';
-
 import {
 	applyServiceWorkerUpdate,
 	registerServiceWorker,
 	useServiceWorkerStatus,
 } from '#/lib/service-worker';
 
-import * as Settings from '#/components/SettingsCards';
-import * as cardStyles from '#/components/SettingsCards.css';
+import * as Settings from '#/components/Settings';
 import { Spinner } from '#/components/Spinner';
 
 import DownloadIcon from '#/icons/central/ArrowInbox_round_outlined_radius1_stroke2.svg';
@@ -18,21 +15,14 @@ import { m } from '#/paraglide/messages';
 
 const HAS_SERVICE_WORKER = 'serviceWorker' in navigator;
 
-// a disabled row with a trailing spinner, shared by first-install and update downloads. the button
-// carries the label, so the spinner is aria-hidden to avoid a redundant announcement.
 const busyRow = (titleText: ReactNode, label: string) => (
-	<button
-		type="button"
-		disabled
-		aria-label={label}
-		className={clsx(cardStyles.row, cardStyles.rowInteractive)}
-	>
+	<Settings.StaticRow>
 		<Settings.Icon icon={DownloadIcon} />
 		<Settings.Label titleText={titleText} />
-		<span className={cardStyles.trailing}>
-			<Spinner color="default" label={null} size="sm" />
-		</span>
-	</button>
+		<Settings.Trailing>
+			<Spinner color="default" label={label} size="sm" />
+		</Settings.Trailing>
+	</Settings.StaticRow>
 );
 
 /** settings card for the offline service worker. */

@@ -5,7 +5,7 @@ import {
 } from '#/state/queries/preferences';
 import { useTitle } from '#/state/use-title';
 
-import * as Settings from '#/components/SettingsCards';
+import * as Settings from '#/components/Settings';
 import { Spinner } from '#/components/Spinner';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
