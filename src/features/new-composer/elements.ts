@@ -26,3 +26,6 @@ export const MEDIA_INSERT_BEFORE_ATTR = 'data-insert-before';
 
 /** insertion marker after the last media tile. */
 export const MEDIA_INSERT_AFTER_ATTR = 'data-insert-after';
+
+/** post id used to refocus its handle after reordering. */
+export const POST_HANDLE_ATTR = 'data-post-handle';
