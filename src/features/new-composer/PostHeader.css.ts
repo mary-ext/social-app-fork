@@ -1,0 +1,15 @@
+import { style } from '@vanilla-extract/css';
+
+import { fontLeading, fontSize, space } from '#/styles/tokens.css';
+
+export const root = style({
+	display: 'flex',
+	paddingBottom: space._2xs,
+	// reserve space to avoid a layout shift when the profile loads.
+	minHeight: `calc(${fontSize.md} * ${fontLeading.md})`,
+	alignItems: 'center',
+});
+
+export const badges = style({
+	paddingLeft: 6,
+});

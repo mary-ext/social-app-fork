@@ -52,14 +52,15 @@ export const overflow = style({
 	backgroundColor: `color-mix(in srgb, ${vars.palette.negative_500} 20%, transparent)`,
 });
 
-export const railSlot = style({
+const slot = style({
 	display: 'block',
+	whiteSpace: 'normal',
+	userSelect: 'none',
 });
 
-export const footerSlot = style({
-	display: 'block',
-	paddingBottom: space.sm,
-});
+export const headerSlot = slot;
+
+export const footerSlot = style([slot, { paddingBottom: space.sm }]);
 
 globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]`, {
 	outline: `2px dashed ${vars.palette.primary_500}`,

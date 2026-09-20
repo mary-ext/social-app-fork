@@ -41,6 +41,7 @@ import { MEDIA_GRID_ATTR } from './elements';
 import { attachFiles, moveMediaTo, moveMediaToSlot } from './media';
 import * as styles from './NewComposer.css';
 import { PostFooter } from './PostFooter';
+import { PostHeader } from './PostHeader';
 import { PostRail } from './PostRail';
 import { createPosts, endOfLastLine, findPost, getPostParam, threadSchema, type ThreadPost } from './schema';
 import { SuggestionPopup } from './SuggestionPopup';
@@ -313,18 +314,21 @@ export function NewComposer() {
 				}
 
 				switch (kind) {
-					case 'rail': {
+					case 'header': {
 						return createPortal(
-							<PostRail
-								wg={editor}
-								dnd={dnd}
-								postId={post.id}
-								index={post.index}
-								total={posts.length}
-								profile={profile}
-							/>,
+							<>
+								<PostRail
+									wg={editor}
+									dnd={dnd}
+									postId={post.id}
+									index={post.index}
+									total={posts.length}
+									profile={profile}
+								/>
+								<PostHeader profile={profile} />
+							</>,
 							element,
-							`rail:${postId}`,
+							`header:${postId}`,
 						);
 					}
 					case 'footer': {

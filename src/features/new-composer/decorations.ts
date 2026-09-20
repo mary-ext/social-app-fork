@@ -52,7 +52,7 @@ type ThreadAnalysis = {
 };
 
 /** per-post React portal slot. */
-export type PostSlotKind = 'rail' | 'footer';
+export type PostSlotKind = 'header' | 'footer';
 
 /** connects slot widgets to the hosting component. */
 export type SlotHost = {
@@ -83,13 +83,10 @@ const hosts = new WeakMap<Element | Text, SlotHost>();
  * creates a portal host widget keyed by post id to preserve React state during reordering.
  *
  * @param kind which slot the widget stands for
- * @param options the slot element's class, and whether it takes part in the post's layout
+ * @param className the slot element's class
  * @returns the widget type
  */
-const defineSlotWidget = (
-	kind: PostSlotKind,
-	{ className, inFlow }: { className: string; inFlow: boolean },
-) => {
+const defineSlotWidget = (kind: PostSlotKind, className: string) => {
 	return Widget.define<string>({
 		render(_postId, wg) {
 			const element = document.createElement('div');
@@ -113,18 +110,12 @@ const defineSlotWidget = (
 		},
 		// prevent control clicks from changing the editor selection.
 		propagateEvent: false,
-		inFlow,
+		inFlow: true,
 	});
 };
 
-const railWidget = defineSlotWidget('rail', {
-	className: styles.railSlot,
-	inFlow: false,
-});
-const footerWidget = defineSlotWidget('footer', {
-	className: styles.footerSlot,
-	inFlow: true,
-});
+const headerWidget = defineSlotWidget('header', styles.headerSlot);
+const footerWidget = defineSlotWidget('footer', styles.footerSlot);
 
 /**
  * maps text offsets of a post (lines joined with newlines) to document positions.
@@ -279,8 +270,8 @@ const analyze = (getPlaceholder: ((index: number) => string) | null, doc: Plot.D
 			points.push([pos + 1, Decoration.Point.attributes({ [LINE_PLACEHOLDER_ATTR]: getPlaceholder(index) })]);
 		}
 
-		// just inside the post's opening token; the rail is positioned over the whole post.
-		points.push([pos + 1, Decoration.Point.widget(railWidget.of(id), { side: -1 })]);
+		// just inside the post's opening token, before its first line.
+		points.push([pos + 1, Decoration.Point.widget(headerWidget.of(id), { side: -1 })]);
 
 		// just inside the post's closing token, after its last line.
 		points.push([pos + node.length - 1, Decoration.Point.widget(footerWidget.of(id), { side: 1 })]);
