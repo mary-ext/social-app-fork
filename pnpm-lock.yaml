@@ -163,6 +163,9 @@ importers:
       valibot:
         specifier: ^1.5.0
         version: 1.5.0(@typescript/typescript6@6.0.2)
+      wordgard:
+        specifier: 0.5.2
+        version: 0.5.2
     devDependencies:
       '@inlang/paraglide-js':
         specifier: 2.25.3
@@ -924,6 +927,9 @@ packages:
 
   '@lix-js/sdk@0.17.0':
     resolution: {integrity: sha512-xplbKYEokKbm0/soUy9eXlROF55Si1J9HK97iwJrNl/av1VixZ2mvpDTa0QsX96UyxFnzkXru6hngjtIJTl73g==}
+
+  '@marijn/find-cluster-break@1.0.4':
+    resolution: {integrity: sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ==}
 
   '@mary-ext/simple-event-emitter@1.0.2':
     resolution: {integrity: sha512-A644JdOf+KfTGyX/EYf8AI1Y18mM7369KrhtOVkdEwRa2QIC0Botv7XWnK6/XU7HuQfvtFpCufmHJC3hi4YMuw==}
@@ -1856,6 +1862,9 @@ packages:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
     engines: {node: '>=18'}
 
+  crelt@1.0.7:
+    resolution: {integrity: sha512-aK6BbWfhf4U/wCcLHKPJl/xa6VkVstRaPywWtMKGwuOLc/wZTyQYuoxgvZnNsBvv7Kg3YTBQYYBCggcviQczuA==}
+
   css-select@6.0.0:
     resolution: {integrity: sha512-rZZVSLle8v0+EY8QAkDWrKhpgt6SA5OtHsgBnsj6ZaLb5dmDVOWUDtQitd9ydxxvEjhewNudS6eTVU7uOyzvXw==}
 
@@ -2236,6 +2245,9 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
+  style-mod@4.1.4:
+    resolution: {integrity: sha512-XXWIQt633/EpAFx8aZDOTjBzrCaGmhvEQlQo6MVPfa2OzO2cWo+4hV9h+6UkHYlXGfy+ODXKUdP7Pthmcu5ATw==}
+
   supports-color@10.2.2:
     resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
     engines: {node: '>=18'}
@@ -2368,6 +2380,10 @@ packages:
 
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
+
+  wordgard@0.5.2:
+    resolution: {integrity: sha512-GaP/WbtSYi6+FM0dp9qVRE4W+5tOnz5UOrM/olqIuoEdU4csNc9XqMhKEHFKtXk5heN95UheNM+0HNxpGkLQIg==}
+    engines: {node: '>=22'}
 
   workerd@1.20260916.1:
     resolution: {integrity: sha512-yGPvK1Tg6l80QNp7uIs3fAlWBmw+ftgn3QK4uqH3bHoS+PeJNARjm6HoWGmkYl1zaqFO0iR31sdwnFKHoHOhUQ==}
@@ -2996,6 +3012,8 @@ snapshots:
       '@lix-js/sdk-linux-x64': 0.17.0
       '@lix-js/sdk-win32-x64': 0.17.0
 
+  '@marijn/find-cluster-break@1.0.4': {}
+
   '@mary-ext/simple-event-emitter@1.0.2': {}
 
   '@napi-rs/wasm-runtime@1.2.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
@@ -3531,6 +3549,8 @@ snapshots:
 
   cookie@1.1.1: {}
 
+  crelt@1.0.7: {}
+
   css-select@6.0.0:
     dependencies:
       boolbase: 1.0.0
@@ -3956,6 +3976,8 @@ snapshots:
 
   source-map@0.6.1: {}
 
+  style-mod@4.1.4: {}
+
   supports-color@10.2.2: {}
 
   svgo@4.1.0:
@@ -4066,6 +4088,12 @@ snapshots:
       terser: 5.51.2
 
   webpack-virtual-modules@0.6.2: {}
+
+  wordgard@0.5.2:
+    dependencies:
+      '@marijn/find-cluster-break': 1.0.4
+      crelt: 1.0.7
+      style-mod: 4.1.4
 
   workerd@1.20260916.1:
     optionalDependencies:
