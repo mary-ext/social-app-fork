@@ -202,9 +202,6 @@ const StarterPackScreen = lazy(() =>
 const StarterPackScreenShort = lazy(() =>
 	import('#/screens/StarterPack/StarterPackScreen').then((mod) => ({ default: mod.StarterPackScreenShort })),
 );
-const ThreadEditorPrototypeScreen = lazy(() =>
-	import('#/screens/ThreadEditorPrototype').then((mod) => ({ default: mod.ThreadEditorPrototypeScreen })),
-);
 const TopicScreen = lazy(() => import('#/screens/Topic').then((mod) => ({ default: mod.default })));
 const Wizard = lazy(() => import('#/screens/StarterPack/Wizard').then((mod) => ({ default: mod.Wizard })));
 
@@ -564,12 +561,6 @@ export const routes = defineRoutes({
 						query: { accept: optional(boolean()), embed: optional(resourceUri()) },
 					}),
 				},
-			}),
-
-			ThreadEditorPrototype: route({
-				component: ThreadEditorPrototypeScreen,
-				meta: { requireAuth: true },
-				path: '/dev/thread-editor',
 			}),
 
 			StarterPackWizard: route({

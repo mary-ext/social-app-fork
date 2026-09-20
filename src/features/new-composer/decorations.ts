@@ -19,6 +19,7 @@ import {
 	POST_DROP_TARGET_ATTR,
 } from './elements';
 import { getMediaProblem } from './media';
+import * as styles from './NewComposer.css';
 import {
 	getChildPlots,
 	getPostParam,
@@ -28,7 +29,6 @@ import {
 	type PostMedia,
 	type ThreadPost,
 } from './schema';
-import * as styles from './ThreadEditor.css';
 
 /** summary of one post, derived from the document. */
 export type PostSummary = {

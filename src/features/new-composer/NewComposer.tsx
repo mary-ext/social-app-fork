@@ -7,6 +7,9 @@ import { GardState } from 'wordgard/state';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
+import { useProfileQuery } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
+
 import { m } from '#/paraglide/messages';
 
 import {
@@ -36,11 +39,11 @@ import { createThreadDnd, getMediaDropIndex, getPostDropIndex } from './dnd';
 import { isFileDrag } from './drag';
 import { MEDIA_GRID_ATTR } from './elements';
 import { attachFiles, moveMediaTo, moveMediaToSlot } from './media';
+import * as styles from './NewComposer.css';
 import { PostFooter } from './PostFooter';
 import { PostRail } from './PostRail';
 import { createPosts, endOfLastLine, findPost, getPostParam, threadSchema, type ThreadPost } from './schema';
 import { SuggestionPopup } from './SuggestionPopup';
-import * as styles from './ThreadEditor.css';
 
 type Suggesting = {
 	completion: ActiveCompletion;
@@ -72,12 +75,15 @@ const getPostUnder = (
 };
 
 /**
- * thread editor with shared selection and undo history across posts.
+ * thread composer with shared selection and undo history across posts.
  *
- * @param props editor props, including the author's optional avatar URL
  * @returns the editor and its per-post controls
  */
-export function ThreadEditor({ avatar }: { avatar?: string }) {
+export function NewComposer() {
+	const { currentAccount } = useSession();
+	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+	const avatar = profile?.avatar;
+
 	const containerRef = useRef<HTMLDivElement>(null);
 	const dnd = useConstant(createThreadDnd);
 

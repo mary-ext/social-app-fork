@@ -22,6 +22,7 @@ import { Shell } from '#/components/Shell/Shell';
 import { useRouter } from '#/router';
 
 import { ComposerDialog } from './ComposerDialog';
+import { NewComposerDialog } from './NewComposerDialog';
 
 /**
  * the shell layout wrapping every in-app route. global overlays live inside here (not as siblings of the
@@ -75,6 +76,7 @@ export function ShellLayout() {
 				<Outlet />
 			</ErrorBoundary>
 			<ComposerDialog />
+			<NewComposerDialog />
 			<SigninDialog />
 			<LinkWarningDialog />
 			<GroupChatJoinDialog />
