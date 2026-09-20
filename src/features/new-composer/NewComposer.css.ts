@@ -10,13 +10,12 @@ import {
 	POST_DROP_TARGET_ATTR,
 	POST_ELEMENT,
 } from './elements';
-import { AVATAR_SIZE, GRIP_GAP, RAIL_WIDTH } from './PostRail.css';
+import { AVATAR_SIZE } from './PostRail.css';
 
 export const root = style({
 	position: 'relative',
 	paddingTop: space.md,
-	// reserve grip space without shifting the text.
-	paddingLeft: space.lg - GRIP_GAP,
+	paddingLeft: space.lg,
 	paddingRight: space.lg,
 	// the editor draws its own caret in `currentColor`.
 	color: vars.palette.contrast_1000,
@@ -31,7 +30,7 @@ globalStyle(`${root} wg-content`, {
 globalStyle(`${root} ${POST_ELEMENT}`, {
 	display: 'block',
 	position: 'relative',
-	paddingLeft: RAIL_WIDTH + space.md,
+	paddingLeft: AVATAR_SIZE + space.md,
 	minHeight: AVATAR_SIZE,
 });
 

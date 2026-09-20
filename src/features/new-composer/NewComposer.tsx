@@ -82,7 +82,6 @@ const getPostUnder = (
 export function NewComposer() {
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
-	const avatar = profile?.avatar;
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const dnd = useConstant(createThreadDnd);
@@ -322,7 +321,7 @@ export function NewComposer() {
 								postId={post.id}
 								index={post.index}
 								total={posts.length}
-								avatar={avatar}
+								profile={profile}
 							/>,
 							element,
 							`rail:${postId}`,
