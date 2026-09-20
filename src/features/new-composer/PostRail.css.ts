@@ -4,19 +4,23 @@ import { vars } from '#/styles/contract.css';
 import { hoverWithin } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
-/** also the post's minimum height, so a single-line post still clears the avatar. */
 export const AVATAR_SIZE = 36;
 
+export const RAIL_WIDTH = space.lg + AVATAR_SIZE + space.md;
+
 export const root = style({
+	boxSizing: 'border-box',
 	display: 'flex',
 	position: 'absolute',
 	top: 0,
 	bottom: 0,
 	left: 0,
+	paddingLeft: space.lg,
+	paddingRight: space.md,
+	width: RAIL_WIDTH,
 	flexDirection: 'column',
 	alignItems: 'center',
 	gap: space.xs,
-	width: AVATAR_SIZE,
 });
 
 export const handle = style({
