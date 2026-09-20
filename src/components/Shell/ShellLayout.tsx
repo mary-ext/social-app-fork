@@ -22,6 +22,7 @@ import { Shell } from '#/components/Shell/Shell';
 import { useRouter } from '#/router';
 
 import { ComposerDialog } from './ComposerDialog';
+import { NewComposerDialog } from './NewComposerDialog';
 
 const LoggedOut = lazy(() =>
 	import('#/components/Shell/LoggedOut').then((mod) => ({ default: mod.LoggedOut })),
@@ -83,6 +84,7 @@ export function ShellLayout() {
 				<Outlet />
 			</ErrorBoundary>
 			<ComposerDialog />
+			<NewComposerDialog />
 			<SigninDialog />
 			<LinkWarningDialog />
 			<GroupChatJoinDialog />

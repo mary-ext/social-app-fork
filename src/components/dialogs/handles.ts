@@ -33,6 +33,8 @@ export const lightboxHandle = Dialog.createHandle<LightboxPayload>();
 
 export const linkWarningDialogHandle = Dialog.createHandle<LinkWarningPayload>();
 
+export const newComposerDialogHandle = Dialog.createHandle<ComposerOpts>();
+
 export const reportDialogHandle = Dialog.createHandle<{ subject: ReportSubject }>();
 
 export const signinDialogHandle = Dialog.createHandle<SigninDialogPayload>();
