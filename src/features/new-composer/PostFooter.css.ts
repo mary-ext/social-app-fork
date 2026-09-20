@@ -11,8 +11,6 @@ export const root = style({
 	flexDirection: 'column',
 	gap: space.sm,
 	paddingTop: space.sm,
-	whiteSpace: 'normal',
-	userSelect: 'none',
 });
 
 export const grid = style({
