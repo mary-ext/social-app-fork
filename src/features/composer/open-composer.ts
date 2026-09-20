@@ -11,10 +11,11 @@ import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
 import { RQKEY_LINK } from '#/state/queries/resolve-link-key';
 
-import { composerDialogHandle } from '#/components/dialogs/handles';
+import { composerDialogHandle, newComposerDialogHandle } from '#/components/dialogs/handles';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
+import { getRouter } from '#/router';
 
 export interface ComposerOptsPostRef {
 	uri: ResourceUri;
@@ -57,6 +58,13 @@ export function useOpenComposer() {
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
+		if (new URLSearchParams(location.search).has('new-composer')) {
+			if (!newComposerDialogHandle.isOpen) {
+				newComposerDialogHandle.openWithPayload(opts);
+			}
+			return;
+		}
+
 		if (opts.quote) {
 			const appUrl = recordUriToShareUrl(opts.quote.uri);
 			if (appUrl) {
