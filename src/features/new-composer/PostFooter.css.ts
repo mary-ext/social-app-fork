@@ -4,6 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { MOUSE } from '#/styles/interaction';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+import { RIGHT_PADDING } from './consts';
 import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR, POST_ELEMENT } from './elements';
 
 export const root = style({
@@ -11,6 +12,7 @@ export const root = style({
 	flexDirection: 'column',
 	gap: space.sm,
 	paddingTop: space.sm,
+	paddingRight: RIGHT_PADDING,
 });
 
 export const grid = style({

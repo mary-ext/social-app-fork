@@ -3,6 +3,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
 
+import { RIGHT_PADDING } from './consts';
 import {
 	LINE_PLACEHOLDER_ATTR,
 	POST_DROP_AFTER_ATTR,
@@ -28,12 +29,12 @@ globalStyle(`${root} ${POST_ELEMENT}`, {
 	display: 'block',
 	position: 'relative',
 	paddingLeft: space.lg + AVATAR_SIZE + space.md,
-	paddingRight: space.lg,
 	minHeight: AVATAR_SIZE,
 });
 
 globalStyle(`${root} ${POST_ELEMENT} p`, {
 	margin: 0,
+	marginRight: RIGHT_PADDING,
 });
 
 export const facet = style({
