@@ -14,9 +14,6 @@ import { AVATAR_SIZE } from './PostRail.css';
 
 export const root = style({
 	position: 'relative',
-	paddingTop: space.md,
-	paddingLeft: space.lg,
-	paddingRight: space.lg,
 	// the editor draws its own caret in `currentColor`.
 	color: vars.palette.contrast_1000,
 });
@@ -30,7 +27,8 @@ globalStyle(`${root} wg-content`, {
 globalStyle(`${root} ${POST_ELEMENT}`, {
 	display: 'block',
 	position: 'relative',
-	paddingLeft: AVATAR_SIZE + space.md,
+	paddingLeft: space.lg + AVATAR_SIZE + space.md,
+	paddingRight: space.lg,
 	minHeight: AVATAR_SIZE,
 });
 
