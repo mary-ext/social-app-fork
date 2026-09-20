@@ -6,9 +6,7 @@ import * as SearchField from '#/components/forms/SearchField';
 
 import { m } from '#/paraglide/messages';
 
-/**
- * pill-shaped search field. shows a clear button when `value` is non-empty and `onClear` is provided.
- */
+/** pill-shaped search field. shows a clear button when `value` is non-empty and `onClear` is provided. */
 export function SearchInput({
 	autoFocus,
 	inputRef,

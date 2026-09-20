@@ -91,16 +91,14 @@ export function Section({
 	);
 }
 
-/**
- * an inset group of related rows. accepts `div` props for use with Base UI's `render` prop.
- */
+/** an inset group of related rows. accepts `div` props for use with Base UI's `render` prop. */
 export function Group({ className, ...props }: ComponentProps<'div'>) {
 	return <div {...props} className={clsx(styles.group, className)} />;
 }
 
 /**
- * groups a row and sibling controls under one divider and border radius.
- * position sibling controls absolutely; buttons cannot nest inside a row's button.
+ * groups a row and sibling controls under one divider and border radius. position sibling controls
+ * absolutely; buttons cannot nest inside a row's button.
  */
 export function Item({ children }: { children: ReactNode }) {
 	return <div className={styles.item}>{children}</div>;
@@ -115,9 +113,7 @@ export function Icon({ icon: IconCmp }: { icon: ComponentType<SVGProps<SVGSVGEle
 	return <IconCmp className={styles.leading} />;
 }
 
-/**
- * a fixed-width leading slot for custom content. oversized content stays centered without shifting the label.
- */
+/** a fixed-width leading slot for custom content. oversized content stays centered without shifting the label. */
 export function Leading({ children }: { children: ReactNode }) {
 	return <span className={styles.leading}>{children}</span>;
 }
