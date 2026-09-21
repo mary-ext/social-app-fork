@@ -21,8 +21,8 @@ export const root = style({
 
 globalStyle(`${root} wg-content`, {
 	padding: 0,
-	lineHeight: fontLeading.lg,
-	fontSize: fontSize.lg,
+	lineHeight: fontLeading.md,
+	fontSize: fontSize.md,
 });
 
 globalStyle(`${root} ${POST_ELEMENT}`, {
