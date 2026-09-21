@@ -24,6 +24,9 @@ export const MEDIA_GRID_ATTR = 'data-media-grid';
 /** carries a media entry's id, used to find its tile for hit testing and refocusing. */
 export const MEDIA_ID_ATTR = 'data-media-id';
 
+/** marks a full-width media tile. */
+export const MEDIA_ROW_ATTR = 'data-row';
+
 /** insertion marker before a media tile. */
 export const MEDIA_INSERT_BEFORE_ATTR = 'data-insert-before';
 
