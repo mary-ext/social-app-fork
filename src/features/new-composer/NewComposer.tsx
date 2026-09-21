@@ -40,6 +40,7 @@ import { createThreadDnd, getMediaDropIndex, getPostDropIndex } from './dnd';
 import { isFileDrag } from './drag';
 import { MEDIA_GRID_ATTR } from './elements';
 import { attachFiles, moveMediaTo, moveMediaToSlot } from './media';
+import { MediaRow } from './MediaRow';
 import * as styles from './NewComposer.css';
 import { PostFooter } from './PostFooter';
 import { PostHeader } from './PostHeader';
@@ -335,7 +336,10 @@ export function NewComposer() {
 					}
 					case 'footer': {
 						return createPortal(
-							<PostFooter wg={editor} dnd={dnd} post={post} />,
+							<>
+								<MediaRow wg={editor} dnd={dnd} post={post} />
+								<PostFooter wg={editor} post={post} />
+							</>,
 							element,
 							`footer:${postId}`,
 						);
