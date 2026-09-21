@@ -10,18 +10,20 @@ import { Text } from '#/components/Text';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './index.css';
-import { matchStandardSitePublisher, matchStandardSitePublisherByUri } from './publishers';
+import { matchStandardSitePublisherByUri } from './publishers';
 import { isStandardSiteDocumentUri, isStandardSitePublicationUri } from './utils';
 
 /** Row of `domain • by @handle` meta items beneath a standard-site title. */
 export function MetaRow({
+	hideDomain = false,
 	type = 'document',
 	view,
 }: {
+	/** hide the domain when the card names the publisher elsewhere. */
+	hideDomain?: boolean;
 	type?: 'document' | 'publication';
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	const highlightedPublisher = !!matchStandardSitePublisher(view);
 	const matchesRefType = type === 'document' ? isStandardSiteDocumentUri : isStandardSitePublicationUri;
 	// atm should only be one document
 	const authorRef = view.associatedRefs?.find(matchesRefType);
@@ -36,7 +38,7 @@ export function MetaRow({
 
 	const items: { key: string; node: ReactNode }[] = [];
 
-	if (!highlightedPublisher && !domainHandleMatch) {
+	if (!hideDomain && !domainHandleMatch) {
 		items.push({
 			key: 'domain',
 			node: (

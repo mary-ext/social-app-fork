@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import {
@@ -34,7 +36,7 @@ import { vars } from '#/styles/contract.css';
 
 import * as styles from './index.css';
 import { MetaRow } from './MetaRow';
-import { matchStandardSitePublisher } from './publishers';
+import { matchStandardSitePublisher, type StandardSitePublisher } from './publishers';
 import { isStandardSitePublicationEmbed } from './utils';
 
 type StandardSiteEmbedProps = {
@@ -135,7 +137,7 @@ export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
 	return <ArticleCard {...props} />;
 }
 
-function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
+function ArticleCard({ className, onOpen, view }: StandardSiteEmbedProps) {
 	const interactive = !useNavigationDisabled();
 	const niceUrl = toNiceDomain(view.uri);
 	const open = () => onOpen?.();
@@ -194,7 +196,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 			{view.source ? (
 				<>
 					<div className={styles.divider} />
-					<PublicationFooter onOpen={onOpen} preview={preview} view={view} />
+					<PublicationFooter onOpen={onOpen} view={view} />
 				</>
 			) : null}
 		</div>
@@ -207,7 +209,7 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 		return null;
 	}
 
-	const themeColors = themeColorsFor(view);
+	const highlightedPublisher = matchStandardSitePublisher(view);
 	const open = () => onOpen?.();
 
 	return (
@@ -227,16 +229,23 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 
 			<div className={styles.pubTopRow}>
 				<div className={styles.pubIdentity}>
-					<PublicationIcon size="lg" themeColors={themeColors} view={view} />
+					<PublicationIcon size="lg" view={view} />
 					<div className={styles.identityText}>
 						<Text color="text" numberOfLines={1} size="md" weight="semiBold">
 							{view.source.title}
 						</Text>
-						<MetaRow type="publication" view={view} />
+						<MetaRow hideDomain={!preview && !!highlightedPublisher} type="publication" view={view} />
 					</div>
 				</div>
 
-				{!preview ? <SubscribeButton className={styles.hideOnPhone} onOpen={onOpen} view={view} /> : null}
+				{!preview ? (
+					<SubscribeButton
+						className={styles.hideOnPhone}
+						onOpen={onOpen}
+						publisher={highlightedPublisher}
+						view={view}
+					/>
+				) : null}
 			</div>
 
 			{view.description ? (
@@ -251,6 +260,7 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 				<SubscribeButton
 					className={clsx(styles.pubSubscribeStacked, styles.hideOnGtPhone)}
 					onOpen={onOpen}
+					publisher={highlightedPublisher}
 					view={view}
 				/>
 			) : null}
@@ -260,17 +270,14 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 
 function PublicationFooter({
 	onOpen,
-	preview,
 	view,
 }: {
 	onOpen?: () => void;
-	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
 	if (!view.source) {
 		return null;
 	}
-	const themeColors = themeColorsFor(view);
 	const open = () => onOpen?.();
 
 	return (
@@ -290,7 +297,7 @@ function PublicationFooter({
 			</ExternalLink>
 
 			<div className={styles.footerIdentity}>
-				<PublicationIcon size="sm" themeColors={themeColors} view={view} />
+				<PublicationIcon size="sm" view={view} />
 				<div className={styles.identityText}>
 					<Text className={styles.footerTitle} color="text" numberOfLines={1} size="sm" weight="medium">
 						{view.source.title}
@@ -298,55 +305,52 @@ function PublicationFooter({
 					<MetaRow type="publication" view={view} />
 				</div>
 			</div>
-
-			{!preview ? <SubscribeButton onOpen={onOpen} view={view} /> : null}
 		</div>
 	);
 }
 
-function PublicationIcon({
-	size,
-	themeColors,
-	view,
-}: {
-	size: 'lg' | 'sm';
-	themeColors: ThemeColors;
-	view: AppBskyEmbedExternal.ViewExternal;
-}) {
+function PublicationIcon({ size, view }: { size: 'lg' | 'sm'; view: AppBskyEmbedExternal.ViewExternal }) {
 	if (!view.source) {
 		return null;
 	}
-	const px = size === 'lg' ? 40 : 32;
+
+	let icon: ReactNode;
+	if (view.source.icon) {
+		icon = (
+			<div className={styles.avatarWrap}>
+				<UserAvatar
+					avatar={view.source.icon}
+					className={styles.publicationAvatar}
+					noBorder
+					size={size === 'lg' ? 40 : 32}
+					type="labeler"
+				/>
+				<span aria-hidden className={styles.avatarBorder} />
+			</div>
+		);
+	} else {
+		const themeColors = themeColorsFor(view);
+		icon = (
+			<div
+				className={clsx(styles.letterBox, size === 'lg' ? styles.letterBoxLg : styles.letterBoxSm)}
+				style={assignInlineVars({
+					[styles.accentForegroundVar]: themeColors.accentForeground,
+					[styles.accentVar]: themeColors.accent,
+				})}
+			>
+				<Text className={styles.letterText} size="xl" weight="bold">
+					{Array.from(view.source.title)[0] ?? ''}
+				</Text>
+			</div>
+		);
+	}
 
 	return (
 		<div className={styles.iconRoot}>
 			<div className={styles.standardBadge}>
 				<StandardSite className={styles.metaIcon} />
 			</div>
-			{view.source.icon ? (
-				<div className={styles.avatarWrap}>
-					<UserAvatar
-						avatar={view.source.icon}
-						className={styles.publicationAvatar}
-						noBorder
-						size={px}
-						type="labeler"
-					/>
-					<span aria-hidden className={styles.avatarBorder} />
-				</div>
-			) : (
-				<div
-					className={clsx(styles.letterBox, size === 'lg' ? styles.letterBoxLg : styles.letterBoxSm)}
-					style={assignInlineVars({
-						[styles.accentForegroundVar]: themeColors.accentForeground,
-						[styles.accentVar]: themeColors.accent,
-					})}
-				>
-					<Text className={styles.letterText} size="xl" weight="bold">
-						{Array.from(view.source.title)[0] ?? ''}
-					</Text>
-				</div>
-			)}
+			{icon}
 		</div>
 	);
 }
@@ -354,13 +358,14 @@ function PublicationIcon({
 function SubscribeButton({
 	className,
 	onOpen,
+	publisher: highlightedPublisher,
 	view,
 }: {
 	className?: string;
 	onOpen?: () => void;
+	publisher: StandardSitePublisher | null;
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
-	const highlightedPublisher = matchStandardSitePublisher(view);
 	if (!view.source) {
 		return null;
 	}

@@ -227,21 +227,12 @@ export const hideOnGtPhone = style({
 });
 
 export const footer = style({
-	boxSizing: 'border-box',
-	display: 'flex',
 	position: 'relative',
-	flexDirection: 'column',
-	gap: space.md,
-	alignItems: 'center',
-	justifyContent: 'space-between',
 	padding: space.md,
 	selectors: {
 		[`${MOUSE} ${isInteractive} ${bodyLink}:hover ~ &, ${isInteractive} ${bodyLink}${PRESSED} ~ &`]: {
 			backgroundColor: colors.contrast_25,
 		},
-	},
-	'@media': {
-		[gtPhone]: { flexDirection: 'row', gap: space.sm },
 	},
 });
 
@@ -261,12 +252,7 @@ export const footerIdentity = style({
 	gap: space.sm,
 	alignItems: 'center',
 	zIndex: 1,
-	width: '100%',
-	minWidth: 0,
 	pointerEvents: 'none',
-	'@media': {
-		[gtPhone]: { flex: 1, width: 'auto' },
-	},
 });
 
 export const footerTitle = style({
