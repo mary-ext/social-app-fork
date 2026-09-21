@@ -14,6 +14,7 @@ import { buildSpans } from '#/components/Composer/rich-text';
 
 import {
 	LINE_PLACEHOLDER_ATTR,
+	POST_ACTIVE_ATTR,
 	POST_DROP_AFTER_ATTR,
 	POST_DROP_BEFORE_ATTR,
 	POST_DROP_TARGET_ATTR,
@@ -21,6 +22,7 @@ import {
 import { getMediaProblem } from './media';
 import * as styles from './NewComposer.css';
 import {
+	findPost,
 	getChildPlots,
 	getPostParam,
 	getPosts,
@@ -311,6 +313,18 @@ export const threadAnalysis = GardState.Field.define<ThreadAnalysis>({
 		];
 	},
 });
+
+// #region active post
+
+const activeDeco = Decoration.Point.attributes({ [POST_ACTIVE_ATTR]: '' });
+
+/** marks the post containing the selection head. */
+export const activePost = Decoration.Point.source.of((state) => {
+	const found = findPost(state.sel.head);
+	return found ? PointSet.create([[found.before, activeDeco]]) : PointSet.empty;
+});
+
+// #endregion
 
 // #region drop target
 

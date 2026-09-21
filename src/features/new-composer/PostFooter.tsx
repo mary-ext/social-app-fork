@@ -8,16 +8,20 @@ import type { Wordgard } from 'wordgard/editor';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { AttachmentKind } from '#/lib/media/read-attachment';
 
-import { CharProgress } from '#/features/composer/char-progress/CharProgress';
+import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
+
 import { getSelectionErrorMessage } from '#/features/composer/media/attachment-messages';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import EmojiIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
+import GifIcon from '#/icons/central/GifSquare_round_outlined_radius1_stroke2.svg';
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
+import { CharCount } from './CharCount';
 import { autoSplitPost } from './commands';
 import { markDropTarget, type PostSummary } from './decorations';
 import type { ThreadDnd } from './dnd';
@@ -49,22 +53,12 @@ const keepEditorFocus = (event: MouseEvent) => {
 /**
  * media and editing controls for a post.
  *
- * @param props the editor, post summary, and position in the thread
+ * @param props the editor, drag state, and post summary
  * @returns the post's footer
  */
-export function PostFooter({
-	wg,
-	dnd,
-	index,
-	total,
-	post,
-}: {
-	wg: Wordgard;
-	dnd: ThreadDnd;
-	index: number;
-	total: number;
-	post: PostSummary;
-}) {
+export function PostFooter({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; post: PostSummary }) {
+	const languages = toPostLanguages(usePostLanguage());
+
 	return (
 		<div className={styles.root}>
 			{post.media.length > 0 && <MediaGrid wg={wg} dnd={dnd} postId={post.id} media={post.media} />}
@@ -76,38 +70,63 @@ export function PostFooter({
 			)}
 
 			<div className={styles.toolbar} onMouseDown={keepEditorFocus}>
-				<Button
-					className={styles.postAction}
-					label={m['common.compose.action.photo']()}
-					variant="ghost"
-					color="primary"
-					shape="round"
-					onClick={() => {
-						void openMediaPicker().then((files) => attachFiles(wg, post.id, files));
-					}}
-				>
-					<ButtonIcon icon={ImageIcon} />
-				</Button>
-
-				<div className={styles.spacer} />
-
-				{post.isOverLimit && (
+				<div className={styles.actions}>
 					<Button
-						label="Split into multiple posts"
-						size="tiny"
+						className={styles.postAction}
+						label={m['common.compose.action.photo']()}
+						variant="ghost"
 						color="secondary"
-						onClick={() => autoSplitPost(wg, post.id)}
+						shape="round"
+						onClick={() => {
+							void openMediaPicker().then((files) => attachFiles(wg, post.id, files));
+						}}
 					>
-						<ButtonText>Auto-split</ButtonText>
+						<ButtonIcon icon={ImageIcon} size="lg" />
 					</Button>
-				)}
 
-				{total > 1 && (
-					<Text size="md_sub" className={styles.postNumber}>
-						{index + 1}/{total}
-					</Text>
-				)}
-				<CharProgress count={post.length} />
+					<Button
+						className={styles.postAction}
+						label={m['view.composer.gif.a11y.select']()}
+						variant="ghost"
+						color="secondary"
+						shape="round"
+					>
+						<ButtonIcon icon={GifIcon} size="lg" />
+					</Button>
+
+					<Button
+						className={styles.postAction}
+						label={m['common.a11y.openEmojiPicker']()}
+						variant="ghost"
+						color="secondary"
+						shape="round"
+					>
+						<ButtonIcon icon={EmojiIcon} size="lg" />
+					</Button>
+				</div>
+
+				<div className={styles.status}>
+					{post.isOverLimit && (
+						<Button
+							label="Split into multiple posts"
+							size="tiny"
+							color="secondary"
+							onClick={() => autoSplitPost(wg, post.id)}
+						>
+							<ButtonText>Auto-split</ButtonText>
+						</Button>
+					)}
+
+					<Button
+						className={styles.language}
+						label={m['view.composer.language.selectPost']()}
+						variant="ghost"
+						color="secondary"
+					>
+						<ButtonText size="sm">{languages.join(', ')}</ButtonText>
+					</Button>
+					<CharCount count={post.length} />
+				</div>
 			</div>
 		</div>
 	);

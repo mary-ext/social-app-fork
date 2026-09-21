@@ -16,3 +16,9 @@ export const root = style({
 export const badges = style({
 	paddingLeft: 6,
 });
+
+export const number = style({
+	display: 'flex',
+	marginInlineStart: 'auto',
+	paddingInlineStart: space.sm,
+});

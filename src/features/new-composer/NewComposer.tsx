@@ -24,6 +24,7 @@ import {
 } from './autocomplete';
 import { movePostToSlot, threadCommands } from './commands';
 import {
+	activePost,
 	dropTarget,
 	markDropTarget,
 	markPostDropSlot,
@@ -128,6 +129,7 @@ export function NewComposer() {
 			history(),
 			threadCommands,
 			threadAnalysis,
+			activePost,
 			dropTarget,
 			postDropSlot,
 			slotHost.of(host),
@@ -325,7 +327,7 @@ export function NewComposer() {
 									total={posts.length}
 									profile={profile}
 								/>
-								<PostHeader profile={profile} />
+								<PostHeader profile={profile} index={post.index} total={posts.length} />
 							</>,
 							element,
 							`header:${postId}`,
@@ -333,7 +335,7 @@ export function NewComposer() {
 					}
 					case 'footer': {
 						return createPortal(
-							<PostFooter wg={editor} dnd={dnd} index={post.index} total={posts.length} post={post} />,
+							<PostFooter wg={editor} dnd={dnd} post={post} />,
 							element,
 							`footer:${postId}`,
 						);
