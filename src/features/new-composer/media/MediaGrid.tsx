@@ -5,7 +5,7 @@ import type { Wordgard } from 'wordgard/editor';
 import { isFileDrag, type ThreadDnd } from '../dnd/channel';
 import { markDropTarget } from '../dnd/drop-indicators';
 import type { PostMedia } from '../editor/schema';
-import { MEDIA_GRID_ATTR, MEDIA_ID_ATTR } from '../elements';
+import { MEDIA_GRID_ATTR, MEDIA_ID_ATTR, MEDIA_ROW_ATTR } from '../elements';
 import { escapeToEditor, useRovingFocus } from '../focus';
 import { createMedia } from './attachments';
 import { insertMediaAt } from './commands';
@@ -14,15 +14,25 @@ import { MediaTile } from './MediaTile';
 
 /** returns the file insertion index at the pointer, or the tile count to append. */
 const getFileSlotAt = (grid: HTMLElement, x: number, y: number): number => {
-	const rects = [...grid.querySelectorAll(`[${MEDIA_ID_ATTR}]`)].map((tile) => tile.getBoundingClientRect());
+	const tiles = [...grid.querySelectorAll(`[${MEDIA_ID_ATTR}]`)].map((tile, index) => ({
+		rect: tile.getBoundingClientRect(),
+		index,
+		isRow: tile.hasAttribute(MEDIA_ROW_ATTR),
+	}));
 
 	// find the row first so drops after a wrapped row's last tile stay in that row.
-	const rowTop = rects.find((rect) => y < rect.bottom)?.top;
+	const rowTop = tiles.find(({ rect }) => y < rect.bottom)?.rect.top;
 	if (rowTop === undefined) {
-		return rects.length;
+		return tiles.length;
 	}
 
-	const inRow = rects.flatMap((rect, index) => (rect.top === rowTop ? [{ rect, index }] : []));
+	const inRow = tiles.filter(({ rect }) => rect.top === rowTop);
+
+	const [first] = inRow;
+	if (first?.isRow) {
+		return y < first.rect.top + first.rect.height / 2 ? first.index : first.index + 1;
+	}
+
 	const before = inRow.find(({ rect }) => x < rect.left + rect.width / 2);
 	return before?.index ?? inRow[inRow.length - 1]!.index + 1;
 };

@@ -1,5 +1,6 @@
 import { attachClosestEdge } from '@oomfware/tug/hitbox';
 
+import { clsx } from 'clsx';
 import type { Wordgard } from 'wordgard/editor';
 
 import type { AttachmentKind } from '#/lib/media/read-attachment';
@@ -12,7 +13,12 @@ import { m } from '#/paraglide/messages';
 import type { ThreadDnd } from '../dnd/channel';
 import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
 import { findActivePost } from '../editor/selection';
-import { MEDIA_ID_ATTR, MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR } from '../elements';
+import {
+	MEDIA_ID_ATTR,
+	MEDIA_INSERT_AFTER_ATTR,
+	MEDIA_INSERT_BEFORE_ATTR,
+	MEDIA_ROW_ATTR,
+} from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
 import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
@@ -33,7 +39,7 @@ function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; t
 		case 'voice': {
 			return (
 				<audio
-					className={styles.media}
+					className={styles.audio}
 					src={url}
 					preload="metadata"
 					controls
@@ -42,9 +48,12 @@ function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; t
 				/>
 			);
 		}
-		case 'gif':
+		case 'gif': {
+			// GIFs remain images until publishing.
+			return <img className={styles.frame} src={url} alt="" />;
+		}
 		case 'video': {
-			return <video className={styles.media} src={url} preload="metadata" muted />;
+			return <video className={styles.frame} src={url} preload="metadata" muted />;
 		}
 	}
 }
@@ -94,6 +103,7 @@ export function MediaTile({
 	insertAfter: boolean;
 }) {
 	const url = getMediaUrl(item);
+	const isRow = item.kind !== 'image';
 
 	const remove = () => {
 		// transfer focus only if the removed tile had it.
@@ -121,6 +131,9 @@ export function MediaTile({
 
 		const stopDragging = dnd.draggable({
 			element: node,
+			// preserve native audio control interaction.
+			canDrag: ({ input }) =>
+				!(document.elementFromPoint(input.clientX, input.clientY) instanceof HTMLAudioElement),
 			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, index }),
 		});
 
@@ -130,7 +143,7 @@ export function MediaTile({
 			getData: ({ element, input }) =>
 				attachClosestEdge(
 					{ kind: 'mediaTile', postId, index },
-					{ allowedEdges: ['left', 'right'], element, input },
+					{ allowedEdges: isRow ? ['top', 'bottom'] : ['left', 'right'], element, input },
 				),
 		});
 
@@ -144,11 +157,12 @@ export function MediaTile({
 		<div
 			ref={tileRef}
 			{...roving}
-			className={styles.tile}
+			className={clsx(styles.tile, item.kind === 'voice' && styles.voice)}
 			role="group"
 			aria-label={MEDIA_LABELS[item.kind]}
 			{...{
 				[MEDIA_ID_ATTR]: item.id,
+				[MEDIA_ROW_ATTR]: isRow ? '' : undefined,
 				[MEDIA_INSERT_BEFORE_ATTR]: insertBefore ? '' : undefined,
 				[MEDIA_INSERT_AFTER_ATTR]: insertAfter ? '' : undefined,
 			}}

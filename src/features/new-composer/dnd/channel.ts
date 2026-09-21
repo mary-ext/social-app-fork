@@ -78,9 +78,10 @@ export const getMediaDropIndex = (data: ThreadDropData, startIndex: number): num
 		return -1;
 	}
 
+	const edge = extractClosestEdge(data);
 	return getReorderDestinationIndex({
-		axis: 'horizontal',
-		closestEdgeOfTarget: extractClosestEdge(data),
+		axis: edge === 'top' || edge === 'bottom' ? 'vertical' : 'horizontal',
+		closestEdgeOfTarget: edge,
 		indexOfTarget: data.index,
 		startIndex,
 	});
