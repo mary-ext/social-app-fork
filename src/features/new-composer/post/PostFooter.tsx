@@ -13,13 +13,12 @@ import GifIcon from '#/icons/central/GifSquare_round_outlined_radius1_stroke2.sv
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
+import { autoSplitPost } from '../commands/split-post';
+import type { PostSummary } from '../editor/thread-analysis';
+import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
+import { attachFiles } from '../media/commands';
 import { CharCount } from './CharCount';
-import { autoSplitPost } from './commands';
-import type { PostSummary } from './decorations';
-import { escapeToEditor, keepEditorFocus } from './focus';
-import { attachFiles } from './media';
 import * as styles from './PostFooter.css';
-import { useRovingFocus } from './roving';
 
 /**
  * editing controls for a post.

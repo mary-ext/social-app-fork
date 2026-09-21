@@ -12,9 +12,10 @@ import ArrowDownIcon from '#/icons/central/ArrowDown_round_outlined_radius1_stro
 import ArrowUpIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
 import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
 
-import { movePostToSlot } from './commands';
-import type { ThreadDnd } from './dnd';
-import { POST_HANDLE_ATTR } from './elements';
+import { movePostToSlot } from '../commands/reorder-posts';
+import type { ThreadDnd } from '../dnd/channel';
+import { POST_HANDLE_ATTR } from '../elements';
+import { AVATAR_SIZE } from '../layout';
 import * as styles from './PostRail.css';
 
 type RailProps = {
@@ -36,7 +37,7 @@ function Avatar({
 	return (
 		<UserAvatar
 			avatar={profile?.avatar}
-			size={styles.AVATAR_SIZE}
+			size={AVATAR_SIZE}
 			type={profile?.associated?.labeler ? 'labeler' : 'user'}
 			noBorder={noBorder}
 		/>

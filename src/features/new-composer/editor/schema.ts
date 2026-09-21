@@ -4,7 +4,7 @@ import { Paragraph } from 'wordgard/types';
 
 import type { AttachmentKind } from '#/lib/media/read-attachment';
 
-import { POST_ELEMENT } from './elements';
+import { POST_ELEMENT } from '../elements';
 
 /** local attachment. the document and undo history retain its file for preview and restoration. */
 export type PostMedia = {
@@ -72,6 +72,18 @@ const ThreadDoc = Plot.defineDoc({ blockContent: Post });
  */
 export const setPostParamChange = (pos: number, param: PostParam): ChangeSet.Spec => {
 	return { from: pos, to: pos + 1, insert: [Post.of(param)] };
+};
+
+/**
+ * creates a change that replaces a post's media, leaving its content and id in place.
+ *
+ * @param pos the position before the post
+ * @param post the post plot
+ * @param media the new media
+ * @returns the media replacement change
+ */
+export const setPostMediaChange = (pos: number, post: Plot, media: readonly PostMedia[]): ChangeSet.Spec => {
+	return setPostParamChange(pos, { ...getPostParam(post), media });
 };
 
 // widgets and media commands require unique post ids. use an appender because repair positions

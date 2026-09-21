@@ -3,7 +3,6 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-import { RIGHT_PADDING } from './consts';
 import {
 	LINE_PLACEHOLDER_ATTR,
 	POST_DROP_AFTER_ATTR,
@@ -11,7 +10,7 @@ import {
 	POST_DROP_TARGET_ATTR,
 	POST_ELEMENT,
 } from './elements';
-import { AVATAR_SIZE } from './PostRail.css';
+import { AVATAR_SIZE, RAIL_WIDTH, RIGHT_PADDING } from './layout';
 
 export const root = style({
 	position: 'relative',
@@ -28,7 +27,7 @@ globalStyle(`${root} wg-content`, {
 globalStyle(`${root} ${POST_ELEMENT}`, {
 	display: 'block',
 	position: 'relative',
-	paddingLeft: space.lg + AVATAR_SIZE + space.md,
+	paddingLeft: RAIL_WIDTH,
 	minHeight: AVATAR_SIZE,
 });
 
