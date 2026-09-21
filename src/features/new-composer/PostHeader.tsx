@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { PostNumberBlock } from '#/components/PostNumber';
@@ -12,7 +14,7 @@ import * as styles from './PostHeader.css';
  * @param props the author profile (undefined while loading), zero-based post index, and total post count
  * @returns the post's header
  */
-export function PostHeader({
+export const PostHeader = memo(function PostHeader({
 	profile,
 	index,
 	total,
@@ -34,4 +36,4 @@ export function PostHeader({
 			)}
 		</div>
 	);
-}
+});

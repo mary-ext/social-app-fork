@@ -216,8 +216,8 @@ export const suggestionKeys = (getHandler: () => SuggestionKeyHandler): GardStat
 		SUGGESTION_KEYS.map((key) =>
 			KeyBinding.of({
 				key: key,
-				// leave unhandled Escape uncanceled so the parent dialog can handle it.
-				allowDefault: key === 'Escape',
+				// unhandled bindings still cancel defaults; preserve Escape dismissal and Tab navigation.
+				allowDefault: key === 'Escape' || key === 'Tab',
 				run() {
 					const handler = getHandler();
 					return handler(key);

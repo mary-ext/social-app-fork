@@ -1,4 +1,4 @@
-import { type MouseEvent, useRef } from 'react';
+import { memo, type MouseEvent, useRef } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
@@ -49,7 +49,7 @@ function Avatar({
  * @param props editor, drag channel, post position and id, and author profile
  * @returns the post's rail
  */
-export function PostRail(props: RailProps) {
+export const PostRail = memo(function PostRail(props: RailProps) {
 	const { index, total, profile } = props;
 
 	return (
@@ -58,7 +58,7 @@ export function PostRail(props: RailProps) {
 			{index < total - 1 && <div className={styles.line} />}
 		</div>
 	);
-}
+});
 
 // defer Base UI's menu opening until click so pointer down can start a drag.
 const deferToClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
@@ -99,6 +99,8 @@ function PostHandle({ wg, dnd, postId, index, total, profile }: RailProps) {
 				ref={handleRef}
 				className={styles.handle}
 				aria-label="Reorder this post"
+				// keyboard users reorder from the text with Alt-ArrowUp/ArrowDown.
+				tabIndex={-1}
 				{...{ [POST_HANDLE_ATTR]: postId }}
 				onMouseDown={(event) => {
 					deferToClick(event);
