@@ -8,7 +8,27 @@ import { toShortUrl } from '#/lib/utils/url';
 
 import { buildSpans } from '#/components/Composer/rich-text';
 
+import { getLinkEmbedKind, type LinkEmbedKind } from '../embeds/link-embeds';
 import { getChildPlots, getPostText } from './schema';
+
+export type PostLink = {
+	url: string;
+	/** the embed slot the link fills. */
+	kind: LinkEmbedKind;
+	/** UTF-16 offset of the link's start. */
+	from: number;
+	/** UTF-16 offset just past the link. */
+	to: number;
+};
+
+/** a final link followed only by whitespace, eligible for removal if embedded. */
+export type TrailingLink = {
+	link: PostLink;
+	/** UTF-16 end offset after removing the link and trimming trailing whitespace. */
+	textEnd: number;
+	/** grapheme count of the remaining text after link shortening. */
+	length: number;
+};
 
 /** a post's text measured against the post limit. */
 export type PostText = {
@@ -18,6 +38,19 @@ export type PostText = {
 	overflowAt: number | null;
 	/** UTF-16 ranges of highlighted facets. */
 	facets: [number, number][];
+	/** links, in text order. */
+	links: PostLink[];
+	trailingLink: TrailingLink | null;
+};
+
+const getTrailingLink = (text: string, links: readonly PostLink[]): TrailingLink | null => {
+	const link = links.at(-1);
+	if (!link || text.slice(link.to).trim()) {
+		return null;
+	}
+
+	const remaining = text.slice(0, link.from).trimEnd();
+	return { link, textEnd: remaining.length, length: getShortenedLength(remaining) };
 };
 
 const segmenter = new Intl.Segmenter();
@@ -57,6 +90,7 @@ export const createOffsetMapper = (post: Plot, start: number): ((textOffset: num
 
 const measurePost = (text: string): PostText => {
 	const facets: [number, number][] = [];
+	const links: PostLink[] = [];
 	let raw = 0;
 	let shown = 0;
 	let overflowAt: number | null = null;
@@ -85,6 +119,9 @@ const measurePost = (text: string): PostText => {
 		if (span.facet) {
 			facets.push([raw, raw + span.raw.length]);
 		}
+		if (isLink) {
+			links.push({ url: span.raw, kind: getLinkEmbedKind(span.raw), from: raw, to: raw + span.raw.length });
+		}
 
 		raw += span.raw.length;
 		shown += shownLength;
@@ -92,7 +129,13 @@ const measurePost = (text: string): PostText => {
 
 	// per-span counts can split grapheme clusters at facet boundaries. use the shared whole-text
 	// measure for the reported length; the overflow offset remains span-based.
-	return { length: getShortenedLength(text), overflowAt, facets };
+	return {
+		length: getShortenedLength(text),
+		overflowAt,
+		facets,
+		links,
+		trailingLink: getTrailingLink(text, links),
+	};
 };
 
 // unchanged posts retain node identity, so their measurements can be reused.
