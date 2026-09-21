@@ -3,6 +3,9 @@
 /** custom element each post renders as. */
 export const POST_ELEMENT = 'bsky-post';
 
+/** marks the post containing the selection head. */
+export const POST_ACTIVE_ATTR = 'data-active';
+
 /** marks the post a media drag is hovering. */
 export const POST_DROP_TARGET_ATTR = 'data-drop-target';
 

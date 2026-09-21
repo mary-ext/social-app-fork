@@ -2,10 +2,15 @@ import { globalStyle, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { MOUSE } from '#/styles/interaction';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 import { RIGHT_PADDING } from './consts';
-import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR, POST_ELEMENT } from './elements';
+import {
+	MEDIA_INSERT_AFTER_ATTR,
+	MEDIA_INSERT_BEFORE_ATTR,
+	POST_ACTIVE_ATTR,
+	POST_ELEMENT,
+} from './elements';
 
 export const root = style({
 	display: 'flex',
@@ -67,18 +72,30 @@ export const tileActions = style({
 
 export const toolbar = style({
 	display: 'flex',
+	justifyContent: 'space-between',
 	alignItems: 'center',
 	gap: space.sm,
-	minHeight: 32,
 });
 
-export const spacer = style({
-	flexGrow: 1,
+const ICON_BUTTON_SIZE = 33;
+
+export const actions = style({
+	display: 'flex',
+	alignItems: 'center',
+	gap: space._2xs,
+	marginInlineStart: -(ICON_BUTTON_SIZE - iconSize.lg) / 2,
 });
 
-export const postNumber = style({
-	fontVariantNumeric: 'tabular-nums',
-	color: vars.palette.contrast_500,
+export const status = style({
+	display: 'flex',
+	alignItems: 'center',
+	gap: space.sm,
+});
+
+export const language = style({
+	minWidth: ICON_BUTTON_SIZE,
+	paddingInline: space.sm,
+	textTransform: 'uppercase',
 });
 
 export const postAction = style({
@@ -88,4 +105,9 @@ export const postAction = style({
 // keep controls visible on touch devices.
 globalStyle(`${MOUSE} ${POST_ELEMENT}:not(:hover) ${postAction}`, {
 	opacity: 0,
+});
+
+// keep controls visible while editing, even without hover.
+globalStyle(`${MOUSE} ${POST_ELEMENT}[${POST_ACTIVE_ATTR}] ${postAction}`, {
+	opacity: 1,
 });
