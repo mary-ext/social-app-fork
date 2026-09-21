@@ -92,7 +92,6 @@ export function NewComposer() {
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 
-	const containerRef = useRef<HTMLDivElement>(null);
 	const dnd = useConstant(createThreadDnd);
 
 	const [editor, setEditor] = useState<Wordgard | null>(null);
@@ -110,12 +109,7 @@ export function NewComposer() {
 	const [activeOption, setActiveOption] = useState<string | null>(null);
 	const suggestionKeyRef = useRef<SuggestionKeyHandler>(() => false);
 
-	useEffect(() => {
-		const container = containerRef.current;
-		if (!container) {
-			return;
-		}
-
+	const mountEditor = (container: HTMLDivElement) => {
 		const host: SlotHost = {
 			mount: (kind, postId, element) => {
 				setSlots((prev) => [...prev, { kind, element, postId }]);
@@ -185,50 +179,34 @@ export function NewComposer() {
 		// focus after React fills the slots; nearby DOM changes can displace the initial caret.
 		const focusing = requestAnimationFrame(() => wg.focus());
 
-		return () => {
-			cancelAnimationFrame(focusing);
-			wg.dom.remove();
-		};
-	}, []);
-
-	const suggestionKey = suggesting && getCompletionKey(suggesting.completion);
-	const showSuggestions = suggesting?.completion.query && suggestionKey !== dismissed ? suggesting : null;
-	const postsById = new Map(posts.map((post) => [post.id, post]));
-
-	// editor-owned posts share a drop target; hit testing uses their rendered bounds.
-	useEffect(() => {
-		const container = containerRef.current;
-		if (!editor || !container) {
-			return;
-		}
-
+		// editor-owned posts share a drop target; hit testing uses their rendered bounds.
 		// fallback target for drops outside media grids and tiles.
 		const stopDropping = dnd.dropTarget({
 			element: container,
 			getData: () => ({ kind: 'post', index: -1 }),
 			onDrag: ({ location, source }) => {
 				if (source.data.kind === 'post') {
-					markPostDropSlot(editor, getPostDropIndex(editor, location.current.input, -1));
+					markPostDropSlot(wg, getPostDropIndex(wg, location.current.input, -1));
 				} else {
-					markDropTarget(editor, getPostUnder(editor, location.current.input)?.pos ?? null);
+					markDropTarget(wg, getPostUnder(wg, location.current.input)?.pos ?? null);
 				}
 			},
 			onDragLeave: () => {
-				markPostDropSlot(editor, null);
-				markDropTarget(editor, null);
+				markPostDropSlot(wg, null);
+				markDropTarget(wg, null);
 			},
 			onDrop: () => {
-				markPostDropSlot(editor, null);
-				markDropTarget(editor, null);
+				markPostDropSlot(wg, null);
+				markDropTarget(wg, null);
 			},
 		});
 
 		const stopMonitoring = dnd.monitor({
 			onDrop: ({ location, source }) => {
-				markPostDropSlot(editor, null);
-				markDropTarget(editor, null);
+				markPostDropSlot(wg, null);
+				markDropTarget(wg, null);
 
-				// targets are ordered innermost first: tile, grid, editor.
+				// targets are ordered innermost first: tile, grid, wg.
 				const target = location.current.dropTargets[0];
 				if (!target) {
 					return;
@@ -236,31 +214,37 @@ export function NewComposer() {
 
 				if (source.data.kind === 'post') {
 					// account for removal from the source index.
-					const to = getPostDropIndex(editor, location.current.input, source.data.index);
-					movePostToSlot(editor, source.data.postId, to);
+					const to = getPostDropIndex(wg, location.current.input, source.data.index);
+					movePostToSlot(wg, source.data.postId, to);
 				} else if (target.data.kind === 'post') {
 					// drops on post text append media.
-					const under = getPostUnder(editor, location.current.input);
+					const under = getPostUnder(wg, location.current.input);
 					if (under) {
-						moveMediaTo(editor, source.data.postId, source.data.mediaId, under.id);
+						moveMediaTo(wg, source.data.postId, source.data.mediaId, under.id);
 					}
 				} else {
 					const { postId, mediaId, index } = source.data;
 					const toId = target.data.postId;
 					const at = getMediaDropIndex(target.data, toId === postId ? index : -1);
-					moveMediaToSlot(editor, postId, mediaId, toId, at === -1 ? undefined : at);
+					moveMediaToSlot(wg, postId, mediaId, toId, at === -1 ? undefined : at);
 				}
 
 				// blurred editors don't update the DOM selection; focus applies the moved selection.
-				editor.focus();
+				wg.focus();
 			},
 		});
 
 		return () => {
 			stopDropping();
 			stopMonitoring();
+			cancelAnimationFrame(focusing);
+			wg.dom.remove();
 		};
-	}, [editor, dnd]);
+	};
+
+	const suggestionKey = suggesting && getCompletionKey(suggesting.completion);
+	const showSuggestions = suggesting?.completion.query && suggestionKey !== dismissed ? suggesting : null;
+	const postsById = new Map(posts.map((post) => [post.id, post]));
 
 	// update placement and ARIA state together so closing the popup clears both.
 	useEffect(() => {
@@ -275,7 +259,7 @@ export function NewComposer() {
 
 	return (
 		<div
-			ref={containerRef}
+			ref={mountEditor}
 			className={styles.root}
 			// intercept files before the editor's content drop handler.
 			onDragOverCapture={(event) => {
