@@ -26,6 +26,7 @@ import { movePostToSlot, threadCommands } from './commands';
 import {
 	activePost,
 	dropTarget,
+	findActivePost,
 	markDropTarget,
 	markPostDropSlot,
 	postDropSlot,
@@ -68,6 +69,11 @@ const isOverMediaGrid = (event: DragEvent) => {
 	return event.target instanceof Element && event.target.closest(`[${MEDIA_GRID_ATTR}]`) !== null;
 };
 
+const getActivePostId = (state: GardState): string | null => {
+	const found = findActivePost(state);
+	return found && getPostParam(found.node).id;
+};
+
 const getPostUnder = (
 	wg: Wordgard,
 	point: { clientX: number; clientY: number },
@@ -92,6 +98,8 @@ export function NewComposer() {
 	const [editor, setEditor] = useState<Wordgard | null>(null);
 	const [posts, setPosts] = useState<PostSummary[]>([]);
 	const [slots, setSlots] = useState<PostSlot[]>([]);
+	// only the active post's controls are tabbable.
+	const [activePostId, setActivePostId] = useState<string | null>(null);
 
 	const [suggesting, setSuggesting] = useState<Suggesting | null>(null);
 	// portal target positioned by the editor.
@@ -156,6 +164,9 @@ export function NewComposer() {
 				if (update.docChanged) {
 					setPosts(update.state.field(threadAnalysis).posts);
 				}
+				if (update.docChanged || update.selectionSet) {
+					setActivePostId(getActivePostId(update.state));
+				}
 			}),
 		]);
 
@@ -170,6 +181,7 @@ export function NewComposer() {
 
 		setEditor(wg);
 		setPosts(wg.state.field(threadAnalysis).posts);
+		setActivePostId(getActivePostId(wg.state));
 		// focus after React fills the slots; nearby DOM changes can displace the initial caret.
 		const focusing = requestAnimationFrame(() => wg.focus());
 
@@ -337,8 +349,8 @@ export function NewComposer() {
 					case 'footer': {
 						return createPortal(
 							<>
-								<MediaRow wg={editor} dnd={dnd} post={post} />
-								<PostFooter wg={editor} post={post} />
+								<MediaRow wg={editor} dnd={dnd} post={post} isActive={post.id === activePostId} />
+								<PostFooter wg={editor} post={post} isActive={post.id === activePostId} />
 							</>,
 							element,
 							`footer:${postId}`,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 import { attachClosestEdge } from '@oomfware/tug/hitbox';
 
@@ -14,7 +14,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { markDropTarget, type PostSummary } from './decorations';
+import { findActivePost, markDropTarget, type PostSummary } from './decorations';
 import type { ThreadDnd } from './dnd';
 import { isFileDrag } from './drag';
 import {
@@ -23,7 +23,7 @@ import {
 	MEDIA_INSERT_AFTER_ATTR,
 	MEDIA_INSERT_BEFORE_ATTR,
 } from './elements';
-import { keepEditorFocus } from './focus';
+import { escapeToEditor, keepEditorFocus } from './focus';
 import {
 	createMedia,
 	getMediaUrl,
@@ -34,22 +34,35 @@ import {
 	removeMedia,
 } from './media';
 import * as styles from './MediaRow.css';
-import type { PostMedia } from './schema';
+import { type RovingItemProps, useRovingFocus } from './roving';
+import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from './schema';
 
 /**
  * a post's attachments and media errors.
  *
- * @param props the editor, drag state, and post summary
+ * @param props the editor, drag state, post summary, and whether attachments are tabbable
  * @returns the media row, or null if there are no attachments or errors
  */
-export function MediaRow({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; post: PostSummary }) {
+export const MediaRow = memo(function MediaRow({
+	wg,
+	dnd,
+	post,
+	isActive,
+}: {
+	wg: Wordgard;
+	dnd: ThreadDnd;
+	post: PostSummary;
+	isActive: boolean;
+}) {
 	if (post.media.length === 0 && !post.mediaProblem) {
 		return null;
 	}
 
 	return (
 		<div className={styles.root}>
-			{post.media.length > 0 && <MediaGrid wg={wg} dnd={dnd} postId={post.id} media={post.media} />}
+			{post.media.length > 0 && (
+				<MediaGrid wg={wg} dnd={dnd} postId={post.id} media={post.media} isActive={isActive} />
+			)}
 
 			{post.mediaProblem && (
 				<Text size="md_sub" color="negative_600">
@@ -58,7 +71,7 @@ export function MediaRow({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; post
 			)}
 		</div>
 	);
-}
+});
 
 const MEDIA_LABELS: Record<AttachmentKind, string> = {
 	gif: 'GIF attachment',
@@ -67,13 +80,22 @@ const MEDIA_LABELS: Record<AttachmentKind, string> = {
 	voice: 'Voice attachment',
 };
 
-function MediaPreview({ item, url }: { item: PostMedia; url: string }) {
+function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; tabbable: boolean }) {
 	switch (item.kind) {
 		case 'image': {
 			return <img className={styles.media} src={url} alt="" />;
 		}
 		case 'voice': {
-			return <audio className={styles.media} src={url} preload="metadata" controls />;
+			return (
+				<audio
+					className={styles.media}
+					src={url}
+					preload="metadata"
+					controls
+					// keep native controls out of the tab order unless their tile is tabbable.
+					tabIndex={tabbable ? undefined : -1}
+				/>
+			);
 		}
 		case 'gif':
 		case 'video': {
@@ -87,6 +109,18 @@ const refocusMedia = (mediaId: string) => {
 	requestAnimationFrame(() => {
 		document.querySelector<HTMLElement>(`[${MEDIA_ID_ATTR}="${CSS.escape(mediaId)}"]`)?.focus();
 	});
+};
+
+// move the caret with the tile so its new post's controls stay tabbable.
+const followMedia = (wg: Wordgard, mediaId: string) => {
+	const post = getPosts(wg.state.doc).find(({ node }) =>
+		getPostParam(node).media.some((entry) => entry.id === mediaId),
+	);
+	if (post && findActivePost(wg.state)?.before !== post.pos) {
+		wg.dispatch({ selection: { anchor: endOfLastLine(post.pos + post.node.length) } });
+	}
+
+	refocusMedia(mediaId);
 };
 
 /** returns the file insertion index at the pointer, or the tile count to append. */
@@ -109,14 +143,20 @@ function MediaGrid({
 	dnd,
 	postId,
 	media,
+	isActive,
 }: {
 	wg: Wordgard;
 	dnd: ThreadDnd;
 	postId: string;
 	media: readonly PostMedia[];
+	isActive: boolean;
 }) {
 	// insertion index for external files.
 	const [slot, setSlot] = useState<number | null>(null);
+	const roving = useRovingFocus(
+		media.map((item) => item.id),
+		isActive,
+	);
 
 	const gridRef = (node: HTMLElement | null) => {
 		if (!node) {
@@ -136,6 +176,10 @@ function MediaGrid({
 			ref={gridRef}
 			className={styles.grid}
 			{...{ [MEDIA_GRID_ATTR]: '' }}
+			onKeyDown={(event) => {
+				escapeToEditor(wg, event);
+				roving.onKeyDown(event);
+			}}
 			onDragOver={(event) => {
 				if (!isFileDrag(event.dataTransfer)) {
 					return;
@@ -175,6 +219,7 @@ function MediaGrid({
 					postId={postId}
 					index={index}
 					item={item}
+					roving={roving.item(item.id)}
 					insertBefore={slot === index}
 					insertAfter={slot === media.length && index === media.length - 1}
 				/>
@@ -189,6 +234,7 @@ function MediaTile({
 	postId,
 	index,
 	item,
+	roving,
 	insertBefore,
 	insertAfter,
 }: {
@@ -197,10 +243,30 @@ function MediaTile({
 	postId: string;
 	index: number;
 	item: PostMedia;
+	roving: RovingItemProps;
 	insertBefore: boolean;
 	insertAfter: boolean;
 }) {
 	const url = getMediaUrl(item);
+
+	const remove = () => {
+		// transfer focus only if the removed tile had it.
+		const focused = document.activeElement?.closest(`[${MEDIA_ID_ATTR}]`)?.getAttribute(MEDIA_ID_ATTR);
+		const post = findPostById(wg.state.doc, postId);
+		const media = post ? getPostParam(post.node).media : [];
+		const neighbor = media[index + 1] ?? media[index - 1];
+
+		removeMedia(wg, postId, item.id);
+		if (focused !== item.id) {
+			return;
+		}
+
+		if (neighbor) {
+			refocusMedia(neighbor.id);
+		} else {
+			wg.focus();
+		}
+	};
 
 	const tileRef = (node: HTMLElement | null) => {
 		if (!node) {
@@ -231,8 +297,8 @@ function MediaTile({
 	return (
 		<div
 			ref={tileRef}
+			{...roving}
 			className={styles.tile}
-			tabIndex={0}
 			role="group"
 			aria-label={MEDIA_LABELS[item.kind]}
 			{...{
@@ -241,6 +307,17 @@ function MediaTile({
 				[MEDIA_INSERT_AFTER_ATTR]: insertAfter ? '' : undefined,
 			}}
 			onKeyDown={(event) => {
+				// preserve native keyboard handling in audio controls.
+				if (event.target !== event.currentTarget) {
+					return;
+				}
+
+				if (event.key === 'Backspace' || event.key === 'Delete') {
+					event.preventDefault();
+					remove();
+					return;
+				}
+
 				if (!event.altKey) {
 					return;
 				}
@@ -248,18 +325,22 @@ function MediaTile({
 				switch (event.key) {
 					case 'ArrowLeft': {
 						nudgeMedia(wg, postId, item.id, -1);
+						refocusMedia(item.id);
 						break;
 					}
 					case 'ArrowRight': {
 						nudgeMedia(wg, postId, item.id, 1);
+						refocusMedia(item.id);
 						break;
 					}
 					case 'ArrowUp': {
 						moveMediaUp(wg, postId, item.id);
+						followMedia(wg, item.id);
 						break;
 					}
 					case 'ArrowDown': {
 						moveMediaDown(wg, postId, item.id);
+						followMedia(wg, item.id);
 						break;
 					}
 					default: {
@@ -267,20 +348,21 @@ function MediaTile({
 					}
 				}
 
-				refocusMedia(item.id);
 				event.preventDefault();
 				event.stopPropagation();
 			}}
 		>
-			<MediaPreview item={item} url={url} />
+			<MediaPreview item={item} url={url} tabbable={roving.tabIndex === 0} />
 
 			<div className={styles.tileActions} onMouseDown={keepEditorFocus}>
+				{/* Delete and Backspace remove the focused tile. */}
 				<Button
 					label={m['view.composer.media.removeAttachment']()}
 					size="tiny"
 					color="secondary_inverted"
 					shape="round"
-					onClick={() => removeMedia(wg, postId, item.id)}
+					tabIndex={-1}
+					onClick={remove}
 				>
 					<ButtonIcon icon={XIcon} />
 				</Button>

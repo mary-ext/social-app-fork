@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import type { Wordgard } from 'wordgard/editor';
 
 import { openMediaPicker } from '#/lib/media/picker';
@@ -14,23 +16,46 @@ import { m } from '#/paraglide/messages';
 import { CharCount } from './CharCount';
 import { autoSplitPost } from './commands';
 import type { PostSummary } from './decorations';
-import { keepEditorFocus } from './focus';
+import { escapeToEditor, keepEditorFocus } from './focus';
 import { attachFiles } from './media';
 import * as styles from './PostFooter.css';
+import { useRovingFocus } from './roving';
 
 /**
  * editing controls for a post.
  *
- * @param props the editor and post summary
+ * @param props the editor, post summary, and whether controls are tabbable
  * @returns the post's footer
  */
-export function PostFooter({ wg, post }: { wg: Wordgard; post: PostSummary }) {
+export const PostFooter = memo(function PostFooter({
+	wg,
+	post,
+	isActive,
+}: {
+	wg: Wordgard;
+	post: PostSummary;
+	isActive: boolean;
+}) {
 	const languages = toPostLanguages(usePostLanguage());
+	const roving = useRovingFocus(
+		post.isOverLimit ? ['photo', 'gif', 'emoji', 'split', 'language'] : ['photo', 'gif', 'emoji', 'language'],
+		isActive,
+	);
 
 	return (
-		<div className={styles.root} onMouseDown={keepEditorFocus}>
+		<div
+			className={styles.root}
+			role="toolbar"
+			aria-label="Post controls"
+			onMouseDown={keepEditorFocus}
+			onKeyDown={(event) => {
+				escapeToEditor(wg, event);
+				roving.onKeyDown(event);
+			}}
+		>
 			<div className={styles.actions}>
 				<Button
+					{...roving.item('photo')}
 					label={m['common.compose.action.photo']()}
 					variant="ghost"
 					color="secondary"
@@ -42,11 +67,23 @@ export function PostFooter({ wg, post }: { wg: Wordgard; post: PostSummary }) {
 					<ButtonIcon icon={ImageIcon} size="lg" />
 				</Button>
 
-				<Button label={m['view.composer.gif.a11y.select']()} variant="ghost" color="secondary" shape="round">
+				<Button
+					{...roving.item('gif')}
+					label={m['view.composer.gif.a11y.select']()}
+					variant="ghost"
+					color="secondary"
+					shape="round"
+				>
 					<ButtonIcon icon={GifIcon} size="lg" />
 				</Button>
 
-				<Button label={m['common.a11y.openEmojiPicker']()} variant="ghost" color="secondary" shape="round">
+				<Button
+					{...roving.item('emoji')}
+					label={m['common.a11y.openEmojiPicker']()}
+					variant="ghost"
+					color="secondary"
+					shape="round"
+				>
 					<ButtonIcon icon={EmojiIcon} size="lg" />
 				</Button>
 			</div>
@@ -54,16 +91,22 @@ export function PostFooter({ wg, post }: { wg: Wordgard; post: PostSummary }) {
 			<div className={styles.status}>
 				{post.isOverLimit && (
 					<Button
+						{...roving.item('split')}
 						label="Split into multiple posts"
 						size="tiny"
 						color="secondary"
-						onClick={() => autoSplitPost(wg, post.id)}
+						onClick={() => {
+							autoSplitPost(wg, post.id);
+							// splitting removes the focused button.
+							wg.focus();
+						}}
 					>
 						<ButtonText>Auto-split</ButtonText>
 					</Button>
 				)}
 
 				<Button
+					{...roving.item('language')}
 					className={styles.language}
 					label={m['view.composer.language.selectPost']()}
 					variant="ghost"
@@ -75,4 +118,4 @@ export function PostFooter({ wg, post }: { wg: Wordgard; post: PostSummary }) {
 			</div>
 		</div>
 	);
-}
+});

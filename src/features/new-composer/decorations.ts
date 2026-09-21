@@ -1,6 +1,6 @@
 import { getGraphemeLength } from '@atcute/util-text';
 
-import type { Plot } from 'wordgard/doc';
+import type { Plot, Pos } from 'wordgard/doc';
 import { Decoration, PointSet, RangeSet, Widget, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
@@ -318,9 +318,19 @@ export const threadAnalysis = GardState.Field.define<ThreadAnalysis>({
 
 const activeDeco = Decoration.Point.attributes({ [POST_ACTIVE_ATTR]: '' });
 
-/** marks the post containing the selection head. */
+/**
+ * finds the post containing the selection head.
+ *
+ * @param state the editor state
+ * @returns the post, or null when the selection head is outside any post
+ */
+export const findActivePost = (state: GardState): Pos.Plot | null => {
+	return findPost(state.sel.head);
+};
+
+/** marks the active post. */
 export const activePost = Decoration.Point.source.of((state) => {
-	const found = findPost(state.sel.head);
+	const found = findActivePost(state);
 	return found ? PointSet.create([[found.before, activeDeco]]) : PointSet.empty;
 });
 
