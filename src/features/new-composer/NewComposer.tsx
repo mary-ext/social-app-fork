@@ -20,6 +20,7 @@ import { type PostSlotKind, type SlotHost, slotHost } from './editor/post-slots'
 import { createPosts, endOfLastLine, getPostParam, threadSchema } from './editor/schema';
 import { activePost, findActivePost } from './editor/selection';
 import { type PostSummary, postPlaceholder, threadAnalysis } from './editor/thread-analysis';
+import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
 import * as styles from './NewComposer.css';
 import { PostFooter } from './post/PostFooter';
@@ -129,8 +130,10 @@ export function NewComposer() {
 					setSuggesting(completion && { completion });
 				}
 
-				if (update.docChanged) {
-					setPosts(update.state.field(threadAnalysis).posts);
+				// settling or dismissing a link can change summaries without a document change.
+				const nextPosts = update.state.field(threadAnalysis).posts;
+				if (nextPosts !== update.startState.field(threadAnalysis).posts) {
+					setPosts(nextPosts);
 				}
 				if (update.docChanged || update.selectionSet) {
 					setActivePostId(getActivePostId(update.state));
@@ -217,6 +220,7 @@ export function NewComposer() {
 						return createPortal(
 							<>
 								<MediaRow wg={editor} dnd={dnd} post={post} isActive={post.id === activePostId} />
+								<LinkEmbedRow wg={editor} embeds={post.embeds} isActive={post.id === activePostId} />
 								<PostFooter wg={editor} post={post} isActive={post.id === activePostId} />
 							</>,
 							element,

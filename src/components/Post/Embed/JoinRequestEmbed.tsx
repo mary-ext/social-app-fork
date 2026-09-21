@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
+import { useNavigationDisabled } from '#/components/NavigationDisabled';
 
 import * as css from './JoinRequestEmbed.css';
 
@@ -23,6 +24,8 @@ export function JoinRequestEmbedBody({
 	className?: string;
 	onOpen?: () => void;
 }) {
+	const navigationDisabled = useNavigationDisabled();
+
 	if (status === 'loading') {
 		return <ChatInvite.Loading className={clsx(css.box, className)} />;
 	}
@@ -34,7 +37,7 @@ export function JoinRequestEmbedBody({
 	return (
 		<div className={clsx(css.box, css.available, className)}>
 			<ChatInvite.Card preview={preview} />
-			<ChatInvite.JoinButton action={action} onPress={onOpen} />
+			{!navigationDisabled && <ChatInvite.JoinButton action={action} onPress={onOpen} />}
 		</div>
 	);
 }
