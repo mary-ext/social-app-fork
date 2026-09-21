@@ -1,87 +1,20 @@
 import { reorder } from '@oomfware/tug/reorder';
 
-import type { ChangeSet, Plot } from 'wordgard/doc';
+import type { ChangeSet } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
 import { Paragraph } from 'wordgard/types';
 
-import { type AttachmentRejection, getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
-import { getBlobUrl } from '#/lib/utils/blob-url';
-
-import type { SelectionError } from '#/features/composer/media/select-attachments';
-import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
-
+import { ISOLATE_HISTORY } from '../editor/history';
 import {
 	findPostById,
 	getPostParam,
 	getPosts,
 	newPost,
 	type PostMedia,
-	setPostParamChange,
+	setPostMediaChange,
 	type ThreadPost,
-} from './schema';
-import { ISOLATE_HISTORY } from './transactions';
-
-/**
- * checks media type and count limits. excess media is allowed during editing.
- *
- * @param media the post's media
- * @returns the type or count violation, or null
- */
-export const getMediaProblem = (media: readonly PostMedia[]): SelectionError | null => {
-	// GIFs and voice notes also publish as video embeds.
-	const images = media.filter((item) => item.kind === 'image').length;
-	const videos = media.length - images;
-
-	if (images > 0 && videos > 0) {
-		return { type: 'mixedTypes' };
-	}
-	if (images > MAX_GALLERY_IMAGES) {
-		return { type: 'maxImages' };
-	}
-	if (videos > 1) {
-		return { type: 'oneOnly', kind: 'video' };
-	}
-
-	return null;
-};
-
-/**
- * creates a change that replaces a post's media, leaving its content and id in place.
- *
- * @param pos the position before the post
- * @param post the post plot
- * @param media the new media
- * @returns the media replacement change
- */
-export const setPostMediaChange = (pos: number, post: Plot, media: readonly PostMedia[]): ChangeSet.Spec => {
-	return setPostParamChange(pos, { ...getPostParam(post), media });
-};
-
-/**
- * classifies and validates files for attaching, without uploading them.
- *
- * @param files the picked or dropped files
- * @returns accepted media and file rejections
- */
-export const createMedia = async (
-	files: Iterable<File>,
-): Promise<{ media: PostMedia[]; rejections: AttachmentRejection[] }> => {
-	const read = await Promise.all(
-		[...files].map(async (file) => ({ file, result: await readAttachment(file) })),
-	);
-
-	const media: PostMedia[] = [];
-	const rejections: AttachmentRejection[] = [];
-	for (const { file, result } of read) {
-		if (result.ok) {
-			media.push({ id: crypto.randomUUID(), kind: getAttachmentKind(result.attachment), file });
-		} else {
-			rejections.push(result.rejection);
-		}
-	}
-
-	return { media, rejections };
-};
+} from '../editor/schema';
+import { createMedia } from './attachments';
 
 /**
  * classifies and validates files, then appends the accepted ones to a post.
@@ -93,16 +26,6 @@ export const createMedia = async (
 export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
 	const { media } = await createMedia(files);
 	addMediaTo(wg, postId, media);
-};
-
-/**
- * returns a cached preview URL for an attachment.
- *
- * @param item the media entry
- * @returns an object URL valid for the file's lifetime
- */
-export const getMediaUrl = (item: PostMedia): string => {
-	return getBlobUrl(item.file);
 };
 
 /**

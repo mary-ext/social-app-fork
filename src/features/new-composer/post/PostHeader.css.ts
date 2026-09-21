@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-import { RIGHT_PADDING } from './consts';
+import { RIGHT_PADDING } from '../layout';
 
 export const root = style({
 	display: 'flex',

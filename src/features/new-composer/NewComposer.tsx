@@ -1,4 +1,4 @@
-import { type DragEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 import { Wordgard } from 'wordgard/editor';
@@ -12,6 +12,19 @@ import { useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
 
+import { threadCommands } from './commands/thread-commands';
+import { createThreadDnd } from './dnd/channel';
+import { dropTarget, postDropSlot } from './dnd/drop-indicators';
+import { createFileDropHandlers, registerThreadDrop } from './dnd/thread-drop';
+import { type PostSlotKind, type SlotHost, slotHost } from './editor/post-slots';
+import { createPosts, endOfLastLine, getPostParam, threadSchema } from './editor/schema';
+import { activePost, findActivePost } from './editor/selection';
+import { type PostSummary, postPlaceholder, threadAnalysis } from './editor/thread-analysis';
+import { MediaRow } from './media/MediaRow';
+import * as styles from './NewComposer.css';
+import { PostFooter } from './post/PostFooter';
+import { PostHeader } from './post/PostHeader';
+import { PostRail } from './post/PostRail';
 import {
 	type ActiveCompletion,
 	findActiveCompletion,
@@ -21,33 +34,8 @@ import {
 	suggestionState,
 	type SuggestionKeyHandler,
 	suggestionKeys,
-} from './autocomplete';
-import { movePostToSlot, threadCommands } from './commands';
-import {
-	activePost,
-	dropTarget,
-	findActivePost,
-	markDropTarget,
-	markPostDropSlot,
-	postDropSlot,
-	type PostSlotKind,
-	type PostSummary,
-	postPlaceholder,
-	type SlotHost,
-	slotHost,
-	threadAnalysis,
-} from './decorations';
-import { createThreadDnd, getMediaDropIndex, getPostDropIndex } from './dnd';
-import { isFileDrag } from './drag';
-import { MEDIA_GRID_ATTR } from './elements';
-import { attachFiles, moveMediaTo, moveMediaToSlot } from './media';
-import { MediaRow } from './MediaRow';
-import * as styles from './NewComposer.css';
-import { PostFooter } from './PostFooter';
-import { PostHeader } from './PostHeader';
-import { PostRail } from './PostRail';
-import { createPosts, endOfLastLine, findPost, getPostParam, threadSchema, type ThreadPost } from './schema';
-import { SuggestionPopup } from './SuggestionPopup';
+} from './suggestions/autocomplete';
+import { SuggestionPopup } from './suggestions/SuggestionPopup';
 
 type Suggesting = {
 	completion: ActiveCompletion;
@@ -64,23 +52,9 @@ const getCompletionKey = (completion: ActiveCompletion) => {
 	return `${completion.type}:${completion.from}:${completion.query}`;
 };
 
-// media grids handle their own drops to support insertion between attachments.
-const isOverMediaGrid = (event: DragEvent) => {
-	return event.target instanceof Element && event.target.closest(`[${MEDIA_GRID_ATTR}]`) !== null;
-};
-
 const getActivePostId = (state: GardState): string | null => {
 	const found = findActivePost(state);
 	return found && getPostParam(found.node).id;
-};
-
-const getPostUnder = (
-	wg: Wordgard,
-	point: { clientX: number; clientY: number },
-): Pick<ThreadPost, 'node' | 'pos' | 'id'> | null => {
-	const { pos } = wg.posAtCoords({ x: point.clientX, y: point.clientY });
-	const found = findPost(wg.state.doc.resolve(pos));
-	return found && { node: found.node, pos: found.before, id: getPostParam(found.node).id };
 };
 
 /**
@@ -179,64 +153,10 @@ export function NewComposer() {
 		// focus after React fills the slots; nearby DOM changes can displace the initial caret.
 		const focusing = requestAnimationFrame(() => wg.focus());
 
-		// editor-owned posts share a drop target; hit testing uses their rendered bounds.
-		// fallback target for drops outside media grids and tiles.
-		const stopDropping = dnd.dropTarget({
-			element: container,
-			getData: () => ({ kind: 'post', index: -1 }),
-			onDrag: ({ location, source }) => {
-				if (source.data.kind === 'post') {
-					markPostDropSlot(wg, getPostDropIndex(wg, location.current.input, -1));
-				} else {
-					markDropTarget(wg, getPostUnder(wg, location.current.input)?.pos ?? null);
-				}
-			},
-			onDragLeave: () => {
-				markPostDropSlot(wg, null);
-				markDropTarget(wg, null);
-			},
-			onDrop: () => {
-				markPostDropSlot(wg, null);
-				markDropTarget(wg, null);
-			},
-		});
-
-		const stopMonitoring = dnd.monitor({
-			onDrop: ({ location, source }) => {
-				markPostDropSlot(wg, null);
-				markDropTarget(wg, null);
-
-				// targets are ordered innermost first: tile, grid, wg.
-				const target = location.current.dropTargets[0];
-				if (!target) {
-					return;
-				}
-
-				if (source.data.kind === 'post') {
-					// account for removal from the source index.
-					const to = getPostDropIndex(wg, location.current.input, source.data.index);
-					movePostToSlot(wg, source.data.postId, to);
-				} else if (target.data.kind === 'post') {
-					// drops on post text append media.
-					const under = getPostUnder(wg, location.current.input);
-					if (under) {
-						moveMediaTo(wg, source.data.postId, source.data.mediaId, under.id);
-					}
-				} else {
-					const { postId, mediaId, index } = source.data;
-					const toId = target.data.postId;
-					const at = getMediaDropIndex(target.data, toId === postId ? index : -1);
-					moveMediaToSlot(wg, postId, mediaId, toId, at === -1 ? undefined : at);
-				}
-
-				// blurred editors don't update the DOM selection; focus applies the moved selection.
-				wg.focus();
-			},
-		});
+		const stopDropping = registerThreadDrop(wg, dnd, container);
 
 		return () => {
 			stopDropping();
-			stopMonitoring();
 			cancelAnimationFrame(focusing);
 			wg.dom.remove();
 		};
@@ -258,44 +178,7 @@ export function NewComposer() {
 	}, [editor, showSuggestions, activeOption]);
 
 	return (
-		<div
-			ref={mountEditor}
-			className={styles.root}
-			// intercept files before the editor's content drop handler.
-			onDragOverCapture={(event) => {
-				if (!editor || !isFileDrag(event.dataTransfer) || isOverMediaGrid(event)) {
-					return;
-				}
-				event.preventDefault();
-				event.stopPropagation();
-				markDropTarget(editor, getPostUnder(editor, event)?.pos ?? null);
-			}}
-			onDragLeave={(event) => {
-				if (
-					editor &&
-					!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))
-				) {
-					markDropTarget(editor, null);
-				}
-			}}
-			onDropCapture={(event) => {
-				if (!editor || !isFileDrag(event.dataTransfer) || isOverMediaGrid(event)) {
-					return;
-				}
-				event.preventDefault();
-				event.stopPropagation();
-				markDropTarget(editor, null);
-
-				const post = getPostUnder(editor, event);
-				if (!post) {
-					return;
-				}
-
-				// copy files before the drop event expires.
-				void attachFiles(editor, post.id, [...event.dataTransfer.files]);
-				editor.focus();
-			}}
-		>
+		<div ref={mountEditor} className={styles.root} {...createFileDropHandlers(editor)}>
 			{editor && showSuggestions && suggestionSlot && (
 				<SuggestionPopup
 					wg={editor}

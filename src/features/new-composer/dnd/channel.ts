@@ -4,7 +4,7 @@ import { getReorderDestinationIndex } from '@oomfware/tug/reorder';
 
 import type { Wordgard } from 'wordgard/editor';
 
-import { POST_ELEMENT } from './elements';
+import { POST_ELEMENT } from '../elements';
 
 /** in-page drag payload; external files use native drop handlers. */
 export type ThreadDragData =
@@ -26,6 +26,16 @@ export type ThreadDnd = DndChannel<ThreadDragData, ThreadDropData>;
  * @returns a channel isolated to this editor's own draggables
  */
 export const createThreadDnd = (): ThreadDnd => createDnd<ThreadDragData, ThreadDropData>();
+
+/**
+ * checks for a drag carrying files from outside the page.
+ *
+ * @param transfer the drag's data transfer
+ * @returns whether the drop would attach files
+ */
+export const isFileDrag = (transfer: DataTransfer): boolean => {
+	return transfer.types.includes('Files');
+};
 
 /**
  * finds a post's drop index after removing it from its current position.

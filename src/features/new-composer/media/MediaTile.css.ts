@@ -3,23 +3,8 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-import { RIGHT_PADDING } from './consts';
-import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR } from './elements';
-import { revealOnHover } from './reveal.css';
-
-export const root = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.sm,
-	paddingTop: space.md,
-	paddingRight: RIGHT_PADDING,
-});
-
-export const grid = style({
-	display: 'grid',
-	gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
-	gap: space.xs,
-});
+import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR } from '../elements';
+import { revealOnHover } from '../reveal.css';
 
 export const tile = style({
 	position: 'relative',
