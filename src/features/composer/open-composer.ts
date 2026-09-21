@@ -15,7 +15,6 @@ import { composerDialogHandle, newComposerDialogHandle } from '#/components/dial
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
-import { getRouter } from '#/router';
 
 export interface ComposerOptsPostRef {
 	uri: ResourceUri;

@@ -16,7 +16,7 @@ export const root = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.sm,
-	paddingTop: space.sm,
+	paddingTop: space.md,
 	paddingRight: RIGHT_PADDING,
 });
 
@@ -62,52 +62,60 @@ export const media = style({
 	pointerEvents: 'none',
 });
 
-export const tileActions = style({
-	display: 'flex',
-	position: 'absolute',
-	top: space.xs,
-	right: space.xs,
-	gap: space._2xs,
+const revealOnHover = style({
+	transition: 'opacity 100ms',
 });
 
-export const toolbar = style({
-	display: 'flex',
-	justifyContent: 'space-between',
-	alignItems: 'center',
-	gap: space.sm,
+// keep controls visible on touch devices.
+globalStyle(`${MOUSE} ${POST_ELEMENT}:not(:hover) ${revealOnHover}`, {
+	opacity: 0,
 });
+
+// keep controls visible while editing, even without hover.
+globalStyle(`${MOUSE} ${POST_ELEMENT}[${POST_ACTIVE_ATTR}] ${revealOnHover}`, {
+	opacity: 1,
+});
+
+export const tileActions = style([
+	revealOnHover,
+	{
+		display: 'flex',
+		position: 'absolute',
+		top: space.xs,
+		right: space.xs,
+		gap: space._2xs,
+	},
+]);
+
+export const toolbar = style([
+	revealOnHover,
+	{
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		gap: space.sm,
+	},
+]);
 
 const ICON_BUTTON_SIZE = 33;
+const ICON_OFFSET = -(ICON_BUTTON_SIZE - iconSize.lg) / 2;
 
 export const actions = style({
 	display: 'flex',
 	alignItems: 'center',
 	gap: space._2xs,
-	marginInlineStart: -(ICON_BUTTON_SIZE - iconSize.lg) / 2,
+	margin: ICON_OFFSET,
 });
 
 export const status = style({
 	display: 'flex',
 	alignItems: 'center',
 	gap: space.sm,
+	marginBlock: ICON_OFFSET,
 });
 
 export const language = style({
 	minWidth: ICON_BUTTON_SIZE,
 	paddingInline: space.sm,
 	textTransform: 'uppercase',
-});
-
-export const postAction = style({
-	transition: 'opacity 100ms',
-});
-
-// keep controls visible on touch devices.
-globalStyle(`${MOUSE} ${POST_ELEMENT}:not(:hover) ${postAction}`, {
-	opacity: 0,
-});
-
-// keep controls visible while editing, even without hover.
-globalStyle(`${MOUSE} ${POST_ELEMENT}[${POST_ACTIVE_ATTR}] ${postAction}`, {
-	opacity: 1,
 });

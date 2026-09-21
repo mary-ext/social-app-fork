@@ -61,7 +61,7 @@ const slot = style({
 
 export const headerSlot = slot;
 
-export const footerSlot = style([slot, { paddingBottom: space.sm }]);
+export const footerSlot = style([slot, { paddingBottom: space.lg }]);
 
 globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]`, {
 	outline: `2px dashed ${vars.palette.primary_500}`,

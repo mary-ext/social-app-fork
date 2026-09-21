@@ -2,7 +2,6 @@ import { type MouseEvent, useState } from 'react';
 
 import { attachClosestEdge } from '@oomfware/tug/hitbox';
 
-import { clsx } from 'clsx';
 import type { Wordgard } from 'wordgard/editor';
 
 import { openMediaPicker } from '#/lib/media/picker';
@@ -72,7 +71,6 @@ export function PostFooter({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; po
 			<div className={styles.toolbar} onMouseDown={keepEditorFocus}>
 				<div className={styles.actions}>
 					<Button
-						className={styles.postAction}
 						label={m['common.compose.action.photo']()}
 						variant="ghost"
 						color="secondary"
@@ -85,7 +83,6 @@ export function PostFooter({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; po
 					</Button>
 
 					<Button
-						className={styles.postAction}
 						label={m['view.composer.gif.a11y.select']()}
 						variant="ghost"
 						color="secondary"
@@ -94,13 +91,7 @@ export function PostFooter({ wg, dnd, post }: { wg: Wordgard; dnd: ThreadDnd; po
 						<ButtonIcon icon={GifIcon} size="lg" />
 					</Button>
 
-					<Button
-						className={styles.postAction}
-						label={m['common.a11y.openEmojiPicker']()}
-						variant="ghost"
-						color="secondary"
-						shape="round"
-					>
+					<Button label={m['common.a11y.openEmojiPicker']()} variant="ghost" color="secondary" shape="round">
 						<ButtonIcon icon={EmojiIcon} size="lg" />
 					</Button>
 				</div>
@@ -346,7 +337,7 @@ function MediaTile({
 		>
 			<MediaPreview item={item} url={url} />
 
-			<div className={clsx(styles.tileActions, styles.postAction)} onMouseDown={keepEditorFocus}>
+			<div className={styles.tileActions} onMouseDown={keepEditorFocus}>
 				<Button
 					label={m['view.composer.media.removeAttachment']()}
 					size="tiny"
