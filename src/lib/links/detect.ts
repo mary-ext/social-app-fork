@@ -64,9 +64,8 @@ export function suggestLinkCardUri(
 		}
 	}
 
-	let suggestedUri: string | undefined;
-	if (suggestedUris.size > 0) {
-		suggestedUri = Array.from(suggestedUris)[0]!;
+	const suggestedUri = suggestedUris.values().next().value;
+	if (suggestedUri !== undefined) {
 		pastSuggestedUris.add(suggestedUri);
 	}
 

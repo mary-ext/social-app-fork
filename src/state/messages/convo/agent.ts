@@ -1099,7 +1099,7 @@ export class Convo {
 	}
 
 	async processPendingMessages() {
-		const pendingMessage = Array.from(this.pendingMessages.values()).shift();
+		const pendingMessage = this.pendingMessages.values().next().value;
 
 		if (!pendingMessage) {
 			this.isProcessingPendingMessages = false;

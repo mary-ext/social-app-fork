@@ -38,11 +38,14 @@ export function ListPicker({
 
 	const onValueChange = (next: AppBskyGraphDefs.ListView[]) => {
 		// preserve selections absent from the fetched lists, including deleted lists.
-		const hidden = [...selectedUris].filter((uri) => !lists?.some((list) => list.uri === uri));
+		const hidden = selectedUris
+			.values()
+			.filter((uri) => !lists?.some((list) => list.uri === uri))
+			.map((list) => ({ type: 'list' as const, list }));
 		onChange(
 			coalesceAllowUISettings([
 				...settings.filter((v) => v.type !== 'list'),
-				...hidden.map((list) => ({ type: 'list' as const, list })),
+				...hidden,
 				...next.map((list) => ({ type: 'list' as const, list: list.uri })),
 			]),
 		);

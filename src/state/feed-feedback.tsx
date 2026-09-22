@@ -85,12 +85,12 @@ export function useFeedFeedback(feed: FeedFeedbackTarget | undefined, hasSession
 			return;
 		}
 
-		const interactions = Array.from(queue.current).map(toInteraction);
+		const interactionsToSend = queue.current
+			.values()
+			.map(toInteraction)
+			.filter((interaction) => interaction.event && isInteractionAllowed(feed, interaction.event))
+			.toArray();
 		queue.current.clear();
-
-		const interactionsToSend = interactions.filter(
-			(interaction) => interaction.event && isInteractionAllowed(feed, interaction.event),
-		);
 
 		if (interactionsToSend.length === 0) {
 			return;

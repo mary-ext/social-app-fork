@@ -298,9 +298,7 @@ export class MessagesEventBus {
 	private getPollInterval() {
 		switch (this.status) {
 			case MessagesEventBusStatus.Ready: {
-				const requested = Array.from(this.requestedPollIntervals.values());
-				const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested);
-				return lowest;
+				return Math.min(DEFAULT_POLL_INTERVAL, ...this.requestedPollIntervals.values());
 			}
 			case MessagesEventBusStatus.Backgrounded: {
 				return BACKGROUND_POLL_INTERVAL;

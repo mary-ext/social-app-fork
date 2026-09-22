@@ -112,7 +112,10 @@ export function useMenuNavigation(ref: RefObject<HTMLElement | null>, { navigate
 	};
 
 	const onMapChange = (map: Map<Node, unknown>) => {
-		rows.current = Array.from(map.keys()).filter((row) => row instanceof HTMLElement);
+		rows.current = map
+			.keys()
+			.filter((row) => row instanceof HTMLElement)
+			.toArray();
 
 		// wait until the composite assigns item indices.
 		if (panelEntry === 'row' && rows.current.length > 0) {

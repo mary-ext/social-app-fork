@@ -55,13 +55,15 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 	}
 
 	await Promise.all(
-		[...extractLocalRefs(draft)].map(async (path) => {
-			try {
-				loadedMedia.set(path, await storage.loadMediaFromLocal(path));
-			} catch (e) {
-				console.error('Failed to load draft media', path, e);
-			}
-		}),
+		extractLocalRefs(draft)
+			.values()
+			.map(async (path) => {
+				try {
+					loadedMedia.set(path, await storage.loadMediaFromLocal(path));
+				} catch (e) {
+					console.error('Failed to load draft media', path, e);
+				}
+			}),
 	);
 
 	return { loadedMedia };
@@ -117,7 +119,7 @@ export function useSaveDraftMutation() {
 		onSuccess: async ({ localRefPaths, originalLocalRefs }) => {
 			// Save new/changed media files
 			await Promise.all(
-				[...localRefPaths].map(async ([localRefPath, blob]) => {
+				localRefPaths.entries().map(async ([localRefPath, blob]) => {
 					// Only save if this media doesn't already exist (reusing localRefPath)
 					if (storage.mediaExists(localRefPath)) {
 						return;
@@ -128,10 +130,10 @@ export function useSaveDraftMutation() {
 
 			// Delete orphaned media (old refs not in new)
 			if (originalLocalRefs) {
-				const newLocalRefs = new Set(localRefPaths.keys());
 				await Promise.all(
-					[...originalLocalRefs]
-						.filter((oldRef) => !newLocalRefs.has(oldRef))
+					originalLocalRefs
+						.values()
+						.filter((oldRef) => !localRefPaths.has(oldRef))
 						.map((oldRef) => {
 							return storage.deleteMediaFromLocal(oldRef);
 						}),
@@ -186,7 +188,7 @@ export function useCleanupPublishedDraftMutation() {
 		onSuccess: async (_, { originalLocalRefs }) => {
 			// Delete all local media files for this draft
 			await Promise.all(
-				[...originalLocalRefs].map((localRef) => {
+				originalLocalRefs.values().map((localRef) => {
 					return storage.deleteMediaFromLocal(localRef);
 				}),
 			);
