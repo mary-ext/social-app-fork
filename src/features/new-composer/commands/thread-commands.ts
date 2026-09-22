@@ -14,7 +14,7 @@ export const threadCommands: GardState.Extension = [
 	Command.handler(deleteUnit, joinPosts),
 	Command.handler(deleteWord, joinPosts),
 	Command.handler(selectAll, selectPost),
-	KeyBinding.of({ key: 'Mod-Enter', run: splitPost }),
+	KeyBinding.of({ key: 'Shift-Enter', run: splitPost }),
 	KeyBinding.of({ key: 'Alt-ArrowUp', run: (wg) => movePost(wg, -1) }),
 	KeyBinding.of({ key: 'Alt-ArrowDown', run: (wg) => movePost(wg, 1) }),
 	pastePlainText,
