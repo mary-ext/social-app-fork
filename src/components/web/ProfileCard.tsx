@@ -43,12 +43,14 @@ import { m } from '#/paraglide/messages';
  * default profile card presentation displaying an avatar, name/handle, follow button, moderation labels, and
  * bio.
  *
+ * @param children extra content rendered below the bio.
  * @param descriptionLines max bio lines before truncation.
  * @param followButtonProps overrides forwarded to the trailing FollowButton.
  * @param showLabels whether to render the moderation/follows-you Labels row.
  * @param topBorder whether the row carries a top divider.
  */
 export function Default({
+	children,
 	descriptionLines = 3,
 	followButtonProps,
 	moderationOpts,
@@ -57,6 +59,7 @@ export function Default({
 	showLabels = true,
 	topBorder,
 }: {
+	children?: ReactNode;
 	descriptionLines?: number;
 	followButtonProps?: Partial<Omit<FollowButtonProps, 'profile'>>;
 	moderationOpts: ModerationOptions;
@@ -75,6 +78,7 @@ export function Default({
 				</Header>
 				{showLabels && <Labels moderationOpts={moderationOpts} profile={profile} />}
 				<Description numberOfLines={descriptionLines} profile={profile} />
+				{children}
 			</Outer>
 		</Link>
 	);

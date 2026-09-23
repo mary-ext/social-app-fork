@@ -32,6 +32,8 @@ interface State {
 	name?: string;
 	description?: string;
 	profiles: AnyProfileView[];
+	/** members who opted out of the pack being edited; they can't be added back. */
+	optedOutDids: ReadonlySet<string>;
 	feeds: AppBskyFeedDefs.GeneratorView[];
 	processing: boolean;
 	error?: string;
@@ -145,7 +147,9 @@ export function Provider({
 					text: record.description ?? '',
 					facets: record.descriptionFacets,
 				}),
-				profiles: listItems?.map((i) => i.subject) ?? [],
+				// opted-out members are dropped from the pack once it's saved
+				profiles: listItems?.filter((i) => !i.subjectOptedOut).map((i) => i.subject) ?? [],
+				optedOutDids: new Set(listItems?.filter((i) => i.subjectOptedOut).map((i) => i.subject.did)),
 				feeds: starterPack.feeds ?? [],
 				processing: false,
 				targetDid,
@@ -156,6 +160,7 @@ export function Provider({
 			canNext: true,
 			currentStep: 'Details',
 			profiles: [targetProfile],
+			optedOutDids: new Set(),
 			feeds: [],
 			processing: false,
 			targetDid,

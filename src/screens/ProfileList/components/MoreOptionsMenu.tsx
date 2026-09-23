@@ -5,7 +5,12 @@ import { useGoBack } from '#/lib/hooks/use-go-back';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { listTarget } from '#/lib/routes/targets';
 
-import { useListBlockMutation, useListDeleteMutation, useListMuteMutation } from '#/state/queries/list';
+import {
+	useListBlockMutation,
+	useListDeleteMutation,
+	useListMuteMutation,
+	useListOptOutMutation,
+} from '#/state/queries/list';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -14,6 +19,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { shareUrl } from '#/components/sharing';
+import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
@@ -41,6 +47,10 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 	const isBlocking = !!list.viewer?.blocked;
 	const isMuting = !!list.viewer?.muted;
 	const isOwner = currentAccount?.did === list.creator.did;
+	const isReferenceList = list.purpose === 'app.bsky.graph.defs#referencelist';
+	const optOut = list.viewer?.referenceListOptOut;
+	const optOutHandle = Prompt.usePromptHandle();
+	const { mutate: toggleOptOut, isPending: isOptOutPending } = useListOptOutMutation(list);
 
 	const onPressShare = () => {
 		const { rkey } = parseCanonicalResourceUri(list.uri);
@@ -118,6 +128,13 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 								<Menu.ItemText>{m['screens.profileList.report.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={WarningIcon} />
 							</Menu.Item>
+							{isReferenceList && (
+								<OptOutMenuItem
+									disabled={isOptOutPending}
+									onClick={() => optOutHandle.open(null)}
+									optedOut={!!optOut}
+								/>
+							)}
 						</Menu.Group>
 					)}
 
@@ -157,6 +174,7 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 			/>
+			{isReferenceList && <OptOutPrompt handle={optOutHandle} onToggle={toggleOptOut} optOut={optOut} />}
 			<ReportDialog
 				handle={reportDialogHandle}
 				subject={{

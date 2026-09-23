@@ -2,7 +2,7 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
 
-import { useDeleteStarterPackMutation } from '#/state/queries/starter-packs';
+import { useDeleteStarterPackMutation, useStarterPackOptOutMutation } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -11,6 +11,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
+import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
@@ -58,6 +59,9 @@ export function OverflowMenu({
 	});
 
 	const isOwn = starterPack.creator.did === currentAccount?.did;
+	const optOut = starterPack.list?.viewer?.referenceListOptOut;
+	const optOutHandle = Prompt.usePromptHandle();
+	const { mutate: toggleOptOut, isPending: isOptOutPending } = useStarterPackOptOutMutation(starterPack);
 
 	const onDeleteStarterPack = () => {
 		if (!starterPack.list) {
@@ -134,6 +138,13 @@ export function OverflowMenu({
 								<Menu.ItemText>{m['screens.starterPack.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleInfo} position="right" />
 							</Menu.Item>
+							{starterPack.list && (
+								<OptOutMenuItem
+									disabled={isOptOutPending}
+									onClick={() => optOutHandle.open(null)}
+									optedOut={!!optOut}
+								/>
+							)}
 						</>
 					)}
 				</Menu.Popup>
@@ -176,6 +187,7 @@ export function OverflowMenu({
 				</Prompt.Actions>
 			</Prompt.Outer>
 			<CreateListFromStarterPackDialog handle={convertToListHandle} starterPack={starterPack} />
+			{starterPack.list && <OptOutPrompt handle={optOutHandle} onToggle={toggleOptOut} optOut={optOut} />}
 		</>
 	);
 }

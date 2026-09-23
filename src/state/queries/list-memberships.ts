@@ -1,6 +1,7 @@
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
+	AppBskyGraphDefs,
 	AppBskyGraphGetListsWithMembership,
 	AppBskyGraphGetStarterPacksWithMembership,
 } from '@atcute/bluesky';
@@ -20,7 +21,10 @@ import { createRecord, deleteRecord } from '#/lib/api/records';
 import { accumulate } from '#/lib/utils/accumulate';
 
 import { STALE } from '#/state/queries';
-import { invalidateListMembersQuery } from '#/state/queries/list-members';
+import {
+	invalidateListMembersQuery,
+	RQKEY_ALL as LIST_MEMBERS_ALL_RQKEY,
+} from '#/state/queries/list-members';
 import { getClients, useSession } from '#/state/session';
 
 import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
@@ -202,6 +206,11 @@ export function useListMembershipRemoveMutation({
 			setTimeout(() => {
 				void invalidateListMembersQuery({ queryClient, uri: variables.listUri });
 			}, 1e3);
+
+			queryClient.setQueryData<AppBskyGraphDefs.ListItemView[]>(
+				LIST_MEMBERS_ALL_RQKEY(variables.listUri),
+				(old) => old?.filter((item) => item.uri !== variables.membershipUri),
+			);
 
 			queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
 				old?.map((item) => (item.list.uri === variables.listUri ? { ...item, listItem: undefined } : item)),

@@ -30,6 +30,7 @@ function WizardListCard({
 	btnType,
 	displayName,
 	subtitle,
+	note,
 	onPress,
 	avatar,
 	included,
@@ -42,6 +43,7 @@ function WizardListCard({
 	feed?: AppBskyFeedDefs.GeneratorView;
 	displayName: string;
 	subtitle?: string;
+	note?: string;
 	onPress: () => void;
 	avatar?: string;
 	included?: boolean;
@@ -58,6 +60,11 @@ function WizardListCard({
 				{subtitle ? (
 					<Text color="textContrastMedium" size="md_sub" numberOfLines={1}>
 						{subtitle}
+					</Text>
+				) : null}
+				{note ? (
+					<Text color="textContrastMedium" size="md_sub" numberOfLines={1}>
+						{note}
 					</Text>
 				) : null}
 			</div>
@@ -121,8 +128,9 @@ export function WizardProfileCard({
 	// Determine the "main" profile for this starter pack - either targetDid or current account
 	const targetProfileDid = state.targetDid || currentAccount?.did;
 	const isTarget = profile.did === targetProfileDid;
+	const optedOut = state.optedOutDids.has(profile.did);
 	const included = isTarget || state.profiles.some((p) => p.did === profile.did);
-	const disabled = isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE);
+	const disabled = optedOut || isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE);
 	const moderationUi = getDisplayRestrictions(
 		moderateProfile(profile, moderationOpts),
 		DisplayContext.ProfileMedia,
@@ -150,6 +158,7 @@ export function WizardProfileCard({
 			btnType={btnType}
 			displayName={profile.handle}
 			subtitle={displayName}
+			note={optedOut ? m['components.starterPack.optOut.label']() : undefined}
 			onPress={onPress}
 			avatar={profile.avatar}
 			included={included}
