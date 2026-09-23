@@ -662,20 +662,18 @@ export async function setThreadViewPrefs(
 }
 
 /**
- * Sets the onboarding interests preference, merging over any existing values.
+ * replaces interest tags and sets `updatedAt` to the current time.
  *
  * @param pds the PDS client.
- * @param pref the interests fields to apply.
+ * @param tags the interest tags to store.
+ * @returns the written preference.
  */
-export async function setInterestsPref(pds: Client, pref: Partial<BskyInterestsPreference>): Promise<void> {
+export async function setInterestsPref(pds: Client, tags: string[]): Promise<BskyInterestsPreference> {
+	const pref: BskyInterestsPreference = { tags, updatedAt: new Date().toISOString() };
 	await updatePreferences(pds, (prefs) => {
-		const existing = prefs.findLast(isInterestsPref);
-		const next: PrefOf<'app.bsky.actor.defs#interestsPref'> = {
-			$type: 'app.bsky.actor.defs#interestsPref',
-			tags: pref.tags ?? existing?.tags ?? [],
-		};
-		return upsertPref(prefs, isInterestsPref, next);
+		return upsertPref(prefs, isInterestsPref, { $type: 'app.bsky.actor.defs#interestsPref', ...pref });
 	});
+	return pref;
 }
 
 /**

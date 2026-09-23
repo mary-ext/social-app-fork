@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
-import { joinInterestTags, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
+import { serializeUserInterests, createBskyTopicsHeader } from '#/state/queries/feed-api/utils';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
@@ -34,7 +34,7 @@ export function useSuggestedStarterPacksQuery({
 					signal,
 					headers: {
 						...createBskyTopicsHeader(
-							overrideInterests ? overrideInterests.join(',') : joinInterestTags(preferences),
+							overrideInterests ? overrideInterests.join(',') : serializeUserInterests(preferences),
 						),
 						'Accept-Language': contentLangs,
 					},

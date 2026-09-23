@@ -15,7 +15,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { CustomFeedAPI } from '#/state/queries/feed-api/custom';
-import { joinInterestTags } from '#/state/queries/feed-api/utils';
+import { serializeUserInterests } from '#/state/queries/feed-api/utils';
 import { FeedTuner } from '#/state/queries/feed-tuner';
 import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -110,7 +110,7 @@ export function useFeedPreviews(
 	const uris = feeds.map((feed) => feed.uri);
 	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
-	const userInterests = joinInterestTags(preferences);
+	const userInterests = serializeUserInterests(preferences);
 	const moderationOpts = useModerationOpts();
 	const enabled = feeds.length > 0 && isEnabled;
 

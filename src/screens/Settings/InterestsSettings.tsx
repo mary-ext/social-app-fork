@@ -93,13 +93,12 @@ function Inner({
 			setIsSaving(true);
 
 			try {
-				await setInterestsPref(pds!, { tags: nextInterests });
+				const nextPref = await setInterestsPref(pds!, nextInterests);
 				qc.setQueriesData({ queryKey: preferencesQueryKey }, (old?: UsePreferencesQueryResponse) => {
 					if (!old) {
 						return old;
 					}
-					old.interests.tags = nextInterests;
-					return old;
+					return { ...old, interests: nextPref };
 				});
 				await Promise.all([
 					qc.resetQueries({ queryKey: createSuggestedStarterPacksQueryKey() }),

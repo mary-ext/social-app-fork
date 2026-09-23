@@ -12,12 +12,20 @@ if (typeof window !== 'undefined') {
 
 export function createBskyTopicsHeader(userInterests?: string) {
 	return {
-		'X-Bsky-Topics': debugTopics || userInterests || '',
+		'x-atproto-bsky-topics': debugTopics || userInterests || '',
 	};
 }
 
-export function joinInterestTags(preferences?: UsePreferencesQueryResponse) {
-	return preferences?.interests?.tags?.join(',') || '';
+/**
+ * serializes interests for the topics header.
+ *
+ * @param preferences the user's preferences.
+ * @returns comma-separated tags with `;updatedAt` appended when present, even if the tags are empty.
+ */
+export function serializeUserInterests(preferences?: UsePreferencesQueryResponse) {
+	const interests = preferences?.interests.tags.join(',') ?? '';
+	const updatedAt = preferences?.interests.updatedAt;
+	return updatedAt ? `${interests};${updatedAt}` : interests;
 }
 
 export function isBlueskyOwnedFeed(feedUri: string) {

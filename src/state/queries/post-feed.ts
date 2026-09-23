@@ -28,7 +28,7 @@ import { FollowingFeedAPI } from '#/state/queries/feed-api/following';
 import { ListFeedAPI } from '#/state/queries/feed-api/list';
 import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
-import { joinInterestTags } from '#/state/queries/feed-api/utils';
+import { serializeUserInterests } from '#/state/queries/feed-api/utils';
 import { type FeedDescriptor, type FeedRequest, toFeedRequest } from '#/state/queries/feed-descriptor';
 import { FeedTuner, type PostNumbering } from '#/state/queries/feed-tuner';
 import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
@@ -107,7 +107,7 @@ export function usePostFeedQuery(
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
 	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
-	const userInterests = joinInterestTags(preferences);
+	const userInterests = serializeUserInterests(preferences);
 	const { appview } = getClients();
 	const { hasSession } = useSession();
 	const lastRun = useRef<{
