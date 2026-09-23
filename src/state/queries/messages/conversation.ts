@@ -13,6 +13,7 @@ import { STALE } from '#/state/queries';
 import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations';
 import { getClients } from '#/state/session';
 
+import { RQKEY, RQKEY_ROOT } from './conversation-cache';
 import {
 	RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
 	UNREAD_ACCEPTED_CAP,
@@ -23,9 +24,6 @@ import {
 	getConvoFromQueryData,
 	RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations';
-
-export const RQKEY_ROOT = 'convo';
-export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId];
 
 export function useConvoQuery({ convoId }: { convoId: string }) {
 	const { chat } = getClients();
@@ -40,17 +38,6 @@ export function useConvoQuery({ convoId }: { convoId: string }) {
 			const data = await ok(chat.get('chat.bsky.convo.getConvo', { signal, params: { convoId } }));
 			return data.convo;
 		},
-	});
-}
-
-/** seeds the single-conversation cache. a view no newer than the cached one is ignored. */
-export function precacheConvoQuery(queryClient: QueryClient, convo: ChatBskyConvoDefs.ConvoView) {
-	queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(RQKEY(convo.id), (old) => {
-		// `<=` because the cached copy may carry an optimistic update on top of the same server state
-		if (old && convo.rev <= old.rev) {
-			return old;
-		}
-		return convo;
 	});
 }
 

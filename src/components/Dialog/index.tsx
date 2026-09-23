@@ -5,6 +5,7 @@ export {
 	Close,
 	Divider,
 	Footer,
+	Loading,
 	Popup,
 	Search,
 	Title,

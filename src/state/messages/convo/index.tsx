@@ -13,11 +13,8 @@ import { Convo } from '#/state/messages/convo/agent';
 import type { ConvoParams, ConvoState } from '#/state/messages/convo/types';
 import { isConvoActive } from '#/state/messages/convo/util';
 import { useMessagesEventBus } from '#/state/messages/events';
-import {
-	precacheConvoQuery,
-	RQKEY as getConvoKey,
-	useMarkAsReadMutation,
-} from '#/state/queries/messages/conversation';
+import { useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import { precacheConvoQuery, RQKEY as getConvoKey } from '#/state/queries/messages/conversation-cache';
 import { LIST_CONVOS_RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations-key';
 import { profileQueryKey as createProfileQueryKey } from '#/state/queries/profile-key';
 import { getClients, useSession } from '#/state/session';

@@ -11,7 +11,7 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 
 import { getClients } from '#/state/session';
 
-import { RQKEY as CONVO_KEY } from './conversation';
+import { RQKEY as CONVO_KEY } from './conversation-cache';
 import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations-key';
 import { listConvoMembersQueryKey } from './list-convo-members';
 

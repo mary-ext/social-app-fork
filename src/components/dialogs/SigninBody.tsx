@@ -1,0 +1,212 @@
+import { type KeyboardEvent, useCallback, useState } from 'react';
+
+import { isActorIdentifier } from '@atcute/lexicons/syntax';
+
+import { login, type SessionAccount, switchAccount, useSession } from '#/state/session';
+
+import { AccountList } from '#/components/AccountList';
+import * as Dialog from '#/components/Dialog';
+import type { SigninDialogPayload } from '#/components/dialogs/handles';
+import * as css from '#/components/dialogs/Signin.css';
+import { Stack } from '#/components/Stack';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
+
+import AtIcon from '#/icons/central/At_round_outlined_radius1_stroke2.svg';
+import ChevronLeftIcon from '#/icons/central/ChevronLeft_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
+
+/**
+ * offers saved accounts or a new sign-in based on the dialog payload.
+ *
+ * @param props close handler and sign-in request
+ * @returns the account chooser or sign-in form
+ */
+export function SigninBody({ close, payload }: { close: () => void; payload: SigninDialogPayload }) {
+	const { accounts } = useSession();
+	const requestedAccount = payload.requestedAccount;
+	const showStoredAccounts = payload.showStoredAccounts ?? true;
+	const hasStoredAccounts = showStoredAccounts && accounts.length > 0;
+
+	// The render-prop subtree remounts on each open, so the entry screen is derived once from the
+	// payload: stored accounts get the chooser, everything else the new-account form.
+	const [screen, setScreen] = useState<'choose' | 'new'>(() =>
+		hasStoredAccounts && !requestedAccount ? 'choose' : 'new',
+	);
+
+	if (screen === 'choose') {
+		return (
+			<ChooseAccountScreen
+				close={close}
+				intent={payload.intent ?? 'signin'}
+				onSelectOther={() => setScreen('new')}
+			/>
+		);
+	}
+	return (
+		<NewAccountScreen
+			initialHandle={requestedAccount?.handle ?? ''}
+			onBack={hasStoredAccounts ? () => setScreen('choose') : undefined}
+		/>
+	);
+}
+
+function ChooseAccountScreen({
+	close,
+	intent,
+	onSelectOther,
+}: {
+	close: () => void;
+	intent: 'signin' | 'switch';
+	onSelectOther: () => void;
+}) {
+	const { currentAccount } = useSession();
+	const [pendingDid, setPendingDid] = useState<string | null>(null);
+
+	const onSelectAccount = useCallback(
+		async (account: SessionAccount) => {
+			if (pendingDid) {
+				return;
+			}
+			if (account.did === currentAccount?.did) {
+				close();
+				Toast.show(m['components.dialogs.account.alreadySignedIn']({ handle: account.handle }));
+				return;
+			}
+			try {
+				setPendingDid(account.did);
+				await switchAccount(account);
+			} catch (e) {
+				console.error('sign in dialog: resume account failed', e);
+				setPendingDid(null);
+				await login({ identifier: account.did });
+				return;
+			}
+			setPendingDid(null);
+		},
+		[close, currentAccount?.did, pendingDid],
+	);
+
+	return (
+		<Stack gap="lg">
+			<Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>
+						{intent === 'switch' ? m['common.account.action.switch']() : m['common.session.action.signIn']()}
+					</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				{intent !== 'switch' && (
+					<Text color="textContrastMedium">{m['components.dialogs.account.chooseDescription']()}</Text>
+				)}
+			</Stack>
+
+			<AccountList
+				onSelectAccount={(account) => void onSelectAccount(account)}
+				onSelectOther={onSelectOther}
+				otherLabel={m['components.dialogs.account.signInAnother']()}
+				pendingDid={pendingDid}
+			/>
+		</Stack>
+	);
+}
+
+function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; onBack?: () => void }) {
+	const [identifier, setIdentifier] = useState(initialHandle);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState('');
+
+	const onSubmit = async () => {
+		// people habitually type the leading `@`, and the field renders one as a prefix icon
+		const trimmed = identifier.trim().replace(/^@/, '');
+		if (!isActorIdentifier(trimmed)) {
+			setError(m['components.dialogs.account.handle.description']());
+			return;
+		}
+
+		setError('');
+		setIsSubmitting(true);
+		try {
+			await login({ identifier: trimmed });
+		} catch (e) {
+			console.error('sign in dialog: OAuth start failed', e);
+			setError(m['components.dialogs.signin.startError']());
+			setIsSubmitting(false);
+		}
+	};
+
+	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			void onSubmit();
+		}
+	};
+
+	return (
+		<Stack gap="xl">
+			<Stack gap="xs">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['common.session.action.signIn']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+
+				<Text color="textContrastMedium">{m['components.dialogs.signin.description']()}</Text>
+			</Stack>
+			<TextField.Root isInvalid={!!error}>
+				<TextField.LabelText>{m['components.dialogs.account.handle.label']()}</TextField.LabelText>
+				<div className={css.field}>
+					<AtIcon className={css.fieldIcon} />
+					<TextField.Input
+						autoCapitalize="none"
+						autoFocus
+						className={css.fieldInput}
+						label={m['components.dialogs.account.handle.label']()}
+						onChangeText={setIdentifier}
+						onKeyDown={onKeyDown}
+						placeholder={m['components.dialogs.account.handle.placeholder']()}
+						value={identifier}
+					/>
+				</div>
+
+				{error && (
+					<Text className={css.error} color="textContrastMedium" size="sm">
+						{error}
+					</Text>
+				)}
+			</TextField.Root>
+			<Dialog.Actions direction="column">
+				<Button
+					color="primary"
+					disabled={isSubmitting}
+					label={m['common.session.action.signIn']()}
+					onClick={() => void onSubmit()}
+					variant="solid"
+					size="large"
+				>
+					{isSubmitting ? (
+						<ButtonSpinner color="white" label={m['common.status.loading']()} />
+					) : (
+						<ButtonText>{m['common.session.action.signIn']()}</ButtonText>
+					)}
+				</Button>
+
+				{onBack && (
+					<Button
+						color="secondary"
+						disabled={isSubmitting}
+						label={m['components.dialogs.account.back']()}
+						onClick={onBack}
+						variant="ghost"
+						size="large"
+					>
+						<ButtonIcon icon={ChevronLeftIcon} />
+						<ButtonText>{m['components.dialogs.account.back']()}</ButtonText>
+					</Button>
+				)}
+			</Dialog.Actions>
+		</Stack>
+	);
+}

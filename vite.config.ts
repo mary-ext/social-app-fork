@@ -41,6 +41,8 @@ export default defineConfig(({ command, mode }) => {
 		: `http://localhost?redirect_uri=${encodeURIComponent(oauthRedirectUri)}` +
 			`&scope=${encodeURIComponent(oauthScope)}`;
 
+	const baseUiFormControls = '(?:checkbox|checkbox-group|radio|radio-group|select|switch)';
+
 	const codeSplitting: Rolldown.CodeSplittingOptions = {
 		minShareCount: 24,
 		groups: [
@@ -60,8 +62,23 @@ export default defineConfig(({ command, mode }) => {
 			// #region lazy tier
 			{ name: 'messages', test: /[\\/]src[\\/]paraglide[\\/]/, minShareCount: 4, priority: 20 },
 			{ name: 'icons', test: /[\\/]src[\\/]icons[\\/]/, minShareCount: 1, priority: 20 },
-			{ name: 'base-ui', test: /node_modules[\\/](?:@base-ui|@floating-ui)[\\/]/, priority: 15 },
+			{
+				name: 'base-ui',
+				test: new RegExp(
+					String.raw`node_modules[\\/](?:@base-ui[\\/](?!react[\\/]${baseUiFormControls}[\\/])|@floating-ui[\\/])`,
+				),
+				priority: 15,
+			},
 			{ name: 'atproto', test: /node_modules[\\/](?:@atcute|@jsr[\\/]mary__)/, priority: 15 },
+			{
+				// keep form controls off feed pages; base-ui retains their shared popup dependencies.
+				name: 'forms',
+				test: new RegExp(
+					String.raw`node_modules[\\/]@base-ui[\\/]react[\\/]${baseUiFormControls}[\\/]` +
+						String.raw`|[\\/]src[\\/]components[\\/](?:(?:Select|Settings)\.|forms[\\/](?:Checkbox\.|Toggle[\\/]))`,
+				),
+				priority: 14,
+			},
 			{ name: 'common', priority: 0 },
 			// #endregion
 		],

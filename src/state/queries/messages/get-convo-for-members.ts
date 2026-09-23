@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { precacheConvoQuery } from './conversation';
+import { precacheConvoQuery } from './conversation-cache';
 
 export function useGetConvoForMembers({
 	onSuccess,

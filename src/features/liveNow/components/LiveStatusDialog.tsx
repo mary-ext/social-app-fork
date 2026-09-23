@@ -1,32 +1,19 @@
+import { lazy, Suspense } from 'react';
+
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { clsx } from 'clsx';
-
-import { toNiceDomain } from '#/lib/links/nice-domain';
 import { profileTarget } from '#/lib/routes/targets';
 
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
-
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
 
 import * as Dialog from '#/components/Dialog';
-import { reportDialogHandle } from '#/components/dialogs/handles';
-import { EmbedThumb } from '#/components/EmbedThumb';
-import { ContentHider } from '#/components/moderation/ContentHider';
-import { Text } from '#/components/Text';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import { ExternalLinkButton } from '#/components/web/Link';
-import * as ProfileCard from '#/components/web/ProfileCard';
 
-import CircleInfoIcon from '#/icons/central/CircleInfo_round_outlined_radius1_stroke2.svg';
-import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
-import SquareArrowTopRightIcon from '#/icons/central/SquareArrowTopRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
+
+const LiveStatus = lazy(() =>
+	import('#/features/liveNow/components/LiveStatus').then((mod) => ({ default: mod.LiveStatus })),
+);
 
 /**
  * A touch-only dialog that surfaces a live status (no hover affordance on touch devices). Open it
@@ -58,143 +45,17 @@ export function LiveStatusDialog({
 				padding="none"
 				size="narrow"
 			>
-				<LiveStatus
-					embed={embed}
-					onPressOpenProfile={onPressOpenProfile}
-					onRequestClose={() => handle.close()}
-					profile={profile}
-					status={status}
-				/>
+				<Suspense fallback={<Dialog.Loading />}>
+					<LiveStatus
+						embed={embed}
+						onPressOpenProfile={onPressOpenProfile}
+						onRequestClose={() => handle.close()}
+						profile={profile}
+						status={status}
+					/>
+				</Suspense>
 				<Dialog.Close variant="floating" />
 			</Dialog.Popup>
 		</Dialog.Root>
-	);
-}
-
-/**
- * The live-status card body: livestream media, title/domain, a watch CTA, and the streamer's identity. Shared
- * by {@link LiveStatusDialog} and the profile hover card.
- */
-export function LiveStatus({
-	embed,
-	onPressOpenProfile,
-	onRequestClose,
-	padding = 'xl',
-	profile,
-	status,
-}: {
-	embed: AppBskyEmbedExternal.View;
-	onPressOpenProfile: () => void;
-	/** When set (i.e. inside a dialog), dismiss the host before opening the report dialog. */
-	onRequestClose?: () => void;
-	padding?: 'lg' | 'xl';
-	profile: AnyProfileView;
-	status: AppBskyActorDefs.StatusView;
-}) {
-	const queryClient = useQueryClient();
-	const moderationOpts = useModerationOpts();
-
-	const statusModeration = moderationOpts ? moderateStatus(profile, moderationOpts) : undefined;
-
-	const onReport = () => {
-		onRequestClose?.();
-		reportDialogHandle.openWithPayload({
-			subject: {
-				$type: 'app.bsky.actor.defs#statusView',
-				...status,
-			},
-		});
-	};
-
-	const thumb = embed.external.thumb;
-
-	return (
-		<>
-			{thumb && (
-				<ContentHider
-					className={css.media}
-					modui={statusModeration && getDisplayRestrictions(statusModeration, DisplayContext.ContentMedia)}
-				>
-					<EmbedThumb frameClassName={css.mediaFrame} src={thumb} />
-					<LiveIndicator className={css.liveBadge} size="large" />
-				</ContentHider>
-			)}
-			<div
-				className={clsx(
-					css.content,
-					css.padding[padding],
-					padding === 'xl' && css.xlTop[thumb ? 'thumb' : 'noThumb'],
-				)}
-			>
-				<div className={css.info}>
-					<Text numberOfLines={3} size="xl" weight="semiBold">
-						{embed.external.title || embed.external.uri}
-					</Text>
-					<div className={css.domain}>
-						<GlobeIcon className={css.globeIcon} />
-						<Text color="textContrastMedium" numberOfLines={1} size="sm">
-							{toNiceDomain(embed.external.uri)}
-						</Text>
-					</div>
-				</div>
-
-				<ExternalLinkButton
-					className={css.watchButton}
-					color="primary"
-					label={m['features.liveNow.action.watchNow']()}
-					size="small"
-					href={embed.external.uri}
-					variant="solid"
-				>
-					<ButtonText>{m['features.liveNow.action.watchNow']()}</ButtonText>
-					<ButtonIcon icon={SquareArrowTopRightIcon} />
-				</ExternalLinkButton>
-
-				<div className={css.divider} />
-
-				{moderationOpts && (
-					<ProfileCard.Header>
-						<ProfileCard.Avatar
-							disabledPreview
-							liveOverride={false}
-							moderationOpts={moderationOpts}
-							profile={profile}
-						/>
-						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
-						<Button
-							color="secondary"
-							label={m['features.liveNow.action.openProfile']()}
-							onClick={() => {
-								unstableCacheProfileView(queryClient, profile);
-								onPressOpenProfile();
-							}}
-							size="small"
-							variant="solid"
-						>
-							<ButtonText>{m['features.liveNow.action.openProfile']()}</ButtonText>
-						</Button>
-					</ProfileCard.Header>
-				)}
-
-				<div className={css.betaRow}>
-					<div className={css.beta}>
-						<CircleInfoIcon className={css.circleInfoIcon} />
-						<Text color="textContrastLow" size="sm">
-							{m['features.liveNow.badge.beta']()}
-						</Text>
-					</div>
-					<Button
-						className={css.reportButton}
-						label={m['common.action.report']()}
-						onClick={onReport}
-						variant="bare"
-					>
-						<Text color="textContrastMedium" size="sm">
-							{m['common.action.report']()}
-						</Text>
-					</Button>
-				</div>
-			</div>
-		</>
 	);
 }

@@ -1,0 +1,176 @@
+import { useState } from 'react';
+
+import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
+
+import { differenceInMinutes } from '@mary/date-fns';
+
+import { cleanError } from '#/lib/errors';
+import { useDebouncedValue } from '#/lib/hooks/use-debounce';
+import { parseLooseUrl } from '#/lib/utils/url';
+
+import { useTick } from '#/state/tick';
+
+import {
+	displayDuration,
+	getValidLiveStatusRecord,
+	useLiveLinkMetaQuery,
+	useRemoveLiveStatusMutation,
+	useUpsertLiveStatusMutation,
+} from '#/features/liveNow';
+import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
+
+import * as Dialog from '#/components/Dialog';
+import { Stack } from '#/components/Stack';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
+
+import ClockIcon from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
+
+import * as styles from './EditLiveDialog.css';
+
+/**
+ * updates a live link or ends the live status.
+ *
+ * @param props live status, link, and dialog handle
+ * @returns the live-status editor
+ */
+export function EditLiveDialogBody({
+	embed,
+	handle,
+	status,
+}: {
+	embed: AppBskyEmbedExternal.View;
+	handle: Dialog.DialogHandle;
+	status: AppBskyActorDefs.StatusView;
+}) {
+	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
+	const [liveLinkError, setLiveLinkError] = useState('');
+	const tick = useTick();
+
+	const liveLinkUrl = parseLooseUrl(liveLink);
+	const debouncedUrl = useDebouncedValue(liveLinkUrl, 500);
+
+	const isDirty = liveLinkUrl !== embed.external.uri;
+
+	const {
+		data: linkMeta,
+		isSuccess: hasValidLinkMeta,
+		isLoading: linkMetaLoading,
+		error: linkMetaError,
+	} = useLiveLinkMetaQuery(debouncedUrl);
+
+	const record = getValidLiveStatusRecord(status.record);
+
+	const {
+		mutate: goLive,
+		isPending: isGoingLive,
+		error: goLiveError,
+	} = useUpsertLiveStatusMutation(handle, record?.durationMinutes ?? 0, linkMeta, record?.createdAt);
+
+	const {
+		mutate: removeLiveStatus,
+		isPending: isRemovingLiveStatus,
+		error: removeLiveStatusError,
+	} = useRemoveLiveStatusMutation(handle);
+
+	const expiryDateTime = new Date(status.expiresAt ?? tick);
+	const minutesUntilExpiry = differenceInMinutes(expiryDateTime, new Date(tick));
+
+	const submitDisabled =
+		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;
+
+	return (
+		<Stack gap="lg">
+			<Stack gap="sm">
+				<Dialog.TitleRow>
+					<Dialog.Title>{m['features.liveNow.goLive.live']()}</Dialog.Title>
+					<Dialog.Close />
+				</Dialog.TitleRow>
+				<div className={styles.expiryRow}>
+					<ClockIcon className={styles.clockIcon} />
+					<Text color="textContrastHigh" size="md">
+						{typeof record?.durationMinutes === 'number'
+							? m['features.liveNow.expiry.value']({
+									duration: displayDuration(minutesUntilExpiry),
+									time: expiryDateTime,
+								})
+							: m['features.liveNow.expiry.none']()}
+					</Text>
+				</div>
+			</Stack>
+			<Stack gap="sm">
+				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
+					<TextField.LabelText>{m['features.liveNow.link.label']()}</TextField.LabelText>
+					<TextField.Input
+						autoCapitalize="none"
+						autoComplete="url"
+						label={m['features.liveNow.link.label']()}
+						onBlur={() => {
+							// don't nag about an empty field — only flag a non-empty, non-URL value
+							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
+								setLiveLinkError('Invalid URL');
+							}
+						}}
+						onChangeText={setLiveLink}
+						onFocus={() => setLiveLinkError('')}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' && isDirty && !submitDisabled) {
+								goLive();
+							}
+						}}
+						placeholder={m['features.liveNow.link.placeholder']()}
+						value={liveLink}
+					/>
+				</TextField.Root>
+				{(liveLinkError || linkMetaError) && (
+					<Admonition type="error">
+						{liveLinkError ? m['features.liveNow.link.invalid']() : cleanError(linkMetaError)}
+					</Admonition>
+				)}
+
+				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
+			</Stack>
+			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
+			{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
+			<Dialog.Actions>
+				<Button
+					color="negative_subtle"
+					disabled={isRemovingLiveStatus || isGoingLive}
+					label={m['features.liveNow.goLive.remove']()}
+					onClick={() => removeLiveStatus()}
+					size="small"
+					variant="solid"
+				>
+					<ButtonText>{m['features.liveNow.goLive.remove']()}</ButtonText>
+					{isRemovingLiveStatus && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
+				</Button>
+				{isDirty ? (
+					<Button
+						color="primary"
+						disabled={submitDisabled}
+						label={m['common.action.save']()}
+						onClick={() => goLive()}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>{m['common.action.save']()}</ButtonText>
+						{isGoingLive && <ButtonSpinner color="white" label={m['common.status.saving']()} />}
+					</Button>
+				) : (
+					<Button
+						color="primary"
+						label={m['common.action.close']()}
+						onClick={() => handle.close()}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>{m['common.action.close']()}</ButtonText>
+					</Button>
+				)}
+			</Dialog.Actions>
+		</Stack>
+	);
+}

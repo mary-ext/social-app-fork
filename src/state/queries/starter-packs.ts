@@ -25,6 +25,7 @@ import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-
 import { STALE } from '#/state/queries/index';
 import { useReferenceListOptOutMutation } from '#/state/queries/list';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
+import { RQKEY } from '#/state/queries/starter-pack-cache';
 import { getClients, useSession } from '#/state/session';
 
 async function resolveDescription(
@@ -39,16 +40,6 @@ async function resolveDescription(
 
 	return { description: rt.text, descriptionFacets: rt.facets };
 }
-
-const RQKEY_ROOT = 'starter-pack';
-const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) => {
-	if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
-		const parsed = parseStarterPackUri(uri);
-		return [RQKEY_ROOT, parsed?.actor, parsed?.rkey];
-	} else {
-		return [RQKEY_ROOT, did, rkey];
-	}
-};
 
 export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) {
 	const { appview } = getClients();
@@ -375,40 +366,4 @@ async function whenAppViewReady(
 		fn,
 		() => ok(appview.get('app.bsky.graph.getStarterPack', { params: { starterPack: uri } })),
 	);
-}
-
-export function precacheStarterPack(
-	queryClient: QueryClient,
-	starterPack: AppBskyGraphDefs.StarterPackViewBasic | AppBskyGraphDefs.StarterPackView,
-) {
-	const record = getStarterPackRecord(starterPack);
-	if (record.$type !== 'app.bsky.graph.starterpack') {
-		return;
-	}
-
-	let starterPackView: AppBskyGraphDefs.StarterPackView | undefined;
-	if (starterPack.$type === 'app.bsky.graph.defs#starterPackView') {
-		starterPackView = starterPack;
-	} else if (starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic') {
-		// the appview returns generator views despite the lexicon's broader field type.
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the wire shape disagrees with the lexicon, see above
-		const feeds = record.feeds as unknown as AppBskyFeedDefs.GeneratorView[] | undefined;
-
-		const listView: AppBskyGraphDefs.ListViewBasic = {
-			cid: '',
-			name: record.name,
-			purpose: 'app.bsky.graph.defs#referencelist',
-			uri: record.list,
-		};
-		starterPackView = {
-			...starterPack,
-			$type: 'app.bsky.graph.defs#starterPackView',
-			feeds,
-			list: listView,
-		};
-	}
-
-	if (starterPackView) {
-		queryClient.setQueryData(RQKEY({ uri: starterPack.uri }), starterPackView);
-	}
 }

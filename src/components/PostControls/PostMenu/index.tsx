@@ -1,4 +1,4 @@
-import { type ReactElement, type ReactNode, useState } from 'react';
+import { lazy, type ReactElement, type ReactNode, Suspense, useState } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
@@ -9,7 +9,9 @@ import type { Shadow } from '#/state/cache/post-shadow';
 import * as Menu from '#/components/Menu';
 import { Tooltip } from '#/components/Tooltip';
 
-import { PostMenuItems } from './PostMenuItems';
+const importPostMenuItems = () => import('./PostMenuItems').then((mod) => ({ default: mod.PostMenuItems }));
+
+const PostMenuItems = lazy(importPostMenuItems);
 
 /**
  * The post overflow menu. The caller supplies the trigger button via `render` so each action-bar size owns
@@ -52,19 +54,25 @@ export const PostOverflowMenu = ({
 			}}
 		>
 			<Tooltip label={tooltip}>
-				<Menu.Trigger render={render} />
+				<Menu.Trigger
+					render={render}
+					onFocus={() => void importPostMenuItems()}
+					onPointerEnter={() => void importPostMenuItems()}
+				/>
 			</Tooltip>
 			{hasBeenOpen && (
-				<PostMenuItems
-					alwaysShowTranslate={alwaysShowTranslate}
-					post={post}
-					postFeedContext={postFeedContext}
-					postReqId={postReqId}
-					record={record}
-					richText={richText}
-					threadgateRecord={threadgateRecord}
-					onShowLess={onShowLess}
-				/>
+				<Suspense fallback={null}>
+					<PostMenuItems
+						alwaysShowTranslate={alwaysShowTranslate}
+						post={post}
+						postFeedContext={postFeedContext}
+						postReqId={postReqId}
+						record={record}
+						richText={richText}
+						threadgateRecord={threadgateRecord}
+						onShowLess={onShowLess}
+					/>
+				</Suspense>
 			)}
 		</Menu.Root>
 	);

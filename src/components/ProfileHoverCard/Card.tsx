@@ -20,7 +20,7 @@ import { useSession } from '#/state/session';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
-import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
 import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';

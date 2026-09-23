@@ -2,7 +2,7 @@ import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky
 
 import type { InfiniteData, QueryClient, QueryKey } from '@tanstack/react-query';
 
-import { RQKEY as CONVO_KEY } from '../conversation';
+import { RQKEY as CONVO_KEY } from '../conversation-cache';
 import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY } from '../list-conversations-key';
 
 type ConvoUpdater = (prev: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView | undefined;

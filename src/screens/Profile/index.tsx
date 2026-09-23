@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
@@ -31,13 +31,13 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 import { ProfileHeader } from '#/screens/Profile/Header';
 import { ProfileHeaderSkeleton } from '#/screens/Profile/Header/Skeleton';
 import { ProfileStickyHeader } from '#/screens/Profile/Header/Sticky';
-import { ProfileCollectionsSection } from '#/screens/Profile/Sections/Collections';
 import { ProfileMediaFilter, ProfileMediaSection } from '#/screens/Profile/Sections/Media';
 import { ProfilePostsFilter, ProfilePostsSection } from '#/screens/Profile/Sections/Posts';
 
 import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
 import { GoHome } from '#/components/GoHome';
+import { ListLoading } from '#/components/List/ListLoading';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { NotFoundState } from '#/components/NotFoundState';
 import { type Section, Tabs } from '#/components/Tabs';
@@ -48,6 +48,12 @@ import { m } from '#/paraglide/messages';
 import { useFocusEffect, useParams, useRouter } from '#/router';
 
 import * as css from './index.css';
+
+const ProfileCollectionsSection = lazy(() =>
+	import('#/screens/Profile/Sections/Collections').then((mod) => ({
+		default: mod.ProfileCollectionsSection,
+	})),
+);
 
 type ProfileTabId = 'collections' | 'media' | 'posts';
 
@@ -188,13 +194,15 @@ function ProfileScreenLoaded({
 			id: 'collections',
 			label: m['screens.profile.collections.label'](),
 			children: (
-				<ProfileCollectionsSection
-					did={profile.did}
-					feedCount={feedCount}
-					isMe={isMe}
-					listCount={listCount}
-					starterPackCount={starterPackCount}
-				/>
+				<Suspense fallback={<ListLoading />}>
+					<ProfileCollectionsSection
+						did={profile.did}
+						feedCount={feedCount}
+						isMe={isMe}
+						listCount={listCount}
+						starterPackCount={starterPackCount}
+					/>
+				</Suspense>
 			),
 		},
 	]);

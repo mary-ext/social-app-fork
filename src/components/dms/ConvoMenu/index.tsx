@@ -1,12 +1,17 @@
-import { type ReactElement, type ReactNode, useState } from 'react';
+import { lazy, type ReactElement, type ReactNode, Suspense, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import type { Shadow } from '#/state/cache/types';
 
-import { type BlockInfo, ConvoMenuItems } from '#/components/dms/ConvoMenu/ConvoMenuItems';
+import type { BlockInfo } from '#/components/dms/ConvoMenu/ConvoMenuItems';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import * as Menu from '#/components/Menu';
+
+const importConvoMenuItems = () =>
+	import('#/components/dms/ConvoMenu/ConvoMenuItems').then((mod) => ({ default: mod.ConvoMenuItems }));
+
+const ConvoMenuItems = lazy(importConvoMenuItems);
 
 /**
  * The conversation overflow menu. The caller supplies the trigger button via `render`, and may pass a
@@ -43,15 +48,23 @@ export function ConvoMenu({
 				}
 			}}
 		>
-			<Menu.Trigger handle={handle} id={triggerId} render={render} />
+			<Menu.Trigger
+				handle={handle}
+				id={triggerId}
+				render={render}
+				onFocus={() => void importConvoMenuItems()}
+				onPointerEnter={() => void importConvoMenuItems()}
+			/>
 			{hasBeenOpen && (
-				<ConvoMenuItems
-					blockInfo={blockInfo}
-					convo={convo}
-					currentScreen={currentScreen}
-					profile={profile}
-					showMarkAsRead={showMarkAsRead}
-				/>
+				<Suspense fallback={null}>
+					<ConvoMenuItems
+						blockInfo={blockInfo}
+						convo={convo}
+						currentScreen={currentScreen}
+						profile={profile}
+						showMarkAsRead={showMarkAsRead}
+					/>
+				</Suspense>
 			)}
 		</Menu.Root>
 	);

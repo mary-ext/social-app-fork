@@ -7,6 +7,7 @@ import { clsx } from 'clsx';
 
 import { useVisualViewportVars } from '#/lib/browser/visual-viewport';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as styles from '#/components/Dialog/Popup.css';
 import { NavigationEnabled } from '#/components/NavigationDisabled';
 import { Text } from '#/components/Text';
@@ -172,6 +173,16 @@ export function Actions({
 	reverse?: boolean;
 }) {
 	return <div className={styles.actions({ align, direction, reverse })}>{children}</div>;
+}
+
+/**
+ * labeled loading state for deferred dialog content.
+ *
+ * @param props.fill fills fixed-height popups
+ * @returns the loading spinner
+ */
+export function Loading({ fill = false }: { fill?: boolean }) {
+	return <CenteredSpinner fill={fill} label={m['common.status.loading']()} size="xl" />;
 }
 
 /** Hairline rule between sections. */

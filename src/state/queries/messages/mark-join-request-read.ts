@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getClients } from '#/state/session';
 
-import { RQKEY as CONVO_KEY } from './conversation';
+import { RQKEY as CONVO_KEY } from './conversation-cache';
 import type { ConvoListQueryData } from './list-conversations';
 import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './list-conversations-key';
 

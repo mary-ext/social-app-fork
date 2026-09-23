@@ -1,32 +1,14 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
-
-import type { AnyProfileView } from '@atcute/bluesky';
-
-import { boostInterests, interestDisplayNames, popularInterests } from '#/lib/interests';
-
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorSearch } from '#/state/queries/actor-search';
-import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
-import { useSession } from '#/state/session';
+import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
-import { SearchInput } from '#/components/forms/SearchInput';
-import { InterestTabs } from '#/components/InterestTabs';
-import type { ListMethods } from '#/components/List/List';
-import * as css from '#/components/SuggestedFollowsDialog.css';
-import { Text } from '#/components/Text';
-import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { m } from '#/paraglide/messages';
 
-const FOR_YOU_TAB = 'all';
-
-const PROFILE_ITEM_HEIGHT_ESTIMATE = 97;
-
-// persisted across opens so reopening the dialog restores the last tab/search the user left it on
-let lastSelectedInterest = '';
-let lastSearchText = '';
+const SuggestedFollowsDialogBody = lazy(() =>
+	import('#/components/SuggestedFollowsDialogBody').then((mod) => ({
+		default: mod.SuggestedFollowsDialogBody,
+	})),
+);
 
 export function SuggestedFollowsDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	return (
@@ -37,167 +19,10 @@ export function SuggestedFollowsDialog({ handle }: { handle: Dialog.DialogHandle
 				scroll="body"
 				size="wide"
 			>
-				<DialogInner handle={handle} />
+				<Suspense fallback={<Dialog.Loading fill />}>
+					<SuggestedFollowsDialogBody handle={handle} />
+				</Suspense>
 			</Dialog.Popup>
 		</Dialog.Root>
-	);
-}
-
-function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
-	const { data: preferences } = usePreferencesQuery();
-	const personalizedInterests = preferences?.interests?.tags;
-	const interests = [
-		FOR_YOU_TAB,
-		...Object.keys(interestDisplayNames)
-			// oxlint-disable-next-line unicorn/no-array-sort -- our own array of keys, and stable sorts compose:
-			.sort(boostInterests(popularInterests))
-			// oxlint-disable-next-line unicorn/no-array-sort -- personalized boosts outrank popular ones
-			.sort(boostInterests(personalizedInterests)),
-	];
-	const interestsDisplayNames = {
-		[FOR_YOU_TAB]: m['common.feeds.forYou'],
-		...interestDisplayNames,
-	};
-
-	const [selectedInterest, setSelectedInterest] = useState(() => lastSelectedInterest || FOR_YOU_TAB);
-	const [searchText, setSearchText] = useState(lastSearchText);
-	const moderationOpts = useModerationOpts();
-	const { currentAccount } = useSession();
-	const listRef = useRef<ListMethods>(null);
-
-	useEffect(() => {
-		lastSearchText = searchText;
-		lastSelectedInterest = selectedInterest;
-	}, [searchText, selectedInterest]);
-
-	const isForYou = selectedInterest === FOR_YOU_TAB;
-	const hasSearchText = !!searchText;
-
-	const {
-		data: suggestions,
-		error: suggestionsError,
-		isFetching: isFetchingSuggestions,
-	} = useGetSuggestedUsersForSeeMoreQuery({
-		category: isForYou ? undefined : selectedInterest,
-		limit: 50,
-	});
-	const {
-		data: searchResults,
-		error: searchResultsError,
-		isFetching: isFetchingSearchResults,
-	} = useActorSearch({ enabled: hasSearchText, query: searchText });
-
-	const isFetching = hasSearchText ? isFetchingSearchResults : isFetchingSuggestions;
-	const error = hasSearchText ? searchResultsError : suggestionsError;
-
-	const results = hasSearchText ? searchResults?.pages.flatMap((p) => p.actors) : suggestions?.actors;
-	const profiles: AnyProfileView[] = [];
-	if (results) {
-		const seen = new Set<string>();
-		for (const profile of results) {
-			if (seen.has(profile.did)) {
-				continue;
-			}
-			if (profile.did === currentAccount?.did) {
-				continue;
-			}
-			if (profile.viewer?.following) {
-				continue;
-			}
-			seen.add(profile.did);
-			profiles.push(profile);
-		}
-	}
-
-	// drives the empty slot: placeholders while loading, then a network/search-empty message
-	let listEmpty: ReactNode;
-	if (isFetching) {
-		listEmpty = <ProfileCard.LoadingPlaceholder count={10} />;
-	} else if (error) {
-		listEmpty = <Empty message={m['components.dialogs.error.network']()} />;
-	} else if (hasSearchText) {
-		listEmpty = <Empty message={m['common.search.empty']()} />;
-	} else {
-		listEmpty = <Empty message={m['components.dialogs.error.network']()} />;
-	}
-
-	const onSelectTab = (interest: string) => {
-		setSelectedInterest(interest);
-		setSearchText('');
-		listRef.current?.scrollToTop();
-	};
-
-	const onChangeSearchText = (text: string) => {
-		setSearchText(text);
-		listRef.current?.scrollToTop();
-	};
-
-	const renderItem = ({ index, item: profile }: Dialog.ListRenderItemInfo<AnyProfileView>) =>
-		moderationOpts ? (
-			<ProfileCard.Default
-				descriptionLines={2}
-				followButtonProps={{ variant: 'suggested' }}
-				moderationOpts={moderationOpts}
-				onPress={() => handle.close()}
-				profile={profile}
-				showLabels={false}
-				topBorder={index !== 0}
-			/>
-		) : null;
-
-	return (
-		<>
-			<Dialog.Header.Root>
-				<Dialog.Header.Close />
-				<Dialog.Header.Title>{m['components.dialogs.suggestedFollows.title']()}</Dialog.Header.Title>
-			</Dialog.Header.Root>
-
-			<Dialog.Search>
-				<SearchInput
-					autoFocus
-					label={m['common.search.action.profiles']()}
-					maxLength={50}
-					onChangeText={onChangeSearchText}
-					onClear={() => onChangeSearchText('')}
-					placeholder={m['components.dialogs.suggestedFollows.searchPlaceholder']()}
-					value={searchText}
-				/>
-			</Dialog.Search>
-
-			<Dialog.List
-				className={css.list}
-				data={profiles}
-				estimateHeight={PROFILE_ITEM_HEIGHT_ESTIMATE}
-				keyExtractor={(profile) => profile.did}
-				ListEmptyComponent={listEmpty}
-				ListHeaderComponent={
-					hasSearchText ? null : (
-						<div className={css.tabs}>
-							<InterestTabs
-								interests={interests}
-								interestsDisplayNames={interestsDisplayNames}
-								onSelectTab={onSelectTab}
-								selectedInterest={selectedInterest}
-							/>
-						</div>
-					)
-				}
-				ref={listRef}
-				renderItem={renderItem}
-			/>
-		</>
-	);
-}
-
-function Empty({ message }: { message: string }) {
-	return (
-		<div className={css.empty}>
-			<Text className={css.emptyMessage} color="textContrastHigh" size="sm">
-				{message}
-			</Text>
-			<Text color="textContrastLow" size="xs">
-				(╯°□°)╯︵ ┻━┻
-			</Text>
-		</div>
 	);
 }

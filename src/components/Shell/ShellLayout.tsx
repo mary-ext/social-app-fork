@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 
 import { Outlet, resolveMeta, useRoute } from '@oomfware/stacker';
 
@@ -16,12 +16,16 @@ import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
-import { LoggedOut } from '#/components/Shell/LoggedOut';
+import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 import { Shell } from '#/components/Shell/Shell';
 
 import { useRouter } from '#/router';
 
 import { ComposerDialog } from './ComposerDialog';
+
+const LoggedOut = lazy(() =>
+	import('#/components/Shell/LoggedOut').then((mod) => ({ default: mod.LoggedOut })),
+);
 
 /**
  * the shell layout wrapping every in-app route. global overlays live inside here (not as siblings of the
@@ -66,7 +70,11 @@ export function ShellLayout() {
 	}, [router]);
 
 	if (!hasSession && resolveMeta(match, 'requireAuth')) {
-		return <LoggedOut />;
+		return (
+			<Suspense fallback={<RouteLoadingScreen />}>
+				<LoggedOut />
+			</Suspense>
+		);
 	}
 
 	return (

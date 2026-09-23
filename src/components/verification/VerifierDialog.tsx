@@ -1,19 +1,12 @@
+import { lazy, Suspense } from 'react';
+
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { useSession } from '#/state/session';
-
-import { Trans } from '#/locale/Trans';
-
 import * as Dialog from '#/components/Dialog';
-import { Stack } from '#/components/Stack';
-import { Text } from '#/components/Text';
-import * as css from '#/components/verification/VerifierDialog.css';
-import { Button, ButtonText } from '#/components/web/Button';
 
-import Logo from '#/icons/brands/Bluesky.svg';
-import VerifiedCheck from '#/icons/original/VerifiedCheck.svg';
-import VerifierCheck from '#/icons/original/VerifierCheck.svg';
-import { m } from '#/paraglide/messages';
+const VerifierDialogBody = lazy(() =>
+	import('#/components/verification/VerifierDialogBody').then((mod) => ({ default: mod.VerifierDialogBody })),
+);
 
 export function VerifierDialog({
 	handle,
@@ -25,91 +18,10 @@ export function VerifierDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup size="narrow">
-				<DialogInner handle={handle} profile={profile} />
+				<Suspense fallback={<Dialog.Loading />}>
+					<VerifierDialogBody handle={handle} profile={profile} />
+				</Suspense>
 			</Dialog.Popup>
 		</Dialog.Root>
-	);
-}
-
-const VerificationIllustration = () => {
-	return (
-		<div
-			aria-label={m['components.verification.trustedVerifier.illustration']()}
-			className={css.imageBox}
-			role="img"
-		>
-			<div className={css.illustrationInner}>
-				{/* Step 1: Bluesky logo */}
-				<div className={css.blueskyCircleClass}>
-					<Logo className={css.logo} />
-				</div>
-				<span className={css.blueskyLabelClass}>{m['components.verification.illustration.bluesky']()}</span>
-
-				{/* Arrow 1 */}
-				<div className={css.arrow1}>
-					<svg fill="none" height={16} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={16}>
-						<path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" strokeLinecap="round" strokeLinejoin="round" />
-					</svg>
-				</div>
-
-				{/* Step 2: Trusted Verifier badge */}
-				<div className={css.verifierCircleClass}>
-					<VerifierCheck className={css.checkIcon} />
-				</div>
-				<span className={css.verifierLabelClass}>
-					{m['components.verification.illustration.trustedVerifier']()}
-				</span>
-
-				{/* Arrow 2 */}
-				<div className={css.arrow2}>
-					<svg fill="none" height={16} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={16}>
-						<path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" strokeLinecap="round" strokeLinejoin="round" />
-					</svg>
-				</div>
-
-				{/* Step 3: Verified Account badge */}
-				<div className={css.verifiedCircleClass}>
-					<VerifiedCheck className={css.checkIcon} />
-				</div>
-				<span className={css.verifiedLabelClass}>
-					{m['components.verification.illustration.verifiedAccount']()}
-				</span>
-			</div>
-		</div>
-	);
-};
-
-function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile: AnyProfileView }) {
-	const { currentAccount } = useSession();
-
-	const isSelf = profile.did === currentAccount?.did;
-	const name = profile.handle;
-	const label = isSelf
-		? m['components.verification.trustedVerifier.youStatus']()
-		: m['components.verification.trustedVerifier.userStatus']({ name });
-
-	return (
-		<Stack gap="lg">
-			<VerificationIllustration />
-			<Stack gap="sm">
-				<Dialog.Title>{label}</Dialog.Title>
-				<Text size="md">
-					<Trans
-						message={m['components.verification.trustedVerifier.description']}
-						markup={{ t0: () => <VerifierCheck className={css.inlineCheck} /> }}
-					/>
-				</Text>
-			</Stack>
-			<Dialog.Actions direction="responsive">
-				<Button
-					color="primary"
-					label={m['common.a11y.closeDialog']()}
-					onClick={() => handle.close()}
-					size="small"
-				>
-					<ButtonText>{m['common.action.close']()}</ButtonText>
-				</Button>
-			</Dialog.Actions>
-		</Stack>
 	);
 }

@@ -20,7 +20,7 @@ import { useMessagesEventBus } from '#/state/messages/events';
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
 import { getClients, useSession } from '#/state/session';
 
-import { RQKEY as CONVO_KEY } from './conversation';
+import { RQKEY as CONVO_KEY } from './conversation-cache';
 import {
 	type ConvoRequestListQueryData,
 	optimisticDeleteJoinRequest,

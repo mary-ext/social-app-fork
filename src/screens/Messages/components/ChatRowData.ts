@@ -10,7 +10,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 
 import type { Shadow } from '#/state/cache/profile-shadow';
-import { precacheConvoQuery } from '#/state/queries/messages/conversation';
+import { precacheConvoQuery } from '#/state/queries/messages/conversation-cache';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { getMessageInfo } from '#/components/dms/getMessageInfo';

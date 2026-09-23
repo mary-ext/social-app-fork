@@ -1,4 +1,4 @@
-import { type ReactElement, type ReactNode, useState } from 'react';
+import { lazy, type ReactElement, type ReactNode, Suspense, useState } from 'react';
 
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -7,7 +7,10 @@ import type { Shadow } from '#/state/cache/post-shadow';
 import * as Menu from '#/components/Menu';
 import { Tooltip } from '#/components/Tooltip';
 
-import { ShareMenuItems } from './ShareMenuItems';
+const importShareMenuItems = () =>
+	import('./ShareMenuItems').then((mod) => ({ default: mod.ShareMenuItems }));
+
+const ShareMenuItems = lazy(importShareMenuItems);
 
 /**
  * The share menu. The caller supplies the trigger button via `render` so each action-bar size owns its own
@@ -37,9 +40,17 @@ export const ShareMenu = ({
 			}}
 		>
 			<Tooltip label={tooltip}>
-				<Menu.Trigger render={render} />
+				<Menu.Trigger
+					render={render}
+					onFocus={() => void importShareMenuItems()}
+					onPointerEnter={() => void importShareMenuItems()}
+				/>
 			</Tooltip>
-			{hasBeenOpen && <ShareMenuItems post={post} onShare={onShare} />}
+			{hasBeenOpen && (
+				<Suspense fallback={null}>
+					<ShareMenuItems post={post} onShare={onShare} />
+				</Suspense>
+			)}
 		</Menu.Root>
 	);
 };
