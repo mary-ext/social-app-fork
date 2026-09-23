@@ -15,8 +15,6 @@ export const dateTimeLong = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'long',
 export const dateTimeMedium = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short' });
 /** "3:00 PM" */
 export const timeShort = new Intl.DateTimeFormat(LOCALE, { timeStyle: 'short' });
-/** "3:00 PM" (explicit 12-hour clock) */
-export const clock = new Intl.DateTimeFormat(LOCALE, { hour: 'numeric', hour12: true, minute: '2-digit' });
 /** "3:00 PM" (numeric minute, locale clock) */
 export const clockNumeric = new Intl.DateTimeFormat(LOCALE, { hour: 'numeric', minute: 'numeric' });
 /** "Jan 5" (no year — pairs with `dateMedium` for the year-bearing variant) */

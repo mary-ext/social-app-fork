@@ -9,7 +9,7 @@ import { parseLooseUrl } from '#/lib/utils/url';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useTick } from '#/state/tick';
 
-import { clock } from '#/locale/intl/datetime';
+import { clockNumeric } from '#/locale/intl/datetime';
 
 import {
 	displayDuration,
@@ -57,7 +57,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 	const time = (offset: number) => {
 		const date = new Date(tick);
 		date.setMinutes(date.getMinutes() + offset);
-		return clock.format(date);
+		return clockNumeric.format(date);
 	};
 
 	const onChangeDuration = (newDuration: string) => {
