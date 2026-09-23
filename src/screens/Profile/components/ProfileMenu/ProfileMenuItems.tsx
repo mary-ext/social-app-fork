@@ -14,7 +14,6 @@ import {
 	RQKEY as profileQueryKey,
 	useProfileBlockMutationQueue,
 	useProfileFollowMutationQueue,
-	useProfileMuteMutationQueue,
 	useProfileMuteRepostsMutationQueue,
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
@@ -29,8 +28,13 @@ import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemo
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
-import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
+import {
+	ChangeMuteDurationPrompt,
+	MuteAccountPrompt,
+	UnmuteAccountPrompt,
+} from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import { useAccountMute } from '#/components/moderation/use-account-mute';
 import * as Prompt from '#/components/Prompt';
 import { shareText, shareUrl } from '#/components/sharing';
 import * as Toast from '#/components/Toast';
@@ -39,6 +43,7 @@ import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1
 import RepostOff from '#/icons/central/ArrowsRepeatRightLeftOff_round_outlined_radius1_stroke2.svg';
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
+import Timer from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
 import Flag from '#/icons/central/Flag1_round_outlined_radius1_stroke2.svg';
 import ListAdd from '#/icons/central/ListAdd_round_outlined_radius1_stroke2.svg';
 import LiveIcon from '#/icons/central/LiveFull_round_outlined_radius1_stroke2.svg';
@@ -63,13 +68,15 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 	const { canGoLive } = useLiveNowConfig();
 	const status = useActorStatus(profile);
 
-	const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile);
+	const { mute, unmute } = useAccountMute(profile);
 	const [queueMuteReposts, queueUnmuteReposts] = useProfileMuteRepostsMutationQueue(profile);
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 	const [, queueUnfollow] = useProfileFollowMutationQueue(profile);
 
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
+	const changeMuteDurationPromptHandle = Prompt.usePromptHandle();
+	const unmutePromptHandle = Prompt.usePromptHandle();
 	const loggedOutWarningPromptHandle = Prompt.usePromptHandle();
 	const goLiveDialogHandle = Dialog.useDialogHandle();
 	const goLiveDisabledDialogHandle = Dialog.useDialogHandle();
@@ -91,32 +98,6 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 
 	const onPressShare = () => {
 		void shareUrl(targetToShareUrl(profileTarget(profile.did)));
-	};
-
-	const onPressMuteAccount = async () => {
-		if (profile.viewer?.muted) {
-			try {
-				await queueUnmute();
-				Toast.show(m['common.mute.unmutedToast']());
-			} catch (e) {
-				if (!isAbortError(e)) {
-					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
-						type: 'error',
-					});
-				}
-			}
-		} else {
-			try {
-				await queueMute();
-				Toast.show(m['common.mute.mutedToast']());
-			} catch (e) {
-				if (!isAbortError(e)) {
-					Toast.show(m['common.error.issueWithDetail']({ error: String(e) }), {
-						type: 'error',
-					});
-				}
-			}
-		}
 	};
 
 	const onPressMuteReposts = async () => {
@@ -295,7 +276,13 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 														? m['common.mute.action.unmuteAccount']()
 														: m['common.mute.action.muteAccount']()
 												}
-												onClick={() => mutePromptHandle.open(null)}
+												onClick={() => {
+													if (profile.viewer?.muted) {
+														unmutePromptHandle.open(null);
+													} else {
+														mutePromptHandle.open(null);
+													}
+												}}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.muted
@@ -304,6 +291,15 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 												</Menu.ItemText>
 												<Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
 											</Menu.Item>
+											{profile.viewer?.muted && (
+												<Menu.Item
+													label={m['common.mute.action.changeDuration']()}
+													onClick={() => changeMuteDurationPromptHandle.open(null)}
+												>
+													<Menu.ItemText>{m['common.mute.action.changeDuration']()}</Menu.ItemText>
+													<Menu.ItemIcon icon={Timer} />
+												</Menu.Item>
+											)}
 										</>
 									)}
 									{!profile.viewer?.blockingByList && (
@@ -367,11 +363,13 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 				isLabeler={!!profile.associated?.labeler}
 				onConfirm={() => void blockAccount()}
 			/>
-			<MuteAccountPrompt
-				handle={mutePromptHandle}
-				isMuted={!!profile.viewer?.muted}
-				onConfirm={() => void onPressMuteAccount()}
+			<MuteAccountPrompt handle={mutePromptHandle} onConfirm={(duration) => void mute(duration)} />
+			<ChangeMuteDurationPrompt
+				did={profile.did}
+				handle={changeMuteDurationPromptHandle}
+				onConfirm={(duration) => void mute(duration)}
 			/>
+			<UnmuteAccountPrompt handle={unmutePromptHandle} onConfirm={() => void unmute()} />
 			<Prompt.Basic
 				handle={loggedOutWarningPromptHandle}
 				title={m['view.profile.sharing.note']()}

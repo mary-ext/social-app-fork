@@ -279,6 +279,7 @@
 	"common.moderation.unknownLabeler": "an unknown labeler",
 	"common.moderation.warn": "Warn",
 	"common.mute.accountsTitle": "Muted accounts",
+	"common.mute.action.changeDuration": "Change mute duration",
 	"common.mute.action.hideReposts": "Hide reposts in feeds",
 	"common.mute.action.mute": "Mute",
 	"common.mute.action.muteAccount": "Mute account",
@@ -289,13 +290,43 @@
 	"common.mute.byList.title": "Account muted by list",
 	"common.mute.byYou.message": "You have muted this account.",
 	"common.mute.byYou.title": "Account muted",
+	"common.mute.durationUpdatedToast": "Mute duration updated",
 	"common.mute.empty": "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account.",
 	"common.mute.mutedToast": "Account muted",
+	"common.mute.mutedUntilToast": [
+		{
+			"declarations": ["input date", "local d = date: datetime dateStyle=medium timeStyle=short"],
+			"selectors": [],
+			"match": {
+				"": "Account muted until {d}"
+			}
+		}
+	],
 	"common.mute.repostsHidden": "Reposts hidden",
 	"common.mute.repostsHiddenToast": "Reposts will be hidden in feeds",
 	"common.mute.repostsShownToast": "Reposts will be shown in feeds",
 	"common.mute.status": "Muted",
+	"common.mute.unmutePending": "Unmute pending",
 	"common.mute.unmutedToast": "Account unmuted",
+	"common.mute.unmutes": [
+		{
+			"declarations": [
+				"input recency",
+				"input ts",
+				"input unit",
+				"input value",
+				"local fullDate = ts: datetime year=numeric month=long day=numeric",
+				"local monthDay = ts: datetime month=long day=numeric",
+				"local relative = value: relativetime unit=$unit numeric=auto"
+			],
+			"selectors": ["recency"],
+			"match": {
+				"recency=other": "Unmutes on {fullDate}",
+				"recency=this_week": "Unmutes {relative}",
+				"recency=this_year": "Unmutes on {monthDay}"
+			}
+		}
+	],
 	"common.mutedWord.action.add": "Add muted word",
 	"common.mutedWord.expires": [
 		{
@@ -393,10 +424,13 @@
 	"common.thread.sort.top": "Top replies first",
 	"common.thread.youHidPost": "You have hidden this post.",
 	"common.thread.youHidReply": "You hid this reply.",
+	"common.time.days3": "3 days",
 	"common.time.days30": "30 days",
 	"common.time.days7": "7 days",
 	"common.time.forever": "Forever",
+	"common.time.hour1": "1 hour",
 	"common.time.hours24": "24 hours",
+	"common.time.hours8": "8 hours",
 	"common.verification.settingsTitle": "Verification settings",
 	"common.video.empty": "No video posts yet",
 	"common.video.loading": "Loading video"

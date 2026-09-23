@@ -17,6 +17,7 @@ import { limitConcurrency } from '#/lib/utils/task';
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { STALE } from '#/state/queries';
 import { RQKEY as MUTED_ACCOUNTS_RQKEY } from '#/state/queries/my-muted-accounts';
+import { cancelScheduledUnmutes } from '#/state/queries/timed-mutes';
 import { getClients } from '#/state/session';
 
 const RQKEY_ROOT = 'mute-cleanup';
@@ -162,6 +163,10 @@ export function useBulkUnmuteMutation({
 			for (const did of cleared) {
 				updateProfileShadow(queryClient, did, { muted: false, mutedOnlyReposts: false });
 			}
+
+			cancelScheduledUnmutes(queryClient, cleared).catch((err: unknown) => {
+				console.error('failed to cancel timed mute schedules', err);
+			});
 
 			// filtering could empty loaded pages while muted accounts remain on later pages.
 			if (cancelled || failed > 0) {

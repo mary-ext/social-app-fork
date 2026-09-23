@@ -10,6 +10,7 @@ import { MessagesEventBusProvider } from '#/state/messages/events';
 import { Provider as LabelDefsProvider } from '#/state/moderation/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/moderation/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
+import { useTimedMuteExpiry } from '#/state/queries/timed-mutes';
 import { QueryProvider } from '#/state/query-client';
 import { Provider as SessionProvider, useSession } from '#/state/session';
 
@@ -19,6 +20,11 @@ import { ToastOutlet } from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 import { router } from '#/routes';
 import { Splash } from '#/Splash';
+
+function TimedMuteExpiry() {
+	useTimedMuteExpiry();
+	return null;
+}
 
 function InnerApp() {
 	const { currentAccount, isSessionResuming, sessionResumeFailed } = useSession();
@@ -40,6 +46,7 @@ function InnerApp() {
 							<UnreadNotifsProvider>
 								<RouterView router={router} />
 								<ToastOutlet />
+								{currentAccount && <TimedMuteExpiry />}
 							</UnreadNotifsProvider>
 						</ModerationOptsProvider>
 					</LabelDefsProvider>

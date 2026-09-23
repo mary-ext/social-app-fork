@@ -34,6 +34,7 @@ import { STALE } from '#/state/queries';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { RQKEY as PROFILE_FOLLOWS_RQKEY } from '#/state/queries/profile-follows';
 import { PROFILE_RQKEY_ROOT, profileQueryKey } from '#/state/queries/profile-key';
+import { cancelScheduledUnmutes } from '#/state/queries/timed-mutes';
 import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
 import { useUnstableProfileViewCache } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
@@ -357,6 +358,12 @@ function useProfileUnfollowMutation() {
 	});
 }
 
+const forgetUnmuteSchedule = (queryClient: QueryClient, did: Did) => {
+	cancelScheduledUnmutes(queryClient, [did]).catch((err: unknown) => {
+		console.error('failed to cancel timed mute schedule', err);
+	});
+};
+
 export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 	const queryClient = useQueryClient();
 	const did = profile.did;
@@ -382,6 +389,11 @@ export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 		onSuccess(finalMuted) {
 			// finalize
 			updateProfileShadow(queryClient, did, { muted: finalMuted });
+
+			// muting must preserve the schedule saved before this mutation
+			if (!finalMuted) {
+				forgetUnmuteSchedule(queryClient, did);
+			}
 		},
 	});
 
@@ -438,6 +450,9 @@ export function useProfileMuteRepostsMutationQueue(profile: Shadow<AnyProfileVie
 		onSuccess(finalMutedOnlyReposts) {
 			// finalize
 			updateProfileShadow(queryClient, did, { mutedOnlyReposts: finalMutedOnlyReposts });
+
+			// repost-only changes replace full mutes, so their expiry no longer applies
+			forgetUnmuteSchedule(queryClient, did);
 		},
 	});
 

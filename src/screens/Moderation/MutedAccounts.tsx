@@ -4,12 +4,16 @@ import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useMyMutedAccountsQuery } from '#/state/queries/my-muted-accounts';
+import type { TimedMute } from '#/state/queries/preferences/app-specific-prefs';
+import { useTimedMutes } from '#/state/queries/timed-mutes';
+import { useTick } from '#/state/tick';
 import { useTitle } from '#/state/use-title';
 
 import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import * as Menu from '#/components/Menu';
+import { timedMuteStatusText } from '#/components/moderation/mute-account-prompt';
 import { UnmuteAllPrompt } from '#/components/moderation/unmute-all-prompt';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
@@ -33,6 +37,7 @@ export function ModerationMutedAccounts() {
 		useMyMutedAccountsQuery();
 	const profiles = data?.pages ? data.pages.flatMap((page) => page.mutes) : [];
 	const isEmpty = !isPending && profiles.length === 0;
+	const timedMutes = new Map(useTimedMutes().map((mute) => [mute.did, mute]));
 
 	return (
 		<Layout.Screen>
@@ -63,7 +68,9 @@ export function ModerationMutedAccounts() {
 						}
 						void fetchNextPage();
 					}}
-					renderItem={({ item, index }) => <MutedRow index={index} profile={item} />}
+					renderItem={({ item, index }) => (
+						<MutedRow index={index} profile={item} timedMute={timedMutes.get(item.did)} />
+					)}
 					ListHeaderComponent={<Info />}
 					ListFooterComponent={
 						<ListTail.Frame>
@@ -80,8 +87,17 @@ export function ModerationMutedAccounts() {
 	);
 }
 
-function MutedRow({ index, profile }: { index: number; profile: ActorDefs.ProfileView }) {
+function MutedRow({
+	index,
+	profile,
+	timedMute,
+}: {
+	index: number;
+	profile: ActorDefs.ProfileView;
+	timedMute: TimedMute | undefined;
+}) {
 	const moderationOpts = useModerationOpts();
+	const now = useTick(!!timedMute);
 	if (!moderationOpts) {
 		return null;
 	}
@@ -92,6 +108,11 @@ function MutedRow({ index, profile }: { index: number; profile: ActorDefs.Profil
 					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
 					<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
 				</ProfileCard.Header>
+				{timedMute && (
+					<Text color="textContrastMedium" size="sm">
+						{timedMuteStatusText(timedMute, now)}
+					</Text>
+				)}
 				<ProfileCard.Labels profile={profile} moderationOpts={moderationOpts} />
 				<ProfileCard.Description profile={profile} />
 			</ProfileCard.Outer>

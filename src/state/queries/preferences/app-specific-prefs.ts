@@ -3,9 +3,18 @@ import * as v from '@atcute/lexicons/validations';
 /** uses an `app.bsky` prefix because the PDS discards preferences outside that namespace. */
 export const APP_SPECIFIC_PREF_TYPE = 'app.bsky.unspecced.thirdparty#kelinciPrefs';
 
+/** a scheduled account unmute. */
+export const timedMuteSchema = v.object({
+	did: v.didString(),
+	expiresAt: v.datetimeString(),
+});
+
+export type TimedMute = v.InferOutput<typeof timedMuteSchema>;
+
 /** account-synced app settings */
 export const appSpecificPrefsSchema = v.object({
 	$type: v.literal(APP_SPECIFIC_PREF_TYPE),
+	timedMutes: v.optional(v.array(timedMuteSchema)),
 });
 
 export type AppSpecificPrefs = v.InferOutput<typeof appSpecificPrefsSchema>;

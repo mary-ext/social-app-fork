@@ -19,7 +19,7 @@ import { usePinnedPostMutation } from '#/state/queries/pinned-post';
 import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
 import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
 import { getMaybeDetachedQuoteEmbed } from '#/state/queries/postgate/util';
-import { useProfileBlockMutationQueue, useProfileMuteMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import {
 	InvalidInteractionSettingsError,
 	MAX_HIDDEN_REPLIES,
@@ -39,8 +39,9 @@ import {
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
-import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
+import { MuteAccountPrompt, UnmuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
+import { useAccountMute } from '#/components/moderation/use-account-mute';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
@@ -91,6 +92,7 @@ function PostMenuItems({
 	const router = useRouter();
 	const blockPromptHandle = Prompt.usePromptHandle();
 	const mutePromptHandle = Prompt.usePromptHandle();
+	const unmutePromptHandle = Prompt.usePromptHandle();
 	const reportDialogHandle = Dialog.useDialogHandle();
 	const deletePromptHandle = Prompt.usePromptHandle();
 	const postInteractionSettingsHandle = Dialog.useDialogHandle();
@@ -123,7 +125,7 @@ function PostMenuItems({
 		useToggleQuoteDetachmentMutation();
 
 	const [queueBlock] = useProfileBlockMutationQueue(postAuthor);
-	const [queueMute, queueUnmute] = useProfileMuteMutationQueue(postAuthor);
+	const { mute: muteAuthor, unmute: unmuteAuthor } = useAccountMute(postAuthor);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
 		postUri: post.uri,
@@ -298,32 +300,6 @@ function PostMenuItems({
 		}
 	};
 
-	const onMuteAuthor = async () => {
-		if (postAuthor.viewer?.muted) {
-			try {
-				await queueUnmute();
-				Toast.show(m['common.mute.unmutedToast']());
-			} catch (err) {
-				if (!isAbortError(err)) {
-					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
-						type: 'error',
-					});
-				}
-			}
-		} else {
-			try {
-				await queueMute();
-				Toast.show(m['common.mute.mutedToast']());
-			} catch (err) {
-				if (!isAbortError(err)) {
-					Toast.show(m['common.error.issueWithDetail']({ error: String(err) }), {
-						type: 'error',
-					});
-				}
-			}
-		}
-	};
-
 	const onSignIn = () => requireSignIn(() => {});
 
 	return (
@@ -488,7 +464,13 @@ function PostMenuItems({
 												? m['common.mute.action.unmuteAccount']()
 												: m['common.mute.action.muteAccount']()
 										}
-										onClick={() => mutePromptHandle.open(null)}
+										onClick={() => {
+											if (postAuthor.viewer?.muted) {
+												unmutePromptHandle.open(null);
+											} else {
+												mutePromptHandle.open(null);
+											}
+										}}
 									>
 										<Menu.ItemText>
 											{postAuthor.viewer?.muted
@@ -580,11 +562,8 @@ function PostMenuItems({
 				isLabeler={!!postAuthor.associated?.labeler}
 				onConfirm={() => void onBlockAuthor()}
 			/>
-			<MuteAccountPrompt
-				handle={mutePromptHandle}
-				isMuted={!!postAuthor.viewer?.muted}
-				onConfirm={() => void onMuteAuthor()}
-			/>
+			<MuteAccountPrompt handle={mutePromptHandle} onConfirm={(duration) => void muteAuthor(duration)} />
+			<UnmuteAccountPrompt handle={unmutePromptHandle} onConfirm={() => void unmuteAuthor()} />
 		</>
 	);
 }
