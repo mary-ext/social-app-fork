@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import { getLocalizedFeedName } from '#/lib/feed-names';
+
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { usePinnedFeedsInfos } from '#/state/queries/feed';
@@ -38,7 +40,7 @@ export function HomeScreen() {
 		sections = [
 			{
 				id: feedInfo.uri,
-				label: feedInfo.displayName,
+				label: getLocalizedFeedName(feedInfo),
 				children: (
 					<FeedPage
 						feed={feedInfo.feedDescriptor}
@@ -53,7 +55,7 @@ export function HomeScreen() {
 			const feed = feedInfo.feedDescriptor;
 			return {
 				id: feedInfo.uri,
-				label: feedInfo.displayName,
+				label: getLocalizedFeedName(feedInfo),
 				children:
 					feed.type === 'following' ? (
 						<FeedPage

@@ -162,6 +162,7 @@
 	"common.feeds.action.pin": "Pin feed",
 	"common.feeds.action.remove": "Remove from my feeds",
 	"common.feeds.action.unpin": "Unpin feed",
+	"common.feeds.discover": "Discover",
 	"common.feeds.empty": "This feed is empty.",
 	"common.feeds.feedBy": "Feed by {handle}",
 	"common.feeds.following": "Following",

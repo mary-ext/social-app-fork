@@ -1,6 +1,8 @@
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
 
+import { getLocalizedFeedName } from '#/lib/feed-names';
+
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
@@ -97,13 +99,14 @@ export function DesktopFeeds() {
 
 function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 	const isFollowing = feedInfo.feedDescriptor.type === 'following';
+	const displayName = getLocalizedFeedName(feedInfo);
 
 	return (
 		<Toggle
 			value={feedInfo.uri}
 			className={css.item}
-			aria-label={feedInfo.displayName}
-			title={m['view.feeds.feed.a11y.opens']({ name: feedInfo.displayName })}
+			aria-label={displayName}
+			title={m['view.feeds.feed.a11y.opens']({ name: displayName })}
 		>
 			{isFollowing ? (
 				<span className={css.followingIcon}>
@@ -119,7 +122,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 				/>
 			)}
 			<Text size="md" numberOfLines={1} className={css.label}>
-				{feedInfo.displayName}
+				{displayName}
 			</Text>
 		</Toggle>
 	);

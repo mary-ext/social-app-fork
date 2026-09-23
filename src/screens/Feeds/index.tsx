@@ -7,6 +7,7 @@ import { partition } from '@mary/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants/feeds';
 import { cleanError } from '#/lib/errors';
+import { getLocalizedFeedName } from '#/lib/feed-names';
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 
 import {
@@ -390,7 +391,7 @@ function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 
 		<FeedCard.Link className={css.savedFeedRow} view={savedFeed.view}>
 			<FeedCard.Header>
 				<FeedCard.Avatar size={28} src={savedFeed.view.avatar} />
-				<FeedCard.TitleAndByline title={savedFeed.view.displayName} />
+				<FeedCard.TitleAndByline title={getLocalizedFeedName(savedFeed.view)} />
 				<ChevronRight className={css.chevronRightIcon} />
 			</FeedCard.Header>
 		</FeedCard.Link>
