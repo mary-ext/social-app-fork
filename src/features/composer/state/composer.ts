@@ -249,6 +249,8 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			return {
 				...state,
 				isDirty: true,
+				activePostIndex: activePostIndex + 1,
+				activePostFocusRequestId: state.activePostFocusRequestId + 1,
 				thread: {
 					...state.thread,
 					posts: nextPosts,
