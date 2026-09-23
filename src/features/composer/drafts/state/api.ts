@@ -565,13 +565,13 @@ export async function draftToComposerPosts(
 				}
 			}
 
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- restoring self-label values verbatim keeps the draft round-trip lossless
 			return {
 				id: `draft-post-${index}`,
 				text,
 				shortenedGraphemeLength: getShortenedLength(text),
 				labels,
 				embed,
+				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- restoring self-label values verbatim keeps the draft round-trip lossless
 			} as PostDraft;
 		}),
 	);

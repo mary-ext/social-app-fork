@@ -75,6 +75,14 @@ const shiftLightness = (color: ColorValue, delta: number): ColorValue => {
 	return fromHsla(h, s, clamp(l + delta, 0, 100));
 };
 
+/** builds legible theme colors from an accent background and its text color. */
+const themed = (background: ColorValue, foreground: ColorValue): ThemeColors => ({
+	accent: toHex(background),
+	accentForeground: toHex(foreground),
+	accentHover: toHex(darken(background, 0.1)),
+	legible: true,
+});
+
 /**
  * resolves a legible accent pair from a site's custom theme. honors the publisher's pair if it clears APCA;
  * otherwise, adjusts the accent color to achieve sufficient contrast against the text color. falls back to
@@ -94,12 +102,6 @@ function themeColorsFor(view: AppBskyEmbedExternal.ViewExternal): ThemeColors {
 	}
 
 	const accent = fromRgba(accentRGB.r, accentRGB.g, accentRGB.b);
-	const themed = (background: ColorValue, foreground: ColorValue): ThemeColors => ({
-		accent: toHex(background),
-		accentForeground: toHex(foreground),
-		accentHover: toHex(darken(background, 0.1)),
-		legible: true,
-	});
 
 	// Honor the publisher's own foreground when their pairing already reads.
 	const publisherForeground = accentForegroundRGB

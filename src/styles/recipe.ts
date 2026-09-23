@@ -117,10 +117,10 @@ export const recipe = <Variants extends VariantGroups>(
 		variantClassNames,
 	};
 
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the serializer erases the variant-typed signature to `RecipeFn`
 	return addFunctionSerializer<RecipeFn>(createRuntimeFn(config), {
 		args: [config],
 		importName: 'createRuntimeFn',
 		importPath: '#/styles/recipe-runtime',
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the serializer erases the variant-typed signature to `RecipeFn`
 	}) as RecipeRuntimeFn<Variants>;
 };

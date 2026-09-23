@@ -805,7 +805,6 @@ type VirtualRowProps<ItemT> = {
 	renderItem: ListRenderItem<ItemT>;
 };
 
-// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 const VirtualRow = memo(function VirtualRow<ItemT>({
 	enabled,
 	index,
@@ -829,6 +828,7 @@ const VirtualRow = memo(function VirtualRow<ItemT>({
 			{renderItem({ index, item })}
 		</div>
 	);
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 }) as <ItemT>(props: VirtualRowProps<ItemT>) => ReactNode;
 
 const noop = () => {};

@@ -97,7 +97,7 @@ export const fontSize = createGlobalTheme(
 	},
 );
 
-// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every entry comes from `type`, so the key set is exactly its keys
 export const fontLeading = Object.fromEntries(
 	Object.entries(type).map(([key, { fontSize: size, lineHeight: leading }]) => [key, leading / size]),
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- every entry comes from `type`, so the key set is exactly its keys
 ) as { [K in keyof typeof type]: number };

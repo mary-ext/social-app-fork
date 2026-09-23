@@ -127,7 +127,6 @@ export function useListMembershipAddMutation({
 							return old;
 						}
 
-						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- spreading the pages loses the `$type` literals; the values are unchanged
 						return {
 							...old,
 							pages: old.pages.map((page) => ({
@@ -167,6 +166,7 @@ export function useListMembershipAddMutation({
 									return spWithMembership;
 								}),
 							})),
+							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- spreading the pages loses the `$type` literals; the values are unchanged
 						} as InfiniteData<StarterPacksWithMembership>;
 					},
 				);

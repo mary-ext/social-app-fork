@@ -165,72 +165,72 @@ export function ListConvosProviderInner({ children }: { children: ReactNode }) {
 	}, 500);
 
 	useEffect(() => {
+		function mutateMembers(
+			convoId: string,
+			fn: (members: ChatBskyActorDefs.ProfileViewBasic[]) => ChatBskyActorDefs.ProfileViewBasic[],
+		) {
+			queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+				listConvoMembersQueryKey(convoId),
+				(old) => {
+					if (!old) {
+						return;
+					} // query does not exist yet.
+					return fn(old);
+				},
+			);
+		}
+
+		function mutateConvoView(
+			convoId: string,
+			fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+		) {
+			queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (old) =>
+				old ? fn(old) : old,
+			);
+			queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [RQKEY_ROOT] }, (old) =>
+				optimisticUpdate(convoId, old, fn),
+			);
+		}
+
+		function handleMemberAdded(
+			convoId: string,
+			did: string,
+			relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+			rev: string,
+		) {
+			const newMember = relatedProfiles.find((r) => r.did === did);
+			if (!newMember) {
+				return;
+			}
+			// avoid counting an optimistic member change twice.
+			const alreadyKnownMember =
+				queryClient
+					.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
+					?.some((m) => m.did === did) ?? false;
+			mutateMembers(convoId, (list) => (list.some((m) => m.did === did) ? list : list.concat(newMember)));
+			mutateConvoView(
+				convoId,
+				withRevGuard(rev, (convo) => addMemberToConvoView(convo, newMember, rev, alreadyKnownMember)),
+			);
+		}
+
+		function handleMemberRemoved(convoId: string, did: string, rev: string) {
+			// avoid counting an optimistic member change twice.
+			const alreadyRemovedMember =
+				queryClient
+					.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
+					?.some((m) => m.did === did) === false;
+			mutateMembers(convoId, (list) => list.filter((m) => m.did !== did));
+			mutateConvoView(
+				convoId,
+				withRevGuard(rev, (convo) => removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember)),
+			);
+		}
+
 		const unsub = messagesBus.on(
 			(events) => {
 				if (events.type !== 'logs') {
 					return;
-				}
-
-				function mutateMembers(
-					convoId: string,
-					fn: (members: ChatBskyActorDefs.ProfileViewBasic[]) => ChatBskyActorDefs.ProfileViewBasic[],
-				) {
-					queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-						listConvoMembersQueryKey(convoId),
-						(old) => {
-							if (!old) {
-								return;
-							} // query does not exist yet.
-							return fn(old);
-						},
-					);
-				}
-
-				function mutateConvoView(
-					convoId: string,
-					fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
-				) {
-					queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (old) =>
-						old ? fn(old) : old,
-					);
-					queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [RQKEY_ROOT] }, (old) =>
-						optimisticUpdate(convoId, old, fn),
-					);
-				}
-
-				function handleMemberAdded(
-					convoId: string,
-					did: string,
-					relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
-					rev: string,
-				) {
-					const newMember = relatedProfiles.find((r) => r.did === did);
-					if (!newMember) {
-						return;
-					}
-					// avoid counting an optimistic member change twice.
-					const alreadyKnownMember =
-						queryClient
-							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
-							?.some((m) => m.did === did) ?? false;
-					mutateMembers(convoId, (list) => (list.some((m) => m.did === did) ? list : list.concat(newMember)));
-					mutateConvoView(
-						convoId,
-						withRevGuard(rev, (convo) => addMemberToConvoView(convo, newMember, rev, alreadyKnownMember)),
-					);
-				}
-
-				function handleMemberRemoved(convoId: string, did: string, rev: string) {
-					// avoid counting an optimistic member change twice.
-					const alreadyRemovedMember =
-						queryClient
-							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
-							?.some((m) => m.did === did) === false;
-					mutateMembers(convoId, (list) => list.filter((m) => m.did !== did));
-					mutateConvoView(
-						convoId,
-						withRevGuard(rev, (convo) => removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember)),
-					);
 				}
 
 				for (const log of events.logs) {

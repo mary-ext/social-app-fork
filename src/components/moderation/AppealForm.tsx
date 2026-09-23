@@ -52,12 +52,12 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 			// the appeal is funnelled to the labeler that applied the label
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
 			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
-			const ref = (
+			const subjectRef =
 				'did' in subject
 					? { $type: 'com.atproto.admin.defs#repoRef', ...subject }
-					: { $type: 'com.atproto.repo.strongRef', ...subject }
-			) as ComAtprotoModerationCreateReport.$input['subject'];
+					: { $type: 'com.atproto.repo.strongRef', ...subject };
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
+			const ref = subjectRef as ComAtprotoModerationCreateReport.$input['subject'];
 			await ok(
 				reportClient.post('com.atproto.moderation.createReport', {
 					input: {

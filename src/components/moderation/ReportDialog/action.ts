@@ -82,12 +82,12 @@ export function useSubmitReportMutation() {
 					report = {
 						reasonType,
 						reason: details,
-						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						subject: {
 							$type: 'chat.bsky.convo.defs#messageRef',
 							messageId: subject.message.id,
 							convoId: subject.convoId,
 							did: subject.message.sender.did,
+							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						} as unknown as ComAtprotoModerationCreateReport.$input['subject'],
 					};
 					break;
@@ -96,11 +96,11 @@ export function useSubmitReportMutation() {
 					report = {
 						reasonType,
 						reason: details,
-						// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						subject: {
 							$type: 'chat.bsky.convo.defs#convoRef',
 							convoId: subject.convoId,
 							did: subject.did,
+							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- outside the createReport lexicon's subject union; chat moderation accepts it
 						} as unknown as ComAtprotoModerationCreateReport.$input['subject'],
 					};
 					break;

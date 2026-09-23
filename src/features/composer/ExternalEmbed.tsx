@@ -38,12 +38,12 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	const thumbUrl = getBlobUrl(data?.thumb?.source.blob);
 	let linkInfo: AppBskyEmbedExternal.ViewExternal | undefined;
 	if (data) {
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a tenor url and a `blob:` object url, both absolute
 		linkInfo = {
 			title: data.title ?? data.uri,
 			uri: data.uri,
 			description: data.description ?? '',
 			thumb: thumbUrl,
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a tenor url and a `blob:` object url, both absolute
 		} as AppBskyEmbedExternal.ViewExternal;
 	}
 
@@ -110,7 +110,6 @@ export const ExternalEmbedLink = ({
 					<StandardSiteEmbed
 						preview
 						view={
-							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							{
 								...external,
 								title: external.title || data.title || uri,
@@ -118,6 +117,7 @@ export const ExternalEmbedLink = ({
 								description: external.description || data.description,
 								// prefer opengraph data to atproto record-derived image
 								thumb: thumbUrl || external.thumb,
+								// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							} as AppBskyEmbedExternal.ViewExternal
 						}
 					/>
@@ -126,12 +126,12 @@ export const ExternalEmbedLink = ({
 				linkComponent = (
 					<ExternalEmbed
 						link={
-							// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							{
 								title: data.title || uri,
 								uri,
 								description: data.description,
 								thumb: thumbUrl,
+								// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a resolved http(s) link and a `blob:` object url, both absolute
 							} as AppBskyEmbedExternal.ViewExternal
 						}
 						hideAlt
