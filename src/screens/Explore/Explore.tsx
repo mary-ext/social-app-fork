@@ -157,6 +157,7 @@ export function Explore({ focusSearchInput }: { focusSearchInput: (tab: ExploreS
 	const [showAllFeeds, setShowAllFeeds] = useState(false);
 
 	const { data: suggestedFeeds, error: suggestedFeedsError } = useGetSuggestedFeedsQuery({});
+	const [feedPreviewsEnabled, setFeedPreviewsEnabled] = useState(false);
 	const {
 		data: feedPreviewSlices,
 		query: {
@@ -166,9 +167,13 @@ export function Explore({ focusSearchInput }: { focusSearchInput: (tab: ExploreS
 			hasNextPage: hasNextPageFeedPreviews,
 			error: feedPreviewSlicesError,
 		},
-	} = useFeedPreviews(suggestedFeeds?.feeds ?? []);
+	} = useFeedPreviews(suggestedFeeds?.feeds ?? [], feedPreviewsEnabled);
 
 	const onLoadMoreFeedPreviews = async () => {
+		if (!feedPreviewsEnabled) {
+			setFeedPreviewsEnabled(true);
+			return;
+		}
 		if (
 			isPendingFeedPreviews ||
 			isFetchingNextPageFeedPreviews ||

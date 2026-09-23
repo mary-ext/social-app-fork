@@ -7,7 +7,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
-import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -17,6 +17,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { CustomFeedAPI } from '#/state/queries/feed-api/custom';
 import { serializeUserInterests } from '#/state/queries/feed-api/utils';
 import { FeedTuner } from '#/state/queries/feed-tuner';
+import { STALE } from '#/state/queries/index';
 import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
@@ -26,6 +27,7 @@ import { m } from '#/paraglide/messages';
 
 const RQKEY_ROOT = 'feed-previews';
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds];
+const FEED_RQKEY = (feed: string) => ['feed-preview', feed];
 
 const LIMIT = 8; // sliced to 6, overfetch to account for moderation
 const PINNED_POST_URIS: Record<string, boolean> = {
@@ -103,11 +105,12 @@ export type FeedPreviewItem =
 
 export function useFeedPreviews(
 	feedsMaybeWithDuplicates: AtcAppBskyFeedDefs.GeneratorView[],
-	isEnabled: boolean = true,
+	isEnabled: boolean,
 ) {
 	const feeds = feedsMaybeWithDuplicates.filter((f, i, a) => i === a.findIndex((f2) => f.uri === f2.uri));
 
 	const uris = feeds.map((feed) => feed.uri);
+	const queryClient = useQueryClient();
 	const { appview } = getClients();
 	const { data: preferences } = usePreferencesQuery();
 	const userInterests = serializeUserInterests(preferences);
@@ -135,21 +138,32 @@ export function useFeedPreviews(
 	const query = useInfiniteQuery({
 		queryKey: RQKEY(uris),
 		enabled,
-		queryFn: async ({ pageParam, signal }) => {
+		staleTime: STALE.MINUTES.THREE,
+		queryFn: async ({ pageParam }) => {
 			const feed = feeds[pageParam]!;
-			const api = new CustomFeedAPI({
-				appview,
-				feedParams: { feed: feed.uri },
-				userInterests,
+			// reuse previews across suggestion lists while they're fresh.
+			return queryClient.fetchQuery({
+				queryKey: FEED_RQKEY(feed.uri),
+				staleTime: STALE.MINUTES.THREE,
+				gcTime: STALE.MINUTES.THREE,
+				// use this query's signal: cancelling one suggestion list must not abort a shared fetch.
+				queryFn: async ({ signal }) => {
+					const api = new CustomFeedAPI({
+						appview,
+						feedParams: { feed: feed.uri },
+						userInterests,
+					});
+					const data = await api.fetch({ cursor: undefined, limit: LIMIT, signal });
+					return {
+						feed,
+						posts: data.feed,
+					};
+				},
 			});
-			const data = await api.fetch({ cursor: undefined, limit: LIMIT, signal });
-			return {
-				feed,
-				posts: data.feed,
-			};
 		},
 		initialPageParam: 0,
-		getNextPageParam: (_p, _a, count) => (count < feeds.length ? count + 1 : undefined),
+		getNextPageParam: (_page, _pages, pageParam) =>
+			pageParam + 1 < feeds.length ? pageParam + 1 : undefined,
 	});
 
 	const { data, isFetched, isError, isPending, error } = query;
