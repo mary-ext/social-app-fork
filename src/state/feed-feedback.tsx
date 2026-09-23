@@ -5,7 +5,7 @@ import { ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
-import { FIRST_PARTY_FEED_URIS } from '#/lib/constants/feeds';
+import { FIRST_PARTY_FEED_URIS, TRENDING_DID } from '#/lib/constants/feeds';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
@@ -171,8 +171,15 @@ function isFirstPartyFeed(uri: ResourceUri) {
 	return FIRST_PARTY_FEED_URIS.includes(uri);
 }
 
+function isTrendingFeed(uri: ResourceUri) {
+	return uri.startsWith(`at://${TRENDING_DID}/`);
+}
+
 function isInteractionAllowed(feed: FeedFeedbackTarget, interaction: AppBskyFeedDefs.Interaction['event']) {
-	return isFirstPartyFeed(feed.uri) ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction);
+	if (isFirstPartyFeed(feed.uri) || isTrendingFeed(feed.uri)) {
+		return true;
+	}
+	return THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction);
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
