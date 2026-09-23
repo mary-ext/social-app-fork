@@ -1,6 +1,8 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
+import type { AppSpecificPrefs } from '#/state/queries/preferences/app-specific-prefs';
+
 /**
  * the fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation
  * preference interface the app persists. back on `@atcute/bluesky` lexicon records (the PDS wire types) but
@@ -33,6 +35,7 @@ export interface BskyPreferences {
 	feedViewPrefs: { [feed: string]: BskyFeedViewPreference };
 	feeds: { pinned: string[] | undefined; saved: string[] | undefined };
 	interests: BskyInterestsPreference;
+	appPrefs: AppSpecificPrefs;
 	moderationPrefs: ModerationPrefs;
 	postInteractionSettings: {
 		postgateEmbeddingRules: AppBskyActorDefs.PostInteractionSettingsPref['postgateEmbeddingRules'];

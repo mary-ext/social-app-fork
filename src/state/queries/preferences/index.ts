@@ -21,12 +21,14 @@ import {
 	setAdultContentEnabled,
 	setContentLabelPref,
 	setFeedViewPrefs,
+	setAppSpecificPrefs,
 	setThreadViewPrefs,
 	setVerificationPrefs,
 	updateMutedWord,
 	updateSavedFeeds,
 	upsertMutedWords,
 } from '#/state/queries/preferences/agent';
+import type { AppSpecificPrefs } from '#/state/queries/preferences/app-specific-prefs';
 import {
 	DEFAULT_HOME_FEED_PREFS,
 	DEFAULT_LOGGED_OUT_PREFERENCES,
@@ -371,6 +373,20 @@ export function useRemoveMutedWordsMutation() {
 		mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
 			await removeMutedWords(pds!, mutedWords);
 			// triggers a refetch
+			await queryClient.invalidateQueries({
+				queryKey: preferencesQueryKey,
+			});
+		},
+	});
+}
+
+export function useSetAppSpecificPrefsMutation() {
+	const queryClient = useQueryClient();
+	const { pds } = getClients();
+
+	return useMutation<void, unknown, Partial<Omit<AppSpecificPrefs, '$type'>>>({
+		mutationFn: async (patch) => {
+			await setAppSpecificPrefs(pds!, patch);
 			await queryClient.invalidateQueries({
 				queryKey: preferencesQueryKey,
 			});

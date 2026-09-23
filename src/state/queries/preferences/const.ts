@@ -1,3 +1,4 @@
+import { DEFAULT_APP_SPECIFIC_PREF } from '#/state/queries/preferences/app-specific-prefs';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
 import type { ThreadViewPreferences, UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 
@@ -24,6 +25,7 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
 	feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
 	threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
 	interests: { tags: [] },
+	appPrefs: DEFAULT_APP_SPECIFIC_PREF,
 	savedFeeds: [],
 	postInteractionSettings: {
 		threadgateAllowRules: undefined,

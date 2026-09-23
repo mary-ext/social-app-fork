@@ -15,6 +15,13 @@ import type {
 	LabelVisibility,
 } from '#/lib/moderation/preferences-types';
 
+import {
+	DEFAULT_APP_SPECIFIC_PREF,
+	APP_SPECIFIC_PREF_TYPE as APP_SPECIFIC_PREFS_TYPE,
+	type AppSpecificPrefs,
+	readAppSpecificPref,
+} from '#/state/queries/preferences/app-specific-prefs';
+
 /**
  * manages user preferences by communicating directly with the PDS.
  *
@@ -210,6 +217,7 @@ export async function getPreferences(
 		interests: {
 			tags: [],
 		},
+		appPrefs: DEFAULT_APP_SPECIFIC_PREF,
 		moderationPrefs: {
 			adultContentEnabled: false,
 			labelers: appLabelers.map((did) => ({ did, labels: {} })),
@@ -262,6 +270,8 @@ export async function getPreferences(
 			prefs.verificationPrefs = { hideBadges: pref.hideBadges ?? false };
 		}
 	}
+
+	prefs.appPrefs = readAppSpecificPref(preferences);
 
 	// apply the label prefs
 	// the lexicon leaves `visibility` open, but the PDS only stores the three `LabelVisibility` values,
@@ -714,6 +724,32 @@ export async function setVerificationPrefs(
 			hideBadges: settings.hideBadges,
 		};
 		return upsertPref(prefs, isVerificationPrefs, next);
+	});
+}
+
+// #endregion
+
+// #region app prefs
+
+const isAppSpecificPrefs = (pref: { $type: string }): boolean => pref.$type === APP_SPECIFIC_PREFS_TYPE;
+
+/**
+ * updates app preferences, preserving unpatched fields.
+ *
+ * @param pds the PDS client
+ * @param patch the settings to apply
+ */
+export async function setAppSpecificPrefs(
+	pds: Client,
+	patch: Partial<Omit<AppSpecificPrefs, '$type'>>,
+): Promise<void> {
+	await updatePreferences(pds, (prefs) => {
+		// merge the raw entry to preserve fields from newer app versions
+		const existing: object | undefined = prefs.findLast(isAppSpecificPrefs);
+		const next = { ...existing, ...patch, $type: APP_SPECIFIC_PREFS_TYPE };
+
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- atcute's types omit custom members of the open union
+		return upsertPref(prefs, isAppSpecificPrefs, next as Pref);
 	});
 }
 
