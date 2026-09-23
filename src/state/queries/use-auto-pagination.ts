@@ -9,7 +9,8 @@ interface AutoPaginationQuery {
 	fetchNextPage: () => Promise<unknown>;
 }
 
-const MAX_AUTO_PAGINATION_ATTEMPTS = 50;
+// each appview request already fetches up to 10 pages by default; limit retries to avoid excessive load.
+const MAX_AUTO_PAGINATION_ATTEMPTS = 5;
 
 /**
  * fetches pages until the filtered item count reaches `pageSize`.
