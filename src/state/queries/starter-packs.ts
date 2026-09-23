@@ -253,7 +253,8 @@ export function useEditStarterPackMutation({
 				did: currentAccount!.did,
 			});
 			if (currentStarterPack.list) {
-				await invalidateListMembersQuery({
+				// the full member list takes several requests to refetch, so don't hold up the save on it
+				void invalidateListMembersQuery({
 					queryClient,
 					uri: currentStarterPack.list.uri,
 				});
@@ -312,7 +313,7 @@ export function useDeleteStarterPackMutation({
 			}
 
 			if (listUri) {
-				await invalidateListMembersQuery({ queryClient, uri: listUri });
+				void invalidateListMembersQuery({ queryClient, uri: listUri });
 			}
 			await invalidateActorStarterPacksQuery({
 				queryClient,

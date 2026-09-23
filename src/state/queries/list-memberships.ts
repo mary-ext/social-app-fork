@@ -20,7 +20,7 @@ import { createRecord, deleteRecord } from '#/lib/api/records';
 import { accumulate } from '#/lib/utils/accumulate';
 
 import { STALE } from '#/state/queries';
-import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';
+import { invalidateListMembersQuery } from '#/state/queries/list-members';
 import { getClients, useSession } from '#/state/session';
 
 import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
@@ -96,9 +96,7 @@ export function useListMembershipAddMutation({
 		onSuccess: (data, variables) => {
 			// wait before invalidating because the appview may lag.
 			setTimeout(() => {
-				void queryClient.invalidateQueries({
-					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
-				});
+				void invalidateListMembersQuery({ queryClient, uri: variables.listUri });
 			}, 1e3);
 
 			if (variables.subject) {
@@ -202,9 +200,7 @@ export function useListMembershipRemoveMutation({
 		onSuccess: (data, variables) => {
 			// wait before invalidating because the appview may lag.
 			setTimeout(() => {
-				void queryClient.invalidateQueries({
-					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
-				});
+				void invalidateListMembersQuery({ queryClient, uri: variables.listUri });
 			}, 1e3);
 
 			queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
