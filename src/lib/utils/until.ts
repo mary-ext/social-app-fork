@@ -3,7 +3,7 @@ import { sleep } from './sleep';
 export async function until<T>(
 	retries: number,
 	delay: number,
-	cond: (v: T, err: unknown) => boolean,
+	cond: (v: T | undefined, err: unknown) => boolean,
 	fn: () => Promise<T>,
 ): Promise<boolean> {
 	while (retries > 0) {
@@ -13,10 +13,7 @@ export async function until<T>(
 				return true;
 			}
 		} catch (e) {
-			// widening `cond`'s first parameter to `T | undefined` would reject every existing caller, so
-			// callers that inspect it declare it optional themselves
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- no value to report on the error path
-			if (cond(undefined as T, e)) {
+			if (cond(undefined, e)) {
 				return true;
 			}
 		}

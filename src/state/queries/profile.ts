@@ -666,7 +666,7 @@ async function whenAppViewReady(
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
-		fn,
+		(res) => res !== undefined && fn(res),
 		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor } })),
 	);
 }

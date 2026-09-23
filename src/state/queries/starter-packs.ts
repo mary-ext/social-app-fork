@@ -246,7 +246,7 @@ export function useEditStarterPackMutation({
 		onSuccess: async (_, { currentStarterPack }) => {
 			const parsed = parseStarterPackUri(currentStarterPack.uri);
 			await whenAppViewReady(appview, currentStarterPack.uri, (v) => {
-				return currentStarterPack.cid !== v?.starterPack.cid;
+				return !!v && currentStarterPack.cid !== v.starterPack.cid;
 			});
 			await invalidateActorStarterPacksQuery({
 				queryClient,
@@ -305,6 +305,7 @@ export function useDeleteStarterPackMutation({
 			const uri = makeRecordUri(currentAccount!.did, 'app.bsky.graph.starterpack', rkey);
 
 			if (uri) {
+				// once the deletion is indexed, `getStarterPack` throws and the poll sees no response
 				await whenAppViewReady(appview, uri, (v) => {
 					return !v?.starterPack;
 				});
@@ -333,7 +334,7 @@ export function useDeleteStarterPackMutation({
 async function whenAppViewReady(
 	appview: Client,
 	uri: ResourceUri,
-	fn: (res?: AppBskyGraphGetStarterPack.$output) => boolean,
+	fn: (res: AppBskyGraphGetStarterPack.$output | undefined) => boolean,
 ) {
 	await until(
 		5, // 5 tries

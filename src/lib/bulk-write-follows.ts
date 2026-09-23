@@ -108,11 +108,15 @@ async function whenFollowsIndexed(
 	actor: ActorIdentifier,
 	fn: (res: { follows: unknown[] }) => boolean,
 ) {
-	await until(5, 1e3, fn, () =>
-		ok(
-			appview.get('app.bsky.graph.getFollows', {
-				params: { actor, limit: 1 },
-			}),
-		),
+	await until(
+		5,
+		1e3,
+		(res) => res !== undefined && fn(res),
+		() =>
+			ok(
+				appview.get('app.bsky.graph.getFollows', {
+					params: { actor, limit: 1 },
+				}),
+			),
 	);
 }
