@@ -62,10 +62,10 @@ export const actions = style({
 });
 
 export const footer = style({
-	position: 'absolute',
-	left: 0,
-	right: 0,
+	position: 'sticky',
 	bottom: 0,
+	// push to the bottom of Layout.Screen's flex column when the list is short
+	marginTop: 'auto',
 	paddingBlock: space.lg,
 	paddingInline: space.xl,
 	borderTop: `1px solid ${colors.borderContrastLow}`,

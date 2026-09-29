@@ -112,18 +112,6 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	};
 
 	const [isPTRing, setIsPTRing] = useState(false);
-	// the footer floats over the bottom of the list; measure it so the list can reserve space below.
-	const [footerHeight, setFooterHeight] = useState(0);
-	const footerObserver = useRef<ResizeObserver | null>(null);
-	const footerRef = (node: HTMLDivElement | null) => {
-		footerObserver.current?.disconnect();
-		if (node) {
-			const observer = new ResizeObserver(() => setFooterHeight(node.offsetHeight));
-			observer.observe(node);
-			footerObserver.current = observer;
-			setFooterHeight(node.offsetHeight);
-		}
-	};
 
 	const owner = convo.primaryMember;
 	const isOwner = !!owner && owner.did === currentAccount?.did;
@@ -244,7 +232,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	};
 
 	const footer = (
-		<div className={css.footer} ref={footerRef}>
+		<div className={css.footer}>
 			<Dialog.Trigger
 				handle={inviteLinkHandle}
 				render={
@@ -300,8 +288,6 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		);
 	}
 
-	const showFooter = isOwner;
-
 	const list = (
 		<List
 			data={items}
@@ -315,7 +301,6 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 					</div>
 				) : null
 			}
-			ListFooterComponent={showFooter ? <div style={{ height: footerHeight }} /> : undefined}
 			onEndReached={onEndReached}
 			scrollRoot={isWithinSplitView ? scrollContainerRef : undefined}
 		/>
@@ -331,7 +316,7 @@ function JoinRequestsList({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 			) : (
 				list
 			)}
-			{showFooter ? footer : null}
+			{isOwner ? footer : null}
 			{owner && <InviteLinkDialog convo={convo} handle={inviteLinkHandle} isOwner={isOwner} owner={owner} />}
 		</>
 	);
