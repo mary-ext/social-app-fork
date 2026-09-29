@@ -18,6 +18,7 @@ export const item = style([
 		appearance: 'none',
 		display: 'block',
 		position: 'relative',
+		transformOrigin: 'left center',
 		transitionDuration: '200ms',
 		transitionProperty: 'transform',
 		margin: 0,
