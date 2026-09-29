@@ -1,6 +1,6 @@
 import { fallbackVar, style } from '@vanilla-extract/css';
 
-import { bottomBarHeightVar } from '#/components/Shell/Shell.css';
+import { bottomBarHeightVar, mainAnchor } from '#/components/Shell/Shell.css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
@@ -10,12 +10,15 @@ import { iconSize, zIndex } from '#/styles/tokens.css';
 export const outer = style({
 	position: 'fixed',
 	bottom: `calc(${fallbackVar(bottomBarHeightVar, '0px')} + 30px)`,
-	left: 18,
+	left: `calc(anchor(${mainAnchor} left, 0px) + 18px)`,
 	zIndex: zIndex.float,
+	'@media': {
+		// move into the gutter when clear of the nav; 82px = 42px button + 40px gap
+		'screen and (width >= 1300px) and (height >= 700px)': {
+			left: `calc(anchor(${mainAnchor} left, 0px) - 82px)`,
+		},
+	},
 });
-
-export const leftInline = style({ left: 'calc(50vw - 282px)' });
-export const leftOutOfLine = style({ left: 'calc(50vw - 382px)' });
 
 export const button = style({
 	appearance: 'none',

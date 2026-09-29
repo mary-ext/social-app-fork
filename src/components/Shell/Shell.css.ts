@@ -9,6 +9,9 @@ const CENTER_COLUMN_FRAME = CENTER_COLUMN_WIDTH + 2;
 
 export const bottomBarHeightVar = createVar();
 
+/** center-column anchor for fixed elements. */
+export const mainAnchor = '--shell-main';
+
 export const root = style({
 	display: 'flex',
 	flexDirection: 'column',
@@ -57,6 +60,7 @@ export const railRightFluid = style({
 });
 
 export const main = style({
+	anchorName: mainAnchor,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',

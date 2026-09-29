@@ -1,8 +1,5 @@
 import { clsx } from 'clsx';
 
-import { useMediaQuery } from '#/lib/browser/media-query';
-import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-
 import ArrowIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
 
 import * as css from './LoadLatestBtn.css';
@@ -16,19 +13,8 @@ export function LoadLatestBtn({
 	label: string;
 	showIndicator: boolean;
 }) {
-	const { gtMobile, gtTablet } = useBreakpoints();
-
-	// move button inline if it starts overlapping the left nav
-	const isTallViewport = useMediaQuery('(height >= 700px)');
-
 	return (
-		<div
-			className={clsx(
-				css.outer,
-				gtTablet && (isTallViewport ? css.leftOutOfLine : css.leftInline),
-				gtMobile && !gtTablet && css.leftInline,
-			)}
-		>
+		<div className={css.outer}>
 			<button
 				aria-label={label}
 				className={clsx(css.button, showIndicator && css.indicator)}
