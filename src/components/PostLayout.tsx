@@ -42,10 +42,15 @@ export function Frame({ children, className, hoverable, rootPad, topBorder, ...r
 	);
 }
 
+export interface RowProps extends DivProps {
+	/** place the first two children above the avatar and content, aligned to their columns. */
+	withHeader?: boolean;
+}
+
 /** The avatar + content columns side by side. */
-export function Row({ children, className, ...rest }: DivProps) {
+export function Row({ children, className, withHeader, ...rest }: RowProps) {
 	return (
-		<div className={clsx(css.row, className)} {...rest}>
+		<div className={clsx(css.row({ withHeader }), className)} {...rest}>
 			{children}
 		</div>
 	);

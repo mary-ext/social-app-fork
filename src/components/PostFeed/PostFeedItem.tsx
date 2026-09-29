@@ -251,16 +251,14 @@ function FeedItemInner({
 		<GalleryBleed>
 			<BlockLink to={target} state={sourceState} onBeforePress={onBeforePress}>
 				<PostLayout.Frame hoverable topBorder={!(hideTopBorder || isThreadChild)}>
-					<div className={css.reasonRow}>
+					<PostLayout.Row withHeader>
 						<div className={css.spineSlot}>
 							{isThreadChild && <PostLayout.Spine className={css.replyLineTop} />}
 						</div>
 						<div className={css.reason}>
 							{reason && <PostFeedReason reason={reason} onOpenReposter={onOpenReposter} />}
 						</div>
-					</div>
 
-					<PostLayout.Row>
 						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar
 								size={36}

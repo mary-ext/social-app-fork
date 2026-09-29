@@ -47,9 +47,8 @@ export function PostLoadingPlaceholder({ row, topBorder }: { row: PostRow; topBo
 	const { embed, lastLineWidth, reasonWidth, textLines } = row;
 	return (
 		<PostLayout.Frame topBorder={topBorder}>
-			{/* the real item always renders this reason row; even empty it reserves the post's top spacing, and
-			    a repost/pin reason adds its own line */}
-			<div className={feedCss.reasonRow}>
+			<PostLayout.Row withHeader>
+				{/* keep the reason's top spacing even when empty, matching the feed item */}
 				<div className={feedCss.spineSlot} />
 				<div className={feedCss.reason}>
 					{reasonWidth != null ? (
@@ -60,8 +59,6 @@ export function PostLoadingPlaceholder({ row, topBorder }: { row: PostRow; topBo
 						</div>
 					) : null}
 				</div>
-			</div>
-			<PostLayout.Row>
 				<PostLayout.AvatarColumn>
 					<Skele.Circle size={AVI_SIZE} />
 				</PostLayout.AvatarColumn>

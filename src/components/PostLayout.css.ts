@@ -42,13 +42,27 @@ export const frame = recipe(
 	{ debugId: 'frame' },
 );
 
-export const row = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	position: 'relative',
-	flexDirection: 'row',
-	gap: space.md,
-});
+export const row = recipe(
+	{
+		base: {
+			boxSizing: 'border-box',
+			display: 'flex',
+			position: 'relative',
+			flexDirection: 'row',
+			gap: space.md,
+		},
+		variants: {
+			withHeader: {
+				true: {
+					display: 'grid',
+					gridTemplateColumns: 'auto minmax(0, 1fr)',
+					rowGap: 0,
+				},
+			},
+		},
+	},
+	{ debugId: 'row' },
+);
 
 export const avatarColumn = style({
 	boxSizing: 'border-box',
