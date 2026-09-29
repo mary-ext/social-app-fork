@@ -25,42 +25,37 @@ export const card = style({
 	},
 });
 
-export const stackWidthVar = createVar();
+export const countVar = createVar();
 
+// 120%-wide items overlap; the final 0.2fr track contains the last item's overhang
 export const stack = style({
-	display: 'flex',
-	position: 'relative',
-	flexDirection: 'row',
+	display: 'grid',
+	gridTemplateColumns: `repeat(${countVar}, minmax(0, 1fr)) minmax(0, 0.2fr)`,
 	alignItems: 'center',
 	isolation: 'isolate',
-	width: stackWidthVar,
 });
 
-export const cellWidthVar = createVar();
-export const cellZVar = createVar();
+export const zVar = createVar();
 
-export const cell = style({
+const item = style({
 	position: 'relative',
-	zIndex: cellZVar,
-	width: cellWidthVar,
-});
-
-export const cellInner = style({
-	position: 'relative',
-	width: '120%',
-});
-
-export const circle = style({
-	position: 'relative',
+	gridRow: 1,
+	zIndex: zVar,
 	borderRadius: borderRadius.full,
-	backgroundColor: colors.contrast_25,
+	width: '120%',
 	aspectRatio: '1',
-	width: '100%',
 });
 
-export const avatarFill = style({
-	position: 'absolute',
-	inset: 0,
+export const circle = style([
+	item,
+	{
+		backgroundColor: colors.contrast_25,
+	},
+]);
+
+export const avatar = style({
+	width: '100%',
+	height: '100%',
 });
 
 export const placeholderBorder = style({
@@ -70,21 +65,15 @@ export const placeholderBorder = style({
 	boxShadow: `inset 0 0 0 1px ${colors.borderContrastLow}`,
 });
 
-export const totalBox = style({
-	position: 'relative',
-	aspectRatio: '1',
-	width: '100%',
-});
-
-export const totalInner = style({
-	display: 'flex',
-	position: 'absolute',
-	inset: 0,
-	alignItems: 'center',
-	justifyContent: 'center',
-	borderRadius: borderRadius.full,
-	backgroundColor: colors.textContrastLow,
-});
+export const total = style([
+	item,
+	{
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: colors.textContrastLow,
+	},
+]);
 
 export const totalText = style({
 	color: 'white',

@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-
 import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
@@ -67,6 +65,8 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 	);
 }
 
+const AVATAR_SIZE_HINT = 64;
+
 export function AvatarStack({
 	numPending,
 	profiles,
@@ -79,26 +79,10 @@ export function AvatarStack({
 	const { gtPhone } = useBreakpoints();
 	const moderationOpts = useModerationOpts();
 	const computedTotal = (total ?? numPending) - numPending;
-	const circlesCount = numPending + 1; // add the count circle at the end
-	const widthPerc = 100 / circlesCount;
 
-	const [size, setSize] = useState<number | null>(null);
-	const measureRef = useRef<HTMLDivElement | null>(null);
-	useEffect(() => {
-		const el = measureRef.current;
-		if (!el) {
-			return;
-		}
-		const measure = () => setSize(el.getBoundingClientRect().width);
-		measure();
-		const observer = new ResizeObserver(measure);
-		observer.observe(el);
-		return () => observer.disconnect();
-	}, []);
-
-	const isPending = ((numPending ?? 0) > 0 && profiles.length === 0) || !moderationOpts;
+	const isPending = (numPending > 0 && profiles.length === 0) || !moderationOpts;
 	const items = isPending
-		? Array.from({ length: numPending ?? circlesCount }).map((_, i) => ({
+		? Array.from({ length: numPending }).map((_, i) => ({
 				key: i,
 				moderation: null,
 				profile: null,
@@ -110,48 +94,35 @@ export function AvatarStack({
 			}));
 
 	return (
-		<div className={css.stack} style={assignInlineVars({ [css.stackWidthVar]: `${100 - widthPerc * 0.2}%` })}>
+		<div
+			className={css.stack}
+			// include the count circle
+			style={assignInlineVars({ [css.countVar]: String(numPending + 1) })}
+		>
 			{items.map((item, i) => (
-				<div
-					className={css.cell}
-					key={item.key}
-					style={assignInlineVars({ [css.cellWidthVar]: `${widthPerc}%`, [css.cellZVar]: String(100 - i) })}
-				>
-					<div className={css.cellInner}>
-						<div className={css.circle} ref={i === 0 ? measureRef : undefined}>
-							{size && item.profile ? (
-								<div className={css.avatarFill}>
-									<UserAvatar
-										avatar={item.profile.avatar}
-										moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
-										size={size}
-										type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-									/>
-								</div>
-							) : (
-								<div className={css.placeholderBorder} />
-							)}
-						</div>
-					</div>
+				<div className={css.circle} key={item.key} style={assignInlineVars({ [css.zVar]: String(100 - i) })}>
+					{item.profile ? (
+						<UserAvatar
+							avatar={item.profile.avatar}
+							className={css.avatar}
+							moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
+							// CSS sets dimensions; size controls thumbnail selection, borders, and badges
+							size={AVATAR_SIZE_HINT}
+							type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+						/>
+					) : (
+						<div className={css.placeholderBorder} />
+					)}
 				</div>
 			))}
-			<div
-				className={css.cell}
-				style={assignInlineVars({ [css.cellWidthVar]: `${widthPerc}%`, [css.cellZVar]: '1' })}
-			>
-				<div className={css.cellInner}>
-					<div className={css.totalBox}>
-						<div className={css.totalInner}>
-							{computedTotal > 0 ? (
-								<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
-									{m['screens.search.starterPack.additionalCount']({ count: computedTotal })}
-								</Text>
-							) : (
-								<Plus className={css.plusIcon} />
-							)}
-						</div>
-					</div>
-				</div>
+			<div className={css.total} style={assignInlineVars({ [css.zVar]: '1' })}>
+				{computedTotal > 0 ? (
+					<Text className={css.totalText} size={gtPhone ? 'md' : 'xs'} weight="semiBold">
+						{m['screens.search.starterPack.additionalCount']({ count: computedTotal })}
+					</Text>
+				) : (
+					<Plus className={css.plusIcon} />
+				)}
 			</div>
 		</div>
 	);
