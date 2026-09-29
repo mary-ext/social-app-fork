@@ -3,7 +3,7 @@ import { weightedIndex } from '@mary/array-fns';
 import { randomInRange } from '#/lib/utils/numbers';
 
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
-import { clampAspectRatio, deriveCarouselHeight } from '#/components/ImageEmbed/carousel/utils';
+import { getStripStyle, getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import * as css from './EmbedSkeleton.css';
@@ -90,23 +90,21 @@ function BleedSingle({ aspect }: { aspect: number }) {
 }
 
 function CarouselStrip({ tiles }: { tiles: number[] }) {
-	// a strip at the carousel's derived row height, each tile as wide as its clamped aspect, clipped to the
-	// column like the real one.
-	const height = deriveCarouselHeight({
-		max: CAROUSEL_MAX_HEIGHT,
-		min: CAROUSEL_MIN_HEIGHT,
-		ratios: tiles,
-	});
 	return (
-		<div className={css.carousel} style={{ height }}>
-			{tiles.map((aspect, i) => (
-				<div
-					// oxlint-disable-next-line react/no-array-index-key -- static skeleton
-					key={i}
-					className={css.carouselTile}
-					style={{ width: Math.floor(height * clampAspectRatio(aspect)) }}
-				/>
-			))}
+		<div
+			className={css.carousel}
+			style={getStripStyle({ max: CAROUSEL_MAX_HEIGHT, min: CAROUSEL_MIN_HEIGHT, ratios: tiles })}
+		>
+			<div className={css.carouselRow}>
+				{tiles.map((aspect, i) => (
+					<div
+						// oxlint-disable-next-line react/no-array-index-key -- static skeleton
+						key={i}
+						className={css.carouselTile}
+						style={getTileStyle(aspect)}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }

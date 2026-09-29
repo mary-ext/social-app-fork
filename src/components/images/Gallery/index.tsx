@@ -9,6 +9,7 @@ import {
 	useState,
 } from 'react';
 
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/utils/merge-refs';
@@ -53,11 +54,9 @@ export function GalleryBleed({ children }: { children: ReactNode }) {
 }
 
 type GalleryBleedStrip = {
-	/** styles that extend the strip to the host's edges. */
+	/** gutter custom properties; apply with the `bleedStrip` class on the same element. */
 	bleedStyle: CSSProperties;
-	bleedWidth: number;
 	insetLeft: number;
-	insetRight: number;
 	ref: (el: HTMLElement | null) => void;
 };
 
@@ -70,7 +69,7 @@ type GalleryBleedStrip = {
 export function useGalleryBleed(): GalleryBleedStrip {
 	const bleedEl = use(BleedContext);
 	const isFocused = useIsFocused();
-	const [insets, setInsets] = useState({ bleedWidth: 0, insetLeft: 0, insetRight: 0 });
+	const [insets, setInsets] = useState({ insetLeft: 0, insetRight: 0 });
 
 	// refs attach child-first, so the host arrives a commit late; closing over it (and over `isFocused`) makes
 	// React reattach, and so remeasure, whenever either changes.
@@ -85,16 +84,11 @@ export function useGalleryBleed(): GalleryBleedStrip {
 
 			setInsets((prev) => {
 				const next = {
-					bleedWidth: bleed.width,
 					insetLeft: strip.left - bleed.left,
 					insetRight: bleed.right - strip.right,
 				};
 
-				// the strip's height is derived from these, so observing it re-runs this on every height change
-				const unchanged =
-					prev.bleedWidth === next.bleedWidth &&
-					prev.insetLeft === next.insetLeft &&
-					prev.insetRight === next.insetRight;
+				const unchanged = prev.insetLeft === next.insetLeft && prev.insetRight === next.insetRight;
 
 				return unchanged ? prev : next;
 			});
@@ -110,18 +104,14 @@ export function useGalleryBleed(): GalleryBleedStrip {
 		return () => observer.disconnect();
 	};
 
-	const { bleedWidth, insetLeft, insetRight } = insets;
+	const { insetLeft, insetRight } = insets;
 
 	return {
-		bleedStyle: {
-			marginLeft: -insetLeft,
-			marginRight: -insetRight,
-			paddingLeft: insetLeft,
-			scrollPaddingLeft: insetLeft,
-		},
-		bleedWidth,
+		bleedStyle: assignInlineVars({
+			[css.insetLeftVar]: `${insetLeft}px`,
+			[css.insetRightVar]: `${insetRight}px`,
+		}),
 		insetLeft,
-		insetRight,
 		ref,
 	};
 }

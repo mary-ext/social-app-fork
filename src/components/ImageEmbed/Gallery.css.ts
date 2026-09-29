@@ -1,45 +1,23 @@
 import { style } from '@vanilla-extract/css';
 
-import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
 import { navHost } from '#/components/ImageEmbed/carousel/PagingControls.css';
+import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 
 import { vars } from '#/styles/contract.css';
 import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, iconSize } from '#/styles/tokens.css';
 
-export const root = style([
-	navHost,
-	{
-		width: '100%',
-		overflow: 'visible',
-	},
-]);
+export const root = style([navHost, strip.root]);
 
-export const scroll = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	position: 'relative',
-	flexDirection: 'row',
-	gap: ITEM_GAP,
-	height: '100%',
-	overflowX: 'scroll',
-	overflowY: 'hidden',
-	overscrollBehaviorX: 'contain',
-	scrollSnapType: 'x mandatory',
-	scrollbarWidth: 'none',
-	selectors: {
-		'&::-webkit-scrollbar': { display: 'none' },
-	},
-});
+export const scroll = style([strip.scroll, { position: 'relative' }]);
 
 export const item = style([
 	mediaBorder,
+	strip.tile,
 	{
 		appearance: 'none',
 		display: 'block',
 		position: 'relative',
-		flex: '0 0 auto',
-		scrollSnapAlign: 'start',
 		transitionDuration: '200ms',
 		transitionProperty: 'transform',
 		margin: 0,

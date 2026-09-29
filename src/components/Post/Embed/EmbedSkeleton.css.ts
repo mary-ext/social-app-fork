@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
+import * as strip from '#/components/ImageEmbed/carousel/strip.css';
+import { bleedStrip, insetRightVar } from '#/components/images/Gallery/index.css';
 import { OUTER_SPACE } from '#/components/PostLayout.const';
 
 import { vars } from '#/styles/contract.css';
@@ -16,18 +17,22 @@ export const singleTile = style({
 	backgroundColor: vars.palette.contrast_50,
 });
 
-export const carousel = style({
-	display: 'flex',
-	flexDirection: 'row',
-	gap: ITEM_GAP,
-	marginTop: space.sm,
-	marginRight: OUTER_SPACE * -1,
-	overflow: 'hidden',
-});
+export const carousel = style([strip.root, { marginTop: space.sm }]);
 
-export const carouselTile = style({
-	flexShrink: 0,
-	borderRadius: borderRadius.md,
-	backgroundColor: vars.palette.contrast_50,
-	height: '100%',
-});
+// match the loaded carousel's right gutter without measuring the skeleton.
+export const carouselRow = style([
+	strip.row,
+	bleedStrip,
+	{
+		vars: { [insetRightVar]: `${OUTER_SPACE}px` },
+		overflow: 'hidden',
+	},
+]);
+
+export const carouselTile = style([
+	strip.tile,
+	{
+		borderRadius: borderRadius.md,
+		backgroundColor: vars.palette.contrast_50,
+	},
+]);

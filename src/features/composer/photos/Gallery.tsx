@@ -9,7 +9,8 @@ import * as Dialog from '#/components/Dialog';
 import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
-import { computeDims, getAspectRatio, getCarouselMetrics } from '#/components/ImageEmbed/carousel/utils';
+import { getStripStyle, getTileStyle } from '#/components/ImageEmbed/carousel/strip';
+import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { Text } from '#/components/Text';
 
@@ -92,32 +93,28 @@ const onFocus = (evt: FocusEvent<HTMLDivElement>) => {
 };
 
 const Carousel = ({ dispatch, images, text }: GalleryProps) => {
-	const { bleedStyle, bleedWidth, insetLeft, insetRight, ref: bleedRef } = useGalleryBleed();
+	const { bleedStyle, insetLeft, ref: bleedRef } = useGalleryBleed();
 	const scrollRef = useRef<HTMLDivElement>(null);
 
-	const { contentHeight, paddingRight } = getCarouselMetrics({
-		bleedWidth,
-		insetLeft,
-		insetRight,
+	const stripStyle = getStripStyle({
 		max: CAROUSEL_MAX_HEIGHT,
 		min: CAROUSEL_MIN_HEIGHT,
 		ratios: images.map((image) => getAspectRatio(image.transformed ?? image.source)),
 	});
 
 	return (
-		<div ref={bleedRef} className={styles.root} style={{ height: contentHeight }}>
+		<div ref={bleedRef} className={styles.root} style={stripStyle}>
 			<div
 				ref={scrollRef}
 				className={styles.scroll}
 				onFocus={onFocus}
 				role="group"
 				aria-label={m['components.post.image.a11y.gallery']({ count: images.length })}
-				style={{ ...bleedStyle, paddingRight }}
+				style={bleedStyle}
 			>
 				{images.map((image, index) => (
 					<GalleryItem
 						key={image.source.id}
-						contentHeight={contentHeight}
 						context={toAltTextContext(images, index, text)}
 						image={image}
 						onChange={(next) => {
@@ -140,19 +137,17 @@ const toAltTextContext = (images: ComposerImage[], index: number, text: string):
 });
 
 type GalleryItemProps = {
-	contentHeight: number;
 	context: AltTextContext;
 	image: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 	onRemove: () => void;
 };
 
-const GalleryItem = ({ contentHeight, context, image, onChange, onRemove }: GalleryItemProps) => {
+const GalleryItem = ({ context, image, onChange, onRemove }: GalleryItemProps) => {
 	const aspectRatio = getAspectRatio(image.transformed ?? image.source);
-	const dims = computeDims({ aspectRatio, height: contentHeight });
 
 	return (
-		<div className={styles.item} data-composer-image style={{ height: dims.height, width: dims.width }}>
+		<div className={styles.item} data-composer-image style={getTileStyle(aspectRatio)}>
 			<ItemChrome context={context} image={image} onChange={onChange} onRemove={onRemove} />
 		</div>
 	);

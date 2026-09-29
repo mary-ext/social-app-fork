@@ -6,9 +6,8 @@ export const MAX_ASPECT_RATIO = 16 / 9; // landscape limit
 // a multi-image carousel always hints there's more to scroll. Sits clear of the tile's 12px corner radius.
 export const CAROUSEL_PEEK = 28; // tokens.space._3xl
 
-// Orientation bounds for the strip's shared row height (see deriveCarouselHeight): a wide first pair packs
-// toward the min, a portrait pair stretches toward the max. On a narrow viewport the height can shrink below
-// the min so the widest tile still fits whole, leaving the next to peek instead of being cropped.
+// the first two tiles set the preferred height: landscape toward min, portrait toward max.
+// CSS can shrink below min to fit the widest tile and a peek of the next.
 export const CAROUSEL_MIN_HEIGHT = 235;
 export const CAROUSEL_MAX_HEIGHT = 330;
 // Chat bubbles run more compact.
