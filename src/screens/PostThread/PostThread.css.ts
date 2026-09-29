@@ -8,6 +8,12 @@ export const footer = style({
 	borderTopWidth: 1,
 	borderTopStyle: 'solid',
 	borderTopColor: colors.borderContrastLow,
+	height: 180,
+});
+
+// leave room to scroll the anchor post to the top when it has parents
+export const footerTall = style({
+	height: 'calc(100svh - 200px)',
 });
 
 export const footerNoBorder = style({

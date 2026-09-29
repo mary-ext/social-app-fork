@@ -39,9 +39,6 @@ import * as Layout from '#/components/web/Layout';
 import { m } from '#/paraglide/messages';
 import { useFocusEffect } from '#/router';
 
-/** Height the trailing spacer falls back to when the thread has no parents. */
-const FALLBACK_FOOTER_HEIGHT = 180;
-
 // Measured threads skew toward short text replies (~110px), punctuated by a tall anchor and occasional media.
 const ITEM_HEIGHT_ESTIMATE = 200;
 
@@ -290,8 +287,6 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		return null;
 	};
 
-	const defaultListFooterHeight = hasParents ? window.innerHeight - 200 : undefined;
-
 	return (
 		<PostThreadContextProvider context={thread.context}>
 			<Layout.Header.Outer ref={headerRef}>
@@ -319,8 +314,11 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 					estimateHeight={ITEM_HEIGHT_ESTIMATE}
 					ListFooterComponent={
 						<div
-							className={clsx(css.footer, isTombstoneView && css.footerNoBorder)}
-							style={{ height: defaultListFooterHeight ?? FALLBACK_FOOTER_HEIGHT }}
+							className={clsx(
+								css.footer,
+								hasParents && css.footerTall,
+								isTombstoneView && css.footerNoBorder,
+							)}
 						/>
 					}
 				/>
