@@ -24,7 +24,7 @@ import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/u
 import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import { Button } from '#/components/web/Button';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import BanIcon from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
@@ -93,7 +93,7 @@ function Frame({
 						tabIndex={isActive ? 0 : -1}
 						onClick={remove}
 					>
-						<ButtonIcon icon={XIcon} />
+						<XIcon className={overlay.overlayIcon} />
 					</Button>
 				) : (
 					<Button

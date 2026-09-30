@@ -7,7 +7,7 @@ import type { Wordgard } from 'wordgard/editor';
 import { PostNumberBlock } from '#/components/PostNumber';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import { Button } from '#/components/web/Button';
 
 import CrossIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 
@@ -62,7 +62,7 @@ export const PostHeader = memo(function PostHeader({
 							wg.focus();
 						}}
 					>
-						<ButtonIcon icon={CrossIcon} />
+						<CrossIcon className={styles.removeIcon} />
 					</Button>
 				</>
 			)}

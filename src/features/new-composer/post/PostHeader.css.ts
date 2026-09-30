@@ -34,3 +34,9 @@ export const remove = style([
 		marginInlineEnd: -space.xs,
 	},
 ]);
+
+export const removeIcon = style({
+	display: 'block',
+	width: 13,
+	height: 13,
+});
