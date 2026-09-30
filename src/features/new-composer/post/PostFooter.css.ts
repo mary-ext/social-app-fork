@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { iconSize, space } from '#/styles/tokens.css';
+import { fontWeight, iconSize, space } from '#/styles/tokens.css';
 
 import { RIGHT_PADDING } from '../layout';
 import { revealOnHover } from '../reveal.css';
@@ -37,5 +37,6 @@ export const status = style({
 export const language = style({
 	minWidth: ICON_BUTTON_SIZE,
 	paddingInline: space.sm,
+	fontWeight: fontWeight.bold,
 	textTransform: 'uppercase',
 });
