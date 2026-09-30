@@ -4,7 +4,7 @@ import { Decoration, PointSet } from 'wordgard/editor';
 import { GardSelection, type GardState } from 'wordgard/state';
 
 import { POST_ACTIVE_ATTR } from '../elements';
-import { findPost } from './schema';
+import { findPost, getPostParam } from './schema';
 
 // #region caret
 
@@ -72,6 +72,17 @@ const activeDeco = Decoration.Point.attributes({ [POST_ACTIVE_ATTR]: '' });
  */
 export const findActivePost = (state: GardState): Pos.Plot | null => {
 	return findPost(state.sel.head);
+};
+
+/**
+ * finds the id of the post containing the selection head.
+ *
+ * @param state the editor state
+ * @returns the post id, or null when the selection head is outside any post
+ */
+export const getActivePostId = (state: GardState): string | null => {
+	const found = findActivePost(state);
+	return found && getPostParam(found.node).id;
 };
 
 /** marks the active post. */
