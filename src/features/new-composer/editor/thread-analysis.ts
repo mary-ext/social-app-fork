@@ -3,6 +3,7 @@ import { Decoration, PointSet, RangeSet } from 'wordgard/editor';
 import { GardState, type Transaction } from 'wordgard/state';
 
 import { MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { isSameSelfLabels, type SelfLabel } from '#/lib/moderation/self-labels';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 
@@ -14,6 +15,13 @@ import {
 	type PostEmbeds,
 	selectPostEmbeds,
 } from '../embeds/link-embeds';
+import {
+	applyLabelTaints,
+	emptyLabelTaints,
+	getAttachmentKeys,
+	getTaintedLabels,
+	type LabelTaints,
+} from '../labels/commands';
 import { getMediaProblem } from '../media/attachments';
 import * as styles from '../NewComposer.css';
 import { footerWidget, headerWidget } from './post-slots';
@@ -34,6 +42,10 @@ export type PostSummary = {
 	/** media type or count violation, or null. */
 	mediaProblem: SelectionError | null;
 	embeds: PostEmbeds;
+	/** attachment keys used to read and update content warnings. */
+	attachmentKeys: readonly string[];
+	/** content warnings from the post's attachments. */
+	labels: readonly SelfLabel[];
 };
 
 type Span = { from: number; to: number };
@@ -45,6 +57,7 @@ type ThreadAnalysis = {
 	overflow: RangeSet<Decoration.Range>;
 	points: PointSet<Decoration.Point>;
 	session: EmbedSession;
+	taints: LabelTaints;
 	/** the unsettled link at the caret, or null. moving the caret out of it settles it. */
 	editing: Span | null;
 };
@@ -71,7 +84,16 @@ const getEditableEnd = (text: string, to: number) => {
 // stable summary props let React skip unchanged post controls; reordering invalidates the index.
 const summarized = new WeakMap<Plot, PostSummary>();
 
-const summarize = ({ node, index, id }: ThreadPost, length: number, embeds: PostEmbeds): PostSummary => {
+const summarize = (
+	{ node, index, id }: ThreadPost,
+	length: number,
+	embeds: PostEmbeds,
+	taints: LabelTaints,
+): PostSummary => {
+	const { media } = getPostParam(node);
+	const attachmentKeys = getAttachmentKeys(media, embeds);
+	const labels = getTaintedLabels(taints, attachmentKeys);
+
 	const hit = summarized.get(node);
 	if (
 		hit &&
@@ -79,12 +101,12 @@ const summarize = ({ node, index, id }: ThreadPost, length: number, embeds: Post
 		hit.id === id &&
 		hit.length === length &&
 		hit.embeds.external === embeds.external &&
-		hit.embeds.record === embeds.record
+		hit.embeds.record === embeds.record &&
+		isSameSelfLabels(hit.labels, labels)
 	) {
 		return hit;
 	}
 
-	const { media } = getPostParam(node);
 	const summary: PostSummary = {
 		id,
 		index,
@@ -94,6 +116,8 @@ const summarize = ({ node, index, id }: ThreadPost, length: number, embeds: Post
 		media,
 		mediaProblem: getMediaProblem(media),
 		embeds,
+		attachmentKeys,
+		labels,
 	};
 
 	summarized.set(node, summary);
@@ -105,6 +129,7 @@ const analyze = (
 	doc: Plot.Doc,
 	head: number,
 	prevSession: EmbedSession,
+	taints: LabelTaints,
 ): ThreadAnalysis => {
 	const posts: PostSummary[] = [];
 	const facets: [number, number, Decoration.Range][] = [];
@@ -151,7 +176,7 @@ const analyze = (
 			}
 		}
 
-		posts.push(summarize(post, length, embeds));
+		posts.push(summarize(post, length, embeds, taints));
 
 		for (const [from, to] of measurement.facets) {
 			facets.push([toPos(from), toPos(to), facetDeco]);
@@ -179,6 +204,7 @@ const analyze = (
 		overflow: RangeSet.create(overflow),
 		points: PointSet.create(points),
 		session,
+		taints,
 		editing,
 	};
 };
@@ -187,8 +213,19 @@ const samePosts = (a: readonly PostSummary[], b: readonly PostSummary[]) => {
 	return a.length === b.length && a.every((post, i) => post === b[i]);
 };
 
-const reanalyze = (value: ThreadAnalysis, tr: Transaction, session: EmbedSession): ThreadAnalysis => {
-	const next = analyze(tr.startState.facet(postPlaceholder), tr.newDoc, tr.newSelection.head, session);
+const reanalyze = (
+	value: ThreadAnalysis,
+	tr: Transaction,
+	session: EmbedSession,
+	taints: LabelTaints,
+): ThreadAnalysis => {
+	const next = analyze(
+		tr.startState.facet(postPlaceholder),
+		tr.newDoc,
+		tr.newSelection.head,
+		session,
+		taints,
+	);
 	// reuse the array when summaries are unchanged to avoid a React state update.
 	return samePosts(value.posts, next.posts) ? { ...next, posts: value.posts } : next;
 };
@@ -203,17 +240,24 @@ const applyDismissals = (session: EmbedSession, tr: Transaction): EmbedSession =
 	return session;
 };
 
-/** per-post summaries and decorations, recomputed when the document or link embed state changes. */
+/** per-post summaries and decorations derived from document, embed, and label state. */
 export const threadAnalysis = GardState.Field.define<ThreadAnalysis>({
 	create(state) {
-		return analyze(state.facet(postPlaceholder), state.doc, state.selection.head, emptyEmbedSession);
+		return analyze(
+			state.facet(postPlaceholder),
+			state.doc,
+			state.selection.head,
+			emptyEmbedSession,
+			emptyLabelTaints,
+		);
 	},
 	update(value, tr) {
 		const session = applyDismissals(value.session, tr);
+		const taints = applyLabelTaints(value.taints, tr);
 		const leftLink = value.editing !== null && !isWithin(tr.newSelection.head, value.editing);
 
-		if (tr.docChanged || leftLink || session !== value.session) {
-			return reanalyze(value, tr, session);
+		if (tr.docChanged || leftLink || session !== value.session || taints !== value.taints) {
+			return reanalyze(value, tr, session, taints);
 		}
 
 		return value;
