@@ -81,7 +81,7 @@ export const viewport = style(
 
 		'@media': {
 			'(width >= 800px)': {
-				paddingBlock: '10vh',
+				paddingBlock: 'round(10vh, 1px)',
 			},
 		},
 	}),

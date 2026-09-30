@@ -34,6 +34,7 @@ import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
 import { keepEditorFocus } from '../focus';
+import * as overlay from '../overlay.css';
 import { dismissLinkEmbed, type LinkEmbedKind } from './link-embeds';
 import * as styles from './LinkCard.css';
 
@@ -43,9 +44,7 @@ const StandardSiteEmbed = lazy(() =>
 
 // #region frame
 
-/**
- * `bare` uses the embed's own border; `card` adds one; `notice` frames a status message.
- */
+/** `bare` uses the embed's own border; `card` adds one; `notice` frames a status message. */
 type FrameVariant = 'bare' | 'card' | 'notice';
 
 function Frame({
@@ -65,6 +64,13 @@ function Frame({
 }) {
 	const isNotice = variant === 'notice';
 
+	const remove = () => {
+		dismissLinkEmbed(wg, url);
+		// dismissing removes the focused button.
+		wg.focus();
+	};
+	const removeLabel = kind === 'record' ? 'Remove embed' : 'Remove link preview';
+
 	return (
 		<div
 			className={styles.frame[variant]}
@@ -77,21 +83,29 @@ function Frame({
 		>
 			{children}
 			<div className={isNotice ? styles.noticeActions : styles.actions} onMouseDown={keepEditorFocus}>
-				<Button
-					label={kind === 'record' ? 'Remove embed' : 'Remove link preview'}
-					size="tiny"
-					color={isNotice ? 'secondary' : 'secondary_inverted'}
-					variant={isNotice ? 'ghost' : 'solid'}
-					shape="round"
-					tabIndex={isActive ? 0 : -1}
-					onClick={() => {
-						dismissLinkEmbed(wg, url);
-						// dismissing removes the focused button.
-						wg.focus();
-					}}
-				>
-					<ButtonIcon icon={XIcon} />
-				</Button>
+				{isNotice ? (
+					<Button
+						label={removeLabel}
+						size="tiny"
+						color="secondary"
+						variant="ghost"
+						shape="round"
+						tabIndex={isActive ? 0 : -1}
+						onClick={remove}
+					>
+						<ButtonIcon icon={XIcon} />
+					</Button>
+				) : (
+					<Button
+						label={removeLabel}
+						className={overlay.overlayButton}
+						variant="bare"
+						tabIndex={isActive ? 0 : -1}
+						onClick={remove}
+					>
+						<XIcon className={overlay.overlayIcon} />
+					</Button>
+				)}
 			</div>
 		</div>
 	);

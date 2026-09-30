@@ -3,6 +3,9 @@
 	"view.composer.a11y.dismissError": "Dismiss error",
 	"view.composer.altText.action.add": "Add alt text",
 	"view.composer.altText.action.addOptional": "Add alt text (optional)",
+	"view.composer.altText.action.edit": "Edit alt text",
+	"view.composer.altText.badge.add": "Add alt",
+	"view.composer.altText.badge.done": "Alt",
 	"view.composer.altText.charCount": [
 		{
 			"declarations": ["input length", "input max", "local ln = length: number", "local mn = max: number"],
@@ -174,11 +177,15 @@
 			}
 		}
 	],
+	"view.composer.media.cancelUpload": "Cancel upload",
 	"view.composer.media.missing": "Missing media",
 	"view.composer.media.multipleTypes": "Selecting multiple media types is not supported.",
 	"view.composer.media.removeAttachment": "Remove attachment",
 	"view.composer.media.storedOn": "Media stored on {deviceName}",
 	"view.composer.media.storedOtherDevice": "Media stored on another device",
+	"view.composer.media.upload.compressing": "Compressing",
+	"view.composer.media.upload.processing": "Processing",
+	"view.composer.media.upload.uploading": "Uploading · {percent}%",
 	"view.composer.publish.a11y.post": "Publish post",
 	"view.composer.publish.a11y.posts": "Publish posts",
 	"view.composer.publish.a11y.replies": "Publish replies",
@@ -271,6 +278,7 @@
 	"view.composer.video.uploading": "Uploading video...",
 	"view.composer.voice.a11y.pause": "Pause voice clip",
 	"view.composer.voice.a11y.play": "Play voice clip",
+	"view.composer.voice.a11y.seek": "Seek voice clip",
 	"view.composer.voice.cardLabel": "Voice",
 	"view.composer.voice.error.altMissing": "One or more voice clips is missing alt text.",
 	"view.composer.voice.error.oneOnly": "You can only select one audio file at a time.",

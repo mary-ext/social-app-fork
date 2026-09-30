@@ -2,17 +2,39 @@ import { type ChangeSet, Leaf, type Node, Plot, type Pos } from 'wordgard/doc';
 import { GardState, Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
-import type { AttachmentKind } from '#/lib/media/read-attachment';
-
 import { POST_ELEMENT } from '../elements';
 
 /** local attachment. the document and undo history retain its file for preview and restoration. */
-export type PostMedia = {
-	id: string;
-	/** distinguishes animated GIFs and voice notes from other video embeds. */
-	kind: AttachmentKind;
-	file: File;
-};
+export type PostMedia =
+	| {
+			kind: 'image';
+			id: string;
+			file: File;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
+			/** alt text; empty when absent. */
+			alt: string;
+	  }
+	| {
+			kind: 'gif' | 'video';
+			id: string;
+			file: File;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
+			/** seconds; undefined if unknown. */
+			duration: number | undefined;
+			/** alt text; empty when absent. */
+			alt: string;
+	  }
+	| {
+			kind: 'voice';
+			id: string;
+			file: File;
+			/** seconds; undefined if unknown. */
+			duration: number | undefined;
+			/** alt text; empty when absent. */
+			alt: string;
+	  };
 
 /** per-post data that isn't part of the text. */
 export type PostParam = {

@@ -1,8 +1,11 @@
-import { type AttachmentRejection, getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
+import { getImageDimensions } from '#/lib/media/metadata';
+import { type Attachment, type AttachmentRejection, readAttachment } from '#/lib/media/read-attachment';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
+
+import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
 import type { PostMedia } from '../editor/schema';
 
@@ -40,20 +43,68 @@ export const createMedia = async (
 	files: Iterable<File>,
 ): Promise<{ media: PostMedia[]; rejections: AttachmentRejection[] }> => {
 	const read = await Promise.all(
-		[...files].map(async (file) => ({ file, result: await readAttachment(file) })),
+		[...files].map(async (file) => {
+			return { file, result: await readAttachment(file) };
+		}),
 	);
 
-	const media: PostMedia[] = [];
+	const media: Promise<PostMedia>[] = [];
 	const rejections: AttachmentRejection[] = [];
 	for (const { file, result } of read) {
 		if (result.ok) {
-			media.push({ id: crypto.randomUUID(), kind: getAttachmentKind(result.attachment), file });
+			media.push(toPostMedia(file, result.attachment));
 		} else {
 			rejections.push(result.rejection);
 		}
 	}
 
-	return { media, rejections };
+	return { media: await Promise.all(media), rejections };
+};
+
+const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedia> => {
+	const id = crypto.randomUUID();
+	switch (attachment.type) {
+		case 'image': {
+			let aspectRatio;
+			try {
+				aspectRatio = getAspectRatio(await getImageDimensions(attachment.blob));
+			} catch {
+				// fall back to square sizing if dimensions can't be read.
+			}
+
+			return {
+				id,
+				kind: 'image',
+				file,
+				aspectRatio,
+				alt: '',
+			};
+		}
+		case 'video': {
+			const { asset } = attachment;
+			return {
+				id,
+				kind: asset.kind,
+				file,
+				aspectRatio: getAspectRatio(asset),
+				duration: toSeconds(asset.duration),
+				alt: '',
+			};
+		}
+		case 'voice': {
+			return {
+				id,
+				kind: 'voice',
+				file,
+				duration: toSeconds(attachment.asset.duration),
+				alt: '',
+			};
+		}
+	}
+};
+
+const toSeconds = (ms: number | null): number | undefined => {
+	return ms === null ? undefined : ms / 1000;
 };
 
 /**
