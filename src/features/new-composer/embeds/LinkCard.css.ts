@@ -31,8 +31,8 @@ export const actions = style([
 	revealOnHover,
 	{
 		position: 'absolute',
-		top: space.xs,
-		right: space.xs,
+		top: space.sm,
+		right: space.sm,
 	},
 ]);
 

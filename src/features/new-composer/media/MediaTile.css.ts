@@ -4,10 +4,10 @@ import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import { vars } from '#/styles/contract.css';
-import { hover } from '#/styles/interaction';
 import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
 
 import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR, MEDIA_ROW_ATTR } from '../elements';
+import { overlay, OVERLAY_SIZE } from '../overlay.css';
 import { revealOnHover } from '../reveal.css';
 
 export const tile = style({
@@ -90,20 +90,6 @@ export const audio = style({
 	minWidth: 0,
 });
 
-// keep contrast over media in either theme.
-const OVERLAY_BACKGROUND = 'rgba(0, 0, 0, 0.72)';
-const OVERLAY_HOVER_BACKGROUND = 'rgba(0, 0, 0, 0.85)';
-// an odd-sized box centers 13px icons at integer offsets.
-const OVERLAY_SIZE = 27;
-
-const overlay = style({
-	backgroundColor: OVERLAY_BACKGROUND,
-	color: vars.palette.white,
-	selectors: {
-		[hover()]: { backgroundColor: OVERLAY_HOVER_BACKGROUND },
-	},
-});
-
 const badge = style({
 	display: 'flex',
 	position: 'absolute',
@@ -132,23 +118,6 @@ export const altCheck = style({
 });
 
 export const uploadBadge = style([badge, overlay, { gap: 6, padding: '0 11px 0 5px' }]);
-
-export const overlayButton = style([
-	overlay,
-	{
-		borderRadius: 999,
-		width: OVERLAY_SIZE,
-		height: OVERLAY_SIZE,
-		padding: 0,
-	},
-]);
-
-// 13px scales the glyphs' 2-unit strokes to roughly 1px.
-export const overlayIcon = style({
-	display: 'block',
-	width: 13,
-	height: 13,
-});
 
 export const tileActions = style([
 	revealOnHover,

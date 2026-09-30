@@ -29,6 +29,7 @@ import {
 	MEDIA_ROW_ATTR,
 } from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
+import * as overlay from '../overlay.css';
 import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
 import * as styles from './MediaTile.css';
@@ -115,9 +116,9 @@ function AltButton({ item, tabbable }: { item: PostMedia; tabbable: boolean }) {
 			onMouseDown={keepEditorFocus}
 		>
 			{hasAlt ? (
-				<CheckIcon className={clsx(styles.overlayIcon, styles.altCheck)} />
+				<CheckIcon className={clsx(overlay.overlayIcon, styles.altCheck)} />
 			) : (
-				<PlusIcon className={styles.overlayIcon} />
+				<PlusIcon className={overlay.overlayIcon} />
 			)}
 			{hasAlt ? m['view.composer.altText.badge.done']() : m['view.composer.altText.badge.add']()}
 		</Button>
@@ -317,11 +318,11 @@ export function MediaTile({
 					// TODO: open the image editor.
 					<Button
 						label={m['view.composer.gallery.action.edit']()}
-						className={styles.overlayButton}
+						className={overlay.overlayButton}
 						variant="bare"
 						tabIndex={tabbable ? undefined : -1}
 					>
-						<PencilIcon className={styles.overlayIcon} />
+						<PencilIcon className={overlay.overlayIcon} />
 					</Button>
 				)}
 
@@ -332,12 +333,12 @@ export function MediaTile({
 							? m['view.composer.media.cancelUpload']()
 							: m['view.composer.media.removeAttachment']()
 					}
-					className={styles.overlayButton}
+					className={overlay.overlayButton}
 					variant="bare"
 					tabIndex={-1}
 					onClick={remove}
 				>
-					<XIcon className={styles.overlayIcon} />
+					<XIcon className={overlay.overlayIcon} />
 				</Button>
 			</div>
 		</div>
