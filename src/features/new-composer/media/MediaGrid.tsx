@@ -171,7 +171,7 @@ export function MediaGrid({
 			style={getStripStyle({
 				max: CAROUSEL_MAX_HEIGHT,
 				min: CAROUSEL_MIN_HEIGHT,
-				ratios: media.map((item) => item.aspectRatio),
+				ratios: media.map((item) => (item.kind === 'image' ? item.aspectRatio : undefined)),
 			})}
 		>
 			{grid}

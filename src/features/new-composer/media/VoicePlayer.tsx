@@ -32,7 +32,15 @@ const FLAT_PEAKS = Array.from({ length: BAR_COUNT }, () => 0);
  * @param props.tabbable whether the controls are in the tab order
  * @returns the player
  */
-export function VoicePlayer({ item, url, tabbable }: { item: PostMedia; url: string; tabbable: boolean }) {
+export function VoicePlayer({
+	item,
+	url,
+	tabbable,
+}: {
+	item: Extract<PostMedia, { kind: 'voice' }>;
+	url: string;
+	tabbable: boolean;
+}) {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const waveform = useWaveform(item.file);
 

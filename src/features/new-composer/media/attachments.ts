@@ -1,10 +1,5 @@
 import { getImageDimensions } from '#/lib/media/metadata';
-import {
-	type Attachment,
-	type AttachmentRejection,
-	getAttachmentKind,
-	readAttachment,
-} from '#/lib/media/read-attachment';
+import { type Attachment, type AttachmentRejection, readAttachment } from '#/lib/media/read-attachment';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
@@ -49,62 +44,67 @@ export const createMedia = async (
 ): Promise<{ media: PostMedia[]; rejections: AttachmentRejection[] }> => {
 	const read = await Promise.all(
 		[...files].map(async (file) => {
-			const result = await readAttachment(file);
-			const aspectRatio = result.ok ? await readAspectRatio(result.attachment) : undefined;
-			return { file, result, aspectRatio };
+			return { file, result: await readAttachment(file) };
 		}),
 	);
 
-	const media: PostMedia[] = [];
+	const media: Promise<PostMedia>[] = [];
 	const rejections: AttachmentRejection[] = [];
-	for (const { file, result, aspectRatio } of read) {
+	for (const { file, result } of read) {
 		if (result.ok) {
-			media.push({
-				id: crypto.randomUUID(),
-				kind: getAttachmentKind(result.attachment),
-				file,
-				aspectRatio,
-				duration: readDuration(result.attachment),
-				alt: '',
-			});
+			media.push(toPostMedia(file, result.attachment));
 		} else {
 			rejections.push(result.rejection);
 		}
 	}
 
-	return { media, rejections };
+	return { media: await Promise.all(media), rejections };
 };
 
-const readAspectRatio = async (attachment: Attachment): Promise<number | undefined> => {
+const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedia> => {
+	const id = crypto.randomUUID();
 	switch (attachment.type) {
 		case 'image': {
+			let aspectRatio;
 			try {
-				return getAspectRatio(await getImageDimensions(attachment.blob));
+				aspectRatio = getAspectRatio(await getImageDimensions(attachment.blob));
 			} catch {
 				// fall back to square sizing if dimensions can't be read.
-				return undefined;
 			}
+
+			return {
+				id,
+				kind: 'image',
+				file,
+				aspectRatio,
+				alt: '',
+			};
 		}
 		case 'video': {
-			return getAspectRatio(attachment.asset);
+			const { asset } = attachment;
+			return {
+				id,
+				kind: asset.kind,
+				file,
+				aspectRatio: getAspectRatio(asset),
+				duration: toSeconds(asset.duration),
+				alt: '',
+			};
 		}
 		case 'voice': {
-			return undefined;
+			return {
+				id,
+				kind: 'voice',
+				file,
+				duration: toSeconds(attachment.asset.duration),
+				alt: '',
+			};
 		}
 	}
 };
 
-const readDuration = (attachment: Attachment): number | undefined => {
-	switch (attachment.type) {
-		case 'image': {
-			return undefined;
-		}
-		case 'video':
-		case 'voice': {
-			const ms = attachment.asset.duration;
-			return ms === null ? undefined : ms / 1000;
-		}
-	}
+const toSeconds = (ms: number | null): number | undefined => {
+	return ms === null ? undefined : ms / 1000;
 };
 
 /**

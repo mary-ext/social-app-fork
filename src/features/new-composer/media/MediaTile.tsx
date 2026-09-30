@@ -162,6 +162,9 @@ const getLayoutProps = (
 	layout: MediaLayout,
 	item: PostMedia,
 ): { className?: string; style?: CSSProperties } => {
+	// single and strip layouts only hold images.
+	const aspectRatio = item.kind === 'image' ? item.aspectRatio : undefined;
+
 	switch (layout) {
 		case 'grid': {
 			return { className: item.kind === 'image' ? styles.square : undefined };
@@ -169,11 +172,11 @@ const getLayoutProps = (
 		case 'single': {
 			return {
 				className: styles.single,
-				style: assignInlineVars({ [styles.ratioVar]: String(item.aspectRatio ?? 1) }),
+				style: assignInlineVars({ [styles.ratioVar]: String(aspectRatio ?? 1) }),
 			};
 		}
 		case 'strip': {
-			return { className: styles.stripTile, style: getTileStyle(item.aspectRatio) };
+			return { className: styles.stripTile, style: getTileStyle(aspectRatio) };
 		}
 	}
 };
