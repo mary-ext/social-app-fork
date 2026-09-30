@@ -5,17 +5,9 @@ import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 import { insetLeftVar, insetRightVar } from '#/components/images/Gallery/index.css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
 
 import { MEDIA_DRAGGING_ATTR } from '../elements';
 import { RAIL_WIDTH, RIGHT_PADDING } from '../layout';
-
-export const grid = style({
-	display: 'grid',
-	position: 'relative',
-	gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
-	gap: space.xs,
-});
 
 export const single = style({
 	display: 'flex',

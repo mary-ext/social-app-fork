@@ -3,12 +3,19 @@ import type { Input } from '@oomfware/tug';
 import type { Wordgard } from 'wordgard/editor';
 
 import { movePostToSlot } from '../commands/reorder-posts';
-import { getPostParam, getPosts } from '../editor/schema';
-import { getMediaTileSelector, MEDIA_GRID_ATTR, NEW_POST_ZONE_ATTR } from '../elements';
+import { getPostParam, getPosts, splitMedia } from '../editor/schema';
+import { getMediaTileSelector, IMAGE_GROUP_ATTR, NEW_POST_ZONE_ATTR } from '../elements';
 import { createMedia } from '../media/attachments';
-import { addMediaInNewPost, insertMediaAt, moveMediaToNewPost, moveMediaToSlot } from '../media/commands';
 import {
-	getMediaDropSlot,
+	addMediaInNewPost,
+	addMediaTo,
+	insertMediaAt,
+	moveMediaTo,
+	moveMediaToNewPost,
+	moveMediaToSlot,
+} from '../media/commands';
+import {
+	getImageDropSlot,
 	getMoveIndex,
 	getPostAt,
 	getPostDropSlot,
@@ -33,16 +40,17 @@ const getMediaDrop = (container: Element, wg: Wordgard, point: Point): MediaDrop
 		return null;
 	}
 
-	const grid = target.element.querySelector(`[${MEDIA_GRID_ATTR}]`);
-	if (grid) {
-		// ignore horizontal bounds so drops in the rail also pick a media slot.
-		const rect = grid.getBoundingClientRect();
+	const group = target.element.querySelector(`[${IMAGE_GROUP_ATTR}]`);
+	if (group) {
+		// ignore horizontal bounds so drops in the rail also pick a slot.
+		const rect = group.getBoundingClientRect();
 		if (point.clientY >= rect.top && point.clientY <= rect.bottom) {
-			return { kind: 'post', postId: post.id, slot: getMediaDropSlot(grid, point.clientX, point.clientY) };
+			return { kind: 'post', postId: post.id, slot: getImageDropSlot(group, point.clientX) };
 		}
 	}
 
-	return { kind: 'post', postId: post.id, slot: getPostParam(post.node).media.length };
+	const { images } = splitMedia(getPostParam(post.node).media);
+	return { kind: 'post', postId: post.id, slot: images.length };
 };
 
 // carousels re-snap to their previous tile after a reorder; bring the moved one into view instead.
@@ -71,9 +79,17 @@ const getIdleIndicator = (source: ThreadDragData): DropIndicator => {
 };
 
 // hides drops that would leave the attachment where it is.
-const getMediaIndicator = (source: MediaSource, drop: MediaDrop | null): DropIndicator => {
+const getMediaIndicator = (source: MediaSource, hit: MediaDrop | null): DropIndicator => {
+	let drop = hit;
+	// non-image drags target a post, not an insertion slot.
+	if (drop?.kind === 'post' && source.mediaKind !== 'image') {
+		drop = { ...drop, slot: null };
+	}
+
 	const isNoop =
-		drop?.kind === 'post' && drop.postId === source.postId && getMoveIndex(drop.slot, source.index) === null;
+		drop?.kind === 'post' &&
+		drop.postId === source.postId &&
+		(drop.slot === null || getMoveIndex(drop.slot, source.index) === null);
 
 	return { kind: 'media', drop: isNoop ? null : drop };
 };
@@ -87,6 +103,12 @@ const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): voi
 			break;
 		}
 		case 'post': {
+			if (drop.slot === null) {
+				moveMediaTo(wg, postId, mediaId, drop.postId);
+				break;
+			}
+
+			// images lead the post's media, so image slots are also media indices.
 			// within a post, the destination counts positions after the attachment's removal.
 			const to = drop.postId === postId ? getMoveIndex(drop.slot, index) : drop.slot;
 			if (to === null) {
@@ -293,6 +315,8 @@ export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => v
 		void createMedia(files).then(({ media }) => {
 			if (target.kind === 'newPost') {
 				addMediaInNewPost(wg, media);
+			} else if (target.slot === null) {
+				addMediaTo(wg, target.postId, media);
 			} else {
 				insertMediaAt(wg, target.postId, target.slot, media);
 			}

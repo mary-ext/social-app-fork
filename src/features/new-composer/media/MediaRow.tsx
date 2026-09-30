@@ -7,9 +7,12 @@ import { getSelectionErrorMessage } from '#/features/composer/media/attachment-m
 import { Text } from '#/components/Text';
 
 import type { ThreadDnd } from '../dnd/channel';
+import { splitMedia } from '../editor/schema';
 import type { PostSummary } from '../editor/thread-analysis';
-import { MediaGrid } from './MediaGrid';
+import { escapeToEditor, useRovingFocus } from '../focus';
+import { ImageGroup } from './ImageGroup';
 import * as styles from './MediaRow.css';
+import { MediaTile } from './MediaTile';
 
 /**
  * a post's attachments and media errors.
@@ -30,22 +33,42 @@ export const MediaRow = memo(function MediaRow({
 	isActive: boolean;
 	dropSlot: number | null;
 }) {
-	if (post.media.length === 0 && !post.mediaProblem) {
+	const { media } = post;
+	const roving = useRovingFocus(
+		media.map((item) => item.id),
+		isActive,
+	);
+
+	if (media.length === 0 && !post.mediaProblem) {
 		return null;
 	}
 
+	const { images, others } = splitMedia(media);
+
 	return (
-		<div className={styles.root}>
-			{post.media.length > 0 && (
-				<MediaGrid
+		<div
+			className={styles.root}
+			onKeyDown={(event) => {
+				escapeToEditor(wg, event);
+				roving.onKeyDown(event);
+			}}
+		>
+			{images.length > 0 && (
+				<ImageGroup wg={wg} dnd={dnd} postId={post.id} images={images} roving={roving} dropSlot={dropSlot} />
+			)}
+
+			{others.map((item, index) => (
+				<MediaTile
+					key={item.id}
 					wg={wg}
 					dnd={dnd}
 					postId={post.id}
-					media={post.media}
-					isActive={isActive}
-					dropSlot={dropSlot}
+					index={images.length + index}
+					item={item}
+					layout="stack"
+					roving={roving.item(item.id)}
 				/>
-			)}
+			))}
 
 			{post.mediaProblem && (
 				<Text size="md_sub" color="negative_600">

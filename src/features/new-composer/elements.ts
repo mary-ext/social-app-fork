@@ -27,8 +27,8 @@ export const NEW_POST_ZONE_ATTR = 'data-new-post-zone';
 /** empty-post placeholder text. */
 export const LINE_PLACEHOLDER_ATTR = 'data-placeholder';
 
-/** marks a post's media grid, used to hit test insertion slots. */
-export const MEDIA_GRID_ATTR = 'data-media-grid';
+/** image group used for drop hit testing and drag auto-scrolling. */
+export const IMAGE_GROUP_ATTR = 'data-image-group';
 
 /** carries a media entry's id, used to find its tile for hit testing and refocusing. */
 export const MEDIA_ID_ATTR = 'data-media-id';
@@ -42,9 +42,6 @@ export const MEDIA_ID_ATTR = 'data-media-id';
 export const getMediaTileSelector = (mediaId: string): string => {
 	return `[${MEDIA_ID_ATTR}="${CSS.escape(mediaId)}"]`;
 };
-
-/** marks a full-width media tile. */
-export const MEDIA_ROW_ATTR = 'data-row';
 
 /** post id used to refocus its handle after reordering. */
 export const POST_HANDLE_ATTR = 'data-post-handle';

@@ -43,7 +43,34 @@ export type PostParam = {
 	 * surviving post's id.
 	 */
 	id: string;
+	/** grouped in order: images, GIFs, videos, voice notes. */
 	media: readonly PostMedia[];
+};
+
+/** a local image attachment. */
+export type ImageMedia = Extract<PostMedia, { kind: 'image' }>;
+
+const MEDIA_KIND_RANK: Record<PostMedia['kind'], number> = {
+	image: 0,
+	gif: 1,
+	video: 2,
+	voice: 3,
+};
+
+// keep images contiguous for the carousel; mixed kinds can't publish together.
+const sortMedia = (media: readonly PostMedia[]): PostMedia[] => {
+	return media.toSorted((a, b) => MEDIA_KIND_RANK[a.kind] - MEDIA_KIND_RANK[b.kind]);
+};
+
+/**
+ * separates a post's images from its other attachments.
+ *
+ * @param media the post's media; all images must precede other attachments
+ * @returns images and other attachments, each in their original order
+ */
+export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[]; others: PostMedia[] } => {
+	const images = media.filter((item): item is ImageMedia => item.kind === 'image');
+	return { images, others: media.slice(images.length) };
 };
 
 /** a single post in the thread. holds one paragraph per line of the post's text. */
@@ -60,13 +87,13 @@ export const Post = Plot.Type.define<PostParam>('Post', {
 });
 
 /**
- * creates a post tag with a unique id.
+ * creates a post tag with a unique id and media stably grouped by kind.
  *
- * @param media the post's media, if it starts with any
+ * @param media initial attachments
  * @returns the tag to open the post with
  */
 export const newPost = (media: readonly PostMedia[] = []): Plot.Tag<PostParam> => {
-	return Post.of({ id: crypto.randomUUID(), media });
+	return Post.of({ id: crypto.randomUUID(), media: sortMedia(media) });
 };
 
 // tolerate non-post plots during document updates.
@@ -86,18 +113,18 @@ export const getPostParam = (post: Plot): PostParam => {
 const ThreadDoc = Plot.defineDoc({ blockContent: Post });
 
 /**
- * replaces a post's data, leaving its content in place.
+ * replaces a post's data, stably grouping media by kind and preserving text.
  *
  * @param pos the position before the post
  * @param param the new data
  * @returns the change replacing the post's opening tag
  */
 export const setPostParamChange = (pos: number, param: PostParam): ChangeSet.Spec => {
-	return { from: pos, to: pos + 1, insert: [Post.of(param)] };
+	return { from: pos, to: pos + 1, insert: [Post.of({ ...param, media: sortMedia(param.media) })] };
 };
 
 /**
- * creates a change that replaces a post's media, leaving its content and id in place.
+ * replaces a post's media, stably grouping by kind and preserving text and id.
  *
  * @param pos the position before the post
  * @param post the post plot

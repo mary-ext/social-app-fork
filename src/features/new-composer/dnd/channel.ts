@@ -4,12 +4,13 @@ import { getReorderDestinationIndex } from '@oomfware/tug/reorder';
 
 import type { Wordgard } from 'wordgard/editor';
 
-import { MEDIA_ID_ATTR, MEDIA_ROW_ATTR, POST_ELEMENT } from '../elements';
+import type { PostMedia } from '../editor/schema';
+import { MEDIA_ID_ATTR, POST_ELEMENT } from '../elements';
 
 /** in-page drag payload; external files use native drop handlers. */
 export type ThreadDragData =
 	| { kind: 'post'; postId: string; index: number }
-	| { kind: 'media'; postId: string; mediaId: string; index: number };
+	| { kind: 'media'; postId: string; mediaId: string; mediaKind: PostMedia['kind']; index: number };
 
 /** drop target data; the editor is the channel's only drop target. */
 export type ThreadDropData = { kind: 'thread' };
@@ -89,33 +90,18 @@ export const getPostDropSlot = (wg: Wordgard, input: Input): number => {
 };
 
 /**
- * finds the insertion slot under the pointer within a media grid.
+ * finds an image insertion slot by horizontal position.
  *
- * @param grid the media grid element
+ * @param group the image group element
  * @param x the pointer's client x
- * @param y the pointer's client y
- * @returns the index an attachment would be inserted before, or the tile count to append
+ * @returns the index an image would be inserted before, or the tile count to append
  */
-export const getMediaDropSlot = (grid: Element, x: number, y: number): number => {
-	const tiles = [...grid.querySelectorAll(`[${MEDIA_ID_ATTR}]`)].map((tile, index) => ({
-		rect: tile.getBoundingClientRect(),
-		index,
-		isRow: tile.hasAttribute(MEDIA_ROW_ATTR),
-	}));
+export const getImageDropSlot = (group: Element, x: number): number => {
+	const tiles = [...group.querySelectorAll(`[${MEDIA_ID_ATTR}]`)];
+	const before = tiles.findIndex((tile) => {
+		const rect = tile.getBoundingClientRect();
+		return x < rect.left + rect.width / 2;
+	});
 
-	// find the row first so drops after a wrapped row's last tile stay in that row.
-	const rowTop = tiles.find(({ rect }) => y < rect.bottom)?.rect.top;
-	if (rowTop === undefined) {
-		return tiles.length;
-	}
-
-	const inRow = tiles.filter(({ rect }) => rect.top === rowTop);
-
-	const [first] = inRow;
-	if (first?.isRow) {
-		return y < first.rect.top + first.rect.height / 2 ? first.index : first.index + 1;
-	}
-
-	const before = inRow.find(({ rect }) => x < rect.left + rect.width / 2);
-	return before?.index ?? inRow[inRow.length - 1]!.index + 1;
+	return before === -1 ? tiles.length : before;
 };

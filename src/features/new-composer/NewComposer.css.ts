@@ -67,7 +67,7 @@ export const footerSlot = style([slot, { paddingBottom: POST_GAP_CENTER * 2 }]);
 
 // #region drag and drop
 
-// tint the landing post; the media grid draws the exact slot.
+// tint the target post; image drops also get an insertion line.
 globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]::before`, DROP_TINT);
 
 // keep the first post's tint inside the scroll container.

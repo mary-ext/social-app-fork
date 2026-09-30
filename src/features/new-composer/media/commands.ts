@@ -67,11 +67,11 @@ export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMed
 };
 
 /**
- * inserts media at a given slot in a post.
+ * inserts media at a post's slot, then stably groups it by kind.
  *
  * @param wg the editor
  * @param postId the post's id
- * @param at the slot the media lands in
+ * @param at the index to insert before
  * @param media the media to add
  */
 export const insertMediaAt = (
@@ -197,7 +197,7 @@ export const moveMediaTo = (wg: Wordgard, fromId: string, mediaId: string, toId:
 };
 
 /**
- * swaps a media entry with its neighbour inside the same post.
+ * swaps adjacent attachments of the same kind within a post.
  *
  * @param wg the editor
  * @param postId the post's id
@@ -208,7 +208,8 @@ export const nudgeMedia = (wg: Wordgard, postId: string, mediaId: string, dir: -
 	const post = findPostById(wg.state.doc, postId);
 	const media = post && getPostParam(post.node).media;
 	const at = media ? media.findIndex((entry) => entry.id === mediaId) : -1;
-	if (!media || at === -1 || at + dir < 0 || at + dir >= media.length) {
+	// regrouping would undo a swap across kinds.
+	if (!media || at === -1 || media[at + dir]?.kind !== media[at]!.kind) {
 		return;
 	}
 

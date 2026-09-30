@@ -7,7 +7,6 @@ import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
 
-import { MEDIA_ROW_ATTR } from '../elements';
 import { DRAGGING_OPACITY } from '../layout';
 import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
 import { revealOnHover } from '../reveal.css';
@@ -18,18 +17,11 @@ export const tile = style({
 	overflow: 'hidden',
 	backgroundColor: vars.palette.contrast_50,
 	selectors: {
-		[`&[${MEDIA_ROW_ATTR}]`]: {
-			gridColumn: '1 / -1',
-		},
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},
 	},
-});
-
-export const square = style({
-	aspectRatio: '1',
 });
 
 export const ratioVar = createVar();

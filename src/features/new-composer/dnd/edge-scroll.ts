@@ -1,6 +1,6 @@
 import { clamp } from '#/lib/utils/numbers';
 
-import { MEDIA_GRID_ATTR } from '../elements';
+import { IMAGE_GROUP_ATTR } from '../elements';
 
 // include the rail gutter in the left-edge hit area.
 const EDGE_SIZE = 56;
@@ -16,20 +16,20 @@ const getSpeed = (distance: number): number => {
 };
 
 const findScroller = (container: Element, point: { clientX: number; clientY: number }): Hit | null => {
-	for (const grid of container.querySelectorAll<HTMLElement>(`[${MEDIA_GRID_ATTR}]`)) {
-		const max = grid.scrollWidth - grid.clientWidth;
-		const rect = grid.getBoundingClientRect();
+	for (const group of container.querySelectorAll<HTMLElement>(`[${IMAGE_GROUP_ATTR}]`)) {
+		const max = group.scrollWidth - group.clientWidth;
+		const rect = group.getBoundingClientRect();
 		if (max <= 0 || point.clientY < rect.top || point.clientY > rect.bottom) {
 			continue;
 		}
 
 		const fromLeft = point.clientX - rect.left;
 		const fromRight = rect.right - point.clientX;
-		if (fromLeft < EDGE_SIZE && grid.scrollLeft > 0) {
-			return { element: grid, speed: -getSpeed(fromLeft) };
+		if (fromLeft < EDGE_SIZE && group.scrollLeft > 0) {
+			return { element: group, speed: -getSpeed(fromLeft) };
 		}
-		if (fromRight < EDGE_SIZE && grid.scrollLeft < max) {
-			return { element: grid, speed: getSpeed(fromRight) };
+		if (fromRight < EDGE_SIZE && group.scrollLeft < max) {
+			return { element: group, speed: getSpeed(fromRight) };
 		}
 		return null;
 	}

@@ -24,7 +24,7 @@ import type { ThreadDnd } from '../dnd/channel';
 import { DragChip, DragThumbnail, setDragPreview } from '../dnd/DragPreview';
 import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
 import { findActivePost } from '../editor/selection';
-import { getMediaTileSelector, MEDIA_ID_ATTR, MEDIA_ROW_ATTR } from '../elements';
+import { getMediaTileSelector, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
 import * as overlay from '../overlay.css';
 import { getMediaUrl } from './attachments';
@@ -167,7 +167,8 @@ function AltButton({
 	);
 }
 
-export type MediaLayout = 'grid' | 'single' | 'strip';
+// images use single or strip; other attachments use full-width stack rows.
+type MediaLayout = 'single' | 'stack' | 'strip';
 
 const getLayoutProps = (
 	layout: MediaLayout,
@@ -177,14 +178,14 @@ const getLayoutProps = (
 	const aspectRatio = item.kind === 'image' ? item.aspectRatio : undefined;
 
 	switch (layout) {
-		case 'grid': {
-			return { className: item.kind === 'image' ? styles.square : undefined };
-		}
 		case 'single': {
 			return {
 				className: styles.single,
 				style: assignInlineVars({ [styles.ratioVar]: String(aspectRatio ?? 1) }),
 			};
+		}
+		case 'stack': {
+			return {};
 		}
 		case 'strip': {
 			return { className: styles.stripTile, style: getTileStyle(aspectRatio) };
@@ -236,7 +237,6 @@ export function MediaTile({
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const url = getMediaUrl(item);
-	const isRow = item.kind !== 'image';
 	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;
 	const layoutProps = getLayoutProps(layout, item);
 	const tabbable = roving.tabIndex === 0;
@@ -270,7 +270,7 @@ export function MediaTile({
 
 		return dnd.draggable({
 			element: node,
-			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, index }),
+			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, mediaKind: item.kind, index }),
 			onGenerateDragPreview: ({ nativeSetDragImage }) => {
 				setDragPreview(nativeSetDragImage, getMediaDragPreview(item, url));
 			},
@@ -292,10 +292,7 @@ export function MediaTile({
 			style={layoutProps.style}
 			role="group"
 			aria-label={MEDIA_LABELS[item.kind]}
-			{...{
-				[MEDIA_ID_ATTR]: item.id,
-				[MEDIA_ROW_ATTR]: isRow ? '' : undefined,
-			}}
+			{...{ [MEDIA_ID_ATTR]: item.id }}
 			onKeyDown={(event) => {
 				// preserve keyboard handling in the tile's controls.
 				if (event.target !== event.currentTarget) {

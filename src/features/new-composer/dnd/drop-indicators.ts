@@ -12,10 +12,10 @@ import {
 /**
  * where dropped media would land.
  *
- * - `post`: in an existing post's media, inserted before `slot`.
+ * - `post`: before image `slot`, or after attachments of the same kind if null.
  * - `newPost`: in a new post appended to the thread.
  */
-export type MediaDrop = { kind: 'post'; postId: string; slot: number } | { kind: 'newPost' };
+export type MediaDrop = { kind: 'post'; postId: string; slot: number | null } | { kind: 'newPost' };
 
 /**
  * destination of the current drag.
@@ -138,11 +138,11 @@ export const getMediaDrag = (state: GardState): MediaDrag | null => {
 };
 
 /**
- * reads a post's media insertion slot for the current drag.
+ * reads a post's image insertion slot for the current drag.
  *
  * @param drag the media drag, or null outside one
  * @param postId the post's id
- * @returns the insertion slot, or null when the drag wouldn't land in that post
+ * @returns the image insertion slot, or null if none targets this post
  */
 export const getDropSlot = (drag: MediaDrag | null, postId: string): number | null => {
 	const drop = drag?.drop;
