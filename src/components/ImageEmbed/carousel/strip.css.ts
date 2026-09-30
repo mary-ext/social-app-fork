@@ -13,6 +13,9 @@ export const tileRatioVar = createVar();
 
 const heightVar = createVar();
 
+// round widths to avoid fractional offsets on subsequent tiles; object-fit: cover handles the crop.
+const tileWidth = (ratio: string) => `round(${heightVar} * ${ratio}, 1px)`;
+
 const insetRight = fallbackVar(insetRightVar, '0px');
 // 100cqw is the root's width; include the right gutter to reach the bleed host's edge.
 const snapRoom = `(100cqw + ${insetRight})`;
@@ -48,7 +51,7 @@ export const scroll = style([
 		scrollSnapType: 'x mandatory',
 		scrollbarWidth: 'none',
 		// leave room for the last tile to snap to the start; keep only the gutter when the strip fits.
-		paddingRight: `max(${insetRight}, ${snapRoom} - ${heightVar} * ${lastRatioVar} - ${fitSlack})`,
+		paddingRight: `max(${insetRight}, ${snapRoom} - ${tileWidth(lastRatioVar)} - ${fitSlack})`,
 		selectors: {
 			'&::-webkit-scrollbar': { display: 'none' },
 		},
@@ -57,7 +60,7 @@ export const scroll = style([
 
 export const tile = style({
 	flex: '0 0 auto',
-	aspectRatio: tileRatioVar,
+	width: tileWidth(tileRatioVar),
 	height: '100%',
 	scrollSnapAlign: 'start',
 });

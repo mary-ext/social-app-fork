@@ -14,6 +14,8 @@ export type PostMedia = {
 	file: File;
 	/** width / height, or undefined when dimensions are unavailable. */
 	aspectRatio: number | undefined;
+	/** alt text; empty when absent. */
+	alt: string;
 };
 
 /** per-post data that isn't part of the text. */

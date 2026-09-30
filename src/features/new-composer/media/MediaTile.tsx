@@ -9,9 +9,14 @@ import type { Wordgard } from 'wordgard/editor';
 import type { AttachmentKind } from '#/lib/media/read-attachment';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
-import { Button, ButtonIcon } from '#/components/web/Button';
+import { ProgressCircle } from '#/components/ProgressCircle';
+import { Spinner } from '#/components/Spinner';
+import { Button } from '#/components/web/Button';
 
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import type { ThreadDnd } from '../dnd/channel';
@@ -27,6 +32,7 @@ import { keepEditorFocus, type RovingItemProps } from '../focus';
 import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
 import * as styles from './MediaTile.css';
+import { type UploadStatus, useUploadStatus } from './upload-status';
 
 const MEDIA_LABELS: Record<AttachmentKind, string> = {
 	gif: 'GIF attachment',
@@ -60,6 +66,62 @@ function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; t
 			return <video className={styles.frame} src={url} preload="metadata" muted />;
 		}
 	}
+}
+
+type PendingUpload = Exclude<UploadStatus, { status: 'done' }>;
+
+const getUploadLabel = (upload: PendingUpload): string => {
+	switch (upload.status) {
+		case 'compressing': {
+			return m['view.composer.media.upload.compressing']();
+		}
+		case 'uploading': {
+			return m['view.composer.media.upload.uploading']({ percent: Math.round(upload.progress * 100) });
+		}
+		case 'processing': {
+			return m['view.composer.media.upload.processing']();
+		}
+	}
+};
+
+function UploadBadge({ upload }: { upload: PendingUpload }) {
+	return (
+		<div className={styles.uploadBadge}>
+			{upload.status === 'uploading' ? (
+				<ProgressCircle
+					color="white"
+					progress={upload.progress}
+					size={18}
+					trackColor="rgba(255, 255, 255, 0.25)"
+				/>
+			) : (
+				<Spinner label={null} size="md" />
+			)}
+			{getUploadLabel(upload)}
+		</div>
+	);
+}
+
+function AltButton({ item, tabbable }: { item: PostMedia; tabbable: boolean }) {
+	const hasAlt = item.alt.length > 0;
+
+	// TODO: open the alt text editor.
+	return (
+		<Button
+			label={hasAlt ? m['view.composer.altText.action.edit']() : m['view.composer.altText.action.add']()}
+			className={styles.altChip}
+			variant="bare"
+			tabIndex={tabbable ? undefined : -1}
+			onMouseDown={keepEditorFocus}
+		>
+			{hasAlt ? (
+				<CheckIcon className={clsx(styles.overlayIcon, styles.altCheck)} />
+			) : (
+				<PlusIcon className={styles.overlayIcon} />
+			)}
+			{hasAlt ? m['view.composer.altText.badge.done']() : m['view.composer.altText.badge.add']()}
+		</Button>
+	);
 }
 
 export type MediaLayout = 'grid' | 'single' | 'strip';
@@ -133,6 +195,10 @@ export function MediaTile({
 	const url = getMediaUrl(item);
 	const isRow = item.kind !== 'image';
 	const layoutProps = getLayoutProps(layout, item);
+	const tabbable = roving.tabIndex === 0;
+
+	const upload = useUploadStatus(item);
+	const pendingUpload = upload && upload.status !== 'done' ? upload : null;
 
 	const remove = () => {
 		// transfer focus only if the removed tile had it.
@@ -242,19 +308,36 @@ export function MediaTile({
 				event.stopPropagation();
 			}}
 		>
-			<MediaPreview item={item} url={url} tabbable={roving.tabIndex === 0} />
+			<MediaPreview item={item} url={url} tabbable={tabbable} />
+
+			{pendingUpload ? <UploadBadge upload={pendingUpload} /> : <AltButton item={item} tabbable={tabbable} />}
 
 			<div className={styles.tileActions} onMouseDown={keepEditorFocus}>
+				{item.kind === 'image' && (
+					// TODO: open the image editor.
+					<Button
+						label={m['view.composer.gallery.action.edit']()}
+						className={styles.overlayButton}
+						variant="bare"
+						tabIndex={tabbable ? undefined : -1}
+					>
+						<PencilIcon className={styles.overlayIcon} />
+					</Button>
+				)}
+
 				{/* Delete and Backspace remove the focused tile. */}
 				<Button
-					label={m['view.composer.media.removeAttachment']()}
-					size="tiny"
-					color="secondary_inverted"
-					shape="round"
+					label={
+						pendingUpload
+							? m['view.composer.media.cancelUpload']()
+							: m['view.composer.media.removeAttachment']()
+					}
+					className={styles.overlayButton}
+					variant="bare"
 					tabIndex={-1}
 					onClick={remove}
 				>
-					<ButtonIcon icon={XIcon} />
+					<XIcon className={styles.overlayIcon} />
 				</Button>
 			</div>
 		</div>

@@ -59,7 +59,13 @@ export const createMedia = async (
 	const rejections: AttachmentRejection[] = [];
 	for (const { file, result, aspectRatio } of read) {
 		if (result.ok) {
-			media.push({ id: crypto.randomUUID(), kind: getAttachmentKind(result.attachment), file, aspectRatio });
+			media.push({
+				id: crypto.randomUUID(),
+				kind: getAttachmentKind(result.attachment),
+				file,
+				aspectRatio,
+				alt: '',
+			});
 		} else {
 			rejections.push(result.rejection);
 		}
