@@ -14,6 +14,8 @@ export type PostMedia = {
 	file: File;
 	/** width / height, or undefined when dimensions are unavailable. */
 	aspectRatio: number | undefined;
+	/** seconds, or undefined for images or unreadable metadata. */
+	duration: number | undefined;
 	/** alt text; empty when absent. */
 	alt: string;
 };

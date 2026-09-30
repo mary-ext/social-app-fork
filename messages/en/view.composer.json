@@ -278,6 +278,7 @@
 	"view.composer.video.uploading": "Uploading video...",
 	"view.composer.voice.a11y.pause": "Pause voice clip",
 	"view.composer.voice.a11y.play": "Play voice clip",
+	"view.composer.voice.a11y.seek": "Seek voice clip",
 	"view.composer.voice.cardLabel": "Voice",
 	"view.composer.voice.error.altMissing": "One or more voice clips is missing alt text.",
 	"view.composer.voice.error.oneOnly": "You can only select one audio file at a time.",

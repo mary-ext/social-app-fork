@@ -64,6 +64,7 @@ export const createMedia = async (
 				kind: getAttachmentKind(result.attachment),
 				file,
 				aspectRatio,
+				duration: readDuration(result.attachment),
 				alt: '',
 			});
 		} else {
@@ -89,6 +90,19 @@ const readAspectRatio = async (attachment: Attachment): Promise<number | undefin
 		}
 		case 'voice': {
 			return undefined;
+		}
+	}
+};
+
+const readDuration = (attachment: Attachment): number | undefined => {
+	switch (attachment.type) {
+		case 'image': {
+			return undefined;
+		}
+		case 'video':
+		case 'voice': {
+			const ms = attachment.asset.duration;
+			return ms === null ? undefined : ms / 1000;
 		}
 	}
 };

@@ -18,6 +18,7 @@ import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
+import { colors } from '#/styles/colors';
 
 import type { ThreadDnd } from '../dnd/channel';
 import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
@@ -34,6 +35,7 @@ import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
 import * as styles from './MediaTile.css';
 import { type UploadStatus, useUploadStatus } from './upload-status';
+import { VoicePlayer } from './VoicePlayer';
 
 const MEDIA_LABELS: Record<AttachmentKind, string> = {
 	gif: 'GIF attachment',
@@ -48,16 +50,7 @@ function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; t
 			return <img className={styles.media} src={url} alt="" />;
 		}
 		case 'voice': {
-			return (
-				<audio
-					className={styles.audio}
-					src={url}
-					preload="metadata"
-					controls
-					// keep native controls out of the tab order unless their tile is tabbable.
-					tabIndex={tabbable ? undefined : -1}
-				/>
-			);
+			return <VoicePlayer item={item} url={url} tabbable={tabbable} />;
 		}
 		case 'gif': {
 			// GIFs remain images until publishing.
@@ -85,32 +78,70 @@ const getUploadLabel = (upload: PendingUpload): string => {
 	}
 };
 
-function UploadBadge({ upload }: { upload: PendingUpload }) {
+type ControlStyles = {
+	actions: string;
+	altChip: string;
+	progressColor: string;
+	removeButton: string;
+	spinnerColor: 'default' | 'white';
+	trackColor: string;
+	uploadBadge: string;
+};
+
+const OVERLAY_CONTROLS: ControlStyles = {
+	actions: styles.tileActions,
+	altChip: styles.altChip,
+	progressColor: 'white',
+	removeButton: overlay.overlayButton,
+	spinnerColor: 'white',
+	trackColor: 'rgba(255, 255, 255, 0.25)',
+	uploadBadge: styles.uploadBadge,
+};
+
+const INLINE_CONTROLS: ControlStyles = {
+	actions: styles.inlineTileActions,
+	altChip: styles.inlineAltChip,
+	progressColor: colors.primary_500,
+	removeButton: styles.inlineButton,
+	spinnerColor: 'default',
+	trackColor: colors.borderContrastLow,
+	uploadBadge: styles.inlineUploadStatus,
+};
+
+function UploadBadge({ upload, controls }: { upload: PendingUpload; controls: ControlStyles }) {
 	return (
-		<div className={styles.uploadBadge}>
+		<div className={controls.uploadBadge}>
 			{upload.status === 'uploading' ? (
 				<ProgressCircle
-					color="white"
+					color={controls.progressColor}
 					progress={upload.progress}
 					size={18}
-					trackColor="rgba(255, 255, 255, 0.25)"
+					trackColor={controls.trackColor}
 				/>
 			) : (
-				<Spinner label={null} size="md" />
+				<Spinner color={controls.spinnerColor} label={null} size="md" />
 			)}
 			{getUploadLabel(upload)}
 		</div>
 	);
 }
 
-function AltButton({ item, tabbable }: { item: PostMedia; tabbable: boolean }) {
+function AltButton({
+	item,
+	controls,
+	tabbable,
+}: {
+	item: PostMedia;
+	controls: ControlStyles;
+	tabbable: boolean;
+}) {
 	const hasAlt = item.alt.length > 0;
 
 	// TODO: open the alt text editor.
 	return (
 		<Button
 			label={hasAlt ? m['view.composer.altText.action.edit']() : m['view.composer.altText.action.add']()}
-			className={styles.altChip}
+			className={controls.altChip}
 			variant="bare"
 			tabIndex={tabbable ? undefined : -1}
 			onMouseDown={keepEditorFocus}
@@ -195,6 +226,7 @@ export function MediaTile({
 }) {
 	const url = getMediaUrl(item);
 	const isRow = item.kind !== 'image';
+	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;
 	const layoutProps = getLayoutProps(layout, item);
 	const tabbable = roving.tabIndex === 0;
 
@@ -227,9 +259,6 @@ export function MediaTile({
 
 		const stopDragging = dnd.draggable({
 			element: node,
-			// preserve native audio control interaction.
-			canDrag: ({ input }) =>
-				!(document.elementFromPoint(input.clientX, input.clientY) instanceof HTMLAudioElement),
 			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, index }),
 		});
 
@@ -264,7 +293,7 @@ export function MediaTile({
 				[MEDIA_INSERT_AFTER_ATTR]: insertAfter ? '' : undefined,
 			}}
 			onKeyDown={(event) => {
-				// preserve native keyboard handling in audio controls.
+				// preserve keyboard handling in the tile's controls.
 				if (event.target !== event.currentTarget) {
 					return;
 				}
@@ -311,9 +340,13 @@ export function MediaTile({
 		>
 			<MediaPreview item={item} url={url} tabbable={tabbable} />
 
-			{pendingUpload ? <UploadBadge upload={pendingUpload} /> : <AltButton item={item} tabbable={tabbable} />}
+			{pendingUpload ? (
+				<UploadBadge upload={pendingUpload} controls={controls} />
+			) : (
+				<AltButton item={item} controls={controls} tabbable={tabbable} />
+			)}
 
-			<div className={styles.tileActions} onMouseDown={keepEditorFocus}>
+			<div className={controls.actions} onMouseDown={keepEditorFocus}>
 				{item.kind === 'image' && (
 					// TODO: open the image editor.
 					<Button
@@ -333,7 +366,7 @@ export function MediaTile({
 							? m['view.composer.media.cancelUpload']()
 							: m['view.composer.media.removeAttachment']()
 					}
-					className={overlay.overlayButton}
+					className={controls.removeButton}
 					variant="bare"
 					tabIndex={-1}
 					onClick={remove}

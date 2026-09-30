@@ -4,10 +4,11 @@ import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import { vars } from '#/styles/contract.css';
+import { hover } from '#/styles/interaction';
 import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
 
 import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR, MEDIA_ROW_ATTR } from '../elements';
-import { overlay, OVERLAY_SIZE } from '../overlay.css';
+import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
 import { revealOnHover } from '../reveal.css';
 
 export const tile = style({
@@ -41,11 +42,14 @@ export const single = style({
 
 export const stripTile = style([strip.tile, { borderRadius: borderRadius.md }]);
 
+// keep badge and button changes from resizing the waveform.
 export const voice = style({
-	display: 'flex',
+	display: 'grid',
+	gridTemplateAreas: '"player player" "status actions"',
+	gridTemplateColumns: '1fr auto',
 	alignItems: 'center',
-	gap: space.xs,
-	padding: space.xs,
+	gap: space.sm,
+	padding: space.sm,
 });
 
 const insertionLine = {
@@ -84,17 +88,8 @@ export const frame = style({
 	pointerEvents: 'none',
 });
 
-export const audio = style({
-	display: 'block',
-	flex: 1,
-	minWidth: 0,
-});
-
 const badge = style({
 	display: 'flex',
-	position: 'absolute',
-	bottom: space.sm,
-	left: space.sm,
 	alignItems: 'center',
 	boxSizing: 'border-box',
 	borderRadius: 999,
@@ -102,36 +97,61 @@ const badge = style({
 	fontSize: 12,
 	fontWeight: fontWeight.semiBold,
 	lineHeight: 1,
+});
+
+const overlayBadge = style([
+	badge,
+	overlay,
+	{
+		position: 'absolute',
+		bottom: space.sm,
+		left: space.sm,
+	},
+]);
+
+const inlineBadge = style([
+	badge,
+	{
+		gridArea: 'status',
+		justifySelf: 'start',
+		color: vars.palette.contrast_700,
+	},
+]);
+
+const inlineControl = style({
+	backgroundColor: 'transparent',
 	selectors: {
-		// avoid covering native audio controls.
-		[`${voice} &`]: {
-			position: 'static',
-			flexShrink: 0,
-		},
+		[hover()]: { backgroundColor: vars.palette.contrast_100 },
 	},
 });
 
-export const altChip = style([badge, overlay, { gap: space.xs, padding: '0 11px 0 8px' }]);
+const altChipShape = style({ gap: space.xs, padding: '0 11px 0 8px' });
+
+export const altChip = style([overlayBadge, altChipShape]);
+
+export const inlineAltChip = style([inlineBadge, inlineControl, altChipShape]);
 
 export const altCheck = style({
 	color: vars.palette.positive_500,
 });
 
-export const uploadBadge = style([badge, overlay, { gap: 6, padding: '0 11px 0 5px' }]);
+const uploadShape = style({ gap: 6, padding: '0 11px 0 5px' });
+
+export const uploadBadge = style([overlayBadge, uploadShape]);
+
+export const inlineUploadStatus = style([inlineBadge, uploadShape]);
+
+export const inlineButton = style([inlineControl, roundButton, { color: vars.palette.contrast_700 }]);
+
+const actions = style([revealOnHover, { display: 'flex', gap: 6 }]);
 
 export const tileActions = style([
-	revealOnHover,
+	actions,
 	{
-		display: 'flex',
 		position: 'absolute',
 		top: space.sm,
 		right: space.sm,
-		gap: 6,
-		selectors: {
-			// avoid covering native audio controls.
-			[`${voice} &`]: {
-				position: 'static',
-			},
-		},
 	},
 ]);
+
+export const inlineTileActions = style([actions, { gridArea: 'actions' }]);

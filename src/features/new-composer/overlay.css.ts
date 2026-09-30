@@ -18,15 +18,14 @@ export const overlay = style({
 	},
 });
 
-export const overlayButton = style([
-	overlay,
-	{
-		borderRadius: 999,
-		width: OVERLAY_SIZE,
-		height: OVERLAY_SIZE,
-		padding: 0,
-	},
-]);
+export const roundButton = style({
+	borderRadius: 999,
+	width: OVERLAY_SIZE,
+	height: OVERLAY_SIZE,
+	padding: 0,
+});
+
+export const overlayButton = style([overlay, roundButton]);
 
 // 13px scales the glyphs' 2-unit strokes to roughly 1px.
 export const overlayIcon = style({
