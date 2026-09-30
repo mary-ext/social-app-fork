@@ -1,6 +1,6 @@
-import { keyframes, style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
-import { BODY_TIMELINE } from '#/components/Dialog/Popup.css';
+import { body } from '#/components/Dialog/Popup.css';
 
 import { colors } from '#/styles/colors';
 import { space, zIndex } from '#/styles/tokens.css';
@@ -21,37 +21,25 @@ export const border = style({
 	borderBottom: `1px solid ${colors.contrast_200}`,
 });
 
-const divide = keyframes({
-	from: { opacity: 0 },
-	to: { opacity: 1 },
-});
+export const scrollingBorder = style({});
 
-// overlay the divider to avoid layout shifts. browsers without scroll timelines leave it hidden.
-export const scrollingBorder = style({
-	position: 'relative',
+globalStyle(`:has(> ${scrollingBorder}) ${body}::before`, {
+	display: 'block',
+	position: 'sticky',
+	top: 0,
 	zIndex: zIndex.raised,
-	'::after': {
-		position: 'absolute',
-		top: '100%',
-		right: 0,
-		left: 0,
-		opacity: 0,
-		backgroundColor: colors.contrast_200,
-		height: 1,
-		pointerEvents: 'none',
-		content: '""',
-	},
-	'@supports': {
-		'(animation-timeline: scroll())': {
-			selectors: {
-				'&::after': {
-					animationName: divide,
-					animationTimingFunction: 'linear',
-					animationFillMode: 'both',
-					animationTimeline: BODY_TIMELINE,
-					animationRange: '0px 16px',
-				},
-			},
+	transitionDuration: '150ms',
+	transitionProperty: 'opacity',
+	opacity: 0,
+	// cancel out its height to avoid layout shifts.
+	marginBottom: -1,
+	backgroundColor: colors.contrast_200,
+	height: 1,
+	pointerEvents: 'none',
+	content: '""',
+	'@container': {
+		'scroll-state(scrollable: top)': {
+			opacity: 1,
 		},
 	},
 });

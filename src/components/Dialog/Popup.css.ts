@@ -1,4 +1,4 @@
-import { createVar, generateIdentifier, style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
 
@@ -9,9 +9,6 @@ import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { iconSize, space, zIndex } from '#/styles/tokens.css';
-
-/** shared scroll timeline for `Body`/`List` and the header divider. */
-export const BODY_TIMELINE = `--${generateIdentifier('dialog-body')}`;
 
 // #region search
 
@@ -123,7 +120,6 @@ export const popup = recipe(
 					padding: 0,
 					maxHeight: '80vh',
 					overflow: 'hidden',
-					timelineScope: BODY_TIMELINE,
 					vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
 					selectors: {
 						[`&:has(${searchOverlap})`]: {
@@ -181,13 +177,12 @@ export const popup = recipe(
 
 export const body = style(
 	layered(components, {
+		containerType: 'scroll-state',
 		flex: 1,
 		paddingTop: searchInset,
 		minHeight: 0,
 		overflowY: 'auto',
 		scrollPaddingTop: searchScrollInset,
-		scrollTimelineName: BODY_TIMELINE,
-		scrollTimelineAxis: 'block',
 	}),
 );
 
