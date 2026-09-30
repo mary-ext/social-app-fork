@@ -27,8 +27,9 @@ import { dropIndicator, getDropSlot, getMediaDrag, type MediaDrag } from './dnd/
 import { NewPostDropZone } from './dnd/NewPostDropZone';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
 import { type PostSlotKind, type SlotHost, slotHost } from './editor/post-slots';
-import { createPosts, endOfLastLine, getPostParam, threadSchema } from './editor/schema';
-import { activePost, findActivePost } from './editor/selection';
+import { createPosts, endOfLastLine, threadSchema } from './editor/schema';
+import { postScrolling } from './editor/scrolling';
+import { activePost, getActivePostId } from './editor/selection';
 import { type PostSummary, postPlaceholder, threadAnalysis } from './editor/thread-analysis';
 import { MEDIA_DRAGGING_ATTR } from './elements';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
@@ -65,11 +66,6 @@ type PostSlot = {
 // query changes reopen dismissed suggestions.
 const getCompletionKey = (completion: ActiveCompletion) => {
 	return `${completion.type}:${completion.from}:${completion.query}`;
-};
-
-const getActivePostId = (state: GardState): string | null => {
-	const found = findActivePost(state);
-	return found && getPostParam(found.node).id;
 };
 
 /**
@@ -140,6 +136,7 @@ export function NewComposer() {
 			threadCommands,
 			threadAnalysis,
 			activePost,
+			postScrolling,
 			dropIndicator,
 			slotHost.of(host),
 			suggestionState,

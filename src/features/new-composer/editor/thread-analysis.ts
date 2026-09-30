@@ -38,6 +38,8 @@ export type PostSummary = {
 	isOverLimit: boolean;
 	/** no text, media, or embeds. */
 	isBlank: boolean;
+	/** has media or embeds. */
+	hasAttachments: boolean;
 	media: readonly PostMedia[];
 	/** media type or count violation, or null. */
 	mediaProblem: SelectionError | null;
@@ -107,12 +109,14 @@ const summarize = (
 		return hit;
 	}
 
+	const hasAttachments = media.length > 0 || embeds.external !== null || embeds.record !== null;
 	const summary: PostSummary = {
 		id,
 		index,
 		length,
 		isOverLimit: length > MAX_POST_GRAPHEME_LENGTH,
-		isBlank: length === 0 && media.length === 0 && embeds.external === null && embeds.record === null,
+		isBlank: length === 0 && !hasAttachments,
+		hasAttachments,
 		media,
 		mediaProblem: getMediaProblem(media),
 		embeds,
