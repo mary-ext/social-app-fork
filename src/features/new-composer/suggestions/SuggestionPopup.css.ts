@@ -1,11 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, emojiFontFamily, fontSize, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, emojiFontFamily, fontSize, space } from '#/styles/tokens.css';
 
-// the editor's tooltip host handles placement and available-height constraints.
 export const popup = style({
-	zIndex: zIndex.popover,
 	boxSizing: 'border-box',
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: borderRadius.md,
@@ -14,7 +12,8 @@ export const popup = style({
 	paddingBlock: space.xs,
 	width: 320,
 	maxWidth: '100%',
-	maxHeight: 360,
+	// 100% respects the tooltip host's clamped height.
+	maxHeight: 'min(360px, 100%)',
 	overflowX: 'hidden',
 	overflowY: 'auto',
 });

@@ -77,6 +77,7 @@ const createHost = (wg: Wordgard): Tooltip.View => {
 
 	return {
 		dom,
+		offset: { x: 0, y: 8 },
 		connect: () => hosts.get(dom)?.mount(dom),
 		disconnect: () => hosts.get(dom)?.unmount(dom),
 		remove: () => hosts.get(dom)?.unmount(dom),

@@ -11,6 +11,7 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
+import { zIndex } from '#/styles/tokens.css';
 
 import { threadCommands } from './commands/thread-commands';
 import { createThreadDnd } from './dnd/channel';
@@ -124,6 +125,13 @@ export function NewComposer() {
 			Wordgard.theme({
 				'&': { border: 'none' },
 				'&:has(> wg-scroller > wg-content:focus)': { outline: 'none' },
+				// reset host styles; the suggestion popup supplies its own.
+				'.wg-tooltip': {
+					zIndex: zIndex.popover,
+					boxShadow: 'unset',
+					backgroundColor: 'unset',
+					font: 'unset',
+				},
 			}),
 			suggestionKeys(() => suggestionKeyRef.current),
 			Wordgard.updateListener.of((update) => {
