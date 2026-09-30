@@ -60,6 +60,12 @@ const isWithin = (pos: number, span: Span) => {
 	return pos >= span.from && pos <= span.to;
 };
 
+// keep parser-trimmed punctuation in the editing range so typing it doesn't settle the link.
+const getEditableEnd = (text: string, to: number) => {
+	const end = text.slice(to).search(/\s/);
+	return end === -1 ? text.length : to + end;
+};
+
 // stable summary props let React skip unchanged post controls; reordering invalidates the index.
 const summarized = new WeakMap<Plot, PostSummary>();
 
@@ -110,13 +116,13 @@ const analyze = (
 	// settle every link the caret isn't in before picking embeds, since settling is per URL.
 	let settled: Set<string> | null = null;
 	let editing: Span | null = null;
-	for (const { measurement, toPos } of measured) {
+	for (const { text, measurement, toPos } of measured) {
 		for (const link of measurement.links) {
 			if ((settled ?? prevSession.settled).has(link.url)) {
 				continue;
 			}
 
-			const span = { from: toPos(link.from), to: toPos(link.to) };
+			const span = { from: toPos(link.from), to: toPos(getEditableEnd(text, link.to)) };
 			if (isWithin(head, span)) {
 				editing = span;
 			} else {
