@@ -1,4 +1,4 @@
-import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
@@ -7,7 +7,8 @@ import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
 
-import { MEDIA_INSERT_AFTER_ATTR, MEDIA_INSERT_BEFORE_ATTR, MEDIA_ROW_ATTR } from '../elements';
+import { MEDIA_ROW_ATTR } from '../elements';
+import { DRAGGING_OPACITY } from '../layout';
 import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
 import { revealOnHover } from '../reveal.css';
 
@@ -52,23 +53,9 @@ export const voice = style({
 	padding: space.sm,
 });
 
-const insertionLine = {
-	position: 'absolute',
-	zIndex: 1,
-	backgroundColor: vars.palette.primary_500,
-	content: '""',
-} as const;
-
-const cellLine = { ...insertionLine, top: 0, bottom: 0, width: 3 };
-const rowLine = { ...insertionLine, right: 0, left: 0, height: 3 };
-
-const cell = `${tile}:not([${MEDIA_ROW_ATTR}])`;
-const row = `${tile}[${MEDIA_ROW_ATTR}]`;
-
-globalStyle(`${cell}[${MEDIA_INSERT_BEFORE_ATTR}]::before`, { ...cellLine, left: 0 });
-globalStyle(`${cell}[${MEDIA_INSERT_AFTER_ATTR}]::after`, { ...cellLine, right: 0 });
-globalStyle(`${row}[${MEDIA_INSERT_BEFORE_ATTR}]::before`, { ...rowLine, top: 0 });
-globalStyle(`${row}[${MEDIA_INSERT_AFTER_ATTR}]::after`, { ...rowLine, bottom: 0 });
+export const dragging = style({
+	opacity: DRAGGING_OPACITY,
+});
 
 export const media = style({
 	display: 'block',

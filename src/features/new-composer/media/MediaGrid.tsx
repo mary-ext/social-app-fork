@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import type { Wordgard } from 'wordgard/editor';
 
@@ -6,40 +6,76 @@ import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbe
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
 
-import { isFileDrag, type ThreadDnd } from '../dnd/channel';
-import { markDropTarget } from '../dnd/drop-indicators';
+import { space } from '#/styles/tokens.css';
+
+import type { ThreadDnd } from '../dnd/channel';
 import type { PostMedia } from '../editor/schema';
 import { MEDIA_GRID_ATTR, MEDIA_ID_ATTR, MEDIA_ROW_ATTR } from '../elements';
 import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
 import { RAIL_WIDTH } from '../layout';
-import { createMedia } from './attachments';
-import { insertMediaAt } from './commands';
 import * as styles from './MediaGrid.css';
 import { type MediaLayout, MediaTile } from './MediaTile';
 
-/** returns the file insertion index at the pointer, or the tile count to append. */
-const getFileSlotAt = (grid: HTMLElement, x: number, y: number): number => {
-	const tiles = [...grid.querySelectorAll(`[${MEDIA_ID_ATTR}]`)].map((tile, index) => ({
-		rect: tile.getBoundingClientRect(),
-		index,
-		isRow: tile.hasAttribute(MEDIA_ROW_ATTR),
-	}));
+type Box = { left: number; top: number; width: number; height: number; isRow: boolean };
 
-	// find the row first so drops after a wrapped row's last tile stay in that row.
-	const rowTop = tiles.find(({ rect }) => y < rect.bottom)?.rect.top;
-	if (rowTop === undefined) {
-		return tiles.length;
+const getBox = (tile: HTMLElement): Box => ({
+	left: tile.offsetLeft,
+	top: tile.offsetTop,
+	width: tile.offsetWidth,
+	height: tile.offsetHeight,
+	isRow: tile.hasAttribute(MEDIA_ROW_ATTR),
+});
+
+// the single-image layout has no gap; space its drop line as the grid would.
+const getGap = (value: string) => {
+	const gap = parseFloat(value);
+	return Number.isNaN(gap) || gap === 0 ? space.xs : gap;
+};
+
+/** centers the insertion line in the gap before `slot`. */
+const placeDropLine = (grid: HTMLElement, line: HTMLElement, slot: number): void => {
+	const tiles = [...grid.querySelectorAll<HTMLElement>(`[${MEDIA_ID_ATTR}]`)];
+	const prev = tiles[slot - 1];
+	const next = tiles[slot];
+
+	const computed = getComputedStyle(grid);
+	const columnGap = getGap(computed.columnGap);
+	const rowGap = getGap(computed.rowGap);
+	const thickness = styles.DROP_LINE_THICKNESS;
+
+	const horizontal = (box: Box, y: number) => {
+		Object.assign(line.style, {
+			left: `${box.left}px`,
+			top: `${y - thickness / 2}px`,
+			width: `${box.width}px`,
+			height: `${thickness}px`,
+		});
+	};
+	const vertical = (box: Box, x: number) => {
+		Object.assign(line.style, {
+			left: `${x - thickness / 2}px`,
+			top: `${box.top}px`,
+			width: `${thickness}px`,
+			height: `${box.height}px`,
+		});
+	};
+
+	const before = next && getBox(next);
+	const after = prev && getBox(prev);
+
+	if (before?.isRow) {
+		horizontal(before, before.top - rowGap / 2);
+	} else if (before) {
+		if (after && !after.isRow && after.top === before.top) {
+			vertical(before, (after.left + after.width + before.left) / 2);
+		} else {
+			vertical(before, before.left - columnGap / 2);
+		}
+	} else if (after?.isRow) {
+		horizontal(after, after.top + after.height + rowGap / 2);
+	} else if (after) {
+		vertical(after, after.left + after.width + columnGap / 2);
 	}
-
-	const inRow = tiles.filter(({ rect }) => rect.top === rowTop);
-
-	const [first] = inRow;
-	if (first?.isRow) {
-		return y < first.rect.top + first.rect.height / 2 ? first.index : first.index + 1;
-	}
-
-	const before = inRow.find(({ rect }) => x < rect.left + rect.width / 2);
-	return before?.index ?? inRow[inRow.length - 1]!.index + 1;
 };
 
 // match published image layouts; use the grid for other attachments.
@@ -58,9 +94,9 @@ const LAYOUT_CLASSES: Record<MediaLayout, string> = {
 };
 
 /**
- * attachment grid with file drops and drag reordering.
+ * attachment grid with drag reordering.
  *
- * @param props post attachments, editor, drag channel, and tab-stop state
+ * @param props attachments, editor, drag state, and keyboard focus state
  * @returns the grid
  */
 export function MediaGrid({
@@ -69,79 +105,38 @@ export function MediaGrid({
 	postId,
 	media,
 	isActive,
+	dropSlot,
 }: {
 	wg: Wordgard;
 	dnd: ThreadDnd;
 	postId: string;
 	media: readonly PostMedia[];
 	isActive: boolean;
+	dropSlot: number | null;
 }) {
-	// insertion index for external files.
-	const [slot, setSlot] = useState<number | null>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
+	const lineRef = useRef<HTMLDivElement>(null);
 	const roving = useRovingFocus(
 		media.map((item) => item.id),
 		isActive,
 	);
 	const layout = getMediaLayout(media);
 
-	const gridRef = (node: HTMLDivElement | null) => {
-		scrollRef.current = node;
-		if (!node) {
-			return;
+	// remeasure every render to track tile changes during a drag.
+	useLayoutEffect(() => {
+		if (scrollRef.current && lineRef.current && dropSlot !== null) {
+			placeDropLine(scrollRef.current, lineRef.current, dropSlot);
 		}
-
-		// catches attachments dropped on the grid's padding rather than a tile.
-		const stopDropping = dnd.dropTarget({
-			element: node,
-			canDrop: ({ source }) => source.data.kind === 'media',
-			getData: () => ({ kind: 'mediaGrid', postId }),
-		});
-
-		return () => {
-			scrollRef.current = null;
-			stopDropping();
-		};
-	};
+	});
 
 	const grid = (
 		<div
-			ref={gridRef}
+			ref={scrollRef}
 			className={LAYOUT_CLASSES[layout]}
 			{...{ [MEDIA_GRID_ATTR]: '' }}
 			onKeyDown={(event) => {
 				escapeToEditor(wg, event);
 				roving.onKeyDown(event);
-			}}
-			onDragOver={(event) => {
-				if (!isFileDrag(event.dataTransfer)) {
-					return;
-				}
-				event.preventDefault();
-				event.stopPropagation();
-				// show the grid's insertion line instead of the post outline.
-				markDropTarget(wg, null);
-				setSlot(getFileSlotAt(event.currentTarget, event.clientX, event.clientY));
-			}}
-			onDragLeave={(event) => {
-				if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-					setSlot(null);
-				}
-			}}
-			onDrop={(event) => {
-				if (!isFileDrag(event.dataTransfer)) {
-					return;
-				}
-				event.preventDefault();
-				event.stopPropagation();
-				setSlot(null);
-
-				const at = getFileSlotAt(event.currentTarget, event.clientX, event.clientY);
-				// copy files before the drop event expires.
-				const files = [...event.dataTransfer.files];
-				void createMedia(files).then((created) => insertMediaAt(wg, postId, at, created.media));
-				// restore the caret, which does not redraw while the editor is blurred.
-				wg.focus();
 			}}
 		>
 			{media.map((item, index) => (
@@ -154,10 +149,10 @@ export function MediaGrid({
 					item={item}
 					layout={layout}
 					roving={roving.item(item.id)}
-					insertBefore={slot === index}
-					insertAfter={slot === media.length && index === media.length - 1}
 				/>
 			))}
+			{/* mounted only during drags, since carousel paging treats every child as a tile. */}
+			{dropSlot !== null && <div ref={lineRef} className={styles.dropLine} aria-hidden />}
 		</div>
 	);
 

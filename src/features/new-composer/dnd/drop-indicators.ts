@@ -1,71 +1,73 @@
 import { Decoration, PointSet, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
-import { getPosts } from '../editor/schema';
-import { POST_DROP_AFTER_ATTR, POST_DROP_BEFORE_ATTR, POST_DROP_TARGET_ATTR } from '../elements';
-
-// #region media drop target
-
-const dropDeco = Decoration.Point.attributes({ [POST_DROP_TARGET_ATTR]: '' });
-
-/** position before the media drop target, or null to clear it. */
-const setDropTarget = Transaction.Effect.define<number | null>({
-	map: (pos, mapping) => (pos === null ? null : mapping.mapPos(pos)),
-});
+import { findPostById, getPosts } from '../editor/schema';
+import {
+	POST_DRAGGING_ATTR,
+	POST_DROP_AFTER_ATTR,
+	POST_DROP_BEFORE_ATTR,
+	POST_DROP_TARGET_ATTR,
+} from '../elements';
 
 /**
- * highlights the media drop target.
+ * where dropped media would land.
  *
- * @param wg the editor
- * @param pos the position before the post, or null to clear the highlight
+ * - `post`: in an existing post's media, inserted before `slot`.
+ * - `newPost`: in a new post appended to the thread.
  */
-export const markDropTarget = (wg: Wordgard, pos: number | null): void => {
-	if (wg.state.field(dropTarget) !== pos) {
-		wg.dispatch({ effects: setDropTarget.of(pos) });
+export type MediaDrop = { kind: 'post'; postId: string; slot: number } | { kind: 'newPost' };
+
+/**
+ * destination of the current drag.
+ *
+ * - `post`: `slot` is the insertion index before removing the dragged post.
+ * - `media`: `drop` is the attachment or file destination.
+ *
+ * a null destination means the pointer is outside the editor or the drop would change nothing.
+ */
+export type DropIndicator =
+	| { kind: 'post'; postId: string; slot: number | null }
+	| { kind: 'media'; drop: MediaDrop | null };
+
+const isSameMediaDrop = (a: MediaDrop | null, b: MediaDrop | null): boolean => {
+	if (a === null || b === null || a.kind === 'newPost' || b.kind === 'newPost') {
+		return a?.kind === b?.kind;
+	}
+
+	return a.postId === b.postId && a.slot === b.slot;
+};
+
+const isSameIndicator = (a: DropIndicator | null, b: DropIndicator | null): boolean => {
+	if (a === null || b === null) {
+		return a === b;
+	}
+
+	switch (a.kind) {
+		case 'post': {
+			return b.kind === 'post' && a.postId === b.postId && a.slot === b.slot;
+		}
+		case 'media': {
+			return b.kind === 'media' && isSameMediaDrop(a.drop, b.drop);
+		}
 	}
 };
 
-/** media drop target position, retained across editor redraws. */
-export const dropTarget = GardState.Field.define<number | null>({
-	create() {
-		return null;
-	},
-	update(value, tr) {
-		let next = tr.docChanged && value !== null ? tr.changes.mapPos(value) : value;
-		for (const effect of tr.effects) {
-			if (effect.is(setDropTarget)) {
-				next = effect.value;
-			}
-		}
+const setDropIndicator = Transaction.Effect.define<DropIndicator | null>();
 
-		return next;
-	},
-	provide(field) {
-		return Decoration.Point.source.of((state) => {
-			const pos = state.field(field);
-			return pos === null ? PointSet.empty : PointSet.create([[pos, dropDeco]]);
-		});
-	},
-});
-
-// #endregion
-
-// #region post drop slot
-
+const draggingDeco = Decoration.Point.attributes({ [POST_DRAGGING_ATTR]: '' });
+const dropTargetDeco = Decoration.Point.attributes({ [POST_DROP_TARGET_ATTR]: '' });
 const dropBeforeDeco = Decoration.Point.attributes({ [POST_DROP_BEFORE_ATTR]: '' });
 const dropAfterDeco = Decoration.Point.attributes({ [POST_DROP_AFTER_ATTR]: '' });
 
-const setPostDropSlot = Transaction.Effect.define<number | null>();
-
-/** insertion index for a dragged post, or null. */
-export const postDropSlot = GardState.Field.define<number | null>({
+/** the current drag's drop indicator, or null outside a drag. */
+export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 	create() {
 		return null;
 	},
 	update(value, tr) {
 		let next = value;
 		for (const effect of tr.effects) {
-			if (effect.is(setPostDropSlot)) {
+			if (effect.is(setDropIndicator)) {
 				next = effect.value;
 			}
 		}
@@ -74,34 +76,75 @@ export const postDropSlot = GardState.Field.define<number | null>({
 	},
 	provide(field) {
 		return Decoration.Point.source.of((state) => {
-			const slot = state.field(field);
-			if (slot === null) {
+			const indicator = state.field(field);
+			if (indicator === null) {
 				return PointSet.empty;
 			}
 
-			// append slots use the last post's trailing edge.
-			const posts = getPosts(state.doc);
-			const at = posts[slot];
-			if (at) {
-				return PointSet.create([[at.pos, dropBeforeDeco]]);
-			}
+			switch (indicator.kind) {
+				case 'media': {
+					// new post drops are drawn by the drop zone after the thread.
+					const { drop } = indicator;
+					const post = drop?.kind === 'post' && findPostById(state.doc, drop.postId);
+					return post ? PointSet.create([[post.pos, dropTargetDeco]]) : PointSet.empty;
+				}
+				case 'post': {
+					const posts = getPosts(state.doc);
+					const post = posts.find((entry) => entry.id === indicator.postId);
+					if (!post) {
+						return PointSet.empty;
+					}
 
-			const last = posts[posts.length - 1];
-			return last ? PointSet.create([[last.pos, dropAfterDeco]]) : PointSet.empty;
+					const marks: [number, typeof draggingDeco][] = [[post.pos, draggingDeco]];
+					if (indicator.slot !== null) {
+						// append slots use the last post's trailing edge.
+						const at = posts[indicator.slot];
+						const last = posts[posts.length - 1]!;
+						marks.push(at ? [at.pos, dropBeforeDeco] : [last.pos, dropAfterDeco]);
+					}
+
+					// point sets expect ascending positions.
+					return PointSet.create(marks.toSorted((a, b) => a[0] - b[0]));
+				}
+			}
 		});
 	},
 });
 
 /**
- * highlights the insertion slot for a dragged post.
+ * updates the drop indicator.
  *
  * @param wg the editor
- * @param slot the index the post would be inserted before, or null to clear the line
+ * @param indicator the new indicator, or null to clear it
  */
-export const markPostDropSlot = (wg: Wordgard, slot: number | null): void => {
-	if (wg.state.field(postDropSlot) !== slot) {
-		wg.dispatch({ effects: setPostDropSlot.of(slot) });
+export const markDropIndicator = (wg: Wordgard, indicator: DropIndicator | null): void => {
+	if (!isSameIndicator(wg.state.field(dropIndicator), indicator)) {
+		wg.dispatch({ effects: setDropIndicator.of(indicator) });
 	}
 };
 
-// #endregion
+/** the drop indicator of an attachment or file drag. */
+export type MediaDrag = Extract<DropIndicator, { kind: 'media' }>;
+
+/**
+ * reads the current attachment or file drag.
+ *
+ * @param state the editor state
+ * @returns the indicator, or null when no media drag is in progress
+ */
+export const getMediaDrag = (state: GardState): MediaDrag | null => {
+	const indicator = state.field(dropIndicator);
+	return indicator?.kind === 'media' ? indicator : null;
+};
+
+/**
+ * reads a post's media insertion slot for the current drag.
+ *
+ * @param drag the media drag, or null outside one
+ * @param postId the post's id
+ * @returns the insertion slot, or null when the drag wouldn't land in that post
+ */
+export const getDropSlot = (drag: MediaDrag | null, postId: string): number | null => {
+	const drop = drag?.drop;
+	return drop?.kind === 'post' && drop.postId === postId ? drop.slot : null;
+};

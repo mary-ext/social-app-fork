@@ -1,6 +1,4 @@
-import type { CSSProperties } from 'react';
-
-import { attachClosestEdge } from '@oomfware/tug/hitbox';
+import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -16,19 +14,17 @@ import { Button } from '#/components/web/Button';
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
+import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
+import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
 import type { ThreadDnd } from '../dnd/channel';
+import { DragChip, DragThumbnail, setDragPreview } from '../dnd/DragPreview';
 import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
 import { findActivePost } from '../editor/selection';
-import {
-	MEDIA_ID_ATTR,
-	MEDIA_INSERT_AFTER_ATTR,
-	MEDIA_INSERT_BEFORE_ATTR,
-	MEDIA_ROW_ATTR,
-} from '../elements';
+import { getMediaTileSelector, MEDIA_ID_ATTR, MEDIA_ROW_ATTR } from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
 import * as overlay from '../overlay.css';
 import { getMediaUrl } from './attachments';
@@ -42,6 +38,21 @@ const MEDIA_LABELS: Record<AttachmentKind, string> = {
 	image: 'Image attachment',
 	video: 'Video attachment',
 	voice: 'Voice attachment',
+};
+
+const getMediaDragPreview = (item: PostMedia, url: string): ReactNode => {
+	switch (item.kind) {
+		case 'image':
+		case 'gif': {
+			return <DragThumbnail src={url} />;
+		}
+		case 'video': {
+			return <DragChip icon={VideoIcon} label={MEDIA_LABELS.video} />;
+		}
+		case 'voice': {
+			return <DragChip icon={PlayIcon} label={MEDIA_LABELS.voice} />;
+		}
+	}
 };
 
 function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; tabbable: boolean }) {
@@ -184,7 +195,7 @@ const getLayoutProps = (
 // moves replace the tile; restore focus so keyboard moves can repeat.
 const refocusMedia = (mediaId: string) => {
 	requestAnimationFrame(() => {
-		document.querySelector<HTMLElement>(`[${MEDIA_ID_ATTR}="${CSS.escape(mediaId)}"]`)?.focus();
+		document.querySelector<HTMLElement>(getMediaTileSelector(mediaId))?.focus();
 	});
 };
 
@@ -214,8 +225,6 @@ export function MediaTile({
 	item,
 	layout,
 	roving,
-	insertBefore,
-	insertAfter,
 }: {
 	wg: Wordgard;
 	dnd: ThreadDnd;
@@ -224,9 +233,8 @@ export function MediaTile({
 	item: PostMedia;
 	layout: MediaLayout;
 	roving: RovingItemProps;
-	insertBefore: boolean;
-	insertAfter: boolean;
 }) {
+	const [isDragging, setIsDragging] = useState(false);
 	const url = getMediaUrl(item);
 	const isRow = item.kind !== 'image';
 	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;
@@ -260,40 +268,33 @@ export function MediaTile({
 			return;
 		}
 
-		const stopDragging = dnd.draggable({
+		return dnd.draggable({
 			element: node,
 			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, index }),
+			onGenerateDragPreview: ({ nativeSetDragImage }) => {
+				setDragPreview(nativeSetDragImage, getMediaDragPreview(item, url));
+			},
+			onDragStart: () => setIsDragging(true),
+			onDrop: () => setIsDragging(false),
 		});
-
-		const stopDropping = dnd.dropTarget({
-			element: node,
-			canDrop: ({ source }) => source.data.kind === 'media',
-			getData: ({ element, input }) =>
-				attachClosestEdge(
-					{ kind: 'mediaTile', postId, index },
-					{ allowedEdges: isRow ? ['top', 'bottom'] : ['left', 'right'], element, input },
-				),
-		});
-
-		return () => {
-			stopDragging();
-			stopDropping();
-		};
 	};
 
 	return (
 		<div
 			ref={tileRef}
 			{...roving}
-			className={clsx(styles.tile, layoutProps.className, item.kind === 'voice' && styles.voice)}
+			className={clsx(
+				styles.tile,
+				layoutProps.className,
+				item.kind === 'voice' && styles.voice,
+				isDragging && styles.dragging,
+			)}
 			style={layoutProps.style}
 			role="group"
 			aria-label={MEDIA_LABELS[item.kind]}
 			{...{
 				[MEDIA_ID_ATTR]: item.id,
 				[MEDIA_ROW_ATTR]: isRow ? '' : undefined,
-				[MEDIA_INSERT_BEFORE_ATTR]: insertBefore ? '' : undefined,
-				[MEDIA_INSERT_AFTER_ATTR]: insertAfter ? '' : undefined,
 			}}
 			onKeyDown={(event) => {
 				// preserve keyboard handling in the tile's controls.

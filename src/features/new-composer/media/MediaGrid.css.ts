@@ -1,21 +1,25 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 import { navHost } from '#/components/ImageEmbed/carousel/PagingControls.css';
 import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 import { insetLeftVar, insetRightVar } from '#/components/images/Gallery/index.css';
 
+import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
+import { MEDIA_DRAGGING_ATTR } from '../elements';
 import { RAIL_WIDTH, RIGHT_PADDING } from '../layout';
 
 export const grid = style({
 	display: 'grid',
+	position: 'relative',
 	gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
 	gap: space.xs,
 });
 
 export const single = style({
 	display: 'flex',
+	position: 'relative',
 });
 
 export const stripRoot = style([
@@ -31,6 +35,22 @@ export const stripRoot = style([
 ]);
 
 export const stripScroll = style([strip.scroll, { position: 'relative' }]);
+
+// mandatory snapping would undo drag auto-scrolling.
+globalStyle(`[${MEDIA_DRAGGING_ATTR}] ${stripScroll}`, {
+	scrollSnapType: 'none',
+});
+
+/** thickness of the insertion line, in pixels. */
+export const DROP_LINE_THICKNESS = 3;
+
+export const dropLine = style({
+	position: 'absolute',
+	zIndex: 1,
+	borderRadius: DROP_LINE_THICKNESS,
+	backgroundColor: vars.palette.primary_500,
+	pointerEvents: 'none',
+});
 
 // position paging buttons relative to the strip root.
 export const paging = style({
