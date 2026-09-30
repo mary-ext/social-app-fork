@@ -1,10 +1,14 @@
+import type { CSSProperties } from 'react';
+
 import { attachClosestEdge } from '@oomfware/tug/hitbox';
 
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 import type { Wordgard } from 'wordgard/editor';
 
 import type { AttachmentKind } from '#/lib/media/read-attachment';
 
+import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
@@ -58,6 +62,28 @@ function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; t
 	}
 }
 
+export type MediaLayout = 'grid' | 'single' | 'strip';
+
+const getLayoutProps = (
+	layout: MediaLayout,
+	item: PostMedia,
+): { className?: string; style?: CSSProperties } => {
+	switch (layout) {
+		case 'grid': {
+			return { className: item.kind === 'image' ? styles.square : undefined };
+		}
+		case 'single': {
+			return {
+				className: styles.single,
+				style: assignInlineVars({ [styles.ratioVar]: String(item.aspectRatio ?? 1) }),
+			};
+		}
+		case 'strip': {
+			return { className: styles.stripTile, style: getTileStyle(item.aspectRatio) };
+		}
+	}
+};
+
 // moves replace the tile; restore focus so keyboard moves can repeat.
 const refocusMedia = (mediaId: string) => {
 	requestAnimationFrame(() => {
@@ -80,7 +106,7 @@ const followMedia = (wg: Wordgard, mediaId: string) => {
 /**
  * attachment tile with drag and keyboard controls.
  *
- * @param props attachment, post position, editor, drag channel, focus props, and drop indicators
+ * @param props attachment, layout, and editor interaction state
  * @returns the tile
  */
 export function MediaTile({
@@ -89,6 +115,7 @@ export function MediaTile({
 	postId,
 	index,
 	item,
+	layout,
 	roving,
 	insertBefore,
 	insertAfter,
@@ -98,12 +125,14 @@ export function MediaTile({
 	postId: string;
 	index: number;
 	item: PostMedia;
+	layout: MediaLayout;
 	roving: RovingItemProps;
 	insertBefore: boolean;
 	insertAfter: boolean;
 }) {
 	const url = getMediaUrl(item);
 	const isRow = item.kind !== 'image';
+	const layoutProps = getLayoutProps(layout, item);
 
 	const remove = () => {
 		// transfer focus only if the removed tile had it.
@@ -157,7 +186,8 @@ export function MediaTile({
 		<div
 			ref={tileRef}
 			{...roving}
-			className={clsx(styles.tile, item.kind === 'voice' && styles.voice)}
+			className={clsx(styles.tile, layoutProps.className, item.kind === 'voice' && styles.voice)}
+			style={layoutProps.style}
 			role="group"
 			aria-label={MEDIA_LABELS[item.kind]}
 			{...{

@@ -1,4 +1,7 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { createVar, globalStyle, style } from '@vanilla-extract/css';
+
+import * as strip from '#/components/ImageEmbed/carousel/strip.css';
+import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
 
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -11,11 +14,7 @@ export const tile = style({
 	borderRadius: borderRadius.sm,
 	overflow: 'hidden',
 	backgroundColor: vars.palette.contrast_50,
-	cursor: 'grab',
 	selectors: {
-		[`&:not([${MEDIA_ROW_ATTR}])`]: {
-			aspectRatio: '1',
-		},
 		[`&[${MEDIA_ROW_ATTR}]`]: {
 			gridColumn: '1 / -1',
 		},
@@ -25,6 +24,21 @@ export const tile = style({
 		},
 	},
 });
+
+export const square = style({
+	aspectRatio: '1',
+});
+
+export const ratioVar = createVar();
+
+// preserve the aspect ratio within the feed's height limit.
+export const single = style({
+	borderRadius: borderRadius.md,
+	aspectRatio: ratioVar,
+	width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))`,
+});
+
+export const stripTile = style([strip.tile, { borderRadius: borderRadius.md }]);
 
 export const voice = style({
 	display: 'flex',

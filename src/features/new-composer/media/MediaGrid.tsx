@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { Wordgard } from 'wordgard/editor';
+
+import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
+import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
+import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
 
 import { isFileDrag, type ThreadDnd } from '../dnd/channel';
 import { markDropTarget } from '../dnd/drop-indicators';
 import type { PostMedia } from '../editor/schema';
 import { MEDIA_GRID_ATTR, MEDIA_ID_ATTR, MEDIA_ROW_ATTR } from '../elements';
-import { escapeToEditor, useRovingFocus } from '../focus';
+import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
+import { RAIL_WIDTH } from '../layout';
 import { createMedia } from './attachments';
 import { insertMediaAt } from './commands';
 import * as styles from './MediaGrid.css';
-import { MediaTile } from './MediaTile';
+import { type MediaLayout, MediaTile } from './MediaTile';
 
 /** returns the file insertion index at the pointer, or the tile count to append. */
 const getFileSlotAt = (grid: HTMLElement, x: number, y: number): number => {
@@ -37,6 +42,21 @@ const getFileSlotAt = (grid: HTMLElement, x: number, y: number): number => {
 	return before?.index ?? inRow[inRow.length - 1]!.index + 1;
 };
 
+// match published image layouts; use the grid for other attachments.
+const getMediaLayout = (media: readonly PostMedia[]): MediaLayout => {
+	if (!media.every((item) => item.kind === 'image')) {
+		return 'grid';
+	}
+
+	return media.length === 1 ? 'single' : 'strip';
+};
+
+const LAYOUT_CLASSES: Record<MediaLayout, string> = {
+	grid: styles.grid,
+	single: styles.single,
+	strip: styles.stripScroll,
+};
+
 /**
  * attachment grid with file drops and drag reordering.
  *
@@ -58,28 +78,36 @@ export function MediaGrid({
 }) {
 	// insertion index for external files.
 	const [slot, setSlot] = useState<number | null>(null);
+	const scrollRef = useRef<HTMLDivElement>(null);
 	const roving = useRovingFocus(
 		media.map((item) => item.id),
 		isActive,
 	);
+	const layout = getMediaLayout(media);
 
-	const gridRef = (node: HTMLElement | null) => {
+	const gridRef = (node: HTMLDivElement | null) => {
+		scrollRef.current = node;
 		if (!node) {
 			return;
 		}
 
 		// catches attachments dropped on the grid's padding rather than a tile.
-		return dnd.dropTarget({
+		const stopDropping = dnd.dropTarget({
 			element: node,
 			canDrop: ({ source }) => source.data.kind === 'media',
 			getData: () => ({ kind: 'mediaGrid', postId }),
 		});
+
+		return () => {
+			scrollRef.current = null;
+			stopDropping();
+		};
 	};
 
-	return (
+	const grid = (
 		<div
 			ref={gridRef}
-			className={styles.grid}
+			className={LAYOUT_CLASSES[layout]}
 			{...{ [MEDIA_GRID_ATTR]: '' }}
 			onKeyDown={(event) => {
 				escapeToEditor(wg, event);
@@ -124,11 +152,32 @@ export function MediaGrid({
 					postId={postId}
 					index={index}
 					item={item}
+					layout={layout}
 					roving={roving.item(item.id)}
 					insertBefore={slot === index}
 					insertAfter={slot === media.length && index === media.length - 1}
 				/>
 			))}
+		</div>
+	);
+
+	if (layout !== 'strip') {
+		return grid;
+	}
+
+	return (
+		<div
+			className={styles.stripRoot}
+			style={getStripStyle({
+				max: CAROUSEL_MAX_HEIGHT,
+				min: CAROUSEL_MIN_HEIGHT,
+				ratios: media.map((item) => item.aspectRatio),
+			})}
+		>
+			{grid}
+			<div className={styles.paging} onMouseDown={keepEditorFocus}>
+				<PagingControls scrollPaddingLeft={RAIL_WIDTH} scrollRef={scrollRef} />
+			</div>
 		</div>
 	);
 }

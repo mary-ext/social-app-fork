@@ -1,8 +1,16 @@
-import { type AttachmentRejection, getAttachmentKind, readAttachment } from '#/lib/media/read-attachment';
+import { getImageDimensions } from '#/lib/media/metadata';
+import {
+	type Attachment,
+	type AttachmentRejection,
+	getAttachmentKind,
+	readAttachment,
+} from '#/lib/media/read-attachment';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
+
+import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
 import type { PostMedia } from '../editor/schema';
 
@@ -40,20 +48,43 @@ export const createMedia = async (
 	files: Iterable<File>,
 ): Promise<{ media: PostMedia[]; rejections: AttachmentRejection[] }> => {
 	const read = await Promise.all(
-		[...files].map(async (file) => ({ file, result: await readAttachment(file) })),
+		[...files].map(async (file) => {
+			const result = await readAttachment(file);
+			const aspectRatio = result.ok ? await readAspectRatio(result.attachment) : undefined;
+			return { file, result, aspectRatio };
+		}),
 	);
 
 	const media: PostMedia[] = [];
 	const rejections: AttachmentRejection[] = [];
-	for (const { file, result } of read) {
+	for (const { file, result, aspectRatio } of read) {
 		if (result.ok) {
-			media.push({ id: crypto.randomUUID(), kind: getAttachmentKind(result.attachment), file });
+			media.push({ id: crypto.randomUUID(), kind: getAttachmentKind(result.attachment), file, aspectRatio });
 		} else {
 			rejections.push(result.rejection);
 		}
 	}
 
 	return { media, rejections };
+};
+
+const readAspectRatio = async (attachment: Attachment): Promise<number | undefined> => {
+	switch (attachment.type) {
+		case 'image': {
+			try {
+				return getAspectRatio(await getImageDimensions(attachment.blob));
+			} catch {
+				// fall back to square sizing if dimensions can't be read.
+				return undefined;
+			}
+		}
+		case 'video': {
+			return getAspectRatio(attachment.asset);
+		}
+		case 'voice': {
+			return undefined;
+		}
+	}
 };
 
 /**

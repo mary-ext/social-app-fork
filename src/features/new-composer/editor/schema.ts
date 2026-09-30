@@ -12,6 +12,8 @@ export type PostMedia = {
 	/** distinguishes animated GIFs and voice notes from other video embeds. */
 	kind: AttachmentKind;
 	file: File;
+	/** width / height, or undefined when dimensions are unavailable. */
+	aspectRatio: number | undefined;
 };
 
 /** per-post data that isn't part of the text. */
