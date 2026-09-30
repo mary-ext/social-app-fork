@@ -28,6 +28,8 @@ export type PostSummary = {
 	/** grapheme count after link shortening, excluding a trailing link shown as an embed. */
 	length: number;
 	isOverLimit: boolean;
+	/** no text, media, or embeds. */
+	isBlank: boolean;
 	media: readonly PostMedia[];
 	/** media type or count violation, or null. */
 	mediaProblem: SelectionError | null;
@@ -88,6 +90,7 @@ const summarize = ({ node, index, id }: ThreadPost, length: number, embeds: Post
 		index,
 		length,
 		isOverLimit: length > MAX_POST_GRAPHEME_LENGTH,
+		isBlank: length === 0 && media.length === 0 && embeds.external === null && embeds.record === null,
 		media,
 		mediaProblem: getMediaProblem(media),
 		embeds,

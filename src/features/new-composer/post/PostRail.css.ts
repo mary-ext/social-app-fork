@@ -1,10 +1,9 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { hoverWithin } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
-import { MEDIA_DRAGGING_ATTR } from '../elements';
 import { AVATAR_SIZE, RAIL_WIDTH } from '../layout';
 
 export const root = style({
@@ -65,11 +64,4 @@ export const line = style({
 	marginBottom: space.xs,
 	backgroundColor: vars.palette.contrast_100,
 	width: 2,
-});
-
-export const lineToDropZone = style([line, { display: 'none' }]);
-
-// media drags show the new post zone after the last post.
-globalStyle(`[${MEDIA_DRAGGING_ATTR}] ${lineToDropZone}`, {
-	display: 'block',
 });

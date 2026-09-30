@@ -11,6 +11,7 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { m } from '#/paraglide/messages';
+import { zIndex } from '#/styles/tokens.css';
 
 import { threadCommands } from './commands/thread-commands';
 import { createThreadDnd } from './dnd/channel';
@@ -25,6 +26,7 @@ import { MEDIA_DRAGGING_ATTR } from './elements';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
 import * as styles from './NewComposer.css';
+import { AddPostRow } from './post/AddPostRow';
 import { PostFooter } from './post/PostFooter';
 import { PostHeader } from './post/PostHeader';
 import { PostRail } from './post/PostRail';
@@ -77,7 +79,7 @@ export function NewComposer() {
 	// only the active post's controls are tabbable.
 	const [activePostId, setActivePostId] = useState<string | null>(null);
 	const [mediaDrag, setMediaDrag] = useState<MediaDrag | null>(null);
-	// portal target after the editor for the new post zone.
+	// portal target after the editor for the add post row and new post zone.
 	const [zoneSlot, setZoneSlot] = useState<HTMLElement | null>(null);
 
 	const [suggesting, setSuggesting] = useState<Suggesting | null>(null);
@@ -124,6 +126,13 @@ export function NewComposer() {
 			Wordgard.theme({
 				'&': { border: 'none' },
 				'&:has(> wg-scroller > wg-content:focus)': { outline: 'none' },
+				// reset host styles; the suggestion popup supplies its own.
+				'.wg-tooltip': {
+					zIndex: zIndex.popover,
+					boxShadow: 'unset',
+					backgroundColor: 'unset',
+					font: 'unset',
+				},
 			}),
 			suggestionKeys(() => suggestionKeyRef.current),
 			Wordgard.updateListener.of((update) => {
@@ -197,9 +206,16 @@ export function NewComposer() {
 
 	return (
 		<div ref={mountEditor} className={styles.root} {...{ [MEDIA_DRAGGING_ATTR]: mediaDrag ? '' : undefined }}>
-			{zoneSlot &&
-				mediaDrag &&
-				createPortal(<NewPostDropZone isActive={mediaDrag.drop?.kind === 'newPost'} />, zoneSlot)}
+			{editor &&
+				zoneSlot &&
+				createPortal(
+					mediaDrag ? (
+						<NewPostDropZone isActive={mediaDrag.drop?.kind === 'newPost'} />
+					) : (
+						<AddPostRow wg={editor} profile={profile} isDisabled={posts.at(-1)?.isBlank ?? true} />
+					),
+					zoneSlot,
+				)}
 			{editor && showSuggestions && suggestionSlot && (
 				<SuggestionPopup
 					wg={editor}
@@ -228,7 +244,14 @@ export function NewComposer() {
 									total={posts.length}
 									profile={profile}
 								/>
-								<PostHeader profile={profile} index={post.index} total={posts.length} />
+								<PostHeader
+									wg={editor}
+									postId={post.id}
+									profile={profile}
+									index={post.index}
+									total={posts.length}
+									isActive={post.id === activePostId}
+								/>
 							</>,
 							element,
 							`header:${postId}`,

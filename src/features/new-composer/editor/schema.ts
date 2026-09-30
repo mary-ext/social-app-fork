@@ -236,6 +236,16 @@ export const getSiblingPost = (post: Pos.Plot, dir: -1 | 1): Plot | null => {
 };
 
 /**
+ * caret position at the start of the first line of a post.
+ *
+ * @param pos the position before the post
+ * @returns the caret position past the post's and its first line's opening tokens
+ */
+export const startOfFirstLine = (pos: number): number => {
+	return pos + 2;
+};
+
+/**
  * caret position at the end of the last line of a post or document.
  *
  * @param end the position just past the post or document

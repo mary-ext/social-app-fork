@@ -2,26 +2,39 @@ import { memo } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
+import type { Wordgard } from 'wordgard/editor';
+
 import { PostNumberBlock } from '#/components/PostNumber';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Text';
+import { Button } from '#/components/web/Button';
 
+import CrossIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+
+import { removePost } from '../commands/remove-post';
+import { keepEditorFocus } from '../focus';
 import * as styles from './PostHeader.css';
 
 /**
- * author handle, badges, and thread position above a post's text.
+ * post attribution, thread position, and removal button.
  *
- * @param props the author profile (undefined while loading), zero-based post index, and total post count
+ * @param props the editor, post id, profile, zero-based index, post count, and whether controls are tabbable
  * @returns the post's header
  */
 export const PostHeader = memo(function PostHeader({
+	wg,
+	postId,
 	profile,
 	index,
 	total,
+	isActive,
 }: {
+	wg: Wordgard;
+	postId: string;
 	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
 	index: number;
 	total: number;
+	isActive: boolean;
 }) {
 	return (
 		<div className={styles.root}>
@@ -30,9 +43,28 @@ export const PostHeader = memo(function PostHeader({
 			</Text>
 			{profile && <ProfileBadges className={styles.badges} profile={profile} size="sm" />}
 			{total > 1 && (
-				<div className={styles.number}>
-					<PostNumberBlock value={{ index: index + 1, count: total }} />
-				</div>
+				<>
+					<div className={styles.number}>
+						<PostNumberBlock value={{ index: index + 1, count: total }} />
+					</div>
+					<Button
+						className={styles.remove}
+						label="Remove post"
+						tabIndex={isActive ? 0 : -1}
+						variant="ghost"
+						color="secondary"
+						shape="round"
+						size="tiny"
+						onMouseDown={keepEditorFocus}
+						onClick={() => {
+							removePost(wg, postId);
+							// removing the post removes the focused button.
+							wg.focus();
+						}}
+					>
+						<CrossIcon className={styles.removeIcon} />
+					</Button>
+				</>
 			)}
 		</div>
 	);
