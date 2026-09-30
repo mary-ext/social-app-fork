@@ -4,8 +4,8 @@ import { ISOLATE_HISTORY } from '../editor/history';
 import { endOfLastLine, getPosts, startOfFirstLine } from '../editor/schema';
 
 /**
- * deletes a post unless it is the only one. if either selection endpoint is inside it, moves the caret to
- * the previous post's end, or the next post's start when deleting the first post.
+ * deletes a post unless it is the only one. if either selection endpoint is inside it, moves the caret to the
+ * previous post's end, or the next post's start for the first post.
  *
  * @param wg the editor
  * @param postId the post's id

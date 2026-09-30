@@ -1,5 +1,4 @@
 import type { AppBskyActorDefs, AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
-import type { ResourceUri } from '@atcute/lexicons';
 
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
@@ -11,7 +10,7 @@ import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { AbortError } from '#/lib/utils/abort-error';
 
-import { createPostgateRecord } from '#/state/queries/postgate/util';
+import { createPostgateRecord, PLACEHOLDER_POST_URI } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
 import {
@@ -21,9 +20,6 @@ import {
 	videoReducer,
 	type VideoState,
 } from './video';
-
-/** the gated post doesn't exist until publish; `src/lib/api` swaps in the real at-uri then. */
-const PLACEHOLDER_POST_URI: ResourceUri = 'at://placeholder.invalid';
 
 type ImagesMedia = {
 	type: 'images';

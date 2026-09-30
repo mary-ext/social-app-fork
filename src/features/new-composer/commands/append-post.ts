@@ -9,7 +9,7 @@ import { endOfLastLine, getPosts, newPost, type PostMedia } from '../editor/sche
  * appends a post and moves the caret into it, in one undo step.
  *
  * @param wg the editor
- * @param options the user event, initial media, and accompanying changes, which must not insert or delete content
+ * @param options the user event, initial media, and accompanying changes (no insertions or deletions)
  */
 export const appendPost = (
 	wg: Wordgard,
