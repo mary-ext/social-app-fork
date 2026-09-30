@@ -21,19 +21,19 @@ export function NewComposerDialog() {
 						<Dialog.Header.Close />
 						<Dialog.Header.Title>{m['view.composer.title.post']()}</Dialog.Header.Title>
 					</Dialog.Header.Root>
-					<Dialog.Body>
-						{payload && (
-							<Suspense
-								fallback={
+					{payload && (
+						<Suspense
+							fallback={
+								<Dialog.Body>
 									<div className={styles.placeholder}>
 										<Spinner color="default" label={m['common.status.loading']()} />
 									</div>
-								}
-							>
-								<NewComposer />
-							</Suspense>
-						)}
-					</Dialog.Body>
+								</Dialog.Body>
+							}
+						>
+							<NewComposer />
+						</Suspense>
+					)}
 				</Dialog.Popup>
 			)}
 		</Dialog.Root>
