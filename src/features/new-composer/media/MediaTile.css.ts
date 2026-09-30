@@ -135,7 +135,7 @@ export const altCheck = style({
 	color: vars.palette.positive_500,
 });
 
-const uploadShape = style({ gap: 6, padding: '0 11px 0 5px' });
+const uploadShape = style({ gap: 6, padding: '0 11px 0 5px', fontVariantNumeric: 'tabular-nums' });
 
 export const uploadBadge = style([overlayBadge, uploadShape]);
 
