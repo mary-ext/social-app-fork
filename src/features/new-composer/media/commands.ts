@@ -6,6 +6,7 @@ import { Paragraph } from 'wordgard/types';
 
 import { ISOLATE_HISTORY } from '../editor/history';
 import {
+	endOfLastLine,
 	findPostById,
 	getPostParam,
 	getPosts,
@@ -66,11 +67,11 @@ export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMed
 };
 
 /**
- * inserts media at a given slot in a post.
+ * inserts media at a post's slot, then stably groups it by kind.
  *
  * @param wg the editor
  * @param postId the post's id
- * @param at the slot the media lands in
+ * @param at the index to insert before
  * @param media the media to add
  */
 export const insertMediaAt = (
@@ -122,7 +123,7 @@ export const removeMedia = (wg: Wordgard, postId: string, mediaId: string): void
 
 // #region moving
 
-type LiftedMedia = { item: PostMedia; source: ThreadPost; changes: ChangeSet.Spec[] };
+type LiftedMedia = { item: PostMedia; changes: ChangeSet.Spec[] };
 
 const liftMedia = (wg: Wordgard, postId: string, mediaId: string): LiftedMedia | null => {
 	const source = findPostById(wg.state.doc, postId);
@@ -132,7 +133,7 @@ const liftMedia = (wg: Wordgard, postId: string, mediaId: string): LiftedMedia |
 	}
 
 	const remaining = getPostParam(source.node).media.filter((entry) => entry.id !== mediaId);
-	return { item, source, changes: [setPostMediaChange(source.pos, source.node, remaining)] };
+	return { item, changes: [setPostMediaChange(source.pos, source.node, remaining)] };
 };
 
 const dispatchMove = (wg: Wordgard, changes: ChangeSet.Spec[]): void => {
@@ -196,7 +197,7 @@ export const moveMediaTo = (wg: Wordgard, fromId: string, mediaId: string, toId:
 };
 
 /**
- * swaps a media entry with its neighbour inside the same post.
+ * swaps adjacent attachments of the same kind within a post.
  *
  * @param wg the editor
  * @param postId the post's id
@@ -207,7 +208,8 @@ export const nudgeMedia = (wg: Wordgard, postId: string, mediaId: string, dir: -
 	const post = findPostById(wg.state.doc, postId);
 	const media = post && getPostParam(post.node).media;
 	const at = media ? media.findIndex((entry) => entry.id === mediaId) : -1;
-	if (!media || at === -1 || at + dir < 0 || at + dir >= media.length) {
+	// regrouping would undo a swap across kinds.
+	if (!media || at === -1 || media[at + dir]?.kind !== media[at]!.kind) {
 		return;
 	}
 
@@ -247,21 +249,59 @@ export const moveMediaDown = (wg: Wordgard, fromId: string, mediaId: string): vo
 	const next = posts[from.index + 1];
 	if (next) {
 		moveMediaTo(wg, fromId, mediaId, next.id);
+	} else {
+		moveMediaToNewPost(wg, fromId, mediaId);
+	}
+};
+
+// media-only changes leave the append position unchanged.
+const appendPost = (
+	wg: Wordgard,
+	changes: ChangeSet.Spec[],
+	media: readonly PostMedia[],
+	userEvent: string,
+): void => {
+	const posts = getPosts(wg.state.doc);
+	const last = posts[posts.length - 1];
+	if (!last) {
 		return;
 	}
 
+	const end = last.pos + last.node.length;
+	const post = newPost(media).create([Paragraph.create()]);
+	wg.dispatch({
+		changes: [...changes, { from: end, insert: [post] }],
+		selection: { anchor: endOfLastLine(end + post.length) },
+		scrollIntoView: true,
+		userEvent,
+		annotations: ISOLATE_HISTORY,
+	});
+};
+
+/**
+ * moves an attachment into a new post at the end of the thread, placing the caret in it.
+ *
+ * @param wg the editor
+ * @param fromId the id of the post holding the entry
+ * @param mediaId the media entry's id
+ */
+export const moveMediaToNewPost = (wg: Wordgard, fromId: string, mediaId: string): void => {
 	const lifted = liftMedia(wg, fromId, mediaId);
-	if (!lifted) {
-		return;
+	if (lifted) {
+		appendPost(wg, lifted.changes, [lifted.item], 'media.move');
 	}
+};
 
-	dispatchMove(wg, [
-		...lifted.changes,
-		{
-			from: lifted.source.pos + lifted.source.node.length,
-			insert: [newPost([lifted.item]).create([Paragraph.create()])],
-		},
-	]);
+/**
+ * appends a new post holding the given media, placing the caret in it.
+ *
+ * @param wg the editor
+ * @param media the media to add; nothing is appended when empty
+ */
+export const addMediaInNewPost = (wg: Wordgard, media: readonly PostMedia[]): void => {
+	if (media.length > 0) {
+		appendPost(wg, [], media, 'media.add');
+	}
 };
 
 // #endregion

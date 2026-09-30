@@ -102,6 +102,11 @@ export const preserveJoinedMedia = (tr: Transaction): Transaction.Spec | null =>
 	const changes: ChangeSet.Spec[] = [];
 
 	tr.changes.iterChanges((fromA, toA) => {
+		// replacing only the opening tag updates post data without joining posts.
+		if (toA === fromA + 1 && posts.some((post) => post.pos === fromA)) {
+			return;
+		}
+
 		const first = posts.findLast((post) => post.pos < fromA);
 		const last = posts.findLast((post) => post.pos < toA);
 		// replacements within a post preserve its media-bearing tag.

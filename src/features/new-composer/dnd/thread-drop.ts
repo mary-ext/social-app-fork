@@ -1,26 +1,166 @@
-import type { DragEvent } from 'react';
+import type { Input } from '@oomfware/tug';
 
 import type { Wordgard } from 'wordgard/editor';
 
 import { movePostToSlot } from '../commands/reorder-posts';
-import { findPost, getPostParam, type ThreadPost } from '../editor/schema';
-import { MEDIA_GRID_ATTR } from '../elements';
-import { attachFiles, moveMediaTo, moveMediaToSlot } from '../media/commands';
-import { getMediaDropIndex, getPostDropIndex, isFileDrag, type ThreadDnd } from './channel';
-import { markDropTarget, markPostDropSlot } from './drop-indicators';
+import { getPostParam, getPosts, splitMedia } from '../editor/schema';
+import { getMediaTileSelector, IMAGE_GROUP_ATTR, NEW_POST_ZONE_ATTR } from '../elements';
+import { createMedia } from '../media/attachments';
+import {
+	addMediaInNewPost,
+	addMediaTo,
+	insertMediaAt,
+	moveMediaTo,
+	moveMediaToNewPost,
+	moveMediaToSlot,
+} from '../media/commands';
+import {
+	getImageDropSlot,
+	getMoveIndex,
+	getPostAt,
+	getPostDropSlot,
+	isFileDrag,
+	type ThreadDnd,
+	type ThreadDragData,
+} from './channel';
+import { type DropIndicator, dropIndicator, markDropIndicator, type MediaDrop } from './drop-indicators';
+import { createEdgeScroller } from './edge-scroll';
 
-// media grids handle their own drops to support insertion between attachments.
-const isOverMediaGrid = (event: DragEvent) => {
-	return event.target instanceof Element && event.target.closest(`[${MEDIA_GRID_ATTR}]`) !== null;
+type Point = { clientX: number; clientY: number };
+
+const getMediaDrop = (container: Element, wg: Wordgard, point: Point): MediaDrop | null => {
+	const zone = container.querySelector(`[${NEW_POST_ZONE_ATTR}]`);
+	if (zone && point.clientY >= zone.getBoundingClientRect().top) {
+		return { kind: 'newPost' };
+	}
+
+	const target = getPostAt(wg, point.clientY);
+	const post = target && getPosts(wg.state.doc)[target.index];
+	if (!target || !post) {
+		return null;
+	}
+
+	const group = target.element.querySelector(`[${IMAGE_GROUP_ATTR}]`);
+	if (group) {
+		// ignore horizontal bounds so drops in the rail also pick a slot.
+		const rect = group.getBoundingClientRect();
+		if (point.clientY >= rect.top && point.clientY <= rect.bottom) {
+			return { kind: 'post', postId: post.id, slot: getImageDropSlot(group, point.clientX) };
+		}
+	}
+
+	const { images } = splitMedia(getPostParam(post.node).media);
+	return { kind: 'post', postId: post.id, slot: images.length };
 };
 
-const getPostUnder = (
-	wg: Wordgard,
-	point: { clientX: number; clientY: number },
-): Pick<ThreadPost, 'node' | 'pos' | 'id'> | null => {
-	const { pos } = wg.posAtCoords({ x: point.clientX, y: point.clientY });
-	const found = findPost(wg.state.doc.resolve(pos));
-	return found && { node: found.node, pos: found.before, id: getPostParam(found.node).id };
+// carousels re-snap to their previous tile after a reorder; bring the moved one into view instead.
+const revealMedia = (mediaId: string) => {
+	requestAnimationFrame(() => {
+		const tile = document.querySelector(getMediaTileSelector(mediaId));
+		if (!tile) {
+			return;
+		}
+
+		// in Firefox, 'nearest' can snap back to an earlier tile; use 'start' for clipped tiles.
+		let inline: ScrollLogicalPosition = 'nearest';
+		{
+			const group = tile.closest(`[${IMAGE_GROUP_ATTR}]`);
+			if (group) {
+				const rect = tile.getBoundingClientRect();
+				const bounds = group.getBoundingClientRect();
+				// exclude the rail gutter from the visible bounds.
+				const left = bounds.left + parseFloat(getComputedStyle(group).scrollPaddingLeft);
+				if (rect.left < left || rect.right > bounds.right) {
+					inline = 'start';
+				}
+			}
+		}
+
+		tile.scrollIntoView({ block: 'nearest', inline });
+	});
+};
+
+// #region in-page drags
+
+type MediaSource = Extract<ThreadDragData, { kind: 'media' }>;
+
+// keeps the dragged post dimmed and the new post zone open while the pointer is outside the editor.
+const getIdleIndicator = (source: ThreadDragData): DropIndicator => {
+	switch (source.kind) {
+		case 'post': {
+			return { kind: 'post', postId: source.postId, slot: null };
+		}
+		case 'media': {
+			return { kind: 'media', drop: null };
+		}
+	}
+};
+
+// hides drops that would leave the attachment where it is.
+const getMediaIndicator = (source: MediaSource, hit: MediaDrop | null): DropIndicator => {
+	let drop = hit;
+	// non-image drags target a post, not an insertion slot.
+	if (drop?.kind === 'post' && source.mediaKind !== 'image') {
+		drop = { ...drop, slot: null };
+	}
+
+	const isNoop =
+		drop?.kind === 'post' &&
+		drop.postId === source.postId &&
+		(drop.slot === null || getMoveIndex(drop.slot, source.index) === null);
+
+	return { kind: 'media', drop: isNoop ? null : drop };
+};
+
+const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): void => {
+	const { postId, mediaId, index } = source;
+
+	switch (drop.kind) {
+		case 'newPost': {
+			moveMediaToNewPost(wg, postId, mediaId);
+			break;
+		}
+		case 'post': {
+			if (drop.slot === null) {
+				moveMediaTo(wg, postId, mediaId, drop.postId);
+				break;
+			}
+
+			// images lead the post's media, so image slots are also media indices.
+			// within a post, the destination counts positions after the attachment's removal.
+			const to = drop.postId === postId ? getMoveIndex(drop.slot, index) : drop.slot;
+			if (to === null) {
+				return;
+			}
+			moveMediaToSlot(wg, postId, mediaId, drop.postId, to);
+			break;
+		}
+	}
+
+	revealMedia(mediaId);
+};
+
+// use the displayed destination rather than hit-testing again on drop.
+const applyDrop = (wg: Wordgard, source: ThreadDragData, indicator: DropIndicator): void => {
+	switch (source.kind) {
+		case 'post': {
+			if (indicator.kind !== 'post' || indicator.slot === null) {
+				break;
+			}
+
+			const to = getMoveIndex(indicator.slot, source.index);
+			if (to !== null) {
+				movePostToSlot(wg, source.postId, to);
+			}
+			break;
+		}
+		case 'media': {
+			if (indicator.kind === 'media' && indicator.drop) {
+				applyMediaDrop(wg, source, indicator.drop);
+			}
+			break;
+		}
+	}
 };
 
 /**
@@ -28,108 +168,191 @@ const getPostUnder = (
  *
  * @param wg the editor
  * @param dnd the editor's drag channel
- * @param container the element hosting the editor
+ * @param container the element hosting the editor and the new post zone
  * @returns a function that stops handling drops
  */
 export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTMLElement): (() => void) => {
-	// posts share a fallback target; media grids and tiles take precedence.
+	const scroller = createEdgeScroller(container);
+
+	const getDragIndicator = (source: ThreadDragData, input: Input): DropIndicator => {
+		switch (source.kind) {
+			case 'post': {
+				const slot = getPostDropSlot(wg, input);
+				return {
+					kind: 'post',
+					postId: source.postId,
+					slot: getMoveIndex(slot, source.index) === null ? null : slot,
+				};
+			}
+			case 'media': {
+				scroller.update(input);
+				return getMediaIndicator(source, getMediaDrop(container, wg, input));
+			}
+		}
+	};
+
 	const stopDropping = dnd.dropTarget({
 		element: container,
-		getData: () => ({ kind: 'post', index: -1 }),
+		getData: () => ({ kind: 'thread' }),
 		onDrag: ({ location, source }) => {
-			if (source.data.kind === 'post') {
-				markPostDropSlot(wg, getPostDropIndex(wg, location.current.input, -1));
-			} else {
-				markDropTarget(wg, getPostUnder(wg, location.current.input)?.pos ?? null);
-			}
+			markDropIndicator(wg, getDragIndicator(source.data, location.current.input));
 		},
-		onDragLeave: () => {
-			markPostDropSlot(wg, null);
-			markDropTarget(wg, null);
-		},
-		onDrop: () => {
-			markPostDropSlot(wg, null);
-			markDropTarget(wg, null);
+		onDragLeave: ({ source }) => {
+			scroller.stop();
+			markDropIndicator(wg, getIdleIndicator(source.data));
 		},
 	});
 
 	const stopMonitoring = dnd.monitor({
+		onDragStart: ({ source }) => {
+			markDropIndicator(wg, getIdleIndicator(source.data));
+		},
 		onDrop: ({ location, source }) => {
-			markPostDropSlot(wg, null);
-			markDropTarget(wg, null);
-
-			// targets are ordered innermost first: tile, grid, editor.
-			const target = location.current.dropTargets[0];
-			if (!target) {
+			scroller.stop();
+			const indicator = wg.state.field(dropIndicator);
+			markDropIndicator(wg, null);
+			if (location.current.dropTargets.length === 0 || !indicator) {
 				return;
 			}
 
-			if (source.data.kind === 'post') {
-				// account for removal from the source index.
-				const to = getPostDropIndex(wg, location.current.input, source.data.index);
-				movePostToSlot(wg, source.data.postId, to);
-			} else if (target.data.kind === 'post') {
-				// drops on post text append media.
-				const under = getPostUnder(wg, location.current.input);
-				if (under) {
-					moveMediaTo(wg, source.data.postId, source.data.mediaId, under.id);
-				}
-			} else {
-				const { postId, mediaId, index } = source.data;
-				const toId = target.data.postId;
-				const at = getMediaDropIndex(target.data, toId === postId ? index : -1);
-				moveMediaToSlot(wg, postId, mediaId, toId, at === -1 ? undefined : at);
-			}
-
+			applyDrop(wg, source.data, indicator);
 			// blurred editors don't update the DOM selection; focus applies the moved selection.
 			wg.focus();
 		},
 	});
 
 	return () => {
+		scroller.stop();
 		stopDropping();
 		stopMonitoring();
 	};
 };
 
+// #endregion
+
+// #region file drags
+
+// a null relatedTarget can also occur between elements; allow time for the next dragover.
+const LEAVE_DELAY_MS = 100;
+
 /**
- * handles external file drops on the post under the pointer.
+ * accepts file drops at media insertion slots and blocks file-drop navigation elsewhere on the page.
  *
- * @param wg the editor, or null before it mounts
- * @returns handlers for the element hosting the editor
+ * @param wg the editor
+ * @param container the element hosting the editor and the new post zone
+ * @returns a function that stops handling file drags
  */
-export const createFileDropHandlers = (wg: Wordgard | null) => {
-	return {
-		// intercept files before the editor's content drop handler.
-		onDragOverCapture: (event: DragEvent) => {
-			if (!wg || !isFileDrag(event.dataTransfer) || isOverMediaGrid(event)) {
-				return;
-			}
-			event.preventDefault();
-			event.stopPropagation();
-			markDropTarget(wg, getPostUnder(wg, event)?.pos ?? null);
-		},
-		onDragLeave: (event: DragEvent) => {
-			if (wg && !(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-				markDropTarget(wg, null);
-			}
-		},
-		onDropCapture: (event: DragEvent) => {
-			if (!wg || !isFileDrag(event.dataTransfer) || isOverMediaGrid(event)) {
-				return;
-			}
-			event.preventDefault();
-			event.stopPropagation();
-			markDropTarget(wg, null);
+export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => void) => {
+	const scroller = createEdgeScroller(container);
+	const controller = new AbortController();
+	let leaving: ReturnType<typeof setTimeout> | undefined;
 
-			const post = getPostUnder(wg, event);
-			if (!post) {
-				return;
-			}
+	// limit hit testing to once per frame.
+	let frame = 0;
+	let pending: (Point & { isInside: boolean }) | null = null;
 
-			// copy files before the drop event expires.
-			void attachFiles(wg, post.id, [...event.dataTransfer.files]);
-			wg.focus();
-		},
+	const resolve = () => {
+		cancelAnimationFrame(frame);
+		frame = 0;
+		if (!pending) {
+			return;
+		}
+
+		const drop = pending.isInside ? getMediaDrop(container, wg, pending) : null;
+		if (drop) {
+			scroller.update(pending);
+		} else {
+			scroller.stop();
+		}
+		pending = null;
+		// open the new post zone as soon as files are over the page.
+		markDropIndicator(wg, { kind: 'media', drop });
+	};
+
+	const halt = () => {
+		cancelAnimationFrame(frame);
+		frame = 0;
+		pending = null;
+		scroller.stop();
+	};
+
+	const finish = () => {
+		halt();
+		markDropIndicator(wg, null);
+	};
+
+	// prevent the editor and browser from handling file drops themselves.
+	const claim = (event: DragEvent): DataTransfer | null => {
+		const transfer = event.dataTransfer;
+		if (!transfer || !isFileDrag(transfer)) {
+			return null;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		clearTimeout(leaving);
+		return transfer;
+	};
+
+	const onDragOver = (event: DragEvent) => {
+		const transfer = claim(event);
+		if (!transfer) {
+			return;
+		}
+
+		const isInside = event.target instanceof Node && container.contains(event.target);
+		transfer.dropEffect = isInside ? 'copy' : 'none';
+		pending = { clientX: event.clientX, clientY: event.clientY, isInside };
+		frame ||= requestAnimationFrame(resolve);
+	};
+
+	const onDragLeave = (event: DragEvent) => {
+		if (event.dataTransfer && isFileDrag(event.dataTransfer) && event.relatedTarget === null) {
+			clearTimeout(leaving);
+			leaving = setTimeout(finish, LEAVE_DELAY_MS);
+		}
+	};
+
+	const onDrop = (event: DragEvent) => {
+		const transfer = claim(event);
+		if (!transfer) {
+			return;
+		}
+
+		// settle the latest dragover so the drop lands where the indicator shows.
+		resolve();
+		const indicator = wg.state.field(dropIndicator);
+		const target = indicator?.kind === 'media' ? indicator.drop : null;
+		finish();
+		if (!target) {
+			return;
+		}
+
+		// copy files before the drop event expires.
+		const files = [...transfer.files];
+		void createMedia(files).then(({ media }) => {
+			if (target.kind === 'newPost') {
+				addMediaInNewPost(wg, media);
+			} else if (target.slot === null) {
+				addMediaTo(wg, target.postId, media);
+			} else {
+				insertMediaAt(wg, target.postId, target.slot, media);
+			}
+		});
+		// restore the caret, which does not redraw while the editor is blurred.
+		wg.focus();
+	};
+
+	const options = { capture: true, signal: controller.signal };
+	document.addEventListener('dragover', onDragOver, options);
+	document.addEventListener('dragleave', onDragLeave, options);
+	document.addEventListener('drop', onDrop, options);
+
+	return () => {
+		controller.abort();
+		clearTimeout(leaving);
+		halt();
 	};
 };
+
+// #endregion

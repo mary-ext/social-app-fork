@@ -128,8 +128,8 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@oomfware/tug':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       '@tanstack/react-query':
         specifier: ^5.103.2
         version: 5.103.2(react@19.3.0)
@@ -969,8 +969,8 @@ packages:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
 
-  '@oomfware/tug@0.2.0':
-    resolution: {integrity: sha512-GIVeJ6pSbO2vTa3369fadVv5Uh6j5yFmAIvwDOCwZE1OpfdV4Wtycfz7d4xyl56nhDbmn/QXLqVXnKrpwkuong==}
+  '@oomfware/tug@0.2.1':
+    resolution: {integrity: sha512-CDRJFjQwT0gu7hc9ad8TyDu/ow09hc1e11KPFTAqfsRR0Xh6rtvGat/k5aQdULoSa4UC11vCTvDa4aJdGy0lSw==}
 
   '@oomfware/vite-plugin-svg-sprites@0.1.2':
     resolution: {integrity: sha512-KkQcfuUiPydhz3BGxWdMIYKHmrDe+CcmrOnVLCfhVkxx6GpjMfBqkw4+disi/gfJ11vbr0NBaJEerGJY2+sCFA==}
@@ -3046,7 +3046,7 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@oomfware/tug@0.2.0':
+  '@oomfware/tug@0.2.1':
     dependencies:
       esm-env: 1.2.2
 

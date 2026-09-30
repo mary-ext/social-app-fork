@@ -1,9 +1,11 @@
-import { memo, type MouseEvent, useRef } from 'react';
+import { memo, type MouseEvent, type ReactNode, useRef } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import type { BaseUIEvent } from '@base-ui/react';
 import type { Wordgard } from 'wordgard/editor';
+
+import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
 import * as Menu from '#/components/Menu';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -14,6 +16,8 @@ import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.
 
 import { movePostToSlot } from '../commands/reorder-posts';
 import type { ThreadDnd } from '../dnd/channel';
+import { DragChip, setDragPreview } from '../dnd/DragPreview';
+import { findPostById, getPostText } from '../editor/schema';
 import { POST_HANDLE_ATTR } from '../elements';
 import { AVATAR_SIZE } from '../layout';
 import * as styles from './PostRail.css';
@@ -56,7 +60,7 @@ export const PostRail = memo(function PostRail(props: RailProps) {
 	return (
 		<div className={styles.root}>
 			{total > 1 ? <PostHandle {...props} /> : <Avatar profile={profile} />}
-			{index < total - 1 && <div className={styles.line} />}
+			<div className={index < total - 1 ? styles.line : styles.lineToDropZone} />
 		</div>
 	);
 });
@@ -64,6 +68,18 @@ export const PostRail = memo(function PostRail(props: RailProps) {
 // defer Base UI's menu opening until click so pointer down can start a drag.
 const deferToClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
 	event.preventBaseUIHandler();
+};
+
+const getPostDragPreview = (
+	wg: Wordgard,
+	postId: string,
+	profile: AppBskyActorDefs.ProfileViewDetailed | undefined,
+): ReactNode => {
+	const post = findPostById(wg.state.doc, postId);
+	const text = post ? getPostText(post.node).replaceAll('\n', ' ').trim() : '';
+	// the preview is snapshotted immediately; reuse the thumbnail the rail already loaded.
+	const avatar = profile?.avatar && toImageCdnUrl(profile.avatar, 'avatar_thumbnail');
+	return <DragChip avatar={avatar} label={text || 'Empty post'} />;
 };
 
 // moving a post replaces its handle; refocus the replacement for keyboard reordering.
@@ -86,6 +102,9 @@ function PostHandle({ wg, dnd, postId, index, total, profile }: RailProps) {
 		return dnd.draggable({
 			element: node,
 			getInitialData: () => ({ kind: 'post', postId, index }),
+			onGenerateDragPreview: ({ nativeSetDragImage }) => {
+				setDragPreview(nativeSetDragImage, getPostDragPreview(wg, postId, profile));
+			},
 		});
 	};
 

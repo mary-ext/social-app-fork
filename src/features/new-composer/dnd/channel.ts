@@ -4,18 +4,16 @@ import { getReorderDestinationIndex } from '@oomfware/tug/reorder';
 
 import type { Wordgard } from 'wordgard/editor';
 
-import { POST_ELEMENT } from '../elements';
+import type { PostMedia } from '../editor/schema';
+import { MEDIA_ID_ATTR, POST_ELEMENT } from '../elements';
 
 /** in-page drag payload; external files use native drop handlers. */
 export type ThreadDragData =
 	| { kind: 'post'; postId: string; index: number }
-	| { kind: 'media'; postId: string; mediaId: string; index: number };
+	| { kind: 'media'; postId: string; mediaId: string; mediaKind: PostMedia['kind']; index: number };
 
-/** drop target data; the innermost target takes precedence. */
-export type ThreadDropData =
-	| { kind: 'post'; index: number }
-	| { kind: 'mediaTile'; postId: string; index: number }
-	| { kind: 'mediaGrid'; postId: string };
+/** drop target data; the editor is the channel's only drop target. */
+export type ThreadDropData = { kind: 'thread' };
 
 /** the thread editor's drag channel. */
 export type ThreadDnd = DndChannel<ThreadDragData, ThreadDropData>;
@@ -38,51 +36,72 @@ export const isFileDrag = (transfer: DataTransfer): boolean => {
 };
 
 /**
- * finds a post's drop index after removing it from its current position.
+ * adjusts an insertion slot for removal of the dragged item.
+ *
+ * @param slot the index the item would be inserted before, counting the item itself
+ * @param from the item's current index
+ * @returns the destination index, or null when the item would stay in place
+ */
+export const getMoveIndex = (slot: number, from: number): number | null => {
+	if (slot === from || slot === from + 1) {
+		return null;
+	}
+
+	return slot > from ? slot - 1 : slot;
+};
+
+/**
+ * finds a post by vertical position, including its media and footer. positions outside the thread resolve to
+ * the nearest end post.
+ *
+ * @param wg the editor
+ * @param clientY the pointer's client y
+ * @returns the post's thread index and element, or null for an empty thread
+ */
+export const getPostAt = (wg: Wordgard, clientY: number): { index: number; element: Element } | null => {
+	const posts = [...wg.dom.querySelectorAll(POST_ELEMENT)];
+	const found = posts.findIndex((post) => clientY < post.getBoundingClientRect().bottom);
+	const index = found === -1 ? posts.length - 1 : found;
+	const element = posts[index];
+	return element ? { index, element } : null;
+};
+
+/**
+ * finds the insertion slot for a dragged post.
  *
  * @param wg the editor
  * @param input the pointer position
- * @param startIndex the dragged post's current index, or -1 when it isn't in the thread
- * @returns the destination index
+ * @returns the index the post would be inserted before, counting the dragged post itself
  */
-export const getPostDropIndex = (wg: Wordgard, input: Input, startIndex: number): number => {
-	// use full post bounds so gutter, media, and footer drops share the same midpoint.
-	const posts = [...wg.dom.querySelectorAll(POST_ELEMENT)];
-
-	const found = posts.findIndex((post) => input.clientY < post.getBoundingClientRect().bottom);
-	const indexOfTarget = found === -1 ? posts.length - 1 : found;
-	const element = posts[indexOfTarget];
-	if (!element) {
+export const getPostDropSlot = (wg: Wordgard, input: Input): number => {
+	const target = getPostAt(wg, input.clientY);
+	if (!target) {
 		return 0;
 	}
 
 	return getReorderDestinationIndex({
 		axis: 'vertical',
 		closestEdgeOfTarget: extractClosestEdge(
-			attachClosestEdge({}, { allowedEdges: ['bottom', 'top'], element, input }),
+			attachClosestEdge({}, { allowedEdges: ['bottom', 'top'], element: target.element, input }),
 		),
-		indexOfTarget,
-		startIndex,
+		indexOfTarget: target.index,
+		startIndex: -1,
 	});
 };
 
 /**
- * returns the index a dragged attachment would land at within a post's media.
+ * finds an image insertion slot by horizontal position.
  *
- * @param data the tile drop target's data, carrying the closest edge
- * @param startIndex the dragged entry's current index in that post, or -1 when it comes from elsewhere
- * @returns the destination index, or -1 for a non-tile target
+ * @param group the image group element
+ * @param x the pointer's client x
+ * @returns the index an image would be inserted before, or the tile count to append
  */
-export const getMediaDropIndex = (data: ThreadDropData, startIndex: number): number => {
-	if (data.kind !== 'mediaTile') {
-		return -1;
-	}
-
-	const edge = extractClosestEdge(data);
-	return getReorderDestinationIndex({
-		axis: edge === 'top' || edge === 'bottom' ? 'vertical' : 'horizontal',
-		closestEdgeOfTarget: edge,
-		indexOfTarget: data.index,
-		startIndex,
+export const getImageDropSlot = (group: Element, x: number): number => {
+	const tiles = [...group.querySelectorAll(`[${MEDIA_ID_ATTR}]`)];
+	const before = tiles.findIndex((tile) => {
+		const rect = tile.getBoundingClientRect();
+		return x < rect.left + rect.width / 2;
 	});
+
+	return before === -1 ? tiles.length : before;
 };

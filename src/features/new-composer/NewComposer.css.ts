@@ -1,16 +1,18 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, fontLeading, fontSize, space } from '#/styles/tokens.css';
+import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
+import { DROP_TINT } from './dnd/drop.css';
 import {
 	LINE_PLACEHOLDER_ATTR,
+	POST_DRAGGING_ATTR,
 	POST_DROP_AFTER_ATTR,
 	POST_DROP_BEFORE_ATTR,
 	POST_DROP_TARGET_ATTR,
 	POST_ELEMENT,
 } from './elements';
-import { AVATAR_SIZE, RAIL_WIDTH, RIGHT_PADDING } from './layout';
+import { AVATAR_SIZE, DRAGGING_OPACITY, POST_GAP_CENTER, RAIL_WIDTH, RIGHT_PADDING } from './layout';
 
 export const root = style({
 	position: 'relative',
@@ -60,22 +62,47 @@ const slot = style({
 
 export const headerSlot = slot;
 
-export const footerSlot = style([slot, { paddingBottom: space.lg }]);
+// drop markers align with the center of this gap.
+export const footerSlot = style([slot, { paddingBottom: POST_GAP_CENTER * 2 }]);
 
-globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]`, {
-	outline: `2px dashed ${vars.palette.primary_500}`,
-	outlineOffset: space.xs,
-	borderRadius: borderRadius.sm,
+// #region drag and drop
+
+// tint the target post; image drops also get an insertion line.
+globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]::before`, DROP_TINT);
+
+// keep the first post's tint inside the scroll container.
+globalStyle(`${root} ${POST_ELEMENT}:first-of-type[${POST_DROP_TARGET_ATTR}]::before`, {
+	top: 0,
 });
 
+globalStyle(`${root} ${POST_ELEMENT}[${POST_DRAGGING_ATTR}]`, {
+	opacity: DRAGGING_OPACITY,
+});
+
+const DROP_DOT_SIZE = 8;
+const DROP_LINE_THICKNESS = 2;
+
+// align the dot with the thread line.
 const dropMarker = {
 	position: 'absolute',
-	left: 0,
-	right: 0,
-	backgroundColor: vars.palette.primary_500,
-	height: 3,
+	right: RIGHT_PADDING,
+	left: space.lg + AVATAR_SIZE / 2 - DROP_DOT_SIZE / 2,
+	height: DROP_DOT_SIZE,
+	background: [
+		`radial-gradient(circle at ${DROP_DOT_SIZE / 2}px 50%, ${vars.palette.primary_500} ${DROP_DOT_SIZE / 2 - 0.5}px, transparent ${DROP_DOT_SIZE / 2}px)`,
+		`linear-gradient(${vars.palette.primary_500}, ${vars.palette.primary_500}) ${DROP_DOT_SIZE / 2}px 50% / 100% ${DROP_LINE_THICKNESS}px no-repeat`,
+	].join(', '),
+	pointerEvents: 'none',
 	content: '""',
 } as const;
 
-globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_BEFORE_ATTR}]::before`, { ...dropMarker, top: 0 });
-globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_AFTER_ATTR}]::after`, { ...dropMarker, bottom: 0 });
+globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_BEFORE_ATTR}]::before`, {
+	...dropMarker,
+	top: -POST_GAP_CENTER - DROP_DOT_SIZE / 2,
+});
+globalStyle(`${root} ${POST_ELEMENT}[${POST_DROP_AFTER_ATTR}]::after`, {
+	...dropMarker,
+	bottom: POST_GAP_CENTER - DROP_DOT_SIZE / 2,
+});
+
+// #endregion

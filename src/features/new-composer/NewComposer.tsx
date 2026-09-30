@@ -14,12 +14,14 @@ import { m } from '#/paraglide/messages';
 
 import { threadCommands } from './commands/thread-commands';
 import { createThreadDnd } from './dnd/channel';
-import { dropTarget, postDropSlot } from './dnd/drop-indicators';
-import { createFileDropHandlers, registerThreadDrop } from './dnd/thread-drop';
+import { dropIndicator, getDropSlot, getMediaDrag, type MediaDrag } from './dnd/drop-indicators';
+import { NewPostDropZone } from './dnd/NewPostDropZone';
+import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
 import { type PostSlotKind, type SlotHost, slotHost } from './editor/post-slots';
 import { createPosts, endOfLastLine, getPostParam, threadSchema } from './editor/schema';
 import { activePost, findActivePost } from './editor/selection';
 import { type PostSummary, postPlaceholder, threadAnalysis } from './editor/thread-analysis';
+import { MEDIA_DRAGGING_ATTR } from './elements';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
 import * as styles from './NewComposer.css';
@@ -74,6 +76,9 @@ export function NewComposer() {
 	const [slots, setSlots] = useState<PostSlot[]>([]);
 	// only the active post's controls are tabbable.
 	const [activePostId, setActivePostId] = useState<string | null>(null);
+	const [mediaDrag, setMediaDrag] = useState<MediaDrag | null>(null);
+	// portal target after the editor for the new post zone.
+	const [zoneSlot, setZoneSlot] = useState<HTMLElement | null>(null);
 
 	const [suggesting, setSuggesting] = useState<Suggesting | null>(null);
 	// portal target positioned by the editor.
@@ -108,8 +113,7 @@ export function NewComposer() {
 			threadCommands,
 			threadAnalysis,
 			activePost,
-			dropTarget,
-			postDropSlot,
+			dropIndicator,
 			slotHost.of(host),
 			suggestionState,
 			suggestionHost.of(popupHost),
@@ -138,6 +142,9 @@ export function NewComposer() {
 				if (update.docChanged || update.selectionSet) {
 					setActivePostId(getActivePostId(update.state));
 				}
+				if (update.state.field(dropIndicator) !== update.startState.field(dropIndicator)) {
+					setMediaDrag(getMediaDrag(update.state));
+				}
 			}),
 		]);
 
@@ -150,17 +157,25 @@ export function NewComposer() {
 			parent: container,
 		});
 
+		// the editor mounts after React's children, so the zone needs its own host after it.
+		const zoneHost = document.createElement('div');
+		container.append(zoneHost);
+
 		setEditor(wg);
 		setPosts(wg.state.field(threadAnalysis).posts);
 		setActivePostId(getActivePostId(wg.state));
+		setZoneSlot(zoneHost);
 		// focus after React fills the slots; nearby DOM changes can displace the initial caret.
 		const focusing = requestAnimationFrame(() => wg.focus());
 
 		const stopDropping = registerThreadDrop(wg, dnd, container);
+		const stopFileDrops = registerFileDrop(wg, container);
 
 		return () => {
 			stopDropping();
+			stopFileDrops();
 			cancelAnimationFrame(focusing);
+			zoneHost.remove();
 			wg.dom.remove();
 		};
 	};
@@ -181,7 +196,10 @@ export function NewComposer() {
 	}, [editor, showSuggestions, activeOption]);
 
 	return (
-		<div ref={mountEditor} className={styles.root} {...createFileDropHandlers(editor)}>
+		<div ref={mountEditor} className={styles.root} {...{ [MEDIA_DRAGGING_ATTR]: mediaDrag ? '' : undefined }}>
+			{zoneSlot &&
+				mediaDrag &&
+				createPortal(<NewPostDropZone isActive={mediaDrag.drop?.kind === 'newPost'} />, zoneSlot)}
 			{editor && showSuggestions && suggestionSlot && (
 				<SuggestionPopup
 					wg={editor}
@@ -219,7 +237,13 @@ export function NewComposer() {
 					case 'footer': {
 						return createPortal(
 							<>
-								<MediaRow wg={editor} dnd={dnd} post={post} isActive={post.id === activePostId} />
+								<MediaRow
+									wg={editor}
+									dnd={dnd}
+									post={post}
+									isActive={post.id === activePostId}
+									dropSlot={getDropSlot(mediaDrag, post.id)}
+								/>
 								<LinkEmbedRow wg={editor} embeds={post.embeds} isActive={post.id === activePostId} />
 								<PostFooter wg={editor} post={post} isActive={post.id === activePostId} />
 							</>,

@@ -1,0 +1,124 @@
+import { useLayoutEffect, useRef } from 'react';
+
+import type { Wordgard } from 'wordgard/editor';
+
+import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
+import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
+import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
+
+import { space } from '#/styles/tokens.css';
+
+import type { ThreadDnd } from '../dnd/channel';
+import type { ImageMedia } from '../editor/schema';
+import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
+import { keepEditorFocus, type RovingFocus } from '../focus';
+import { RAIL_WIDTH } from '../layout';
+import * as styles from './ImageGroup.css';
+import { MediaTile } from './MediaTile';
+
+// the single-image layout has no gap; space its drop line as the strip would.
+const getGap = (value: string) => {
+	const gap = parseFloat(value);
+	return Number.isNaN(gap) || gap === 0 ? space.xs : gap;
+};
+
+const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): void => {
+	const tiles = [...group.querySelectorAll<HTMLElement>(`[${MEDIA_ID_ATTR}]`)];
+	const prev = tiles[slot - 1];
+	const next = tiles[slot];
+	const gap = getGap(getComputedStyle(group).columnGap);
+	const thickness = styles.DROP_LINE_THICKNESS;
+
+	const place = (tile: HTMLElement, x: number) => {
+		Object.assign(line.style, {
+			left: `${x - thickness / 2}px`,
+			top: `${tile.offsetTop}px`,
+			width: `${thickness}px`,
+			height: `${tile.offsetHeight}px`,
+		});
+	};
+
+	if (next && prev) {
+		place(next, (prev.offsetLeft + prev.offsetWidth + next.offsetLeft) / 2);
+	} else if (next) {
+		place(next, next.offsetLeft - gap / 2);
+	} else if (prev) {
+		place(prev, prev.offsetLeft + prev.offsetWidth + gap / 2);
+	}
+};
+
+/**
+ * reorderable images using the feed's single-image or carousel layout.
+ *
+ * @param props images in post-media order (starting at index 0), editor, drag, and keyboard focus state
+ * @returns the image group
+ */
+export function ImageGroup({
+	wg,
+	dnd,
+	postId,
+	images,
+	roving,
+	dropSlot,
+}: {
+	wg: Wordgard;
+	dnd: ThreadDnd;
+	postId: string;
+	images: readonly ImageMedia[];
+	roving: RovingFocus<string>;
+	dropSlot: number | null;
+}) {
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const lineRef = useRef<HTMLDivElement>(null);
+	const layout = images.length === 1 ? 'single' : 'strip';
+
+	// remeasure every render to track tile changes during a drag.
+	useLayoutEffect(() => {
+		if (scrollRef.current && lineRef.current && dropSlot !== null) {
+			placeDropLine(scrollRef.current, lineRef.current, dropSlot);
+		}
+	});
+
+	const group = (
+		<div
+			ref={scrollRef}
+			className={layout === 'single' ? styles.single : styles.stripScroll}
+			{...{ [IMAGE_GROUP_ATTR]: '' }}
+		>
+			{images.map((item, index) => (
+				<MediaTile
+					key={item.id}
+					wg={wg}
+					dnd={dnd}
+					postId={postId}
+					index={index}
+					item={item}
+					layout={layout}
+					roving={roving.item(item.id)}
+				/>
+			))}
+			{/* mounted only during drags, since carousel paging treats every child as a tile. */}
+			{dropSlot !== null && <div ref={lineRef} className={styles.dropLine} aria-hidden />}
+		</div>
+	);
+
+	if (layout === 'single') {
+		return group;
+	}
+
+	return (
+		<div
+			className={styles.stripRoot}
+			style={getStripStyle({
+				max: CAROUSEL_MAX_HEIGHT,
+				min: CAROUSEL_MIN_HEIGHT,
+				ratios: images.map((item) => item.aspectRatio),
+			})}
+		>
+			{group}
+			<div className={styles.paging} onMouseDown={keepEditorFocus}>
+				<PagingControls scrollPaddingLeft={RAIL_WIDTH} scrollRef={scrollRef} />
+			</div>
+		</div>
+	);
+}
