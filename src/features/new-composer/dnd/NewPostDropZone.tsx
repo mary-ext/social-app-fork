@@ -5,6 +5,7 @@ import { Text } from '#/components/Text';
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 
 import { NEW_POST_ZONE_ATTR } from '../elements';
+import * as threadEnd from '../thread-end.css';
 import * as styles from './NewPostDropZone.css';
 
 /**
@@ -23,7 +24,7 @@ export function NewPostDropZone({ isActive }: { isActive: boolean }) {
 			<div className={styles.avatar}>
 				<PlusIcon className={styles.icon} />
 			</div>
-			<Text weight="medium" className={styles.label}>
+			<Text weight="medium" className={threadEnd.label}>
 				Drop to add a new post
 			</Text>
 		</div>

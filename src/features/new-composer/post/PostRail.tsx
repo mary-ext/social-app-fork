@@ -31,17 +31,25 @@ type RailProps = {
 	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
 };
 
-function Avatar({
+/**
+ * author avatar, using the labeler shape when applicable.
+ *
+ * @param props the profile, size in pixels (defaults to AVATAR_SIZE), and whether to omit the border
+ * @returns the avatar
+ */
+export function Avatar({
 	profile,
+	size = AVATAR_SIZE,
 	noBorder,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
+	size?: number;
 	noBorder?: boolean;
 }) {
 	return (
 		<UserAvatar
 			avatar={profile?.avatar}
-			size={AVATAR_SIZE}
+			size={size}
 			type={profile?.associated?.labeler ? 'labeler' : 'user'}
 			noBorder={noBorder}
 		/>
@@ -55,12 +63,12 @@ function Avatar({
  * @returns the post's rail
  */
 export const PostRail = memo(function PostRail(props: RailProps) {
-	const { index, total, profile } = props;
+	const { total, profile } = props;
 
 	return (
 		<div className={styles.root}>
 			{total > 1 ? <PostHandle {...props} /> : <Avatar profile={profile} />}
-			<div className={index < total - 1 ? styles.line : styles.lineToDropZone} />
+			<div className={styles.line} />
 		</div>
 	);
 });

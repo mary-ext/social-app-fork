@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
 import { RIGHT_PADDING } from '../layout';
+import { revealOnHover } from '../reveal.css';
 
 export const root = style({
 	display: 'flex',
@@ -19,6 +20,17 @@ export const badges = style({
 
 export const number = style({
 	display: 'flex',
-	marginInlineStart: 'auto',
+	flexShrink: 0,
 	paddingInlineStart: space.sm,
 });
+
+// overhang the header so the button doesn't grow it.
+export const remove = style([
+	revealOnHover,
+	{
+		flexShrink: 0,
+		marginBlock: -space.sm,
+		marginInlineStart: 'auto',
+		marginInlineEnd: -space.xs,
+	},
+]);

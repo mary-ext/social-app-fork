@@ -2,15 +2,13 @@ import { reorder } from '@oomfware/tug/reorder';
 
 import type { ChangeSet } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
-import { Paragraph } from 'wordgard/types';
 
+import { appendPost } from '../commands/append-post';
 import { ISOLATE_HISTORY } from '../editor/history';
 import {
-	endOfLastLine,
 	findPostById,
 	getPostParam,
 	getPosts,
-	newPost,
 	type PostMedia,
 	setPostMediaChange,
 	type ThreadPost,
@@ -254,30 +252,6 @@ export const moveMediaDown = (wg: Wordgard, fromId: string, mediaId: string): vo
 	}
 };
 
-// media-only changes leave the append position unchanged.
-const appendPost = (
-	wg: Wordgard,
-	changes: ChangeSet.Spec[],
-	media: readonly PostMedia[],
-	userEvent: string,
-): void => {
-	const posts = getPosts(wg.state.doc);
-	const last = posts[posts.length - 1];
-	if (!last) {
-		return;
-	}
-
-	const end = last.pos + last.node.length;
-	const post = newPost(media).create([Paragraph.create()]);
-	wg.dispatch({
-		changes: [...changes, { from: end, insert: [post] }],
-		selection: { anchor: endOfLastLine(end + post.length) },
-		scrollIntoView: true,
-		userEvent,
-		annotations: ISOLATE_HISTORY,
-	});
-};
-
 /**
  * moves an attachment into a new post at the end of the thread, placing the caret in it.
  *
@@ -288,7 +262,8 @@ const appendPost = (
 export const moveMediaToNewPost = (wg: Wordgard, fromId: string, mediaId: string): void => {
 	const lifted = liftMedia(wg, fromId, mediaId);
 	if (lifted) {
-		appendPost(wg, lifted.changes, [lifted.item], 'media.move');
+		// media-only changes leave the append position unchanged.
+		appendPost(wg, { userEvent: 'media.move', media: [lifted.item], changes: lifted.changes });
 	}
 };
 
@@ -300,7 +275,7 @@ export const moveMediaToNewPost = (wg: Wordgard, fromId: string, mediaId: string
  */
 export const addMediaInNewPost = (wg: Wordgard, media: readonly PostMedia[]): void => {
 	if (media.length > 0) {
-		appendPost(wg, [], media, 'media.add');
+		appendPost(wg, { userEvent: 'media.add', media });
 	}
 };
 
