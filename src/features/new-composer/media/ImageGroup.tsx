@@ -83,6 +83,7 @@ export function ImageGroup({
 	const group = (
 		<div
 			ref={scrollRef}
+			tabIndex={layout === 'strip' ? -1 : undefined}
 			className={layout === 'single' ? styles.single : styles.stripScroll}
 			{...{ [IMAGE_GROUP_ATTR]: '' }}
 		>

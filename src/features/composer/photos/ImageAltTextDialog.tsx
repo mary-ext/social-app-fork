@@ -1,4 +1,4 @@
-import { type ReactNode, useId, useRef, useState } from 'react';
+import { type ReactNode, type RefObject, useId, useRef, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -36,13 +36,15 @@ type Props<T extends AltTextTarget> = {
 
 export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: Props<T>): ReactNode => {
 	const { gtMobile } = useBreakpoints();
+	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'}>
+				<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'} initialFocus={inputRef}>
 					{payload && (
 						<DialogInner
+							inputRef={inputRef}
 							target={payload}
 							onSave={(alt) => {
 								onSave(alt, payload);
@@ -57,15 +59,16 @@ export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: 
 };
 
 const DialogInner = ({
+	inputRef,
 	target: { context, blob, alt: initialAlt },
 	onSave,
 }: {
+	inputRef: RefObject<(HTMLInputElement & HTMLTextAreaElement) | null>;
 	target: AltTextTarget;
 	onSave: (alt: string) => void;
 }): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 	const [alt, setAlt] = useState(initialAlt);
-	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 	const imageUrl = getBlobUrl(blob);
 	const counterId = useId();
 
@@ -133,7 +136,6 @@ const DialogInner = ({
 						{m['view.composer.altText.descriptive']()}
 					</TextField.LabelText>
 					<TextField.Input
-						autoFocus
 						describedBy={counterId}
 						isInvalid={isOverLimit}
 						label={m['common.altText.label']()}

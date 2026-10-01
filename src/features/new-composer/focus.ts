@@ -56,7 +56,9 @@ export const restoreSelectionOnFocus = (): GardState.Extension => {
 		}),
 		Wordgard.domEventObserver('focus', (_event, wg) => {
 			if (!pressing) {
-				// other text fields can move the DOM selection; native focus may not restore it.
+				// queue the saved selection to prevent focus's flush from importing a stale DOM selection
+				// left by another text field or a post redraw.
+				wg.dispatch({ selection: wg.state.selection });
 				wg.focus();
 			}
 		}),

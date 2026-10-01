@@ -8,6 +8,7 @@ import { vars } from '#/styles/contract.css';
 
 import { MEDIA_DRAGGING_ATTR } from '../elements';
 import { RAIL_WIDTH, RIGHT_PADDING } from '../layout';
+import { FOCUS_RING_EXTENT } from './MediaTile.css';
 
 export const single = style({
 	display: 'flex',
@@ -26,7 +27,15 @@ export const stripRoot = style([
 	},
 ]);
 
-export const stripScroll = style([strip.scroll, { position: 'relative' }]);
+export const stripScroll = style([
+	strip.scroll,
+	{
+		position: 'relative',
+		marginBlock: -FOCUS_RING_EXTENT,
+		boxSizing: 'content-box',
+		paddingBlock: FOCUS_RING_EXTENT,
+	},
+]);
 
 // mandatory snapping would undo drag auto-scrolling.
 globalStyle(`[${MEDIA_DRAGGING_ATTR}] ${stripScroll}`, {
