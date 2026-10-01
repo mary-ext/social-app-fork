@@ -23,6 +23,7 @@ import { embedSession } from './embeds/embed-session';
 import { restoreSelectionOnFocus } from './focus';
 import { labelTaint } from './labels/commands';
 import { altTaint } from './media/alt-text';
+import { imageEditTaint } from './media/image-edits';
 import { createStore } from './store';
 import {
 	activeCompletion,
@@ -49,6 +50,7 @@ export const createComposer = (): Composer => {
 		threadCommands,
 		embedSession,
 		altTaint.field,
+		imageEditTaint.field,
 		labelTaint.field,
 		threadDecorations,
 		activePost,

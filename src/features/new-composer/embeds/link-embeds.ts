@@ -59,7 +59,7 @@ export const emptyEmbedSession: EmbedSession = { dismissed: new Set(), settled: 
 export const dismissLinkEmbedEffect = Transaction.Effect.define<string>();
 
 /**
- * stops embedding a URL for the rest of the session, in every post. not undoable.
+ * stops embedding a URL for the rest of the session, in every post.
  *
  * @param wg the editor
  * @param url the dismissed link's URL

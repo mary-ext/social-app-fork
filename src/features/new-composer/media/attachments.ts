@@ -65,9 +65,9 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 	const id = crypto.randomUUID();
 	switch (attachment.type) {
 		case 'image': {
-			let aspectRatio;
+			let dimensions;
 			try {
-				aspectRatio = getAspectRatio(await getImageDimensions(attachment.blob));
+				dimensions = await getImageDimensions(attachment.blob);
 			} catch {
 				// fall back to square sizing if dimensions can't be read.
 			}
@@ -76,7 +76,7 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 				id,
 				kind: 'image',
 				file,
-				aspectRatio,
+				dimensions,
 			};
 		}
 		case 'video': {

@@ -1,7 +1,7 @@
 import type { Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
-// key metadata by media id or link URL so it follows attachments across posts.
+// key metadata by media ID or link URL so it follows attachments across posts.
 // keep it outside the document so undoing attachment changes preserves it.
 
 /** attachment metadata keyed by identity. */
@@ -14,7 +14,7 @@ export type TaintKind<T> = {
 	/** include this field in the editor's extensions before reading or setting metadata. */
 	field: GardState.Field<TaintMap<T>>;
 	/**
-	 * sets attachment metadata. not undoable.
+	 * sets attachment metadata.
 	 *
 	 * @param wg the editor
 	 * @param keys the attachments' keys
