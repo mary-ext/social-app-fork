@@ -24,7 +24,7 @@ import { m } from '#/paraglide/messages';
 import type { PostAction } from '../state/composer';
 import type { AltTextContext } from './alt-text-generator/types';
 import * as styles from './Gallery.css';
-import { ImageAltTextDialog } from './ImageAltTextDialog';
+import { type AltTextTarget, ImageAltTextDialog } from './ImageAltTextDialog';
 
 type GalleryProps = {
 	dispatch: (action: PostAction) => void;
@@ -161,9 +161,10 @@ type ItemChromeProps = {
 };
 
 const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => {
-	const imageUrl = getBlobUrl((image.transformed ?? image.source).blob);
+	const blob = (image.transformed ?? image.source).blob;
+	const imageUrl = getBlobUrl(blob);
 
-	const altTextHandle = Dialog.useDialogHandle();
+	const altTextHandle = Dialog.useDialogHandle<AltTextTarget>();
 	const editHandle = Dialog.useDialogHandle();
 
 	const hasAlt = image.alt.length !== 0;
@@ -173,6 +174,7 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 			<img className={styles.image} src={imageUrl} alt={image.alt} draggable={false} />
 			<Dialog.Trigger
 				handle={altTextHandle}
+				payload={{ context, blob, alt: image.alt }}
 				className={styles.altBadge}
 				aria-label={m['view.composer.altText.action.add']()}
 			>
@@ -202,7 +204,7 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 					<TimesIcon className={styles.timesIcon} />
 				</button>
 			</div>
-			<ImageAltTextDialog context={context} handle={altTextHandle} image={image} onChange={onChange} />
+			<ImageAltTextDialog handle={altTextHandle} onSave={(alt) => onChange({ ...image, alt })} />
 			<EditImageDialog handle={editHandle} image={image} onChange={onChange} />
 		</>
 	);

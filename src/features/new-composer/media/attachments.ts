@@ -77,7 +77,6 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 				kind: 'image',
 				file,
 				aspectRatio,
-				alt: '',
 			};
 		}
 		case 'video': {
@@ -88,7 +87,6 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 				file,
 				aspectRatio: getAspectRatio(asset),
 				duration: toSeconds(asset.duration),
-				alt: '',
 			};
 		}
 		case 'voice': {
@@ -97,7 +95,6 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 				kind: 'voice',
 				file,
 				duration: toSeconds(attachment.asset.duration),
-				alt: '',
 			};
 		}
 	}

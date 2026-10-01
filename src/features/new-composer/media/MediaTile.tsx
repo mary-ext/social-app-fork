@@ -138,17 +138,16 @@ function UploadBadge({ upload, controls }: { upload: PendingUpload; controls: Co
 }
 
 function AltButton({
-	item,
+	hasAlt,
 	controls,
 	tabbable,
+	onClick,
 }: {
-	item: PostMedia;
+	hasAlt: boolean;
 	controls: ControlStyles;
 	tabbable: boolean;
+	onClick: () => void;
 }) {
-	const hasAlt = item.alt.length > 0;
-
-	// TODO: open the alt text editor.
 	return (
 		<Button
 			label={hasAlt ? m['view.composer.altText.action.edit']() : m['view.composer.altText.action.add']()}
@@ -156,6 +155,7 @@ function AltButton({
 			variant="bare"
 			tabIndex={tabbable ? undefined : -1}
 			onMouseDown={keepEditorFocus}
+			onClick={onClick}
 		>
 			{hasAlt ? (
 				<CheckIcon className={clsx(overlay.overlayIcon, styles.altCheck)} />
@@ -215,7 +215,7 @@ const followMedia = (wg: Wordgard, mediaId: string) => {
 /**
  * attachment tile with drag and keyboard controls.
  *
- * @param props attachment, layout, and editor interaction state
+ * @param props attachment data, layout, and editor controls
  * @returns the tile
  */
 export function MediaTile({
@@ -224,16 +224,20 @@ export function MediaTile({
 	postId,
 	index,
 	item,
+	hasAlt,
 	layout,
 	roving,
+	onEditAlt,
 }: {
 	wg: Wordgard;
 	dnd: ThreadDnd;
 	postId: string;
 	index: number;
 	item: PostMedia;
+	hasAlt: boolean;
 	layout: MediaLayout;
 	roving: RovingItemProps;
+	onEditAlt: () => void;
 }) {
 	const [isDragging, setIsDragging] = useState(false);
 	const url = getMediaUrl(item);
@@ -344,7 +348,7 @@ export function MediaTile({
 			{pendingUpload ? (
 				<UploadBadge upload={pendingUpload} controls={controls} />
 			) : (
-				<AltButton item={item} controls={controls} tabbable={tabbable} />
+				<AltButton hasAlt={hasAlt} controls={controls} tabbable={tabbable} onClick={onEditAlt} />
 			)}
 
 			<div className={controls.actions} onMouseDown={keepEditorFocus}>

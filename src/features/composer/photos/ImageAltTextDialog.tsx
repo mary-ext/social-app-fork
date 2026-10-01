@@ -1,8 +1,7 @@
-import { type ReactNode, useId, useRef, useState } from 'react';
+import { type ComponentProps, type ReactNode, useId, useRef, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
-import type { ComposerImage } from '#/lib/media/composer-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 import { trimText } from '#/lib/utils/text';
 
@@ -20,36 +19,64 @@ import type { AltTextContext } from './alt-text-generator/types';
 import { useAltTextGenerator } from './alt-text-generator/use-generator';
 import * as styles from './ImageAltTextDialog.css';
 
-type Props = {
-	/** The post this image is attached to, for the description assistant to anchor what it can't see to. */
+/** image data passed through the alt text dialog's handle. */
+export type AltTextTarget = {
+	/** post text and sibling alt text for description generation. */
 	context: AltTextContext;
-	handle: Dialog.DialogHandle;
-	image: ComposerImage;
-	onChange: (next: ComposerImage) => void;
+	blob: Blob;
+	/** initial alt text; empty when absent. */
+	alt: string;
 };
 
-export const ImageAltTextDialog = ({ context, handle, image, onChange }: Props): ReactNode => {
+type Props<T extends AltTextTarget> = {
+	handle: Dialog.DialogHandle<T>;
+	/** receives trimmed alt text and the opening payload on save. */
+	onSave: (alt: string, target: T) => void;
+	/** focus target or callback on close; defaults to the opening element. */
+	finalFocus?: ComponentProps<typeof Dialog.Popup>['finalFocus'];
+};
+
+export const ImageAltTextDialog = <T extends AltTextTarget>({
+	handle,
+	onSave,
+	finalFocus,
+}: Props<T>): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
-			<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'}>
-				<DialogInner context={context} handle={handle} image={image} onChange={onChange} />
-			</Dialog.Popup>
+			{({ payload }) => (
+				<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'} finalFocus={finalFocus}>
+					{payload && (
+						<DialogInner
+							target={payload}
+							onSave={(alt) => {
+								onSave(alt, payload);
+								handle.close();
+							}}
+						/>
+					)}
+				</Dialog.Popup>
+			)}
 		</Dialog.Root>
 	);
 };
 
-const DialogInner = ({ context, handle, image, onChange }: Props): ReactNode => {
+const DialogInner = ({
+	target: { context, blob, alt: initialAlt },
+	onSave,
+}: {
+	target: AltTextTarget;
+	onSave: (alt: string) => void;
+}): ReactNode => {
 	const { gtMobile } = useBreakpoints();
-	const [alt, setAlt] = useState(image.alt);
+	const [alt, setAlt] = useState(initialAlt);
 	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-	const source = image.transformed ?? image.source;
-	const imageUrl = getBlobUrl(source.blob);
+	const imageUrl = getBlobUrl(blob);
 	const counterId = useId();
 
 	const generator = useAltTextGenerator({
-		blob: source.blob,
+		blob,
 		context: context,
 		text: alt,
 		onGenerated(draft) {
@@ -64,15 +91,14 @@ const DialogInner = ({ context, handle, image, onChange }: Props): ReactNode => 
 	});
 
 	const isOverLimit = alt.length > MAX_ALT_TEXT;
-	const canSave = alt !== image.alt && !isOverLimit;
+	const canSave = alt !== initialAlt && !isOverLimit;
 
 	const counterLabel = isOverLimit
 		? m['view.composer.altText.charCountOverLimit']({ length: alt.length, max: MAX_ALT_TEXT })
 		: m['view.composer.altText.charCount']({ length: alt.length, max: MAX_ALT_TEXT });
 
-	const onSave = () => {
-		onChange({ ...image, alt: trimText(alt) });
-		handle.close();
+	const save = () => {
+		onSave(trimText(alt));
 	};
 
 	const Layout = gtMobile ? WideLayout : CompactLayout;
@@ -87,7 +113,7 @@ const DialogInner = ({ context, handle, image, onChange }: Props): ReactNode => 
 						color="primary"
 						disabled={!canSave}
 						label={m['common.action.save']()}
-						onClick={onSave}
+						onClick={save}
 						size="small"
 					>
 						<ButtonText>{m['common.action.save']()}</ButtonText>

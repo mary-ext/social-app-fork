@@ -13,6 +13,7 @@ import type { ImageMedia } from '../editor/schema';
 import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingFocus } from '../focus';
 import { RAIL_WIDTH } from '../layout';
+import type { AltTexts } from './alt-text';
 import * as styles from './ImageGroup.css';
 import { MediaTile } from './MediaTile';
 
@@ -50,7 +51,7 @@ const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): voi
 /**
  * reorderable images using the feed's single-image or carousel layout.
  *
- * @param props images in post-media order (starting at index 0), editor, drag, and keyboard focus state
+ * @param props images starting at post-media index 0, alt text, and editor controls
  * @returns the image group
  */
 export function ImageGroup({
@@ -58,15 +59,19 @@ export function ImageGroup({
 	dnd,
 	postId,
 	images,
+	altTexts,
 	roving,
 	dropSlot,
+	onEditAlt,
 }: {
 	wg: Wordgard;
 	dnd: ThreadDnd;
 	postId: string;
 	images: readonly ImageMedia[];
+	altTexts: AltTexts;
 	roving: RovingFocus<string>;
 	dropSlot: number | null;
+	onEditAlt: (item: ImageMedia) => void;
 }) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const lineRef = useRef<HTMLDivElement>(null);
@@ -93,8 +98,10 @@ export function ImageGroup({
 					postId={postId}
 					index={index}
 					item={item}
+					hasAlt={altTexts.has(item.id)}
 					layout={layout}
 					roving={roving.item(item.id)}
+					onEditAlt={() => onEditAlt(item)}
 				/>
 			))}
 			{/* mounted only during drags, since carousel paging treats every child as a tile. */}

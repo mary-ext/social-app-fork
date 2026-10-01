@@ -12,8 +12,6 @@ export type PostMedia =
 			file: File;
 			/** width / height; undefined if unknown. */
 			aspectRatio: number | undefined;
-			/** alt text; empty when absent. */
-			alt: string;
 	  }
 	| {
 			kind: 'gif' | 'video';
@@ -23,8 +21,6 @@ export type PostMedia =
 			aspectRatio: number | undefined;
 			/** seconds; undefined if unknown. */
 			duration: number | undefined;
-			/** alt text; empty when absent. */
-			alt: string;
 	  }
 	| {
 			kind: 'voice';
@@ -32,8 +28,6 @@ export type PostMedia =
 			file: File;
 			/** seconds; undefined if unknown. */
 			duration: number | undefined;
-			/** alt text; empty when absent. */
-			alt: string;
 	  };
 
 /** per-post data that isn't part of the text. */
