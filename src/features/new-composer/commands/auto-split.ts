@@ -1,4 +1,20 @@
+import type { Wordgard } from 'wordgard/editor';
+
+import { MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { getShortenedLength } from '#/lib/rich-text';
+
 import { buildSpans } from '#/components/Composer/rich-text';
+
+import { ISOLATE_HISTORY } from '../model/history';
+import {
+	createPosts,
+	endOfLastLine,
+	findPostById,
+	getPostParam,
+	getPostText,
+	newPost,
+	Post,
+} from '../model/schema';
 
 // break points in preference order; matches end at the next chunk's start.
 const BREAK_TIERS = [
@@ -94,18 +110,23 @@ const findLongestFit = (text: string, limit: number, measure: (chunk: string) =>
  * @param measure measures a chunk's length, as counted against the limit
  * @returns the chunks, trimmed, with at least one entry
  */
-export const splitText = (text: string, limit: number, measure: (chunk: string) => number): string[] => {
+const splitText = (text: string, limit: number, measure: (chunk: string) => number): string[] => {
+	const full = text.trim();
+	// reuse full-text ranges and boundaries by adding `base` to each chunk's offsets.
+	const unbreakable = getUnbreakableRanges(full);
+	const boundaries = getBoundarySet(full);
+
 	const chunks: string[] = [];
-	let rest = text.trim();
+	let base = 0;
+	let rest = full;
 
 	while (measure(rest) > limit) {
-		const unbreakable = getUnbreakableRanges(rest);
-		const boundaries = getBoundarySet(rest);
-
 		const fits = findLongestFit(rest, limit, measure);
 
+		const isBoundary = (offset: number) => boundaries.has(base + offset);
 		const isBreakable = (offset: number) => {
-			return boundaries.has(offset) && !unbreakable.some(([from, to]) => offset > from && offset < to);
+			const at = base + offset;
+			return isBoundary(offset) && !unbreakable.some(([from, to]) => at > from && at < to);
 		};
 
 		let cut = -1;
@@ -120,7 +141,7 @@ export const splitText = (text: string, limit: number, measure: (chunk: string) 
 				const resume = match.index + match[0].length;
 
 				// a lower tier only helps when it breaks later than the higher tier's pick.
-				if (end > cut && isBreakable(end) && boundaries.has(resume) && fitsHere) {
+				if (end > cut && isBreakable(end) && isBoundary(resume) && fitsHere) {
 					cut = end;
 					next = resume;
 				}
@@ -137,9 +158,48 @@ export const splitText = (text: string, limit: number, measure: (chunk: string) 
 		}
 
 		chunks.push(rest.slice(0, cut).trimEnd());
-		rest = rest.slice(next).trimStart();
+		const after = rest.slice(next);
+		rest = after.trimStart();
+		base += next + after.length - rest.length;
 	}
 
 	chunks.push(rest);
 	return chunks;
+};
+
+/**
+ * splits an overlong post at text boundaries, keeping its media on the last post.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ */
+export const autoSplitPost = (wg: Wordgard, postId: string): void => {
+	const post = findPostById(wg.state.doc, postId);
+	if (!post) {
+		return;
+	}
+
+	const chunks = splitText(getPostText(post.node), MAX_POST_GRAPHEME_LENGTH, getShortenedLength);
+	if (chunks.length < 2) {
+		return;
+	}
+
+	// preserve the original post's id on the first chunk.
+	const param = getPostParam(post.node);
+	const posts = createPosts(chunks).map((plot, i) => {
+		if (i === 0) {
+			return Post.of({ id: param.id, media: [] }).create(plot.content);
+		}
+		return i === chunks.length - 1 ? newPost(param.media).create(plot.content) : plot;
+	});
+
+	const end = post.pos + posts.reduce((length, plot) => length + plot.length, 0);
+
+	wg.dispatch({
+		changes: { from: post.pos, to: post.pos + post.node.length, insert: posts },
+		selection: { anchor: endOfLastLine(end) },
+		scrollIntoView: true,
+		userEvent: 'input.split',
+		annotations: ISOLATE_HISTORY,
+	});
 };

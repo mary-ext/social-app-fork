@@ -5,7 +5,7 @@ import { Paragraph } from 'wordgard/types';
 import type { Gif } from '#/lib/media/external-gif/types';
 import type { Dimensions } from '#/lib/media/metadata';
 
-import { POST_ELEMENT } from '../elements';
+import { POST_ELEMENT } from '../shared/elements';
 
 /** post attachment. retains local files or GIF provider metadata for preview and undo. */
 export type PostMedia =
@@ -129,14 +129,8 @@ export const getPostParam = (post: Plot): PostParam => {
 /** the thread document, a non-empty list of posts. */
 const ThreadDoc = Plot.defineDoc({ blockContent: Post });
 
-/**
- * replaces a post's data, stably grouping media by kind and preserving text.
- *
- * @param pos the position before the post
- * @param param the new data
- * @returns the change replacing the post's opening tag
- */
-export const setPostParamChange = (pos: number, param: PostParam): ChangeSet.Spec => {
+// replace only the opening tag to preserve the post's text.
+const setPostParamChange = (pos: number, param: PostParam): ChangeSet.Spec => {
 	return { from: pos, to: pos + 1, insert: [Post.of({ ...param, media: sortMedia(param.media) })] };
 };
 
@@ -247,8 +241,7 @@ export const isEmptyPost = (post: Plot): boolean => {
  * @returns the neighbouring post, or null at the thread's edge
  */
 export const getSiblingPost = (post: Pos.Plot, dir: -1 | 1): Plot | null => {
-	// wordgard 0.5.2 types sibling getters as Pos.Node but returns bare nodes; read the parent instead.
-	const sibling = post.parent?.node.content[post.index + dir];
+	const sibling = dir < 0 ? post.previousSibling : post.nextSibling;
 	return sibling?.isPlot ? sibling : null;
 };
 

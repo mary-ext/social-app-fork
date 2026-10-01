@@ -45,3 +45,13 @@ export const getMediaTileSelector = (mediaId: string): string => {
 
 /** post id used to refocus its handle after reordering. */
 export const POST_HANDLE_ATTR = 'data-post-handle';
+
+/**
+ * builds a selector matching a post's reorder handle.
+ *
+ * @param postId the post's id
+ * @returns the selector
+ */
+export const getPostHandleSelector = (postId: string): string => {
+	return `[${POST_HANDLE_ATTR}="${CSS.escape(postId)}"]`;
+};

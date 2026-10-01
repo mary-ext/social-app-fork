@@ -2,8 +2,8 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { useEditorState } from '../context';
 import { DragThumbnail } from '../dnd/DragPreview';
-import type { PostMedia } from '../editor/schema';
-import type { RovingItemProps } from '../focus';
+import type { PostMedia } from '../model/schema';
+import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import * as css from './GifTile.css';
 import { MediaTile } from './MediaTile';
@@ -32,7 +32,7 @@ export function GifTile({
 	onRemove: () => void;
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
-	const upload = usePendingUpload(item.id);
+	const upload = usePendingUpload(item.file);
 	const url = getBlobUrl(item.file);
 	const tabbable = roving.tabIndex === 0;
 

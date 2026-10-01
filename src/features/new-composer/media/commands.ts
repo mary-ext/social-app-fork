@@ -6,7 +6,7 @@ import type { Wordgard } from 'wordgard/editor';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 import { appendPost } from '../commands/append-post';
-import { ISOLATE_HISTORY } from '../editor/history';
+import { ISOLATE_HISTORY } from '../model/history';
 import {
 	endOfLastLine,
 	findPostById,
@@ -14,10 +14,15 @@ import {
 	getPosts,
 	type PostMedia,
 	setPostMediaChange,
-	type ThreadPost,
-} from '../editor/schema';
-import { findActivePost } from '../editor/selection';
+} from '../model/schema';
+import { findActivePost } from '../model/selection';
 import { createGifMedia, createMedia } from './attachments';
+
+/** an attachment's id and containing post. */
+export type MediaRef = {
+	postId: string;
+	mediaId: string;
+};
 
 /**
  * classifies and validates files, then appends the accepted ones to a post.
@@ -46,15 +51,12 @@ export const attachGif = (wg: Wordgard, postId: string, gif: Gif): void => {
  * appends media to a post.
  *
  * @param wg the editor
- * @param post the post, already located in the document
+ * @param postId the post's id
  * @param media the media to add
  */
-export const addMedia = (
-	wg: Wordgard,
-	post: Pick<ThreadPost, 'node' | 'pos'>,
-	media: readonly PostMedia[],
-): void => {
-	if (media.length === 0) {
+export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
+	const post = findPostById(wg.state.doc, postId);
+	if (!post || media.length === 0) {
 		return;
 	}
 
@@ -63,20 +65,6 @@ export const addMedia = (
 		userEvent: 'media.add',
 		annotations: ISOLATE_HISTORY,
 	});
-};
-
-/**
- * appends media to the post with the given id.
- *
- * @param wg the editor
- * @param postId the post's id
- * @param media the media to add
- */
-export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
-	const post = findPostById(wg.state.doc, postId);
-	if (post) {
-		addMedia(wg, post, media);
-	}
 };
 
 /**
@@ -111,13 +99,12 @@ export const insertMediaAt = (
 };
 
 /**
- * removes a media entry from a post.
+ * removes an attachment from its post.
  *
  * @param wg the editor
- * @param postId the post's id
- * @param mediaId the media entry's id
+ * @param ref the attachment
  */
-export const removeMedia = (wg: Wordgard, postId: string, mediaId: string): void => {
+export const removeMedia = (wg: Wordgard, { postId, mediaId }: MediaRef): void => {
 	const post = findPostById(wg.state.doc, postId);
 	if (!post) {
 		return;
@@ -138,7 +125,7 @@ export const removeMedia = (wg: Wordgard, postId: string, mediaId: string): void
 
 type LiftedMedia = { item: PostMedia; changes: ChangeSet.Spec[] };
 
-const liftMedia = (wg: Wordgard, postId: string, mediaId: string): LiftedMedia | null => {
+const liftMedia = (wg: Wordgard, { postId, mediaId }: MediaRef): LiftedMedia | null => {
 	const source = findPostById(wg.state.doc, postId);
 	const item = source && getPostParam(source.node).media.find((entry) => entry.id === mediaId);
 	if (!source || !item) {
@@ -153,23 +140,8 @@ const dispatchMove = (wg: Wordgard, changes: ChangeSet.Spec[], selection?: { anc
 	wg.dispatch({ changes, selection, userEvent: 'media.move', annotations: ISOLATE_HISTORY });
 };
 
-/**
- * reorders or transfers an attachment. transfers move the caret to the destination unless already there.
- *
- * @param wg the editor
- * @param fromId the id of the post holding the entry
- * @param mediaId the media entry's id
- * @param toId the id of the post it moves to
- * @param toIndex destination index after removal from the source; defaults to appending
- */
-export const moveMediaToSlot = (
-	wg: Wordgard,
-	fromId: string,
-	mediaId: string,
-	toId: string,
-	toIndex?: number,
-): void => {
-	const lifted = liftMedia(wg, fromId, mediaId);
+const moveMedia = (wg: Wordgard, ref: MediaRef, toId: string, toIndex: number | undefined): void => {
+	const lifted = liftMedia(wg, ref);
 	const dest = findPostById(wg.state.doc, toId);
 	if (!lifted || !dest) {
 		return;
@@ -177,8 +149,8 @@ export const moveMediaToSlot = (
 
 	const media = getPostParam(dest.node).media;
 
-	if (toId === fromId) {
-		const from = media.findIndex((entry) => entry.id === mediaId);
+	if (toId === ref.postId) {
+		const from = media.findIndex((entry) => entry.id === ref.mediaId);
 		const to = Math.min(toIndex ?? media.length - 1, media.length - 1);
 		if (to === from) {
 			return;
@@ -203,16 +175,30 @@ export const moveMediaToSlot = (
 };
 
 /**
- * moves a media entry to the end of another post's media, placing the caret in that post.
+ * reorders or transfers an attachment. transfers move the caret to the destination unless already there.
  *
  * @param wg the editor
- * @param fromId the id of the post holding the entry
- * @param mediaId the media entry's id
- * @param toId the id of the post it moves to
+ * @param ref the attachment
+ * @param slot the destination post and its media index after removal from the source
  */
-export const moveMediaTo = (wg: Wordgard, fromId: string, mediaId: string, toId: string): void => {
-	if (toId !== fromId) {
-		moveMediaToSlot(wg, fromId, mediaId, toId);
+export const moveMediaToSlot = (
+	wg: Wordgard,
+	ref: MediaRef,
+	slot: { postId: string; index: number },
+): void => {
+	moveMedia(wg, ref, slot.postId, slot.index);
+};
+
+/**
+ * moves an attachment to the end of another post's media, placing the caret in that post.
+ *
+ * @param wg the editor
+ * @param ref the attachment
+ * @param postId the id of the post it moves to
+ */
+export const moveMediaTo = (wg: Wordgard, ref: MediaRef, postId: string): void => {
+	if (postId !== ref.postId) {
+		moveMedia(wg, ref, postId, undefined);
 	}
 };
 
@@ -220,35 +206,33 @@ export const moveMediaTo = (wg: Wordgard, fromId: string, mediaId: string, toId:
  * swaps adjacent attachments of the same kind within a post.
  *
  * @param wg the editor
- * @param postId the post's id
- * @param mediaId the media entry's id
+ * @param ref the attachment
  * @param dir -1 to move it earlier, 1 to move it later
  */
-export const nudgeMedia = (wg: Wordgard, postId: string, mediaId: string, dir: -1 | 1): void => {
-	const post = findPostById(wg.state.doc, postId);
+export const nudgeMedia = (wg: Wordgard, ref: MediaRef, dir: -1 | 1): void => {
+	const post = findPostById(wg.state.doc, ref.postId);
 	const media = post && getPostParam(post.node).media;
-	const at = media ? media.findIndex((entry) => entry.id === mediaId) : -1;
+	const at = media ? media.findIndex((entry) => entry.id === ref.mediaId) : -1;
 	// regrouping would undo a swap across kinds.
 	if (!media || at === -1 || media[at + dir]?.kind !== media[at]!.kind) {
 		return;
 	}
 
-	moveMediaToSlot(wg, postId, mediaId, postId, at + dir);
+	moveMedia(wg, ref, ref.postId, at + dir);
 };
 
 /**
- * moves a media entry to the preceding post, placing the caret in it.
+ * moves an attachment to the preceding post, placing the caret in it.
  *
  * @param wg the editor
- * @param fromId the id of the post holding the entry
- * @param mediaId the media entry's id
+ * @param ref the attachment
  */
-export const moveMediaUp = (wg: Wordgard, fromId: string, mediaId: string): void => {
-	const posts = getPosts(wg.state.doc);
-	const from = posts.find((post) => post.id === fromId);
-	const previous = from && posts[from.index - 1];
+export const moveMediaUp = (wg: Wordgard, ref: MediaRef): void => {
+	const { doc } = wg.state;
+	const from = findPostById(doc, ref.postId);
+	const previous = from && getPosts(doc)[from.index - 1];
 	if (previous) {
-		moveMediaTo(wg, fromId, mediaId, previous.id);
+		moveMediaTo(wg, ref, previous.id);
 	}
 };
 
@@ -256,21 +240,20 @@ export const moveMediaUp = (wg: Wordgard, fromId: string, mediaId: string): void
  * moves an attachment and the caret to the following post, creating one if needed.
  *
  * @param wg the editor
- * @param fromId the id of the post holding the entry
- * @param mediaId the media entry's id
+ * @param ref the attachment
  */
-export const moveMediaDown = (wg: Wordgard, fromId: string, mediaId: string): void => {
-	const posts = getPosts(wg.state.doc);
-	const from = posts.find((post) => post.id === fromId);
+export const moveMediaDown = (wg: Wordgard, ref: MediaRef): void => {
+	const { doc } = wg.state;
+	const from = findPostById(doc, ref.postId);
 	if (!from) {
 		return;
 	}
 
-	const next = posts[from.index + 1];
+	const next = getPosts(doc)[from.index + 1];
 	if (next) {
-		moveMediaTo(wg, fromId, mediaId, next.id);
+		moveMediaTo(wg, ref, next.id);
 	} else {
-		moveMediaToNewPost(wg, fromId, mediaId);
+		moveMediaToNewPost(wg, ref);
 	}
 };
 
@@ -278,11 +261,10 @@ export const moveMediaDown = (wg: Wordgard, fromId: string, mediaId: string): vo
  * moves an attachment into a new post at the end of the thread, placing the caret in it.
  *
  * @param wg the editor
- * @param fromId the id of the post holding the entry
- * @param mediaId the media entry's id
+ * @param ref the attachment
  */
-export const moveMediaToNewPost = (wg: Wordgard, fromId: string, mediaId: string): void => {
-	const lifted = liftMedia(wg, fromId, mediaId);
+export const moveMediaToNewPost = (wg: Wordgard, ref: MediaRef): void => {
+	const lifted = liftMedia(wg, ref);
 	if (lifted) {
 		// media-only changes leave the append position unchanged.
 		appendPost(wg, { userEvent: 'media.move', media: [lifted.item], changes: lifted.changes });

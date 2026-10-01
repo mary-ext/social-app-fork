@@ -13,8 +13,9 @@ import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../context';
 import { DragThumbnail } from '../dnd/DragPreview';
-import type { PostMedia } from '../editor/schema';
-import { keepEditorFocus, type RovingItemProps } from '../focus';
+import type { PostMedia } from '../model/schema';
+import { keepEditorFocus } from '../shared/editor-focus';
+import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import * as css from './ExternalGifTile.css';
 import { MediaTile } from './MediaTile';

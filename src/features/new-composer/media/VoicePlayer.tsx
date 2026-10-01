@@ -1,5 +1,6 @@
 import { type KeyboardEvent, type PointerEvent, useEffect, useId, useRef, useState } from 'react';
 
+import { getBlobUrl } from '#/lib/utils/blob-url';
 import { clamp } from '#/lib/utils/numbers';
 
 import { formatTime } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils';
@@ -9,9 +10,9 @@ import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import type { PostMedia } from '../editor/schema';
-import { keepEditorFocus } from '../focus';
-import * as styles from './VoicePlayer.css';
+import type { PostMedia } from '../model/schema';
+import { keepEditorFocus } from '../shared/editor-focus';
+import * as css from './VoicePlayer.css';
 import { BAR_COUNT, useWaveform } from './waveform';
 
 const SEEK_STEP = 5;
@@ -28,17 +29,14 @@ const FLAT_PEAKS = Array.from({ length: BAR_COUNT }, () => 0);
  * plays a voice attachment with a seekable waveform.
  *
  * @param props.item the voice attachment
- * @param props.url the attachment's preview URL
  * @param props.tabbable whether the controls are in the tab order
  * @returns the player
  */
 export function VoicePlayer({
 	item,
-	url,
 	tabbable,
 }: {
 	item: Extract<PostMedia, { kind: 'voice' }>;
-	url: string;
 	tabbable: boolean;
 }) {
 	const audioRef = useRef<HTMLAudioElement>(null);
@@ -131,7 +129,7 @@ export function VoicePlayer({
 	};
 
 	return (
-		<div className={styles.player}>
+		<div className={css.player}>
 			<Button
 				label={isPlaying ? m['view.composer.voice.a11y.pause']() : m['view.composer.voice.a11y.play']()}
 				color="primary"
@@ -145,7 +143,7 @@ export function VoicePlayer({
 			</Button>
 
 			<div
-				className={styles.waveform}
+				className={css.waveform}
 				role="slider"
 				aria-label={m['view.composer.voice.a11y.seek']()}
 				aria-valuemin={0}
@@ -167,7 +165,7 @@ export function VoicePlayer({
 				onKeyDown={onScrubKeyDown}
 			>
 				{/* clipping lets progress advance within each bar. */}
-				<svg className={styles.bars} aria-hidden>
+				<svg className={css.bars} aria-hidden>
 					<defs>
 						<clipPath id={clipId}>
 							{peaks.map((peak, index) => {
@@ -187,17 +185,17 @@ export function VoicePlayer({
 						</clipPath>
 					</defs>
 					<g clipPath={`url(#${clipId})`}>
-						<rect className={styles.track} width="100%" height="100%" />
-						<rect className={styles.played} width={`${progress * 100}%`} height="100%" />
+						<rect className={css.track} width="100%" height="100%" />
+						<rect className={css.played} width={`${progress * 100}%`} height="100%" />
 					</g>
 				</svg>
 			</div>
 
-			<span className={styles.time}>{formatTime(isPlaying || position > 0 ? position : duration)}</span>
+			<span className={css.time}>{formatTime(isPlaying || position > 0 ? position : duration)}</span>
 
 			<audio
 				ref={audioRef}
-				src={url}
+				src={getBlobUrl(item.file)}
 				preload="metadata"
 				onPlay={() => setIsPlaying(true)}
 				onPause={(event) => {

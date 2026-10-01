@@ -4,9 +4,9 @@ import type { GardState } from 'wordgard/state';
 
 import { isSameSelfLabels, normalizeSelfLabels, type SelfLabel } from '#/lib/moderation/self-labels';
 
-import { getPostInfo } from '../editor/post-info';
-import { getPostParam } from '../editor/schema';
-import { defineTaint } from '../editor/taints';
+import { getPostInfo } from '../model/post-info';
+import { getPostParam } from '../model/schema';
+import { defineTaint } from '../model/taints';
 
 /** content warnings per attachment key. */
 export const labelTaint = defineTaint<readonly SelfLabel[]>({

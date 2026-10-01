@@ -1,6 +1,6 @@
 import { clamp } from '#/lib/utils/numbers';
 
-import { IMAGE_GROUP_ATTR } from '../elements';
+import { IMAGE_GROUP_ATTR } from '../shared/elements';
 
 // include the rail gutter in the left-edge hit area.
 const EDGE_SIZE = 56;

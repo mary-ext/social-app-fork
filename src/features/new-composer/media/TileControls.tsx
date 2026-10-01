@@ -12,8 +12,7 @@ import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.s
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import { keepEditorFocus } from '../focus';
-import * as overlay from '../overlay.css';
+import { keepEditorFocus } from '../shared/editor-focus';
 import * as css from './TileControls.css';
 import { getUploadLabel, type PendingUpload } from './upload-status';
 
@@ -46,11 +45,7 @@ export function AltButton({
 			onMouseDown={keepEditorFocus}
 			onClick={onClick}
 		>
-			{hasAlt ? (
-				<CheckIcon className={clsx(overlay.overlayIcon, css.altCheck)} />
-			) : (
-				<PlusIcon className={overlay.overlayIcon} />
-			)}
+			{hasAlt ? <CheckIcon className={clsx(css.icon, css.altCheck)} /> : <PlusIcon className={css.icon} />}
 			{hasAlt ? m['view.composer.altText.badge.done']() : m['view.composer.altText.badge.add']()}
 		</Button>
 	);
@@ -83,7 +78,7 @@ export function TileButton({
 			tabIndex={tabbable ? undefined : -1}
 			onClick={onClick}
 		>
-			<Icon className={overlay.overlayIcon} />
+			<Icon className={css.icon} />
 		</Button>
 	);
 }

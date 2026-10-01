@@ -9,3 +9,8 @@ of the point set.
 deleting a post containing the caret puts the deletion and the following post's active-post
 attribute in adjacent update sections. the second section skipped that post's header widget at
 `pos + 1`, removing its avatar and handle.
+
+## `dist/doc.d.ts`: type `Pos.Node` sibling getters as document nodes
+
+`nextSibling` and `previousSibling` return document nodes, not `Pos.Node` wrappers. correct their
+return types and swapped descriptions.

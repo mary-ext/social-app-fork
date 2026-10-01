@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { borderRadius } from '#/styles/tokens.css';
 
-import { DRAGGING_OPACITY } from '../layout';
+import { DRAGGING_OPACITY } from '../shared/layout';
 
 export const FOCUS_RING_EXTENT = 4;
 
@@ -24,4 +24,24 @@ export const tile = style({
 
 export const dragging = style({
 	opacity: DRAGGING_OPACITY,
+});
+
+/** media filling a tile with a known aspect ratio. */
+export const cover = style({
+	display: 'block',
+	width: '100%',
+	height: '100%',
+	objectFit: 'cover',
+	pointerEvents: 'none',
+});
+
+/** media sizing its own tile. */
+export const contain = style({
+	display: 'block',
+	width: '100%',
+	maxHeight: 360,
+	// use 16:9 until intrinsic dimensions are available.
+	aspectRatio: 'auto 16 / 9',
+	objectFit: 'contain',
+	pointerEvents: 'none',
 });

@@ -4,9 +4,8 @@ import { Text } from '#/components/Text';
 
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 
-import { NEW_POST_ZONE_ATTR } from '../elements';
-import * as threadEnd from '../thread-end.css';
-import * as styles from './NewPostDropZone.css';
+import { NEW_POST_ZONE_ATTR } from '../shared/elements';
+import * as css from './NewPostDropZone.css';
 
 /**
  * drop zone for appending a post with the dragged media.
@@ -16,15 +15,11 @@ import * as styles from './NewPostDropZone.css';
  */
 export function NewPostDropZone({ isActive }: { isActive: boolean }) {
 	return (
-		<div
-			className={clsx(styles.root, isActive && styles.active)}
-			aria-hidden
-			{...{ [NEW_POST_ZONE_ATTR]: '' }}
-		>
-			<div className={styles.avatar}>
-				<PlusIcon className={styles.icon} />
+		<div className={clsx(css.root, isActive && css.active)} aria-hidden {...{ [NEW_POST_ZONE_ATTR]: '' }}>
+			<div className={css.avatar}>
+				<PlusIcon className={css.icon} />
 			</div>
-			<Text weight="medium" className={threadEnd.label}>
+			<Text weight="medium" className={css.label}>
 				Drop to add a new post
 			</Text>
 		</div>

@@ -5,7 +5,7 @@ import { pointerOutsideOfPreview, setCustomNativeDragPreview } from '@oomfware/t
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
-import * as styles from './drag-preview.css';
+import * as css from './DragPreview.css';
 
 /**
  * renders a React node as the native drag image, offset from the pointer.
@@ -20,10 +20,10 @@ export const setDragPreview = (
 	setCustomNativeDragPreview({
 		nativeSetDragImage,
 		getOffset: pointerOutsideOfPreview({ x: '4px', y: '4px' }),
-		render: ({ container }) => {
+		render({ container }) {
 			const root = createRoot(container);
 			// the browser snapshots the preview as soon as the drag start handler returns.
-			flushSync(() => root.render(<div className={styles.frame}>{preview}</div>));
+			flushSync(() => root.render(<div className={css.frame}>{preview}</div>));
 			return () => root.unmount();
 		},
 	});
@@ -46,19 +46,19 @@ export function DragChip({
 }) {
 	let leading: ReactNode = null;
 	if (avatar) {
-		leading = <img className={styles.chipIcon} src={avatar} alt="" />;
+		leading = <img className={css.chipIcon} src={avatar} alt="" />;
 	} else if (Icon) {
 		leading = (
-			<span className={styles.chipIcon}>
+			<span className={css.chipIcon}>
 				<Icon width={16} height={16} />
 			</span>
 		);
 	}
 
 	return (
-		<div className={styles.chip}>
+		<div className={css.chip}>
 			{leading}
-			<span className={styles.chipText}>{label}</span>
+			<span className={css.chipText}>{label}</span>
 		</div>
 	);
 }
@@ -70,5 +70,5 @@ export function DragChip({
  * @returns the preview
  */
 export function DragThumbnail({ src }: { src: string }) {
-	return <img className={styles.thumbnail} src={src} alt="" />;
+	return <img className={css.thumbnail} src={src} alt="" />;
 }

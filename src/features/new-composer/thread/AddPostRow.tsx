@@ -4,11 +4,10 @@ import { Text } from '#/components/Text';
 
 import { appendPost } from '../commands/append-post';
 import { useEditor, useEditorState } from '../context';
-import { isBlankPost } from '../editor/post-info';
-import { getPosts } from '../editor/schema';
-import * as threadEnd from '../thread-end.css';
-import * as styles from './AddPostRow.css';
-import { Avatar } from './PostRail';
+import { isBlankPost } from '../model/post-info';
+import { getPosts } from '../model/schema';
+import { Avatar } from '../post/Avatar';
+import * as css from './AddPostRow.css';
 
 const GHOST_AVATAR_SIZE = 20;
 
@@ -29,17 +28,17 @@ export function AddPostRow() {
 		<button
 			type="button"
 			tabIndex={-1}
-			className={styles.root}
+			className={css.root}
 			disabled={isDisabled}
 			onClick={() => {
 				appendPost(wg, { userEvent: 'input.post' });
 				wg.focus();
 			}}
 		>
-			<span className={styles.avatar}>
+			<span className={css.avatar}>
 				<Avatar profile={profile} size={GHOST_AVATAR_SIZE} noBorder />
 			</span>
-			<Text size="md" className={threadEnd.label}>
+			<Text size="md" className={css.label}>
 				Add to thread
 			</Text>
 		</button>

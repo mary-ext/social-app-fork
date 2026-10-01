@@ -1,9 +1,7 @@
 import type { Command } from 'wordgard/command';
 import type { Pos } from 'wordgard/doc';
-import { Decoration, PointSet } from 'wordgard/editor';
 import { GardSelection, type GardState } from 'wordgard/state';
 
-import { POST_ACTIVE_ATTR } from '../elements';
 import { findPost, getPostParam } from './schema';
 
 // #region caret
@@ -74,8 +72,6 @@ export const selectPost: Command = (wg) => {
 
 // #region active post
 
-const activeDeco = Decoration.Point.attributes({ [POST_ACTIVE_ATTR]: '' });
-
 /**
  * finds the post containing the selection head.
  *
@@ -86,6 +82,9 @@ export const findActivePost = (state: GardState): Pos.Plot | null => {
 	return findPost(state.sel.head);
 };
 
+// share the lookup across all posts' controls.
+const activePostIds = new WeakMap<GardState, string | null>();
+
 /**
  * finds the id of the post containing the selection head.
  *
@@ -93,14 +92,14 @@ export const findActivePost = (state: GardState): Pos.Plot | null => {
  * @returns the post id, or null when the selection head is outside any post
  */
 export const getActivePostId = (state: GardState): string | null => {
-	const found = findActivePost(state);
-	return found && getPostParam(found.node).id;
-};
+	let id = activePostIds.get(state);
+	if (id === undefined) {
+		const found = findActivePost(state);
+		id = found && getPostParam(found.node).id;
+		activePostIds.set(state, id);
+	}
 
-/** marks the active post. */
-export const activePost = Decoration.Point.source.of((state) => {
-	const found = findActivePost(state);
-	return found ? PointSet.create([[found.before, activeDeco]]) : PointSet.empty;
-});
+	return id;
+};
 
 // #endregion

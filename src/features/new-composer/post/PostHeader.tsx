@@ -9,8 +9,8 @@ import CrossIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2
 
 import { removePost } from '../commands/remove-post';
 import { useEditor, useIsActivePost, usePostCount, usePostState } from '../context';
-import { keepEditorFocus } from '../focus';
-import * as styles from './PostHeader.css';
+import { keepEditorFocus } from '../shared/editor-focus';
+import * as css from './PostHeader.css';
 
 /**
  * post attribution, thread position, and removal button.
@@ -23,11 +23,11 @@ export function PostHeader({ postId }: { postId: string }) {
 	const total = usePostCount();
 
 	return (
-		<div className={styles.root}>
+		<div className={css.root}>
 			<Text color="textContrastHigh" size="md" weight="semiBold" numberOfLines={1}>
 				{profile?.handle}
 			</Text>
-			{profile && <ProfileBadges className={styles.badges} profile={profile} size="sm" />}
+			{profile && <ProfileBadges className={css.badges} profile={profile} size="sm" />}
 			{total > 1 && <ThreadPosition postId={postId} total={total} />}
 		</div>
 	);
@@ -40,11 +40,11 @@ function ThreadPosition({ postId, total }: { postId: string; total: number }) {
 
 	return (
 		<>
-			<div className={styles.number}>
+			<div className={css.number}>
 				<PostNumberBlock value={{ index: index + 1, count: total }} />
 			</div>
 			<Button
-				className={styles.remove}
+				className={css.remove}
 				label="Remove post"
 				tabIndex={isActive ? 0 : -1}
 				variant="ghost"
@@ -58,7 +58,7 @@ function ThreadPosition({ postId, total }: { postId: string; total: number }) {
 					wg.focus();
 				}}
 			>
-				<CrossIcon className={styles.removeIcon} />
+				<CrossIcon className={css.removeIcon} />
 			</Button>
 		</>
 	);

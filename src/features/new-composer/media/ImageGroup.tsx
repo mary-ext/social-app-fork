@@ -10,10 +10,11 @@ import { space } from '#/styles/tokens.css';
 
 import { useEditorState } from '../context';
 import { getDropSlot, getMediaDrag } from '../dnd/drop-indicators';
-import type { ImageMedia } from '../editor/schema';
-import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
-import { keepEditorFocus, type RovingFocus } from '../focus';
-import { RAIL_WIDTH } from '../layout';
+import type { ImageMedia } from '../model/schema';
+import { keepEditorFocus } from '../shared/editor-focus';
+import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../shared/elements';
+import { RAIL_WIDTH } from '../shared/layout';
+import type { RovingFocus } from '../shared/roving-focus';
 import { type EditableImage, getEditedImage, getImageEdits, isEditableImage } from './image-edits';
 import * as css from './ImageGroup.css';
 import { ImageTile } from './ImageTile';

@@ -3,8 +3,8 @@ import { Wordgard } from 'wordgard/editor';
 import { GardSelection } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
-import { findPost, getPostParam, newPost, Post } from '../editor/schema';
 import { attachFiles } from '../media/commands';
+import { findPost, getPostParam, newPost, Post } from '../model/schema';
 
 const PARAGRAPH_BREAK: Token[] = [Plot.End, Paragraph];
 

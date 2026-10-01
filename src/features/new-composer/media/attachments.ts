@@ -1,13 +1,23 @@
 import type { Gif } from '#/lib/media/external-gif/types';
 import { getImageDimensions } from '#/lib/media/metadata';
-import { type Attachment, type AttachmentRejection, readAttachment } from '#/lib/media/read-attachment';
+import {
+	type Attachment,
+	type AttachmentKind,
+	type AttachmentRejection,
+	readAttachment,
+} from '#/lib/media/read-attachment';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
-import type { PostMedia } from '../editor/schema';
+import type { PostMedia } from '../model/schema';
+
+// GIF picker results share the local GIF's one-per-post rule.
+const toAttachmentKind = (item: PostMedia): AttachmentKind => {
+	return item.kind === 'externalGif' ? 'gif' : item.kind;
+};
 
 /**
  * checks media type and count limits. excess media is allowed during editing.
@@ -16,21 +26,21 @@ import type { PostMedia } from '../editor/schema';
  * @returns the type or count violation, or null
  */
 export const getMediaProblem = (media: readonly PostMedia[]): SelectionError | null => {
-	// all non-image attachments need the post's only media embed.
-	const images = media.filter((item) => item.kind === 'image').length;
-	const videos = media.length - images;
+	const [first, ...rest] = media;
+	if (!first) {
+		return null;
+	}
 
-	if (images > 0 && videos > 0) {
+	const kind = toAttachmentKind(first);
+	if (rest.some((item) => toAttachmentKind(item) !== kind)) {
 		return { type: 'mixedTypes' };
 	}
-	if (images > MAX_GALLERY_IMAGES) {
-		return { type: 'maxImages' };
-	}
-	if (videos > 1) {
-		return { type: 'oneOnly', kind: 'video' };
+	if (kind === 'image') {
+		return media.length > MAX_GALLERY_IMAGES ? { type: 'maxImages' } : null;
 	}
 
-	return null;
+	// non-image attachments need the post's only media embed.
+	return media.length > 1 ? { type: 'oneOnly', kind } : null;
 };
 
 /**

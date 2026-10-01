@@ -1,13 +1,15 @@
+import './drop-indicators.css';
+
 import { Decoration, PointSet, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
-import { findPostById, getPosts } from '../editor/schema';
+import { findPostById, getPosts } from '../model/schema';
 import {
 	POST_DRAGGING_ATTR,
 	POST_DROP_AFTER_ATTR,
 	POST_DROP_BEFORE_ATTR,
 	POST_DROP_TARGET_ATTR,
-} from '../elements';
+} from '../shared/elements';
 
 /**
  * where dropped media would land.
@@ -89,8 +91,7 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 					return post ? PointSet.create([[post.pos, dropTargetDeco]]) : PointSet.empty;
 				}
 				case 'post': {
-					const posts = getPosts(state.doc);
-					const post = posts.find((entry) => entry.id === indicator.postId);
+					const post = findPostById(state.doc, indicator.postId);
 					if (!post) {
 						return PointSet.empty;
 					}
@@ -98,13 +99,13 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 					const marks: [number, typeof draggingDeco][] = [[post.pos, draggingDeco]];
 					if (indicator.slot !== null) {
 						// append slots use the last post's trailing edge.
+						const posts = getPosts(state.doc);
 						const at = posts[indicator.slot];
 						const last = posts[posts.length - 1]!;
 						marks.push(at ? [at.pos, dropBeforeDeco] : [last.pos, dropAfterDeco]);
 					}
 
-					// point sets expect ascending positions.
-					return PointSet.create(marks.toSorted((a, b) => a[0] - b[0]));
+					return PointSet.create(marks);
 				}
 			}
 		});

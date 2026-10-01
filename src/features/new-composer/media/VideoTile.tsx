@@ -4,8 +4,8 @@ import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.
 
 import { useEditorState } from '../context';
 import { DragChip } from '../dnd/DragPreview';
-import type { PostMedia } from '../editor/schema';
-import type { RovingItemProps } from '../focus';
+import type { PostMedia } from '../model/schema';
+import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import { MediaTile } from './MediaTile';
 import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
@@ -36,7 +36,7 @@ export function VideoTile({
 	onRemove: () => void;
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
-	const upload = usePendingUpload(item.id);
+	const upload = usePendingUpload(item.file);
 	const tabbable = roving.tabIndex === 0;
 
 	return (

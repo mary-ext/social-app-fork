@@ -1,24 +1,13 @@
 import type { Plot } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
-import { GardSelection, type Transaction } from 'wordgard/state';
+import { GardSelection, type GardState, type Transaction } from 'wordgard/state';
 
-import { ISOLATE_HISTORY } from '../editor/history';
-import { findPost, getPosts, getSiblingPost } from '../editor/schema';
+import { ISOLATE_HISTORY } from '../model/history';
+import { findPostById, getPosts, type ThreadPost } from '../model/schema';
+import { findSelectedPost } from '../model/selection';
 
-/**
- * moves a post to an insertion slot, preserving the selection.
- *
- * @param wg the editor
- * @param postId the post's id
- * @param target the insertion index after removing the post
- */
-export const movePostToSlot = (wg: Wordgard, postId: string, target: number): void => {
-	const { sel } = wg.state;
-	const posts = getPosts(wg.state.doc);
-	const post = posts.find((entry) => entry.id === postId);
-	if (!post || target === post.index) {
-		return;
-	}
+const movePostSpec = (state: GardState, post: ThreadPost, target: number): Transaction.Spec => {
+	const posts = getPosts(state.doc);
 
 	// replace the affected range in one change to simplify selection mapping.
 	const first = Math.min(post.index, target);
@@ -48,16 +37,30 @@ export const movePostToSlot = (wg: Wordgard, postId: string, target: number): vo
 		return entry ? landed.get(entry.node)! + at - entry.pos : at;
 	};
 
-	const { anchor, head } = sel.selection;
+	const { anchor, head } = state.selection;
 
-	wg.dispatch({
+	return {
 		changes: { from, to, insert: nodes },
 		// an explicit selection prevents the next flush from importing the drag's DOM selection.
 		selection: GardSelection.range(rebase(anchor), rebase(head)),
 		scrollIntoView: true,
 		userEvent: 'move.post',
 		annotations: ISOLATE_HISTORY,
-	});
+	};
+};
+
+/**
+ * moves a post to an insertion slot, preserving the selection.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ * @param target the insertion index after removing the post
+ */
+export const movePostToSlot = (wg: Wordgard, postId: string, target: number): void => {
+	const post = findPostById(wg.state.doc, postId);
+	if (post && target !== post.index) {
+		wg.dispatch(movePostSpec(wg.state, post, target));
+	}
 };
 
 /**
@@ -68,30 +71,13 @@ export const movePostToSlot = (wg: Wordgard, postId: string, target: number): vo
  * @returns the swap, or false when the selection spans posts or the post is at the thread's edge
  */
 export const movePost = (wg: Wordgard, dir: -1 | 1): Transaction.Spec | false => {
-	const { sel } = wg.state;
-	const post = findPost(sel.head);
-	if (!post || findPost(sel.anchor)?.before !== post.before) {
+	const { state } = wg;
+	const selected = findSelectedPost(state);
+	const posts = getPosts(state.doc);
+	const post = selected && posts[selected.index];
+	if (!post || !posts[post.index + dir]) {
 		return false;
 	}
 
-	const other = getSiblingPost(post, dir);
-	if (!other) {
-		return false;
-	}
-
-	const from = dir < 0 ? post.before - other.length : post.before;
-	const movedBefore = dir < 0 ? from : from + other.length;
-	const { anchor, head } = sel.selection;
-
-	return {
-		changes: {
-			from,
-			to: from + post.node.length + other.length,
-			insert: dir < 0 ? [post.node, other] : [other, post.node],
-		},
-		selection: GardSelection.range(movedBefore + anchor - post.before, movedBefore + head - post.before),
-		scrollIntoView: true,
-		userEvent: 'move.post',
-		annotations: ISOLATE_HISTORY,
-	};
+	return movePostSpec(state, post, post.index + dir);
 };

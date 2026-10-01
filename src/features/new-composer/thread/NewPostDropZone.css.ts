@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { avatarSlot, row } from '../thread-end.css';
-import { DROP_TINT } from './drop.css';
+import { DROP_TINT } from '../dnd/drop-indicators.css';
+import { avatarSlot, label as threadEndLabel, row } from './ThreadEnd.css';
 
 export const root = row;
 
@@ -26,3 +26,5 @@ export const icon = style({
 	width: 24,
 	height: 24,
 });
+
+export const label = style([threadEndLabel]);

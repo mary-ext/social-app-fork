@@ -4,9 +4,10 @@ import { clsx } from 'clsx';
 
 import { useComposer } from '../context';
 import { setDragPreview } from '../dnd/DragPreview';
-import type { PostMedia } from '../editor/schema';
-import { getMediaTileSelector, MEDIA_ID_ATTR } from '../elements';
-import type { RovingItemProps } from '../focus';
+import type { PostMedia } from '../model/schema';
+import { refocusSoon } from '../shared/editor-focus';
+import { getMediaTileSelector, MEDIA_ID_ATTR } from '../shared/elements';
+import type { RovingItemProps } from '../shared/roving-focus';
 import { moveMediaDown, moveMediaUp, nudgeMedia } from './commands';
 import * as css from './MediaTile.css';
 
@@ -16,9 +17,7 @@ import * as css from './MediaTile.css';
  * @param mediaId the attachment's id
  */
 export const refocusMedia = (mediaId: string): void => {
-	requestAnimationFrame(() => {
-		document.querySelector<HTMLElement>(getMediaTileSelector(mediaId))?.focus();
-	});
+	refocusSoon(getMediaTileSelector(mediaId));
 };
 
 /**
@@ -64,12 +63,18 @@ export function MediaTile({
 
 		return dnd.draggable({
 			element: node,
-			getInitialData: () => ({ kind: 'media', postId, mediaId: item.id, mediaKind: item.kind, index }),
-			onGenerateDragPreview: ({ nativeSetDragImage }) => {
+			getInitialData() {
+				return { kind: 'media', postId, mediaId: item.id, mediaKind: item.kind, index };
+			},
+			onGenerateDragPreview({ nativeSetDragImage }) {
 				setDragPreview(nativeSetDragImage, dragPreview);
 			},
-			onDragStart: () => setIsDragging(true),
-			onDrop: () => setIsDragging(false),
+			onDragStart() {
+				setIsDragging(true);
+			},
+			onDrop() {
+				setIsDragging(false);
+			},
 		});
 	};
 
@@ -104,25 +109,22 @@ export function MediaTile({
 					return;
 				}
 
+				const ref = { postId, mediaId: item.id };
 				switch (event.key) {
 					case 'ArrowLeft': {
-						nudgeMedia(wg, postId, item.id, -1);
-						refocusMedia(item.id);
+						nudgeMedia(wg, ref, -1);
 						break;
 					}
 					case 'ArrowRight': {
-						nudgeMedia(wg, postId, item.id, 1);
-						refocusMedia(item.id);
+						nudgeMedia(wg, ref, 1);
 						break;
 					}
 					case 'ArrowUp': {
-						moveMediaUp(wg, postId, item.id);
-						refocusMedia(item.id);
+						moveMediaUp(wg, ref);
 						break;
 					}
 					case 'ArrowDown': {
-						moveMediaDown(wg, postId, item.id);
-						refocusMedia(item.id);
+						moveMediaDown(wg, ref);
 						break;
 					}
 					default: {
@@ -130,6 +132,7 @@ export function MediaTile({
 					}
 				}
 
+				refocusMedia(item.id);
 				event.preventDefault();
 				event.stopPropagation();
 			}}

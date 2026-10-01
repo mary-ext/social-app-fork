@@ -11,17 +11,17 @@ import { m } from '#/paraglide/messages';
 import { ComposerContext, useComposer, useEditorState } from './context';
 import { createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
-import { MEDIA_DRAGGING_ATTR } from './elements';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
-import * as styles from './NewComposer.css';
+import * as css from './NewComposer.css';
 import { PostFooter } from './post/PostFooter';
 import { PostHeader } from './post/PostHeader';
 import { PostRail } from './post/PostRail';
+import { MEDIA_DRAGGING_ATTR } from './shared/elements';
 import { useStore } from './store';
 import { Suggestions } from './suggestions/SuggestionPopup';
-import { ThreadEnd } from './ThreadEnd';
-import { ThreadFooter } from './ThreadFooter';
+import { ThreadEnd } from './thread/ThreadEnd';
+import { ThreadFooter } from './thread/ThreadFooter';
 
 /**
  * thread composer with shared selection and undo history across posts.
@@ -50,7 +50,7 @@ function ComposerRoot() {
 	const isMediaDragging = useEditorState((state) => getMediaDrag(state) !== null);
 
 	return (
-		<div ref={mount} className={styles.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
+		<div ref={mount} className={css.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
 			<PostSlots />
 			<ThreadEndPortal />
 			<Suggestions />
@@ -63,7 +63,7 @@ function ThreadEndPortal() {
 	return createPortal(<ThreadEnd />, endHost);
 }
 
-// portals keyed by post id preserve React state while posts are reordered.
+// post-id keys preserve unaffected portals' state. moved posts get new slot elements and remount.
 function PostSlots() {
 	const { slots } = useComposer();
 

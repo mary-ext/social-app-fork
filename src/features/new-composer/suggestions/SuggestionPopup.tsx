@@ -26,7 +26,7 @@ import {
 	SUGGESTION_LISTBOX_ID,
 	type SuggestionKeyHandler,
 } from './autocomplete';
-import * as styles from './SuggestionPopup.css';
+import * as css from './SuggestionPopup.css';
 
 const SPINNER_DELAY_MS = 200;
 
@@ -122,8 +122,6 @@ function SuggestionPopup({
 	}, [pendingQuery]);
 
 	const isOpen = items.length > 0 || (pendingQuery !== null && pendingQuery === slowQuery);
-	// useAutocomplete retains the previous query's results while fetching.
-	const isStale = isFetching;
 
 	const accept = (item: AutocompleteItem) => {
 		return acceptCompletion(wg, completion, item.value);
@@ -165,8 +163,8 @@ function SuggestionPopup({
 				}
 				case 'Enter':
 				case 'Tab': {
-					// consume acceptance keys while fetching; Enter must not split the post.
-					if (isStale) {
+					// block stale results while fetching, and keep Enter from splitting the post.
+					if (isFetching) {
 						return true;
 					}
 
@@ -197,7 +195,7 @@ function SuggestionPopup({
 			ref={listRef}
 			id={SUGGESTION_LISTBOX_ID}
 			role="listbox"
-			className={styles.popup}
+			className={css.popup}
 			// preserve the editor's focus and caret when clicking a suggestion.
 			onMouseDown={(event) => event.preventDefault()}
 		>
@@ -211,7 +209,7 @@ function SuggestionPopup({
 						role="option"
 						aria-selected={i === index}
 						data-highlighted={i === index ? '' : undefined}
-						className={styles.row}
+						className={css.row}
 						onMouseEnter={() => setHighlighted(item.key)}
 						onClick={() => accept(item)}
 					>
@@ -237,12 +235,12 @@ function SuggestionRow({ item }: { item: AutocompleteItem }) {
 				<>
 					<UserAvatar
 						avatar={item.profile.avatar}
-						className={styles.avatar}
+						className={css.avatar}
 						moderation={moderation}
 						size={36}
 						type={item.profile.associated?.labeler ? 'labeler' : 'user'}
 					/>
-					<span className={styles.profileText}>
+					<span className={css.profileText}>
 						<Text numberOfLines={1} weight="medium">
 							{item.profile.handle}
 						</Text>
@@ -258,8 +256,8 @@ function SuggestionRow({ item }: { item: AutocompleteItem }) {
 		case 'emoji': {
 			return (
 				<>
-					<Text className={styles.emojiGlyph}>{item.value}</Text>
-					<Text className={styles.emojiName}>{item.label}</Text>
+					<Text className={css.emojiGlyph}>{item.value}</Text>
+					<Text className={css.emojiName}>{item.label}</Text>
 				</>
 			);
 		}

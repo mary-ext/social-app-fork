@@ -32,10 +32,9 @@ import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
 import { useEditor, useIsActivePost } from '../context';
-import { keepEditorFocus } from '../focus';
-import * as overlay from '../overlay.css';
+import { keepEditorFocus } from '../shared/editor-focus';
 import { dismissLinkEmbed, type LinkEmbedKind } from './link-embeds';
-import * as styles from './LinkCard.css';
+import * as css from './LinkCard.css';
 
 const StandardSiteEmbed = lazy(() =>
 	import('#/components/Post/Embed/StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
@@ -72,7 +71,7 @@ function Frame({
 
 	return (
 		<div
-			className={styles.frame[variant]}
+			className={css.frame[variant]}
 			role="group"
 			aria-label={
 				kind === 'record'
@@ -81,7 +80,7 @@ function Frame({
 			}
 		>
 			{children}
-			<div className={isNotice ? styles.noticeActions : styles.actions} onMouseDown={keepEditorFocus}>
+			<div className={isNotice ? css.noticeActions : css.actions} onMouseDown={keepEditorFocus}>
 				{isNotice ? (
 					<Button
 						label={removeLabel}
@@ -92,17 +91,17 @@ function Frame({
 						tabIndex={isActive ? 0 : -1}
 						onClick={remove}
 					>
-						<XIcon className={overlay.overlayIcon} />
+						<XIcon className={css.removeIcon} />
 					</Button>
 				) : (
 					<Button
 						label={removeLabel}
-						className={overlay.overlayButton}
+						className={css.removeButton}
 						variant="bare"
 						tabIndex={isActive ? 0 : -1}
 						onClick={remove}
 					>
-						<XIcon className={overlay.overlayIcon} />
+						<XIcon className={css.removeIcon} />
 					</Button>
 				)}
 			</div>
@@ -112,13 +111,17 @@ function Frame({
 
 function Notice({ icon: Icon, message }: { icon: typeof InfoIcon; message: string }) {
 	return (
-		<div className={styles.notice}>
-			<Icon className={styles.noticeIcon} />
+		<div className={css.notice}>
+			<Icon className={css.noticeIcon} />
 			<Text size="md_sub" weight="semiBold" color="textContrastMedium" numberOfLines={1}>
 				{message}
 			</Text>
 		</div>
 	);
+}
+
+function NoPreviewNotice() {
+	return <Notice icon={InfoIcon} message="No preview for this link" />;
 }
 
 // #endregion
@@ -128,11 +131,11 @@ function Notice({ icon: Icon, message }: { icon: typeof InfoIcon; message: strin
 function ExternalPlaceholder() {
 	return (
 		<>
-			<div className={styles.skeletonThumb} />
-			<div className={styles.body}>
+			<div className={css.skeletonThumb} />
+			<div className={css.body}>
 				<Skeleton.Text size="sm" width="40%" />
 				<Skeleton.Text size="md" width="80%" />
-				<div className={styles.status}>
+				<div className={css.status}>
 					<Spinner color="default" label={null} size="sm" />
 					<Text size="md_sub" color="textContrastMedium">
 						Fetching preview…
@@ -145,7 +148,7 @@ function ExternalPlaceholder() {
 
 function QuotePlaceholder() {
 	return (
-		<Skeleton.Col className={styles.placeholder} gap="sm">
+		<Skeleton.Col className={css.placeholder} gap="sm">
 			<Skeleton.Row align="center" gap="xs">
 				<Skeleton.Circle size={16} />
 				<Skeleton.Text size="md" width="40%" />
@@ -157,7 +160,7 @@ function QuotePlaceholder() {
 
 function RecordCardPlaceholder() {
 	return (
-		<Skeleton.Row className={styles.placeholder} align="center" gap="sm">
+		<Skeleton.Row className={css.placeholder} align="center" gap="sm">
 			<Skeleton.Square radius={borderRadius.sm} size={40} />
 			<Skeleton.Col grow>
 				<Skeleton.Text size="md" width="60%" />
@@ -236,7 +239,7 @@ function ChatInviteCard({ code, ...frame }: LinkCardProps & { code: string }) {
 	if (status === 'error') {
 		return (
 			<Frame {...frame} variant="notice">
-				<Notice icon={InfoIcon} message="No preview for this link" />
+				<NoPreviewNotice />
 			</Frame>
 		);
 	}
@@ -259,7 +262,7 @@ function ResolvedLinkCard(frame: LinkCardProps) {
 			if (!view) {
 				return (
 					<Frame {...frame} variant="notice">
-						<Notice icon={InfoIcon} message="No preview for this link" />
+						<NoPreviewNotice />
 					</Frame>
 				);
 			}
@@ -306,7 +309,7 @@ function ResolvedLinkCard(frame: LinkCardProps) {
 				{error instanceof EmbeddingDisabledError ? (
 					<Notice icon={BanIcon} message="This post can't be quoted" />
 				) : (
-					<Notice icon={InfoIcon} message="No preview for this link" />
+					<NoPreviewNotice />
 				)}
 			</Frame>
 		);

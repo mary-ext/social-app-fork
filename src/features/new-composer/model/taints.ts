@@ -1,41 +1,41 @@
 import type { Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
-// key metadata by media ID or link URL so it follows attachments across posts.
-// keep it outside the document so undoing attachment changes preserves it.
-
-/** attachment metadata keyed by identity. */
 export type TaintMap<T> = ReadonlyMap<string, T>;
 
 const emptyTaintMap: TaintMap<never> = new Map<string, never>();
 
-/** attachment metadata stored outside the document and undo history. */
+/** metadata stored outside the document and undo history. */
 export type TaintKind<T> = {
 	/** include this field in the editor's extensions before reading or setting metadata. */
 	field: GardState.Field<TaintMap<T>>;
 	/**
-	 * sets attachment metadata.
+	 * sets metadata.
 	 *
 	 * @param wg the editor
-	 * @param keys the attachments' keys
+	 * @param keys the entries to update
 	 * @param value the replacement value; an empty value clears it
 	 */
 	set: (wg: Wordgard, keys: readonly string[], value: T) => void;
 };
 
 /**
- * defines attachment metadata stored outside the document and undo history.
+ * defines metadata that survives document edits and undo.
  *
  * @param options.isEmpty identifies values that clear an entry
  * @param options.isSame compares values for equality
+ * @param options.onDocChange updates entries on document changes, before explicit metadata effects; return
+ *   the original map when unchanged to avoid subscriber rerenders
  * @returns the metadata's state field and setter
  */
 export const defineTaint = <T>({
 	isEmpty,
 	isSame,
+	onDocChange,
 }: {
 	isEmpty: (value: T) => boolean;
 	isSame: (a: T, b: T) => boolean;
+	onDocChange?: (map: TaintMap<T>, tr: Transaction) => TaintMap<T>;
 }): TaintKind<T> => {
 	const effect = Transaction.Effect.define<{ keys: readonly string[]; value: T }>();
 
@@ -43,7 +43,9 @@ export const defineTaint = <T>({
 		create() {
 			return emptyTaintMap;
 		},
-		update(map, tr) {
+		update(prev, tr) {
+			const map = tr.docChanged && onDocChange ? onDocChange(prev, tr) : prev;
+
 			let next: Map<string, T> | null = null;
 			for (const fx of tr.effects) {
 				if (!fx.is(effect)) {

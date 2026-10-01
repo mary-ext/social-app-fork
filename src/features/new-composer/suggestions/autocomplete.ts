@@ -48,8 +48,6 @@ export type SuggestionState = {
 	activeOption: string | null;
 };
 
-const CLOSED: SuggestionState = { anchor: null, activeOption: null };
-
 const setSuggestionState = Transaction.Effect.define<SuggestionState>();
 
 /**
@@ -65,46 +63,44 @@ export const markSuggestionState = (wg: Wordgard, next: SuggestionState): void =
 	}
 };
 
-// retain the host for tooltip lifecycle callbacks.
-const hosts = new WeakMap<HTMLElement, SuggestionHost>();
-
 const createHost = (wg: Wordgard): Tooltip.View => {
 	const dom = document.createElement('div');
 	const host = wg.state.facet(suggestionHost);
-	if (host) {
-		hosts.set(dom, host);
-	}
 
 	return {
 		dom,
 		offset: { x: 0, y: 8 },
-		connect: () => hosts.get(dom)?.mount(dom),
-		disconnect: () => hosts.get(dom)?.unmount(dom),
-		remove: () => hosts.get(dom)?.unmount(dom),
+		connect: () => host?.mount(dom),
+		disconnect: () => host?.unmount(dom),
+		// called instead of disconnect when the editor is already detached.
+		remove: () => host?.unmount(dom),
 	};
 };
 
-let cached: { anchor: number; tooltip: Tooltip } | null = null;
-const getTooltip = (anchor: number | null): Tooltip | null => {
-	if (anchor === null) {
-		cached = null;
-		return null;
+type SuggestionField = SuggestionState & { tooltip: Tooltip | null };
+
+const CLOSED: SuggestionField = { anchor: null, activeOption: null, tooltip: null };
+
+const withTooltip = (prev: SuggestionField, next: SuggestionState): SuggestionField => {
+	// changing the active row doesn't need a tooltip update.
+	if (next.anchor === prev.anchor) {
+		return next.activeOption === prev.activeOption ? prev : { ...next, tooltip: prev.tooltip };
+	}
+	if (next.anchor === null) {
+		return CLOSED;
 	}
 
-	if (cached?.anchor !== anchor) {
-		cached = { anchor, tooltip: { pos: anchor, create: createHost } };
-	}
-
-	return cached.tooltip;
+	// views are matched by `create`, so a moved anchor repositions the same popup.
+	return { ...next, tooltip: { pos: next.anchor, create: createHost } };
 };
 
 /** suggestion state, tooltip placement, and editor ARIA attributes. */
-export const suggestionState = GardState.Field.define<SuggestionState>({
+export const suggestionState = GardState.Field.define<SuggestionField>({
 	create() {
 		return CLOSED;
 	},
 	update(value, tr) {
-		let next = value;
+		let next: SuggestionState = value;
 		if (tr.docChanged && next.anchor !== null) {
 			next = { ...next, anchor: tr.changes.mapPos(next.anchor) };
 		}
@@ -116,11 +112,11 @@ export const suggestionState = GardState.Field.define<SuggestionState>({
 			}
 		}
 
-		return next;
+		return withTooltip(value, next);
 	},
 	provide(field) {
 		return [
-			Tooltip.show.compute((state) => getTooltip(state.field(field).anchor)),
+			Tooltip.show.compute((state) => state.field(field).tooltip),
 			// null removes ARIA attributes when the popup closes.
 			Wordgard.contentAttributes.compute((state) => {
 				const { anchor, activeOption } = state.field(field);
