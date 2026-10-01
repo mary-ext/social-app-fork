@@ -1,22 +1,16 @@
 import type { Wordgard } from 'wordgard/editor';
-import { Transaction } from 'wordgard/state';
 
-import { normalizeSelfLabels, type SelfLabel } from '#/lib/moderation/self-labels';
+import { isSameSelfLabels, normalizeSelfLabels, type SelfLabel } from '#/lib/moderation/self-labels';
 
 import type { PostMedia } from '../editor/schema';
+import { defineTaint, type TaintMap } from '../editor/taints';
 import type { PostEmbeds } from '../embeds/link-embeds';
 
-// key labels by media id or URL so they follow attachments across posts. keep them outside the
-// document so undoing attachment changes preserves their labels.
-
 /** content warnings per attachment key. */
-export type LabelTaints = ReadonlyMap<string, readonly SelfLabel[]>;
-
-export const emptyLabelTaints: LabelTaints = new Map();
-
-type TaintSpec = { keys: readonly string[]; labels: readonly SelfLabel[] };
-
-const taintEffect = Transaction.Effect.define<TaintSpec>();
+export const labelTaint = defineTaint<readonly SelfLabel[]>({
+	isEmpty: (labels) => labels.length === 0,
+	isSame: isSameSelfLabels,
+});
 
 /**
  * lists a post's labelable attachment keys.
@@ -36,37 +30,15 @@ export const getAttachmentKeys = (media: readonly PostMedia[], embeds: PostEmbed
 /**
  * computes a post's content warnings from its attachments.
  *
- * @param taints the labels per attachment key
+ * @param labels the labels per attachment key
  * @param keys the post's attachment keys
  * @returns the combined labels, keeping the most severe adult content label
  */
-export const getTaintedLabels = (taints: LabelTaints, keys: readonly string[]): SelfLabel[] => {
-	return normalizeSelfLabels(keys.flatMap((key) => taints.get(key) ?? []));
-};
-
-/**
- * applies a transaction's label changes.
- *
- * @param taints the current labels per attachment key
- * @param tr the transaction
- * @returns updated labels, or the original map if there are no label effects
- */
-export const applyLabelTaints = (taints: LabelTaints, tr: Transaction): LabelTaints => {
-	let next: Map<string, readonly SelfLabel[]> | null = null;
-	for (const effect of tr.effects) {
-		if (effect.is(taintEffect)) {
-			next ??= new Map(taints);
-			for (const key of effect.value.keys) {
-				if (effect.value.labels.length > 0) {
-					next.set(key, effect.value.labels);
-				} else {
-					next.delete(key);
-				}
-			}
-		}
-	}
-
-	return next ?? taints;
+export const getTaintedLabels = (
+	labels: TaintMap<readonly SelfLabel[]>,
+	keys: readonly string[],
+): SelfLabel[] => {
+	return normalizeSelfLabels(keys.flatMap((key) => labels.get(key) ?? []));
 };
 
 /**
@@ -81,5 +53,5 @@ export const setAttachmentLabels = (
 	keys: readonly string[],
 	labels: readonly SelfLabel[],
 ): void => {
-	wg.dispatch({ effects: taintEffect.of({ keys, labels: normalizeSelfLabels(labels) }) });
+	labelTaint.set(wg, keys, normalizeSelfLabels(labels));
 };

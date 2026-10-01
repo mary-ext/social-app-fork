@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 
 import type { Wordgard } from 'wordgard/editor';
 
@@ -18,7 +18,7 @@ import { m } from '#/paraglide/messages';
 
 import { autoSplitPost } from '../commands/split-post';
 import type { PostSummary } from '../editor/thread-analysis';
-import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
+import { escapeToEditor, keepEditorFocus, useDialogFocusReturn, useRovingFocus } from '../focus';
 import { setAttachmentLabels } from '../labels/commands';
 import { LabelsDialog } from '../labels/LabelsDialog';
 import { attachFiles } from '../media/commands';
@@ -43,7 +43,7 @@ export const PostFooter = memo(function PostFooter({
 	const languages = toPostLanguages(usePostLanguage());
 	const labelsDialog = Dialog.useDialogHandle();
 
-	const editorHadFocus = useRef(false);
+	const focusReturn = useDialogFocusReturn(wg);
 
 	const canLabel = post.attachmentKeys.length > 0;
 	const hasLabels = post.labels.length > 0;
@@ -114,7 +114,7 @@ export const PostFooter = memo(function PostFooter({
 							color={hasLabels ? 'primary' : 'secondary'}
 							shape="round"
 							onClick={() => {
-								editorHadFocus.current = wg.hasFocus;
+								focusReturn.capture();
 								labelsDialog.open(null);
 							}}
 						>
@@ -159,14 +159,7 @@ export const PostFooter = memo(function PostFooter({
 					handle={labelsDialog}
 					labels={post.labels}
 					onSave={(labels) => setAttachmentLabels(wg, post.attachmentKeys, labels)}
-					finalFocus={() => {
-						if (!editorHadFocus.current) {
-							return true;
-						}
-						// restore the editor's selection, not the DOM selection left by the dialog.
-						wg.focus();
-						return false;
-					}}
+					finalFocus={focusReturn.finalFocus}
 				/>
 			)}
 		</>

@@ -15,17 +15,13 @@ import {
 	type PostEmbeds,
 	selectPostEmbeds,
 } from '../embeds/link-embeds';
-import {
-	applyLabelTaints,
-	emptyLabelTaints,
-	getAttachmentKeys,
-	getTaintedLabels,
-	type LabelTaints,
-} from '../labels/commands';
+import { getAttachmentKeys, getTaintedLabels, labelTaint } from '../labels/commands';
+import { type AltTexts, altTaint, getAltTexts, isSameAltTexts } from '../media/alt-text';
 import { getMediaProblem } from '../media/attachments';
 import * as styles from '../NewComposer.css';
 import { footerWidget, headerWidget } from './post-slots';
 import { getPostParam, getPosts, isEmptyPost, type PostMedia, type ThreadPost } from './schema';
+import { emptyTaintMap, type TaintMap } from './taints';
 import { createOffsetMapper, measureCached } from './text-measurement';
 
 /** summary of one post, derived from the document. */
@@ -48,9 +44,23 @@ export type PostSummary = {
 	attachmentKeys: readonly string[];
 	/** content warnings from the post's attachments. */
 	labels: readonly SelfLabel[];
+	altTexts: AltTexts;
 };
 
 type Span = { from: number; to: number };
+
+type Taints = {
+	labels: TaintMap<readonly SelfLabel[]>;
+	alts: AltTexts;
+};
+
+const emptyTaints: Taints = { labels: emptyTaintMap, alts: emptyTaintMap };
+
+const applyTaints = (taints: Taints, tr: Transaction): Taints => {
+	const labels = labelTaint.apply(taints.labels, tr);
+	const alts = altTaint.apply(taints.alts, tr);
+	return labels === taints.labels && alts === taints.alts ? taints : { labels, alts };
+};
 
 type ThreadAnalysis = {
 	posts: PostSummary[];
@@ -59,7 +69,7 @@ type ThreadAnalysis = {
 	overflow: RangeSet<Decoration.Range>;
 	points: PointSet<Decoration.Point>;
 	session: EmbedSession;
-	taints: LabelTaints;
+	taints: Taints;
 	/** the unsettled link at the caret, or null. moving the caret out of it settles it. */
 	editing: Span | null;
 };
@@ -90,11 +100,12 @@ const summarize = (
 	{ node, index, id }: ThreadPost,
 	length: number,
 	embeds: PostEmbeds,
-	taints: LabelTaints,
+	taints: Taints,
 ): PostSummary => {
 	const { media } = getPostParam(node);
 	const attachmentKeys = getAttachmentKeys(media, embeds);
-	const labels = getTaintedLabels(taints, attachmentKeys);
+	const labels = getTaintedLabels(taints.labels, attachmentKeys);
+	const altTexts = getAltTexts(taints.alts, media);
 
 	const hit = summarized.get(node);
 	if (
@@ -104,7 +115,8 @@ const summarize = (
 		hit.length === length &&
 		hit.embeds.external === embeds.external &&
 		hit.embeds.record === embeds.record &&
-		isSameSelfLabels(hit.labels, labels)
+		isSameSelfLabels(hit.labels, labels) &&
+		isSameAltTexts(hit.altTexts, altTexts)
 	) {
 		return hit;
 	}
@@ -122,6 +134,7 @@ const summarize = (
 		embeds,
 		attachmentKeys,
 		labels,
+		altTexts,
 	};
 
 	summarized.set(node, summary);
@@ -133,7 +146,7 @@ const analyze = (
 	doc: Plot.Doc,
 	head: number,
 	prevSession: EmbedSession,
-	taints: LabelTaints,
+	taints: Taints,
 ): ThreadAnalysis => {
 	const posts: PostSummary[] = [];
 	const facets: [number, number, Decoration.Range][] = [];
@@ -221,7 +234,7 @@ const reanalyze = (
 	value: ThreadAnalysis,
 	tr: Transaction,
 	session: EmbedSession,
-	taints: LabelTaints,
+	taints: Taints,
 ): ThreadAnalysis => {
 	const next = analyze(
 		tr.startState.facet(postPlaceholder),
@@ -244,7 +257,7 @@ const applyDismissals = (session: EmbedSession, tr: Transaction): EmbedSession =
 	return session;
 };
 
-/** per-post summaries and decorations derived from document, embed, and label state. */
+/** per-post summaries and decorations derived from document, embed, and taint state. */
 export const threadAnalysis = GardState.Field.define<ThreadAnalysis>({
 	create(state) {
 		return analyze(
@@ -252,12 +265,12 @@ export const threadAnalysis = GardState.Field.define<ThreadAnalysis>({
 			state.doc,
 			state.selection.head,
 			emptyEmbedSession,
-			emptyLabelTaints,
+			emptyTaints,
 		);
 	},
 	update(value, tr) {
 		const session = applyDismissals(value.session, tr);
-		const taints = applyLabelTaints(value.taints, tr);
+		const taints = applyTaints(value.taints, tr);
 		const leftLink = value.editing !== null && !isWithin(tr.newSelection.head, value.editing);
 
 		if (tr.docChanged || leftLink || session !== value.session || taints !== value.taints) {
