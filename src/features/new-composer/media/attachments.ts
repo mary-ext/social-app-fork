@@ -1,11 +1,9 @@
 import type { Gif } from '#/lib/media/external-gif/types';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { type Attachment, type AttachmentRejection, readAttachment } from '#/lib/media/read-attachment';
-import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
-import { gifPreviewUrl } from '#/features/gifPicker/utils';
 
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
@@ -120,18 +118,4 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 
 const toSeconds = (ms: number | null): number | undefined => {
 	return ms === null ? undefined : ms / 1000;
-};
-
-/**
- * returns a preview URL for an attachment.
- *
- * @param item the media entry
- * @returns an object URL valid for the file's lifetime, or a remote GIF preview URL
- */
-export const getMediaUrl = (item: PostMedia): string => {
-	if (item.kind === 'externalGif') {
-		return gifPreviewUrl(item.gif.media_formats.gif.url);
-	}
-
-	return getBlobUrl(item.file);
 };

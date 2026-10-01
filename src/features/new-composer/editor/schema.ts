@@ -24,7 +24,16 @@ export type PostMedia =
 			aspectRatio: number | undefined;
 	  }
 	| {
-			kind: 'gif' | 'video';
+			kind: 'gif';
+			id: string;
+			file: File;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
+			/** seconds; undefined if unknown. */
+			duration: number | undefined;
+	  }
+	| {
+			kind: 'video';
 			id: string;
 			file: File;
 			/** width / height; undefined if unknown. */
@@ -54,6 +63,8 @@ export type PostParam = {
 /** a local image attachment. */
 export type ImageMedia = Extract<PostMedia, { kind: 'image' }>;
 
+export type OtherMedia = Exclude<PostMedia, ImageMedia>;
+
 const MEDIA_KIND_RANK: Record<PostMedia['kind'], number> = {
 	image: 0,
 	gif: 1,
@@ -70,12 +81,13 @@ const sortMedia = (media: readonly PostMedia[]): PostMedia[] => {
 /**
  * separates a post's images from its other attachments.
  *
- * @param media the post's media; all images must precede other attachments
+ * @param media the post's media
  * @returns images and other attachments, each in their original order
  */
-export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[]; others: PostMedia[] } => {
+export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[]; others: OtherMedia[] } => {
 	const images = media.filter((item): item is ImageMedia => item.kind === 'image');
-	return { images, others: media.slice(images.length) };
+	const others = media.filter((item): item is OtherMedia => item.kind !== 'image');
+	return { images, others };
 };
 
 /** a single post in the thread. holds one paragraph per line of the post's text. */

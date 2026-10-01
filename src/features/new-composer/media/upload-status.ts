@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import type { PostMedia } from '../editor/schema';
+import { m } from '#/paraglide/messages';
 
 export type UploadStatus =
 	| { status: 'compressing' }
@@ -39,27 +39,48 @@ const getStatusAt = (elapsed: number): UploadStatus => {
 	return { status: 'done' };
 };
 
+export type PendingUpload = Exclude<UploadStatus, { status: 'done' }>;
+
 /**
- * simulates upload progress without uploading the attachment.
+ * simulates upload progress; no file is uploaded.
  *
- * @param item the media entry
- * @returns simulated status, or null for images and external GIFs
+ * @param mediaId the attachment's id
+ * @returns simulated status, or null when the simulation finishes
  */
-export const useUploadStatus = (item: PostMedia): UploadStatus | null => {
+export const usePendingUpload = (mediaId: string): PendingUpload | null => {
 	const [now, setNow] = useState(() => performance.now());
 
-	const status =
-		item.kind === 'image' || item.kind === 'externalGif' ? null : getStatusAt(now - getStartTime(item.id));
-	const isSettled = status === null || status.status === 'done';
+	const status = getStatusAt(now - getStartTime(mediaId));
+	const isDone = status.status === 'done';
 
 	useEffect(() => {
-		if (isSettled) {
+		if (isDone) {
 			return;
 		}
 
 		const interval = setInterval(() => setNow(performance.now()), 100);
 		return () => clearInterval(interval);
-	}, [isSettled]);
+	}, [isDone]);
 
-	return status;
+	return isDone ? null : status;
+};
+
+/**
+ * formats upload progress for display.
+ *
+ * @param upload the pending upload
+ * @returns a localized status label
+ */
+export const getUploadLabel = (upload: PendingUpload): string => {
+	switch (upload.status) {
+		case 'compressing': {
+			return m['view.composer.media.upload.compressing']();
+		}
+		case 'uploading': {
+			return m['view.composer.media.upload.uploading']({ percent: Math.round(upload.progress * 100) });
+		}
+		case 'processing': {
+			return m['view.composer.media.upload.processing']();
+		}
+	}
 };

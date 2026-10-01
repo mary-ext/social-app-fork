@@ -11,9 +11,13 @@ import { Text } from '#/components/Text';
 
 import { useEditor, useIsActivePost, usePostState } from '../context';
 import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } from '../editor/schema';
+import { MEDIA_ID_ATTR } from '../elements';
 import { escapeToEditor, useRovingFocus } from '../focus';
 import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
+import { removeMedia } from './commands';
+import { ExternalGifTile } from './ExternalGifTile';
+import { GifTile } from './GifTile';
 import {
 	type EditableImage,
 	getEditedImage,
@@ -22,8 +26,10 @@ import {
 	toComposerImage,
 } from './image-edits';
 import { ImageGroup } from './ImageGroup';
-import * as styles from './MediaRow.css';
-import { MediaTile } from './MediaTile';
+import * as css from './MediaRow.css';
+import { refocusMedia } from './MediaTile';
+import { VideoTile } from './VideoTile';
+import { VoiceTile } from './VoiceTile';
 
 const NO_MEDIA: readonly PostMedia[] = [];
 
@@ -83,10 +89,28 @@ export function MediaRow({ postId }: { postId: string }) {
 		editDialog.open(null);
 	};
 
+	const remove = (item: PostMedia) => {
+		// removing an unfocused tile must not steal focus from the editor.
+		const focused = document.activeElement?.closest(`[${MEDIA_ID_ATTR}]`)?.getAttribute(MEDIA_ID_ATTR);
+		const index = media.indexOf(item);
+		const neighbor = media[index + 1] ?? media[index - 1];
+
+		removeMedia(wg, postId, item.id);
+		if (focused !== item.id) {
+			return;
+		}
+
+		if (neighbor) {
+			refocusMedia(neighbor.id);
+		} else {
+			wg.focus();
+		}
+	};
+
 	return (
 		<>
 			<div
-				className={styles.root}
+				className={css.root}
 				onKeyDown={(event) => {
 					escapeToEditor(wg, event);
 					roving.onKeyDown(event);
@@ -99,20 +123,34 @@ export function MediaRow({ postId }: { postId: string }) {
 						roving={roving}
 						onEditAlt={editAlt}
 						onEditImage={editImage}
+						onRemove={remove}
 					/>
 				)}
 
-				{others.map((item, index) => (
-					<MediaTile
-						key={item.id}
-						postId={postId}
-						index={images.length + index}
-						item={item}
-						layout={item.kind === 'externalGif' ? 'single' : 'stack'}
-						roving={roving.item(item.id)}
-						onEditAlt={() => editAlt(item)}
-					/>
-				))}
+				{others.map((item, index) => {
+					const props = {
+						postId,
+						index: images.length + index,
+						roving: roving.item(item.id),
+						onEditAlt: () => editAlt(item),
+						onRemove: () => remove(item),
+					};
+
+					switch (item.kind) {
+						case 'gif': {
+							return <GifTile key={item.id} {...props} item={item} />;
+						}
+						case 'externalGif': {
+							return <ExternalGifTile key={item.id} {...props} item={item} />;
+						}
+						case 'video': {
+							return <VideoTile key={item.id} {...props} item={item} />;
+						}
+						case 'voice': {
+							return <VoiceTile key={item.id} {...props} item={item} />;
+						}
+					}
+				})}
 
 				{mediaProblem && (
 					<Text size="md_sub" color="negative_600">

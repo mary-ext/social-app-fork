@@ -15,8 +15,8 @@ import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingFocus } from '../focus';
 import { RAIL_WIDTH } from '../layout';
 import { type EditableImage, getEditedImage, getImageEdits, isEditableImage } from './image-edits';
-import * as styles from './ImageGroup.css';
-import { MediaTile } from './MediaTile';
+import * as css from './ImageGroup.css';
+import { ImageTile } from './ImageTile';
 
 // the single-image layout has no gap; space its drop line as the strip would.
 const getGap = (value: string) => {
@@ -29,7 +29,7 @@ const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): voi
 	const prev = tiles[slot - 1];
 	const next = tiles[slot];
 	const gap = getGap(getComputedStyle(group).columnGap);
-	const thickness = styles.DROP_LINE_THICKNESS;
+	const thickness = css.DROP_LINE_THICKNESS;
 
 	const place = (tile: HTMLElement, x: number) => {
 		Object.assign(line.style, {
@@ -62,7 +62,7 @@ const onStripFocus = (event: FocusEvent<HTMLDivElement>) => {
 /**
  * reorderable images using the feed's single-image or carousel layout.
  *
- * @param props post id, images starting at media index 0, and focus and editing controls
+ * @param props post images and interaction controls; images must start at media index 0
  * @returns the image group
  */
 export function ImageGroup({
@@ -71,12 +71,14 @@ export function ImageGroup({
 	roving,
 	onEditAlt,
 	onEditImage,
+	onRemove,
 }: {
 	postId: string;
 	images: readonly ImageMedia[];
 	roving: RovingFocus<string>;
 	onEditAlt: (item: ImageMedia) => void;
 	onEditImage: (item: EditableImage) => void;
+	onRemove: (item: ImageMedia) => void;
 }) {
 	const dropSlot = useEditorState((state) => getDropSlot(getMediaDrag(state), postId));
 	const edits = useEditorState(getImageEdits);
@@ -95,12 +97,12 @@ export function ImageGroup({
 		<div
 			ref={scrollRef}
 			tabIndex={layout === 'strip' ? -1 : undefined}
-			className={layout === 'single' ? styles.single : styles.stripScroll}
+			className={layout === 'single' ? css.single : css.stripScroll}
 			{...{ [IMAGE_GROUP_ATTR]: '' }}
 			onFocus={layout === 'strip' ? onStripFocus : undefined}
 		>
 			{images.map((item, index) => (
-				<MediaTile
+				<ImageTile
 					key={item.id}
 					postId={postId}
 					index={index}
@@ -109,10 +111,11 @@ export function ImageGroup({
 					roving={roving.item(item.id)}
 					onEditAlt={() => onEditAlt(item)}
 					onEditImage={isEditableImage(item) ? () => onEditImage(item) : undefined}
+					onRemove={() => onRemove(item)}
 				/>
 			))}
 			{/* mounted only during drags, since carousel paging treats every child as a tile. */}
-			{dropSlot !== null && <div ref={lineRef} className={styles.dropLine} aria-hidden />}
+			{dropSlot !== null && <div ref={lineRef} className={css.dropLine} aria-hidden />}
 		</div>
 	);
 
@@ -122,7 +125,7 @@ export function ImageGroup({
 
 	return (
 		<div
-			className={styles.stripRoot}
+			className={css.stripRoot}
 			style={getStripStyle({
 				max: CAROUSEL_MAX_HEIGHT,
 				min: CAROUSEL_MIN_HEIGHT,
@@ -132,7 +135,7 @@ export function ImageGroup({
 			})}
 		>
 			{group}
-			<div className={styles.paging} onMouseDown={keepEditorFocus}>
+			<div className={css.paging} onMouseDown={keepEditorFocus}>
 				<PagingControls scrollPaddingLeft={RAIL_WIDTH} scrollRef={scrollRef} />
 			</div>
 		</div>
