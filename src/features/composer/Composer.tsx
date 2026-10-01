@@ -23,6 +23,7 @@ import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/const
 import { cleanError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { interactionSettingsFromPreferences } from '#/lib/interaction-settings';
 import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
@@ -136,7 +137,7 @@ export const ComposePost = ({
 			initQuoteUri: initQuote?.uri,
 			initText,
 			initMention,
-			initInteractionSettings: preferences?.postInteractionSettings,
+			initInteractionSettings: interactionSettingsFromPreferences(preferences?.postInteractionSettings),
 		},
 		createComposerState,
 	);
@@ -274,7 +275,7 @@ export const ComposePost = ({
 	const handleClearComposer = () => {
 		composerDispatch({
 			type: 'clear',
-			initInteractionSettings: preferences?.postInteractionSettings,
+			initInteractionSettings: interactionSettingsFromPreferences(preferences?.postInteractionSettings),
 		});
 	};
 

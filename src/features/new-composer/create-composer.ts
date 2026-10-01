@@ -4,6 +4,8 @@ import { Wordgard } from 'wordgard/editor';
 import { history } from 'wordgard/history';
 import { GardState } from 'wordgard/state';
 
+import type { InteractionSettings } from '#/lib/interaction-settings';
+
 import { m } from '#/paraglide/messages';
 import { zIndex } from '#/styles/tokens.css';
 
@@ -101,6 +103,7 @@ export const createComposer = (): Composer => {
 		wg,
 		dnd,
 
+		interaction: createStore<InteractionSettings | null>(null),
 		slots,
 		endHost,
 		suggestionHost: popupHost,

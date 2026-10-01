@@ -6,6 +6,8 @@ import { useConstant } from '#/lib/hooks/use-constant';
 
 import * as Dialog from '#/components/Dialog';
 
+import { m } from '#/paraglide/messages';
+
 import { ComposerContext, useComposer, useEditorState } from './context';
 import { createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
@@ -24,13 +26,17 @@ import { ThreadFooter } from './ThreadFooter';
 /**
  * thread composer with shared selection and undo history across posts.
  *
- * @returns the composer body and footer
+ * @returns the composer header, body and footer
  */
 export function NewComposer() {
 	const composer = useConstant(createComposer);
 
 	return (
 		<ComposerContext value={composer}>
+			<Dialog.Header.Root border="scrolling">
+				<Dialog.Header.Close />
+				<Dialog.Header.Title>{m['view.composer.title.post']()}</Dialog.Header.Title>
+			</Dialog.Header.Root>
 			<Dialog.Body>
 				<ComposerRoot />
 			</Dialog.Body>

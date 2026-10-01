@@ -7,6 +7,7 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { resolveLink } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { quotesToEmbeddingRules, repliesToThreadgateAllow } from '#/lib/interaction-settings';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import {
 	gifUrlParams,
@@ -22,7 +23,6 @@ import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
 import { getDeviceId } from '#/state/preferences/device-id';
-import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { getClients } from '#/state/session';
 
 import {
@@ -107,11 +107,8 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
 		deviceId: getDeviceId(),
 		deviceName: 'Web',
 		posts,
-		threadgateAllow: threadgateAllowUISettingToAllowRecordValue(state.thread.threadgate),
-		postgateEmbeddingRules:
-			state.thread.postgate.embeddingRules && state.thread.postgate.embeddingRules.length > 0
-				? state.thread.postgate.embeddingRules
-				: undefined,
+		threadgateAllow: repliesToThreadgateAllow(state.thread.interaction.replies),
+		postgateEmbeddingRules: quotesToEmbeddingRules(state.thread.interaction.allowQuotes),
 	};
 
 	return { draft, localRefPaths };

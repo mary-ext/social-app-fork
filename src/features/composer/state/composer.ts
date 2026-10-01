@@ -1,5 +1,10 @@
-import type { AppBskyActorDefs, AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
 
+import {
+	type InteractionSettings,
+	quotesFromEmbeddingRules,
+	repliesFromThreadgateAllow,
+} from '#/lib/interaction-settings';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 import type { ComposerImage } from '#/lib/media/composer-image';
@@ -9,9 +14,6 @@ import type { SelfLabel } from '#/lib/moderation/self-labels';
 import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { AbortError } from '#/lib/utils/abort-error';
-
-import { createPostgateRecord, PLACEHOLDER_POST_URI } from '#/state/queries/postgate/util';
-import { threadgateRecordToAllowUISetting, type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
 import {
 	createVideoState,
@@ -97,9 +99,8 @@ export type PostAction =
 	| { type: 'embedRemoveExternalGif' };
 
 export type ThreadDraft = {
+	interaction: InteractionSettings;
 	posts: PostDraft[];
-	postgate: AppBskyFeedPostgate.Main;
-	threadgate: ThreadgateAllowUISetting[];
 };
 
 export type ComposerState = {
@@ -121,8 +122,7 @@ export type ComposerState = {
 };
 
 export type ComposerAction =
-	| { type: 'updatePostgate'; postgate: AppBskyFeedPostgate.Main }
-	| { type: 'updateThreadgate'; threadgate: ThreadgateAllowUISetting[] }
+	| { type: 'updateInteraction'; interaction: InteractionSettings }
 	| {
 			type: 'updatePost';
 			postId: string;
@@ -153,7 +153,7 @@ export type ComposerAction =
 	  }
 	| {
 			type: 'clear';
-			initInteractionSettings: AppBskyActorDefs.PostInteractionSettingsPref | undefined;
+			initInteractionSettings: InteractionSettings;
 	  }
 	| {
 			type: 'markSaved';
@@ -179,23 +179,13 @@ function imagesToMediaVariant(images: ComposerImage[]): ImagesMedia | GalleryMed
 
 export function composerReducer(state: ComposerState, action: ComposerAction): ComposerState {
 	switch (action.type) {
-		case 'updatePostgate': {
+		case 'updateInteraction': {
 			return {
 				...state,
 				isDirty: true,
 				thread: {
 					...state.thread,
-					postgate: action.postgate,
-				},
-			};
-		}
-		case 'updateThreadgate': {
-			return {
-				...state,
-				isDirty: true,
-				thread: {
-					...state.thread,
-					threadgate: action.threadgate,
+					interaction: action.interaction,
 				},
 			};
 		}
@@ -299,12 +289,11 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				loadedMediaMap: loadedMedia,
 				originalLocalRefs,
 				thread: {
+					interaction: {
+						allowQuotes: quotesFromEmbeddingRules(postgateEmbeddingRules),
+						replies: repliesFromThreadgateAllow(threadgateAllow),
+					},
 					posts,
-					postgate: createPostgateRecord({
-						post: PLACEHOLDER_POST_URI,
-						embeddingRules: postgateEmbeddingRules,
-					}),
-					threadgate: threadgateRecordToAllowUISetting({ allow: threadgateAllow }),
 				},
 			};
 		}
@@ -589,7 +578,7 @@ export function createComposerState({
 	initText: string | undefined;
 	initMention: string | undefined;
 	initQuoteUri: string | undefined;
-	initInteractionSettings: AppBskyActorDefs.PostInteractionSettingsPref | undefined;
+	initInteractionSettings: InteractionSettings;
 }): ComposerState {
 	let quote: Link | undefined;
 	if (initQuoteUri) {
@@ -653,6 +642,7 @@ export function createComposerState({
 		activePostFocusRequestId: 0,
 		isDirty: false,
 		thread: {
+			interaction: initInteractionSettings,
 			posts: [
 				{
 					id: crypto.randomUUID(),
@@ -666,13 +656,6 @@ export function createComposerState({
 					},
 				},
 			],
-			postgate: createPostgateRecord({
-				post: PLACEHOLDER_POST_URI,
-				embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
-			}),
-			threadgate: threadgateRecordToAllowUISetting({
-				allow: initInteractionSettings?.threadgateAllowRules,
-			}),
 		},
 	};
 }

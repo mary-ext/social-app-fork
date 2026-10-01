@@ -13,9 +13,6 @@ import { unique, uniqueBy } from '@mary/array-fns';
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';
 
-/** placeholder for an unpublished post; replace with its at-uri before writing the postgate. */
-export const PLACEHOLDER_POST_URI: ResourceUri = 'at://placeholder.invalid';
-
 export function createPostgateRecord(
 	postgate: Partial<AppBskyFeedPostgate.Main> & {
 		post: AppBskyFeedPostgate.Main['post'];
@@ -178,7 +175,3 @@ export function getMaybeDetachedQuoteEmbed({
 		}
 	}
 }
-
-export const embeddingRules = {
-	disableRule: { $type: 'app.bsky.feed.postgate#disableRule' },
-} as const;

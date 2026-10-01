@@ -3,6 +3,8 @@ import { createContext, use, useSyncExternalStore } from 'react';
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
+import type { InteractionSettings } from '#/lib/interaction-settings';
+
 import type { ThreadDnd } from './dnd/channel';
 import type { PostSlot } from './editor/post-slots';
 import { findPostById, getPosts, type ThreadPost } from './editor/schema';
@@ -23,6 +25,8 @@ export type Composer = {
 	 * @returns a function that detaches it
 	 */
 	mount: (container: HTMLDivElement) => () => void;
+	/** thread settings; `null` follows account defaults. */
+	interaction: Store<InteractionSettings | null>;
 	/** header and footer hosts, in mount order. */
 	slots: Store<readonly PostSlot[]>;
 	/** host after the editor for the add-post row and new-post drop zone. */
