@@ -6,12 +6,10 @@ import { useEditorState } from '../context';
 import { DragThumbnail } from '../dnd/DragPreview';
 import type { PostMedia } from '../editor/schema';
 import type { RovingItemProps } from '../focus';
-import * as overlay from '../overlay.css';
 import { hasMediaAlt } from './alt-text';
 import * as css from './ExternalGifTile.css';
 import { MediaTile } from './MediaTile';
-import { AltButton, TileActions, RemoveButton } from './TileControls';
-import * as controls from './TileControls.css';
+import { AltButton, RemoveButton, TileActions } from './TileControls';
 
 /**
  * GIF picker attachment tile.
@@ -52,15 +50,10 @@ export function ExternalGifTile({
 		>
 			<img className={css.image} src={url} alt="" />
 
-			<AltButton
-				className={controls.overlayAltChip}
-				hasAlt={hasAlt}
-				tabbable={tabbable}
-				onClick={onEditAlt}
-			/>
+			<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
 
-			<TileActions className={controls.overlayActions}>
-				<RemoveButton className={overlay.overlayButton} isUploading={false} onClick={onRemove} />
+			<TileActions>
+				<RemoveButton isUploading={false} onClick={onRemove} />
 			</TileActions>
 		</MediaTile>
 	);

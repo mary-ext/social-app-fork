@@ -6,7 +6,6 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
-import { Button } from '#/components/web/Button';
 
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -15,13 +14,11 @@ import { useEditorState } from '../context';
 import { DragThumbnail } from '../dnd/DragPreview';
 import type { ImageMedia } from '../editor/schema';
 import type { RovingItemProps } from '../focus';
-import * as overlay from '../overlay.css';
 import { hasMediaAlt } from './alt-text';
 import { getEditedImage, getImageEdit } from './image-edits';
 import * as css from './ImageTile.css';
 import { MediaTile } from './MediaTile';
-import { AltButton, TileActions, RemoveButton } from './TileControls';
-import * as controls from './TileControls.css';
+import { AltButton, RemoveButton, TileActions, TileButton } from './TileControls';
 
 type ImageLayout = 'single' | 'strip';
 
@@ -88,26 +85,18 @@ export function ImageTile({
 		>
 			<img className={css.image} src={url} alt="" />
 
-			<AltButton
-				className={controls.overlayAltChip}
-				hasAlt={hasAlt}
-				tabbable={tabbable}
-				onClick={onEditAlt}
-			/>
+			<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
 
-			<TileActions className={controls.overlayActions}>
+			<TileActions>
 				{onEditImage && (
-					<Button
+					<TileButton
 						label={m['view.composer.gallery.action.edit']()}
-						className={overlay.overlayButton}
-						variant="bare"
-						tabIndex={tabbable ? undefined : -1}
+						icon={PencilIcon}
+						tabbable={tabbable}
 						onClick={onEditImage}
-					>
-						<PencilIcon className={overlay.overlayIcon} />
-					</Button>
+					/>
 				)}
-				<RemoveButton className={overlay.overlayButton} isUploading={false} onClick={onRemove} />
+				<RemoveButton isUploading={false} onClick={onRemove} />
 			</TileActions>
 		</MediaTile>
 	);
