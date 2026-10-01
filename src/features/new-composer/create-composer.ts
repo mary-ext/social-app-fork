@@ -20,6 +20,7 @@ import { createPosts, endOfLastLine, threadSchema } from './editor/schema';
 import { postScrolling } from './editor/scrolling';
 import { activePost } from './editor/selection';
 import { embedSession } from './embeds/embed-session';
+import { restoreSelectionOnFocus } from './focus';
 import { labelTaint } from './labels/commands';
 import { altTaint } from './media/alt-text';
 import { createStore } from './store';
@@ -51,6 +52,7 @@ export const createComposer = (): Composer => {
 		labelTaint.field,
 		threadDecorations,
 		activePost,
+		restoreSelectionOnFocus(),
 		postScrolling,
 		dropIndicator,
 		activeCompletion,

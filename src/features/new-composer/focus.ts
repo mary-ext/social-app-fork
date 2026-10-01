@@ -1,6 +1,7 @@
 import { type FocusEvent, type KeyboardEvent, type MouseEvent, useRef, useState } from 'react';
 
-import type { Wordgard } from 'wordgard/editor';
+import { Wordgard } from 'wordgard/editor';
+import type { GardState } from 'wordgard/state';
 
 import { useEditor } from './context';
 
@@ -43,6 +44,12 @@ export type DialogFocusReturn = {
 	 * @returns false after restoring editor focus, or true to use default focus handling
 	 */
 	finalFocus: () => boolean;
+	/**
+	 * pass to the picker's `nextFocusRef`.
+	 *
+	 * @returns the editor if it had focus before opening, or null to use default focus handling
+	 */
+	target: () => Wordgard | null;
 };
 
 /**
@@ -66,7 +73,41 @@ export const useDialogFocusReturn = (): DialogFocusReturn => {
 			wg.focus();
 			return false;
 		},
+		target() {
+			return editorHadFocus.current ? wg : null;
+		},
 	};
+};
+
+/**
+ * restores the saved selection on focus unless a pointer is placing the caret.
+ *
+ * @returns the focus-handling extension
+ */
+export const restoreSelectionOnFocus = (): GardState.Extension => {
+	let pressing = false;
+
+	return [
+		Wordgard.domEventObserver('pointerdown', () => {
+			pressing = true;
+		}),
+		Wordgard.domEventObserver('pointerup', () => {
+			pressing = false;
+		}),
+		Wordgard.domEventObserver('pointercancel', () => {
+			pressing = false;
+		}),
+		// pointerup may occur outside the editor.
+		Wordgard.domEventObserver('blur', () => {
+			pressing = false;
+		}),
+		Wordgard.domEventObserver('focus', (_event, wg) => {
+			if (!pressing) {
+				// other text fields can move the DOM selection; native focus may not restore it.
+				wg.focus();
+			}
+		}),
+	];
 };
 
 // #endregion
