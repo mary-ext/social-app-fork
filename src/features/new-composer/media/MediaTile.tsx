@@ -20,13 +20,14 @@ import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import type { ThreadDnd } from '../dnd/channel';
+import { useComposer, useEditorState } from '../context';
 import { DragChip, DragThumbnail, setDragPreview } from '../dnd/DragPreview';
 import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
 import { findActivePost } from '../editor/selection';
 import { getMediaTileSelector, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
 import * as overlay from '../overlay.css';
+import { hasMediaAlt } from './alt-text';
 import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
 import * as styles from './MediaTile.css';
@@ -215,30 +216,26 @@ const followMedia = (wg: Wordgard, mediaId: string) => {
 /**
  * attachment tile with drag and keyboard controls.
  *
- * @param props attachment data, layout, and editor controls
+ * @param props post id, attachment, media index, layout, and focus and alt text controls
  * @returns the tile
  */
 export function MediaTile({
-	wg,
-	dnd,
 	postId,
 	index,
 	item,
-	hasAlt,
 	layout,
 	roving,
 	onEditAlt,
 }: {
-	wg: Wordgard;
-	dnd: ThreadDnd;
 	postId: string;
 	index: number;
 	item: PostMedia;
-	hasAlt: boolean;
 	layout: MediaLayout;
 	roving: RovingItemProps;
 	onEditAlt: () => void;
 }) {
+	const { wg, dnd } = useComposer();
+	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const [isDragging, setIsDragging] = useState(false);
 	const url = getMediaUrl(item);
 	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;

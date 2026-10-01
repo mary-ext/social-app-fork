@@ -2,6 +2,8 @@ import { type FocusEvent, type KeyboardEvent, type MouseEvent, useRef, useState 
 
 import type { Wordgard } from 'wordgard/editor';
 
+import { useEditor } from './context';
+
 // #region editor focus
 
 /**
@@ -46,17 +48,17 @@ export type DialogFocusReturn = {
 /**
  * restores editor focus on dialog close if the editor had focus before opening.
  *
- * @param wg the editor
  * @returns focus capture and dialog close callbacks
  */
-export const useDialogFocusReturn = (wg: Wordgard): DialogFocusReturn => {
+export const useDialogFocusReturn = (): DialogFocusReturn => {
+	const wg = useEditor();
 	const editorHadFocus = useRef(false);
 
 	return {
-		capture: () => {
+		capture() {
 			editorHadFocus.current = wg.hasFocus;
 		},
-		finalFocus: () => {
+		finalFocus() {
 			if (!editorHadFocus.current) {
 				return true;
 			}
@@ -103,16 +105,18 @@ export const useRovingFocus = <K extends string>(keys: readonly K[], enabled: bo
 	const stop = current !== null && keys.includes(current) ? current : keys[0];
 
 	return {
-		item: (key) => ({
-			[ROVING_ITEM_ATTR]: key,
-			tabIndex: enabled && key === stop ? 0 : -1,
-			onFocus: (event) => {
-				if (event.target === event.currentTarget) {
-					setCurrent(key);
-				}
-			},
-		}),
-		onKeyDown: (event) => {
+		item(key) {
+			return {
+				[ROVING_ITEM_ATTR]: key,
+				tabIndex: enabled && key === stop ? 0 : -1,
+				onFocus: (event) => {
+					if (event.target === event.currentTarget) {
+						setCurrent(key);
+					}
+				},
+			};
+		},
+		onKeyDown(event) {
 			// reserve modified arrows for item shortcuts.
 			if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
 				return;

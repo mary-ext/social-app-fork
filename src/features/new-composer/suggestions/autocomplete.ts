@@ -1,6 +1,6 @@
-import { Leaf } from 'wordgard/doc';
+import { Leaf, type Plot } from 'wordgard/doc';
 import { KeyBinding, Tooltip, Wordgard } from 'wordgard/editor';
-import { GardState, Transaction } from 'wordgard/state';
+import { type GardSelection, GardState, Transaction } from 'wordgard/state';
 
 import { type CompletionType, findCompletion } from '#/components/Composer/rich-text';
 
@@ -142,24 +142,18 @@ export type SuggestionKey = (typeof SUGGESTION_KEYS)[number];
 /** returns true when the suggestion list handles the key. */
 export type SuggestionKeyHandler = (key: SuggestionKey) => boolean;
 
-/**
- * finds the active completion on the caret's line.
- *
- * @param state the editor state
- * @returns the completion, or null when the caret isn't in one
- */
-export const findActiveCompletion = (state: GardState): ActiveCompletion | null => {
-	const { sel } = state;
-	if (!sel.selection.isCursor) {
+const findActiveCompletion = (doc: Plot.Doc, selection: GardSelection): ActiveCompletion | null => {
+	if (!selection.isCursor) {
 		return null;
 	}
 
-	const line = sel.head.textblockParent;
+	const head = doc.resolve(selection.head);
+	const line = head.textblockParent;
 	if (!line) {
 		return null;
 	}
 
-	const completion = findCompletion(line.node.textContent(), sel.head.pos - line.start);
+	const completion = findCompletion(line.node.textContent(), head.pos - line.start);
 	if (!completion) {
 		return null;
 	}
@@ -172,33 +166,49 @@ export const findActiveCompletion = (state: GardState): ActiveCompletion | null 
 	};
 };
 
+const isSameCompletion = (a: ActiveCompletion | null, b: ActiveCompletion | null): boolean => {
+	if (a === null || b === null) {
+		return a === b;
+	}
+
+	return a.type === b.type && a.from === b.from && a.to === b.to && a.query === b.query;
+};
+
+/** completion at the caret; retains object identity while unchanged. */
+export const activeCompletion = GardState.Field.define<ActiveCompletion | null>({
+	create(state) {
+		return findActiveCompletion(state.doc, state.selection);
+	},
+	update(value, tr) {
+		if (!tr.docChanged && tr.selection === undefined) {
+			return value;
+		}
+
+		const next = findActiveCompletion(tr.newDoc, tr.newSelection);
+		return isSameCompletion(value, next) ? value : next;
+	},
+});
+
 /**
  * replaces a completion's text with the picked suggestion, followed by a space unless one's already there.
  *
  * @param wg the editor
- * @param completion the completion displayed by the popup
+ * @param completion the original object from {@link activeCompletion}; copies are rejected
  * @param value the suggestion's text, sigil included
  * @returns whether it was applied; false if the completion is stale
  */
 export const acceptCompletion = (wg: Wordgard, completion: ActiveCompletion, value: string): boolean => {
-	// the document may have changed since the popup rendered; reject stale completions.
-	const current = findActiveCompletion(wg.state);
-	if (
-		!current ||
-		current.type !== completion.type ||
-		current.from !== completion.from ||
-		current.query !== completion.query
-	) {
+	if (wg.state.field(activeCompletion) !== completion) {
 		return false;
 	}
 
-	const { doc } = wg.state;
-	const spaceFollows = doc.textContent({ from: current.to, to: current.to + 1 }) === ' ';
+	const { from, to } = completion;
+	const spaceFollows = wg.state.doc.textContent({ from: to, to: to + 1 }) === ' ';
 	const insert = spaceFollows ? value : value + ' ';
 
 	wg.dispatch({
-		changes: { from: current.from, to: current.to, insert: [Leaf.text(insert)] },
-		selection: { anchor: current.from + insert.length + (spaceFollows ? 1 : 0) },
+		changes: { from, to, insert: [Leaf.text(insert)] },
+		selection: { anchor: from + insert.length + (spaceFollows ? 1 : 0) },
 		scrollIntoView: true,
 		userEvent: 'input.complete',
 	});

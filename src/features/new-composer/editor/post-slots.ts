@@ -6,6 +6,13 @@ import * as styles from '../NewComposer.css';
 /** per-post React portal slot. */
 export type PostSlotKind = 'header' | 'footer';
 
+/** editor-created portal host for a post header or footer. */
+export type PostSlot = {
+	kind: PostSlotKind;
+	element: HTMLElement;
+	postId: string;
+};
+
 /** connects slot widgets to the hosting component. */
 export type SlotHost = {
 	mount: (kind: PostSlotKind, postId: string, element: HTMLElement) => void;

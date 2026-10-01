@@ -268,22 +268,46 @@ export type ThreadPost = {
 	id: string;
 };
 
+type PostIndex = {
+	posts: readonly ThreadPost[];
+	byId: ReadonlyMap<string, ThreadPost>;
+};
+
+// cache by immutable document to avoid rescanning posts for each subscriber.
+const indexes = new WeakMap<Plot.Doc, PostIndex>();
+
+const getPostIndex = (doc: Plot.Doc): PostIndex => {
+	let index = indexes.get(doc);
+	if (!index) {
+		const posts: ThreadPost[] = [];
+		const byId = new Map<string, ThreadPost>();
+
+		let pos = 0;
+		for (const [i, node] of getChildPlots(doc).entries()) {
+			const post = { node, pos, index: i, id: getPostParam(node).id };
+			posts.push(post);
+			// ids are briefly duplicated or empty until normalizePostIds runs; keep the first.
+			if (!byId.has(post.id)) {
+				byId.set(post.id, post);
+			}
+			pos += node.length;
+		}
+
+		index = { posts, byId };
+		indexes.set(doc, index);
+	}
+
+	return index;
+};
+
 /**
  * lists the thread's posts with their positions and ids.
  *
  * @param doc the thread document
  * @returns the posts, in order
  */
-export const getPosts = (doc: Plot.Doc): ThreadPost[] => {
-	const posts: ThreadPost[] = [];
-
-	let pos = 0;
-	for (const [index, node] of getChildPlots(doc).entries()) {
-		posts.push({ node, pos, index, id: getPostParam(node).id });
-		pos += node.length;
-	}
-
-	return posts;
+export const getPosts = (doc: Plot.Doc): readonly ThreadPost[] => {
+	return getPostIndex(doc).posts;
 };
 
 /**
@@ -294,5 +318,5 @@ export const getPosts = (doc: Plot.Doc): ThreadPost[] => {
  * @returns the post, or null when it's no longer in the document
  */
 export const findPostById = (doc: Plot.Doc, id: string): ThreadPost | null => {
-	return getPosts(doc).find((post) => post.id === id) ?? null;
+	return getPostIndex(doc).byId.get(id) ?? null;
 };

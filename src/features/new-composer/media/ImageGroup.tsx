@@ -1,19 +1,17 @@
 import { useLayoutEffect, useRef } from 'react';
 
-import type { Wordgard } from 'wordgard/editor';
-
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
 
 import { space } from '#/styles/tokens.css';
 
-import type { ThreadDnd } from '../dnd/channel';
+import { useEditorState } from '../context';
+import { getDropSlot, getMediaDrag } from '../dnd/drop-indicators';
 import type { ImageMedia } from '../editor/schema';
 import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingFocus } from '../focus';
 import { RAIL_WIDTH } from '../layout';
-import type { AltTexts } from './alt-text';
 import * as styles from './ImageGroup.css';
 import { MediaTile } from './MediaTile';
 
@@ -51,28 +49,21 @@ const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): voi
 /**
  * reorderable images using the feed's single-image or carousel layout.
  *
- * @param props images starting at post-media index 0, alt text, and editor controls
+ * @param props post id, images starting at media index 0, and focus and alt text controls
  * @returns the image group
  */
 export function ImageGroup({
-	wg,
-	dnd,
 	postId,
 	images,
-	altTexts,
 	roving,
-	dropSlot,
 	onEditAlt,
 }: {
-	wg: Wordgard;
-	dnd: ThreadDnd;
 	postId: string;
 	images: readonly ImageMedia[];
-	altTexts: AltTexts;
 	roving: RovingFocus<string>;
-	dropSlot: number | null;
 	onEditAlt: (item: ImageMedia) => void;
 }) {
+	const dropSlot = useEditorState((state) => getDropSlot(getMediaDrag(state), postId));
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const lineRef = useRef<HTMLDivElement>(null);
 	const layout = images.length === 1 ? 'single' : 'strip';
@@ -93,12 +84,9 @@ export function ImageGroup({
 			{images.map((item, index) => (
 				<MediaTile
 					key={item.id}
-					wg={wg}
-					dnd={dnd}
 					postId={postId}
 					index={index}
 					item={item}
-					hasAlt={altTexts.has(item.id)}
 					layout={layout}
 					roving={roving.item(item.id)}
 					onEditAlt={() => onEditAlt(item)}

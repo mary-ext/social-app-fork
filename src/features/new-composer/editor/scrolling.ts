@@ -3,9 +3,9 @@ import { Wordgard } from 'wordgard/editor';
 
 import { clamp } from '#/lib/utils/numbers';
 
+import { hasAttachments } from './post-info';
 import { endOfLastLine } from './schema';
 import { findActivePost, getActivePostId } from './selection';
-import { threadAnalysis } from './thread-analysis';
 
 const CARET_MARGIN = 24;
 // the footer slot already provides bottom padding.
@@ -66,11 +66,7 @@ const scrollCaretIntoView = (wg: Wordgard, scroller: HTMLElement) => {
 	const post = findActivePost(state);
 
 	// include the toolbar on the last visual line, unless attachments separate it from the text.
-	if (
-		post &&
-		!state.field(threadAnalysis).posts[post.index]?.hasAttachments &&
-		isOnLastLine(wg, post, caret)
-	) {
+	if (post && !hasAttachments(state, post.node) && isOnLastLine(wg, post, caret)) {
 		const postRect = wg.nodeDOM(post.before)?.getBoundingClientRect();
 		if (postRect) {
 			const rect = new DOMRect(caret.left, caret.top, caret.width, postRect.bottom - caret.top);

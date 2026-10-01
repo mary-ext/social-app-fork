@@ -5,6 +5,8 @@ import { Text } from '#/components/Text';
 
 import { colors } from '#/styles/colors';
 
+import { usePostState } from '../context';
+import { getPostInfo } from '../editor/post-info';
 import * as styles from './CharCount.css';
 
 // show an exact count near the limit, where the ring is hard to read.
@@ -13,10 +15,11 @@ const COUNTDOWN_AT = 20;
 /**
  * character progress with a remaining count near the limit; negative when over.
  *
- * @param props the post's grapheme count
+ * @param props the post's id
  * @returns the character count indicator
  */
-export function CharCount({ count }: { count: number }) {
+export function CharCount({ postId }: { postId: string }) {
+	const count = usePostState(postId, (state, post) => getPostInfo(state, post.node).length, 0);
 	const remaining = MAX_POST_GRAPHEME_LENGTH - count;
 
 	if (remaining < 0) {

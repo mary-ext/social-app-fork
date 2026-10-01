@@ -3,7 +3,6 @@ import { type RefObject, useEffect, useLayoutEffect, useRef, useState } from 're
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { createPortal } from 'react-dom';
-import type { Wordgard } from 'wordgard/editor';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
@@ -16,30 +15,74 @@ import { UserAvatar } from '#/components/UserAvatar';
 
 import { m } from '#/paraglide/messages';
 
+import { useComposer, useEditor, useEditorState } from '../context';
+import { useStore } from '../store';
 import {
 	type ActiveCompletion,
 	acceptCompletion,
+	activeCompletion,
 	getSuggestionOptionId,
+	markSuggestionState,
 	SUGGESTION_LISTBOX_ID,
 	type SuggestionKeyHandler,
 } from './autocomplete';
 import * as styles from './SuggestionPopup.css';
 
+const getCompletionKey = (completion: ActiveCompletion) => {
+	return `${completion.type}:${completion.from}:${completion.query}`;
+};
+
 /**
- * completion suggestions navigated through the editor's key handler, without taking focus.
+ * suggestions for the completion at the focused editor's caret.
  *
- * @param props the editor, completion, portal host, key handler ref, and popup callbacks
- * @returns the suggestion popup, or null when there are no results and no pending request
+ * @returns the suggestion popup, or null when closed
  */
-export function SuggestionPopup({
-	wg,
+export function Suggestions() {
+	const { wg, suggestionHost, suggestionKeys } = useComposer();
+	const host = useStore(suggestionHost);
+	const completion = useEditorState((state) => (wg.hasFocus ? state.field(activeCompletion) : null));
+
+	// keep dismissed suggestions closed until the query changes.
+	const [dismissed, setDismissed] = useState<string | null>(null);
+	// active descendant announced while focus stays in the editor.
+	const [activeOption, setActiveOption] = useState<string | null>(null);
+
+	let open: ActiveCompletion | null = null;
+	if (completion && completion.query !== '' && getCompletionKey(completion) !== dismissed) {
+		open = completion;
+	}
+
+	// update placement and ARIA state together so closing the popup clears both.
+	useEffect(() => {
+		markSuggestionState(wg, {
+			anchor: open ? open.from : null,
+			activeOption: open ? activeOption : null,
+		});
+	}, [wg, open, activeOption]);
+
+	if (!open || !host) {
+		return null;
+	}
+
+	return (
+		<SuggestionPopup
+			completion={open}
+			host={host}
+			keyHandlerRef={suggestionKeys}
+			onDismiss={() => setDismissed(getCompletionKey(open))}
+			onHighlightChange={setActiveOption}
+		/>
+	);
+}
+
+// keyboard navigation runs through the editor so the popup doesn't take focus.
+function SuggestionPopup({
 	completion,
 	host,
 	keyHandlerRef,
 	onDismiss,
 	onHighlightChange,
 }: {
-	wg: Wordgard;
 	completion: ActiveCompletion;
 	/** portal target positioned by the editor. */
 	host: HTMLElement;
@@ -48,6 +91,7 @@ export function SuggestionPopup({
 	/** reports the highlighted row's DOM id, or null when none. */
 	onHighlightChange: (optionId: string | null) => void;
 }) {
+	const wg = useEditor();
 	const { items, isFetching } = useAutocomplete({
 		type: parseAutocompleteItemType(completion.type),
 		query: completion.query,

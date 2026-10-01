@@ -49,37 +49,43 @@ const ADULT_OPTIONS: readonly Option[] = [
 
 type Draft = { adult: AdultContentLabel | null; others: SelfLabel[] };
 
+/** current labels supplied in the dialog's opening payload. */
+export type LabelsTarget = {
+	labels: readonly SelfLabel[];
+};
+
 /**
  * edits content warnings; dismissing without saving discards changes.
  *
  * @param props.handle the dialog's handle
- * @param props.labels the post's current labels
- * @param props.onSave receives replacement labels on save
+ * @param props.onSave receives replacement labels and the original opening payload
  * @param props.finalFocus focus target or callback used when the dialog closes
  * @returns the dialog
  */
-export const LabelsDialog = ({
+export const LabelsDialog = <T extends LabelsTarget>({
 	handle,
-	labels,
 	onSave,
 	finalFocus,
 }: {
-	handle: Dialog.DialogHandle;
-	labels: readonly SelfLabel[];
-	onSave: (labels: SelfLabel[]) => void;
+	handle: Dialog.DialogHandle<T>;
+	onSave: (labels: SelfLabel[], target: T) => void;
 	finalFocus: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 }) => {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup scroll="body" size="medium" finalFocus={finalFocus}>
-				<LabelsForm
-					labels={labels}
-					onSave={(next) => {
-						onSave(next);
-						handle.close();
-					}}
-				/>
-			</Dialog.Popup>
+			{({ payload }) => (
+				<Dialog.Popup scroll="body" size="medium" finalFocus={finalFocus}>
+					{payload && (
+						<LabelsForm
+							labels={payload.labels}
+							onSave={(next) => {
+								onSave(next, payload);
+								handle.close();
+							}}
+						/>
+					)}
+				</Dialog.Popup>
+			)}
 		</Dialog.Root>
 	);
 };
