@@ -13,10 +13,20 @@ export const tile = style({
 	width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))`,
 });
 
-export const image = style({
+export const media = style({
 	display: 'block',
 	width: '100%',
 	height: '100%',
 	objectFit: 'cover',
 	pointerEvents: 'none',
+});
+
+export const playback = style({
+	display: 'flex',
+	position: 'absolute',
+	inset: 0,
+	alignItems: 'center',
+	justifyContent: 'center',
+	borderRadius: 'inherit',
+	cursor: 'pointer',
 });

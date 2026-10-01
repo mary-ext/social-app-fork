@@ -17,9 +17,7 @@ import * as overlay from '../overlay.css';
 import * as css from './TileControls.css';
 import { getUploadLabel, type PendingUpload } from './upload-status';
 
-/**
- * controls overlay media by default; use `inline` to place them in the tile's layout.
- */
+/** controls overlay media by default; use `inline` to place them in the tile's layout. */
 export type TileVariant = 'inline' | 'overlay';
 
 /**

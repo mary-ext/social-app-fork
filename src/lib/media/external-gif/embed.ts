@@ -1,3 +1,5 @@
+import type { Gif } from './types';
+
 export const klipyHostname = 'static.klipy.com';
 export const tenorHostname = 'media.tenor.com';
 
@@ -143,6 +145,48 @@ const parseDimensions = (url: URL) => {
 	}
 
 	return { height, width };
+};
+
+const getFileSlug = (url: string | undefined): string | undefined => {
+	if (!url) {
+		return undefined;
+	}
+	const filename = url.split('/').pop();
+	if (!filename) {
+		return undefined;
+	}
+	const dotIndex = filename.lastIndexOf('.');
+	return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined;
+};
+
+/**
+ * builds a GIF embed URL for inline playback.
+ *
+ * @param gif GIF picker result
+ * @returns GIF URL with dimensions and available Klipy video filenames
+ */
+export const toGifEmbedUrl = (gif: Gif): string => {
+	const gifUrl = gif.media_formats.gif.url;
+	const params = new URLSearchParams();
+	params.set(gifUrlParams.height, String(gif.media_formats.gif.dims[1]));
+	params.set(gifUrlParams.width, String(gif.media_formats.gif.dims[0]));
+
+	// Klipy uses a different filename for each video format.
+	try {
+		const url = new URL(gifUrl);
+		if (url.hostname === klipyHostname) {
+			const mp4Slug = getFileSlug(gif.media_formats.mp4?.url);
+			const webmSlug = getFileSlug(gif.media_formats.webm?.url);
+			if (mp4Slug) {
+				params.set(gifUrlParams.mp4, mp4Slug);
+			}
+			if (webmSlug) {
+				params.set(gifUrlParams.webm, webmSlug);
+			}
+		}
+	} catch {}
+
+	return `${gifUrl}?${params.toString()}`;
 };
 
 /**

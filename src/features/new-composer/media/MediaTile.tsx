@@ -37,6 +37,7 @@ export function MediaTile({
 	className,
 	style,
 	onRemove,
+	onTogglePlayback,
 	children,
 }: {
 	postId: string;
@@ -49,6 +50,8 @@ export function MediaTile({
 	style?: CSSProperties;
 	/** called on Delete or Backspace while the tile is focused. */
 	onRemove: () => void;
+	/** called on Space while the tile is focused. */
+	onTogglePlayback?: () => void;
 	children: ReactNode;
 }) {
 	const { wg, dnd } = useComposer();
@@ -88,6 +91,12 @@ export function MediaTile({
 				if (event.key === 'Backspace' || event.key === 'Delete') {
 					event.preventDefault();
 					onRemove();
+					return;
+				}
+
+				if (event.key === ' ') {
+					event.preventDefault();
+					onTogglePlayback?.();
 					return;
 				}
 

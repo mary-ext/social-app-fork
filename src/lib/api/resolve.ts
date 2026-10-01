@@ -12,7 +12,7 @@ import { resolveShortLink } from '#/lib/links/short-link';
 import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/compress-image';
 import { createGIFDescription } from '#/lib/media/external-gif/alt-text';
-import { gifUrlParams, klipyHostname } from '#/lib/media/external-gif/embed';
+import { toGifEmbedUrl } from '#/lib/media/external-gif/embed';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 type ResolvedExternalLink = {
@@ -186,47 +186,14 @@ export async function resolveLink(appview: Client, uri: string, signal?: AbortSi
 }
 
 export async function resolveGif(gif: Gif, signal: AbortSignal): Promise<ResolvedExternalLink> {
-	const gifUrl = gif.media_formats.gif.url;
-	const params = new URLSearchParams();
-	params.set(gifUrlParams.height, String(gif.media_formats.gif.dims[1]));
-	params.set(gifUrlParams.width, String(gif.media_formats.gif.dims[0]));
-
-	// Klipy uses a different filename for each video format.
-	try {
-		const url = new URL(gifUrl);
-		if (url.hostname === klipyHostname) {
-			const mp4Slug = getFileSlug(gif.media_formats.mp4?.url);
-			const webmSlug = getFileSlug(gif.media_formats.webm?.url);
-			if (mp4Slug) {
-				params.set(gifUrlParams.mp4, mp4Slug);
-			}
-			if (webmSlug) {
-				params.set(gifUrlParams.webm, webmSlug);
-			}
-		}
-	} catch {}
-
-	const uri = `${gifUrl}?${params.toString()}`;
 	const altText = gif.content_description || gif.title;
 	return {
 		type: 'external',
-		uri,
+		uri: toGifEmbedUrl(gif),
 		title: altText,
 		description: createGIFDescription(altText),
 		thumb: await imageToThumb(gif.media_formats.preview.url, signal),
 	};
-}
-
-function getFileSlug(url: string | undefined): string | undefined {
-	if (!url) {
-		return undefined;
-	}
-	const filename = url.split('/').pop();
-	if (!filename) {
-		return undefined;
-	}
-	const dotIndex = filename.lastIndexOf('.');
-	return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined;
 }
 
 async function resolveExternal(uri: string, signal?: AbortSignal): Promise<ResolvedExternalLink> {
