@@ -1,22 +1,20 @@
 import { useState } from 'react';
 
-import type { AppBskyFeedPostgate } from '@atcute/bluesky';
-
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { RadioGroup } from '@base-ui/react/radio-group';
 
-import { createPostgateRecord, embeddingRules } from '#/state/queries/postgate/util';
-import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 import {
-	coalesceAllowUISettings,
-	getThreadgateReplyMode,
-	type ThreadgateReplyMode,
-} from '#/state/queries/threadgate/util';
+	type InteractionSettings,
+	NO_REPLY_GROUPS,
+	type ReplyAudience,
+	restrictReplies,
+} from '#/lib/interaction-settings';
 
 import { formatCount } from '#/locale/intl/number';
 
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
+import { getReplyAudienceSummary } from '#/components/WhoCanReply';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
@@ -25,19 +23,11 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './SettingsForm.css';
 
-type ReplyGroup = 'followers' | 'following' | 'mention';
-
-const isReplyGroup = (value: string): value is ReplyGroup => {
-	return value === 'followers' || value === 'following' || value === 'mention';
-};
+const REPLY_GROUPS: ('followers' | 'following' | 'mentioned')[] = ['followers', 'following', 'mentioned'];
 
 export type PostInteractionSettingsFormProps = {
-	postgate: AppBskyFeedPostgate.Main;
-	onChangePostgate: (v: AppBskyFeedPostgate.Main) => void;
-
-	threadgateAllowUISettings: ThreadgateAllowUISetting[];
-	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
-
+	value: InteractionSettings;
+	onChange: (next: InteractionSettings) => void;
 	onOpenLists: () => void;
 	replySettingsDisabled?: boolean;
 };
@@ -45,43 +35,28 @@ export type PostInteractionSettingsFormProps = {
 /**
  * reply and quote settings. includes row padding; render without horizontal container padding.
  *
- * @param props.postgate current postgate record
- * @param props.onChangePostgate receives the updated postgate record
- * @param props.threadgateAllowUISettings current reply settings
- * @param props.onChangeThreadgateAllowUISettings receives the updated reply settings
+ * @param props.value current settings
+ * @param props.onChange receives the updated settings
  * @param props.onOpenLists opens the picker for lists whose members can reply
  * @param props.replySettingsDisabled shows reply settings as a read-only summary
  * @returns the settings list
  */
 export function PostInteractionSettingsForm({
-	postgate,
-	onChangePostgate,
-	threadgateAllowUISettings,
-	onChangeThreadgateAllowUISettings,
+	value,
+	onChange,
 	onOpenLists,
 	replySettingsDisabled,
 }: PostInteractionSettingsFormProps) {
-	const quotesEnabled = !postgate.embeddingRules?.some((v) => v.$type === embeddingRules.disableRule.$type);
-
-	const onChangeQuotesEnabled = (enabled: boolean) => {
-		onChangePostgate(
-			createPostgateRecord({
-				...postgate,
-				embeddingRules: enabled ? [] : [embeddingRules.disableRule],
-			}),
-		);
-	};
-
 	return (
 		<Settings.List surface="flush">
 			<Settings.Section titleText={m['common.interaction.whoCanReply']()}>
 				{replySettingsDisabled ? (
-					<LockedReplyRow settings={threadgateAllowUISettings} />
+					<LockedReplyRow replies={value.replies} />
 				) : (
 					<ReplyRows
-						onChange={onChangeThreadgateAllowUISettings}
+						onChange={(replies) => onChange({ ...value, replies })}
 						onOpenLists={onOpenLists}
-						settings={threadgateAllowUISettings}
+						replies={value.replies}
 					/>
 				)}
 			</Settings.Section>
@@ -89,12 +64,12 @@ export function PostInteractionSettingsForm({
 			<Settings.Section titleText={m['components.dialogs.interaction.quote.title']()}>
 				<Settings.SwitchRow
 					label={
-						quotesEnabled
+						value.allowQuotes
 							? m['components.dialogs.interaction.quote.disable']()
 							: m['components.dialogs.interaction.quote.enable']()
 					}
-					onChange={onChangeQuotesEnabled}
-					value={quotesEnabled}
+					onChange={(allowQuotes) => onChange({ ...value, allowQuotes })}
+					value={value.allowQuotes}
 				>
 					<Settings.Icon icon={QuoteIcon} />
 					<Settings.Label
@@ -110,51 +85,42 @@ export function PostInteractionSettingsForm({
 function ReplyRows({
 	onChange,
 	onOpenLists,
-	settings,
+	replies,
 }: {
-	onChange: (v: ThreadgateAllowUISetting[]) => void;
+	onChange: (next: ReplyAudience) => void;
 	onOpenLists: () => void;
-	settings: ThreadgateAllowUISetting[];
+	replies: ReplyAudience;
 }) {
-	const mode = getThreadgateReplyMode(settings);
-	const groups = settings.flatMap((v) => (isReplyGroup(v.type) ? [v.type] : []));
-	const lists = settings.filter((v) => v.type === 'list');
-
 	// arrow keys select radios as they move, so passing through anyone/nobody must not discard the groups
-	const [lastSome, setLastSome] = useState(settings);
-	if (mode === 'some' && lastSome !== settings) {
-		setLastSome(settings);
+	const [lastSome, setLastSome] = useState<ReplyAudience>(replies);
+	if (replies.type === 'some' && lastSome !== replies) {
+		setLastSome(replies);
 	}
 
-	const onChangeMode = (next: ThreadgateReplyMode) => {
+	const onChangeMode = (next: ReplyAudience['type']) => {
 		switch (next) {
-			case 'anyone': {
-				onChange([{ type: 'everybody' }]);
-				break;
-			}
+			case 'anyone':
 			case 'nobody': {
-				onChange([{ type: 'nobody' }]);
+				onChange({ type: next });
 				break;
 			}
 			case 'some': {
-				onChange(getThreadgateReplyMode(lastSome) === 'some' ? lastSome : [{ type: 'mention' }]);
+				onChange(
+					lastSome.type === 'some' ? lastSome : restrictReplies({ ...NO_REPLY_GROUPS, mentioned: true }),
+				);
 				break;
 			}
 		}
 	};
 
-	const onChangeGroups = (values: string[]) => {
-		onChange(coalesceAllowUISettings([...values.filter(isReplyGroup).map((type) => ({ type })), ...lists]));
-	};
-
 	// keep checkboxes outside the radio group's roving focus. CSS places them between "some" and "nobody".
 	return (
 		<>
-			<RadioGroup<ThreadgateReplyMode>
+			<RadioGroup<ReplyAudience['type']>
 				aria-label={m['components.dialogs.reply.description']()}
 				className={styles.radioGroup}
 				onValueChange={onChangeMode}
-				value={mode}
+				value={replies.type}
 			>
 				<Settings.RadioRow label={m['components.dialogs.reply.allowAnyone']()} value="anyone">
 					<Settings.Label
@@ -179,13 +145,23 @@ function ReplyRows({
 					/>
 				</Settings.RadioRow>
 			</RadioGroup>
-			{mode === 'some' && (
+			{replies.type === 'some' && (
 				<CheckboxGroup
 					aria-label={m['components.dialogs.reply.advancedDescription']()}
 					className={styles.nest}
-					onValueChange={onChangeGroups}
+					onValueChange={(values: string[]) => {
+						const groups = new Set(values);
+						onChange(
+							restrictReplies({
+								followers: groups.has('followers'),
+								following: groups.has('following'),
+								lists: replies.lists,
+								mentioned: groups.has('mentioned'),
+							}),
+						);
+					}}
 					render={<Settings.Group />}
-					value={groups}
+					value={REPLY_GROUPS.filter((group) => replies[group])}
 				>
 					<Settings.CheckboxRow label={m['components.dialogs.reply.allowFollowers']()} value="followers">
 						<Settings.Label titleText={m['components.dialogs.reply.followers']()} />
@@ -193,15 +169,15 @@ function ReplyRows({
 					<Settings.CheckboxRow label={m['components.dialogs.reply.allowFollows']()} value="following">
 						<Settings.Label titleText={m['components.dialogs.reply.peopleYouFollow']()} />
 					</Settings.CheckboxRow>
-					<Settings.CheckboxRow label={m['components.dialogs.reply.allowMentions']()} value="mention">
+					<Settings.CheckboxRow label={m['components.dialogs.reply.allowMentions']()} value="mentioned">
 						<Settings.Label titleText={m['components.dialogs.reply.peopleYouMention']()} />
 					</Settings.CheckboxRow>
 					<Settings.ButtonRow label={m['components.dialogs.reply.lists']()} onPress={onOpenLists}>
 						<Settings.Icon icon={ListIcon} />
 						<Settings.Label titleText={m['components.dialogs.reply.lists']()} />
-						{lists.length > 0 && (
+						{replies.lists.length > 0 && (
 							<Text className={styles.pill} size="sm" weight="semiBold">
-								{formatCount(lists.length)}
+								{formatCount(replies.lists.length)}
 							</Text>
 						)}
 					</Settings.ButtonRow>
@@ -211,27 +187,14 @@ function ReplyRows({
 	);
 }
 
-function LockedReplyRow({ settings }: { settings: ThreadgateAllowUISetting[] }) {
-	let summary: string;
-	switch (getThreadgateReplyMode(settings)) {
-		case 'anyone': {
-			summary = m['components.whoCanReply.summary.everybody.label']();
-			break;
-		}
-		case 'nobody': {
-			summary = m['components.whoCanReply.summary.disabled.label']();
-			break;
-		}
-		case 'some': {
-			summary = m['components.whoCanReply.summary.some']();
-			break;
-		}
-	}
-
+function LockedReplyRow({ replies }: { replies: ReplyAudience }) {
 	return (
 		<Settings.StaticRow>
 			<Settings.Icon icon={LockIcon} />
-			<Settings.Label subtitleText={m['components.dialogs.reply.authorControlled']()} titleText={summary} />
+			<Settings.Label
+				subtitleText={m['components.dialogs.reply.authorControlled']()}
+				titleText={getReplyAudienceSummary(replies)}
+			/>
 		</Settings.StaticRow>
 	);
 }

@@ -17,10 +17,6 @@ export function NewComposerDialog() {
 		<Dialog.Root handle={newComposerDialogHandle}>
 			{({ payload }) => (
 				<Dialog.Popup label={m['common.compose.action.write']()} padding="none" scroll="body">
-					<Dialog.Header.Root border="scrolling">
-						<Dialog.Header.Close />
-						<Dialog.Header.Title>{m['view.composer.title.post']()}</Dialog.Header.Title>
-					</Dialog.Header.Root>
 					{payload && (
 						<Suspense
 							fallback={

@@ -21,7 +21,12 @@ const SettingsBody = lazy(importSettingsBody);
 
 export type { PostInteractionSettingsDialogProps };
 
-/** Threadgate settings dialog. Used in the thread. */
+/**
+ * edits reply and quote settings for a published post.
+ *
+ * @param props dialog handle and post identifiers
+ * @returns the dialog
+ */
 export function PostInteractionSettingsDialog({ handle, ...props }: PostInteractionSettingsDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>

@@ -7,22 +7,21 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getRecord, putRecord } from '#/lib/api/records';
 import { isRecordNotFoundError } from '#/lib/errors';
+import {
+	isReplyAudienceEqual,
+	type ReplyAudience,
+	repliesFromThreadgateView,
+	repliesToThreadgateAllow,
+} from '#/lib/interaction-settings';
 import { networkRetry, retry } from '#/lib/utils/retry';
 
 import { STALE } from '#/state/queries';
 import { useGetPost } from '#/state/queries/post';
-import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
-import {
-	createThreadgateRecord,
-	mergeThreadgateRecords,
-	threadgateAllowUISettingToAllowRecordValue,
-	threadgateViewToAllowUISetting,
-} from '#/state/queries/threadgate/util';
+import { createThreadgateRecord, mergeThreadgateRecords } from '#/state/queries/threadgate/util';
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread/threadgate-cache';
 import { getClients, useSession } from '#/state/session';
 import { setReplyHidden } from '#/state/threadgate-hidden-replies';
 
-export * from '#/state/queries/threadgate/types';
 export * from '#/state/queries/threadgate/util';
 
 /** Must match the threadgate lexicon record definition. */
@@ -185,25 +184,25 @@ export function useSetThreadgateAllowMutation() {
 	const updatePostThreadThreadgate = useUpdatePostThreadThreadgateQueryCache();
 
 	return useMutation({
-		mutationFn: async ({ postUri, allow }: { postUri: ResourceUri; allow: ThreadgateAllowUISetting[] }) => {
+		mutationFn: async ({ postUri, replies }: { postUri: ResourceUri; replies: ReplyAudience }) => {
 			return upsertThreadgate(
 				{ appview, did: currentAccount!.did, pds: pds!, postUri },
 				(prev): AppBskyFeedThreadgate.Main | undefined => {
 					if (prev) {
 						return {
 							...prev,
-							allow: threadgateAllowUISettingToAllowRecordValue(allow),
+							allow: repliesToThreadgateAllow(replies),
 						};
 					} else {
 						return createThreadgateRecord({
-							allow: threadgateAllowUISettingToAllowRecordValue(allow),
+							allow: repliesToThreadgateAllow(replies),
 							post: postUri,
 						});
 					}
 				},
 			);
 		},
-		async onSuccess(_, { postUri, allow }) {
+		async onSuccess(_, { postUri, replies }) {
 			const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
 				5, // 5 tries
 				(_e) => true,
@@ -215,9 +214,7 @@ export function useSetThreadgateAllowMutation() {
 							`useSetThreadgateAllowMutation: could not fetch threadgate, appview may not be ready yet`,
 						);
 					}
-					const fetchedSettings = threadgateViewToAllowUISetting(threadgate);
-					const isReady = JSON.stringify(fetchedSettings) === JSON.stringify(allow);
-					if (!isReady) {
+					if (!isReplyAudienceEqual(repliesFromThreadgateView(threadgate), replies)) {
 						throw new Error(`useSetThreadgateAllowMutation: appview isn't ready yet`); // try again
 					}
 					return threadgate;

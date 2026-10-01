@@ -22,6 +22,7 @@ import { getPostRecord } from '#/lib/api/record-casts';
 import { uploadBlob } from '#/lib/api/records';
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { isNetworkError } from '#/lib/errors';
+import { quotesToEmbeddingRules, repliesToThreadgateAllow } from '#/lib/interaction-settings';
 import { compressImage } from '#/lib/media/composer-image';
 import { createGIFDescription } from '#/lib/media/external-gif/alt-text';
 import type { VideoPayload } from '#/lib/media/video/types';
@@ -30,10 +31,7 @@ import { task } from '#/lib/utils/task';
 import { trimText } from '#/lib/utils/text';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
-import {
-	createThreadgateRecord,
-	threadgateAllowUISettingToAllowRecordValue,
-} from '#/state/queries/threadgate';
+import { createThreadgateRecord } from '#/state/queries/threadgate/util';
 
 import type { EmbedDraft, PostDraft, ThreadDraft } from '#/features/composer/state/composer';
 import { getVideoSourceKind } from '#/features/composer/state/video';
@@ -123,6 +121,9 @@ export async function publishThread(
 
 	const now = new Date();
 
+	const threadgateAllow = repliesToThreadgateAllow(thread.interaction.replies);
+	const embeddingRules = quotesToEmbeddingRules(thread.interaction.allowQuotes);
+
 	for (let i = 0; i < thread.posts.length; i++) {
 		const draft = thread.posts[i]!;
 
@@ -158,30 +159,30 @@ export async function publishThread(
 			})),
 		);
 
-		if (i === 0 && thread.threadgate.some((tg) => tg.type !== 'everybody')) {
+		if (i === 0 && threadgateAllow) {
 			writePromises.push(
 				Promise.resolve({
 					$type: 'com.atproto.repo.applyWrites#create',
 					collection: 'app.bsky.feed.threadgate',
 					rkey: rkey,
 					value: createThreadgateRecord({
-						allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
+						allow: threadgateAllow,
 						post: uri,
 					}),
 				}),
 			);
 		}
 
-		if (thread.postgate.embeddingRules?.length || thread.postgate.detachedEmbeddingUris?.length) {
+		if (embeddingRules) {
 			writePromises.push(
 				Promise.resolve({
 					$type: 'com.atproto.repo.applyWrites#create',
 					collection: 'app.bsky.feed.postgate',
 					rkey: rkey,
 					value: {
-						...thread.postgate,
 						$type: 'app.bsky.feed.postgate',
 						createdAt: createdAt,
+						embeddingRules,
 						post: uri,
 					},
 				}),

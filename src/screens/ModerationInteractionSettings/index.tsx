@@ -1,16 +1,9 @@
 import { useState } from 'react';
 
-import type { ResourceUri } from '@atcute/lexicons';
-
-import { dequal } from 'dequal/lite';
+import { interactionSettingsFromPreferences, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
-import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
-import {
-	threadgateAllowUISettingToAllowRecordValue,
-	threadgateRecordToAllowUISetting,
-} from '#/state/queries/threadgate';
 import { useTitle } from '#/state/use-title';
 
 import * as Dialog from '#/components/Dialog';
@@ -59,30 +52,15 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const [error, setError] = useState<string | undefined>(undefined);
 	const listsHandle = Dialog.useDialogHandle();
 
-	const allowUI = threadgateRecordToAllowUISetting({
-		allow: preferences.postInteractionSettings.threadgateAllowRules,
-	});
-	const postgate = createPostgateRecord({
-		embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- placeholder defaults; only `embeddingRules` is read back, never written
-		post: '' as ResourceUri,
-	});
-
-	const [maybeEditedAllowUI, setMaybeEditedAllowUI] = useState(allowUI);
-	const [maybeEditedPostgate, setMaybeEditedPostgate] = useState(postgate);
-
-	const wasEdited =
-		!dequal(allowUI, maybeEditedAllowUI) ||
-		!dequal(postgate.embeddingRules, maybeEditedPostgate.embeddingRules);
+	const saved = interactionSettingsFromPreferences(preferences.postInteractionSettings);
+	const [draft, setDraft] = useState(saved);
+	const wasEdited = !isInteractionSettingsEqual(saved, draft);
 
 	const onSave = async () => {
 		setError('');
 
 		try {
-			await setPostInteractionSettings({
-				postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
-				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
-			});
+			await setPostInteractionSettings(draft);
 			Toast.show(m['screens.moderation.interaction.savedToast']());
 		} catch (e) {
 			console.error('Failed to save post interaction settings', e);
@@ -94,11 +72,9 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 		<>
 			<div className={styles.formBleed}>
 				<PostInteractionSettingsForm
-					onChangePostgate={setMaybeEditedPostgate}
-					onChangeThreadgateAllowUISettings={setMaybeEditedAllowUI}
+					onChange={setDraft}
 					onOpenLists={() => listsHandle.open(null)}
-					postgate={maybeEditedPostgate}
-					threadgateAllowUISettings={maybeEditedAllowUI}
+					value={draft}
 				/>
 			</div>
 
@@ -121,7 +97,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 						<Dialog.Header.Close />
 						<Dialog.Header.Title>{m['components.dialogs.reply.lists']()}</Dialog.Header.Title>
 					</Dialog.Header.Root>
-					<ListPicker onChange={setMaybeEditedAllowUI} settings={maybeEditedAllowUI} />
+					<ListPicker onChange={(replies) => setDraft({ ...draft, replies })} replies={draft.replies} />
 				</Dialog.Popup>
 			</Dialog.Root>
 		</>

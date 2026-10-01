@@ -1,14 +1,13 @@
-import { Fragment, useRef } from 'react';
+import { Fragment, type ReactNode, useRef } from 'react';
 
-import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
 import { getPostRecord } from '#/lib/api/record-casts';
+import { type ReplyAudience, type ReplyGroups, repliesFromThreadgateView } from '#/lib/interaction-settings';
 import { listTarget, profileTarget } from '#/lib/routes/targets';
-
-import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
 
 import { Trans } from '#/locale/Trans';
 
@@ -44,7 +43,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	 */
 	const record = getPostRecord(post);
 	const rootUri = record.reply?.root?.uri ?? post.uri;
-	const settings = threadgateViewToAllowUISetting(post.threadgate);
+	const replies = repliesFromThreadgateView(post.threadgate);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
 		postUri: post.uri,
@@ -55,14 +54,6 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	const prefetch = () => {
 		prefetchPromise.current = prefetchPostInteractionSettings();
 	};
-
-	const anyoneCanReply = settings.length === 1 && settings[0]!.type === 'everybody';
-	const noOneCanReply = settings.length === 1 && settings[0]!.type === 'nobody';
-	const description = anyoneCanReply
-		? m['components.whoCanReply.summary.everybody.label']()
-		: noOneCanReply
-			? m['components.whoCanReply.summary.disabled.label']()
-			: m['components.whoCanReply.summary.some']();
 
 	const onPressOpen = () => {
 		if (isThreadAuthor) {
@@ -87,9 +78,9 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				// prefetch the interaction settings so the edit dialog opens without a spinner
 				onMouseEnter={isThreadAuthor ? prefetch : undefined}
 			>
-				<Icon settings={settings} />
+				<Icon replies={replies} />
 				<Text className={css.label} size="md_sub" color={isThreadAuthor ? 'textLink' : 'textContrastMedium'}>
-					{description}
+					{getReplyAudienceSummary(replies)}
 				</Text>
 				{isThreadAuthor && <TinyChevronDownIcon className={css.tinyChevronDownIcon} />}
 			</button>
@@ -104,7 +95,7 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 				<WhoCanReplyDialog
 					handle={infoDialogHandle}
 					post={post}
-					settings={settings}
+					replies={replies}
 					embeddingDisabled={!!post.viewer?.embeddingDisabled}
 				/>
 			)}
@@ -112,22 +103,46 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	);
 }
 
-function Icon({ settings }: { settings: ThreadgateAllowUISetting[] }) {
-	const isEverybody = settings.every((setting) => setting.type === 'everybody');
-	const isNobody = !!settings.find((gate) => gate.type === 'nobody');
-	const IconComponent = isEverybody ? EarthIcon : isNobody ? CircleBanSignIcon : GroupIcon;
+/**
+ * labels replies as open, disabled, or restricted.
+ *
+ * @param replies the reply audience
+ * @returns the localized summary
+ */
+export const getReplyAudienceSummary = (replies: ReplyAudience): string => {
+	switch (replies.type) {
+		case 'anyone': {
+			return m['components.whoCanReply.summary.everybody.label']();
+		}
+		case 'nobody': {
+			return m['components.whoCanReply.summary.disabled.label']();
+		}
+		case 'some': {
+			return m['components.whoCanReply.summary.some']();
+		}
+	}
+};
+
+const AUDIENCE_ICONS = {
+	anyone: EarthIcon,
+	nobody: CircleBanSignIcon,
+	some: GroupIcon,
+} satisfies Record<ReplyAudience['type'], unknown>;
+
+function Icon({ replies }: { replies: ReplyAudience }) {
+	const IconComponent = AUDIENCE_ICONS[replies.type];
 	return <IconComponent className={css.gateIcon} />;
 }
 
 function WhoCanReplyDialog({
 	handle,
 	post,
-	settings,
+	replies,
 	embeddingDisabled,
 }: {
 	handle: Dialog.DialogHandle;
 	post: AppBskyFeedDefs.PostView;
-	settings: ThreadgateAllowUISetting[];
+	replies: ReplyAudience;
 	embeddingDisabled: boolean;
 }) {
 	return (
@@ -138,7 +153,7 @@ function WhoCanReplyDialog({
 						<Dialog.Title>{m['components.whoCanReply.title']()}</Dialog.Title>
 						<Dialog.Close />
 					</Dialog.TitleRow>
-					<Rules post={post} settings={settings} embeddingDisabled={embeddingDisabled} />
+					<Rules post={post} replies={replies} embeddingDisabled={embeddingDisabled} />
 				</Stack>
 			</Dialog.Popup>
 		</Dialog.Root>
@@ -147,40 +162,53 @@ function WhoCanReplyDialog({
 
 function Rules({
 	post,
-	settings,
+	replies,
 	embeddingDisabled,
 }: {
 	post: AppBskyFeedDefs.PostView;
-	settings: ThreadgateAllowUISetting[];
+	replies: ReplyAudience;
 	embeddingDisabled: boolean;
 }) {
-	return (
-		<>
-			<Text size="md" color="textContrastMedium">
-				{settings.length === 0 ? (
+	let summary: ReactNode;
+	switch (replies.type) {
+		case 'anyone': {
+			summary = m['components.whoCanReply.summary.everybody.description']();
+			break;
+		}
+		case 'nobody': {
+			summary = m['components.whoCanReply.summary.disabled.description']();
+			break;
+		}
+		case 'some': {
+			const rules = getRuleNodes(post, replies);
+			summary =
+				rules.length === 0 ? (
 					m['components.whoCanReply.summary.unknown']()
-				) : settings[0]!.type === 'everybody' ? (
-					m['components.whoCanReply.summary.everybody.description']()
-				) : settings[0]!.type === 'nobody' ? (
-					m['components.whoCanReply.summary.disabled.description']()
 				) : (
 					<Trans
 						message={m['components.whoCanReply.rules.template']}
 						markup={{
 							t0: () => (
 								<>
-									{settings.map((rule, i) => (
-										// oxlint-disable-next-line react/no-array-index-key -- fixed order
-										<Fragment key={`rule-${i}`}>
-											<Rule rule={rule} post={post} lists={post.threadgate!.lists} />
-											<Separator i={i} length={settings.length} />
+									{rules.map(({ key, node }, i) => (
+										<Fragment key={key}>
+											{node}
+											<Separator i={i} length={rules.length} />
 										</Fragment>
 									))}
 								</>
 							),
 						}}
 					/>
-				)}{' '}
+				);
+			break;
+		}
+	}
+
+	return (
+		<>
+			<Text size="md" color="textContrastMedium">
+				{summary}{' '}
 			</Text>
 			{embeddingDisabled && (
 				<Text size="md" color="textContrastMedium">
@@ -191,61 +219,57 @@ function Rules({
 	);
 }
 
-function Rule({
-	rule,
-	post,
-	lists,
-}: {
-	rule: ThreadgateAllowUISetting;
-	post: AppBskyFeedDefs.PostView;
-	lists: AppBskyGraphDefs.ListViewBasic[] | undefined;
-}) {
-	if (rule.type === 'mention') {
-		return m['components.whoCanReply.rules.mentioned']();
+// deleted lists may remain in the rules but have no view to display.
+const getRuleNodes = (
+	post: AppBskyFeedDefs.PostView,
+	replies: ReplyGroups,
+): { key: string; node: ReactNode }[] => {
+	const rules: { key: string; node: ReactNode }[] = [];
+
+	if (replies.mentioned) {
+		rules.push({ key: 'mentioned', node: m['components.whoCanReply.rules.mentioned']() });
 	}
-	if (rule.type === 'followers') {
-		return (
-			<Trans
-				message={m['components.whoCanReply.rules.following']}
-				inputs={{ handle: post.author.handle }}
-				markup={{
-					t0: ({ children }) => (
-						<InlineLinkText
-							label={`@${post.author.handle}`}
-							size="md_sub"
-							to={profileTarget(post.author.did)}
-						>
-							{children}
-						</InlineLinkText>
-					),
-				}}
-			/>
-		);
+
+	const authorRules = [
+		{ enabled: replies.followers, key: 'followers', message: m['components.whoCanReply.rules.following'] },
+		{ enabled: replies.following, key: 'following', message: m['components.whoCanReply.rules.followedBy'] },
+	];
+	for (const { enabled, key, message } of authorRules) {
+		if (!enabled) {
+			continue;
+		}
+
+		rules.push({
+			key,
+			node: (
+				<Trans
+					message={message}
+					inputs={{ handle: post.author.handle }}
+					markup={{
+						t0: ({ children }) => (
+							<InlineLinkText
+								label={`@${post.author.handle}`}
+								size="md_sub"
+								to={profileTarget(post.author.did)}
+							>
+								{children}
+							</InlineLinkText>
+						),
+					}}
+				/>
+			),
+		});
 	}
-	if (rule.type === 'following') {
-		return (
-			<Trans
-				message={m['components.whoCanReply.rules.followedBy']}
-				inputs={{ handle: post.author.handle }}
-				markup={{
-					t0: ({ children }) => (
-						<InlineLinkText
-							label={`@${post.author.handle}`}
-							size="md_sub"
-							to={profileTarget(post.author.did)}
-						>
-							{children}
-						</InlineLinkText>
-					),
-				}}
-			/>
-		);
-	}
-	if (rule.type === 'list') {
-		const list = lists?.find((l) => l.uri === rule.list);
-		if (list) {
-			const listUrip = parseCanonicalResourceUri(list.uri);
-			return (
+	for (const uri of replies.lists) {
+		const list = post.threadgate?.lists?.find((l) => l.uri === uri);
+		if (!list) {
+			continue;
+		}
+
+		const listUrip = parseCanonicalResourceUri(list.uri);
+		rules.push({
+			key: uri,
+			node: (
 				<Trans
 					message={m['components.whoCanReply.rules.listMembers']}
 					inputs={{ name: list.name }}
@@ -257,10 +281,12 @@ function Rule({
 						),
 					}}
 				/>
-			);
-		}
+			),
+		});
 	}
-}
+
+	return rules;
+};
 
 function Separator({ i, length }: { i: number; length: number }) {
 	if (length < 2 || i === length - 1) {

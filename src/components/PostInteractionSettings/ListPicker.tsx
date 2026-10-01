@@ -2,9 +2,11 @@ import { type ReactNode, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
+import { difference } from '@mary/array-fns';
+
+import { NO_REPLY_GROUPS, type ReplyAudience, restrictReplies } from '#/lib/interaction-settings';
+
 import { useMyListsQuery } from '#/state/queries/my-lists';
-import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
-import { coalesceAllowUISettings } from '#/state/queries/threadgate/util';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as ListCard from '#/components/ListCard';
@@ -19,36 +21,30 @@ import * as styles from './ListPicker.css';
  * selects lists whose members can reply. renders search and body for a dialog with `scroll="body"`; provide
  * the dialog header separately.
  *
- * @param props.onChange receives the updated reply settings
- * @param props.settings current reply settings; non-list entries pass through untouched
+ * @param props.onChange receives the updated reply audience
+ * @param props.replies current audience; preserves non-list groups
  * @returns the list picker
  */
 export function ListPicker({
 	onChange,
-	settings,
+	replies,
 }: {
-	onChange: (v: ThreadgateAllowUISetting[]) => void;
-	settings: ThreadgateAllowUISetting[];
+	onChange: (next: ReplyAudience) => void;
+	replies: ReplyAudience;
 }) {
 	const { data: lists, isPending, isError } = useMyListsQuery('curate');
 	const [search, setSearch] = useState('');
 
-	const selectedUris = new Set(settings.flatMap((v) => (v.type === 'list' ? [v.list] : [])));
-	const selected = lists?.filter((list) => selectedUris.has(list.uri)) ?? [];
+	const groups = replies.type === 'some' ? replies : NO_REPLY_GROUPS;
+	const selected = lists?.filter((list) => groups.lists.includes(list.uri)) ?? [];
 
 	const onValueChange = (next: AppBskyGraphDefs.ListView[]) => {
 		// preserve selections absent from the fetched lists, including deleted lists.
-		const hidden = selectedUris
-			.values()
-			.filter((uri) => !lists?.some((list) => list.uri === uri))
-			.map((list) => ({ type: 'list' as const, list }));
-		onChange(
-			coalesceAllowUISettings([
-				...settings.filter((v) => v.type !== 'list'),
-				...hidden,
-				...next.map((list) => ({ type: 'list' as const, list: list.uri })),
-			]),
+		const hidden = difference(
+			groups.lists,
+			(lists ?? []).map((list) => list.uri),
 		);
+		onChange(restrictReplies({ ...groups, lists: [...hidden, ...next.map((list) => list.uri)] }));
 	};
 
 	const query = search.trim().toLowerCase();

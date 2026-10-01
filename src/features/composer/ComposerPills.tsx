@@ -28,16 +28,9 @@ export function ComposerPills({
 		<div className={styles.pills}>
 			{isReply ? null : (
 				<ThreadgateBtn
-					postgate={thread.postgate}
-					onChangePostgate={(nextPostgate) => {
-						dispatch({ type: 'updatePostgate', postgate: nextPostgate });
-					}}
-					threadgateAllowUISettings={thread.threadgate}
-					onChangeThreadgateAllowUISettings={(nextThreadgate) => {
-						dispatch({
-							type: 'updateThreadgate',
-							threadgate: nextThreadgate,
-						});
+					value={thread.interaction}
+					onChange={(interaction) => {
+						dispatch({ type: 'updateInteraction', interaction });
 					}}
 				/>
 			)}
