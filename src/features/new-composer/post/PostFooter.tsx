@@ -1,10 +1,13 @@
+import { useRef } from 'react';
+
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { openMediaPicker } from '#/lib/media/picker';
 
-import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
+import { toPostLanguages } from '#/state/preferences/languages';
 
 import * as Dialog from '#/components/Dialog';
 import * as EmojiPicker from '#/components/EmojiPicker';
+import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import EmojiIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
@@ -28,6 +31,7 @@ import {
 	setAttachmentLabels,
 } from '../labels/commands';
 import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
+import { LanguagePopups, useLanguagePicker } from '../languages/LanguagePicker';
 import { attachFiles } from '../media/commands';
 import { CharCount } from './CharCount';
 import * as styles from './PostFooter.css';
@@ -43,7 +47,8 @@ type LabelsPayload = LabelsTarget & { keys: readonly string[] };
 export function PostFooter({ postId }: { postId: string }) {
 	const { gtPhone } = useBreakpoints();
 	const wg = useEditor();
-	const languages = toPostLanguages(usePostLanguage());
+	const languagePicker = useLanguagePicker(postId);
+	const languageTrigger = useRef<HTMLButtonElement>(null);
 	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
 	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
 	const focusReturn = useDialogFocusReturn();
@@ -162,15 +167,22 @@ export function PostFooter({ postId }: { postId: string }) {
 						</Button>
 					)}
 
-					<Button
-						{...roving.item('language')}
-						className={styles.language}
-						label={m['view.composer.language.selectPost']()}
-						variant="ghost"
-						color="secondary"
-					>
-						<ButtonText size="sm">{languages.join(', ')}</ButtonText>
-					</Button>
+					<Menu.Trigger
+						handle={languagePicker.menu}
+						render={
+							<Button
+								{...roving.item('language')}
+								ref={languageTrigger}
+								className={styles.language}
+								label={m['view.composer.language.selectPost']()}
+								variant="ghost"
+								color="secondary"
+								onClick={focusReturn.capture}
+							>
+								<ButtonText size="sm">{toPostLanguages(languagePicker.language).join(', ')}</ButtonText>
+							</Button>
+						}
+					/>
 					<CharCount postId={postId} />
 				</div>
 			</div>
@@ -192,6 +204,7 @@ export function PostFooter({ postId }: { postId: string }) {
 					finalFocus={focusReturn.finalFocus}
 				/>
 			)}
+			<LanguagePopups picker={languagePicker} trigger={languageTrigger} focusReturn={focusReturn} />
 		</>
 	);
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
@@ -38,14 +38,16 @@ type Props = {
 	currentLanguages: string[];
 	onSelectLanguages: (languages: string[]) => void;
 	maxLanguages?: number;
+	/** focus target on close. `false` skips focus restoration. */
+	finalFocus?: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 };
 
 export function LanguageSelectDialog(props: Props) {
-	const { handle, titleText } = props;
+	const { handle, titleText, finalFocus } = props;
 
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup height="fixed" label={titleText} scroll="body" size="wide">
+			<Dialog.Popup finalFocus={finalFocus} height="fixed" label={titleText} scroll="body" size="wide">
 				<DialogInner {...props} />
 			</Dialog.Popup>
 		</Dialog.Root>
