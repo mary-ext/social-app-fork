@@ -2,7 +2,6 @@ import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
-import type { Wordgard } from 'wordgard/editor';
 
 import type { AttachmentKind } from '#/lib/media/read-attachment';
 import { getBlobUrl } from '#/lib/utils/blob-url';
@@ -24,8 +23,7 @@ import { colors } from '#/styles/colors';
 
 import { useComposer, useEditorState } from '../context';
 import { DragChip, DragThumbnail, setDragPreview } from '../dnd/DragPreview';
-import { endOfLastLine, findPostById, getPostParam, getPosts, type PostMedia } from '../editor/schema';
-import { findActivePost } from '../editor/selection';
+import { findPostById, getPostParam, type PostMedia } from '../editor/schema';
 import { getMediaTileSelector, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingItemProps } from '../focus';
 import * as overlay from '../overlay.css';
@@ -201,18 +199,6 @@ const refocusMedia = (mediaId: string) => {
 	});
 };
 
-// move the caret with the tile so its new post's controls stay tabbable.
-const followMedia = (wg: Wordgard, mediaId: string) => {
-	const post = getPosts(wg.state.doc).find(({ node }) =>
-		getPostParam(node).media.some((entry) => entry.id === mediaId),
-	);
-	if (post && findActivePost(wg.state)?.before !== post.pos) {
-		wg.dispatch({ selection: { anchor: endOfLastLine(post.pos + post.node.length) } });
-	}
-
-	refocusMedia(mediaId);
-};
-
 /**
  * attachment tile with drag and keyboard controls.
  *
@@ -328,12 +314,12 @@ export function MediaTile({
 					}
 					case 'ArrowUp': {
 						moveMediaUp(wg, postId, item.id);
-						followMedia(wg, item.id);
+						refocusMedia(item.id);
 						break;
 					}
 					case 'ArrowDown': {
 						moveMediaDown(wg, postId, item.id);
-						followMedia(wg, item.id);
+						refocusMedia(item.id);
 						break;
 					}
 					default: {

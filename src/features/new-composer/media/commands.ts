@@ -6,6 +6,7 @@ import type { Wordgard } from 'wordgard/editor';
 import { appendPost } from '../commands/append-post';
 import { ISOLATE_HISTORY } from '../editor/history';
 import {
+	endOfLastLine,
 	findPostById,
 	getPostParam,
 	getPosts,
@@ -13,6 +14,7 @@ import {
 	setPostMediaChange,
 	type ThreadPost,
 } from '../editor/schema';
+import { findActivePost } from '../editor/selection';
 import { createMedia } from './attachments';
 
 /**
@@ -134,12 +136,12 @@ const liftMedia = (wg: Wordgard, postId: string, mediaId: string): LiftedMedia |
 	return { item, changes: [setPostMediaChange(source.pos, source.node, remaining)] };
 };
 
-const dispatchMove = (wg: Wordgard, changes: ChangeSet.Spec[]): void => {
-	wg.dispatch({ changes, userEvent: 'media.move', annotations: ISOLATE_HISTORY });
+const dispatchMove = (wg: Wordgard, changes: ChangeSet.Spec[], selection?: { anchor: number }): void => {
+	wg.dispatch({ changes, selection, userEvent: 'media.move', annotations: ISOLATE_HISTORY });
 };
 
 /**
- * moves an attachment within or between posts.
+ * reorders or transfers an attachment. transfers move the caret to the destination unless already there.
  *
  * @param wg the editor
  * @param fromId the id of the post holding the entry
@@ -174,14 +176,21 @@ export const moveMediaToSlot = (
 	}
 
 	const at = Math.min(toIndex ?? media.length, media.length);
-	dispatchMove(wg, [
-		...lifted.changes,
-		setPostMediaChange(dest.pos, dest.node, media.toSpliced(at, 0, lifted.item)),
-	]);
+	let selection: { anchor: number } | undefined;
+	if (findActivePost(wg.state)?.before !== dest.pos) {
+		// keep the destination post's controls tabbable.
+		// media-only changes leave post positions unchanged.
+		selection = { anchor: endOfLastLine(dest.pos + dest.node.length) };
+	}
+	dispatchMove(
+		wg,
+		[...lifted.changes, setPostMediaChange(dest.pos, dest.node, media.toSpliced(at, 0, lifted.item))],
+		selection,
+	);
 };
 
 /**
- * moves a media entry to the end of another post's media.
+ * moves a media entry to the end of another post's media, placing the caret in that post.
  *
  * @param wg the editor
  * @param fromId the id of the post holding the entry
@@ -215,7 +224,7 @@ export const nudgeMedia = (wg: Wordgard, postId: string, mediaId: string, dir: -
 };
 
 /**
- * moves a media entry to the preceding post.
+ * moves a media entry to the preceding post, placing the caret in it.
  *
  * @param wg the editor
  * @param fromId the id of the post holding the entry
@@ -231,7 +240,7 @@ export const moveMediaUp = (wg: Wordgard, fromId: string, mediaId: string): void
 };
 
 /**
- * moves an attachment to the following post, creating one if needed.
+ * moves an attachment and the caret to the following post, creating one if needed.
  *
  * @param wg the editor
  * @param fromId the id of the post holding the entry
