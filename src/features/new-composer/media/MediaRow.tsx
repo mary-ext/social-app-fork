@@ -108,7 +108,7 @@ export function MediaRow({ postId }: { postId: string }) {
 						postId={postId}
 						index={images.length + index}
 						item={item}
-						layout="stack"
+						layout={item.kind === 'externalGif' ? 'single' : 'stack'}
 						roving={roving.item(item.id)}
 						onEditAlt={() => editAlt(item)}
 					/>

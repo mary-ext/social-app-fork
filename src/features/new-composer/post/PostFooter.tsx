@@ -5,6 +5,8 @@ import { openMediaPicker } from '#/lib/media/picker';
 
 import { toPostLanguages } from '#/state/preferences/languages';
 
+import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
+
 import * as Dialog from '#/components/Dialog';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import * as Menu from '#/components/Menu';
@@ -32,7 +34,7 @@ import {
 } from '../labels/commands';
 import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
 import { LanguagePopups, useLanguagePicker } from '../languages/LanguagePicker';
-import { attachFiles } from '../media/commands';
+import { attachFiles, attachGif } from '../media/commands';
 import { CharCount } from './CharCount';
 import * as styles from './PostFooter.css';
 
@@ -52,6 +54,8 @@ export function PostFooter({ postId }: { postId: string }) {
 	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
 	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
 	const insertedEmoji = useRef(false);
+	const gifPicker = Dialog.useDialogHandle();
+	const pickedGif = useRef(false);
 
 	const isActive = useIsActivePost(postId);
 	const canSplit = usePostState(postId, (state, post) => isOverLimit(state, post.node), false);
@@ -118,15 +122,21 @@ export function PostFooter({ postId }: { postId: string }) {
 						<ButtonIcon icon={ImageIcon} size="lg" />
 					</Button>
 
-					<Button
-						{...roving.item('gif')}
-						label={m['view.composer.gif.a11y.select']()}
-						variant="ghost"
-						color="secondary"
-						shape="round"
-					>
-						<ButtonIcon icon={GifIcon} size="lg" />
-					</Button>
+					<Dialog.Trigger
+						handle={gifPicker}
+						render={
+							<Button
+								{...roving.item('gif')}
+								label={m['view.composer.gif.a11y.select']()}
+								aria-description={m['view.composer.gif.a11y.opensPicker']()}
+								variant="ghost"
+								color="secondary"
+								shape="round"
+							>
+								<ButtonIcon icon={GifIcon} size="lg" />
+							</Button>
+						}
+					/>
 
 					{gtPhone && (
 						<EmojiPicker.Trigger
@@ -212,6 +222,22 @@ export function PostFooter({ postId }: { postId: string }) {
 					<EmojiPicker.Picker />
 				</EmojiPicker.Root>
 			)}
+			<GifPickerDialog
+				handle={gifPicker}
+				onSelectGif={(gif) => {
+					attachGif(wg, postId, gif);
+					pickedGif.current = true;
+				}}
+				finalFocus={() => {
+					if (!pickedGif.current) {
+						return true;
+					}
+
+					pickedGif.current = false;
+					wg.focus();
+					return false;
+				}}
+			/>
 			{canLabel && (
 				<LabelsDialog
 					handle={labelsDialog}

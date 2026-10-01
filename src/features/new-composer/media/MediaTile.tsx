@@ -3,7 +3,6 @@ import { type CSSProperties, type ReactNode, useState } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import type { AttachmentKind } from '#/lib/media/read-attachment';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
@@ -35,7 +34,8 @@ import * as styles from './MediaTile.css';
 import { type UploadStatus, useUploadStatus } from './upload-status';
 import { VoicePlayer } from './VoicePlayer';
 
-const MEDIA_LABELS: Record<AttachmentKind, string> = {
+const MEDIA_LABELS: Record<PostMedia['kind'], string> = {
+	externalGif: 'GIF attachment',
 	gif: 'GIF attachment',
 	image: 'Image attachment',
 	video: 'Video attachment',
@@ -45,7 +45,8 @@ const MEDIA_LABELS: Record<AttachmentKind, string> = {
 const getMediaDragPreview = (item: PostMedia, url: string): ReactNode => {
 	switch (item.kind) {
 		case 'image':
-		case 'gif': {
+		case 'gif':
+		case 'externalGif': {
 			return <DragThumbnail src={url} />;
 		}
 		case 'video': {
@@ -59,7 +60,8 @@ const getMediaDragPreview = (item: PostMedia, url: string): ReactNode => {
 
 function MediaPreview({ item, url, tabbable }: { item: PostMedia; url: string; tabbable: boolean }) {
 	switch (item.kind) {
-		case 'image': {
+		case 'image':
+		case 'externalGif': {
 			return <img className={styles.media} src={url} alt="" />;
 		}
 		case 'voice': {
@@ -169,7 +171,6 @@ function AltButton({
 	);
 }
 
-// images use single or strip; other attachments use full-width stack rows.
 type MediaLayout = 'single' | 'stack' | 'strip';
 
 const getLayoutProps = (
@@ -230,7 +231,10 @@ export function MediaTile({
 	const image = item.kind === 'image' ? getEditedImage(item, edit) : null;
 	const url = image ? getBlobUrl(image.blob) : getMediaUrl(item);
 	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;
-	const layoutProps = getLayoutProps(layout, getAspectRatio(image?.dimensions));
+	const layoutProps = getLayoutProps(
+		layout,
+		item.kind === 'externalGif' ? item.aspectRatio : getAspectRatio(image?.dimensions),
+	);
 	const tabbable = roving.tabIndex === 0;
 
 	const upload = useUploadStatus(item);

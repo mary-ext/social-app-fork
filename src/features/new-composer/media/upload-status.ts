@@ -43,12 +43,13 @@ const getStatusAt = (elapsed: number): UploadStatus => {
  * simulates upload progress without uploading the attachment.
  *
  * @param item the media entry
- * @returns simulated status, or null for images
+ * @returns simulated status, or null for images and external GIFs
  */
 export const useUploadStatus = (item: PostMedia): UploadStatus | null => {
 	const [now, setNow] = useState(() => performance.now());
 
-	const status = item.kind === 'image' ? null : getStatusAt(now - getStartTime(item.id));
+	const status =
+		item.kind === 'image' || item.kind === 'externalGif' ? null : getStatusAt(now - getStartTime(item.id));
 	const isSettled = status === null || status.status === 'done';
 
 	useEffect(() => {

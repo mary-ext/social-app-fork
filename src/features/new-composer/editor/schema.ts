@@ -2,11 +2,12 @@ import { type ChangeSet, Leaf, type Node, Plot, type Pos } from 'wordgard/doc';
 import { GardState, Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
+import type { Gif } from '#/lib/media/external-gif/types';
 import type { Dimensions } from '#/lib/media/metadata';
 
 import { POST_ELEMENT } from '../elements';
 
-/** local attachment. the document and undo history retain its file for preview and restoration. */
+/** post attachment. retains local files or GIF provider metadata for preview and undo. */
 export type PostMedia =
 	| {
 			kind: 'image';
@@ -14,6 +15,13 @@ export type PostMedia =
 			file: File;
 			/** pixel size; undefined if unknown. */
 			dimensions: Dimensions | undefined;
+	  }
+	| {
+			kind: 'externalGif';
+			id: string;
+			gif: Gif;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
 	  }
 	| {
 			kind: 'gif' | 'video';
@@ -39,7 +47,7 @@ export type PostParam = {
 	 * surviving post's id.
 	 */
 	id: string;
-	/** grouped in order: images, GIFs, videos, voice notes. */
+	/** grouped in order: images, local GIFs, external GIFs, videos, voice notes. */
 	media: readonly PostMedia[];
 };
 
@@ -49,8 +57,9 @@ export type ImageMedia = Extract<PostMedia, { kind: 'image' }>;
 const MEDIA_KIND_RANK: Record<PostMedia['kind'], number> = {
 	image: 0,
 	gif: 1,
-	video: 2,
-	voice: 3,
+	externalGif: 2,
+	video: 3,
+	voice: 4,
 };
 
 // keep images contiguous for the carousel; mixed kinds can't publish together.

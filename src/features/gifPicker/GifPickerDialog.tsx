@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { type ComponentProps, lazy, Suspense } from 'react';
 
 import type { Gif } from '#/lib/media/external-gif/types';
 
@@ -12,10 +12,12 @@ const GifPickerDialogContent = lazy(() =>
 );
 
 export function GifPickerDialog({
+	finalFocus,
 	handle,
 	onClose,
 	onSelectGif,
 }: {
+	finalFocus?: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 	handle: Dialog.DialogHandle;
 	onClose?: () => void;
 	onSelectGif: (gif: Gif) => void;
@@ -29,7 +31,13 @@ export function GifPickerDialog({
 				}
 			}}
 		>
-			<Dialog.Popup height="fixed" label={m['features.gifPicker.title']()} scroll="body" size="wide">
+			<Dialog.Popup
+				finalFocus={finalFocus}
+				height="fixed"
+				label={m['features.gifPicker.title']()}
+				scroll="body"
+				size="wide"
+			>
 				<Suspense fallback={<CenteredSpinner fill label={m['common.status.loading']()} size="xl" />}>
 					<GifPickerDialogContent handle={handle} onSelectGif={onSelectGif} />
 				</Suspense>
