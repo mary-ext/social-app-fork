@@ -70,7 +70,7 @@ export const getTaintedLabels = (state: GardState, keys: readonly string[]): Sel
 };
 
 /**
- * replaces attachment content warnings. not undoable.
+ * replaces attachment content warnings.
  *
  * @param wg the editor
  * @param keys the attachments' keys, from {@link getAttachmentKeys}

@@ -2,6 +2,8 @@ import { type ChangeSet, Leaf, type Node, Plot, type Pos } from 'wordgard/doc';
 import { GardState, Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
+import type { Dimensions } from '#/lib/media/metadata';
+
 import { POST_ELEMENT } from '../elements';
 
 /** local attachment. the document and undo history retain its file for preview and restoration. */
@@ -10,8 +12,8 @@ export type PostMedia =
 			kind: 'image';
 			id: string;
 			file: File;
-			/** width / height; undefined if unknown. */
-			aspectRatio: number | undefined;
+			/** pixel size; undefined if unknown. */
+			dimensions: Dimensions | undefined;
 	  }
 	| {
 			kind: 'gif' | 'video';

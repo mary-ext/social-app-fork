@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
+import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
 import { space } from '#/styles/tokens.css';
 
@@ -12,6 +13,7 @@ import type { ImageMedia } from '../editor/schema';
 import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../elements';
 import { keepEditorFocus, type RovingFocus } from '../focus';
 import { RAIL_WIDTH } from '../layout';
+import { type EditableImage, getEditedImage, getImageEdits, isEditableImage } from './image-edits';
 import * as styles from './ImageGroup.css';
 import { MediaTile } from './MediaTile';
 
@@ -49,7 +51,7 @@ const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): voi
 /**
  * reorderable images using the feed's single-image or carousel layout.
  *
- * @param props post id, images starting at media index 0, and focus and alt text controls
+ * @param props post id, images starting at media index 0, and focus and editing controls
  * @returns the image group
  */
 export function ImageGroup({
@@ -57,13 +59,16 @@ export function ImageGroup({
 	images,
 	roving,
 	onEditAlt,
+	onEditImage,
 }: {
 	postId: string;
 	images: readonly ImageMedia[];
 	roving: RovingFocus<string>;
 	onEditAlt: (item: ImageMedia) => void;
+	onEditImage: (item: EditableImage) => void;
 }) {
 	const dropSlot = useEditorState((state) => getDropSlot(getMediaDrag(state), postId));
+	const edits = useEditorState(getImageEdits);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const lineRef = useRef<HTMLDivElement>(null);
 	const layout = images.length === 1 ? 'single' : 'strip';
@@ -90,6 +95,7 @@ export function ImageGroup({
 					layout={layout}
 					roving={roving.item(item.id)}
 					onEditAlt={() => onEditAlt(item)}
+					onEditImage={isEditableImage(item) ? () => onEditImage(item) : undefined}
 				/>
 			))}
 			{/* mounted only during drags, since carousel paging treats every child as a tile. */}
@@ -107,7 +113,9 @@ export function ImageGroup({
 			style={getStripStyle({
 				max: CAROUSEL_MAX_HEIGHT,
 				min: CAROUSEL_MIN_HEIGHT,
-				ratios: images.map((item) => item.aspectRatio),
+				ratios: images.map((item) => {
+					return getAspectRatio(getEditedImage(item, edits.get(item.id) ?? null).dimensions);
+				}),
 			})}
 		>
 			{group}

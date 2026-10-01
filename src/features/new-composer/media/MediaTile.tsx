@@ -5,8 +5,10 @@ import { clsx } from 'clsx';
 import type { Wordgard } from 'wordgard/editor';
 
 import type { AttachmentKind } from '#/lib/media/read-attachment';
+import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
+import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import { ProgressCircle } from '#/components/ProgressCircle';
 import { Spinner } from '#/components/Spinner';
 import { Button } from '#/components/web/Button';
@@ -30,6 +32,7 @@ import * as overlay from '../overlay.css';
 import { hasMediaAlt } from './alt-text';
 import { getMediaUrl } from './attachments';
 import { moveMediaDown, moveMediaUp, nudgeMedia, removeMedia } from './commands';
+import { getEditedImage, getImageEdit } from './image-edits';
 import * as styles from './MediaTile.css';
 import { type UploadStatus, useUploadStatus } from './upload-status';
 import { VoicePlayer } from './VoicePlayer';
@@ -173,11 +176,8 @@ type MediaLayout = 'single' | 'stack' | 'strip';
 
 const getLayoutProps = (
 	layout: MediaLayout,
-	item: PostMedia,
+	aspectRatio: number | undefined,
 ): { className?: string; style?: CSSProperties } => {
-	// single and strip layouts only hold images.
-	const aspectRatio = item.kind === 'image' ? item.aspectRatio : undefined;
-
 	switch (layout) {
 		case 'single': {
 			return {
@@ -216,7 +216,7 @@ const followMedia = (wg: Wordgard, mediaId: string) => {
 /**
  * attachment tile with drag and keyboard controls.
  *
- * @param props post id, attachment, media index, layout, and focus and alt text controls
+ * @param props attachment location, layout, and focus and editing controls
  * @returns the tile
  */
 export function MediaTile({
@@ -226,6 +226,7 @@ export function MediaTile({
 	layout,
 	roving,
 	onEditAlt,
+	onEditImage,
 }: {
 	postId: string;
 	index: number;
@@ -233,13 +234,17 @@ export function MediaTile({
 	layout: MediaLayout;
 	roving: RovingItemProps;
 	onEditAlt: () => void;
+	/** omit for attachments that can't be edited. */
+	onEditImage?: () => void;
 }) {
 	const { wg, dnd } = useComposer();
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
+	const edit = useEditorState((state) => getImageEdit(state, item.id));
 	const [isDragging, setIsDragging] = useState(false);
-	const url = getMediaUrl(item);
+	const image = item.kind === 'image' ? getEditedImage(item, edit) : null;
+	const url = image ? getBlobUrl(image.blob) : getMediaUrl(item);
 	const controls = item.kind === 'voice' ? INLINE_CONTROLS : OVERLAY_CONTROLS;
-	const layoutProps = getLayoutProps(layout, item);
+	const layoutProps = getLayoutProps(layout, getAspectRatio(image?.dimensions));
 	const tabbable = roving.tabIndex === 0;
 
 	const upload = useUploadStatus(item);
@@ -349,13 +354,13 @@ export function MediaTile({
 			)}
 
 			<div className={controls.actions} onMouseDown={keepEditorFocus}>
-				{item.kind === 'image' && (
-					// TODO: open the image editor.
+				{onEditImage && (
 					<Button
 						label={m['view.composer.gallery.action.edit']()}
 						className={overlay.overlayButton}
 						variant="bare"
 						tabIndex={tabbable ? undefined : -1}
+						onClick={onEditImage}
 					>
 						<PencilIcon className={overlay.overlayIcon} />
 					</Button>

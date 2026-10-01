@@ -1,7 +1,12 @@
+import { useState } from 'react';
+
+import type { ComposerImage } from '#/lib/media/composer-image';
+
 import { getSelectionErrorMessage } from '#/features/composer/media/attachment-messages';
 import { type AltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
 
 import * as Dialog from '#/components/Dialog';
+import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { Text } from '#/components/Text';
 
 import { useEditor, useIsActivePost, usePostState } from '../context';
@@ -9,6 +14,13 @@ import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } f
 import { escapeToEditor, useDialogFocusReturn, useRovingFocus } from '../focus';
 import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
+import {
+	type EditableImage,
+	getEditedImage,
+	getImageEdit,
+	saveComposerImage,
+	toComposerImage,
+} from './image-edits';
 import { ImageGroup } from './ImageGroup';
 import * as styles from './MediaRow.css';
 import { MediaTile } from './MediaTile';
@@ -33,6 +45,9 @@ export function MediaRow({ postId }: { postId: string }) {
 	);
 
 	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
+	const editDialog = Dialog.useDialogHandle();
+	// retain the image through the dialog's exit animation.
+	const [editing, setEditing] = useState<ComposerImage>();
 	const focusReturn = useDialogFocusReturn();
 
 	if (media.length === 0) {
@@ -54,7 +69,7 @@ export function MediaRow({ postId }: { postId: string }) {
 		focusReturn.capture();
 		altDialog.openWithPayload({
 			mediaId: item.id,
-			blob: item.file,
+			blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
 			alt: getMediaAlt(state, item.id),
 			context: {
 				siblingAlts: images
@@ -63,6 +78,12 @@ export function MediaRow({ postId }: { postId: string }) {
 				text: found ? getPostText(found.node) : '',
 			},
 		});
+	};
+
+	const editImage = (item: EditableImage) => {
+		focusReturn.capture();
+		setEditing(toComposerImage(item, getImageEdit(wg.state, item.id)));
+		editDialog.open(null);
 	};
 
 	return (
@@ -75,7 +96,13 @@ export function MediaRow({ postId }: { postId: string }) {
 				}}
 			>
 				{images.length > 0 && (
-					<ImageGroup postId={postId} images={images} roving={roving} onEditAlt={editAlt} />
+					<ImageGroup
+						postId={postId}
+						images={images}
+						roving={roving}
+						onEditAlt={editAlt}
+						onEditImage={editImage}
+					/>
 				)}
 
 				{others.map((item, index) => (
@@ -101,6 +128,12 @@ export function MediaRow({ postId }: { postId: string }) {
 			<ImageAltTextDialog
 				handle={altDialog}
 				onSave={(alt, { mediaId }) => setMediaAlt(wg, mediaId, alt)}
+				finalFocus={focusReturn.finalFocus}
+			/>
+			<EditImageDialog
+				handle={editDialog}
+				image={editing}
+				onChange={(image) => saveComposerImage(wg, image)}
 				finalFocus={focusReturn.finalFocus}
 			/>
 		</>

@@ -3,7 +3,7 @@ import type { GardState } from 'wordgard/state';
 
 import { defineTaint } from '../editor/taints';
 
-/** alt text keyed by media id. */
+/** alt text keyed by media ID. */
 export const altTaint = defineTaint<string>({
 	isEmpty: (alt) => alt === '',
 	isSame: (a, b) => a === b,
@@ -32,7 +32,7 @@ export const hasMediaAlt = (state: GardState, mediaId: string): boolean => {
 };
 
 /**
- * replaces an attachment's alt text. not undoable.
+ * replaces an attachment's alt text.
  *
  * @param wg the editor
  * @param mediaId the media's id
