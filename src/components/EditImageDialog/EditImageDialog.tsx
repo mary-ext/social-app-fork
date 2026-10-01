@@ -1,4 +1,4 @@
-import { type ComponentProps, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 
 import type { ComposerImage } from '#/lib/media/composer-image';
 
@@ -15,8 +15,6 @@ export type EditImageDialogProps = {
 	onChange: (next: ComposerImage) => void;
 	aspectRatio?: number;
 	circularCrop?: boolean;
-	/** focus target or callback on close; defaults to the opening element. */
-	finalFocus?: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 };
 
 const EditImageDialogInner = lazy(() =>
@@ -26,7 +24,7 @@ const EditImageDialogInner = lazy(() =>
 export function EditImageDialog(props: EditImageDialogProps) {
 	return (
 		<Dialog.Root disablePointerDismissal handle={props.handle}>
-			<Dialog.Popup scroll="body" finalFocus={props.finalFocus}>
+			<Dialog.Popup scroll="body">
 				<Suspense
 					fallback={
 						<>

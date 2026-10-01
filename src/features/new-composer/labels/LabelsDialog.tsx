@@ -1,4 +1,4 @@
-import { type ComponentProps, useState } from 'react';
+import { useState } from 'react';
 
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { RadioGroup } from '@base-ui/react/radio-group';
@@ -59,22 +59,19 @@ export type LabelsTarget = {
  *
  * @param props.handle the dialog's handle
  * @param props.onSave receives replacement labels and the original opening payload
- * @param props.finalFocus focus target or callback used when the dialog closes
  * @returns the dialog
  */
 export const LabelsDialog = <T extends LabelsTarget>({
 	handle,
 	onSave,
-	finalFocus,
 }: {
 	handle: Dialog.DialogHandle<T>;
 	onSave: (labels: SelfLabel[], target: T) => void;
-	finalFocus: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 }) => {
 	return (
 		<Dialog.Root handle={handle}>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" size="medium" finalFocus={finalFocus}>
+				<Dialog.Popup scroll="body" size="medium">
 					{payload && (
 						<LabelsForm
 							labels={payload.labels}

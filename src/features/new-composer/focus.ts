@@ -1,9 +1,7 @@
-import { type FocusEvent, type KeyboardEvent, type MouseEvent, useRef, useState } from 'react';
+import { type FocusEvent, type KeyboardEvent, type MouseEvent, useState } from 'react';
 
 import { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
-
-import { useEditor } from './context';
 
 // #region editor focus
 
@@ -32,51 +30,6 @@ export const escapeToEditor = (wg: Wordgard, event: KeyboardEvent) => {
 	event.preventDefault();
 	event.stopPropagation();
 	wg.focus();
-};
-
-/** callbacks for restoring editor focus after a dialog closes. */
-export type DialogFocusReturn = {
-	/** records editor focus; call immediately before opening the dialog. */
-	capture: () => void;
-	/**
-	 * pass to the dialog popup's `finalFocus`.
-	 *
-	 * @returns false after restoring editor focus, or true to use default focus handling
-	 */
-	finalFocus: () => boolean;
-	/**
-	 * pass to the picker's `nextFocusRef`.
-	 *
-	 * @returns the editor if it had focus before opening, or null to use default focus handling
-	 */
-	target: () => Wordgard | null;
-};
-
-/**
- * restores editor focus on dialog close if the editor had focus before opening.
- *
- * @returns focus capture and dialog close callbacks
- */
-export const useDialogFocusReturn = (): DialogFocusReturn => {
-	const wg = useEditor();
-	const editorHadFocus = useRef(false);
-
-	return {
-		capture() {
-			editorHadFocus.current = wg.hasFocus;
-		},
-		finalFocus() {
-			if (!editorHadFocus.current) {
-				return true;
-			}
-			// restore the editor's selection, not the DOM selection left by the dialog.
-			wg.focus();
-			return false;
-		},
-		target() {
-			return editorHadFocus.current ? wg : null;
-		},
-	};
 };
 
 /**

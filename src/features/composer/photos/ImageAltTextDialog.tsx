@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, useId, useRef, useState } from 'react';
+import { type ReactNode, useId, useRef, useState } from 'react';
 
 import { MAX_ALT_TEXT } from '#/lib/constants/composer';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -32,21 +32,15 @@ type Props<T extends AltTextTarget> = {
 	handle: Dialog.DialogHandle<T>;
 	/** receives trimmed alt text and the opening payload on save. */
 	onSave: (alt: string, target: T) => void;
-	/** focus target or callback on close; defaults to the opening element. */
-	finalFocus?: ComponentProps<typeof Dialog.Popup>['finalFocus'];
 };
 
-export const ImageAltTextDialog = <T extends AltTextTarget>({
-	handle,
-	onSave,
-	finalFocus,
-}: Props<T>): ReactNode => {
+export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: Props<T>): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'} finalFocus={finalFocus}>
+				<Dialog.Popup scroll="body" size={gtMobile ? 'xwide' : 'default'}>
 					{payload && (
 						<DialogInner
 							target={payload}
