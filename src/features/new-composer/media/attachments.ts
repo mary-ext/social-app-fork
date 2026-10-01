@@ -1,6 +1,6 @@
+import type { Gif } from '#/lib/media/external-gif/types';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { type Attachment, type AttachmentRejection, readAttachment } from '#/lib/media/read-attachment';
-import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
@@ -16,7 +16,7 @@ import type { PostMedia } from '../editor/schema';
  * @returns the type or count violation, or null
  */
 export const getMediaProblem = (media: readonly PostMedia[]): SelectionError | null => {
-	// GIFs and voice notes also publish as video embeds.
+	// all non-image attachments need the post's only media embed.
 	const images = media.filter((item) => item.kind === 'image').length;
 	const videos = media.length - images;
 
@@ -61,6 +61,22 @@ export const createMedia = async (
 	return { media: await Promise.all(media), rejections };
 };
 
+/**
+ * creates an external GIF attachment.
+ *
+ * @param gif a GIF picker result
+ * @returns an attachment with a new id
+ */
+export const createGifMedia = (gif: Gif): PostMedia => {
+	const [width, height] = gif.media_formats.gif.dims;
+	return {
+		id: crypto.randomUUID(),
+		kind: 'externalGif',
+		gif,
+		aspectRatio: getAspectRatio({ width, height }),
+	};
+};
+
 const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedia> => {
 	const id = crypto.randomUUID();
 	switch (attachment.type) {
@@ -102,14 +118,4 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 
 const toSeconds = (ms: number | null): number | undefined => {
 	return ms === null ? undefined : ms / 1000;
-};
-
-/**
- * returns a cached preview URL for an attachment.
- *
- * @param item the media entry
- * @returns an object URL valid for the file's lifetime
- */
-export const getMediaUrl = (item: PostMedia): string => {
-	return getBlobUrl(item.file);
 };

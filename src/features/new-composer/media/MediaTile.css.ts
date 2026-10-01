@@ -1,15 +1,9 @@
-import { createVar, style } from '@vanilla-extract/css';
-
-import * as strip from '#/components/ImageEmbed/carousel/strip.css';
-import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { hover } from '#/styles/interaction';
-import { borderRadius, fontWeight, space } from '#/styles/tokens.css';
+import { borderRadius } from '#/styles/tokens.css';
 
 import { DRAGGING_OPACITY } from '../layout';
-import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
-import { revealOnHover } from '../reveal.css';
 
 export const FOCUS_RING_EXTENT = 4;
 
@@ -28,113 +22,6 @@ export const tile = style({
 	},
 });
 
-export const ratioVar = createVar();
-
-// preserve the aspect ratio within the feed's height limit.
-export const single = style({
-	borderRadius: borderRadius.md,
-	aspectRatio: ratioVar,
-	width: `min(100%, calc(${MAX_MEDIA_HEIGHT}px * ${ratioVar}))`,
-});
-
-export const stripTile = style([strip.tile, { borderRadius: borderRadius.md }]);
-
-// keep badge and button changes from resizing the waveform.
-export const voice = style({
-	display: 'grid',
-	gridTemplateAreas: '"player player" "status actions"',
-	gridTemplateColumns: '1fr auto',
-	alignItems: 'center',
-	gap: space.sm,
-	padding: space.sm,
-});
-
 export const dragging = style({
 	opacity: DRAGGING_OPACITY,
 });
-
-export const media = style({
-	display: 'block',
-	width: '100%',
-	height: '100%',
-	objectFit: 'cover',
-	pointerEvents: 'none',
-});
-
-export const frame = style({
-	display: 'block',
-	width: '100%',
-	maxHeight: 360,
-	// use 16:9 until intrinsic dimensions are available.
-	aspectRatio: 'auto 16 / 9',
-	objectFit: 'contain',
-	pointerEvents: 'none',
-});
-
-const badge = style({
-	display: 'flex',
-	alignItems: 'center',
-	boxSizing: 'border-box',
-	borderRadius: 999,
-	height: OVERLAY_SIZE,
-	fontSize: 12,
-	fontWeight: fontWeight.semiBold,
-	lineHeight: 1,
-});
-
-const overlayBadge = style([
-	badge,
-	overlay,
-	{
-		position: 'absolute',
-		bottom: space.sm,
-		left: space.sm,
-	},
-]);
-
-const inlineBadge = style([
-	badge,
-	{
-		gridArea: 'status',
-		justifySelf: 'start',
-		color: vars.palette.contrast_700,
-	},
-]);
-
-const inlineControl = style({
-	backgroundColor: 'transparent',
-	selectors: {
-		[hover()]: { backgroundColor: vars.palette.contrast_100 },
-	},
-});
-
-const altChipShape = style({ gap: space.xs, padding: '0 11px 0 8px' });
-
-export const altChip = style([overlayBadge, altChipShape]);
-
-export const inlineAltChip = style([inlineBadge, inlineControl, altChipShape]);
-
-export const altCheck = style({
-	color: vars.palette.positive_500,
-});
-
-const uploadShape = style({ gap: 6, padding: '0 11px 0 5px', fontVariantNumeric: 'tabular-nums' });
-
-export const uploadBadge = style([overlayBadge, uploadShape]);
-
-export const inlineUploadStatus = style([inlineBadge, uploadShape]);
-
-export const inlineButton = style([inlineControl, roundButton, { color: vars.palette.contrast_700 }]);
-
-const actions = style([revealOnHover, { display: 'flex', gap: 6 }]);
-
-export const tileActions = style([
-	actions,
-	{
-		position: 'absolute',
-		top: space.sm,
-		right: space.sm,
-	},
-]);
-
-export const inlineTileActions = style([actions, { gridArea: 'actions' }]);

@@ -2,11 +2,12 @@ import { type ChangeSet, Leaf, type Node, Plot, type Pos } from 'wordgard/doc';
 import { GardState, Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
+import type { Gif } from '#/lib/media/external-gif/types';
 import type { Dimensions } from '#/lib/media/metadata';
 
 import { POST_ELEMENT } from '../elements';
 
-/** local attachment. the document and undo history retain its file for preview and restoration. */
+/** post attachment. retains local files or GIF provider metadata for preview and undo. */
 export type PostMedia =
 	| {
 			kind: 'image';
@@ -16,7 +17,23 @@ export type PostMedia =
 			dimensions: Dimensions | undefined;
 	  }
 	| {
-			kind: 'gif' | 'video';
+			kind: 'externalGif';
+			id: string;
+			gif: Gif;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
+	  }
+	| {
+			kind: 'gif';
+			id: string;
+			file: File;
+			/** width / height; undefined if unknown. */
+			aspectRatio: number | undefined;
+			/** seconds; undefined if unknown. */
+			duration: number | undefined;
+	  }
+	| {
+			kind: 'video';
 			id: string;
 			file: File;
 			/** width / height; undefined if unknown. */
@@ -39,18 +56,21 @@ export type PostParam = {
 	 * surviving post's id.
 	 */
 	id: string;
-	/** grouped in order: images, GIFs, videos, voice notes. */
+	/** grouped in order: images, local GIFs, external GIFs, videos, voice notes. */
 	media: readonly PostMedia[];
 };
 
 /** a local image attachment. */
 export type ImageMedia = Extract<PostMedia, { kind: 'image' }>;
 
+export type OtherMedia = Exclude<PostMedia, ImageMedia>;
+
 const MEDIA_KIND_RANK: Record<PostMedia['kind'], number> = {
 	image: 0,
 	gif: 1,
-	video: 2,
-	voice: 3,
+	externalGif: 2,
+	video: 3,
+	voice: 4,
 };
 
 // keep images contiguous for the carousel; mixed kinds can't publish together.
@@ -61,12 +81,13 @@ const sortMedia = (media: readonly PostMedia[]): PostMedia[] => {
 /**
  * separates a post's images from its other attachments.
  *
- * @param media the post's media; all images must precede other attachments
+ * @param media the post's media
  * @returns images and other attachments, each in their original order
  */
-export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[]; others: PostMedia[] } => {
+export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[]; others: OtherMedia[] } => {
 	const images = media.filter((item): item is ImageMedia => item.kind === 'image');
-	return { images, others: media.slice(images.length) };
+	const others = media.filter((item): item is OtherMedia => item.kind !== 'image');
+	return { images, others };
 };
 
 /** a single post in the thread. holds one paragraph per line of the post's text. */

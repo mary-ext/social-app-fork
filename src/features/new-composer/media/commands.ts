@@ -3,6 +3,8 @@ import { reorder } from '@oomfware/tug/reorder';
 import type { ChangeSet } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
 
+import type { Gif } from '#/lib/media/external-gif/types';
+
 import { appendPost } from '../commands/append-post';
 import { ISOLATE_HISTORY } from '../editor/history';
 import {
@@ -15,7 +17,7 @@ import {
 	type ThreadPost,
 } from '../editor/schema';
 import { findActivePost } from '../editor/selection';
-import { createMedia } from './attachments';
+import { createGifMedia, createMedia } from './attachments';
 
 /**
  * classifies and validates files, then appends the accepted ones to a post.
@@ -27,6 +29,17 @@ import { createMedia } from './attachments';
 export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
 	const { media } = await createMedia(files);
 	addMediaTo(wg, postId, media);
+};
+
+/**
+ * appends an external GIF to a post.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ * @param gif a GIF picker result
+ */
+export const attachGif = (wg: Wordgard, postId: string, gif: Gif): void => {
+	addMediaTo(wg, postId, [createGifMedia(gif)]);
 };
 
 /**

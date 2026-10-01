@@ -1,0 +1,13 @@
+diff --git a/dist/editor.js b/dist/editor.js
+index 04df810151c72f62dafa53f7f19e8d66853a55fb..fc620aec5bf69f4ea08c94a8aaeebd7841fa6d1e 100644
+--- a/dist/editor.js
++++ b/dist/editor.js
+@@ -669,7 +669,7 @@ class PointIterator {
+     goto(pos, inclusive) {
+         let i = findAbove(this.set.positions, 0, pos - 1);
+         if (!inclusive) {
+-            while (i < this.set.values.length && this.set.values[i].side < 1000000000)
++            while (i < this.set.values.length && this.set.positions[i] == pos && this.set.values[i].side < 1000000000)
+                 i++;
+         }
+         this.fill(i);
