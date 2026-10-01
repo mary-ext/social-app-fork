@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef } from 'react';
+import { type FocusEvent, useLayoutEffect, useRef } from 'react';
 
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { getStripStyle } from '#/components/ImageEmbed/carousel/strip';
+import { scrollToTile } from '#/components/ImageEmbed/carousel/tiles';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
 import { space } from '#/styles/tokens.css';
@@ -48,6 +49,16 @@ const placeDropLine = (group: HTMLElement, line: HTMLElement, slot: number): voi
 	}
 };
 
+const onStripFocus = (event: FocusEvent<HTMLDivElement>) => {
+	const el = event.currentTarget;
+	const tile = event.target;
+	// mandatory snapping can undo native focus scrolling.
+	// leave pointer-focused tiles in place for dragging.
+	if (tile instanceof HTMLElement && tile.parentElement === el && tile.matches(':focus-visible')) {
+		scrollToTile({ el, scrollPaddingLeft: RAIL_WIDTH, tile });
+	}
+};
+
 /**
  * reorderable images using the feed's single-image or carousel layout.
  *
@@ -83,8 +94,10 @@ export function ImageGroup({
 	const group = (
 		<div
 			ref={scrollRef}
+			tabIndex={layout === 'strip' ? -1 : undefined}
 			className={layout === 'single' ? styles.single : styles.stripScroll}
 			{...{ [IMAGE_GROUP_ATTR]: '' }}
+			onFocus={layout === 'strip' ? onStripFocus : undefined}
 		>
 			{images.map((item, index) => (
 				<MediaTile

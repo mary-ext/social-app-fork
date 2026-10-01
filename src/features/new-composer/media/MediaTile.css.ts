@@ -11,6 +11,10 @@ import { DRAGGING_OPACITY } from '../layout';
 import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
 import { revealOnHover } from '../reveal.css';
 
+export const FOCUS_RING_EXTENT = 4;
+
+const FOCUS_RING_OFFSET = 2;
+
 export const tile = style({
 	position: 'relative',
 	borderRadius: borderRadius.sm,
@@ -18,8 +22,8 @@ export const tile = style({
 	backgroundColor: vars.palette.contrast_50,
 	selectors: {
 		'&:focus-visible': {
-			outline: `2px solid ${vars.palette.primary_500}`,
-			outlineOffset: 2,
+			outline: `${FOCUS_RING_EXTENT - FOCUS_RING_OFFSET}px solid ${vars.palette.primary_500}`,
+			outlineOffset: FOCUS_RING_OFFSET,
 		},
 	},
 });

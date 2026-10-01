@@ -22,6 +22,7 @@ import { activePost } from './editor/selection';
 import { embedSession } from './embeds/embed-session';
 import { restoreSelectionOnFocus } from './focus';
 import { labelTaint } from './labels/commands';
+import { languageField } from './languages/commands';
 import { altTaint } from './media/alt-text';
 import { imageEditTaint } from './media/image-edits';
 import { createStore } from './store';
@@ -52,6 +53,7 @@ export const createComposer = (): Composer => {
 		altTaint.field,
 		imageEditTaint.field,
 		labelTaint.field,
+		languageField,
 		threadDecorations,
 		activePost,
 		restoreSelectionOnFocus(),

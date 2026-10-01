@@ -39,6 +39,7 @@ export function Popup({
 	side = 'bottom',
 	minWidth,
 	container,
+	finalFocus,
 }: {
 	children: ReactNode;
 	/** Accessible name for the menu. */
@@ -49,6 +50,8 @@ export function Popup({
 	minWidth?: number;
 	/** portal target, such as the fullscreen container. */
 	container?: RefObject<HTMLElement | null>;
+	/** focus target on close; defaults to the trigger. `false` skips focus restoration. */
+	finalFocus?: BaseMenu.Popup.Props['finalFocus'];
 }) {
 	return (
 		<BaseMenu.Portal className={styles.portal} container={container}>
@@ -56,6 +59,7 @@ export function Popup({
 				<BaseMenu.Popup
 					aria-label={label}
 					className={styles.popup}
+					finalFocus={finalFocus}
 					style={
 						minWidth !== undefined ? assignInlineVars({ [styles.minWidthVar]: `${minWidth}px` }) : undefined
 					}

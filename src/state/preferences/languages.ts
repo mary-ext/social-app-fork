@@ -76,11 +76,7 @@ export function setContentLanguages(code2s: string[]) {
  * @param commaSeparatedLangCodes comma-separated BCP-47 language codes
  */
 export function setPostLanguage(commaSeparatedLangCodes: string) {
-	// canonicalize the code order so set-equal selections (e.g. "en,ja" vs "ja,en") dedupe in history
-	// and compare consistently everywhere downstream
-	// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `toPostLanguages` just returned
-	const postLanguage = toPostLanguages(commaSeparatedLangCodes).sort().join(',');
-	device.set(['postLanguage'], postLanguage);
+	device.set(['postLanguage'], joinPostLanguages(toPostLanguages(commaSeparatedLangCodes)));
 }
 
 /**
@@ -109,4 +105,14 @@ export function getContentLanguages() {
  */
 export function toPostLanguages(postLanguage: string): string[] {
 	return definite(postLanguage.split(','));
+}
+
+/**
+ * joins post language codes in sorted order for consistent comparisons.
+ *
+ * @param languages BCP-47 language codes
+ * @returns comma-separated BCP-47 language codes
+ */
+export function joinPostLanguages(languages: readonly string[]): string {
+	return languages.toSorted().join(',');
 }

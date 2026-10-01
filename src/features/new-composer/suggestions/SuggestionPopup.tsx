@@ -28,6 +28,8 @@ import {
 } from './autocomplete';
 import * as styles from './SuggestionPopup.css';
 
+const SPINNER_DELAY_MS = 200;
+
 const getCompletionKey = (completion: ActiveCompletion) => {
 	return `${completion.type}:${completion.from}:${completion.query}`;
 };
@@ -44,23 +46,26 @@ export function Suggestions() {
 
 	// keep dismissed suggestions closed until the query changes.
 	const [dismissed, setDismissed] = useState<string | null>(null);
-	// active descendant announced while focus stays in the editor.
-	const [activeOption, setActiveOption] = useState<string | null>(null);
 
 	let open: ActiveCompletion | null = null;
-	if (completion && completion.query !== '' && getCompletionKey(completion) !== dismissed) {
+	if (
+		completion &&
+		// hashtags have no suggestion source yet.
+		completion.type !== 'tag' &&
+		completion.query !== '' &&
+		getCompletionKey(completion) !== dismissed
+	) {
 		open = completion;
 	}
 
-	// update placement and ARIA state together so closing the popup clears both.
+	// clear on close; unmount cleanup may run after the editor is detached.
 	useEffect(() => {
-		markSuggestionState(wg, {
-			anchor: open ? open.from : null,
-			activeOption: open ? activeOption : null,
-		});
-	}, [wg, open, activeOption]);
+		if (!open) {
+			markSuggestionState(wg, { anchor: null, activeOption: null });
+		}
+	}, [wg, open]);
 
-	if (!open || !host) {
+	if (!open) {
 		return null;
 	}
 
@@ -70,7 +75,6 @@ export function Suggestions() {
 			host={host}
 			keyHandlerRef={suggestionKeys}
 			onDismiss={() => setDismissed(getCompletionKey(open))}
-			onHighlightChange={setActiveOption}
 		/>
 	);
 }
@@ -81,15 +85,12 @@ function SuggestionPopup({
 	host,
 	keyHandlerRef,
 	onDismiss,
-	onHighlightChange,
 }: {
 	completion: ActiveCompletion;
-	/** portal target positioned by the editor. */
-	host: HTMLElement;
+	/** editor-positioned portal target; null until anchored. */
+	host: HTMLElement | null;
 	keyHandlerRef: RefObject<SuggestionKeyHandler>;
 	onDismiss: () => void;
-	/** reports the highlighted row's DOM id, or null when none. */
-	onHighlightChange: (optionId: string | null) => void;
 }) {
 	const wg = useEditor();
 	const { items, isFetching } = useAutocomplete({
@@ -104,7 +105,23 @@ function SuggestionPopup({
 		0,
 	);
 
-	const isOpen = items.length > 0 || isFetching;
+	// delay the spinner to avoid flicker on fast responses.
+	const pendingQuery = isFetching && items.length === 0 ? completion.query : null;
+	const [slowQuery, setSlowQuery] = useState<string | null>(null);
+	useEffect(() => {
+		if (pendingQuery === null) {
+			return;
+		}
+
+		const timer = setTimeout(() => setSlowQuery(pendingQuery), SPINNER_DELAY_MS);
+		return () => {
+			clearTimeout(timer);
+			// reset the delay for refetches of the same query.
+			setSlowQuery(null);
+		};
+	}, [pendingQuery]);
+
+	const isOpen = items.length > 0 || (pendingQuery !== null && pendingQuery === slowQuery);
 	// useAutocomplete retains the previous query's results while fetching.
 	const isStale = isFetching;
 
@@ -114,10 +131,13 @@ function SuggestionPopup({
 
 	const listRef = useRef<HTMLDivElement>(null);
 
-	// the parent sets and clears the editor's active descendant, including on popup unmount.
+	// leave aria-controls unset when the listbox is hidden.
 	useEffect(() => {
-		onHighlightChange(isOpen && items.length > 0 ? getSuggestionOptionId(index) : null);
-	}, [onHighlightChange, isOpen, index, items.length]);
+		markSuggestionState(wg, {
+			anchor: isOpen ? completion.from : null,
+			activeOption: isOpen && items.length > 0 ? getSuggestionOptionId(index) : null,
+		});
+	}, [wg, isOpen, completion.from, index, items.length]);
 
 	// focus stays in the editor, so scroll the highlighted row manually.
 	useLayoutEffect(() => {
@@ -168,7 +188,7 @@ function SuggestionPopup({
 		};
 	});
 
-	if (!isOpen) {
+	if (!isOpen || !host) {
 		return null;
 	}
 

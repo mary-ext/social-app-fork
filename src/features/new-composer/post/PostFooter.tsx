@@ -1,10 +1,13 @@
+import { useRef } from 'react';
+
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { openMediaPicker } from '#/lib/media/picker';
 
-import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
+import { toPostLanguages } from '#/state/preferences/languages';
 
 import * as Dialog from '#/components/Dialog';
 import * as EmojiPicker from '#/components/EmojiPicker';
+import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import EmojiIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
@@ -19,7 +22,7 @@ import { autoSplitPost } from '../commands/split-post';
 import { useEditor, useIsActivePost, usePostState } from '../context';
 import { isOverLimit } from '../editor/post-info';
 import { findPostById } from '../editor/schema';
-import { escapeToEditor, keepEditorFocus, useDialogFocusReturn, useRovingFocus } from '../focus';
+import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
 import {
 	canLabelPost,
 	getAttachmentKeys,
@@ -28,6 +31,7 @@ import {
 	setAttachmentLabels,
 } from '../labels/commands';
 import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
+import { LanguagePopups, useLanguagePicker } from '../languages/LanguagePicker';
 import { attachFiles } from '../media/commands';
 import { CharCount } from './CharCount';
 import * as styles from './PostFooter.css';
@@ -43,10 +47,11 @@ type LabelsPayload = LabelsTarget & { keys: readonly string[] };
 export function PostFooter({ postId }: { postId: string }) {
 	const { gtPhone } = useBreakpoints();
 	const wg = useEditor();
-	const languages = toPostLanguages(usePostLanguage());
+	const languagePicker = useLanguagePicker(postId);
+	const languageTrigger = useRef<HTMLButtonElement>(null);
 	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
 	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
-	const focusReturn = useDialogFocusReturn();
+	const insertedEmoji = useRef(false);
 
 	const isActive = useIsActivePost(postId);
 	const canSplit = usePostState(postId, (state, post) => isOverLimit(state, post.node), false);
@@ -73,7 +78,6 @@ export function PostFooter({ postId }: { postId: string }) {
 		}
 
 		const keys = getAttachmentKeys(state, post.node);
-		focusReturn.capture();
 		labelsDialog.openWithPayload({ keys, labels: getTaintedLabels(state, keys) });
 	};
 
@@ -96,8 +100,19 @@ export function PostFooter({ postId }: { postId: string }) {
 						variant="ghost"
 						color="secondary"
 						shape="round"
-						onClick={() => {
-							void openMediaPicker().then((files) => attachFiles(wg, postId, files));
+						onClick={(event) => {
+							const button = event.currentTarget;
+							void openMediaPicker().then(async (files) => {
+								if (files.length === 0) {
+									return;
+								}
+
+								await attachFiles(wg, postId, files);
+								// leave focus alone if it moved elsewhere while the files loaded.
+								if (document.activeElement === button) {
+									wg.focus();
+								}
+							});
 						}}
 					>
 						<ButtonIcon icon={ImageIcon} size="lg" />
@@ -123,7 +138,6 @@ export function PostFooter({ postId }: { postId: string }) {
 									variant="ghost"
 									color="secondary"
 									shape="round"
-									onClick={focusReturn.capture}
 								>
 									<ButtonIcon icon={EmojiIcon} size="lg" />
 								</Button>
@@ -162,15 +176,21 @@ export function PostFooter({ postId }: { postId: string }) {
 						</Button>
 					)}
 
-					<Button
-						{...roving.item('language')}
-						className={styles.language}
-						label={m['view.composer.language.selectPost']()}
-						variant="ghost"
-						color="secondary"
-					>
-						<ButtonText size="sm">{languages.join(', ')}</ButtonText>
-					</Button>
+					<Menu.Trigger
+						handle={languagePicker.menu}
+						render={
+							<Button
+								{...roving.item('language')}
+								ref={languageTrigger}
+								className={styles.language}
+								label={m['view.composer.language.selectPost']()}
+								variant="ghost"
+								color="secondary"
+							>
+								<ButtonText size="sm">{toPostLanguages(languagePicker.language).join(', ')}</ButtonText>
+							</Button>
+						}
+					/>
 					<CharCount postId={postId} />
 				</div>
 			</div>
@@ -179,8 +199,15 @@ export function PostFooter({ postId }: { postId: string }) {
 			{gtPhone && (
 				<EmojiPicker.Root
 					handle={emojiPicker}
-					onEmojiSelect={(emoji) => insertTextInPost(wg, postId, emoji.native)}
-					nextFocusRef={focusReturn.target}
+					onEmojiSelect={(emoji) => {
+						insertTextInPost(wg, postId, emoji.native);
+						insertedEmoji.current = true;
+					}}
+					nextFocusRef={() => {
+						const inserted = insertedEmoji.current;
+						insertedEmoji.current = false;
+						return inserted ? wg : null;
+					}}
 				>
 					<EmojiPicker.Picker />
 				</EmojiPicker.Root>
@@ -189,9 +216,9 @@ export function PostFooter({ postId }: { postId: string }) {
 				<LabelsDialog
 					handle={labelsDialog}
 					onSave={(labels, { keys }) => setAttachmentLabels(wg, keys, labels)}
-					finalFocus={focusReturn.finalFocus}
 				/>
 			)}
+			<LanguagePopups picker={languagePicker} trigger={languageTrigger} />
 		</>
 	);
 }
