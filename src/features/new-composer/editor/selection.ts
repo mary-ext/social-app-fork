@@ -41,11 +41,23 @@ export const getCaretContext = (state: GardState): CaretContext | null => {
 	return { block, head: sel.head.pos, post };
 };
 
+/**
+ * finds the post containing the whole selection.
+ *
+ * @param state the editor state
+ * @returns the post, or null when the selection spans posts or lies outside any post
+ */
+export const findSelectedPost = (state: GardState): Pos.Plot | null => {
+	const { sel } = state;
+	const post = findPost(sel.from);
+	return post && findPost(sel.to)?.before === post.before ? post : null;
+};
+
 /** selects the current post's text; returns false when already selected so select-all can continue. */
 export const selectPost: Command = (wg) => {
 	const { sel } = wg.state;
-	const post = findPost(sel.from);
-	if (!post || findPost(sel.to)?.before !== post.before) {
+	const post = findSelectedPost(wg.state);
+	if (!post) {
 		return false;
 	}
 

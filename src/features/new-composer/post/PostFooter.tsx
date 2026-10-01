@@ -1,8 +1,10 @@
+import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 import { openMediaPicker } from '#/lib/media/picker';
 
 import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
 
 import * as Dialog from '#/components/Dialog';
+import * as EmojiPicker from '#/components/EmojiPicker';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import EmojiIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
@@ -12,6 +14,7 @@ import GifIcon from '#/icons/central/GifSquare_round_outlined_radius1_stroke2.sv
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
+import { insertTextInPost } from '../commands/insert-text';
 import { autoSplitPost } from '../commands/split-post';
 import { useEditor, useIsActivePost, usePostState } from '../context';
 import { isOverLimit } from '../editor/post-info';
@@ -38,9 +41,11 @@ type LabelsPayload = LabelsTarget & { keys: readonly string[] };
  * @returns the post's footer
  */
 export function PostFooter({ postId }: { postId: string }) {
+	const { gtPhone } = useBreakpoints();
 	const wg = useEditor();
 	const languages = toPostLanguages(usePostLanguage());
 	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
+	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
 	const focusReturn = useDialogFocusReturn();
 
 	const isActive = useIsActivePost(postId);
@@ -49,7 +54,14 @@ export function PostFooter({ postId }: { postId: string }) {
 	const hasLabels = usePostState(postId, (state, post) => hasPostLabels(state, post.node), false);
 
 	const roving = useRovingFocus(
-		['photo', 'gif', 'emoji', ...(canLabel ? ['labels'] : []), ...(canSplit ? ['split'] : []), 'language'],
+		[
+			'photo',
+			'gif',
+			...(gtPhone ? ['emoji'] : []),
+			...(canLabel ? ['labels'] : []),
+			...(canSplit ? ['split'] : []),
+			'language',
+		],
 		isActive,
 	);
 
@@ -101,15 +113,23 @@ export function PostFooter({ postId }: { postId: string }) {
 						<ButtonIcon icon={GifIcon} size="lg" />
 					</Button>
 
-					<Button
-						{...roving.item('emoji')}
-						label={m['common.a11y.openEmojiPicker']()}
-						variant="ghost"
-						color="secondary"
-						shape="round"
-					>
-						<ButtonIcon icon={EmojiIcon} size="lg" />
-					</Button>
+					{gtPhone && (
+						<EmojiPicker.Trigger
+							handle={emojiPicker}
+							render={
+								<Button
+									{...roving.item('emoji')}
+									label={m['common.a11y.openEmojiPicker']()}
+									variant="ghost"
+									color="secondary"
+									shape="round"
+									onClick={focusReturn.capture}
+								>
+									<ButtonIcon icon={EmojiIcon} size="lg" />
+								</Button>
+							}
+						/>
+					)}
 
 					{canLabel && (
 						<Button
@@ -156,6 +176,15 @@ export function PostFooter({ postId }: { postId: string }) {
 			</div>
 
 			{/* keep dialog events out of the toolbar's focus and key handlers. */}
+			{gtPhone && (
+				<EmojiPicker.Root
+					handle={emojiPicker}
+					onEmojiSelect={(emoji) => insertTextInPost(wg, postId, emoji.native)}
+					nextFocusRef={focusReturn.target}
+				>
+					<EmojiPicker.Picker />
+				</EmojiPicker.Root>
+			)}
 			{canLabel && (
 				<LabelsDialog
 					handle={labelsDialog}
