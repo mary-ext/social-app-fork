@@ -1,10 +1,11 @@
-import type { AppBskyActorDefs } from '@atcute/bluesky';
-
-import type { Wordgard } from 'wordgard/editor';
+import { useCurrentAccountProfile } from '#/state/queries/profile';
 
 import { Text } from '#/components/Text';
 
 import { appendPost } from '../commands/append-post';
+import { useEditor, useEditorState } from '../context';
+import { isBlankPost } from '../editor/post-info';
+import { getPosts } from '../editor/schema';
 import * as threadEnd from '../thread-end.css';
 import * as styles from './AddPostRow.css';
 import { Avatar } from './PostRail';
@@ -12,20 +13,18 @@ import { Avatar } from './PostRail';
 const GHOST_AVATAR_SIZE = 20;
 
 /**
- * button to append a post to the thread.
+ * button to append a post to the thread, disabled while the last post is blank.
  *
- * @param props the editor, author profile, and whether adding a post is disabled
  * @returns the add-post button
  */
-export function AddPostRow({
-	wg,
-	profile,
-	isDisabled,
-}: {
-	wg: Wordgard;
-	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
-	isDisabled: boolean;
-}) {
+export function AddPostRow() {
+	const wg = useEditor();
+	const profile = useCurrentAccountProfile();
+	const isDisabled = useEditorState((state) => {
+		const last = getPosts(state.doc).at(-1);
+		return !last || isBlankPost(state, last.node);
+	});
+
 	return (
 		<button
 			type="button"

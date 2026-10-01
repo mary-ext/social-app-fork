@@ -1,7 +1,3 @@
-import { memo } from 'react';
-
-import type { Wordgard } from 'wordgard/editor';
-
 import { openMediaPicker } from '#/lib/media/picker';
 
 import { toPostLanguages, usePostLanguage } from '#/state/preferences/languages';
@@ -17,48 +13,57 @@ import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.sv
 import { m } from '#/paraglide/messages';
 
 import { autoSplitPost } from '../commands/split-post';
-import type { PostSummary } from '../editor/thread-analysis';
+import { useEditor, useIsActivePost, usePostState } from '../context';
+import { isOverLimit } from '../editor/post-info';
+import { findPostById } from '../editor/schema';
 import { escapeToEditor, keepEditorFocus, useDialogFocusReturn, useRovingFocus } from '../focus';
-import { setAttachmentLabels } from '../labels/commands';
-import { LabelsDialog } from '../labels/LabelsDialog';
+import {
+	canLabelPost,
+	getAttachmentKeys,
+	getTaintedLabels,
+	hasPostLabels,
+	setAttachmentLabels,
+} from '../labels/commands';
+import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
 import { attachFiles } from '../media/commands';
 import { CharCount } from './CharCount';
 import * as styles from './PostFooter.css';
 
+type LabelsPayload = LabelsTarget & { keys: readonly string[] };
+
 /**
  * editing controls for a post.
  *
- * @param props the editor, post summary, and whether controls are tabbable
+ * @param props the post's id
  * @returns the post's footer
  */
-export const PostFooter = memo(function PostFooter({
-	wg,
-	post,
-	isActive,
-}: {
-	wg: Wordgard;
-	post: PostSummary;
-	isActive: boolean;
-}) {
+export function PostFooter({ postId }: { postId: string }) {
+	const wg = useEditor();
 	const languages = toPostLanguages(usePostLanguage());
-	const labelsDialog = Dialog.useDialogHandle();
+	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
+	const focusReturn = useDialogFocusReturn();
 
-	const focusReturn = useDialogFocusReturn(wg);
-
-	const canLabel = post.attachmentKeys.length > 0;
-	const hasLabels = post.labels.length > 0;
+	const isActive = useIsActivePost(postId);
+	const canSplit = usePostState(postId, (state, post) => isOverLimit(state, post.node), false);
+	const canLabel = usePostState(postId, (state, post) => canLabelPost(state, post.node), false);
+	const hasLabels = usePostState(postId, (state, post) => hasPostLabels(state, post.node), false);
 
 	const roving = useRovingFocus(
-		[
-			'photo',
-			'gif',
-			'emoji',
-			...(canLabel ? ['labels'] : []),
-			...(post.isOverLimit ? ['split'] : []),
-			'language',
-		],
+		['photo', 'gif', 'emoji', ...(canLabel ? ['labels'] : []), ...(canSplit ? ['split'] : []), 'language'],
 		isActive,
 	);
+
+	const openLabels = () => {
+		const { state } = wg;
+		const post = findPostById(state.doc, postId);
+		if (!post) {
+			return;
+		}
+
+		const keys = getAttachmentKeys(state, post.node);
+		focusReturn.capture();
+		labelsDialog.openWithPayload({ keys, labels: getTaintedLabels(state, keys) });
+	};
 
 	return (
 		<>
@@ -80,7 +85,7 @@ export const PostFooter = memo(function PostFooter({
 						color="secondary"
 						shape="round"
 						onClick={() => {
-							void openMediaPicker().then((files) => attachFiles(wg, post.id, files));
+							void openMediaPicker().then((files) => attachFiles(wg, postId, files));
 						}}
 					>
 						<ButtonIcon icon={ImageIcon} size="lg" />
@@ -113,10 +118,7 @@ export const PostFooter = memo(function PostFooter({
 							variant="ghost"
 							color={hasLabels ? 'primary' : 'secondary'}
 							shape="round"
-							onClick={() => {
-								focusReturn.capture();
-								labelsDialog.open(null);
-							}}
+							onClick={openLabels}
 						>
 							<ButtonIcon icon={hasLabels ? FlagFilledIcon : FlagIcon} size="lg" />
 						</Button>
@@ -124,14 +126,14 @@ export const PostFooter = memo(function PostFooter({
 				</div>
 
 				<div className={styles.status}>
-					{post.isOverLimit && (
+					{canSplit && (
 						<Button
 							{...roving.item('split')}
 							label="Split into multiple posts"
 							size="tiny"
 							color="secondary"
 							onClick={() => {
-								autoSplitPost(wg, post.id);
+								autoSplitPost(wg, postId);
 								// splitting removes the focused button.
 								wg.focus();
 							}}
@@ -149,7 +151,7 @@ export const PostFooter = memo(function PostFooter({
 					>
 						<ButtonText size="sm">{languages.join(', ')}</ButtonText>
 					</Button>
-					<CharCount count={post.length} />
+					<CharCount postId={postId} />
 				</div>
 			</div>
 
@@ -157,11 +159,10 @@ export const PostFooter = memo(function PostFooter({
 			{canLabel && (
 				<LabelsDialog
 					handle={labelsDialog}
-					labels={post.labels}
-					onSave={(labels) => setAttachmentLabels(wg, post.attachmentKeys, labels)}
+					onSave={(labels, { keys }) => setAttachmentLabels(wg, keys, labels)}
 					finalFocus={focusReturn.finalFocus}
 				/>
 			)}
 		</>
 	);
-});
+}

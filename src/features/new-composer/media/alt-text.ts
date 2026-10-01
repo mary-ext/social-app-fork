@@ -1,56 +1,34 @@
 import type { Wordgard } from 'wordgard/editor';
+import type { GardState } from 'wordgard/state';
 
-import type { PostMedia } from '../editor/schema';
-import { defineTaint, emptyTaintMap, type TaintMap } from '../editor/taints';
+import { defineTaint } from '../editor/taints';
 
-/** non-empty alt text keyed by media id. */
-export type AltTexts = TaintMap<string>;
-
-/** alt text updates keyed by media id. */
+/** alt text keyed by media id. */
 export const altTaint = defineTaint<string>({
 	isEmpty: (alt) => alt === '',
 	isSame: (a, b) => a === b,
 });
 
 /**
- * selects alt text for a post's media.
+ * reads an attachment's alt text.
  *
- * @param alts composer-wide alt text
- * @param media the post's media
- * @returns the post's alt text
+ * @param state the editor state
+ * @param mediaId the media's id
+ * @returns the alt text, or an empty string if unset
  */
-export const getAltTexts = (alts: AltTexts, media: readonly PostMedia[]): AltTexts => {
-	if (media.length === 0 || alts.size === 0) {
-		return emptyTaintMap;
-	}
-
-	const picked = new Map<string, string>();
-	for (const item of media) {
-		const alt = alts.get(item.id);
-		if (alt !== undefined) {
-			picked.set(item.id, alt);
-		}
-	}
-	return picked;
+export const getMediaAlt = (state: GardState, mediaId: string): string => {
+	return state.field(altTaint.field).get(mediaId) ?? '';
 };
 
 /**
- * compares alt text maps by media id and text.
+ * checks whether an attachment has alt text.
  *
- * @param a the first map
- * @param b the second map
- * @returns whether all entries match
+ * @param state the editor state
+ * @param mediaId the media's id
+ * @returns whether alt text is set
  */
-export const isSameAltTexts = (a: AltTexts, b: AltTexts): boolean => {
-	if (a.size !== b.size) {
-		return false;
-	}
-	for (const [id, alt] of a) {
-		if (b.get(id) !== alt) {
-			return false;
-		}
-	}
-	return true;
+export const hasMediaAlt = (state: GardState, mediaId: string): boolean => {
+	return state.field(altTaint.field).has(mediaId);
 };
 
 /**

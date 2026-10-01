@@ -1,4 +1,4 @@
-import { memo, type MouseEvent, type ReactNode, useRef } from 'react';
+import { type MouseEvent, type ReactNode, useRef } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
@@ -6,6 +6,8 @@ import type { BaseUIEvent } from '@base-ui/react';
 import type { Wordgard } from 'wordgard/editor';
 
 import { toImageCdnUrl } from '#/lib/bsky-cdn';
+
+import { useCurrentAccountProfile } from '#/state/queries/profile';
 
 import * as Menu from '#/components/Menu';
 import { UserAvatar } from '#/components/UserAvatar';
@@ -15,21 +17,12 @@ import ArrowUpIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.
 import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
 
 import { movePostToSlot } from '../commands/reorder-posts';
-import type { ThreadDnd } from '../dnd/channel';
+import { useComposer, useEditor, usePostCount, usePostState } from '../context';
 import { DragChip, setDragPreview } from '../dnd/DragPreview';
 import { findPostById, getPostText } from '../editor/schema';
 import { POST_HANDLE_ATTR } from '../elements';
 import { AVATAR_SIZE } from '../layout';
 import * as styles from './PostRail.css';
-
-type RailProps = {
-	wg: Wordgard;
-	dnd: ThreadDnd;
-	postId: string;
-	index: number;
-	total: number;
-	profile: AppBskyActorDefs.ProfileViewDetailed | undefined;
-};
 
 /**
  * author avatar, using the labeler shape when applicable.
@@ -59,19 +52,20 @@ export function Avatar({
 /**
  * post gutter with an avatar, reorder controls, and thread line.
  *
- * @param props editor, drag channel, post position and id, and author profile
+ * @param props the post's id
  * @returns the post's rail
  */
-export const PostRail = memo(function PostRail(props: RailProps) {
-	const { total, profile } = props;
+export function PostRail({ postId }: { postId: string }) {
+	const profile = useCurrentAccountProfile();
+	const isThread = usePostCount() > 1;
 
 	return (
 		<div className={styles.root}>
-			{total > 1 ? <PostHandle {...props} /> : <Avatar profile={profile} />}
+			{isThread ? <PostHandle postId={postId} /> : <Avatar profile={profile} />}
 			<div className={styles.line} />
 		</div>
 	);
-});
+}
 
 // defer Base UI's menu opening until click so pointer down can start a drag.
 const deferToClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
@@ -97,7 +91,10 @@ const refocusHandle = (postId: string) => {
 	});
 };
 
-function PostHandle({ wg, dnd, postId, index, total, profile }: RailProps) {
+function PostHandle({ postId }: { postId: string }) {
+	const { wg, dnd } = useComposer();
+	const profile = useCurrentAccountProfile();
+
 	// cancelled drags skip the drop handler's focus restoration. restore only prior focus
 	// to avoid placing a gap cursor before the first post.
 	const hadFocus = useRef(false);
@@ -109,16 +106,15 @@ function PostHandle({ wg, dnd, postId, index, total, profile }: RailProps) {
 
 		return dnd.draggable({
 			element: node,
-			getInitialData: () => ({ kind: 'post', postId, index }),
+			getInitialData: () => ({
+				kind: 'post',
+				postId,
+				index: findPostById(wg.state.doc, postId)?.index ?? -1,
+			}),
 			onGenerateDragPreview: ({ nativeSetDragImage }) => {
 				setDragPreview(nativeSetDragImage, getPostDragPreview(wg, postId, profile));
 			},
 		});
-	};
-
-	const move = (to: number) => {
-		movePostToSlot(wg, postId, to);
-		refocusHandle(postId);
 	};
 
 	return (
@@ -148,17 +144,32 @@ function PostHandle({ wg, dnd, postId, index, total, profile }: RailProps) {
 			</Menu.Trigger>
 
 			<Menu.Popup label="Reorder this post" align="start">
-				<Menu.Group>
-					<Menu.Item onClick={() => move(index - 1)} disabled={index === 0}>
-						<Menu.ItemText>Move up</Menu.ItemText>
-						<Menu.ItemIcon position="right" icon={ArrowUpIcon} />
-					</Menu.Item>
-					<Menu.Item onClick={() => move(index + 1)} disabled={index === total - 1}>
-						<Menu.ItemText>Move down</Menu.ItemText>
-						<Menu.ItemIcon position="right" icon={ArrowDownIcon} />
-					</Menu.Item>
-				</Menu.Group>
+				<ReorderItems postId={postId} />
 			</Menu.Popup>
 		</Menu.Root>
+	);
+}
+
+function ReorderItems({ postId }: { postId: string }) {
+	const wg = useEditor();
+	const index = usePostState(postId, (_state, post) => post.index, -1);
+	const total = usePostCount();
+
+	const move = (to: number) => {
+		movePostToSlot(wg, postId, to);
+		refocusHandle(postId);
+	};
+
+	return (
+		<Menu.Group>
+			<Menu.Item onClick={() => move(index - 1)} disabled={index <= 0}>
+				<Menu.ItemText>Move up</Menu.ItemText>
+				<Menu.ItemIcon position="right" icon={ArrowUpIcon} />
+			</Menu.Item>
+			<Menu.Item onClick={() => move(index + 1)} disabled={index === -1 || index === total - 1}>
+				<Menu.ItemText>Move down</Menu.ItemText>
+				<Menu.ItemIcon position="right" icon={ArrowDownIcon} />
+			</Menu.Item>
+		</Menu.Group>
 	);
 }

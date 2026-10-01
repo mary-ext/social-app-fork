@@ -3,8 +3,6 @@ import { lazy, type ReactNode, Suspense } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { isGenericUri } from '@atcute/lexicons/syntax';
 
-import type { Wordgard } from 'wordgard/editor';
-
 import { EmbeddingDisabledError, type ResolvedLink } from '#/lib/api/resolve';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { toNiceDomain } from '#/lib/links/nice-domain';
@@ -33,6 +31,7 @@ import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg
 import { m } from '#/paraglide/messages';
 import { borderRadius } from '#/styles/tokens.css';
 
+import { useEditor, useIsActivePost } from '../context';
 import { keepEditorFocus } from '../focus';
 import * as overlay from '../overlay.css';
 import { dismissLinkEmbed, type LinkEmbedKind } from './link-embeds';
@@ -48,20 +47,20 @@ const StandardSiteEmbed = lazy(() =>
 type FrameVariant = 'bare' | 'card' | 'notice';
 
 function Frame({
-	wg,
+	postId,
 	url,
 	kind,
-	isActive,
 	variant,
 	children,
 }: {
-	wg: Wordgard;
+	postId: string;
 	url: string;
 	kind: LinkEmbedKind;
-	isActive: boolean;
 	variant: FrameVariant;
 	children: ReactNode;
 }) {
+	const wg = useEditor();
+	const isActive = useIsActivePost(postId);
 	const isNotice = variant === 'notice';
 
 	const remove = () => {
@@ -226,10 +225,9 @@ function RecordPreview({ link }: { link: Extract<ResolvedLink, { type: 'record' 
 // #endregion
 
 type LinkCardProps = {
-	wg: Wordgard;
+	postId: string;
 	url: string;
 	kind: LinkEmbedKind;
-	isActive: boolean;
 };
 
 function ChatInviteCard({ code, ...frame }: LinkCardProps & { code: string }) {
@@ -324,7 +322,7 @@ function ResolvedLinkCard(frame: LinkCardProps) {
 /**
  * link preview with session-wide dismissal.
  *
- * @param props the editor, the link's URL and embed slot, and whether the dismiss button is tabbable
+ * @param props post id, link URL, and embed slot
  * @returns a preview, loading placeholder, or error notice
  */
 export function LinkCard(props: LinkCardProps) {
