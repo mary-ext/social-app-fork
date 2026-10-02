@@ -21,15 +21,6 @@ const badge = style({
 	lineHeight: 1,
 });
 
-const overlayBadge = style([
-	overlay,
-	{
-		position: 'absolute',
-		bottom: space.sm,
-		left: space.sm,
-	},
-]);
-
 const inlineBadge = style({
 	// prevent grid stretch in voice tiles.
 	width: 'fit-content',
@@ -45,7 +36,15 @@ const inlineControl = style({
 
 // #endregion
 
-export const altChip = recipe(
+export const badges = style({
+	display: 'flex',
+	position: 'absolute',
+	bottom: space.sm,
+	left: space.sm,
+	gap: 6,
+});
+
+export const chip = recipe(
 	{
 		base: [badge, { gap: space.xs, padding: '0 11px 0 8px' }],
 		defaultVariants: {
@@ -54,16 +53,16 @@ export const altChip = recipe(
 		variants: {
 			variant: {
 				inline: [inlineBadge, inlineControl],
-				overlay: [overlayBadge],
+				overlay: [overlay],
 			},
 		},
 	},
-	{ debugId: 'altChip' },
+	{ debugId: 'chip' },
 );
 
 export const icon = style([overlayIcon]);
 
-export const altCheck = style({
+export const chipCheck = style({
 	color: vars.palette.positive_500,
 });
 
@@ -76,7 +75,7 @@ export const uploadBadge = recipe(
 		variants: {
 			variant: {
 				inline: [inlineBadge],
-				overlay: [overlayBadge],
+				overlay: [overlay],
 			},
 		},
 	},

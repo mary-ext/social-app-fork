@@ -7,8 +7,16 @@ import { DragChip } from '../dnd/DragPreview';
 import type { PostMedia } from '../model/schema';
 import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
+import { hasMediaCaptions } from './captions';
 import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
+import {
+	AltButton,
+	CaptionsButton,
+	RemoveButton,
+	TileActions,
+	TileBadges,
+	UploadBadge,
+} from './TileControls';
 import { usePendingUpload } from './upload-status';
 import * as css from './VideoTile.css';
 
@@ -26,6 +34,7 @@ export function VideoTile({
 	item,
 	roving,
 	onEditAlt,
+	onEditCaptions,
 	onRemove,
 }: {
 	postId: string;
@@ -33,9 +42,11 @@ export function VideoTile({
 	item: Extract<PostMedia, { kind: 'video' }>;
 	roving: RovingItemProps;
 	onEditAlt: () => void;
+	onEditCaptions: () => void;
 	onRemove: () => void;
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
+	const hasCaptions = useEditorState((state) => hasMediaCaptions(state, item.id));
 	const upload = usePendingUpload(item.file);
 	const tabbable = roving.tabIndex === 0;
 
@@ -51,11 +62,16 @@ export function VideoTile({
 		>
 			<video className={css.video} src={getBlobUrl(item.file)} preload="metadata" muted />
 
-			{upload ? (
-				<UploadBadge upload={upload} />
-			) : (
-				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
-			)}
+			<TileBadges>
+				{upload ? (
+					<UploadBadge upload={upload} />
+				) : (
+					<>
+						<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+						<CaptionsButton hasCaptions={hasCaptions} tabbable={tabbable} onClick={onEditCaptions} />
+					</>
+				)}
+			</TileBadges>
 
 			<TileActions>
 				<RemoveButton isUploading={!!upload} onClick={onRemove} />

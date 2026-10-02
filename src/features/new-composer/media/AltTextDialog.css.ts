@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-export const gifBox = style({
+export const preview = style({
 	padding: 16,
 	paddingTop: 0,
 });

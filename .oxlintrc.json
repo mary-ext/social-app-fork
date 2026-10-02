@@ -50,9 +50,10 @@
 			"error",
 			{
 				"impliedTextComponents": [
-					"Admonition",
 					"Admonition.Admonition",
+					"Admonition",
 					"AgeAssuranceAdmonition",
+					"Dialog.Header.Title",
 					"Prompt.Row",
 					"Toast.Action",
 					"Toggle.Action"

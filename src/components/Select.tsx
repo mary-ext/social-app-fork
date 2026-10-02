@@ -59,6 +59,10 @@ export function Root<Value = string>({ children, disabled, items, onValueChange,
 
 export type TriggerProps = {
 	children: ReactNode;
+	/** space-separated IDs of help or error text (`aria-describedby`). */
+	describedBy?: string;
+	/** sets `aria-invalid` on the trigger. */
+	isInvalid?: boolean;
 	/**
 	 * Accessible name, applied as `aria-label` to the default trigger button. Omit when `render` supplies an
 	 * element that carries its own label.
@@ -72,12 +76,18 @@ export type TriggerProps = {
 };
 
 /** The button that opens the dropdown. Compose `Value` + `Icon` inside, or pass a custom `render` element. */
-export function Trigger({ children, label, render }: TriggerProps) {
+export function Trigger({ children, describedBy, isInvalid, label, render }: TriggerProps) {
+	const aria = { 'aria-describedby': describedBy, 'aria-invalid': isInvalid };
+
 	if (render) {
-		return <BaseSelect.Trigger render={render}>{children}</BaseSelect.Trigger>;
+		return (
+			<BaseSelect.Trigger {...aria} render={render}>
+				{children}
+			</BaseSelect.Trigger>
+		);
 	}
 	return (
-		<BaseSelect.Trigger aria-label={label} className={styles.trigger}>
+		<BaseSelect.Trigger {...aria} aria-label={label} className={styles.trigger}>
 			{children}
 		</BaseSelect.Trigger>
 	);

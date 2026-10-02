@@ -19,7 +19,7 @@ import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import * as css from './ExternalGifTile.css';
 import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions } from './TileControls';
+import { AltButton, RemoveButton, TileActions, TileBadges } from './TileControls';
 
 /**
  * GIF picker attachment tile.
@@ -111,7 +111,9 @@ export function ExternalGifTile({
 				<img className={css.media} src={url} alt="" />
 			)}
 
-			<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+			<TileBadges>
+				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+			</TileBadges>
 
 			<TileActions>
 				<RemoveButton isUploading={false} onClick={onRemove} />

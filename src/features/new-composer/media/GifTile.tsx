@@ -7,7 +7,7 @@ import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import * as css from './GifTile.css';
 import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
+import { AltButton, RemoveButton, TileActions, TileBadges, UploadBadge } from './TileControls';
 import { usePendingUpload } from './upload-status';
 
 /**
@@ -48,11 +48,13 @@ export function GifTile({
 		>
 			<img className={css.image} src={url} alt="" />
 
-			{upload ? (
-				<UploadBadge upload={upload} />
-			) : (
-				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
-			)}
+			<TileBadges>
+				{upload ? (
+					<UploadBadge upload={upload} />
+				) : (
+					<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+				)}
+			</TileBadges>
 
 			<TileActions>
 				<RemoveButton isUploading={!!upload} onClick={onRemove} />

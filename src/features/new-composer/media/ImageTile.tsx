@@ -18,7 +18,7 @@ import { hasMediaAlt } from './alt-text';
 import { getEditedImage, getImageEdit } from './image-edits';
 import * as css from './ImageTile.css';
 import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, TileButton } from './TileControls';
+import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from './TileControls';
 
 type ImageLayout = 'single' | 'strip';
 
@@ -85,7 +85,9 @@ export function ImageTile({
 		>
 			<img className={css.image} src={url} alt="" />
 
-			<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+			<TileBadges>
+				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+			</TileBadges>
 
 			<TileActions>
 				{onEditImage && (

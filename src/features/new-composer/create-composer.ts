@@ -22,6 +22,7 @@ import { embedSession } from './embeds/embed-session';
 import { labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
 import { altTaint } from './media/alt-text';
+import { captionsTaint } from './media/captions';
 import { imageEditTaint } from './media/image-edits';
 import { createPosts, endOfLastLine, threadSchema } from './model/schema';
 import { createStore } from './store';
@@ -50,6 +51,7 @@ export const createComposer = (): Composer => {
 		threadCommands,
 		embedSession,
 		altTaint.field,
+		captionsTaint.field,
 		imageEditTaint.field,
 		labelTaint.field,
 		languageTaint.field,
