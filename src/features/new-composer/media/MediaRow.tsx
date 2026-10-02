@@ -1,12 +1,8 @@
-import { useState } from 'react';
-
-import type { ComposerImage } from '#/lib/media/composer-image';
-
 import { getSelectionErrorMessage } from '#/features/composer/media/attachment-messages';
-import { type AltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
+import { type ImageAltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
 
 import * as Dialog from '#/components/Dialog';
-import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
+import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import { Text } from '#/components/Text';
 
 import { useEditor, useIsActivePost, usePostState } from '../context';
@@ -23,19 +19,13 @@ import {
 import { ExternalGifTile } from './external-gifs/ExternalGifTile';
 import { GifAltTextDialog, type GifAltTextTarget } from './gifs/GifAltTextDialog';
 import { GifTile } from './gifs/GifTile';
-import {
-	type EditableImage,
-	getEditedImage,
-	getImageEdit,
-	saveComposerImage,
-	toComposerImage,
-} from './images/image-edits';
+import { type EditableImage, getEditedImage, getImageEdit, setImageEdit } from './images/image-edits';
 import { ImageGroup } from './images/ImageGroup';
 import * as css from './MediaRow.css';
 import { getMediaAlt, setMediaAlt } from './shared/alt-text';
 import { refocusMedia } from './shared/MediaTile';
 import { getMediaCaptions, setMediaCaptions } from './videos/captions';
-import { CaptionsDialog, type CaptionsTarget } from './videos/CaptionsDialog';
+import { CaptionsDialog, type VideoCaptionsTarget } from './videos/CaptionsDialog';
 import { VideoAltTextDialog, type VideoAltTextTarget } from './videos/VideoAltTextDialog';
 import { VideoTile } from './videos/VideoTile';
 import { VoiceTile } from './voices/VoiceTile';
@@ -59,14 +49,12 @@ export function MediaRow({ postId }: { postId: string }) {
 		{ tabbable: isActive },
 	);
 
-	const imageAltDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
+	const imageAltDialog = Dialog.useDialogHandle<ImageAltTextTarget & { mediaId: string }>();
 	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
 	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
 	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
-	const captionsDialog = Dialog.useDialogHandle<CaptionsTarget & { mediaId: string }>();
-	const editDialog = Dialog.useDialogHandle();
-	// retain the image through the dialog's exit animation.
-	const [editing, setEditing] = useState<ComposerImage>();
+	const captionsDialog = Dialog.useDialogHandle<VideoCaptionsTarget & { mediaId: string }>();
+	const editDialog = Dialog.useDialogHandle<EditImageTarget & { mediaId: string }>();
 
 	if (media.length === 0) {
 		return null;
@@ -135,8 +123,11 @@ export function MediaRow({ postId }: { postId: string }) {
 	};
 
 	const editImage = (item: EditableImage) => {
-		setEditing(toComposerImage(item, getImageEdit(wg.state, item.id)));
-		editDialog.open(null);
+		editDialog.openWithPayload({
+			mediaId: item.id,
+			source: { blob: item.file, ...item.dimensions },
+			manips: getImageEdit(wg.state, item.id)?.manips,
+		});
 	};
 
 	const remove = (item: PostMedia) => {
@@ -221,8 +212,7 @@ export function MediaRow({ postId }: { postId: string }) {
 			/>
 			<EditImageDialog
 				handle={editDialog}
-				image={editing}
-				onChange={(image) => saveComposerImage(wg, image)}
+				onSave={(edit, { mediaId }) => setImageEdit(wg, { mediaId, edit })}
 			/>
 		</>
 	);

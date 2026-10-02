@@ -1,19 +1,13 @@
-import { useState } from 'react';
-
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { isCancelledError } from '#/lib/errors';
-import {
-	type ComposerImage,
-	compressProfileImage,
-	createComposerImage,
-	type ImageMeta,
-} from '#/lib/media/composer-image';
+import { compressProfileImage, type ImageMeta } from '#/lib/media/composer-image';
+import { getImageDimensions } from '#/lib/media/metadata';
 import { openImagePicker } from '#/lib/media/picker';
 
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableUserAvatar.css';
-import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
+import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import * as Menu from '#/components/Menu';
 import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
 
@@ -34,8 +28,7 @@ export function EditableUserAvatar({
 	avatar?: string | null;
 	onSelectNewAvatar: (img: ImageMeta | null) => void;
 }) {
-	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogHandle = Dialog.useDialogHandle();
+	const editImageDialogHandle = Dialog.useDialogHandle<EditImageTarget>();
 
 	const circular = type !== 'algo' && type !== 'list';
 	const radius = circular ? '50%' : size > 32 ? '8px' : '3px';
@@ -46,18 +39,14 @@ export function EditableUserAvatar({
 			return;
 		}
 		try {
-			setRawImage(await createComposerImage(file));
-			editImageDialogHandle.open(null);
+			const dimensions = await getImageDimensions(file);
+			editImageDialogHandle.openWithPayload({ source: { blob: file, ...dimensions } });
 		} catch (e) {
 			// a user-cancelled selection is not a failure worth reporting
 			if (!isCancelledError(e)) {
 				console.error('Failed to crop avatar', e);
 			}
 		}
-	};
-
-	const onChangeEditImage = async (image: ComposerImage) => {
-		onSelectNewAvatar(await compressProfileImage(image, 1000, 1000));
 	};
 
 	return (
@@ -97,8 +86,9 @@ export function EditableUserAvatar({
 			</Menu.Root>
 			<EditImageDialog
 				handle={editImageDialogHandle}
-				image={rawImage}
-				onChange={(image) => void onChangeEditImage(image)}
+				onSave={(edited, { source }) => {
+					void compressProfileImage(edited?.transformed ?? source, 1000, 1000).then(onSelectNewAvatar);
+				}}
 				aspectRatio={1}
 				circularCrop={circular}
 			/>

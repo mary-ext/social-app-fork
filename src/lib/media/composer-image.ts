@@ -65,31 +65,15 @@ export async function createComposerImage(blob: Blob): Promise<ComposerImageWith
 	};
 }
 
-export async function manipulateImage(
-	img: ComposerImage,
-	trans: ImageTransformation,
-): Promise<ComposerImage> {
-	if (trans.crop === undefined) {
-		if (img.transformed === undefined) {
-			return img;
-		}
-
-		return { alt: img.alt, localRefPath: img.localRefPath, source: img.source };
-	}
-
-	const transformed = await cropImage(img.source.blob, trans.crop);
-
-	return {
-		alt: img.alt,
-		localRefPath: img.localRefPath,
-		source: img.source,
-		transformed,
-		manips: trans,
-	};
-}
-
-/** Turn an image by `crop.rotation`, cut it down to `crop`, and re-encode the result losslessly as a PNG. */
-async function cropImage(blob: Blob, crop: ImageCrop): Promise<ImageMeta> {
+/**
+ * rotates and crops an image, returning a PNG.
+ *
+ * @param blob source image
+ * @param crop pixel rectangle in rotated coordinates; rotation is clockwise quarter-turns
+ * @returns the PNG blob and cropped dimensions
+ * @throws if decoding, canvas creation, or PNG encoding fails
+ */
+export async function cropImage(blob: Blob, crop: ImageCrop): Promise<ImageMeta> {
 	const image = await getImageFromBlob(blob);
 
 	const canvas = new OffscreenCanvas(crop.width, crop.height);
@@ -144,12 +128,11 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
 
 /** Compress an image for use as a profile avatar or banner, cropping it to `maxWidth`×`maxHeight`. */
 export async function compressProfileImage(
-	img: ComposerImage,
+	img: ImageMeta,
 	maxWidth: number,
 	maxHeight: number,
 ): Promise<ImageMeta> {
-	const source = img.transformed || img.source;
-	const { blob, aspectRatio } = await compressProfileBlob(source.blob, maxWidth, maxHeight);
+	const { blob, aspectRatio } = await compressProfileBlob(img.blob, maxWidth, maxHeight);
 
 	return {
 		blob,

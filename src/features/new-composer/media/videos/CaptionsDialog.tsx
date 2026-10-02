@@ -33,7 +33,7 @@ import {
 import * as css from './CaptionsDialog.css';
 
 /** captions dialog payload. */
-export type CaptionsTarget = {
+export type VideoCaptionsTarget = {
 	tracks: readonly CaptionTrack[];
 };
 
@@ -62,7 +62,7 @@ const languageItems = mapDefined(LANGUAGES, (language): Select.SelectItem | unde
  * @param props.onSave receives the edited tracks and original payload
  * @returns the dialog
  */
-export const CaptionsDialog = <T extends CaptionsTarget>({
+export const CaptionsDialog = <T extends VideoCaptionsTarget>({
 	handle,
 	onSave,
 }: {
