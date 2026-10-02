@@ -2,6 +2,9 @@ import { space } from '#/styles/tokens.css';
 
 export const AVATAR_SIZE = 36;
 
+/** avatar size for add-post and draft reply rows. */
+export const GHOST_AVATAR_SIZE = 20;
+
 /** width of the post gutter holding the avatar and thread line. */
 export const RAIL_WIDTH = space.lg + AVATAR_SIZE + space.md;
 

@@ -1,24 +1,24 @@
-import { memo, type RefObject, useImperativeHandle, useState } from 'react';
+import { Fragment, memo, type RefObject, useImperativeHandle, useState } from 'react';
+
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { createPortal } from 'react-dom';
 
-import { useConstant } from '#/lib/hooks/use-constant';
-
-import type { DraftSaveBlocker } from '#/features/composer/drafts/state/api';
 import { closeComposer } from '#/features/composer/open-composer';
 
 import * as Dialog from '#/components/Dialog';
-import * as Prompt from '#/components/Prompt';
+import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 import { ComposerContext, useComposer, useEditorState } from './context';
-import { type ComposerInit, createComposer } from './create-composer';
+import { createBlankSeed, createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
-import { getDraftSaveBlocker } from './drafts/save-blocker';
+import { DraftsButton } from './drafts/DraftsButton';
+import { restoreDraft } from './drafts/restore';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
-import { hasThreadContent } from './model/schema';
 import * as css from './NewComposer.css';
 import { PostFooter } from './post/PostFooter';
 import { PostHeader } from './post/PostHeader';
@@ -26,7 +26,7 @@ import { PostRail } from './post/PostRail';
 import { MEDIA_DRAGGING_ATTR } from './shared/elements';
 import { useStore } from './store';
 import { Suggestions } from './suggestions/SuggestionPopup';
-import { DiscardPrompt } from './thread/DiscardPrompt';
+import { DiscardPrompt, useDiscardGuard } from './thread/DiscardPrompt';
 import { ReplyParent } from './thread/ReplyParent';
 import { ThreadEnd } from './thread/ThreadEnd';
 import { ThreadFooter } from './thread/ThreadFooter';
@@ -52,26 +52,28 @@ export function NewComposer({
 	quoteUri,
 	replyUri,
 	closeGuardRef,
-}: ComposerInit & {
+}: {
+	quoteUri: ResourceUri | undefined;
+	replyUri: ResourceUri | undefined;
 	closeGuardRef: RefObject<ComposerCloseGuard | null>;
 }) {
-	const composer = useConstant(() => createComposer({ quoteUri, replyUri }));
+	const [composer, setComposer] = useState(() => {
+		return createComposer({ seed: createBlankSeed(quoteUri), replyUri });
+	});
 
-	const discardPromptHandle = Prompt.usePromptHandle();
-	const [draftSaveBlocker, setDraftSaveBlocker] = useState<DraftSaveBlocker>();
+	const discard = useDiscardGuard(composer);
 
-	const interceptClose = (): boolean => {
-		const { doc } = composer.wg.state;
-		if (!hasThreadContent(doc)) {
-			return false;
+	const openDraft = async (view: AppBskyDraftDefs.DraftView) => {
+		const { seed, missingMedia } = await restoreDraft(view);
+
+		setComposer(createComposer({ seed, replyUri: undefined }));
+
+		if (missingMedia > 0) {
+			Toast.show(`Some attachments aren't available on this device`, { type: 'warning' });
 		}
-
-		setDraftSaveBlocker(getDraftSaveBlocker(doc));
-		discardPromptHandle.open(null);
-		return true;
 	};
 
-	useImperativeHandle(closeGuardRef, () => ({ interceptClose }));
+	useImperativeHandle(closeGuardRef, () => ({ interceptClose: discard.intercept }));
 
 	return (
 		<ComposerContext value={composer}>
@@ -80,18 +82,24 @@ export function NewComposer({
 				<Dialog.Header.Title>
 					{composer.replyUri ? m['view.composer.title.reply']() : m['view.composer.title.post']()}
 				</Dialog.Header.Title>
-			</Dialog.Header.Root>
-			<Dialog.Body>
-				<ComposerRoot />
-			</Dialog.Body>
-			<ThreadFooter />
 
-			<DiscardPrompt
-				handle={discardPromptHandle}
-				isReply={composer.replyUri !== null}
-				draftSaveBlocker={draftSaveBlocker}
-				onDiscard={closeComposer}
-			/>
+				{composer.replyUri === null && (
+					<Dialog.Header.Actions>
+						<DraftsButton onSelect={openDraft} />
+					</Dialog.Header.Actions>
+				)}
+			</Dialog.Header.Root>
+
+			{/* reset editor and widget state when opening a draft. */}
+			<Fragment key={composer.id}>
+				<Dialog.Body>
+					<ComposerRoot />
+				</Dialog.Body>
+
+				<ThreadFooter />
+			</Fragment>
+
+			<DiscardPrompt {...discard.prompt} onDiscard={closeComposer} />
 		</ComposerContext>
 	);
 }
@@ -100,10 +108,10 @@ function ComposerRoot() {
 	const { mount, replyUri } = useComposer();
 	const isMediaDragging = useEditorState((state) => getMediaDrag(state) !== null);
 
-	// the editor mounts after React's children, keeping the reply parent above it.
 	return (
 		<div ref={mount} className={css.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
 			{replyUri && <ReplyParent uri={replyUri} />}
+
 			<PostSlots />
 			<ThreadEndPortal />
 			<Suggestions />
@@ -132,8 +140,6 @@ function PostSlots() {
 	});
 }
 
-// the compiler doesn't memoize JSX in the map callback; explicit memoization avoids rerendering
-// unchanged posts when slots change.
 const HeaderSlot = memo(function HeaderSlot({ postId }: { postId: string }) {
 	return (
 		<>

@@ -1,30 +1,70 @@
-import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { useState } from 'react';
 
-import type { DraftSaveBlocker } from '#/features/composer/drafts/state/api';
+import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 
 import * as Prompt from '#/components/Prompt';
 
+import { type Composer, useComposer } from '../context';
+import { type DraftSaveBlocker, getDraftSaveBlocker } from '../drafts/save-blocker';
+
+/** unsaved-changes guard and its prompt props. */
+export type DiscardGuard = {
+	/**
+	 * opens the prompt if the thread has unsaved changes.
+	 *
+	 * @returns true if prompted; false if the caller can proceed
+	 */
+	intercept: () => boolean;
+	prompt: {
+		handle: Prompt.PromptHandle;
+		draftSaveBlocker: DraftSaveBlocker | undefined;
+	};
+};
+
 /**
- * prompts before closing an unsaved thread.
+ * guards an action that would lose the thread's unsaved changes.
+ *
+ * @param composer the composer to guard
+ * @returns the guard and its prompt props
+ */
+export const useDiscardGuard = (composer: Composer): DiscardGuard => {
+	const handle = Prompt.usePromptHandle();
+	const [draftSaveBlocker, setDraftSaveBlocker] = useState<DraftSaveBlocker>();
+
+	return {
+		intercept() {
+			if (!composer.hasUnsavedChanges()) {
+				return false;
+			}
+
+			setDraftSaveBlocker(getDraftSaveBlocker(composer.wg.state.doc));
+			handle.open(null);
+			return true;
+		},
+		prompt: { handle, draftSaveBlocker },
+	};
+};
+
+/**
+ * prompts before closing or replacing an unsaved thread.
  *
  * @param props.handle opens the prompt
- * @param props.isReply omits saving for replies
  * @param props.draftSaveBlocker reason saving is unavailable, or undefined to offer saving
- * @param props.onDiscard closes the composer
+ * @param props.onDiscard continues without saving
  * @returns the prompt
  */
 export function DiscardPrompt({
 	handle,
-	isReply,
 	draftSaveBlocker,
 	onDiscard,
-}: {
-	handle: Prompt.PromptHandle;
-	isReply: boolean;
-	draftSaveBlocker: DraftSaveBlocker | undefined;
+}: DiscardGuard['prompt'] & {
 	onDiscard: () => void;
 }) {
-	if (isReply) {
+	const { replyUri, draft } = useComposer();
+	const isDraft = draft !== null;
+
+	// the draft format has no reply parent.
+	if (replyUri !== null) {
 		return (
 			<Prompt.Basic
 				handle={handle}
@@ -40,17 +80,17 @@ export function DiscardPrompt({
 	let message: string | undefined;
 	switch (draftSaveBlocker) {
 		case 'tooLong': {
-			title = `Discard post?`;
+			title = isDraft ? `Discard changes?` : `Discard post?`;
 			message = `Drafts can have up to ${MAX_DRAFT_GRAPHEME_LENGTH} characters per post.`;
 			break;
 		}
 		case 'voiceClip': {
-			title = `Discard post?`;
+			title = isDraft ? `Discard changes?` : `Discard post?`;
 			break;
 		}
 		case undefined: {
-			title = `Save draft?`;
-			message = `Save this draft to edit later.`;
+			title = isDraft ? `Update draft?` : `Save draft?`;
+			message = isDraft ? `Save your changes to this draft.` : `Save this draft to edit later.`;
 			break;
 		}
 	}
@@ -64,7 +104,7 @@ export function DiscardPrompt({
 			<Prompt.Actions>
 				{draftSaveBlocker === undefined && (
 					// TODO: save the thread as a draft.
-					<Prompt.Action cta={`Save draft`} color="primary" onPress={() => {}} />
+					<Prompt.Action cta={isDraft ? `Update draft` : `Save draft`} color="primary" onPress={() => {}} />
 				)}
 				<Prompt.Action cta={`Discard`} color="negative_subtle" onPress={onDiscard} />
 				<Prompt.Cancel cta={`Keep editing`} />

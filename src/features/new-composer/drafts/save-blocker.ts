@@ -4,9 +4,10 @@ import type { Plot } from 'wordgard/doc';
 
 import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 
-import type { DraftSaveBlocker } from '#/features/composer/drafts/state/api';
-
 import { getPostParam, getPosts, getPostText } from '../model/schema';
+
+/** why a thread can't be saved as a draft. */
+export type DraftSaveBlocker = 'tooLong' | 'voiceClip';
 
 /**
  * checks whether the thread can be saved as a draft.

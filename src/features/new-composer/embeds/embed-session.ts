@@ -64,7 +64,8 @@ const applyDismissals = (session: EmbedSession, tr: Transaction): EmbedSession =
 /** settled and dismissed link URLs shared across all posts. */
 export const embedSession = GardState.Field.define<EmbedSessionState>({
 	create(state) {
-		return settle(state.doc, state.selection.head, emptyEmbedSession);
+		// restored links should settle even if the caret is inside them.
+		return settle(state.doc, -1, emptyEmbedSession);
 	},
 	update(value, tr) {
 		const session = applyDismissals(value.session, tr);

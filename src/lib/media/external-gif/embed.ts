@@ -129,7 +129,13 @@ const parseKlipyGif = (url: URL): GifEmbedParams | undefined => {
 	};
 };
 
-const parseDimensions = (url: URL) => {
+/**
+ * reads the dimensions embedded in a GIF URL's query parameters.
+ *
+ * @param url the GIF URL
+ * @returns positive integer dimensions, or undefined if either is missing or invalid
+ */
+export const parseDimensions = (url: URL): { height: number; width: number } | undefined => {
 	const hp = url.searchParams.get(gifUrlParams.height);
 	const wp = url.searchParams.get(gifUrlParams.width);
 

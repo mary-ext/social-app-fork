@@ -14,12 +14,29 @@ import { getActivePostId } from './model/selection';
 import type { Store } from './store';
 import type { SuggestionKeyHandler } from './suggestions/autocomplete';
 
+/** the saved draft a composer was restored from. */
+export type DraftOrigin = {
+	id: string;
+	/** localRef paths of the restored attachments, keyed by media id. */
+	mediaPaths: ReadonlyMap<string, string>;
+};
+
 /** editor, drag channel, and portal hosts for one composer. */
 export type Composer = {
+	/** instance key for remounting the editor and widgets. */
+	id: string;
 	wg: Wordgard;
 	dnd: ThreadDnd;
 	/** reply parent's AT-URI; null for a top-level thread. */
 	replyUri: ResourceUri | null;
+	/** the draft being edited; null for a new thread. */
+	draft: DraftOrigin | null;
+	/**
+	 * checks for unsaved content.
+	 *
+	 * @returns for a new thread, whether it has any content; for a draft, whether it changed since restoring
+	 */
+	hasUnsavedChanges: () => boolean;
 	/** subscribes to editor updates, including focus changes. */
 	subscribe: (listener: () => void) => () => void;
 	/**

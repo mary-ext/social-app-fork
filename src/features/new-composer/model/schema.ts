@@ -189,9 +189,18 @@ export const threadSchema: GardState.Extension = [
  * @returns one post plot per entry
  */
 export const createPosts = (texts: readonly string[]): Plot[] => {
-	return texts.map((text) => {
-		return newPost().create(text.split('\n').map((line) => Paragraph.create(line ? [Leaf.text(line)] : [])));
-	});
+	return texts.map((text) => createPost(newPost(), text));
+};
+
+/**
+ * builds a post plot from plain text, one paragraph per line.
+ *
+ * @param tag the post's opening tag, from {@link newPost} or `Post.of`
+ * @param text the post's text
+ * @returns the post plot
+ */
+export const createPost = (tag: Plot.Tag<PostParam>, text: string): Plot => {
+	return tag.create(text.split('\n').map((line) => Paragraph.create(line ? [Leaf.text(line)] : [])));
 };
 
 /**
