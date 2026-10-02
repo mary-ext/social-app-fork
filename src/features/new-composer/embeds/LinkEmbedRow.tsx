@@ -1,19 +1,20 @@
 import { usePostState } from '../context';
 import { getPostInfo } from '../model/post-info';
-import { LinkCard } from './LinkCard';
+import { LinkCard, QuoteCard } from './LinkCard';
 import * as css from './LinkEmbedRow.css';
 
 /**
- * previews of the links a post embeds.
+ * link and quote previews for a post.
  *
  * @param props the post's id
- * @returns the row, or null if the post embeds no links
+ * @returns the row, or null if the post has no link or quote embeds
  */
 export function LinkEmbedRow({ postId }: { postId: string }) {
 	const external = usePostState(postId, (state, post) => getPostInfo(state, post.node).embeds.external, null);
+	const quote = usePostState(postId, (state, post) => getPostInfo(state, post.node).embeds.quote, null);
 	const record = usePostState(postId, (state, post) => getPostInfo(state, post.node).embeds.record, null);
 
-	if (!external && !record) {
+	if (!external && !quote && !record) {
 		return null;
 	}
 
@@ -21,6 +22,7 @@ export function LinkEmbedRow({ postId }: { postId: string }) {
 	return (
 		<div className={css.root}>
 			{external && <LinkCard key={external} postId={postId} url={external} kind="external" />}
+			{quote && <QuoteCard key={quote} postId={postId} uri={quote} />}
 			{record && <LinkCard key={record} postId={postId} url={record} kind="record" />}
 		</div>
 	);

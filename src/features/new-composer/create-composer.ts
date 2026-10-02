@@ -1,3 +1,5 @@
+import type { ResourceUri } from '@atcute/lexicons';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { Wordgard } from 'wordgard/editor';
@@ -19,6 +21,7 @@ import { restoreSelectionOnFocus } from './editor/focus';
 import { type PostSlot, slotHost } from './editor/post-slots';
 import { postScrolling } from './editor/scrolling';
 import { embedSession } from './embeds/embed-session';
+import { threadQuote } from './embeds/thread-quote';
 import { labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
 import { imageEditTaint } from './media/images/image-edits';
@@ -37,9 +40,10 @@ import {
 /**
  * creates a detached thread composer with one empty post.
  *
+ * @param quoteUri quoted post's AT-URI, or undefined for no quote
  * @returns the composer
  */
-export const createComposer = (): Composer => {
+export const createComposer = (quoteUri: ResourceUri | undefined): Composer => {
 	const updates = new SimpleEventEmitter<[]>();
 	const slots = createStore<readonly PostSlot[]>([]);
 	const popupHost = createStore<HTMLElement | null>(null);
@@ -50,6 +54,7 @@ export const createComposer = (): Composer => {
 		history(),
 		threadCommands,
 		embedSession,
+		quoteUri ? threadQuote.of(quoteUri) : [],
 		altTaint.field,
 		captionsTaint.field,
 		imageEditTaint.field,

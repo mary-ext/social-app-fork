@@ -1,3 +1,5 @@
+import type { ResourceUri } from '@atcute/lexicons';
+
 import type { Wordgard } from 'wordgard/editor';
 import { Transaction } from 'wordgard/state';
 
@@ -41,6 +43,8 @@ export const getLinkEmbedKind = (url: string): LinkEmbedKind => {
 export type PostEmbeds = {
 	/** URL shown as an external link card, or null. */
 	external: string | null;
+	/** AT-URI of the thread quote occupying the record slot, or null. */
+	quote: ResourceUri | null;
 	/** URL shown as a record embed (quoted post, feed, list, or starter pack), or null. */
 	record: string | null;
 };
@@ -74,17 +78,25 @@ export type EmbedSelection = {
 	stripped: TrailingLink | null;
 };
 
+/** attachments that take precedence over link-derived embeds. */
+export type PostAttachments = {
+	/** media occupying the external card's slot. */
+	media: readonly PostMedia[];
+	/** quoted post's AT-URI, or null; occupies the record slot. */
+	quote: ResourceUri | null;
+};
+
 /**
- * selects the last settled link per embed kind. dismissed links leave their slot empty.
+ * selects the last settled link per embed kind unless dismissed or displaced by an attachment.
  *
  * @param measurement the post's measured text
- * @param media the post's media, which takes precedence over an external card
+ * @param attachments the post's explicit attachments
  * @param session the composer's embed session
  * @returns selected embeds and the trailing link eligible for removal
  */
 export const selectPostEmbeds = (
 	{ links, trailingLink }: PostText,
-	media: readonly PostMedia[],
+	{ media, quote }: PostAttachments,
 	session: EmbedSession,
 ): EmbedSelection => {
 	let external: PostLink | null = null;
@@ -110,14 +122,14 @@ export const selectPostEmbeds = (
 	if (external && (media.length > 0 || session.dismissed.has(external.url))) {
 		external = null;
 	}
-	if (record && session.dismissed.has(record.url)) {
+	if (record && (quote !== null || session.dismissed.has(record.url))) {
 		record = null;
 	}
 
 	const isStripped = trailingLink && (trailingLink.link === external || trailingLink.link === record);
 
 	return {
-		embeds: { external: external?.url ?? null, record: record?.url ?? null },
+		embeds: { external: external?.url ?? null, quote, record: record?.url ?? null },
 		stripped: isStripped ? trailingLink : null,
 	};
 };

@@ -9,6 +9,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
+import { RQKEY as RQKEY_POST } from '#/state/queries/post';
 import { RQKEY_LINK } from '#/state/queries/resolve-link-key';
 
 import { composerDialogHandle, newComposerDialogHandle } from '#/components/dialogs/handles';
@@ -57,14 +58,9 @@ export function useOpenComposer() {
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
-		if (new URLSearchParams(location.search).has('new-composer')) {
-			if (!newComposerDialogHandle.isOpen) {
-				newComposerDialogHandle.openWithPayload(opts);
-			}
-			return;
-		}
-
 		if (opts.quote) {
+			queryClient.setQueryData(RQKEY_POST(opts.quote.uri), opts.quote);
+
 			const appUrl = recordUriToShareUrl(opts.quote.uri);
 			if (appUrl) {
 				const resolved: ResolvedLink = {
@@ -89,6 +85,12 @@ export function useOpenComposer() {
 			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
+			return;
+		}
+		if (new URLSearchParams(location.search).has('new-composer')) {
+			if (!newComposerDialogHandle.isOpen) {
+				newComposerDialogHandle.openWithPayload(opts);
+			}
 			return;
 		}
 		// Never replace an already open composer.

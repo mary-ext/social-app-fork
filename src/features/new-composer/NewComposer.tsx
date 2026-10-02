@@ -1,5 +1,7 @@
 import { memo } from 'react';
 
+import type { ResourceUri } from '@atcute/lexicons';
+
 import { createPortal } from 'react-dom';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -26,10 +28,11 @@ import { ThreadFooter } from './thread/ThreadFooter';
 /**
  * thread composer with shared selection and undo history across posts.
  *
+ * @param props quoteUri is the quoted post's AT-URI, or undefined; read only on mount
  * @returns the composer header, body and footer
  */
-export function NewComposer() {
-	const composer = useConstant(createComposer);
+export function NewComposer({ quoteUri }: { quoteUri: ResourceUri | undefined }) {
+	const composer = useConstant(() => createComposer(quoteUri));
 
 	return (
 		<ComposerContext value={composer}>
