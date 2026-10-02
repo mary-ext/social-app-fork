@@ -43,7 +43,7 @@ export type ComposerCloseGuard = {
 /**
  * thread composer with shared selection and undo history across posts.
  *
- * @param props.quoteUri initial quote; ignored after mount
+ * @param props.quoteUri quote used on mount and when discarding before opening drafts
  * @param props.replyUri reply parent; ignored after mount
  * @param props.closeGuardRef lets the dialog check for unsaved content before closing
  * @returns the composer header, body and footer
@@ -62,6 +62,10 @@ export function NewComposer({
 	});
 
 	const discard = useDiscardGuard(composer);
+
+	const resetComposer = () => {
+		setComposer(createComposer({ seed: createBlankSeed(quoteUri), replyUri: undefined }));
+	};
 
 	const openDraft = async (view: AppBskyDraftDefs.DraftView) => {
 		const { seed, missingMedia } = await restoreDraft(view);
@@ -85,7 +89,7 @@ export function NewComposer({
 
 				{composer.replyUri === null && (
 					<Dialog.Header.Actions>
-						<DraftsButton onSelect={openDraft} />
+						<DraftsButton onDiscard={resetComposer} onSelect={openDraft} />
 					</Dialog.Header.Actions>
 				)}
 			</Dialog.Header.Root>

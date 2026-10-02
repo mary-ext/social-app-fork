@@ -18,6 +18,7 @@ export type DiscardGuard = {
 	prompt: {
 		handle: Prompt.PromptHandle;
 		draftSaveBlocker: DraftSaveBlocker | undefined;
+		isDraft: boolean;
 	};
 };
 
@@ -29,7 +30,11 @@ export type DiscardGuard = {
  */
 export const useDiscardGuard = (composer: Composer): DiscardGuard => {
 	const handle = Prompt.usePromptHandle();
-	const [draftSaveBlocker, setDraftSaveBlocker] = useState<DraftSaveBlocker>();
+	// keep prompt text stable during the exit animation when discarding replaces the composer.
+	const [snapshot, setSnapshot] = useState<{
+		draftSaveBlocker: DraftSaveBlocker | undefined;
+		isDraft: boolean;
+	}>({ draftSaveBlocker: undefined, isDraft: false });
 
 	return {
 		intercept() {
@@ -37,11 +42,14 @@ export const useDiscardGuard = (composer: Composer): DiscardGuard => {
 				return false;
 			}
 
-			setDraftSaveBlocker(getDraftSaveBlocker(composer.wg.state.doc));
+			setSnapshot({
+				draftSaveBlocker: getDraftSaveBlocker(composer.wg.state.doc),
+				isDraft: composer.draft !== null,
+			});
 			handle.open(null);
 			return true;
 		},
-		prompt: { handle, draftSaveBlocker },
+		prompt: { handle, ...snapshot },
 	};
 };
 
@@ -50,18 +58,19 @@ export const useDiscardGuard = (composer: Composer): DiscardGuard => {
  *
  * @param props.handle opens the prompt
  * @param props.draftSaveBlocker reason saving is unavailable, or undefined to offer saving
+ * @param props.isDraft whether the thread came from a saved draft
  * @param props.onDiscard continues without saving
  * @returns the prompt
  */
 export function DiscardPrompt({
 	handle,
 	draftSaveBlocker,
+	isDraft,
 	onDiscard,
 }: DiscardGuard['prompt'] & {
 	onDiscard: () => void;
 }) {
-	const { replyUri, draft } = useComposer();
-	const isDraft = draft !== null;
+	const { replyUri } = useComposer();
 
 	// the draft format has no reply parent.
 	if (replyUri !== null) {
