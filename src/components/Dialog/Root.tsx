@@ -98,6 +98,11 @@ export function Root<Payload = unknown>({
 				handle={handle}
 				modal={modal}
 				onOpenChange={(next, details) => {
+					// let nested controls consume Escape without closing the dialog.
+					if (!next && details.reason === 'escape-key' && details.event.defaultPrevented) {
+						details.cancel();
+						return;
+					}
 					if (!next && details.reason === 'close-watcher') {
 						const onBack = backHandler.current;
 						if (onBack) {

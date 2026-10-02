@@ -113,4 +113,7 @@ export function closeComposer(): void {
 	if (composerDialogHandle.isOpen) {
 		composerDialogHandle.close();
 	}
+	if (newComposerDialogHandle.isOpen) {
+		newComposerDialogHandle.close();
+	}
 }

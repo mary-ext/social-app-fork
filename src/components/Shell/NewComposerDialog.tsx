@@ -1,4 +1,6 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef } from 'react';
+
+import type { ComposerCloseGuard } from '#/features/new-composer/NewComposer';
 
 import * as Dialog from '#/components/Dialog';
 import { newComposerDialogHandle } from '#/components/dialogs/handles';
@@ -13,8 +15,18 @@ const NewComposer = lazy(() =>
 );
 
 export function NewComposerDialog() {
+	const closeGuardRef = useRef<ComposerCloseGuard>(null);
+
 	return (
-		<Dialog.Root handle={newComposerDialogHandle}>
+		<Dialog.Root
+			handle={newComposerDialogHandle}
+			onOpenChange={(open, details) => {
+				// confirmed discards close imperatively; don't prompt again.
+				if (!open && details.reason !== 'imperative-action' && closeGuardRef.current?.interceptClose()) {
+					details.cancel();
+				}
+			}}
+		>
 			{({ payload }) => (
 				<Dialog.Popup label={m['common.compose.action.write']()} padding="none" scroll="body">
 					{payload && (
@@ -27,7 +39,11 @@ export function NewComposerDialog() {
 								</Dialog.Body>
 							}
 						>
-							<NewComposer quoteUri={payload.quote?.uri} replyUri={payload.replyTo?.uri} />
+							<NewComposer
+								quoteUri={payload.quote?.uri}
+								replyUri={payload.replyTo?.uri}
+								closeGuardRef={closeGuardRef}
+							/>
 						</Suspense>
 					)}
 				</Dialog.Popup>

@@ -236,6 +236,16 @@ export const isEmptyPost = (post: Plot): boolean => {
 };
 
 /**
+ * checks for content that needs a discard prompt.
+ *
+ * @param doc the thread document
+ * @returns whether any post has text, extra lines or media
+ */
+export const hasThreadContent = (doc: Plot.Doc): boolean => {
+	return getPosts(doc).some(({ node }) => !isEmptyPost(node) || getPostParam(node).media.length > 0);
+};
+
+/**
  * finds the post adjacent to another in the thread.
  *
  * @param post a post located in the document
