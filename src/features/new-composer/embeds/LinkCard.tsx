@@ -19,6 +19,11 @@ import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
+import {
+	parseTangledStringUrl,
+	type TangledStringTarget,
+} from '#/components/Post/Embed/TangledStringEmbed/detect';
+import { TangledStringPlaceholder } from '#/components/Post/Embed/TangledStringEmbed/Placeholder';
 import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
@@ -38,6 +43,9 @@ import * as css from './LinkCard.css';
 
 const StandardSiteEmbed = lazy(() =>
 	import('#/components/Post/Embed/StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
+);
+const TangledStringEmbed = lazy(() =>
+	import('#/components/Post/Embed/TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
 );
 
 // #region frame
@@ -253,6 +261,29 @@ function ChatInviteCard({ code, ...frame }: LinkCardProps & { code: string }) {
 	);
 }
 
+function TangledStringCard({ target, ...frame }: LinkCardProps & { target: TangledStringTarget }) {
+	// the Tangled record supplies the preview, but publishing needs external metadata.
+	const { error } = useResolveLinkQuery(frame.url);
+
+	if (error) {
+		return (
+			<Frame {...frame} variant="notice">
+				<NoPreviewNotice />
+			</Frame>
+		);
+	}
+
+	return (
+		<Frame {...frame} variant="bare">
+			<NavigationDisabled>
+				<Suspense fallback={<TangledStringPlaceholder />}>
+					<TangledStringEmbed target={target} />
+				</Suspense>
+			</NavigationDisabled>
+		</Frame>
+	);
+}
+
 function ResolvedLinkCard(frame: LinkCardProps) {
 	const { data, error } = useResolveLinkQuery(frame.url);
 
@@ -332,6 +363,11 @@ export function LinkCard(props: LinkCardProps) {
 	const link = resolveUrlToLink(props.url);
 	if (link?.kind === 'chatInvite') {
 		return <ChatInviteCard {...props} code={link.code} />;
+	}
+
+	const tangledTarget = parseTangledStringUrl(props.url);
+	if (tangledTarget) {
+		return <TangledStringCard {...props} target={tangledTarget} />;
 	}
 
 	return <ResolvedLinkCard {...props} />;
