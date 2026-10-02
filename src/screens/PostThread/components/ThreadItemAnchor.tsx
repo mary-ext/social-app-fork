@@ -193,6 +193,7 @@ function ThreadItemAnchorInner({
 				author: post.author,
 				embed: post.embed,
 				moderation,
+				view: post,
 			},
 			onPostSuccess: onPostSuccess,
 		});

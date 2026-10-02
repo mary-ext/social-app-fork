@@ -1,5 +1,7 @@
 import { createContext, use, useSyncExternalStore } from 'react';
 
+import type { ResourceUri } from '@atcute/lexicons';
+
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
@@ -16,6 +18,8 @@ import type { SuggestionKeyHandler } from './suggestions/autocomplete';
 export type Composer = {
 	wg: Wordgard;
 	dnd: ThreadDnd;
+	/** reply parent's AT-URI; null for a top-level thread. */
+	replyUri: ResourceUri | null;
 	/** subscribes to editor updates, including focus changes. */
 	subscribe: (listener: () => void) => () => void;
 	/**

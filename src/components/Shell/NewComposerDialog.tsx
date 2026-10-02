@@ -27,7 +27,7 @@ export function NewComposerDialog() {
 								</Dialog.Body>
 							}
 						>
-							<NewComposer />
+							<NewComposer quoteUri={payload.quote?.uri} replyUri={payload.replyTo?.uri} />
 						</Suspense>
 					)}
 				</Dialog.Popup>

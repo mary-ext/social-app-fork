@@ -9,6 +9,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
+import { RQKEY as RQKEY_POST } from '#/state/queries/post';
 import { RQKEY_LINK } from '#/state/queries/resolve-link-key';
 
 import { composerDialogHandle, newComposerDialogHandle } from '#/components/dialogs/handles';
@@ -23,6 +24,8 @@ export interface ComposerOptsPostRef {
 	author: AppBskyActorDefs.ProfileViewBasic;
 	embed?: AppBskyFeedDefs.PostView['embed'];
 	moderation?: ModerationDecision;
+	/** full post for the reply preview. */
+	view: AppBskyFeedDefs.PostView;
 }
 
 export type OnPostSuccessData =
@@ -49,22 +52,17 @@ export interface ComposerOpts {
 export const COMPOSER_DIALOG_ID = 'composer';
 
 /**
- * thin imperative API over the global composer dialog (see `composerDialogHandle` in
- * `#/components/dialogs/handles`). a hook rather than a plain function because precaching the quoted post
- * needs the active account's query client.
+ * provides an opener for the global composer dialog.
+ *
+ * @returns the openComposer callback
  */
 export function useOpenComposer() {
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
-		if (new URLSearchParams(location.search).has('new-composer')) {
-			if (!newComposerDialogHandle.isOpen) {
-				newComposerDialogHandle.openWithPayload(opts);
-			}
-			return;
-		}
-
 		if (opts.quote) {
+			queryClient.setQueryData(RQKEY_POST(opts.quote.uri), opts.quote);
+
 			const appUrl = recordUriToShareUrl(opts.quote.uri);
 			if (appUrl) {
 				const resolved: ResolvedLink = {
@@ -89,6 +87,15 @@ export function useOpenComposer() {
 			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
+			return;
+		}
+		if (new URLSearchParams(location.search).has('new-composer')) {
+			if (!newComposerDialogHandle.isOpen) {
+				if (opts.replyTo) {
+					queryClient.setQueryData(RQKEY_POST(opts.replyTo.uri), opts.replyTo.view);
+				}
+				newComposerDialogHandle.openWithPayload(opts);
+			}
 			return;
 		}
 		// Never replace an already open composer.

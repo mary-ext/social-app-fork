@@ -1,3 +1,5 @@
+import type { ResourceUri } from '@atcute/lexicons';
+
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { Wordgard } from 'wordgard/editor';
@@ -19,6 +21,7 @@ import { restoreSelectionOnFocus } from './editor/focus';
 import { type PostSlot, slotHost } from './editor/post-slots';
 import { postScrolling } from './editor/scrolling';
 import { embedSession } from './embeds/embed-session';
+import { threadQuote } from './embeds/thread-quote';
 import { labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
 import { imageEditTaint } from './media/images/image-edits';
@@ -34,12 +37,21 @@ import {
 	suggestionState,
 } from './suggestions/autocomplete';
 
+/** initial quote and reply context. */
+export type ComposerInit = {
+	/** quoted post's AT-URI; undefined omits the quote. */
+	quoteUri: ResourceUri | undefined;
+	/** reply parent's AT-URI; undefined starts a top-level thread. */
+	replyUri: ResourceUri | undefined;
+};
+
 /**
  * creates a detached thread composer with one empty post.
  *
+ * @param init initial quote and reply URIs
  * @returns the composer
  */
-export const createComposer = (): Composer => {
+export const createComposer = ({ quoteUri, replyUri }: ComposerInit): Composer => {
 	const updates = new SimpleEventEmitter<[]>();
 	const slots = createStore<readonly PostSlot[]>([]);
 	const popupHost = createStore<HTMLElement | null>(null);
@@ -50,6 +62,7 @@ export const createComposer = (): Composer => {
 		history(),
 		threadCommands,
 		embedSession,
+		quoteUri ? threadQuote.of(quoteUri) : [],
 		altTaint.field,
 		captionsTaint.field,
 		imageEditTaint.field,
@@ -78,9 +91,12 @@ export const createComposer = (): Composer => {
 				popupHost.set(null);
 			},
 		}),
-		postPlaceholder.of((index) =>
-			index === 0 ? m['common.compose.placeholder']() : m['view.composer.thread.action.addPost'](),
-		),
+		postPlaceholder.of((index) => {
+			if (index > 0) {
+				return m['view.composer.thread.action.addPost']();
+			}
+			return replyUri ? m['common.compose.replyPlaceholder']() : m['common.compose.placeholder']();
+		}),
 		Wordgard.label(m['common.compose.action.write']()),
 		Wordgard.theme({
 			'&': { border: 'none' },
@@ -113,6 +129,7 @@ export const createComposer = (): Composer => {
 	return {
 		wg,
 		dnd,
+		replyUri: replyUri ?? null,
 
 		interaction: createStore<InteractionSettings | null>(null),
 		slots,

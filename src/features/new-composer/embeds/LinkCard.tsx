@@ -1,6 +1,7 @@
 import { lazy, type ReactNode, Suspense } from 'react';
 
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 import { isGenericUri } from '@atcute/lexicons/syntax';
 
 import { EmbeddingDisabledError, type ResolvedLink } from '#/lib/api/resolve';
@@ -8,6 +9,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { toNiceDomain } from '#/lib/links/nice-domain';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { usePostQuery } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
 
@@ -19,6 +21,11 @@ import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
+import {
+	parseTangledStringUrl,
+	type TangledStringTarget,
+} from '#/components/Post/Embed/TangledStringEmbed/detect';
+import { TangledStringPlaceholder } from '#/components/Post/Embed/TangledStringEmbed/Placeholder';
 import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
@@ -39,24 +46,41 @@ import * as css from './LinkCard.css';
 const StandardSiteEmbed = lazy(() =>
 	import('#/components/Post/Embed/StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
 );
+const TangledStringEmbed = lazy(() =>
+	import('#/components/Post/Embed/TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
+);
 
 // #region frame
 
 /** `bare` uses the embed's own border; `card` adds one; `notice` frames a status message. */
 type FrameVariant = 'bare' | 'card' | 'notice';
 
-function Frame({
+type CardKind = LinkEmbedKind | 'quote';
+
+const getFrameLabel = (kind: CardKind, url: string): string => {
+	switch (kind) {
+		case 'external': {
+			return m['view.composer.embed.a11y.linkPreview']({ niceUrl: toNiceDomain(url) });
+		}
+		case 'quote': {
+			return 'Quoted post';
+		}
+		case 'record': {
+			return 'Embedded record';
+		}
+	}
+};
+
+function RemoveButton({
 	postId,
 	url,
 	kind,
 	variant,
-	children,
 }: {
 	postId: string;
 	url: string;
 	kind: LinkEmbedKind;
 	variant: FrameVariant;
-	children: ReactNode;
 }) {
 	const wg = useEditor();
 	const isActive = useIsActivePost(postId);
@@ -70,41 +94,51 @@ function Frame({
 	const removeLabel = kind === 'record' ? 'Remove embed' : 'Remove link preview';
 
 	return (
-		<div
-			className={css.frame[variant]}
-			role="group"
-			aria-label={
-				kind === 'record'
-					? 'Embedded record'
-					: m['view.composer.embed.a11y.linkPreview']({ niceUrl: toNiceDomain(url) })
-			}
-		>
+		<div className={isNotice ? css.noticeActions : css.actions} onMouseDown={keepEditorFocus}>
+			{isNotice ? (
+				<Button
+					label={removeLabel}
+					size="tiny"
+					color="secondary"
+					variant="ghost"
+					shape="round"
+					tabIndex={isActive ? 0 : -1}
+					onClick={remove}
+				>
+					<XIcon className={css.removeIcon} />
+				</Button>
+			) : (
+				<Button
+					label={removeLabel}
+					className={css.removeButton}
+					variant="bare"
+					tabIndex={isActive ? 0 : -1}
+					onClick={remove}
+				>
+					<XIcon className={css.removeIcon} />
+				</Button>
+			)}
+		</div>
+	);
+}
+
+function Frame({
+	postId,
+	url,
+	kind,
+	variant,
+	children,
+}: {
+	postId: string;
+	url: string;
+	kind: CardKind;
+	variant: FrameVariant;
+	children: ReactNode;
+}) {
+	return (
+		<div className={css.frame[variant]} role="group" aria-label={getFrameLabel(kind, url)}>
 			{children}
-			<div className={isNotice ? css.noticeActions : css.actions} onMouseDown={keepEditorFocus}>
-				{isNotice ? (
-					<Button
-						label={removeLabel}
-						size="tiny"
-						color="secondary"
-						variant="ghost"
-						shape="round"
-						tabIndex={isActive ? 0 : -1}
-						onClick={remove}
-					>
-						<XIcon className={css.removeIcon} />
-					</Button>
-				) : (
-					<Button
-						label={removeLabel}
-						className={css.removeButton}
-						variant="bare"
-						tabIndex={isActive ? 0 : -1}
-						onClick={remove}
-					>
-						<XIcon className={css.removeIcon} />
-					</Button>
-				)}
-			</div>
+			{kind !== 'quote' && <RemoveButton postId={postId} url={url} kind={kind} variant={variant} />}
 		</div>
 	);
 }
@@ -253,6 +287,29 @@ function ChatInviteCard({ code, ...frame }: LinkCardProps & { code: string }) {
 	);
 }
 
+function TangledStringCard({ target, ...frame }: LinkCardProps & { target: TangledStringTarget }) {
+	// the Tangled record supplies the preview, but publishing needs external metadata.
+	const { error } = useResolveLinkQuery(frame.url);
+
+	if (error) {
+		return (
+			<Frame {...frame} variant="notice">
+				<NoPreviewNotice />
+			</Frame>
+		);
+	}
+
+	return (
+		<Frame {...frame} variant="bare">
+			<NavigationDisabled>
+				<Suspense fallback={<TangledStringPlaceholder />}>
+					<TangledStringEmbed target={target} />
+				</Suspense>
+			</NavigationDisabled>
+		</Frame>
+	);
+}
+
 function ResolvedLinkCard(frame: LinkCardProps) {
 	const { data, error } = useResolveLinkQuery(frame.url);
 
@@ -334,5 +391,46 @@ export function LinkCard(props: LinkCardProps) {
 		return <ChatInviteCard {...props} code={link.code} />;
 	}
 
+	const tangledTarget = parseTangledStringUrl(props.url);
+	if (tangledTarget) {
+		return <TangledStringCard {...props} target={tangledTarget} />;
+	}
+
 	return <ResolvedLinkCard {...props} />;
+}
+
+/**
+ * non-removable preview of the thread's quoted post.
+ *
+ * @param props post id and the quoted post's AT-URI
+ * @returns a preview, loading placeholder, or error notice
+ */
+export function QuoteCard({ postId, uri }: { postId: string; uri: ResourceUri }) {
+	const { data, error } = usePostQuery(uri);
+
+	let variant: FrameVariant;
+	let content: ReactNode;
+	if (data && !data.viewer?.embeddingDisabled) {
+		variant = 'bare';
+		content = (
+			<NavigationDisabled>
+				<QuoteEmbed embed={createEmbedViewRecordFromPost(data)} linkDisabled />
+			</NavigationDisabled>
+		);
+	} else if (data) {
+		variant = 'notice';
+		content = <Notice icon={BanIcon} message="This post can't be quoted" />;
+	} else if (error) {
+		variant = 'notice';
+		content = <NoPreviewNotice />;
+	} else {
+		variant = 'card';
+		content = <QuotePlaceholder />;
+	}
+
+	return (
+		<Frame postId={postId} url={uri} kind="quote" variant={variant}>
+			{content}
+		</Frame>
+	);
 }
