@@ -59,7 +59,7 @@ export function MediaRow({ postId }: { postId: string }) {
 		{ tabbable: isActive },
 	);
 
-	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
+	const imageAltDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
 	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
 	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
 	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
@@ -82,7 +82,7 @@ export function MediaRow({ postId }: { postId: string }) {
 			case 'image': {
 				const found = findPostById(state.doc, postId);
 
-				altDialog.openWithPayload({
+				imageAltDialog.openWithPayload({
 					mediaId: item.id,
 					blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
 					alt: getMediaAlt(state, item.id),
@@ -211,7 +211,7 @@ export function MediaRow({ postId }: { postId: string }) {
 				)}
 			</div>
 
-			<ImageAltTextDialog handle={altDialog} onSave={saveAlt} />
+			<ImageAltTextDialog handle={imageAltDialog} onSave={saveAlt} />
 			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
 			<ExternalGifAltTextDialog handle={externalGifAltDialog} onSave={saveAlt} />
 			<VideoAltTextDialog handle={videoAltDialog} onSave={saveAlt} />
