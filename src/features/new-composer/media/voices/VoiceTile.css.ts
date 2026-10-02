@@ -11,3 +11,7 @@ export const tile = style({
 	gap: space.sm,
 	padding: space.sm,
 });
+
+export const player = style({
+	gridArea: 'player',
+});

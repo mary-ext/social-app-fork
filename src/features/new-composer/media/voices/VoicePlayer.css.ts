@@ -5,7 +5,6 @@ import { fontWeight, space } from '#/styles/tokens.css';
 
 export const player = style({
 	display: 'flex',
-	gridArea: 'player',
 	alignItems: 'center',
 	gap: space.sm,
 	minWidth: 0,

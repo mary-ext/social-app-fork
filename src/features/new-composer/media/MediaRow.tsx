@@ -28,6 +28,7 @@ import { getMediaCaptions, setMediaCaptions } from './videos/captions';
 import { CaptionsDialog, type VideoCaptionsTarget } from './videos/CaptionsDialog';
 import { VideoAltTextDialog, type VideoAltTextTarget } from './videos/VideoAltTextDialog';
 import { VideoTile } from './videos/VideoTile';
+import { VoiceAltTextDialog, type VoiceAltTextTarget } from './voices/VoiceAltTextDialog';
 import { VoiceTile } from './voices/VoiceTile';
 
 const NO_MEDIA: readonly PostMedia[] = [];
@@ -53,6 +54,7 @@ export function MediaRow({ postId }: { postId: string }) {
 	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
 	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
 	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
+	const voiceAltDialog = Dialog.useDialogHandle<VoiceAltTextTarget & { mediaId: string }>();
 	const captionsDialog = Dialog.useDialogHandle<VideoCaptionsTarget & { mediaId: string }>();
 	const editDialog = Dialog.useDialogHandle<EditImageTarget & { mediaId: string }>();
 
@@ -107,8 +109,12 @@ export function MediaRow({ postId }: { postId: string }) {
 				});
 				break;
 			}
-			default: {
-				// TODO: support alt text for voice notes.
+			case 'voice': {
+				voiceAltDialog.openWithPayload({
+					mediaId: item.id,
+					item,
+					alt: getMediaAlt(state, item.id),
+				});
 				break;
 			}
 		}
@@ -206,6 +212,7 @@ export function MediaRow({ postId }: { postId: string }) {
 			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
 			<ExternalGifAltTextDialog handle={externalGifAltDialog} onSave={saveAlt} />
 			<VideoAltTextDialog handle={videoAltDialog} onSave={saveAlt} />
+			<VoiceAltTextDialog handle={voiceAltDialog} onSave={saveAlt} />
 			<CaptionsDialog
 				handle={captionsDialog}
 				onSave={(tracks, { mediaId }) => setMediaCaptions(wg, { mediaId, tracks })}

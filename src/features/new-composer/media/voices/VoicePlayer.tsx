@@ -1,5 +1,7 @@
 import { type KeyboardEvent, type PointerEvent, useEffect, useId, useRef, useState } from 'react';
 
+import { clsx } from 'clsx';
+
 import { getBlobUrl } from '#/lib/utils/blob-url';
 import { clamp } from '#/lib/utils/numbers';
 
@@ -10,7 +12,7 @@ import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import type { PostMedia } from '../../model/schema';
+import type { VoiceMedia } from '../../model/schema';
 import { keepEditorFocus } from '../../shared/editor-focus';
 import * as css from './VoicePlayer.css';
 import { BAR_COUNT, useWaveform } from './waveform';
@@ -28,15 +30,18 @@ const FLAT_PEAKS = Array.from({ length: BAR_COUNT }, () => 0);
 /**
  * plays a voice attachment with a seekable waveform.
  *
+ * @param props.className CSS classes for the player's outer element
  * @param props.item the voice attachment
  * @param props.tabbable whether the controls are in the tab order
  * @returns the player
  */
 export function VoicePlayer({
+	className,
 	item,
 	tabbable,
 }: {
-	item: Extract<PostMedia, { kind: 'voice' }>;
+	className: string;
+	item: VoiceMedia;
 	tabbable: boolean;
 }) {
 	const audioRef = useRef<HTMLAudioElement>(null);
@@ -129,7 +134,7 @@ export function VoicePlayer({
 	};
 
 	return (
-		<div className={css.player}>
+		<div className={clsx(css.player, className)}>
 			<Button
 				label={isPlaying ? m['view.composer.voice.a11y.pause']() : m['view.composer.voice.a11y.play']()}
 				color="primary"
