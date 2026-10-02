@@ -11,15 +11,15 @@ import { Button } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-import { useEditorState } from '../context';
-import { DragThumbnail } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import { keepEditorFocus } from '../shared/editor-focus';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
+import { useEditorState } from '../../context';
+import { DragThumbnail } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import { keepEditorFocus } from '../../shared/editor-focus';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, TileBadges } from '../shared/TileControls';
 import * as css from './ExternalGifTile.css';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, TileBadges } from './TileControls';
 
 /**
  * GIF picker attachment tile.

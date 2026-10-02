@@ -2,13 +2,12 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 
-import { useEditorState } from '../context';
-import { DragChip } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
-import { hasMediaCaptions } from './captions';
-import { MediaTile } from './MediaTile';
+import { useEditorState } from '../../context';
+import { DragChip } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
 import {
 	AltButton,
 	CaptionsButton,
@@ -16,8 +15,9 @@ import {
 	TileActions,
 	TileBadges,
 	UploadBadge,
-} from './TileControls';
-import { usePendingUpload } from './upload-status';
+} from '../shared/TileControls';
+import { usePendingUpload } from '../shared/upload-status';
+import { hasMediaCaptions } from './captions';
 import * as css from './VideoTile.css';
 
 const LABEL = 'Video attachment';

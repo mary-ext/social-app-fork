@@ -3,7 +3,7 @@ import type { GardState } from 'wordgard/state';
 
 import { LANGUAGES_MAP, langCode } from '#/locale/languages';
 
-import { defineTaint } from '../model/taints';
+import { defineTaint } from '../../model/taints';
 
 /** maximum caption tracks per video. */
 export const MAX_CAPTION_TRACKS = 20;

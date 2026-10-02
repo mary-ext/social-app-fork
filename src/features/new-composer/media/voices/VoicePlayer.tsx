@@ -10,8 +10,8 @@ import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import type { PostMedia } from '../model/schema';
-import { keepEditorFocus } from '../shared/editor-focus';
+import type { PostMedia } from '../../model/schema';
+import { keepEditorFocus } from '../../shared/editor-focus';
 import * as css from './VoicePlayer.css';
 import { BAR_COUNT, useWaveform } from './waveform';
 

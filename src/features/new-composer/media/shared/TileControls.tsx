@@ -12,7 +12,7 @@ import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.s
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
-import { keepEditorFocus } from '../shared/editor-focus';
+import { keepEditorFocus } from '../../shared/editor-focus';
 import * as css from './TileControls.css';
 import { getUploadLabel, type PendingUpload } from './upload-status';
 

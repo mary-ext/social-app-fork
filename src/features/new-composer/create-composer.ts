@@ -21,9 +21,9 @@ import { postScrolling } from './editor/scrolling';
 import { embedSession } from './embeds/embed-session';
 import { labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
-import { altTaint } from './media/alt-text';
-import { captionsTaint } from './media/captions';
-import { imageEditTaint } from './media/image-edits';
+import { imageEditTaint } from './media/images/image-edits';
+import { altTaint } from './media/shared/alt-text';
+import { captionsTaint } from './media/videos/captions';
 import { createPosts, endOfLastLine, threadSchema } from './model/schema';
 import { createStore } from './store';
 import {

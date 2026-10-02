@@ -6,7 +6,7 @@ import type * as Dialog from '#/components/Dialog';
 
 import { m } from '#/paraglide/messages';
 
-import { AltTextDialog, type AltTextView } from './AltTextDialog';
+import { AltTextDialog, type AltTextView } from '../shared/AltTextDialog';
 import * as css from './VideoAltTextDialog.css';
 
 /** video alt text dialog payload. */

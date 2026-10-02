@@ -21,7 +21,7 @@ import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radi
 import PageTextIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { isFileDrag } from '../dnd/drop-targets';
+import { isFileDrag } from '../../dnd/drop-targets';
 import {
 	type CaptionProblem,
 	type CaptionTrack,

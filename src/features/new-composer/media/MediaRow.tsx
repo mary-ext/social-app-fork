@@ -14,27 +14,30 @@ import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } f
 import { escapeToEditor } from '../shared/editor-focus';
 import { MEDIA_ID_ATTR } from '../shared/elements';
 import { useRovingFocus } from '../shared/roving-focus';
-import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
-import { getMediaCaptions, setMediaCaptions } from './captions';
-import { CaptionsDialog, type CaptionsTarget } from './CaptionsDialog';
 import { removeMedia } from './commands';
-import { ExternalGifTile } from './ExternalGifTile';
-import { GifAltTextDialog, type GifAltTextTarget } from './GifAltTextDialog';
-import { GifTile } from './GifTile';
+import {
+	ExternalGifAltTextDialog,
+	type ExternalGifAltTextTarget,
+} from './external-gifs/ExternalGifAltTextDialog';
+import { ExternalGifTile } from './external-gifs/ExternalGifTile';
+import { GifTile } from './gifs/GifTile';
 import {
 	type EditableImage,
 	getEditedImage,
 	getImageEdit,
 	saveComposerImage,
 	toComposerImage,
-} from './image-edits';
-import { ImageGroup } from './ImageGroup';
+} from './images/image-edits';
+import { ImageGroup } from './images/ImageGroup';
 import * as css from './MediaRow.css';
-import { refocusMedia } from './MediaTile';
-import { VideoAltTextDialog, type VideoAltTextTarget } from './VideoAltTextDialog';
-import { VideoTile } from './VideoTile';
-import { VoiceTile } from './VoiceTile';
+import { getMediaAlt, setMediaAlt } from './shared/alt-text';
+import { refocusMedia } from './shared/MediaTile';
+import { getMediaCaptions, setMediaCaptions } from './videos/captions';
+import { CaptionsDialog, type CaptionsTarget } from './videos/CaptionsDialog';
+import { VideoAltTextDialog, type VideoAltTextTarget } from './videos/VideoAltTextDialog';
+import { VideoTile } from './videos/VideoTile';
+import { VoiceTile } from './voices/VoiceTile';
 
 const NO_MEDIA: readonly PostMedia[] = [];
 
@@ -56,7 +59,7 @@ export function MediaRow({ postId }: { postId: string }) {
 	);
 
 	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
-	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
+	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
 	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
 	const captionsDialog = Dialog.useDialogHandle<CaptionsTarget & { mediaId: string }>();
 	const editDialog = Dialog.useDialogHandle();
@@ -91,7 +94,7 @@ export function MediaRow({ postId }: { postId: string }) {
 				break;
 			}
 			case 'externalGif': {
-				gifAltDialog.openWithPayload({
+				externalGifAltDialog.openWithPayload({
 					mediaId: item.id,
 					gif: item.gif,
 					alt: getMediaAlt(state, item.id),
@@ -199,7 +202,7 @@ export function MediaRow({ postId }: { postId: string }) {
 			</div>
 
 			<ImageAltTextDialog handle={altDialog} onSave={saveAlt} />
-			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
+			<ExternalGifAltTextDialog handle={externalGifAltDialog} onSave={saveAlt} />
 			<VideoAltTextDialog handle={videoAltDialog} onSave={saveAlt} />
 			<CaptionsDialog
 				handle={captionsDialog}

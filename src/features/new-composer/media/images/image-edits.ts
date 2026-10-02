@@ -4,8 +4,8 @@ import type { GardState } from 'wordgard/state';
 import type { ComposerImage, ImageMeta, ImageTransformation } from '#/lib/media/composer-image';
 import type { Dimensions } from '#/lib/media/metadata';
 
-import type { ImageMedia } from '../model/schema';
-import { defineTaint, type TaintMap } from '../model/taints';
+import type { ImageMedia } from '../../model/schema';
+import { defineTaint, type TaintMap } from '../../model/taints';
 
 /** a cropped image and its editor settings. */
 export type ImageEdit = {

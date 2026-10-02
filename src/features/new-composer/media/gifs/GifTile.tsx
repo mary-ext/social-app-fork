@@ -1,14 +1,14 @@
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
-import { useEditorState } from '../context';
-import { DragThumbnail } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
+import { useEditorState } from '../../context';
+import { DragThumbnail } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, TileBadges, UploadBadge } from '../shared/TileControls';
+import { usePendingUpload } from '../shared/upload-status';
 import * as css from './GifTile.css';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, TileBadges, UploadBadge } from './TileControls';
-import { usePendingUpload } from './upload-status';
 
 /**
  * local GIF attachment tile.

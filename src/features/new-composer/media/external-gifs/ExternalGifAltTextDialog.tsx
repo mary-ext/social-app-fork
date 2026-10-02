@@ -10,16 +10,16 @@ import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
 
 import { m } from '#/paraglide/messages';
 
-import { AltTextDialog, type AltTextView } from './AltTextDialog';
+import { AltTextDialog, type AltTextView } from '../shared/AltTextDialog';
 
 /** GIF alt text dialog payload. */
-export type GifAltTextTarget = {
+export type ExternalGifAltTextTarget = {
 	gif: Gif;
 	/** saved alt text; empty falls back to the GIF's description or title. */
 	alt: string;
 };
 
-const getView = ({ gif, alt }: GifAltTextTarget): AltTextView => {
+const getView = ({ gif, alt }: ExternalGifAltTextTarget): AltTextView => {
 	const vendorAlt = gif.content_description || gif.title;
 	const params = parseGifEmbedFromUrl(toGifEmbedUrl(gif));
 
@@ -45,7 +45,7 @@ const getView = ({ gif, alt }: GifAltTextTarget): AltTextView => {
  * @param props.onSave receives trimmed alt text and the original payload
  * @returns the dialog
  */
-export const GifAltTextDialog = <T extends GifAltTextTarget>({
+export const ExternalGifAltTextDialog = <T extends ExternalGifAltTextTarget>({
 	handle,
 	onSave,
 }: {

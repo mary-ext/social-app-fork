@@ -5,8 +5,8 @@ import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { fontWeight, space } from '#/styles/tokens.css';
 
-import { overlay, overlayIcon, OVERLAY_SIZE, roundButton } from '../shared/overlay.css';
-import { revealOnHover } from '../shared/reveal.css';
+import { overlay, overlayIcon, OVERLAY_SIZE, roundButton } from '../../shared/overlay.css';
+import { revealOnHover } from '../../shared/reveal.css';
 
 // #region shared
 

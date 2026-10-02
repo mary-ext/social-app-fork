@@ -1,13 +1,13 @@
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 
-import { useEditorState } from '../context';
-import { DragChip } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
-import { usePendingUpload } from './upload-status';
+import { useEditorState } from '../../context';
+import { DragChip } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, UploadBadge } from '../shared/TileControls';
+import { usePendingUpload } from '../shared/upload-status';
 import { VoicePlayer } from './VoicePlayer';
 import * as css from './VoiceTile.css';
 

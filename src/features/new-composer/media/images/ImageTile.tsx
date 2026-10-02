@@ -10,15 +10,15 @@ import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { useEditorState } from '../context';
-import { DragThumbnail } from '../dnd/DragPreview';
-import type { ImageMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
+import { useEditorState } from '../../context';
+import { DragThumbnail } from '../../dnd/DragPreview';
+import type { ImageMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from '../shared/TileControls';
 import { getEditedImage, getImageEdit } from './image-edits';
 import * as css from './ImageTile.css';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from './TileControls';
 
 type ImageLayout = 'single' | 'strip';
 
