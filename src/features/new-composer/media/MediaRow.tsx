@@ -18,6 +18,7 @@ import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
 import { removeMedia } from './commands';
 import { ExternalGifTile } from './ExternalGifTile';
+import { GifAltTextDialog, type GifAltTextTarget } from './GifAltTextDialog';
 import { GifTile } from './GifTile';
 import {
 	type EditableImage,
@@ -52,6 +53,7 @@ export function MediaRow({ postId }: { postId: string }) {
 	);
 
 	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
+	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
 	const editDialog = Dialog.useDialogHandle();
 	// retain the image through the dialog's exit animation.
 	const [editing, setEditing] = useState<ComposerImage>();
@@ -64,25 +66,42 @@ export function MediaRow({ postId }: { postId: string }) {
 	const { images, others } = splitMedia(media);
 
 	const editAlt = (item: PostMedia) => {
-		if (item.kind !== 'image') {
-			// TODO: support alt text for GIFs, videos, and voice notes.
-			return;
-		}
-
 		const { state } = wg;
-		const found = findPostById(state.doc, postId);
 
-		altDialog.openWithPayload({
-			mediaId: item.id,
-			blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
-			alt: getMediaAlt(state, item.id),
-			context: {
-				siblingAlts: images
-					.filter((image) => image.id !== item.id)
-					.map((image) => getMediaAlt(state, image.id)),
-				text: found ? getPostText(found.node) : '',
-			},
-		});
+		switch (item.kind) {
+			case 'image': {
+				const found = findPostById(state.doc, postId);
+
+				altDialog.openWithPayload({
+					mediaId: item.id,
+					blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
+					alt: getMediaAlt(state, item.id),
+					context: {
+						siblingAlts: images
+							.filter((image) => image.id !== item.id)
+							.map((image) => getMediaAlt(state, image.id)),
+						text: found ? getPostText(found.node) : '',
+					},
+				});
+				break;
+			}
+			case 'externalGif': {
+				gifAltDialog.openWithPayload({
+					mediaId: item.id,
+					gif: item.gif,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
+			default: {
+				// TODO: support alt text for local GIFs, videos, and voice notes.
+				break;
+			}
+		}
+	};
+
+	const saveAlt = (alt: string, { mediaId }: { mediaId: string }) => {
+		setMediaAlt(wg, { mediaId, alt });
 	};
 
 	const editImage = (item: EditableImage) => {
@@ -160,11 +179,8 @@ export function MediaRow({ postId }: { postId: string }) {
 				)}
 			</div>
 
-			{/* keep dialog events out of the row's focus and key handlers. */}
-			<ImageAltTextDialog
-				handle={altDialog}
-				onSave={(alt, { mediaId }) => setMediaAlt(wg, { mediaId, alt })}
-			/>
+			<ImageAltTextDialog handle={altDialog} onSave={saveAlt} />
+			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
 			<EditImageDialog
 				handle={editDialog}
 				image={editing}
