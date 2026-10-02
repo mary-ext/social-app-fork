@@ -23,7 +23,7 @@ import * as styles from './ImageAltTextDialog.css';
 export type AltTextTarget = {
 	/** post text and sibling alt text for description generation. */
 	context: AltTextContext;
-	blob: Blob;
+	file: Blob;
 	/** initial alt text; empty when absent. */
 	alt: string;
 };
@@ -60,7 +60,7 @@ export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: 
 
 const DialogInner = ({
 	inputRef,
-	target: { context, blob, alt: initialAlt },
+	target: { context, file, alt: initialAlt },
 	onSave,
 }: {
 	inputRef: RefObject<(HTMLInputElement & HTMLTextAreaElement) | null>;
@@ -69,11 +69,11 @@ const DialogInner = ({
 }): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 	const [alt, setAlt] = useState(initialAlt);
-	const imageUrl = getBlobUrl(blob);
+	const imageUrl = getBlobUrl(file);
 	const counterId = useId();
 
 	const generator = useAltTextGenerator({
-		blob,
+		file: file,
 		context: context,
 		text: alt,
 		onGenerated(draft) {

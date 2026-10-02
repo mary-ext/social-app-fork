@@ -84,7 +84,7 @@ export function MediaRow({ postId }: { postId: string }) {
 
 				imageAltDialog.openWithPayload({
 					mediaId: item.id,
-					blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
+					file: getEditedImage(item, getImageEdit(state, item.id)).blob,
 					alt: getMediaAlt(state, item.id),
 					context: {
 						siblingAlts: images
