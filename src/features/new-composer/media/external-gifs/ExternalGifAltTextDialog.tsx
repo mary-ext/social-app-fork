@@ -26,15 +26,16 @@ const getView = ({ gif, alt }: ExternalGifAltTextTarget): AltTextView => {
 	return {
 		initialAlt: alt || vendorAlt,
 		placeholder: vendorAlt || m['common.altText.label'](),
-		renderPreview: (draft) =>
-			params ? (
+		renderPreview: () => {
+			return params ? (
 				<GifEmbed
-					altText={draft}
+					altText=""
 					isPreferredAltText={false}
 					params={params}
 					thumb={gifPreviewUrl(gif.media_formats.preview.url)}
 				/>
-			) : null,
+			) : null;
+		},
 	};
 };
 

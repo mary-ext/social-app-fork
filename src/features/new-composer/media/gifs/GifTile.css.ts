@@ -1,5 +1,10 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
-import { contain } from '../shared/MediaTile.css';
+import { getFittedStyle } from '../shared/fitted-tile';
+import { cover } from '../shared/MediaTile.css';
 
-export const image = style([contain]);
+export const ratioVar = createVar();
+
+export const tile = style(getFittedStyle(ratioVar));
+
+export const image = style([cover]);

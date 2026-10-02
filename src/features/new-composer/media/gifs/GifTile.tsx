@@ -1,3 +1,5 @@
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import { useEditorState } from '../../context';
@@ -44,6 +46,8 @@ export function GifTile({
 			label="GIF attachment"
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
+			className={css.tile}
+			style={assignInlineVars({ [css.ratioVar]: String(item.aspectRatio ?? 1) })}
 			onRemove={onRemove}
 		>
 			<img className={css.image} src={url} alt="" />

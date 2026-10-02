@@ -21,6 +21,7 @@ import {
 	type ExternalGifAltTextTarget,
 } from './external-gifs/ExternalGifAltTextDialog';
 import { ExternalGifTile } from './external-gifs/ExternalGifTile';
+import { GifAltTextDialog, type GifAltTextTarget } from './gifs/GifAltTextDialog';
 import { GifTile } from './gifs/GifTile';
 import {
 	type EditableImage,
@@ -59,6 +60,7 @@ export function MediaRow({ postId }: { postId: string }) {
 	);
 
 	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
+	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
 	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
 	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
 	const captionsDialog = Dialog.useDialogHandle<CaptionsTarget & { mediaId: string }>();
@@ -93,6 +95,14 @@ export function MediaRow({ postId }: { postId: string }) {
 				});
 				break;
 			}
+			case 'gif': {
+				gifAltDialog.openWithPayload({
+					mediaId: item.id,
+					file: item.file,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
 			case 'externalGif': {
 				externalGifAltDialog.openWithPayload({
 					mediaId: item.id,
@@ -110,7 +120,7 @@ export function MediaRow({ postId }: { postId: string }) {
 				break;
 			}
 			default: {
-				// TODO: support alt text for local GIFs and voice notes.
+				// TODO: support alt text for voice notes.
 				break;
 			}
 		}
@@ -202,6 +212,7 @@ export function MediaRow({ postId }: { postId: string }) {
 			</div>
 
 			<ImageAltTextDialog handle={altDialog} onSave={saveAlt} />
+			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
 			<ExternalGifAltTextDialog handle={externalGifAltDialog} onSave={saveAlt} />
 			<VideoAltTextDialog handle={videoAltDialog} onSave={saveAlt} />
 			<CaptionsDialog

@@ -18,8 +18,8 @@ export type AltTextView = {
 	initialAlt: string;
 	/** shown while the field is empty. */
 	placeholder: string;
-	/** receives draft alt text; return null to omit the preview. */
-	renderPreview: (alt: string) => ReactElement | null;
+	/** return null to omit the preview. */
+	renderPreview: () => ReactElement | null;
 };
 
 type TextInput = HTMLInputElement & HTMLTextAreaElement;
@@ -75,7 +75,7 @@ const DialogInner = ({
 }): ReactNode => {
 	const [alt, setAlt] = useState(initialAlt);
 	const counterId = useId();
-	const preview = renderPreview(alt);
+	const preview = renderPreview();
 
 	const isOverLimit = alt.length > MAX_ALT_TEXT;
 	const canSave = alt !== initialAlt && !isOverLimit;
