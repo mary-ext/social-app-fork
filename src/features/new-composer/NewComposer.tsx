@@ -1,7 +1,5 @@
 import { memo } from 'react';
 
-import type { ResourceUri } from '@atcute/lexicons';
-
 import { createPortal } from 'react-dom';
 
 import { useConstant } from '#/lib/hooks/use-constant';
@@ -11,7 +9,7 @@ import * as Dialog from '#/components/Dialog';
 import { m } from '#/paraglide/messages';
 
 import { ComposerContext, useComposer, useEditorState } from './context';
-import { createComposer } from './create-composer';
+import { type ComposerInit, createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
@@ -22,23 +20,26 @@ import { PostRail } from './post/PostRail';
 import { MEDIA_DRAGGING_ATTR } from './shared/elements';
 import { useStore } from './store';
 import { Suggestions } from './suggestions/SuggestionPopup';
+import { ReplyParent } from './thread/ReplyParent';
 import { ThreadEnd } from './thread/ThreadEnd';
 import { ThreadFooter } from './thread/ThreadFooter';
 
 /**
  * thread composer with shared selection and undo history across posts.
  *
- * @param props quoteUri is the quoted post's AT-URI, or undefined; read only on mount
+ * @param props initial quote and reply URIs; ignored after mount
  * @returns the composer header, body and footer
  */
-export function NewComposer({ quoteUri }: { quoteUri: ResourceUri | undefined }) {
-	const composer = useConstant(() => createComposer(quoteUri));
+export function NewComposer(props: ComposerInit) {
+	const composer = useConstant(() => createComposer(props));
 
 	return (
 		<ComposerContext value={composer}>
 			<Dialog.Header.Root border="scrolling">
 				<Dialog.Header.Close />
-				<Dialog.Header.Title>{m['view.composer.title.post']()}</Dialog.Header.Title>
+				<Dialog.Header.Title>
+					{composer.replyUri ? m['view.composer.title.reply']() : m['view.composer.title.post']()}
+				</Dialog.Header.Title>
 			</Dialog.Header.Root>
 			<Dialog.Body>
 				<ComposerRoot />
@@ -49,11 +50,13 @@ export function NewComposer({ quoteUri }: { quoteUri: ResourceUri | undefined })
 }
 
 function ComposerRoot() {
-	const { mount } = useComposer();
+	const { mount, replyUri } = useComposer();
 	const isMediaDragging = useEditorState((state) => getMediaDrag(state) !== null);
 
+	// the editor mounts after React's children, keeping the reply parent above it.
 	return (
 		<div ref={mount} className={css.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
+			{replyUri && <ReplyParent uri={replyUri} />}
 			<PostSlots />
 			<ThreadEndPortal />
 			<Suggestions />
