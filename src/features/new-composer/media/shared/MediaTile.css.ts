@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { borderRadius } from '#/styles/tokens.css';
 
-import { DRAGGING_OPACITY } from '../shared/layout';
+import { DRAGGING_OPACITY } from '../../shared/layout';
 
 export const FOCUS_RING_EXTENT = 4;
 

@@ -2,13 +2,13 @@ import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import { useComposer } from '../context';
-import { setDragPreview } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import { refocusSoon } from '../shared/editor-focus';
-import { getMediaTileSelector, MEDIA_ID_ATTR } from '../shared/elements';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { moveMediaDown, moveMediaUp, nudgeMedia } from './commands';
+import { useComposer } from '../../context';
+import { setDragPreview } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import { refocusSoon } from '../../shared/editor-focus';
+import { getMediaTileSelector, MEDIA_ID_ATTR } from '../../shared/elements';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { moveMediaDown, moveMediaUp, nudgeMedia } from '../commands';
 import * as css from './MediaTile.css';
 
 /**

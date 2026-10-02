@@ -1,14 +1,16 @@
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
-import { useEditorState } from '../context';
-import { DragThumbnail } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
+import { useEditorState } from '../../context';
+import { DragThumbnail } from '../../dnd/DragPreview';
+import type { PostMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, TileBadges, UploadBadge } from '../shared/TileControls';
+import { usePendingUpload } from '../shared/upload-status';
 import * as css from './GifTile.css';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
-import { usePendingUpload } from './upload-status';
 
 /**
  * local GIF attachment tile.
@@ -44,15 +46,19 @@ export function GifTile({
 			label="GIF attachment"
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
+			className={css.tile}
+			style={assignInlineVars({ [css.ratioVar]: String(item.aspectRatio ?? 1) })}
 			onRemove={onRemove}
 		>
 			<img className={css.image} src={url} alt="" />
 
-			{upload ? (
-				<UploadBadge upload={upload} />
-			) : (
-				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
-			)}
+			<TileBadges>
+				{upload ? (
+					<UploadBadge upload={upload} />
+				) : (
+					<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+				)}
+			</TileBadges>
 
 			<TileActions>
 				<RemoveButton isUploading={!!upload} onClick={onRemove} />

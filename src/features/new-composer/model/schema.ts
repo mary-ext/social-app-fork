@@ -65,6 +65,8 @@ export type ImageMedia = Extract<PostMedia, { kind: 'image' }>;
 
 export type OtherMedia = Exclude<PostMedia, ImageMedia>;
 
+export type VoiceMedia = Extract<PostMedia, { kind: 'voice' }>;
+
 const MEDIA_KIND_RANK: Record<PostMedia['kind'], number> = {
 	image: 0,
 	gif: 1,

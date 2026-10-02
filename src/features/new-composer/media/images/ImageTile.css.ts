@@ -4,8 +4,8 @@ import * as strip from '#/components/ImageEmbed/carousel/strip.css';
 
 import { borderRadius } from '#/styles/tokens.css';
 
-import { getFittedStyle } from './fitted-tile';
-import { cover } from './MediaTile.css';
+import { getFittedStyle } from '../shared/fitted-tile';
+import { cover } from '../shared/MediaTile.css';
 
 export const ratioVar = createVar();
 

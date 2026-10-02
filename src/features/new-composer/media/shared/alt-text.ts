@@ -1,7 +1,7 @@
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
-import { defineTaint } from '../model/taints';
+import { defineTaint } from '../../model/taints';
 
 /** alt text keyed by media ID. */
 export const altTaint = defineTaint<string>({

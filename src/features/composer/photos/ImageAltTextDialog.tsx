@@ -20,21 +20,21 @@ import { useAltTextGenerator } from './alt-text-generator/use-generator';
 import * as styles from './ImageAltTextDialog.css';
 
 /** image data passed through the alt text dialog's handle. */
-export type AltTextTarget = {
+export type ImageAltTextTarget = {
 	/** post text and sibling alt text for description generation. */
 	context: AltTextContext;
-	blob: Blob;
+	file: Blob;
 	/** initial alt text; empty when absent. */
 	alt: string;
 };
 
-type Props<T extends AltTextTarget> = {
+type Props<T extends ImageAltTextTarget> = {
 	handle: Dialog.DialogHandle<T>;
 	/** receives trimmed alt text and the opening payload on save. */
 	onSave: (alt: string, target: T) => void;
 };
 
-export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: Props<T>): ReactNode => {
+export const ImageAltTextDialog = <T extends ImageAltTextTarget>({ handle, onSave }: Props<T>): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 	const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
 
@@ -60,20 +60,20 @@ export const ImageAltTextDialog = <T extends AltTextTarget>({ handle, onSave }: 
 
 const DialogInner = ({
 	inputRef,
-	target: { context, blob, alt: initialAlt },
+	target: { context, file, alt: initialAlt },
 	onSave,
 }: {
 	inputRef: RefObject<(HTMLInputElement & HTMLTextAreaElement) | null>;
-	target: AltTextTarget;
+	target: ImageAltTextTarget;
 	onSave: (alt: string) => void;
 }): ReactNode => {
 	const { gtMobile } = useBreakpoints();
 	const [alt, setAlt] = useState(initialAlt);
-	const imageUrl = getBlobUrl(blob);
+	const imageUrl = getBlobUrl(file);
 	const counterId = useId();
 
 	const generator = useAltTextGenerator({
-		blob,
+		file: file,
 		context: context,
 		text: alt,
 		onGenerated(draft) {

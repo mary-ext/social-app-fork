@@ -257,6 +257,17 @@ export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => v
 		}
 
 		event.preventDefault();
+		// let other dialogs handle file drops, but allow drops in the thread's own dialog.
+		const dialog =
+			event.target instanceof Element && event.target.closest('[role="dialog"], [role="alertdialog"]');
+		if (dialog && !dialog.contains(container)) {
+			transfer.dropEffect = 'none';
+			// drop doesn't fire dragleave, so clear any stale thread indicator.
+			clearTimeout(leaving);
+			finish();
+			return null;
+		}
+
 		event.stopPropagation();
 		clearTimeout(leaving);
 		return transfer;

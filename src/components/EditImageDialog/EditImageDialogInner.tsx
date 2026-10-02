@@ -5,10 +5,10 @@ import { Cropper, type CropperConfig, type CropValue } from '@oomfware/cropper';
 import { clsx } from 'clsx';
 
 import {
+	cropImage,
 	type ImageCrop,
-	type ImageSource,
+	type ImageMeta,
 	type ImageTransformation,
-	manipulateImage,
 } from '#/lib/media/composer-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
@@ -18,20 +18,26 @@ import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 import { type AspectRatio, AspectRatioSelect, CropToolbar } from './CropToolbar';
-import type { EditImageDialogProps } from './EditImageDialog';
+import type { EditedImage, EditImageTarget } from './EditImageDialog';
 import * as styles from './EditImageDialogInner.css';
 
 const CROPPER_CONFIG: Partial<CropperConfig> = {
 	insets: { top: 16, right: 16, bottom: 16, left: 16 },
 };
 
+type EditImageDialogInnerProps = {
+	target: EditImageTarget;
+	onSave: (edited: EditedImage | null) => void;
+	aspectRatio: number | undefined;
+	circularCrop: boolean;
+};
+
 export function EditImageDialogInner({
-	handle,
-	image,
-	onChange,
-	circularCrop,
+	target,
+	onSave,
 	aspectRatio,
-}: EditImageDialogProps) {
+	circularCrop,
+}: EditImageDialogInnerProps) {
 	const [pending, setPending] = useState(false);
 	const ref = useRef<{ save: () => Promise<void> }>(null);
 
@@ -60,38 +66,32 @@ export function EditImageDialogInner({
 				</Dialog.Header.Actions>
 			</Dialog.Header.Root>
 
-			{image && (
-				<EditImageInner
-					aspectRatio={aspectRatio}
-					circularCrop={circularCrop}
-					handle={handle}
-					image={image}
-					key={image.source.id}
-					onChange={onChange}
-					saveRef={ref}
-				/>
-			)}
+			<EditImageInner
+				aspectRatio={aspectRatio}
+				circularCrop={circularCrop}
+				onSave={onSave}
+				saveRef={ref}
+				target={target}
+			/>
 		</>
 	);
 }
 
 function EditImageInner({
-	image,
-	onChange,
+	target,
+	onSave,
 	saveRef,
-	handle,
-	circularCrop = false,
+	circularCrop,
 	aspectRatio,
-}: Required<Pick<EditImageDialogProps, 'image'>> &
-	Omit<EditImageDialogProps, 'image'> & {
-		saveRef: RefObject<{ save: () => Promise<void> } | null>;
-	}) {
-	const source = image.source;
+}: EditImageDialogInnerProps & {
+	saveRef: RefObject<{ save: () => Promise<void> } | null>;
+}) {
+	const { source, manips } = target;
 	const sourceUrl = getBlobUrl(source.blob);
 
 	const ratioIsFixed = aspectRatio !== undefined;
-	const initialCrop = getInitialCrop(image.manips);
-	const [ratio, setRatio] = useState<AspectRatio>(() => aspectRatio ?? image.manips?.ratio ?? null);
+	const initialCrop = getInitialCrop(manips);
+	const [ratio, setRatio] = useState<AspectRatio>(() => aspectRatio ?? manips?.ratio ?? null);
 
 	const cropRef = useRef(initialCrop);
 	const sourceDimensions =
@@ -107,13 +107,15 @@ function EditImageInner({
 		() => ({
 			async save() {
 				const crop = cropRef.current && toImageCrop(cropRef.current, source);
-				const result = await manipulateImage(image, { crop, ratio });
+				if (!crop) {
+					onSave(null);
+					return;
+				}
 
-				onChange(result);
-				handle.close();
+				onSave({ transformed: await cropImage(source.blob, crop), manips: { crop, ratio } });
 			},
 		}),
-		[ratio, image, source, handle, onChange],
+		[ratio, source, onSave],
 	);
 
 	return (
@@ -157,7 +159,7 @@ const getInitialCrop = (manips: ImageTransformation | undefined): CropValue | un
 	};
 };
 
-const toImageCrop = (value: CropValue, source: ImageSource): ImageCrop | undefined => {
+const toImageCrop = (value: CropValue, source: ImageMeta): ImageCrop | undefined => {
 	const originX = Math.round(value.x);
 	const originY = Math.round(value.y);
 	const width = Math.round(value.x + value.width) - originX;

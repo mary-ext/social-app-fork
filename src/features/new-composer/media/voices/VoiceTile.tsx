@@ -1,13 +1,13 @@
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 
-import { useEditorState } from '../context';
-import { DragChip } from '../dnd/DragPreview';
-import type { PostMedia } from '../model/schema';
-import type { RovingItemProps } from '../shared/roving-focus';
-import { hasMediaAlt } from './alt-text';
-import { MediaTile } from './MediaTile';
-import { AltButton, RemoveButton, TileActions, UploadBadge } from './TileControls';
-import { usePendingUpload } from './upload-status';
+import { useEditorState } from '../../context';
+import { DragChip } from '../../dnd/DragPreview';
+import type { VoiceMedia } from '../../model/schema';
+import type { RovingItemProps } from '../../shared/roving-focus';
+import { hasMediaAlt } from '../shared/alt-text';
+import { MediaTile } from '../shared/MediaTile';
+import { AltButton, RemoveButton, TileActions, UploadBadge } from '../shared/TileControls';
+import { usePendingUpload } from '../shared/upload-status';
 import { VoicePlayer } from './VoicePlayer';
 import * as css from './VoiceTile.css';
 
@@ -29,7 +29,7 @@ export function VoiceTile({
 }: {
 	postId: string;
 	index: number;
-	item: Extract<PostMedia, { kind: 'voice' }>;
+	item: VoiceMedia;
 	roving: RovingItemProps;
 	onEditAlt: () => void;
 	onRemove: () => void;
@@ -49,7 +49,7 @@ export function VoiceTile({
 			className={css.tile}
 			onRemove={onRemove}
 		>
-			<VoicePlayer item={item} tabbable={tabbable} />
+			<VoicePlayer className={css.player} item={item} tabbable={tabbable} />
 
 			{upload ? (
 				<UploadBadge variant="inline" upload={upload} />

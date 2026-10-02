@@ -6,7 +6,7 @@ import type { ComposerImage } from '#/lib/media/composer-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';
-import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
+import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import { CAROUSEL_MAX_HEIGHT, CAROUSEL_MIN_HEIGHT } from '#/components/ImageEmbed/carousel/const';
 import { PagingControls } from '#/components/ImageEmbed/carousel/PagingControls';
 import { getStripStyle, getTileStyle } from '#/components/ImageEmbed/carousel/strip';
@@ -24,7 +24,7 @@ import { m } from '#/paraglide/messages';
 import type { PostAction } from '../state/composer';
 import type { AltTextContext } from './alt-text-generator/types';
 import * as styles from './Gallery.css';
-import { type AltTextTarget, ImageAltTextDialog } from './ImageAltTextDialog';
+import { type ImageAltTextTarget, ImageAltTextDialog } from './ImageAltTextDialog';
 
 type GalleryProps = {
 	dispatch: (action: PostAction) => void;
@@ -164,8 +164,8 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 	const blob = (image.transformed ?? image.source).blob;
 	const imageUrl = getBlobUrl(blob);
 
-	const altTextHandle = Dialog.useDialogHandle<AltTextTarget>();
-	const editHandle = Dialog.useDialogHandle();
+	const altTextHandle = Dialog.useDialogHandle<ImageAltTextTarget>();
+	const editHandle = Dialog.useDialogHandle<EditImageTarget>();
 
 	const hasAlt = image.alt.length !== 0;
 
@@ -174,7 +174,7 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 			<img className={styles.image} src={imageUrl} alt={image.alt} draggable={false} />
 			<Dialog.Trigger
 				handle={altTextHandle}
-				payload={{ context, blob, alt: image.alt }}
+				payload={{ context, file: blob, alt: image.alt }}
 				className={styles.altBadge}
 				aria-label={m['view.composer.altText.action.add']()}
 			>
@@ -190,6 +190,7 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 			<div className={styles.controls}>
 				<Dialog.Trigger
 					handle={editHandle}
+					payload={{ source: image.source, manips: image.manips }}
 					className={styles.control}
 					aria-label={m['view.composer.gallery.action.edit']()}
 				>
@@ -205,7 +206,16 @@ const ItemChrome = ({ context, image, onChange, onRemove }: ItemChromeProps) => 
 				</button>
 			</div>
 			<ImageAltTextDialog handle={altTextHandle} onSave={(alt) => onChange({ ...image, alt })} />
-			<EditImageDialog handle={editHandle} image={image} onChange={onChange} />
+			<EditImageDialog
+				handle={editHandle}
+				onSave={(edited) => {
+					onChange(
+						edited
+							? { ...image, ...edited }
+							: { alt: image.alt, localRefPath: image.localRefPath, source: image.source },
+					);
+				}}
+			/>
 		</>
 	);
 };

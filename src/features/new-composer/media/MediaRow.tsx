@@ -1,12 +1,8 @@
-import { useState } from 'react';
-
-import type { ComposerImage } from '#/lib/media/composer-image';
-
 import { getSelectionErrorMessage } from '#/features/composer/media/attachment-messages';
-import { type AltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
+import { type ImageAltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
 
 import * as Dialog from '#/components/Dialog';
-import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
+import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import { Text } from '#/components/Text';
 
 import { useEditor, useIsActivePost, usePostState } from '../context';
@@ -14,23 +10,26 @@ import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } f
 import { escapeToEditor } from '../shared/editor-focus';
 import { MEDIA_ID_ATTR } from '../shared/elements';
 import { useRovingFocus } from '../shared/roving-focus';
-import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
 import { removeMedia } from './commands';
-import { ExternalGifTile } from './ExternalGifTile';
-import { GifTile } from './GifTile';
 import {
-	type EditableImage,
-	getEditedImage,
-	getImageEdit,
-	saveComposerImage,
-	toComposerImage,
-} from './image-edits';
-import { ImageGroup } from './ImageGroup';
+	ExternalGifAltTextDialog,
+	type ExternalGifAltTextTarget,
+} from './external-gifs/ExternalGifAltTextDialog';
+import { ExternalGifTile } from './external-gifs/ExternalGifTile';
+import { GifAltTextDialog, type GifAltTextTarget } from './gifs/GifAltTextDialog';
+import { GifTile } from './gifs/GifTile';
+import { type EditableImage, getEditedImage, getImageEdit, setImageEdit } from './images/image-edits';
+import { ImageGroup } from './images/ImageGroup';
 import * as css from './MediaRow.css';
-import { refocusMedia } from './MediaTile';
-import { VideoTile } from './VideoTile';
-import { VoiceTile } from './VoiceTile';
+import { getMediaAlt, setMediaAlt } from './shared/alt-text';
+import { refocusMedia } from './shared/MediaTile';
+import { getMediaCaptions, setMediaCaptions } from './videos/captions';
+import { CaptionsDialog, type VideoCaptionsTarget } from './videos/CaptionsDialog';
+import { VideoAltTextDialog, type VideoAltTextTarget } from './videos/VideoAltTextDialog';
+import { VideoTile } from './videos/VideoTile';
+import { VoiceAltTextDialog, type VoiceAltTextTarget } from './voices/VoiceAltTextDialog';
+import { VoiceTile } from './voices/VoiceTile';
 
 const NO_MEDIA: readonly PostMedia[] = [];
 
@@ -51,10 +50,13 @@ export function MediaRow({ postId }: { postId: string }) {
 		{ tabbable: isActive },
 	);
 
-	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
-	const editDialog = Dialog.useDialogHandle();
-	// retain the image through the dialog's exit animation.
-	const [editing, setEditing] = useState<ComposerImage>();
+	const imageAltDialog = Dialog.useDialogHandle<ImageAltTextTarget & { mediaId: string }>();
+	const gifAltDialog = Dialog.useDialogHandle<GifAltTextTarget & { mediaId: string }>();
+	const externalGifAltDialog = Dialog.useDialogHandle<ExternalGifAltTextTarget & { mediaId: string }>();
+	const videoAltDialog = Dialog.useDialogHandle<VideoAltTextTarget & { mediaId: string }>();
+	const voiceAltDialog = Dialog.useDialogHandle<VoiceAltTextTarget & { mediaId: string }>();
+	const captionsDialog = Dialog.useDialogHandle<VideoCaptionsTarget & { mediaId: string }>();
+	const editDialog = Dialog.useDialogHandle<EditImageTarget & { mediaId: string }>();
 
 	if (media.length === 0) {
 		return null;
@@ -64,30 +66,74 @@ export function MediaRow({ postId }: { postId: string }) {
 	const { images, others } = splitMedia(media);
 
 	const editAlt = (item: PostMedia) => {
-		if (item.kind !== 'image') {
-			// TODO: support alt text for GIFs, videos, and voice notes.
-			return;
-		}
-
 		const { state } = wg;
-		const found = findPostById(state.doc, postId);
 
-		altDialog.openWithPayload({
-			mediaId: item.id,
-			blob: getEditedImage(item, getImageEdit(state, item.id)).blob,
-			alt: getMediaAlt(state, item.id),
-			context: {
-				siblingAlts: images
-					.filter((image) => image.id !== item.id)
-					.map((image) => getMediaAlt(state, image.id)),
-				text: found ? getPostText(found.node) : '',
-			},
-		});
+		switch (item.kind) {
+			case 'image': {
+				const found = findPostById(state.doc, postId);
+
+				imageAltDialog.openWithPayload({
+					mediaId: item.id,
+					file: getEditedImage(item, getImageEdit(state, item.id)).blob,
+					alt: getMediaAlt(state, item.id),
+					context: {
+						siblingAlts: images
+							.filter((image) => image.id !== item.id)
+							.map((image) => getMediaAlt(state, image.id)),
+						text: found ? getPostText(found.node) : '',
+					},
+				});
+				break;
+			}
+			case 'gif': {
+				gifAltDialog.openWithPayload({
+					mediaId: item.id,
+					file: item.file,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
+			case 'externalGif': {
+				externalGifAltDialog.openWithPayload({
+					mediaId: item.id,
+					gif: item.gif,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
+			case 'video': {
+				videoAltDialog.openWithPayload({
+					mediaId: item.id,
+					file: item.file,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
+			case 'voice': {
+				voiceAltDialog.openWithPayload({
+					mediaId: item.id,
+					item,
+					alt: getMediaAlt(state, item.id),
+				});
+				break;
+			}
+		}
+	};
+
+	const saveAlt = (alt: string, { mediaId }: { mediaId: string }) => {
+		setMediaAlt(wg, { mediaId, alt });
+	};
+
+	const editCaptions = (item: PostMedia) => {
+		captionsDialog.openWithPayload({ mediaId: item.id, tracks: getMediaCaptions(wg.state, item.id) });
 	};
 
 	const editImage = (item: EditableImage) => {
-		setEditing(toComposerImage(item, getImageEdit(wg.state, item.id)));
-		editDialog.open(null);
+		editDialog.openWithPayload({
+			mediaId: item.id,
+			source: { blob: item.file, ...item.dimensions },
+			manips: getImageEdit(wg.state, item.id)?.manips,
+		});
 	};
 
 	const remove = (item: PostMedia) => {
@@ -145,7 +191,9 @@ export function MediaRow({ postId }: { postId: string }) {
 							return <ExternalGifTile key={item.id} {...props} item={item} />;
 						}
 						case 'video': {
-							return <VideoTile key={item.id} {...props} item={item} />;
+							return (
+								<VideoTile key={item.id} {...props} item={item} onEditCaptions={() => editCaptions(item)} />
+							);
 						}
 						case 'voice': {
 							return <VoiceTile key={item.id} {...props} item={item} />;
@@ -160,15 +208,18 @@ export function MediaRow({ postId }: { postId: string }) {
 				)}
 			</div>
 
-			{/* keep dialog events out of the row's focus and key handlers. */}
-			<ImageAltTextDialog
-				handle={altDialog}
-				onSave={(alt, { mediaId }) => setMediaAlt(wg, { mediaId, alt })}
+			<ImageAltTextDialog handle={imageAltDialog} onSave={saveAlt} />
+			<GifAltTextDialog handle={gifAltDialog} onSave={saveAlt} />
+			<ExternalGifAltTextDialog handle={externalGifAltDialog} onSave={saveAlt} />
+			<VideoAltTextDialog handle={videoAltDialog} onSave={saveAlt} />
+			<VoiceAltTextDialog handle={voiceAltDialog} onSave={saveAlt} />
+			<CaptionsDialog
+				handle={captionsDialog}
+				onSave={(tracks, { mediaId }) => setMediaCaptions(wg, { mediaId, tracks })}
 			/>
 			<EditImageDialog
 				handle={editDialog}
-				image={editing}
-				onChange={(image) => saveComposerImage(wg, image)}
+				onSave={(edit, { mediaId }) => setImageEdit(wg, { mediaId, edit })}
 			/>
 		</>
 	);

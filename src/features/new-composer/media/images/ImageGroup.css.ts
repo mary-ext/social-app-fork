@@ -6,9 +6,9 @@ import { insetLeftVar, insetRightVar } from '#/components/images/Gallery/index.c
 
 import { vars } from '#/styles/contract.css';
 
-import { MEDIA_DRAGGING_ATTR } from '../shared/elements';
-import { RAIL_WIDTH, RIGHT_PADDING } from '../shared/layout';
-import { FOCUS_RING_EXTENT } from './MediaTile.css';
+import { MEDIA_DRAGGING_ATTR } from '../../shared/elements';
+import { RAIL_WIDTH, RIGHT_PADDING } from '../../shared/layout';
+import { FOCUS_RING_EXTENT } from '../shared/MediaTile.css';
 
 export const single = style({
 	display: 'flex',

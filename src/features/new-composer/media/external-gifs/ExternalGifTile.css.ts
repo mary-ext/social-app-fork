@@ -1,7 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import { getFittedStyle } from './fitted-tile';
-import { cover } from './MediaTile.css';
+import { getFittedStyle } from '../shared/fitted-tile';
+import { cover } from '../shared/MediaTile.css';
 
 export const ratioVar = createVar();
 

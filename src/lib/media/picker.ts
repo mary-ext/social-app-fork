@@ -49,6 +49,15 @@ export function openMediaPicker(): Promise<File[]> {
 }
 
 /**
+ * opens a multi-select picker for WebVTT caption files.
+ *
+ * @returns the selected files, or an empty array if the picker was dismissed
+ */
+export function openCaptionPicker(): Promise<File[]> {
+	return pickFiles({ accept: '.vtt,text/vtt', multiple: true });
+}
+
+/**
  * Opens a file picker for a single image.
  *
  * @returns the selected image, or undefined if the picker was dismissed

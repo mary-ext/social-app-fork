@@ -93,7 +93,7 @@ const reducer = (state: GeneratorState, action: GeneratorAction): GeneratorState
 
 type Options = {
 	/** The image bytes to describe — the composer's transformed blob when there is one. */
-	blob: Blob;
+	file: Blob;
 	/** The post the image is being attached to; read fresh on every round, so edits in between count. */
 	context: AltTextContext;
 	/** Called with each finished draft; the caller owns the alt text and decides how to apply it. */
@@ -134,10 +134,10 @@ export type Generator = {
  *
  * @param options the image to describe, the post around it, the field's current text, and where drafts go
  */
-export const useAltTextGenerator = ({ blob, context, onGenerated, text }: Options): Generator => {
+export const useAltTextGenerator = ({ file, context, onGenerated, text }: Options): Generator => {
 	const [state, dispatch] = useReducer(reducer, INITIAL);
 	const abortRef = useRef<AbortController | null>(null);
-	const imageRef = useRef<{ blob: Blob; encoded: Promise<AltTextImage> } | null>(null);
+	const imageRef = useRef<{ file: Blob; encoded: Promise<AltTextImage> } | null>(null);
 
 	useEffect(() => {
 		return () => abortRef.current?.abort();
@@ -159,15 +159,15 @@ export const useAltTextGenerator = ({ blob, context, onGenerated, text }: Option
 	// every round describes the same bytes, so the encode is shared. keyed on the blob because cropping the
 	// image swaps it underneath us, and dropped on failure so the retry button isn't handed the same rejection
 	const loadImage = () => {
-		if (imageRef.current?.blob !== blob) {
-			const encoded = prepareAltTextImage(blob).catch((error: unknown) => {
-				if (imageRef.current?.blob === blob) {
+		if (imageRef.current?.file !== file) {
+			const encoded = prepareAltTextImage(file).catch((error: unknown) => {
+				if (imageRef.current?.file === file) {
 					imageRef.current = null;
 				}
 				throw error;
 			});
 
-			imageRef.current = { blob, encoded };
+			imageRef.current = { file: file, encoded };
 		}
 
 		return imageRef.current.encoded;

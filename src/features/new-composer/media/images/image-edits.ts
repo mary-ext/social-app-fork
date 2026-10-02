@@ -1,11 +1,11 @@
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
-import type { ComposerImage, ImageMeta, ImageTransformation } from '#/lib/media/composer-image';
+import type { ImageMeta, ImageTransformation } from '#/lib/media/composer-image';
 import type { Dimensions } from '#/lib/media/metadata';
 
-import type { ImageMedia } from '../model/schema';
-import { defineTaint, type TaintMap } from '../model/taints';
+import type { ImageMedia } from '../../model/schema';
+import { defineTaint, type TaintMap } from '../../model/taints';
 
 /** a cropped image and its editor settings. */
 export type ImageEdit = {
@@ -73,27 +73,15 @@ export const isEditableImage = (item: ImageMedia): item is EditableImage => {
 };
 
 /**
- * builds image editor input with the media ID as its source ID.
- *
- * @param item the image attachment
- * @param edit the image's current edit, if any
- * @returns the original image and any saved edit, with empty alt text
- */
-export const toComposerImage = (item: EditableImage, edit: ImageEdit | null): ComposerImage => {
-	const source = { id: item.id, blob: item.file, ...item.dimensions };
-	if (edit) {
-		return { alt: '', source, transformed: edit.transformed, manips: edit.manips };
-	}
-	return { alt: '', source };
-};
-
-/**
- * saves image editor output by source ID.
+ * sets or clears an image's edit.
  *
  * @param wg the editor
- * @param image editor output from {@link toComposerImage}; no transformation clears the saved edit
+ * @param options.mediaId the media ID
+ * @param options.edit replacement edit; null clears it
  */
-export const saveComposerImage = (wg: Wordgard, image: ComposerImage): void => {
-	const edit = image.transformed ? { transformed: image.transformed, manips: image.manips } : null;
-	imageEditTaint.set(wg, [image.source.id], edit);
+export const setImageEdit = (
+	wg: Wordgard,
+	{ mediaId, edit }: { mediaId: string; edit: ImageEdit | null },
+): void => {
+	imageEditTaint.set(wg, [mediaId], edit);
 };

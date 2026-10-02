@@ -27,6 +27,7 @@ export const trigger = style(
 		selectors: {
 			'&:focus-visible': { borderColor: vars.palette.primary_500 },
 			'&[data-popup-open]': { borderColor: vars.palette.primary_500 },
+			'&[aria-invalid="true"]': { borderColor: vars.palette.negative_500 },
 		},
 	}),
 );

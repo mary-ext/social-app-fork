@@ -5,8 +5,8 @@ import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { fontWeight, space } from '#/styles/tokens.css';
 
-import { overlay, overlayIcon, OVERLAY_SIZE, roundButton } from '../shared/overlay.css';
-import { revealOnHover } from '../shared/reveal.css';
+import { overlay, overlayIcon, OVERLAY_SIZE, roundButton } from '../../shared/overlay.css';
+import { revealOnHover } from '../../shared/reveal.css';
 
 // #region shared
 
@@ -20,15 +20,6 @@ const badge = style({
 	fontWeight: fontWeight.semiBold,
 	lineHeight: 1,
 });
-
-const overlayBadge = style([
-	overlay,
-	{
-		position: 'absolute',
-		bottom: space.sm,
-		left: space.sm,
-	},
-]);
 
 const inlineBadge = style({
 	// prevent grid stretch in voice tiles.
@@ -45,7 +36,15 @@ const inlineControl = style({
 
 // #endregion
 
-export const altChip = recipe(
+export const badges = style({
+	display: 'flex',
+	position: 'absolute',
+	bottom: space.sm,
+	left: space.sm,
+	gap: 6,
+});
+
+export const chip = recipe(
 	{
 		base: [badge, { gap: space.xs, padding: '0 11px 0 8px' }],
 		defaultVariants: {
@@ -54,16 +53,16 @@ export const altChip = recipe(
 		variants: {
 			variant: {
 				inline: [inlineBadge, inlineControl],
-				overlay: [overlayBadge],
+				overlay: [overlay],
 			},
 		},
 	},
-	{ debugId: 'altChip' },
+	{ debugId: 'chip' },
 );
 
 export const icon = style([overlayIcon]);
 
-export const altCheck = style({
+export const chipCheck = style({
 	color: vars.palette.positive_500,
 });
 
@@ -76,7 +75,7 @@ export const uploadBadge = recipe(
 		variants: {
 			variant: {
 				inline: [inlineBadge],
-				overlay: [overlayBadge],
+				overlay: [overlay],
 			},
 		},
 	},
