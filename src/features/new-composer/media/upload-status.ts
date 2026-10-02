@@ -2,67 +2,67 @@ import { useEffect, useState } from 'react';
 
 import { m } from '#/paraglide/messages';
 
-export type UploadStatus =
+export type PendingUpload =
 	| { status: 'compressing' }
 	| { status: 'uploading'; progress: number }
-	| { status: 'processing' }
-	| { status: 'done' };
+	| { status: 'processing' };
 
 const COMPRESS_MS = 1_500;
 const UPLOAD_MS = 4_000;
 const PROCESS_MS = 1_500;
 
-// preserve simulated progress when a tile moves between posts.
-const startTimes = new Map<string, number>();
+const COMPRESSING: PendingUpload = { status: 'compressing' };
+const PROCESSING: PendingUpload = { status: 'processing' };
 
-const getStartTime = (mediaId: string): number => {
-	let start = startTimes.get(mediaId);
+// preserve simulated progress across tile remounts without retaining removed files.
+const startTimes = new WeakMap<Blob, number>();
+
+const getStartTime = (file: Blob): number => {
+	let start = startTimes.get(file);
 	if (start === undefined) {
 		start = performance.now();
-		startTimes.set(mediaId, start);
+		startTimes.set(file, start);
 	}
 
 	return start;
 };
 
-const getStatusAt = (elapsed: number): UploadStatus => {
+const getStatusAt = (elapsed: number): PendingUpload | null => {
 	if (elapsed < COMPRESS_MS) {
-		return { status: 'compressing' };
+		return COMPRESSING;
 	}
 	if (elapsed < COMPRESS_MS + UPLOAD_MS) {
 		return { status: 'uploading', progress: (elapsed - COMPRESS_MS) / UPLOAD_MS };
 	}
 	if (elapsed < COMPRESS_MS + UPLOAD_MS + PROCESS_MS) {
-		return { status: 'processing' };
+		return PROCESSING;
 	}
 
-	return { status: 'done' };
+	return null;
 };
-
-export type PendingUpload = Exclude<UploadStatus, { status: 'done' }>;
 
 /**
  * simulates upload progress; no file is uploaded.
  *
- * @param mediaId the attachment's id
+ * @param file the attachment's file
  * @returns simulated status, or null when the simulation finishes
  */
-export const usePendingUpload = (mediaId: string): PendingUpload | null => {
-	const [now, setNow] = useState(() => performance.now());
-
-	const status = getStatusAt(now - getStartTime(mediaId));
-	const isDone = status.status === 'done';
+export const usePendingUpload = (file: Blob): PendingUpload | null => {
+	const [status, setStatus] = useState(() => getStatusAt(performance.now() - getStartTime(file)));
+	const isDone = status === null;
 
 	useEffect(() => {
 		if (isDone) {
 			return;
 		}
 
-		const interval = setInterval(() => setNow(performance.now()), 100);
+		const interval = setInterval(() => {
+			setStatus(getStatusAt(performance.now() - getStartTime(file)));
+		}, 100);
 		return () => clearInterval(interval);
-	}, [isDone]);
+	}, [file, isDone]);
 
-	return isDone ? null : status;
+	return status;
 };
 
 /**

@@ -3,9 +3,9 @@ import type { Wordgard } from 'wordgard/editor';
 import { Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
-import { ISOLATE_HISTORY } from '../editor/history';
-import { getPostParam, getPosts, getSiblingPost, isEmptyLine, setPostMediaChange } from '../editor/schema';
-import { type CaretContext, getCaretContext } from '../editor/selection';
+import { ISOLATE_HISTORY } from '../model/history';
+import { getPostParam, getPosts, getSiblingPost, isEmptyLine, setPostMediaChange } from '../model/schema';
+import { type CaretContext, getCaretContext } from '../model/selection';
 
 /**
  * appends the joined post's media to the surviving post.

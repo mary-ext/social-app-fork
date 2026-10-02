@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { hoverWithin } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
-import { AVATAR_SIZE, RAIL_WIDTH } from '../layout';
+import { AVATAR_SIZE, RAIL_WIDTH } from '../shared/layout';
 
 export const root = style({
 	boxSizing: 'border-box',

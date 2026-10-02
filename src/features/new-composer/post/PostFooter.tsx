@@ -19,12 +19,9 @@ import GifIcon from '#/icons/central/GifSquare_round_outlined_radius1_stroke2.sv
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
+import { autoSplitPost } from '../commands/auto-split';
 import { insertTextInPost } from '../commands/insert-text';
-import { autoSplitPost } from '../commands/split-post';
 import { useEditor, useIsActivePost, usePostState } from '../context';
-import { isOverLimit } from '../editor/post-info';
-import { findPostById } from '../editor/schema';
-import { escapeToEditor, keepEditorFocus, useRovingFocus } from '../focus';
 import {
 	canLabelPost,
 	getAttachmentKeys,
@@ -35,8 +32,12 @@ import {
 import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
 import { LanguagePopups, useLanguagePicker } from '../languages/LanguagePicker';
 import { attachFiles, attachGif } from '../media/commands';
+import { isOverLimit } from '../model/post-info';
+import { findPostById } from '../model/schema';
+import { escapeToEditor, keepEditorFocus } from '../shared/editor-focus';
+import { useRovingFocus } from '../shared/roving-focus';
 import { CharCount } from './CharCount';
-import * as styles from './PostFooter.css';
+import * as css from './PostFooter.css';
 
 type LabelsPayload = LabelsTarget & { keys: readonly string[] };
 
@@ -53,9 +54,14 @@ export function PostFooter({ postId }: { postId: string }) {
 	const languageTrigger = useRef<HTMLButtonElement>(null);
 	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
 	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
-	const insertedEmoji = useRef(false);
 	const gifPicker = Dialog.useDialogHandle();
-	const pickedGif = useRef(false);
+	// pickers return focus to the editor after inserting, and to their trigger otherwise.
+	const picked = useRef(false);
+	const takePicked = () => {
+		const value = picked.current;
+		picked.current = false;
+		return value;
+	};
 
 	const isActive = useIsActivePost(postId);
 	const canSplit = usePostState(postId, (state, post) => isOverLimit(state, post.node), false);
@@ -71,7 +77,7 @@ export function PostFooter({ postId }: { postId: string }) {
 			...(canSplit ? ['split'] : []),
 			'language',
 		],
-		isActive,
+		{ tabbable: isActive },
 	);
 
 	const openLabels = () => {
@@ -88,7 +94,7 @@ export function PostFooter({ postId }: { postId: string }) {
 	return (
 		<>
 			<div
-				className={styles.root}
+				className={css.root}
 				role="toolbar"
 				aria-label="Post controls"
 				onMouseDown={keepEditorFocus}
@@ -97,7 +103,7 @@ export function PostFooter({ postId }: { postId: string }) {
 					roving.onKeyDown(event);
 				}}
 			>
-				<div className={styles.actions}>
+				<div className={css.actions}>
 					<Button
 						{...roving.item('photo')}
 						label={m['common.compose.action.photo']()}
@@ -169,7 +175,7 @@ export function PostFooter({ postId }: { postId: string }) {
 					)}
 				</div>
 
-				<div className={styles.status}>
+				<div className={css.status}>
 					{canSplit && (
 						<Button
 							{...roving.item('split')}
@@ -192,7 +198,7 @@ export function PostFooter({ postId }: { postId: string }) {
 							<Button
 								{...roving.item('language')}
 								ref={languageTrigger}
-								className={styles.language}
+								className={css.language}
 								label={m['view.composer.language.selectPost']()}
 								variant="ghost"
 								color="secondary"
@@ -210,14 +216,10 @@ export function PostFooter({ postId }: { postId: string }) {
 				<EmojiPicker.Root
 					handle={emojiPicker}
 					onEmojiSelect={(emoji) => {
-						insertTextInPost(wg, postId, emoji.native);
-						insertedEmoji.current = true;
+						insertTextInPost(wg, { postId, text: emoji.native });
+						picked.current = true;
 					}}
-					nextFocusRef={() => {
-						const inserted = insertedEmoji.current;
-						insertedEmoji.current = false;
-						return inserted ? wg : null;
-					}}
+					nextFocusRef={() => (takePicked() ? wg : null)}
 				>
 					<EmojiPicker.Picker />
 				</EmojiPicker.Root>
@@ -226,14 +228,13 @@ export function PostFooter({ postId }: { postId: string }) {
 				handle={gifPicker}
 				onSelectGif={(gif) => {
 					attachGif(wg, postId, gif);
-					pickedGif.current = true;
+					picked.current = true;
 				}}
 				finalFocus={() => {
-					if (!pickedGif.current) {
+					if (!takePicked()) {
 						return true;
 					}
 
-					pickedGif.current = false;
 					wg.focus();
 					return false;
 				}}

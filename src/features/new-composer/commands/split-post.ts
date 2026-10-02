@@ -1,27 +1,11 @@
 import type { Command } from 'wordgard/command';
 import { type ChangeSet, type Node, Plot, type Pos } from 'wordgard/doc';
-import type { Wordgard } from 'wordgard/editor';
 import { GardSelection } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
-import { MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
-import { getShortenedLength } from '#/lib/rich-text';
-
-import { ISOLATE_HISTORY } from '../editor/history';
-import {
-	createPosts,
-	endOfLastLine,
-	findPost,
-	findPostById,
-	getPostParam,
-	getPostText,
-	isEmptyLine,
-	newPost,
-	Post,
-	setPostMediaChange,
-} from '../editor/schema';
-import { getCaretContext } from '../editor/selection';
-import { splitText } from './auto-split';
+import { ISOLATE_HISTORY } from '../model/history';
+import { findPost, getPostParam, isEmptyLine, newPost, setPostMediaChange } from '../model/schema';
+import { getCaretContext } from '../model/selection';
 
 /** blank lines required to split, including the line enter adds. */
 const BLANK_LINES_TO_SPLIT = { atPostEnd: 3, insidePost: 4 };
@@ -33,7 +17,7 @@ const BLANK_LINES_TO_SPLIT = { atPostEnd: 3, insidePost: 4 };
  * @param hasTextBelow whether text ends up in the lower post
  * @returns upper-post changes and the lower post's opening tag
  */
-const splitMedia = (
+const divideMedia = (
 	post: Pos.Plot,
 	hasTextBelow: boolean,
 ): { changes: ChangeSet.Spec[]; lower: Plot.Tag } => {
@@ -134,7 +118,7 @@ export const splitOnBlankLines: Command = (wg) => {
 	// each post requires at least one paragraph.
 	const before = run.from === 0 ? [Paragraph.create()] : [];
 	const after = reachesPostEnd ? [Paragraph.create()] : [];
-	const split = splitMedia(post, !reachesPostEnd);
+	const split = divideMedia(post, !reachesPostEnd);
 
 	return {
 		changes: [...split.changes, { from, to, insert: [...before, Plot.End, split.lower, ...after] }],
@@ -173,7 +157,7 @@ export const splitPost: Command = (wg) => {
 	}
 
 	const below = post.node.textContent({ from: range.to - post.start, blockSeparator: '' });
-	const split = splitMedia(post, below.trim() !== '');
+	const split = divideMedia(post, below.trim() !== '');
 	const spec = {
 		...range,
 		insert: betweenLines ? [Plot.End, split.lower] : [Plot.End, Plot.End, split.lower, Paragraph],
@@ -186,41 +170,4 @@ export const splitPost: Command = (wg) => {
 		userEvent: 'input.split',
 		annotations: ISOLATE_HISTORY,
 	};
-};
-
-/**
- * splits an overlong post at text boundaries, keeping its media on the last post.
- *
- * @param wg the editor
- * @param postId the post's id
- */
-export const autoSplitPost = (wg: Wordgard, postId: string): void => {
-	const post = findPostById(wg.state.doc, postId);
-	if (!post) {
-		return;
-	}
-
-	const chunks = splitText(getPostText(post.node), MAX_POST_GRAPHEME_LENGTH, getShortenedLength);
-	if (chunks.length < 2) {
-		return;
-	}
-
-	// preserve the original post's id on the first chunk.
-	const param = getPostParam(post.node);
-	const posts = createPosts(chunks).map((plot, i) => {
-		if (i === 0) {
-			return Post.of({ id: param.id, media: [] }).create(plot.content);
-		}
-		return i === chunks.length - 1 ? newPost(param.media).create(plot.content) : plot;
-	});
-
-	const end = post.pos + posts.reduce((length, plot) => length + plot.length, 0);
-
-	wg.dispatch({
-		changes: { from: post.pos, to: post.pos + post.node.length, insert: posts },
-		selection: { anchor: endOfLastLine(end) },
-		scrollIntoView: true,
-		userEvent: 'input.split',
-		annotations: ISOLATE_HISTORY,
-	});
 };

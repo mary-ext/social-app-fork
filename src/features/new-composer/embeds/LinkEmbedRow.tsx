@@ -1,7 +1,7 @@
 import { usePostState } from '../context';
-import { getPostInfo } from '../editor/post-info';
+import { getPostInfo } from '../model/post-info';
 import { LinkCard } from './LinkCard';
-import * as styles from './LinkEmbedRow.css';
+import * as css from './LinkEmbedRow.css';
 
 /**
  * previews of the links a post embeds.
@@ -19,7 +19,7 @@ export function LinkEmbedRow({ postId }: { postId: string }) {
 
 	// media slot first, like a published record-with-media embed.
 	return (
-		<div className={styles.root}>
+		<div className={css.root}>
 			{external && <LinkCard key={external} postId={postId} url={external} kind="external" />}
 			{record && <LinkCard key={record} postId={postId} url={record} kind="record" />}
 		</div>

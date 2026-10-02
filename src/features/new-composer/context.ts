@@ -7,8 +7,8 @@ import type { InteractionSettings } from '#/lib/interaction-settings';
 
 import type { ThreadDnd } from './dnd/channel';
 import type { PostSlot } from './editor/post-slots';
-import { findPostById, getPosts, type ThreadPost } from './editor/schema';
-import { getActivePostId } from './editor/selection';
+import { findPostById, getPosts, type ThreadPost } from './model/schema';
+import { getActivePostId } from './model/selection';
 import type { Store } from './store';
 import type { SuggestionKeyHandler } from './suggestions/autocomplete';
 

@@ -1,7 +1,7 @@
-import { useEditorState } from './context';
-import { getMediaDrag } from './dnd/drop-indicators';
-import { NewPostDropZone } from './dnd/NewPostDropZone';
-import { AddPostRow } from './post/AddPostRow';
+import { useEditorState } from '../context';
+import { getMediaDrag } from '../dnd/drop-indicators';
+import { AddPostRow } from './AddPostRow';
+import { NewPostDropZone } from './NewPostDropZone';
 
 /**
  * new-post drop zone during media drags; add-post button otherwise.

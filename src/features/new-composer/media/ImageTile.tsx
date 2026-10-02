@@ -12,8 +12,8 @@ import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../context';
 import { DragThumbnail } from '../dnd/DragPreview';
-import type { ImageMedia } from '../editor/schema';
-import type { RovingItemProps } from '../focus';
+import type { ImageMedia } from '../model/schema';
+import type { RovingItemProps } from '../shared/roving-focus';
 import { hasMediaAlt } from './alt-text';
 import { getEditedImage, getImageEdit } from './image-edits';
 import * as css from './ImageTile.css';

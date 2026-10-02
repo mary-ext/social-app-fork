@@ -2,8 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 import { fontWeight, iconSize, space } from '#/styles/tokens.css';
 
-import { RIGHT_PADDING } from '../layout';
-import { revealOnHover } from '../reveal.css';
+import { RIGHT_PADDING } from '../shared/layout';
+import { revealOnHover } from '../shared/reveal.css';
 
 export const root = style([
 	revealOnHover,

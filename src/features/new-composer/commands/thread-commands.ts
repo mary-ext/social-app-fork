@@ -2,7 +2,7 @@ import { Command, deleteUnit, deleteWord, enter, selectAll } from 'wordgard/comm
 import { KeyBinding } from 'wordgard/editor';
 import { type GardState, Transaction } from 'wordgard/state';
 
-import { selectPost } from '../editor/selection';
+import { selectPost } from '../model/selection';
 import { copyPlainText, pastePlainText } from './clipboard';
 import { joinPosts, preserveJoinedMedia } from './join-posts';
 import { movePost } from './reorder-posts';

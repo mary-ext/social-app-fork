@@ -1,19 +1,14 @@
 import type { Wordgard } from 'wordgard/editor';
-import { GardState, Transaction } from 'wordgard/state';
+import type { GardState, Transaction } from 'wordgard/state';
 
 import { joinPostLanguages } from '#/state/preferences/languages';
 
-import { findPostById, getPosts } from '../editor/schema';
-
-type LanguageMap = ReadonlyMap<string, string>;
-
-const emptyLanguageMap: LanguageMap = new Map<string, string>();
-
-const setLanguageEffect = Transaction.Effect.define<{ postId: string; language: string }>();
+import { findPostById, getPosts } from '../model/schema';
+import { defineTaint, type TaintMap } from '../model/taints';
 
 // new posts copy their predecessor's override to keep the thread's language consistent.
 // retain deleted posts' entries so undo restores their languages.
-const inheritLanguages = (map: LanguageMap, tr: Transaction): LanguageMap => {
+const inheritLanguages = (map: TaintMap<string>, tr: Transaction): TaintMap<string> => {
 	if (map.size === 0) {
 		return map;
 	}
@@ -34,43 +29,22 @@ const inheritLanguages = (map: LanguageMap, tr: Transaction): LanguageMap => {
 	return next ?? map;
 };
 
-/** per-post language overrides, stored outside the document and undo history. */
-export const languageField = GardState.Field.define<LanguageMap>({
-	create() {
-		return emptyLanguageMap;
-	},
-	update(map, tr) {
-		let next = tr.docChanged ? inheritLanguages(map, tr) : map;
-		for (const fx of tr.effects) {
-			if (!fx.is(setLanguageEffect)) {
-				continue;
-			}
-
-			const { postId, language } = fx.value;
-			if (language === '') {
-				if (next.has(postId)) {
-					const cleared = new Map(next);
-					cleared.delete(postId);
-					next = cleared;
-				}
-			} else if (next.get(postId) !== language) {
-				next = new Map(next).set(postId, language);
-			}
-		}
-		return next;
-	},
+/** comma-separated BCP-47 language overrides, keyed by post id. */
+export const languageTaint = defineTaint<string>({
+	isEmpty: (language) => language === '',
+	isSame: (a, b) => a === b,
+	onDocChange: inheritLanguages,
 });
 
 /**
- * reads a post's language override, or the fallback.
+ * reads a post's language override.
  *
  * @param state the editor state
  * @param postId the post's id
- * @param fallback comma-separated BCP-47 codes used when no override is set
- * @returns comma-separated BCP-47 language codes
+ * @returns comma-separated BCP-47 codes, or undefined to use the composer's default
  */
-export const getPostLanguage = (state: GardState, postId: string, fallback: string): string => {
-	return state.field(languageField).get(postId) ?? fallback;
+export const getPostLanguage = (state: GardState, postId: string): string | undefined => {
+	return state.field(languageTaint.field).get(postId);
 };
 
 /**
@@ -81,5 +55,5 @@ export const getPostLanguage = (state: GardState, postId: string, fallback: stri
  * @param languages BCP-47 codes; an empty list restores the composer's default
  */
 export const setPostLanguage = (wg: Wordgard, postId: string, languages: readonly string[]): void => {
-	wg.dispatch({ effects: setLanguageEffect.of({ postId, language: joinPostLanguages(languages) }) });
+	languageTaint.set(wg, [postId], joinPostLanguages(languages));
 };

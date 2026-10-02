@@ -8,13 +8,10 @@ import { toShortUrl } from '#/lib/utils/url';
 
 import { buildSpans } from '#/components/Composer/rich-text';
 
-import { getLinkEmbedKind, type LinkEmbedKind } from '../embeds/link-embeds';
 import { getChildPlots, getPostText } from './schema';
 
 export type PostLink = {
 	url: string;
-	/** the embed slot the link fills. */
-	kind: LinkEmbedKind;
 	/** UTF-16 offset of the link's start. */
 	from: number;
 	/** UTF-16 offset just past the link. */
@@ -120,7 +117,7 @@ const measurePost = (text: string): PostText => {
 			facets.push([raw, raw + span.raw.length]);
 		}
 		if (isLink) {
-			links.push({ url: span.raw, kind: getLinkEmbedKind(span.raw), from: raw, to: raw + span.raw.length });
+			links.push({ url: span.raw, from: raw, to: raw + span.raw.length });
 		}
 
 		raw += span.raw.length;

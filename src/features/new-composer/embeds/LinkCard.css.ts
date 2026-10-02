@@ -4,7 +4,8 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
-import { revealOnHover } from '../reveal.css';
+import { overlayButton, overlayIcon } from '../shared/overlay.css';
+import { revealOnHover } from '../shared/reveal.css';
 
 const bordered = style({
 	border: `1px solid ${colors.borderContrastLow}`,
@@ -76,3 +77,7 @@ export const status = style({
 	gap: space.xs,
 	marginTop: space.xs,
 });
+
+export const removeButton = style([overlayButton]);
+
+export const removeIcon = style([overlayIcon]);

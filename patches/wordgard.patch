@@ -1,3 +1,25 @@
+diff --git a/dist/doc.d.ts b/dist/doc.d.ts
+index ef9a7f2035c14c5d4a8b2ec42117bf31ca6b00b7..d00a26ed0200e49e501d3e0e7adddca8ba416c6f 100644
+--- a/dist/doc.d.ts
++++ b/dist/doc.d.ts
+@@ -1015,13 +1015,13 @@ declare namespace Pos {
+         */
+         get isLast(): boolean;
+         /**
+-        The node before this one, if any.
++        The node after this one, if any.
+         */
+-        get nextSibling(): Node | null;
++        get nextSibling(): _Node | null;
+         /**
+-        The node after this node, if any.
++        The node before this one, if any.
+         */
+-        get previousSibling(): Node | null;
++        get previousSibling(): _Node | null;
+     }
+     /**
+     Subclass of {@link Pos.Node} that points at a plot node.
 diff --git a/dist/editor.js b/dist/editor.js
 index 04df810151c72f62dafa53f7f19e8d66853a55fb..fc620aec5bf69f4ea08c94a8aaeebd7841fa6d1e 100644
 --- a/dist/editor.js

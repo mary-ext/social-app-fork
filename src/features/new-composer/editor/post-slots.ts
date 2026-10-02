@@ -1,7 +1,7 @@
 import { Widget } from 'wordgard/editor';
 import { GardState } from 'wordgard/state';
 
-import * as styles from '../NewComposer.css';
+import * as css from './decorations.css';
 
 /** per-post React portal slot. */
 export type PostSlotKind = 'header' | 'footer';
@@ -15,8 +15,8 @@ export type PostSlot = {
 
 /** connects slot widgets to the hosting component. */
 export type SlotHost = {
-	mount: (kind: PostSlotKind, postId: string, element: HTMLElement) => void;
-	unmount: (kind: PostSlotKind, postId: string, element: HTMLElement) => void;
+	mount: (slot: PostSlot) => void;
+	unmount: (element: HTMLElement) => void;
 };
 
 /** slot host used by header and footer widgets. */
@@ -42,12 +42,12 @@ const defineSlotWidget = (kind: PostSlotKind, className: string) => {
 		},
 		connect(postId, dom) {
 			if (dom instanceof HTMLElement) {
-				hosts.get(dom)?.mount(kind, postId, dom);
+				hosts.get(dom)?.mount({ kind, element: dom, postId });
 			}
 		},
-		disconnect(postId, dom) {
+		disconnect(_postId, dom) {
 			if (dom instanceof HTMLElement) {
-				hosts.get(dom)?.unmount(kind, postId, dom);
+				hosts.get(dom)?.unmount(dom);
 			}
 		},
 		// prevent control clicks from changing the editor selection.
@@ -57,7 +57,7 @@ const defineSlotWidget = (kind: PostSlotKind, className: string) => {
 };
 
 /** portal host above a post's first line, keyed by post id. */
-export const headerWidget = defineSlotWidget('header', styles.headerSlot);
+export const headerWidget = defineSlotWidget('header', css.headerSlot);
 
 /** portal host below a post's last line, keyed by post id. */
-export const footerWidget = defineSlotWidget('footer', styles.footerSlot);
+export const footerWidget = defineSlotWidget('footer', css.footerSlot);

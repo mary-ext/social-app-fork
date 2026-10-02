@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-import { avatarSlot, row } from '../thread-end.css';
+import { avatarSlot, label as threadEndLabel, row } from './ThreadEnd.css';
 
 export const root = style([
 	row,
@@ -35,3 +35,5 @@ export const avatar = style([
 		},
 	},
 ]);
+
+export const label = style([threadEndLabel]);

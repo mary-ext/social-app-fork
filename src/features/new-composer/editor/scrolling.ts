@@ -3,9 +3,9 @@ import { Wordgard } from 'wordgard/editor';
 
 import { clamp } from '#/lib/utils/numbers';
 
-import { hasAttachments } from './post-info';
-import { endOfLastLine } from './schema';
-import { findActivePost, getActivePostId } from './selection';
+import { hasAttachments } from '../model/post-info';
+import { endOfLastLine } from '../model/schema';
+import { findActivePost, getActivePostId } from '../model/selection';
 
 const CARET_MARGIN = 24;
 // the footer slot already provides bottom padding.

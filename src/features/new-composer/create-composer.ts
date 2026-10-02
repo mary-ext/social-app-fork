@@ -14,17 +14,16 @@ import type { Composer } from './context';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
-import { postPlaceholder, threadDecorations } from './editor/decorations';
+import { activePost, postPlaceholder, threadDecorations } from './editor/decorations';
+import { restoreSelectionOnFocus } from './editor/focus';
 import { type PostSlot, slotHost } from './editor/post-slots';
-import { createPosts, endOfLastLine, threadSchema } from './editor/schema';
 import { postScrolling } from './editor/scrolling';
-import { activePost } from './editor/selection';
 import { embedSession } from './embeds/embed-session';
-import { restoreSelectionOnFocus } from './focus';
 import { labelTaint } from './labels/commands';
-import { languageField } from './languages/commands';
+import { languageTaint } from './languages/commands';
 import { altTaint } from './media/alt-text';
 import { imageEditTaint } from './media/image-edits';
+import { createPosts, endOfLastLine, threadSchema } from './model/schema';
 import { createStore } from './store';
 import {
 	activeCompletion,
@@ -53,7 +52,7 @@ export const createComposer = (): Composer => {
 		altTaint.field,
 		imageEditTaint.field,
 		labelTaint.field,
-		languageField,
+		languageTaint.field,
 		threadDecorations,
 		activePost,
 		restoreSelectionOnFocus(),
@@ -62,16 +61,20 @@ export const createComposer = (): Composer => {
 		activeCompletion,
 		suggestionState,
 		slotHost.of({
-			mount: (kind, postId, element) => {
-				slots.set([...slots.get(), { kind, element, postId }]);
+			mount(slot) {
+				slots.set([...slots.get(), slot]);
 			},
-			unmount: (_kind, _postId, element) => {
+			unmount(element) {
 				slots.set(slots.get().filter((slot) => slot.element !== element));
 			},
 		}),
 		suggestionHost.of({
-			mount: (element) => popupHost.set(element),
-			unmount: () => popupHost.set(null),
+			mount(element) {
+				popupHost.set(element);
+			},
+			unmount() {
+				popupHost.set(null);
+			},
 		}),
 		postPlaceholder.of((index) =>
 			index === 0 ? m['common.compose.placeholder']() : m['view.composer.thread.action.addPost'](),

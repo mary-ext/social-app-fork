@@ -2,8 +2,8 @@ import type { ChangeSet } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
 import { Paragraph } from 'wordgard/types';
 
-import { ISOLATE_HISTORY } from '../editor/history';
-import { endOfLastLine, getPosts, newPost, type PostMedia } from '../editor/schema';
+import { ISOLATE_HISTORY } from '../model/history';
+import { endOfLastLine, getPosts, newPost, type PostMedia } from '../model/schema';
 
 /**
  * appends a post and moves the caret into it, in one undo step.
@@ -27,6 +27,7 @@ export const appendPost = (
 
 	const end = last.pos + last.node.length;
 	const post = newPost(media).create([Paragraph.create()]);
+
 	wg.dispatch({
 		changes: [...changes, { from: end, insert: [post] }],
 		selection: { anchor: endOfLastLine(end + post.length) },

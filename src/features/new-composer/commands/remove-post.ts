@@ -1,7 +1,7 @@
 import type { Wordgard } from 'wordgard/editor';
 
-import { ISOLATE_HISTORY } from '../editor/history';
-import { endOfLastLine, getPosts, startOfFirstLine } from '../editor/schema';
+import { ISOLATE_HISTORY } from '../model/history';
+import { endOfLastLine, findPostById, getPosts, startOfFirstLine } from '../model/schema';
 
 /**
  * deletes a post unless it is the only one. if either selection endpoint is inside it, moves the caret to the
@@ -11,9 +11,9 @@ import { endOfLastLine, getPosts, startOfFirstLine } from '../editor/schema';
  * @param postId the post's id
  */
 export const removePost = (wg: Wordgard, postId: string): void => {
-	const posts = getPosts(wg.state.doc);
-	const post = posts.find((entry) => entry.id === postId);
-	if (!post || posts.length < 2) {
+	const { doc } = wg.state;
+	const post = findPostById(doc, postId);
+	if (!post || getPosts(doc).length < 2) {
 		return;
 	}
 

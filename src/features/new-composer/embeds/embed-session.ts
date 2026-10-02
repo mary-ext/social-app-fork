@@ -1,8 +1,8 @@
 import type { Plot } from 'wordgard/doc';
 import { GardState, type Transaction } from 'wordgard/state';
 
-import { getPosts } from '../editor/schema';
-import { createOffsetMapper, measureCached } from '../editor/text-measurement';
+import { getPosts } from '../model/schema';
+import { createOffsetMapper, measureCached } from '../model/text-measurement';
 import { dismissLinkEmbedEffect, type EmbedSession, emptyEmbedSession } from './link-embeds';
 
 type Span = { from: number; to: number };
@@ -30,16 +30,14 @@ const settle = (doc: Plot.Doc, head: number, prev: EmbedSession): EmbedSessionSt
 
 	for (const post of getPosts(doc)) {
 		const { text, measurement } = measureCached(post.node);
-		if (measurement.links.length === 0) {
-			continue;
-		}
 
-		const toPos = createOffsetMapper(post.node, post.pos + 1);
+		let toPos: ((textOffset: number) => number) | null = null;
 		for (const link of measurement.links) {
 			if ((settled ?? prev.settled).has(link.url)) {
 				continue;
 			}
 
+			toPos ??= createOffsetMapper(post.node, post.pos + 1);
 			const span = { from: toPos(link.from), to: toPos(getEditableEnd(text, link.to)) };
 			if (isWithin(head, span)) {
 				editing = span;

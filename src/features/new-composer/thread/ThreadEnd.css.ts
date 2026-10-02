@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-import { AVATAR_SIZE, POST_GAP_CENTER, RAIL_WIDTH } from './layout';
+import { AVATAR_SIZE, POST_GAP_CENTER, RAIL_WIDTH } from '../shared/layout';
 
 /** shared alignment for the add-post button and drop zone. */
 export const row = style({

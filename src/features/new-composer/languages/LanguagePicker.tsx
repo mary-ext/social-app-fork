@@ -16,7 +16,7 @@ import * as Menu from '#/components/Menu';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { useEditor, usePostState } from '../context';
+import { useEditor, useEditorState } from '../context';
 import { getPostLanguage, setPostLanguage } from './commands';
 
 /** language selection and popup handles for a post. */
@@ -38,7 +38,7 @@ export type LanguagePicker = {
  */
 export const useLanguagePicker = (postId: string): LanguagePicker => {
 	const fallback = usePostLanguage();
-	const language = usePostState(postId, (state) => getPostLanguage(state, postId, fallback), fallback);
+	const language = useEditorState((state) => getPostLanguage(state, postId)) ?? fallback;
 	const menu = Menu.useMenuHandle();
 	const dialog = Dialog.useDialogHandle();
 

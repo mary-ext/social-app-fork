@@ -6,8 +6,8 @@ import { Text } from '#/components/Text';
 import { colors } from '#/styles/colors';
 
 import { usePostState } from '../context';
-import { getPostInfo } from '../editor/post-info';
-import * as styles from './CharCount.css';
+import { getPostInfo } from '../model/post-info';
+import * as css from './CharCount.css';
 
 // show an exact count near the limit, where the ring is hard to read.
 const COUNTDOWN_AT = 20;
@@ -24,16 +24,16 @@ export function CharCount({ postId }: { postId: string }) {
 
 	if (remaining < 0) {
 		return (
-			<Text className={styles.count} color="negative_500" size="md_sub" weight="semiBold">
+			<Text className={css.count} color="negative_500" size="md_sub" weight="semiBold">
 				{remaining}
 			</Text>
 		);
 	}
 
 	return (
-		<div className={styles.root}>
+		<div className={css.root}>
 			{remaining <= COUNTDOWN_AT && (
-				<Text className={styles.count} color="textContrastMedium" size="md_sub">
+				<Text className={css.count} color="textContrastMedium" size="md_sub">
 					{remaining}
 				</Text>
 			)}

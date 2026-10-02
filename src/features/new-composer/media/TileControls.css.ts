@@ -5,8 +5,8 @@ import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { fontWeight, space } from '#/styles/tokens.css';
 
-import { overlay, OVERLAY_SIZE, roundButton } from '../overlay.css';
-import { revealOnHover } from '../reveal.css';
+import { overlay, overlayIcon, OVERLAY_SIZE, roundButton } from '../shared/overlay.css';
+import { revealOnHover } from '../shared/reveal.css';
 
 // #region shared
 
@@ -60,6 +60,8 @@ export const altChip = recipe(
 	},
 	{ debugId: 'altChip' },
 );
+
+export const icon = style([overlayIcon]);
 
 export const altCheck = style({
 	color: vars.palette.positive_500,

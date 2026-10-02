@@ -3,8 +3,6 @@ import type { Input } from '@oomfware/tug';
 import type { Wordgard } from 'wordgard/editor';
 
 import { movePostToSlot } from '../commands/reorder-posts';
-import { getPostParam, getPosts, splitMedia } from '../editor/schema';
-import { getMediaTileSelector, IMAGE_GROUP_ATTR, NEW_POST_ZONE_ATTR } from '../elements';
 import { createMedia } from '../media/attachments';
 import {
 	addMediaInNewPost,
@@ -14,44 +12,11 @@ import {
 	moveMediaToNewPost,
 	moveMediaToSlot,
 } from '../media/commands';
-import {
-	getImageDropSlot,
-	getMoveIndex,
-	getPostAt,
-	getPostDropSlot,
-	isFileDrag,
-	type ThreadDnd,
-	type ThreadDragData,
-} from './channel';
+import { getMediaTileSelector, IMAGE_GROUP_ATTR } from '../shared/elements';
+import type { ThreadDnd, ThreadDragData } from './channel';
 import { type DropIndicator, dropIndicator, markDropIndicator, type MediaDrop } from './drop-indicators';
+import { getMediaDrop, getMoveIndex, getPostDropSlot, isFileDrag, type Point } from './drop-targets';
 import { createEdgeScroller } from './edge-scroll';
-
-type Point = { clientX: number; clientY: number };
-
-const getMediaDrop = (container: Element, wg: Wordgard, point: Point): MediaDrop | null => {
-	const zone = container.querySelector(`[${NEW_POST_ZONE_ATTR}]`);
-	if (zone && point.clientY >= zone.getBoundingClientRect().top) {
-		return { kind: 'newPost' };
-	}
-
-	const target = getPostAt(wg, point.clientY);
-	const post = target && getPosts(wg.state.doc)[target.index];
-	if (!target || !post) {
-		return null;
-	}
-
-	const group = target.element.querySelector(`[${IMAGE_GROUP_ATTR}]`);
-	if (group) {
-		// ignore horizontal bounds so drops in the rail also pick a slot.
-		const rect = group.getBoundingClientRect();
-		if (point.clientY >= rect.top && point.clientY <= rect.bottom) {
-			return { kind: 'post', postId: post.id, slot: getImageDropSlot(group, point.clientX) };
-		}
-	}
-
-	const { images } = splitMedia(getPostParam(post.node).media);
-	return { kind: 'post', postId: post.id, slot: images.length };
-};
 
 // carousels re-snap to their previous tile after a reorder; bring the moved one into view instead.
 const revealMedia = (mediaId: string) => {
@@ -114,15 +79,16 @@ const getMediaIndicator = (source: MediaSource, hit: MediaDrop | null): DropIndi
 
 const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): void => {
 	const { postId, mediaId, index } = source;
+	const ref = { postId, mediaId };
 
 	switch (drop.kind) {
 		case 'newPost': {
-			moveMediaToNewPost(wg, postId, mediaId);
+			moveMediaToNewPost(wg, ref);
 			break;
 		}
 		case 'post': {
 			if (drop.slot === null) {
-				moveMediaTo(wg, postId, mediaId, drop.postId);
+				moveMediaTo(wg, ref, drop.postId);
 				break;
 			}
 
@@ -132,7 +98,7 @@ const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): voi
 			if (to === null) {
 				return;
 			}
-			moveMediaToSlot(wg, postId, mediaId, drop.postId, to);
+			moveMediaToSlot(wg, ref, { postId: drop.postId, index: to });
 			break;
 		}
 	}
@@ -193,21 +159,23 @@ export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTML
 
 	const stopDropping = dnd.dropTarget({
 		element: container,
-		getData: () => ({ kind: 'thread' }),
-		onDrag: ({ location, source }) => {
+		getData() {
+			return { kind: 'thread' };
+		},
+		onDrag({ location, source }) {
 			markDropIndicator(wg, getDragIndicator(source.data, location.current.input));
 		},
-		onDragLeave: ({ source }) => {
+		onDragLeave({ source }) {
 			scroller.stop();
 			markDropIndicator(wg, getIdleIndicator(source.data));
 		},
 	});
 
 	const stopMonitoring = dnd.monitor({
-		onDragStart: ({ source }) => {
+		onDragStart({ source }) {
 			markDropIndicator(wg, getIdleIndicator(source.data));
 		},
-		onDrop: ({ location, source }) => {
+		onDrop({ location, source }) {
 			scroller.stop();
 			const indicator = wg.state.field(dropIndicator);
 			markDropIndicator(wg, null);

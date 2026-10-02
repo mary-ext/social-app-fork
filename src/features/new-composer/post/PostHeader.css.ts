@@ -2,8 +2,9 @@ import { style } from '@vanilla-extract/css';
 
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
-import { RIGHT_PADDING } from '../layout';
-import { revealOnHover } from '../reveal.css';
+import { RIGHT_PADDING } from '../shared/layout';
+import { overlayIcon } from '../shared/overlay.css';
+import { revealOnHover } from '../shared/reveal.css';
 
 export const root = style({
 	display: 'flex',
@@ -35,8 +36,4 @@ export const remove = style([
 	},
 ]);
 
-export const removeIcon = style({
-	display: 'block',
-	width: 13,
-	height: 13,
-});
+export const removeIcon = style([overlayIcon]);

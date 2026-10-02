@@ -10,9 +10,10 @@ import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
 import { Text } from '#/components/Text';
 
 import { useEditor, useIsActivePost, usePostState } from '../context';
-import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } from '../editor/schema';
-import { MEDIA_ID_ATTR } from '../elements';
-import { escapeToEditor, useRovingFocus } from '../focus';
+import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } from '../model/schema';
+import { escapeToEditor } from '../shared/editor-focus';
+import { MEDIA_ID_ATTR } from '../shared/elements';
+import { useRovingFocus } from '../shared/roving-focus';
 import { getMediaAlt, setMediaAlt } from './alt-text';
 import { getMediaProblem } from './attachments';
 import { removeMedia } from './commands';
@@ -47,7 +48,7 @@ export function MediaRow({ postId }: { postId: string }) {
 
 	const roving = useRovingFocus(
 		media.map((item) => item.id),
-		isActive,
+		{ tabbable: isActive },
 	);
 
 	const altDialog = Dialog.useDialogHandle<AltTextTarget & { mediaId: string }>();
@@ -95,7 +96,7 @@ export function MediaRow({ postId }: { postId: string }) {
 		const index = media.indexOf(item);
 		const neighbor = media[index + 1] ?? media[index - 1];
 
-		removeMedia(wg, postId, item.id);
+		removeMedia(wg, { postId, mediaId: item.id });
 		if (focused !== item.id) {
 			return;
 		}
@@ -160,7 +161,10 @@ export function MediaRow({ postId }: { postId: string }) {
 			</div>
 
 			{/* keep dialog events out of the row's focus and key handlers. */}
-			<ImageAltTextDialog handle={altDialog} onSave={(alt, { mediaId }) => setMediaAlt(wg, mediaId, alt)} />
+			<ImageAltTextDialog
+				handle={altDialog}
+				onSave={(alt, { mediaId }) => setMediaAlt(wg, { mediaId, alt })}
+			/>
 			<EditImageDialog
 				handle={editDialog}
 				image={editing}

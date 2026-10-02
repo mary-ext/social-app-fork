@@ -3,8 +3,8 @@ import { Transaction } from 'wordgard/state';
 
 import { resolveUrlToLink } from '#/lib/links/app-url';
 
-import type { PostMedia } from '../editor/schema';
-import type { PostLink, PostText, TrailingLink } from '../editor/text-measurement';
+import type { PostMedia } from '../model/schema';
+import type { PostLink, PostText, TrailingLink } from '../model/text-measurement';
 
 // derive embeds from text so they follow their URLs through splits, joins, and reorders.
 //
@@ -94,7 +94,7 @@ export const selectPostEmbeds = (
 			continue;
 		}
 
-		switch (link.kind) {
+		switch (getLinkEmbedKind(link.url)) {
 			case 'external': {
 				external = link;
 				break;
