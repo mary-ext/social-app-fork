@@ -1,4 +1,4 @@
-import { createStore, del, get, keys } from 'idb-keyval';
+import { createStore, del, get, keys, set } from 'idb-keyval';
 
 // shared with drafts saved by the previous composer; entries are keyed by the draft's localRef path.
 const store = createStore('bsky-draft-media', 'media');
@@ -17,6 +17,16 @@ type MediaRecord = {
 export const loadDraftMedia = async (path: string): Promise<Blob | undefined> => {
 	const record = await get<MediaRecord>(path, store);
 	return record?.blob;
+};
+
+/**
+ * stores a draft attachment on this device.
+ *
+ * @param path the attachment's localRef path
+ * @param blob the file
+ */
+export const saveDraftMedia = async (path: string, blob: Blob): Promise<void> => {
+	await set(path, { blob, createdAt: new Date().toISOString() } satisfies MediaRecord, store);
 };
 
 /**

@@ -89,7 +89,7 @@ export function NewComposer({
 
 				{composer.replyUri === null && (
 					<Dialog.Header.Actions>
-						<DraftsButton onDiscard={resetComposer} onSelect={openDraft} />
+						<DraftsButton onReset={resetComposer} onSelect={openDraft} />
 					</Dialog.Header.Actions>
 				)}
 			</Dialog.Header.Root>
@@ -103,7 +103,7 @@ export function NewComposer({
 				<ThreadFooter />
 			</Fragment>
 
-			<DiscardPrompt {...discard.prompt} onDiscard={closeComposer} />
+			<DiscardPrompt {...discard.prompt} onProceed={closeComposer} />
 		</ComposerContext>
 	);
 }

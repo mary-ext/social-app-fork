@@ -1,10 +1,12 @@
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
+import type { GenericUri } from '@atcute/lexicons';
 
 import {
 	klipyHostname,
 	parseDimensions,
 	stripGifUrlParams,
 	tenorHostname,
+	toGifEmbedUrl,
 } from '#/lib/media/external-gif/embed';
 import type { Gif } from '#/lib/media/external-gif/types';
 import { safeUrlParse } from '#/lib/utils/url';
@@ -13,8 +15,10 @@ import { getDeviceId } from '#/state/preferences/device-id';
 
 const GIF_ALT_PARAM = 'alt';
 
+export const WEB_DEVICE_NAME = 'Web';
+
 // some clients store a platform name instead of a device name.
-const GENERIC_DEVICE_NAMES = new Set(['Android', 'iOS', 'Web']);
+const GENERIC_DEVICE_NAMES = new Set(['Android', 'iOS', WEB_DEVICE_NAME]);
 
 /**
  * checks whether a draft's attachments could be stored on this device.
@@ -79,6 +83,42 @@ export const getDraftMediaName = (path: string): string => {
 export const getDraftVideoType = (path: string): string => {
 	const [, type, rest] = path.split(':');
 	return rest !== undefined && type?.includes('/') ? type : 'video/mp4';
+};
+
+/**
+ * creates a unique image localRef path.
+ *
+ * @returns `image:<uuid>`
+ */
+export const createDraftImagePath = (): string => {
+	return `image:${crypto.randomUUID()}`;
+};
+
+/**
+ * creates a unique localRef path for a video or local GIF.
+ *
+ * @param type the file's MIME type
+ * @returns `video:<mime>:<uuid>`
+ */
+export const createDraftVideoPath = (type: string): string => {
+	return `video:${type}:${crypto.randomUUID()}`;
+};
+
+/**
+ * encodes an external GIF and its alt text as a draft link.
+ *
+ * @param gif the GIF
+ * @param alt the GIF's alt text; empty omits it
+ * @returns the GIF's embed URL with its alt text
+ */
+export const toDraftGifUri = (gif: Gif, alt: string): GenericUri => {
+	const url = new URL(toGifEmbedUrl(gif));
+	if (alt) {
+		url.searchParams.set(GIF_ALT_PARAM, alt);
+	}
+
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `URL.toString()` always serializes an absolute url
+	return url.toString() as GenericUri;
 };
 
 /**

@@ -13,15 +13,15 @@ import { DraftsDialog } from './DraftsDialog';
 /**
  * opens the drafts list, first offering to save unsaved changes.
  *
- * @param props.onDiscard clears unsaved changes before opening the list
+ * @param props.onReset clears the saved or discarded thread before opening the list
  * @param props.onSelect replaces the thread with a saved draft
  * @returns the header button and its dialogs
  */
 export function DraftsButton({
-	onDiscard,
+	onReset,
 	onSelect,
 }: {
-	onDiscard: () => void;
+	onReset: () => void;
 	onSelect: (view: AppBskyDraftDefs.DraftView) => Promise<void>;
 }) {
 	const dialogHandle = Dialog.useDialogHandle();
@@ -46,8 +46,8 @@ export function DraftsButton({
 
 			<DiscardPrompt
 				{...discard.prompt}
-				onDiscard={() => {
-					onDiscard();
+				onProceed={() => {
+					onReset();
 					dialogHandle.open(null);
 				}}
 			/>

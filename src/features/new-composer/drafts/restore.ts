@@ -10,6 +10,7 @@ import { recordUriToShareUrl } from '#/lib/routes/app-links';
 import { joinPostLanguages } from '#/state/preferences/languages';
 
 import type { ComposerSeed, SeedPost } from '../create-composer';
+import { getLinkEmbedKind } from '../embeds/link-embeds';
 import { createGifMedia, createMedia } from '../media/attachments';
 import type { CaptionTrack } from '../media/videos/captions';
 import type { PostMedia } from '../model/schema';
@@ -58,7 +59,8 @@ const getTextLinks = (text: string): string[] => {
 /**
  * converts a saved draft into a composer seed, loading its attachments from this device.
  *
- * appends missing embed URLs to the text. a post quoted by the first post becomes the thread's quote.
+ * appends missing embed URLs to the text. a post quoted by the first post becomes the thread's quote. infers
+ * link dismissals from absent embeds, except where media or a quote occupies the slot.
  *
  * @param view the saved draft
  * @returns the seed and how many attachments were left out
@@ -71,6 +73,9 @@ export const restoreDraft = async ({ id, draft }: AppBskyDraftDefs.DraftView): P
 	const labels = new Map<string, readonly SelfLabel[]>();
 	const languages = new Map<string, string>();
 	const mediaPaths = new Map<string, string>();
+	// dismissals are thread-wide; a URL embedded in any post must stay enabled.
+	const embeddedLinks = new Set<string>();
+	const unembeddedLinks = new Set<string>();
 	let missingMedia = 0;
 	let quoteUri: ResourceUri | undefined;
 
@@ -150,18 +155,43 @@ export const restoreDraft = async ({ id, draft }: AppBskyDraftDefs.DraftView): P
 				appended.push(external);
 			}
 
+			let isQuoting = false;
 			const record = post.embedRecords?.[0]?.record.uri;
-			if (
-				record !== undefined &&
-				isResourceUri(record) &&
-				!links.some((url) => isLinkToRecord(url, record))
-			) {
-				if (index === 0 && parseResourceUri(record).collection === 'app.bsky.feed.post') {
-					quoteUri = record;
+			const savedRecord = record !== undefined && isResourceUri(record) ? record : undefined;
+			if (savedRecord !== undefined && !links.some((url) => isLinkToRecord(url, savedRecord))) {
+				if (index === 0 && parseResourceUri(savedRecord).collection === 'app.bsky.feed.post') {
+					quoteUri = savedRecord;
+					isQuoting = true;
 				} else {
-					const url = recordUriToShareUrl(record);
+					const url = recordUriToShareUrl(savedRecord);
 					if (url) {
 						appended.push(url);
+					}
+				}
+			}
+
+			for (const url of appended) {
+				embeddedLinks.add(url);
+			}
+			for (const url of links) {
+				switch (getLinkEmbedKind(url)) {
+					case 'external': {
+						// media can hide a card without dismissing its URL.
+						if (url === external) {
+							embeddedLinks.add(url);
+						} else if (media.length === 0) {
+							unembeddedLinks.add(url);
+						}
+						break;
+					}
+					case 'record': {
+						// a quote can hide a record embed without dismissing its URL.
+						if (savedRecord !== undefined && isLinkToRecord(url, savedRecord)) {
+							embeddedLinks.add(url);
+						} else if (!isQuoting) {
+							unembeddedLinks.add(url);
+						}
+						break;
 					}
 				}
 			}
@@ -187,6 +217,7 @@ export const restoreDraft = async ({ id, draft }: AppBskyDraftDefs.DraftView): P
 			quoteUri,
 			alt,
 			captions,
+			dismissedLinks: unembeddedLinks.difference(embeddedLinks),
 			labels,
 			languages,
 			interaction: {

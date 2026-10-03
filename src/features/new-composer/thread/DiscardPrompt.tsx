@@ -1,10 +1,16 @@
 import { useState } from 'react';
 
-import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import {
+	MAX_DRAFT_CAPTION_SIZE,
+	MAX_DRAFT_GRAPHEME_LENGTH,
+	MAX_DRAFT_IMAGES,
+} from '#/lib/constants/composer';
 
 import * as Prompt from '#/components/Prompt';
+import * as Toast from '#/components/Toast';
 
-import { type Composer, useComposer } from '../context';
+import { type Composer, useComposer, useThreadInteraction } from '../context';
+import { useSaveDraftMutation } from '../drafts/queries';
 import { type DraftSaveBlocker, getDraftSaveBlocker } from '../drafts/save-blocker';
 
 /** unsaved-changes guard and its prompt props. */
@@ -43,7 +49,7 @@ export const useDiscardGuard = (composer: Composer): DiscardGuard => {
 			}
 
 			setSnapshot({
-				draftSaveBlocker: getDraftSaveBlocker(composer.wg.state.doc),
+				draftSaveBlocker: getDraftSaveBlocker(composer.wg.state),
 				isDraft: composer.draft !== null,
 			});
 			handle.open(null);
@@ -59,46 +65,76 @@ export const useDiscardGuard = (composer: Composer): DiscardGuard => {
  * @param props.handle opens the prompt
  * @param props.draftSaveBlocker reason saving is unavailable, or undefined to offer saving
  * @param props.isDraft whether the thread came from a saved draft
- * @param props.onDiscard continues without saving
+ * @param props.onProceed continues once the thread is saved or discarded
  * @returns the prompt
  */
 export function DiscardPrompt({
 	handle,
 	draftSaveBlocker,
 	isDraft,
-	onDiscard,
+	onProceed,
 }: DiscardGuard['prompt'] & {
-	onDiscard: () => void;
+	onProceed: () => void;
 }) {
-	const { replyUri } = useComposer();
+	const composer = useComposer();
+	const interaction = useThreadInteraction();
+	const { mutate: saveDraft, isPending: isSaving } = useSaveDraftMutation();
 
 	// the draft format has no reply parent.
-	if (replyUri !== null) {
+	if (composer.replyUri !== null) {
 		return (
 			<Prompt.Basic
 				handle={handle}
 				title={`Discard draft?`}
 				confirmButtonCta={`Discard`}
 				confirmButtonColor="negative"
-				onConfirm={onDiscard}
+				onConfirm={onProceed}
 			/>
 		);
 	}
 
+	const save = () => {
+		saveDraft(
+			{ composer, interaction },
+			{
+				onSuccess() {
+					handle.close();
+					Toast.show(isDraft ? `Draft updated` : `Draft saved`);
+					onProceed();
+				},
+				onError(err) {
+					console.error('failed to save draft', err);
+					Toast.show(`Couldn't save this draft`, { type: 'error' });
+				},
+			},
+		);
+	};
+
 	let title: string;
+	if (draftSaveBlocker === undefined) {
+		title = isDraft ? `Update draft?` : `Save draft?`;
+	} else {
+		title = isDraft ? `Discard changes?` : `Discard post?`;
+	}
+
 	let message: string | undefined;
 	switch (draftSaveBlocker) {
+		case 'captionTooLarge': {
+			message = `Drafts can have caption files up to ${MAX_DRAFT_CAPTION_SIZE / 1000} KB.`;
+			break;
+		}
 		case 'tooLong': {
-			title = isDraft ? `Discard changes?` : `Discard post?`;
 			message = `Drafts can have up to ${MAX_DRAFT_GRAPHEME_LENGTH} characters per post.`;
 			break;
 		}
+		case 'tooManyMedia': {
+			message = `Drafts can have up to ${MAX_DRAFT_IMAGES} images and one video or GIF per post.`;
+			break;
+		}
 		case 'voiceClip': {
-			title = isDraft ? `Discard changes?` : `Discard post?`;
 			break;
 		}
 		case undefined: {
-			title = isDraft ? `Update draft?` : `Save draft?`;
 			message = isDraft ? `Save your changes to this draft.` : `Save this draft to edit later.`;
 			break;
 		}
@@ -112,10 +148,15 @@ export function DiscardPrompt({
 			</Prompt.Content>
 			<Prompt.Actions>
 				{draftSaveBlocker === undefined && (
-					// TODO: save the thread as a draft.
-					<Prompt.Action cta={isDraft ? `Update draft` : `Save draft`} color="primary" onPress={() => {}} />
+					<Prompt.Action
+						cta={isDraft ? `Update draft` : `Save draft`}
+						color="primary"
+						disabled={isSaving}
+						shouldCloseOnPress={false}
+						onPress={save}
+					/>
 				)}
-				<Prompt.Action cta={`Discard`} color="negative_subtle" onPress={onDiscard} />
+				<Prompt.Action cta={`Discard`} color="negative_subtle" disabled={isSaving} onPress={onProceed} />
 				<Prompt.Cancel cta={`Keep editing`} />
 			</Prompt.Actions>
 		</Prompt.Outer>

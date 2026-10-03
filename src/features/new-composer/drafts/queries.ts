@@ -3,14 +3,22 @@ import { ok } from '@atcute/client';
 
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { InteractionSettings } from '#/lib/interaction-settings';
+
+import { useGetPost } from '#/state/queries/post';
 import { getClients } from '#/state/session';
 
+import type { Composer } from '../context';
 import { getDraftMediaPaths } from './draft-format';
-import { deleteDraftMedia, listDraftMedia, loadDraftMedia } from './storage';
+import { serializeDraft } from './serialize';
+import { deleteDraftMedia, listDraftMedia, loadDraftMedia, saveDraftMedia } from './storage';
 
-// nested under the previous composer's key so its saves refresh this list too.
-const DRAFTS_QUERY_KEY = ['drafts', 'thread'];
-const STORED_MEDIA_QUERY_KEY = [...DRAFTS_QUERY_KEY, 'stored-media'];
+const DRAFTS_KEY = ['thread-drafts'];
+const LIST_KEY = [...DRAFTS_KEY, 'list'];
+const STORED_MEDIA_KEY = [...DRAFTS_KEY, 'stored-media'];
+
+// unique media paths keep individual file queries valid across saves.
+const LISTING_KEYS = [LIST_KEY, STORED_MEDIA_KEY];
 
 /**
  * lists the account's drafts, most recently updated first.
@@ -21,7 +29,7 @@ export const useDraftsQuery = () => {
 	const { appview } = getClients();
 
 	return useInfiniteQuery({
-		queryKey: DRAFTS_QUERY_KEY,
+		queryKey: LIST_KEY,
 		async queryFn({ pageParam, signal }) {
 			const res = await ok(
 				appview.get('app.bsky.draft.getDrafts', { signal, params: { cursor: pageParam } }),
@@ -41,7 +49,7 @@ export const useDraftsQuery = () => {
  */
 export const useStoredDraftMediaQuery = () => {
 	return useQuery({
-		queryKey: STORED_MEDIA_QUERY_KEY,
+		queryKey: STORED_MEDIA_KEY,
 		queryFn: listDraftMedia,
 	});
 };
@@ -54,12 +62,75 @@ export const useStoredDraftMediaQuery = () => {
  */
 export const useDraftMediaQuery = (path: string) => {
 	return useQuery({
-		queryKey: ['draft-media', path],
+		queryKey: [...DRAFTS_KEY, 'media', path],
 		async queryFn() {
 			return (await loadDraftMedia(path)) ?? null;
 		},
 		// localRef paths are unique, so a stored file never changes.
 		staleTime: Infinity,
+	});
+};
+
+/**
+ * creates a draft or updates the one the composer was restored from.
+ *
+ * @returns the mutation, taking the composer and its resolved interaction settings
+ */
+export const useSaveDraftMutation = () => {
+	const { appview } = getClients();
+	const queryClient = useQueryClient();
+	const getPost = useGetPost();
+
+	return useMutation({
+		async mutationFn({ composer, interaction }: { composer: Composer; interaction: InteractionSettings }) {
+			const origin = composer.draft;
+			const previous = new Set(origin?.mediaPaths.values());
+
+			const { draft, files } = await serializeDraft(composer.wg.state, {
+				getPost,
+				interaction,
+				mediaPaths: origin?.mediaPaths ?? new Map(),
+				queryClient,
+			});
+
+			const added = files
+				.entries()
+				.filter(([path]) => !previous.has(path))
+				.toArray();
+
+			// store new attachments before saving their references.
+			try {
+				await Promise.all(added.map(([path, blob]) => saveDraftMedia(path, blob)));
+
+				if (origin) {
+					await ok(
+						appview.post('app.bsky.draft.updateDraft', {
+							as: null,
+							input: { draft: { id: origin.id, draft } },
+						}),
+					);
+				} else {
+					await ok(appview.post('app.bsky.draft.createDraft', { input: { draft } }));
+				}
+			} catch (err) {
+				await Promise.allSettled(added.map(([path]) => deleteDraftMedia(path)));
+				throw err;
+			}
+
+			// cleanup failures must not report a successful save as failed.
+			await Promise.allSettled(
+				previous
+					.values()
+					.filter((path) => !files.has(path))
+					.map(deleteDraftMedia),
+			);
+		},
+		onSuccess() {
+			// remove cached listings to prevent restoring stale drafts while refetching.
+			for (const queryKey of LISTING_KEYS) {
+				queryClient.removeQueries({ queryKey });
+			}
+		},
 	});
 };
 
@@ -79,7 +150,7 @@ export const useDeleteDraftMutation = () => {
 		async onSuccess(_, view) {
 			// failed deletions must leave the draft's attachments usable.
 			await Promise.all(getDraftMediaPaths(view.draft).map(deleteDraftMedia));
-			await queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
+			await Promise.all(LISTING_KEYS.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
 		},
 	});
 };

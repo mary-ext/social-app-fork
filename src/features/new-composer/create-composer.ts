@@ -21,7 +21,7 @@ import { activePost, postPlaceholder, threadDecorations } from './editor/decorat
 import { restoreSelectionOnFocus } from './editor/focus';
 import { type PostSlot, slotHost } from './editor/post-slots';
 import { postScrolling } from './editor/scrolling';
-import { embedSession, getEmbedSession } from './embeds/embed-session';
+import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
 import { getAttachmentKeys, labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
@@ -64,6 +64,8 @@ export type ComposerSeed = {
 	alt: TaintMap<string>;
 	/** caption tracks keyed by media id. */
 	captions: TaintMap<readonly CaptionTrack[]>;
+	/** link URLs whose embeds start dismissed. */
+	dismissedLinks: ReadonlySet<string>;
 	/** content warnings keyed by post id, applied to each of the post's labelable attachments. */
 	labels: TaintMap<readonly SelfLabel[]>;
 	/** comma-separated language overrides keyed by post id. */
@@ -86,6 +88,7 @@ export const createBlankSeed = (quoteUri: ResourceUri | undefined): ComposerSeed
 		quoteUri,
 		alt: new Map(),
 		captions: new Map(),
+		dismissedLinks: new Set(),
 		labels: new Map(),
 		languages: new Map(),
 		interaction: null,
@@ -127,7 +130,7 @@ export const createComposer = ({
 		threadSchema,
 		history(),
 		threadCommands,
-		embedSession,
+		embedSessionWith(seed.dismissedLinks),
 		quoteUri ? threadQuote.of(quoteUri) : [],
 		altTaint.field.init(() => seed.alt),
 		captionsTaint.field.init(() => seed.captions),

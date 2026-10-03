@@ -5,13 +5,15 @@ import type { ResourceUri } from '@atcute/lexicons';
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
-import type { InteractionSettings } from '#/lib/interaction-settings';
+import { type InteractionSettings, interactionSettingsFromPreferences } from '#/lib/interaction-settings';
+
+import { usePreferencesQuery } from '#/state/queries/preferences';
 
 import type { ThreadDnd } from './dnd/channel';
 import type { PostSlot } from './editor/post-slots';
 import { findPostById, getPosts, type ThreadPost } from './model/schema';
 import { getActivePostId } from './model/selection';
-import type { Store } from './store';
+import { type Store, useStore } from './store';
 import type { SuggestionKeyHandler } from './suggestions/autocomplete';
 
 /** the saved draft a composer was restored from. */
@@ -121,6 +123,17 @@ export const usePostState = <T>(
  */
 export const useIsActivePost = (postId: string): boolean => {
 	return useEditorState((state) => getActivePostId(state) === postId);
+};
+
+/**
+ * subscribes to the thread's interaction settings, following account defaults until edited.
+ *
+ * @returns the thread's effective settings
+ */
+export const useThreadInteraction = (): InteractionSettings => {
+	const edited = useStore(useComposer().interaction);
+	const { data: preferences } = usePreferencesQuery();
+	return edited ?? interactionSettingsFromPreferences(preferences?.postInteractionSettings);
 };
 
 /**
