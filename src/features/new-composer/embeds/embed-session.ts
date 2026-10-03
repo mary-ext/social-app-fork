@@ -61,10 +61,14 @@ const applyDismissals = (session: EmbedSession, tr: Transaction): EmbedSession =
 	return session;
 };
 
-/** settled and dismissed link URLs shared across all posts. */
-export const embedSession = GardState.Field.define<EmbedSessionState>({
+// restored links should settle even if the caret is inside them.
+const startSession = (doc: Plot.Doc, dismissed: ReadonlySet<string>): EmbedSessionState => {
+	return settle(doc, -1, { ...emptyEmbedSession, dismissed });
+};
+
+const embedSession = GardState.Field.define<EmbedSessionState>({
 	create(state) {
-		return settle(state.doc, state.selection.head, emptyEmbedSession);
+		return startSession(state.doc, emptyEmbedSession.dismissed);
 	},
 	update(value, tr) {
 		const session = applyDismissals(value.session, tr);
@@ -77,6 +81,16 @@ export const embedSession = GardState.Field.define<EmbedSessionState>({
 		return session === value.session ? value : { ...value, session };
 	},
 });
+
+/**
+ * tracks settled and dismissed link URLs shared across all posts.
+ *
+ * @param dismissed initially dismissed URLs
+ * @returns the embed session extension
+ */
+export const embedSessionWith = (dismissed: ReadonlySet<string>): GardState.Extension => {
+	return embedSession.init((state) => startSession(state.doc, dismissed));
+};
 
 /**
  * reads the composer's embed session.

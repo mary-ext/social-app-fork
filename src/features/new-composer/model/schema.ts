@@ -189,9 +189,18 @@ export const threadSchema: GardState.Extension = [
  * @returns one post plot per entry
  */
 export const createPosts = (texts: readonly string[]): Plot[] => {
-	return texts.map((text) => {
-		return newPost().create(text.split('\n').map((line) => Paragraph.create(line ? [Leaf.text(line)] : [])));
-	});
+	return texts.map((text) => createPost(newPost(), text));
+};
+
+/**
+ * builds a post plot from plain text, one paragraph per line.
+ *
+ * @param tag the post's opening tag, from {@link newPost} or `Post.of`
+ * @param text the post's text
+ * @returns the post plot
+ */
+export const createPost = (tag: Plot.Tag<PostParam>, text: string): Plot => {
+	return tag.create(text.split('\n').map((line) => Paragraph.create(line ? [Leaf.text(line)] : [])));
 };
 
 /**
@@ -233,6 +242,16 @@ export const isEmptyLine = (node: Node | undefined): boolean => {
 export const isEmptyPost = (post: Plot): boolean => {
 	const [first] = post.content;
 	return post.content.length === 1 && isEmptyLine(first);
+};
+
+/**
+ * checks for content that needs a discard prompt.
+ *
+ * @param doc the thread document
+ * @returns whether any post has text, extra lines or media
+ */
+export const hasThreadContent = (doc: Plot.Doc): boolean => {
+	return getPosts(doc).some(({ node }) => !isEmptyPost(node) || getPostParam(node).media.length > 0);
 };
 
 /**

@@ -7,12 +7,13 @@ import { history } from 'wordgard/history';
 import { GardState } from 'wordgard/state';
 
 import type { InteractionSettings } from '#/lib/interaction-settings';
+import type { SelfLabel } from '#/lib/moderation/self-labels';
 
 import { m } from '#/paraglide/messages';
 import { zIndex } from '#/styles/tokens.css';
 
 import { threadCommands } from './commands/thread-commands';
-import type { Composer } from './context';
+import type { Composer, DraftOrigin } from './context';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
@@ -20,14 +21,23 @@ import { activePost, postPlaceholder, threadDecorations } from './editor/decorat
 import { restoreSelectionOnFocus } from './editor/focus';
 import { type PostSlot, slotHost } from './editor/post-slots';
 import { postScrolling } from './editor/scrolling';
-import { embedSession } from './embeds/embed-session';
+import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
-import { labelTaint } from './labels/commands';
+import { getAttachmentKeys, labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
 import { imageEditTaint } from './media/images/image-edits';
 import { altTaint } from './media/shared/alt-text';
-import { captionsTaint } from './media/videos/captions';
-import { createPosts, endOfLastLine, threadSchema } from './model/schema';
+import { type CaptionTrack, captionsTaint } from './media/videos/captions';
+import {
+	createPost,
+	endOfLastLine,
+	getPosts,
+	hasThreadContent,
+	Post,
+	type PostMedia,
+	threadSchema,
+} from './model/schema';
+import type { TaintMap } from './model/taints';
 import { createStore } from './store';
 import {
 	activeCompletion,
@@ -37,21 +47,80 @@ import {
 	suggestionState,
 } from './suggestions/autocomplete';
 
-/** initial quote and reply context. */
-export type ComposerInit = {
+/** a post's initial text and attachments. */
+export type SeedPost = {
+	id: string;
+	text: string;
+	media: readonly PostMedia[];
+};
+
+/** the thread a composer opens with. */
+export type ComposerSeed = {
+	/** at least one post. */
+	posts: readonly SeedPost[];
 	/** quoted post's AT-URI; undefined omits the quote. */
 	quoteUri: ResourceUri | undefined;
-	/** reply parent's AT-URI; undefined starts a top-level thread. */
-	replyUri: ResourceUri | undefined;
+	/** alt text keyed by media id. */
+	alt: TaintMap<string>;
+	/** caption tracks keyed by media id. */
+	captions: TaintMap<readonly CaptionTrack[]>;
+	/** link URLs whose embeds start dismissed. */
+	dismissedLinks: ReadonlySet<string>;
+	/** content warnings keyed by post id, applied to each of the post's labelable attachments. */
+	labels: TaintMap<readonly SelfLabel[]>;
+	/** comma-separated language overrides keyed by post id. */
+	languages: TaintMap<string>;
+	/** thread settings; null follows account defaults. */
+	interaction: InteractionSettings | null;
+	/** the draft being edited; null for a new thread. */
+	draft: DraftOrigin | null;
 };
 
 /**
- * creates a detached thread composer with one empty post.
+ * creates the seed for a new thread with one empty post.
  *
- * @param init initial quote and reply URIs
+ * @param quoteUri quoted post's AT-URI; undefined omits the quote
+ * @returns the seed
+ */
+export const createBlankSeed = (quoteUri: ResourceUri | undefined): ComposerSeed => {
+	return {
+		posts: [{ id: crypto.randomUUID(), text: '', media: [] }],
+		quoteUri,
+		alt: new Map(),
+		captions: new Map(),
+		dismissedLinks: new Set(),
+		labels: new Map(),
+		languages: new Map(),
+		interaction: null,
+		draft: null,
+	};
+};
+
+// exclude state that changes without user edits, such as settled links.
+const SAVED_FIELDS: readonly GardState.Field<unknown>[] = [
+	altTaint.field,
+	captionsTaint.field,
+	imageEditTaint.field,
+	labelTaint.field,
+	languageTaint.field,
+];
+
+/**
+ * creates a detached thread composer.
+ *
+ * @param options.seed the thread to open with
+ * @param options.replyUri reply parent's AT-URI; undefined starts a top-level thread
  * @returns the composer
  */
-export const createComposer = ({ quoteUri, replyUri }: ComposerInit): Composer => {
+export const createComposer = ({
+	seed,
+	replyUri,
+}: {
+	seed: ComposerSeed;
+	replyUri: ResourceUri | undefined;
+}): Composer => {
+	const { quoteUri } = seed;
+
 	const updates = new SimpleEventEmitter<[]>();
 	const slots = createStore<readonly PostSlot[]>([]);
 	const popupHost = createStore<HTMLElement | null>(null);
@@ -61,13 +130,25 @@ export const createComposer = ({ quoteUri, replyUri }: ComposerInit): Composer =
 		threadSchema,
 		history(),
 		threadCommands,
-		embedSession,
+		embedSessionWith(seed.dismissedLinks),
 		quoteUri ? threadQuote.of(quoteUri) : [],
-		altTaint.field,
-		captionsTaint.field,
+		altTaint.field.init(() => seed.alt),
+		captionsTaint.field.init(() => seed.captions),
 		imageEditTaint.field,
-		labelTaint.field,
-		languageTaint.field,
+		labelTaint.field.init((state) => {
+			const labels = new Map<string, readonly SelfLabel[]>();
+			for (const post of getPosts(state.doc)) {
+				const values = seed.labels.get(post.id);
+				if (values) {
+					for (const key of getAttachmentKeys(state, post.node)) {
+						labels.set(key, values);
+					}
+				}
+			}
+
+			return labels;
+		}),
+		languageTaint.field.init(() => seed.languages),
 		threadDecorations,
 		activePost,
 		restoreSelectionOnFocus(),
@@ -115,7 +196,9 @@ export const createComposer = ({ quoteUri, replyUri }: ComposerInit): Composer =
 		}),
 	]);
 
-	const doc = config.schema!.doc(createPosts(['']));
+	const doc = config.schema!.doc(
+		seed.posts.map(({ id, text, media }) => createPost(Post.of({ id, media }), text)),
+	);
 	const wg = Wordgard.create({
 		config,
 		doc,
@@ -125,13 +208,33 @@ export const createComposer = ({ quoteUri, replyUri }: ComposerInit): Composer =
 
 	const dnd = createThreadDnd();
 	const endHost = document.createElement('div');
+	const interaction = createStore(seed.interaction);
+
+	const initial = wg.state;
 
 	return {
+		id: crypto.randomUUID(),
 		wg,
 		dnd,
 		replyUri: replyUri ?? null,
+		draft: seed.draft,
 
-		interaction: createStore<InteractionSettings | null>(null),
+		hasUnsavedChanges() {
+			const { state } = wg;
+			if (seed.draft === null) {
+				return hasThreadContent(state.doc);
+			}
+
+			// taints keep their identity until a value actually changes.
+			return (
+				interaction.get() !== seed.interaction ||
+				SAVED_FIELDS.some((field) => state.field(field) !== initial.field(field)) ||
+				getEmbedSession(state).dismissed !== getEmbedSession(initial).dismissed ||
+				(state.doc !== initial.doc && !state.doc.eq(initial.doc))
+			);
+		},
+
+		interaction,
 		slots,
 		endHost,
 		suggestionHost: popupHost,

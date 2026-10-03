@@ -7,9 +7,8 @@ import { useEditor, useEditorState } from '../context';
 import { isBlankPost } from '../model/post-info';
 import { getPosts } from '../model/schema';
 import { Avatar } from '../post/Avatar';
+import { GHOST_AVATAR_SIZE } from '../shared/layout';
 import * as css from './AddPostRow.css';
-
-const GHOST_AVATAR_SIZE = 20;
 
 /**
  * button to append a post to the thread, disabled while the last post is blank.

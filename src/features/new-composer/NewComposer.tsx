@@ -1,16 +1,22 @@
-import { memo } from 'react';
+import { Fragment, memo, type RefObject, useImperativeHandle, useState } from 'react';
+
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { createPortal } from 'react-dom';
 
-import { useConstant } from '#/lib/hooks/use-constant';
+import { closeComposer } from '#/features/composer/open-composer';
 
 import * as Dialog from '#/components/Dialog';
+import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 import { ComposerContext, useComposer, useEditorState } from './context';
-import { type ComposerInit, createComposer } from './create-composer';
+import { createBlankSeed, createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
+import { DraftsButton } from './drafts/DraftsButton';
+import { restoreDraft } from './drafts/restore';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
 import { MediaRow } from './media/MediaRow';
 import * as css from './NewComposer.css';
@@ -20,18 +26,58 @@ import { PostRail } from './post/PostRail';
 import { MEDIA_DRAGGING_ATTR } from './shared/elements';
 import { useStore } from './store';
 import { Suggestions } from './suggestions/SuggestionPopup';
+import { DiscardPrompt, useDiscardGuard } from './thread/DiscardPrompt';
 import { ReplyParent } from './thread/ReplyParent';
 import { ThreadEnd } from './thread/ThreadEnd';
 import { ThreadFooter } from './thread/ThreadFooter';
 
+export type ComposerCloseGuard = {
+	/**
+	 * prompts before closing a nonempty thread.
+	 *
+	 * @returns whether the dialog should stay open
+	 */
+	interceptClose: () => boolean;
+};
+
 /**
  * thread composer with shared selection and undo history across posts.
  *
- * @param props initial quote and reply URIs; ignored after mount
+ * @param props.quoteUri quote used on mount and when discarding before opening drafts
+ * @param props.replyUri reply parent; ignored after mount
+ * @param props.closeGuardRef lets the dialog check for unsaved content before closing
  * @returns the composer header, body and footer
  */
-export function NewComposer(props: ComposerInit) {
-	const composer = useConstant(() => createComposer(props));
+export function NewComposer({
+	quoteUri,
+	replyUri,
+	closeGuardRef,
+}: {
+	quoteUri: ResourceUri | undefined;
+	replyUri: ResourceUri | undefined;
+	closeGuardRef: RefObject<ComposerCloseGuard | null>;
+}) {
+	const [composer, setComposer] = useState(() => {
+		return createComposer({ seed: createBlankSeed(quoteUri), replyUri });
+	});
+
+	const discard = useDiscardGuard(composer);
+
+	const resetComposer = () => {
+		setComposer(createComposer({ seed: createBlankSeed(quoteUri), replyUri: undefined }));
+	};
+
+	const openDraft = async (view: AppBskyDraftDefs.DraftView) => {
+		const { seed, missingMedia } = await restoreDraft(view);
+
+		setComposer(createComposer({ seed, replyUri: undefined }));
+
+		if (missingMedia > 0) {
+			Toast.show(`Some attachments aren't available on this device`, { type: 'warning' });
+		}
+	};
+
+	useImperativeHandle(closeGuardRef, () => ({ interceptClose: discard.intercept }));
 
 	return (
 		<ComposerContext value={composer}>
@@ -40,11 +86,24 @@ export function NewComposer(props: ComposerInit) {
 				<Dialog.Header.Title>
 					{composer.replyUri ? m['view.composer.title.reply']() : m['view.composer.title.post']()}
 				</Dialog.Header.Title>
+
+				{composer.replyUri === null && (
+					<Dialog.Header.Actions>
+						<DraftsButton onReset={resetComposer} onSelect={openDraft} />
+					</Dialog.Header.Actions>
+				)}
 			</Dialog.Header.Root>
-			<Dialog.Body>
-				<ComposerRoot />
-			</Dialog.Body>
-			<ThreadFooter />
+
+			{/* reset editor and widget state when opening a draft. */}
+			<Fragment key={composer.id}>
+				<Dialog.Body>
+					<ComposerRoot />
+				</Dialog.Body>
+
+				<ThreadFooter />
+			</Fragment>
+
+			<DiscardPrompt {...discard.prompt} onProceed={closeComposer} />
 		</ComposerContext>
 	);
 }
@@ -53,10 +112,10 @@ function ComposerRoot() {
 	const { mount, replyUri } = useComposer();
 	const isMediaDragging = useEditorState((state) => getMediaDrag(state) !== null);
 
-	// the editor mounts after React's children, keeping the reply parent above it.
 	return (
 		<div ref={mount} className={css.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
 			{replyUri && <ReplyParent uri={replyUri} />}
+
 			<PostSlots />
 			<ThreadEndPortal />
 			<Suggestions />
@@ -85,8 +144,6 @@ function PostSlots() {
 	});
 }
 
-// the compiler doesn't memoize JSX in the map callback; explicit memoization avoids rerendering
-// unchanged posts when slots change.
 const HeaderSlot = memo(function HeaderSlot({ postId }: { postId: string }) {
 	return (
 		<>

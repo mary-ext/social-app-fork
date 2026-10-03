@@ -8,6 +8,16 @@ export type AdultContentLabel = (typeof ADULT_CONTENT_LABELS)[number];
 const ADULT_SEVERITY: readonly AdultContentLabel[] = ['porn', 'sexual', 'nudity'];
 
 /**
+ * checks whether a value is a self-label the composer can apply.
+ *
+ * @param value the value to check
+ * @returns whether it's a known self-label
+ */
+export const isSelfLabel = (value: string): value is SelfLabel => {
+	return SELF_LABELS.some((label) => label === value);
+};
+
+/**
  * checks whether a value is an adult content self-label.
  *
  * @param value the value to check

@@ -1,15 +1,10 @@
-import { interactionSettingsFromPreferences } from '#/lib/interaction-settings';
-
-import { usePreferencesQuery } from '#/state/queries/preferences';
-
 import { ThreadgateBtn } from '#/features/composer/threadgate/ThreadgateBtn';
 
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-import { useComposer, usePostCount } from '../context';
-import { useStore } from '../store';
+import { useComposer, usePostCount, useThreadInteraction } from '../context';
 import * as css from './ThreadFooter.css';
 
 /**
@@ -33,11 +28,7 @@ export function ThreadFooter() {
 
 function InteractionSettingsButton() {
 	const { interaction } = useComposer();
-	const edited = useStore(interaction);
-	const { data: preferences } = usePreferencesQuery();
-
-	// follow account defaults until the thread's settings are edited.
-	const settings = edited ?? interactionSettingsFromPreferences(preferences?.postInteractionSettings);
+	const settings = useThreadInteraction();
 
 	return <ThreadgateBtn value={settings} onChange={interaction.set} />;
 }
