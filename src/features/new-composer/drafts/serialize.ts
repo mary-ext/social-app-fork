@@ -11,6 +11,7 @@ import {
 	quotesToEmbeddingRules,
 	repliesToThreadgateAllow,
 } from '#/lib/interaction-settings';
+import { toSelfLabels } from '#/lib/moderation/self-labels';
 
 import { getDeviceId } from '#/state/preferences/device-id';
 import { toPostLanguages } from '#/state/preferences/languages';
@@ -161,13 +162,7 @@ const serializePost = async (
 		post.embedRecords = [{ $type: 'app.bsky.draft.defs#draftEmbedRecord', record }];
 	}
 
-	const labels = getTaintedLabels(state, getAttachmentKeys(state, node));
-	if (labels.length > 0) {
-		post.labels = {
-			$type: 'com.atproto.label.defs#selfLabels',
-			values: labels.map((val) => ({ val })),
-		};
-	}
+	post.labels = toSelfLabels(getTaintedLabels(state, getAttachmentKeys(state, node)));
 
 	return post;
 };

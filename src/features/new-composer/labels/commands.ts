@@ -15,6 +15,26 @@ export const labelTaint = defineTaint<readonly SelfLabel[]>({
 });
 
 /**
+ * returns the content-warning key for a media attachment.
+ *
+ * @param mediaId the attachment's id
+ * @returns the attachment key
+ */
+export const getMediaKey = (mediaId: string): string => {
+	return `media:${mediaId}`;
+};
+
+/**
+ * returns the content-warning key for an external link card.
+ *
+ * @param url the card's URL
+ * @returns the attachment key
+ */
+export const getLinkKey = (url: string): string => {
+	return `link:${url}`;
+};
+
+/**
  * lists a post's labelable attachment keys.
  *
  * @param state the editor state
@@ -22,10 +42,10 @@ export const labelTaint = defineTaint<readonly SelfLabel[]>({
  * @returns keys for the post's media and external link card, excluding record embeds
  */
 export const getAttachmentKeys = (state: GardState, node: Plot): string[] => {
-	const keys = getPostParam(node).media.map((item) => `media:${item.id}`);
+	const keys = getPostParam(node).media.map((item) => getMediaKey(item.id));
 	const { external } = getPostInfo(state, node).embeds;
 	if (external !== null) {
-		keys.push(`link:${external}`);
+		keys.push(getLinkKey(external));
 	}
 	return keys;
 };

@@ -198,7 +198,6 @@
 	"view.composer.publish.postsSent": "Your posts were sent",
 	"view.composer.publish.publishing": "Publishing",
 	"view.composer.publish.replySent": "Your reply was sent",
-	"view.composer.quote.disabled": "This post's author has disabled quote posts.",
 	"view.composer.reply.deleted": "We're sorry! The post you are replying to has been deleted.",
 	"view.composer.reply.expand": "Expand or collapse the full post you are replying to",
 	"view.composer.text.maxLengthHint": [

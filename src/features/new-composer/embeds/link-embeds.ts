@@ -9,13 +9,6 @@ import type { PostMedia } from '../model/schema';
 import type { PostLink, PostText, TrailingLink } from '../model/text-measurement';
 
 // derive embeds from text so they follow their URLs through splits, joins, and reorders.
-//
-// TODO: when publishing is implemented:
-// - resolve URLs with `fetchResolveLinkQuery` to reuse cached previews and retry failures.
-// - use `app.bsky.embed.recordWithMedia` for records with media or an external card;
-//   otherwise use `app.bsky.embed.record` or `app.bsky.embed.external`.
-// - truncate at `stripped.textEnd` only if that link's embed is included. on resolution
-//   failure, keep the link as text and allow publishing.
 
 export type LinkEmbedKind = 'external' | 'record';
 

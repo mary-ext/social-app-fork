@@ -1,14 +1,20 @@
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+	type QueryClient,
+	useInfiniteQuery,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query';
 
 import type { InteractionSettings } from '#/lib/interaction-settings';
 
 import { useGetPost } from '#/state/queries/post';
 import { getClients } from '#/state/session';
 
-import type { Composer } from '../context';
+import type { Composer, DraftOrigin } from '../context';
 import { getDraftMediaPaths } from './draft-format';
 import { serializeDraft } from './serialize';
 import { deleteDraftMedia, listDraftMedia, loadDraftMedia, saveDraftMedia } from './storage';
@@ -134,23 +140,41 @@ export const useSaveDraftMutation = () => {
 	});
 };
 
+const deleteDraft = async (
+	queryClient: QueryClient,
+	id: string,
+	mediaPaths: Iterable<string>,
+): Promise<void> => {
+	const { appview } = getClients();
+
+	await ok(appview.post('app.bsky.draft.deleteDraft', { as: null, input: { id } }));
+	// failed deletions must leave the draft's attachments usable.
+	await Promise.all(Array.from(mediaPaths, deleteDraftMedia));
+	await Promise.all(LISTING_KEYS.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
+};
+
+/**
+ * deletes a published draft and its local attachments.
+ *
+ * @param queryClient the query client holding draft listings
+ * @param origin the draft the composer was restored from
+ * @returns resolves after deletion and draft listing invalidation
+ */
+export const deletePublishedDraft = (queryClient: QueryClient, origin: DraftOrigin): Promise<void> => {
+	return deleteDraft(queryClient, origin.id, origin.mediaPaths.values());
+};
+
 /**
  * deletes a draft and its attachments on this device.
  *
  * @returns the mutation, taking the draft's view
  */
 export const useDeleteDraftMutation = () => {
-	const { appview } = getClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		async mutationFn(view: AppBskyDraftDefs.DraftView) {
-			await ok(appview.post('app.bsky.draft.deleteDraft', { as: null, input: { id: view.id } }));
-		},
-		async onSuccess(_, view) {
-			// failed deletions must leave the draft's attachments usable.
-			await Promise.all(getDraftMediaPaths(view.draft).map(deleteDraftMedia));
-			await Promise.all(LISTING_KEYS.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
+		mutationFn(view: AppBskyDraftDefs.DraftView) {
+			return deleteDraft(queryClient, view.id, getDraftMediaPaths(view.draft));
 		},
 	});
 };

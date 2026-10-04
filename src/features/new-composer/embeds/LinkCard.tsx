@@ -4,7 +4,7 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { isGenericUri } from '@atcute/lexicons/syntax';
 
-import { EmbeddingDisabledError, type ResolvedLink } from '#/lib/api/resolve';
+import type { ResolvedLink } from '#/lib/api/resolve';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { toNiceDomain } from '#/lib/links/nice-domain';
 import { getBlobUrl } from '#/lib/utils/blob-url';
@@ -156,6 +156,10 @@ function Notice({ icon: Icon, message }: { icon: typeof InfoIcon; message: strin
 
 function NoPreviewNotice() {
 	return <Notice icon={InfoIcon} message="No preview for this link" />;
+}
+
+function QuoteDisabledNotice() {
+	return <Notice icon={BanIcon} message="This post can't be quoted" />;
 }
 
 // #endregion
@@ -349,6 +353,14 @@ function ResolvedLinkCard(frame: LinkCardProps) {
 			);
 		}
 		case 'record': {
+			if (data.kind === 'post' && data.view.viewer?.embeddingDisabled) {
+				return (
+					<Frame {...frame} variant="notice">
+						<QuoteDisabledNotice />
+					</Frame>
+				);
+			}
+
 			return (
 				<Frame {...frame} variant="bare">
 					<NavigationDisabled>
@@ -360,14 +372,10 @@ function ResolvedLinkCard(frame: LinkCardProps) {
 	}
 
 	if (error) {
-		// no retry control: the planned publish path retries resolution failures.
+		// publishing retries failed previews.
 		return (
 			<Frame {...frame} variant="notice">
-				{error instanceof EmbeddingDisabledError ? (
-					<Notice icon={BanIcon} message="This post can't be quoted" />
-				) : (
-					<NoPreviewNotice />
-				)}
+				<NoPreviewNotice />
 			</Frame>
 		);
 	}
@@ -419,7 +427,7 @@ export function QuoteCard({ postId, uri }: { postId: string; uri: ResourceUri })
 		);
 	} else if (data) {
 		variant = 'notice';
-		content = <Notice icon={BanIcon} message="This post can't be quoted" />;
+		content = <QuoteDisabledNotice />;
 	} else if (error) {
 		variant = 'notice';
 		content = <NoPreviewNotice />;

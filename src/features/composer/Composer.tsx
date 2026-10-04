@@ -18,7 +18,6 @@ import type { ResourceUri } from '@atcute/lexicons';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { MAX_DRAFT_GRAPHEME_LENGTH, MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
 import { cleanError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
@@ -420,8 +419,6 @@ export const ComposePost = ({
 			let err = cleanError(e);
 			if (e instanceof ReplyDeletedError || err.includes('not locate record')) {
 				err = m['view.composer.reply.deleted']();
-			} else if (e instanceof EmbeddingDisabledError) {
-				err = m['view.composer.quote.disabled']();
 			}
 			setError(err);
 			setIsPublishing(false);

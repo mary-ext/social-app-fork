@@ -4,12 +4,13 @@ import type { Plot } from 'wordgard/doc';
 import type { GardState } from 'wordgard/state';
 
 import { MAX_POST_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import { trimText } from '#/lib/utils/text';
 
 import { getEmbedSession } from '../embeds/embed-session';
 import { type EmbedSession, type PostEmbeds, selectPostEmbeds } from '../embeds/link-embeds';
 import { getPostQuoteUri } from '../embeds/thread-quote';
 import { getPostParam } from './schema';
-import { measureCached } from './text-measurement';
+import { measureCached, type TrailingLink } from './text-measurement';
 
 /** a post's measured text and embeds. */
 export type PostInfo = {
@@ -18,6 +19,8 @@ export type PostInfo = {
 	/** UTF-16 text offset where the post exceeds the limit, or null. */
 	overflowAt: number | null;
 	embeds: PostEmbeds;
+	/** trailing link to remove if its embed is published, or null. */
+	stripped: TrailingLink | null;
 };
 
 // reordering can move the quote without changing node identity, so check the quote URI too.
@@ -37,10 +40,11 @@ const computePostInfo = (node: Plot, session: EmbedSession, quote: ResourceUri |
 			length: stripped.length,
 			overflowAt: overflowAt !== null && overflowAt < stripped.textEnd ? overflowAt : null,
 			embeds,
+			stripped,
 		};
 	}
 
-	return { length: measurement.length, overflowAt: measurement.overflowAt, embeds };
+	return { length: measurement.length, overflowAt: measurement.overflowAt, embeds, stripped: null };
 };
 
 /**
@@ -101,4 +105,15 @@ export const hasAttachments = (state: GardState, node: Plot): boolean => {
  */
 export const isBlankPost = (state: GardState, node: Plot): boolean => {
 	return getPostInfo(state, node).length === 0 && !hasAttachments(state, node);
+};
+
+/**
+ * checks whether publishing skips a post. unlike {@link isBlankPost}, ignores whitespace.
+ *
+ * @param state the editor state
+ * @param node the post plot
+ * @returns whether the post has no attachments and only whitespace
+ */
+export const isSkippedPost = (state: GardState, node: Plot): boolean => {
+	return trimText(measureCached(node).text) === '' && !hasAttachments(state, node);
 };

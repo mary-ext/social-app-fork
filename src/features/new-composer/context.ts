@@ -50,6 +50,15 @@ export type Composer = {
 	mount: (container: HTMLDivElement) => () => void;
 	/** thread settings; `null` follows account defaults. */
 	interaction: Store<InteractionSettings | null>;
+	/** publishing state; setting true makes the editor read-only. */
+	publishing: Store<boolean>;
+	/**
+	 * replaces the editor's publish shortcut handler.
+	 *
+	 * @param handler the publish action
+	 * @returns cleanup that clears this handler if still current
+	 */
+	handlePublishKey: (handler: () => void) => () => void;
 	/** header and footer hosts, in mount order. */
 	slots: Store<readonly PostSlot[]>;
 	/** host after the editor for the add-post row and new-post drop zone. */

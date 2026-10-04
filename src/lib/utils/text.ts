@@ -31,8 +31,8 @@ export function isOverMaxGraphemeCount({ text, maxCount }: { text: string; maxCo
 
 const BLANK_LINE_PADDING = '[ \\u00AD\\u2060\\u200D\\u200C\\u200B]';
 
-const TRIM_RE = new RegExp(
-	`^\\s+|\\s+$|${BLANK_LINE_PADDING}+(?=\\n)|\\n(?=(?:${BLANK_LINE_PADDING}*\\n){2})${BLANK_LINE_PADDING}*`,
+const COLLAPSE_RE = new RegExp(
+	`${BLANK_LINE_PADDING}+(?=\\n)|\\n(?=(?:${BLANK_LINE_PADDING}*\\n){2})${BLANK_LINE_PADDING}*`,
 	'g',
 );
 
@@ -43,7 +43,8 @@ const TRIM_RE = new RegExp(
  * @returns trimmed text
  */
 export function trimText(text: string): string {
-	return text.replace(TRIM_RE, '');
+	// trim after collapsing, since removing padding can expose leading or trailing newlines.
+	return text.replace(COLLAPSE_RE, '').trim();
 }
 
 export function countLines(str: string | undefined): number {

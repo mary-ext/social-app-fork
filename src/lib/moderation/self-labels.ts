@@ -1,3 +1,6 @@
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { $type } from '@atcute/lexicons';
+
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;
 const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS] as const;
@@ -37,6 +40,22 @@ export const normalizeSelfLabels = (labels: readonly SelfLabel[]): SelfLabel[] =
 	const adult = ADULT_SEVERITY.find((label) => labels.includes(label));
 	const others = OTHER_SELF_LABELS.filter((label) => labels.includes(label));
 	return adult ? [adult, ...others] : others;
+};
+
+/**
+ * converts labels to a record's self-labels field.
+ *
+ * @param labels labels to apply
+ * @returns the self-labels value, or undefined when there are no labels
+ */
+export const toSelfLabels = (
+	labels: readonly SelfLabel[],
+): $type.enforce<ComAtprotoLabelDefs.SelfLabels> | undefined => {
+	if (labels.length === 0) {
+		return undefined;
+	}
+
+	return { $type: 'com.atproto.label.defs#selfLabels', values: labels.map((val) => ({ val })) };
 };
 
 /**

@@ -2,7 +2,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { Wordgard } from 'wordgard/editor';
+import { KeyBinding, Wordgard } from 'wordgard/editor';
 import { history } from 'wordgard/history';
 import { GardState } from 'wordgard/state';
 
@@ -135,8 +135,16 @@ export const createComposer = ({
 	const slots = createStore<readonly PostSlot[]>([]);
 	const popupHost = createStore<HTMLElement | null>(null);
 	const keys: { current: SuggestionKeyHandler } = { current: () => false };
+	const lock = GardState.Compartment.define();
+
+	let onPublishKey: (() => void) | null = null;
+	const runPublish = () => {
+		onPublishKey?.();
+		return true;
+	};
 
 	const config = GardState.Configuration.create([
+		lock.of([]),
 		threadSchema,
 		history(),
 		threadCommands,
@@ -201,6 +209,11 @@ export const createComposer = ({
 			},
 		}),
 		suggestionKeys(() => keys.current),
+		// keep Ctrl-Enter available on macOS.
+		[
+			KeyBinding.of({ key: 'Ctrl-Enter', run: runPublish }),
+			KeyBinding.of({ mac: 'Cmd-Enter', run: runPublish }),
+		],
 		Wordgard.updateListener.of(() => {
 			updates.emit();
 		}),
@@ -219,6 +232,12 @@ export const createComposer = ({
 	const dnd = createThreadDnd();
 	const endHost = document.createElement('div');
 	const interaction = createStore(seed.interaction);
+
+	const publishing = createStore(false);
+	publishing.subscribe(() => {
+		const extension = publishing.get() ? [Wordgard.editable.of(false), GardState.readOnly.of(true)] : [];
+		wg.dispatch({ effects: lock.reconfigure(extension) });
+	});
 
 	const initial = wg.state;
 
@@ -245,6 +264,7 @@ export const createComposer = ({
 		},
 
 		interaction,
+		publishing,
 		slots,
 		endHost,
 		suggestionHost: popupHost,
@@ -252,6 +272,14 @@ export const createComposer = ({
 
 		subscribe(listener) {
 			return updates.subscribe(listener);
+		},
+		handlePublishKey(handler) {
+			onPublishKey = handler;
+			return () => {
+				if (onPublishKey === handler) {
+					onPublishKey = null;
+				}
+			};
 		},
 		mount(container) {
 			container.append(wg.dom, endHost);

@@ -64,12 +64,6 @@ export type ResolvedLink =
 	| ResolvedListRecord
 	| ResolvedStarterPackRecord;
 
-export class EmbeddingDisabledError extends Error {
-	constructor() {
-		super('Embedding is disabled for this record');
-	}
-}
-
 export async function resolveLink(appview: Client, uri: string, signal?: AbortSignal): Promise<ResolvedLink> {
 	let link = resolveUrlToLink(uri);
 	if (link?.kind === 'bskyStarterPackCode') {
@@ -121,9 +115,6 @@ export async function resolveLink(appview: Client, uri: string, signal?: AbortSi
 		case 'post': {
 			const recordUri = makeRecordUri(link.actor, 'app.bsky.feed.post', link.rkey);
 			const post = await getPost({ uri: recordUri });
-			if (post.viewer?.embeddingDisabled) {
-				throw new EmbeddingDisabledError();
-			}
 			return {
 				type: 'record',
 				kind: 'post',

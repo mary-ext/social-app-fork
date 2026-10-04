@@ -1,0 +1,114 @@
+import { useQueryClient } from '@tanstack/react-query';
+
+import { isNetworkError } from '#/lib/errors';
+import { postUriToTarget } from '#/lib/routes/targets';
+
+import { postCreated } from '#/state/events';
+import { savePostLanguageToHistory, usePostLanguage } from '#/state/preferences/languages';
+import { getClients, useSession } from '#/state/session';
+
+import { closeComposer } from '#/features/composer/open-composer';
+
+import * as Toast from '#/components/Toast';
+
+import { m } from '#/paraglide/messages';
+import { useRouter } from '#/router';
+
+import { useComposer, useEditorState, useThreadInteraction } from '../context';
+import { deletePublishedDraft } from '../drafts/queries';
+import { useStore } from '../store';
+import { getPublishBlocker, type PublishBlocker } from './blocker';
+import { publishThread } from './publish-thread';
+import { PublishError } from './resolve-post';
+import { snapshotThread } from './snapshot';
+
+/**
+ * publishes the composer's thread, then closes the composer.
+ *
+ * @returns why publishing is unavailable, whether it's in progress, and the publish action
+ */
+export const usePublish = (): {
+	blocker: PublishBlocker | null;
+	isPublishing: boolean;
+	publish: () => Promise<void>;
+} => {
+	const composer = useComposer();
+	const interaction = useThreadInteraction();
+	const postLanguage = usePostLanguage();
+	const queryClient = useQueryClient();
+	const router = useRouter();
+	const { currentAccount } = useSession();
+
+	const blocker = useEditorState(getPublishBlocker);
+	const isPublishing = useStore(composer.publishing);
+
+	const publish = async () => {
+		const { replyUri, publishing, wg } = composer;
+		if (publishing.get() || getPublishBlocker(wg.state) !== null) {
+			return;
+		}
+
+		const { appview, pds } = getClients();
+		const posts = snapshotThread(wg.state, postLanguage);
+		publishing.set(true);
+
+		let uris;
+		try {
+			uris = await publishThread(
+				{ appview, pds: pds!, did: currentAccount!.did, queryClient },
+				{ posts, replyUri, interaction },
+			);
+		} catch (err) {
+			console.error('failed to publish thread', err);
+			publishing.set(false);
+
+			let message: string;
+			if (err instanceof PublishError) {
+				message = err.message;
+			} else if (isNetworkError(err)) {
+				message = m['lib.upload.postFailed']();
+			} else {
+				message = `Couldn't publish your post`;
+			}
+			Toast.show(message, { type: 'error' });
+			return;
+		}
+
+		if (replyUri === null) {
+			postCreated.emit();
+		}
+		savePostLanguageToHistory();
+		if (composer.draft) {
+			deletePublishedDraft(queryClient, composer.draft).catch((err: unknown) => {
+				console.error('failed to delete published draft', err);
+			});
+		}
+
+		closeComposer();
+
+		const [first] = uris;
+		let message: string;
+		if (uris.length > 1) {
+			message = m['view.composer.publish.postsSent']();
+		} else if (replyUri !== null) {
+			message = m['view.composer.publish.replySent']();
+		} else {
+			message = m['view.composer.publish.postSent']();
+		}
+
+		// let the dialog finish closing first.
+		setTimeout(() => {
+			Toast.show(message, {
+				type: 'success',
+				action: first && {
+					label: m['view.composer.publish.action.view'](),
+					onPress() {
+						router.navigate({ to: postUriToTarget(first) });
+					},
+				},
+			});
+		}, 500);
+	};
+
+	return { blocker, isPublishing, publish };
+};
