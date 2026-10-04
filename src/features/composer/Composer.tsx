@@ -104,7 +104,6 @@ export const ComposePost = ({
 	onPost,
 	onPostSuccess,
 	quote: initQuote,
-	mention: initMention,
 	text: initText,
 	videoUri: initVideoUri,
 	cancelRef,
@@ -136,7 +135,6 @@ export const ComposePost = ({
 		{
 			initQuoteUri: initQuote?.uri,
 			initText,
-			initMention,
 			initInteractionSettings: interactionSettingsFromPreferences(preferences?.postInteractionSettings),
 		},
 		createComposerState,

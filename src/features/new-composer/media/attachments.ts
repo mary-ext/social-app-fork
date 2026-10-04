@@ -6,6 +6,7 @@ import {
 	type AttachmentRejection,
 	readAttachment,
 } from '#/lib/media/read-attachment';
+import type { VideoAsset } from '#/lib/media/video/types';
 
 import type { SelectionError } from '#/features/composer/media/select-attachments';
 import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
@@ -87,6 +88,27 @@ export const createGifMedia = (gif: Gif): PostMedia => {
 	};
 };
 
+/**
+ * creates a video or GIF attachment.
+ *
+ * @param asset source video and metadata
+ * @returns an attachment with a new id
+ */
+export const createVideoMedia = (asset: VideoAsset): PostMedia => {
+	const file = new File([asset.blob], 'video', { type: asset.mimeType });
+	return toVideoMedia(crypto.randomUUID(), file, asset);
+};
+
+const toVideoMedia = (id: string, file: File, asset: VideoAsset): PostMedia => {
+	return {
+		id,
+		kind: asset.kind,
+		file,
+		aspectRatio: getAspectRatio(asset),
+		duration: toSeconds(asset.duration),
+	};
+};
+
 const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedia> => {
 	const id = crypto.randomUUID();
 	switch (attachment.type) {
@@ -106,14 +128,7 @@ const toPostMedia = async (file: File, attachment: Attachment): Promise<PostMedi
 			};
 		}
 		case 'video': {
-			const { asset } = attachment;
-			return {
-				id,
-				kind: asset.kind,
-				file,
-				aspectRatio: getAspectRatio(asset),
-				duration: toSeconds(asset.duration),
-			};
+			return toVideoMedia(id, file, attachment.asset);
 		}
 		case 'voice': {
 			return {

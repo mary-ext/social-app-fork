@@ -42,6 +42,8 @@ export function NewComposerDialog() {
 							<NewComposer
 								quoteUri={payload.quote?.uri}
 								replyUri={payload.replyTo?.uri}
+								initialText={payload.text}
+								initialVideo={payload.videoUri}
 								closeGuardRef={closeGuardRef}
 							/>
 						</Suspense>

@@ -5,6 +5,8 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { createPortal } from 'react-dom';
 
+import type { VideoAsset } from '#/lib/media/video/types';
+
 import { closeComposer } from '#/features/composer/open-composer';
 
 import * as Dialog from '#/components/Dialog';
@@ -18,6 +20,7 @@ import { getMediaDrag } from './dnd/drop-indicators';
 import { DraftsButton } from './drafts/DraftsButton';
 import { restoreDraft } from './drafts/restore';
 import { LinkEmbedRow } from './embeds/LinkEmbedRow';
+import { createVideoMedia } from './media/attachments';
 import { MediaRow } from './media/MediaRow';
 import * as css from './NewComposer.css';
 import { PostFooter } from './post/PostFooter';
@@ -41,30 +44,44 @@ export type ComposerCloseGuard = {
 };
 
 /**
- * thread composer with shared selection and undo history across posts.
+ * thread composer with shared selection and undo history across posts. replyUri, initialText and initialVideo
+ * are read only on mount.
  *
  * @param props.quoteUri quote used on mount and when discarding before opening drafts
- * @param props.replyUri reply parent; ignored after mount
+ * @param props.replyUri reply parent
+ * @param props.initialText first post's text
+ * @param props.initialVideo first post's video or GIF
  * @param props.closeGuardRef lets the dialog check for unsaved content before closing
  * @returns the composer header, body and footer
  */
 export function NewComposer({
 	quoteUri,
 	replyUri,
+	initialText,
+	initialVideo,
 	closeGuardRef,
 }: {
 	quoteUri: ResourceUri | undefined;
 	replyUri: ResourceUri | undefined;
+	initialText: string | undefined;
+	initialVideo: VideoAsset | undefined;
 	closeGuardRef: RefObject<ComposerCloseGuard | null>;
 }) {
 	const [composer, setComposer] = useState(() => {
-		return createComposer({ seed: createBlankSeed(quoteUri), replyUri });
+		return createComposer({
+			seed: createBlankSeed({
+				quoteUri,
+				text: initialText,
+				media: initialVideo ? [createVideoMedia(initialVideo)] : undefined,
+			}),
+			replyUri,
+		});
 	});
 
 	const discard = useDiscardGuard(composer);
 
 	const resetComposer = () => {
-		setComposer(createComposer({ seed: createBlankSeed(quoteUri), replyUri: undefined }));
+		setComposer(createComposer({ seed: createBlankSeed({ quoteUri }), replyUri: undefined }));
 	};
 
 	const openDraft = async (view: AppBskyDraftDefs.DraftView) => {

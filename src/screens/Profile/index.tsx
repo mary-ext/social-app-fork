@@ -170,11 +170,8 @@ function ProfileScreenLoaded({
 	const showCollectionsTab = isMe || feedCount > 0 || starterPackCount > 0 || listCount > 0;
 
 	const onPressCompose = () => {
-		const mention =
-			profile.handle === currentAccount?.handle || isInvalidHandle(profile.handle)
-				? undefined
-				: profile.handle;
-		openComposer({ mention });
+		const text = isMe || isInvalidHandle(profile.handle) ? undefined : `@${profile.handle} `;
+		openComposer({ text });
 	};
 
 	const sections = definite<Section<ProfileTabId>>([

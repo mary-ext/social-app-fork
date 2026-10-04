@@ -9,7 +9,6 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/links/detect';
 import type { ComposerImage } from '#/lib/media/composer-image';
 import type { Gif } from '#/lib/media/external-gif/types';
-import { insertMentionAt } from '#/lib/mentions';
 import type { SelfLabel } from '#/lib/moderation/self-labels';
 import { getShortenedLength } from '#/lib/rich-text';
 import { recordUriToShareUrl } from '#/lib/routes/app-links';
@@ -303,7 +302,6 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			return {
 				...createComposerState({
 					initText: undefined,
-					initMention: undefined,
 					initQuoteUri: undefined,
 					initInteractionSettings: action.initInteractionSettings,
 				}),
@@ -571,12 +569,10 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 
 export function createComposerState({
 	initText,
-	initMention,
 	initQuoteUri,
 	initInteractionSettings,
 }: {
 	initText: string | undefined;
-	initMention: string | undefined;
 	initQuoteUri: string | undefined;
 	initInteractionSettings: InteractionSettings;
 }): ComposerState {
@@ -591,11 +587,7 @@ export function createComposerState({
 			};
 		}
 	}
-	const initialText = initText
-		? initText
-		: initMention
-			? insertMentionAt(`@${initMention}`, initMention.length + 1, initMention)
-			: '';
+	const initialText = initText ?? '';
 
 	let link: Link | undefined;
 

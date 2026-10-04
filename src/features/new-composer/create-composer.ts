@@ -77,14 +77,24 @@ export type ComposerSeed = {
 };
 
 /**
- * creates the seed for a new thread with one empty post.
+ * creates the seed for a new thread with one post.
  *
- * @param quoteUri quoted post's AT-URI; undefined omits the quote
+ * @param options.quoteUri quoted post's AT-URI; undefined omits the quote
+ * @param options.text initial text; defaults to empty
+ * @param options.media initial attachments; defaults to none
  * @returns the seed
  */
-export const createBlankSeed = (quoteUri: ResourceUri | undefined): ComposerSeed => {
+export const createBlankSeed = ({
+	quoteUri,
+	text = '',
+	media = [],
+}: {
+	quoteUri: ResourceUri | undefined;
+	text?: string;
+	media?: readonly PostMedia[];
+}): ComposerSeed => {
 	return {
-		posts: [{ id: crypto.randomUUID(), text: '', media: [] }],
+		posts: [{ id: crypto.randomUUID(), text, media }],
 		quoteUri,
 		alt: new Map(),
 		captions: new Map(),

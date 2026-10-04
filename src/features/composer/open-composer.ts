@@ -40,7 +40,6 @@ export interface ComposerOpts {
 	onPost?: (postUri: string | undefined) => void;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
 	quote?: AppBskyFeedDefs.PostView;
-	mention?: string; // handle of user to mention
 	text?: string;
 	videoUri?: VideoAsset;
 }
@@ -50,6 +49,9 @@ export interface ComposerOpts {
  * other dialogs without threading an id through context.
  */
 export const COMPOSER_DIALOG_ID = 'composer';
+
+// retain the flag across navigations that drop the query.
+const USE_NEW_COMPOSER = new URLSearchParams(location.search).has('new-composer');
 
 /**
  * provides an opener for the global composer dialog.
@@ -89,7 +91,7 @@ export function useOpenComposer() {
 			});
 			return;
 		}
-		if (new URLSearchParams(location.search).has('new-composer')) {
+		if (USE_NEW_COMPOSER) {
 			if (!newComposerDialogHandle.isOpen) {
 				if (opts.replyTo) {
 					queryClient.setQueryData(RQKEY_POST(opts.replyTo.uri), opts.replyTo.view);
