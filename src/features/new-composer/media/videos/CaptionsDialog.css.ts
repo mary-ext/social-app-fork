@@ -5,8 +5,6 @@ import { recipe } from '#/styles/recipe';
 import { iconSize } from '#/styles/tokens.css';
 
 export const body = style({
-	display: 'flex',
-	flexDirection: 'column',
 	gap: 16,
 	paddingBlockEnd: 16,
 	paddingInline: 16,

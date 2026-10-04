@@ -178,7 +178,9 @@ export const popup = recipe(
 export const body = style(
 	layered(components, {
 		containerType: 'scroll-state',
+		display: 'flex',
 		flex: 1,
+		flexDirection: 'column',
 		paddingTop: searchInset,
 		minHeight: 0,
 		overflowY: 'auto',

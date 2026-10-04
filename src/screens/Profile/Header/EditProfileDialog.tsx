@@ -4,7 +4,6 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import * as Dialog from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';
-import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
 
@@ -39,7 +38,7 @@ export function EditProfileDialog({
 					<Suspense
 						fallback={
 							<Dialog.Body>
-								<Spinner color="default" label={m['common.status.loading']()} size="xl" />
+								<Dialog.Loading />
 							</Dialog.Body>
 						}
 					>

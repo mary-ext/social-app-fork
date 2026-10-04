@@ -8,21 +8,6 @@ import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 import { AVATAR_SIZE } from '../shared/layout';
 
-export const placeholder = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.md,
-	justifyContent: 'center',
-	alignItems: 'center',
-	padding: space._3xl,
-});
-
-export const placeholderIcon = style({
-	width: iconSize._3xl,
-	height: iconSize._3xl,
-	color: colors.textContrastLow,
-});
-
 export const row = recipe(
 	{
 		base: {

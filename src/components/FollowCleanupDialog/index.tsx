@@ -1,11 +1,8 @@
 import { lazy, Suspense } from 'react';
 
 import * as Dialog from '#/components/Dialog';
-import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
-
-import * as styles from './index.css';
 
 const FollowCleanupDialogContent = lazy(() =>
 	import('./FollowCleanupDialogContent').then((mod) => ({ default: mod.FollowCleanupDialogContent })),
@@ -18,8 +15,8 @@ export const FollowCleanupDialog = ({ handle }: { handle: Dialog.DialogHandle })
 			<Dialog.Popup height="tall" label={m['components.followCleanupDialog.title']()} scroll="body">
 				<Suspense
 					fallback={
-						<Dialog.Body className={styles.loading}>
-							<Spinner color="default" label={m['common.status.loading']()} size="xl" />
+						<Dialog.Body>
+							<Dialog.Loading fill />
 						</Dialog.Body>
 					}
 				>

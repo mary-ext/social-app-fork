@@ -127,7 +127,7 @@ function EditImageInner({
 				cropRef.current = value;
 			}}
 		>
-			<Dialog.Body className={styles.body}>
+			<Dialog.Body>
 				<Cropper.Viewport className={styles.viewport}>
 					<Cropper.Image alt="" src={sourceUrl} {...sourceDimensions} />
 					<Cropper.Window className={clsx(styles.cropWindow, circularCrop && styles.roundCropWindow)}>
