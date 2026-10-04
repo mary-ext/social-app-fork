@@ -6,7 +6,7 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import PageIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { useComposer } from '../context';
+import { useComposer, useIsPublishing } from '../context';
 import { DiscardPrompt, useDiscardGuard } from '../thread/DiscardPrompt';
 import { DraftsDialog } from './DraftsDialog';
 
@@ -26,6 +26,7 @@ export function DraftsButton({
 }) {
 	const dialogHandle = Dialog.useDialogHandle();
 	const discard = useDiscardGuard(useComposer());
+	const isPublishing = useIsPublishing();
 
 	return (
 		<>
@@ -35,6 +36,7 @@ export function DraftsButton({
 				color="secondary"
 				shape="round"
 				size="small"
+				disabled={isPublishing}
 				onClick={() => {
 					if (!discard.intercept()) {
 						dialogHandle.open(null);

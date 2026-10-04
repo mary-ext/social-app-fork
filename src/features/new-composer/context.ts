@@ -11,6 +11,7 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 
 import type { ThreadDnd } from './dnd/channel';
 import type { PostSlot } from './editor/post-slots';
+import type { VideoUploads } from './media/shared/video-uploads';
 import { findPostById, getPosts, type ThreadPost } from './model/schema';
 import { getActivePostId } from './model/selection';
 import { type Store, useStore } from './store';
@@ -21,6 +22,14 @@ export type DraftOrigin = {
 	id: string;
 	/** localRef paths of the restored attachments, keyed by media id. */
 	mediaPaths: ReadonlyMap<string, string>;
+};
+
+/** a publish in progress. */
+export type PublishTask = {
+	/** video files this publish waits for. */
+	videos: readonly File[];
+	/** stops the publish unless its posts are already being sent. */
+	cancel: () => void;
 };
 
 /** editor, drag channel, and portal hosts for one composer. */
@@ -47,11 +56,13 @@ export type Composer = {
 	 * @param container the element hosting the editor
 	 * @returns a function that detaches it
 	 */
-	mount: (container: HTMLDivElement) => () => void;
+	mount: (container: HTMLFieldSetElement) => () => void;
 	/** thread settings; `null` follows account defaults. */
 	interaction: Store<InteractionSettings | null>;
-	/** publishing state; setting true makes the editor read-only. */
-	publishing: Store<boolean>;
+	/** makes the editor read-only while non-null. */
+	publishing: Store<PublishTask | null>;
+	/** the thread's uploads; active while mounted. */
+	uploads: VideoUploads;
 	/**
 	 * replaces the editor's publish shortcut handler.
 	 *
@@ -143,6 +154,15 @@ export const useThreadInteraction = (): InteractionSettings => {
 	const edited = useStore(useComposer().interaction);
 	const { data: preferences } = usePreferencesQuery();
 	return edited ?? interactionSettingsFromPreferences(preferences?.postInteractionSettings);
+};
+
+/**
+ * subscribes to publishing state, including the wait for uploads.
+ *
+ * @returns whether a publish is in progress
+ */
+export const useIsPublishing = (): boolean => {
+	return useStore(useComposer().publishing) !== null;
 };
 
 /**

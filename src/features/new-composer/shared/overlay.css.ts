@@ -14,7 +14,8 @@ export const overlay = style({
 	backgroundColor: OVERLAY_BACKGROUND,
 	color: vars.palette.white,
 	selectors: {
-		[hover()]: { backgroundColor: OVERLAY_HOVER_BACKGROUND },
+		[hover(':not(:disabled)')]: { backgroundColor: OVERLAY_HOVER_BACKGROUND },
+		'&:disabled': { opacity: 0.5, cursor: 'default' },
 	},
 });
 

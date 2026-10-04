@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 import { ThreadgateBtn } from '#/features/composer/threadgate/ThreadgateBtn';
 
@@ -6,7 +6,8 @@ import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-import { useComposer, usePostCount, useThreadInteraction } from '../context';
+import { useComposer, useIsPublishing, usePostCount, useThreadInteraction } from '../context';
+import { useUploadsProgress } from '../media/shared/upload-status';
 import { usePublish } from '../publish/use-publish';
 import * as css from './ThreadFooter.css';
 
@@ -32,13 +33,17 @@ export function ThreadFooter() {
 function InteractionSettingsButton() {
 	const { interaction } = useComposer();
 	const settings = useThreadInteraction();
+	const isPublishing = useIsPublishing();
 
-	return <ThreadgateBtn value={settings} onChange={interaction.set} />;
+	return <ThreadgateBtn value={settings} disabled={isPublishing} onChange={interaction.set} />;
 }
+
+const NO_FILES: readonly File[] = [];
 
 function PublishButton() {
 	const { handlePublishKey } = useComposer();
-	const { blocker, isPublishing, publish } = usePublish();
+	const { blocker, task, publish } = usePublish();
+	const uploadPercent = useUploadsProgress(task?.videos ?? NO_FILES);
 	const isThread = usePostCount() > 1;
 	const publishLabel = isThread
 		? m['view.composer.publish.a11y.posts']()
@@ -49,19 +54,37 @@ function PublishButton() {
 		return handlePublishKey(() => void publish());
 	}, [handlePublishKey, publish]);
 
-	return (
-		<Button
-			color="primary"
-			size="small"
-			label={publishLabel}
-			disabled={blocker !== null || isPublishing}
-			onClick={() => void publish()}
-		>
-			{isPublishing ? (
+	let content: ReactNode;
+	if (task === null) {
+		content = <ButtonText>{publishText}</ButtonText>;
+	} else {
+		content = (
+			<>
 				<ButtonSpinner label={m['view.composer.publish.publishing']()} />
-			) : (
-				<ButtonText>{publishText}</ButtonText>
+				{uploadPercent !== null && (
+					<ButtonText>{m['view.composer.media.upload.uploading']({ percent: uploadPercent })}</ButtonText>
+				)}
+			</>
+		);
+	}
+
+	return (
+		<>
+			{task !== null && uploadPercent !== null && (
+				<Button color="secondary" size="small" label={`Cancel publishing`} onClick={task.cancel}>
+					<ButtonText>{m['common.action.cancel']()}</ButtonText>
+				</Button>
 			)}
-		</Button>
+
+			<Button
+				color="primary"
+				size="small"
+				label={publishLabel}
+				disabled={blocker !== null || task !== null}
+				onClick={() => void publish()}
+			>
+				{content}
+			</Button>
+		</>
 	);
 }

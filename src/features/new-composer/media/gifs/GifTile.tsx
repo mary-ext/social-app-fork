@@ -8,8 +8,9 @@ import type { PostMedia } from '../../model/schema';
 import type { RovingItemProps } from '../../shared/roving-focus';
 import { hasMediaAlt } from '../shared/alt-text';
 import { MediaTile } from '../shared/MediaTile';
-import { AltButton, RemoveButton, TileActions, TileBadges, UploadBadge } from '../shared/TileControls';
-import { usePendingUpload } from '../shared/upload-status';
+import { AltButton, RemoveButton, TileActions, TileBadges, TileUploadStatus } from '../shared/TileControls';
+import { useVideoUpload } from '../shared/upload-status';
+import { isPendingUpload } from '../shared/video-uploads';
 import * as css from './GifTile.css';
 
 /**
@@ -34,7 +35,7 @@ export function GifTile({
 	onRemove: () => void;
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
-	const upload = usePendingUpload(item.file);
+	const upload = useVideoUpload(item.file);
 	const url = getBlobUrl(item.file);
 	const tabbable = roving.tabIndex === 0;
 
@@ -52,16 +53,14 @@ export function GifTile({
 		>
 			<img className={css.image} src={url} alt="" />
 
+			<TileUploadStatus file={item.file} upload={upload} tabbable={tabbable} />
+
 			<TileBadges>
-				{upload ? (
-					<UploadBadge upload={upload} />
-				) : (
-					<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
-				)}
+				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
 			</TileBadges>
 
 			<TileActions>
-				<RemoveButton isUploading={!!upload} onClick={onRemove} />
+				<RemoveButton isUploading={isPendingUpload(upload)} onClick={onRemove} />
 			</TileActions>
 		</MediaTile>
 	);

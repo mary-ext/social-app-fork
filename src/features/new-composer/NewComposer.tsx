@@ -14,7 +14,7 @@ import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-import { ComposerContext, useComposer, useEditorState } from './context';
+import { ComposerContext, useComposer, useEditorState, useIsPublishing } from './context';
 import { createBlankSeed, createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
 import { DraftsButton } from './drafts/DraftsButton';
@@ -128,15 +128,21 @@ export function NewComposer({
 function ComposerRoot() {
 	const { mount, replyUri } = useComposer();
 	const isMediaDragging = useEditorState((state) => getMediaDrag(state) !== null);
+	const isPublishing = useIsPublishing();
 
 	return (
-		<div ref={mount} className={css.root} {...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}>
+		<fieldset
+			ref={mount}
+			className={css.root}
+			disabled={isPublishing}
+			{...{ [MEDIA_DRAGGING_ATTR]: isMediaDragging ? '' : undefined }}
+		>
 			{replyUri && <ReplyParent uri={replyUri} />}
 
 			<PostSlots />
 			<ThreadEndPortal />
 			<Suggestions />
-		</div>
+		</fieldset>
 	);
 }
 

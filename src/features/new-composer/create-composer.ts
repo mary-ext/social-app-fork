@@ -13,7 +13,7 @@ import { m } from '#/paraglide/messages';
 import { zIndex } from '#/styles/tokens.css';
 
 import { threadCommands } from './commands/thread-commands';
-import type { Composer, DraftOrigin } from './context';
+import type { Composer, DraftOrigin, PublishTask } from './context';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
@@ -25,8 +25,11 @@ import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
 import { getAttachmentKeys, labelTaint } from './labels/commands';
 import { languageTaint } from './languages/commands';
+import { getVideoUploadFiles } from './media/attachments';
 import { imageEditTaint } from './media/images/image-edits';
 import { altTaint } from './media/shared/alt-text';
+import { processVideoFile } from './media/shared/video-pipeline';
+import { createVideoUploads } from './media/shared/video-uploads';
 import { type CaptionTrack, captionsTaint } from './media/videos/captions';
 import {
 	createPost,
@@ -132,6 +135,7 @@ export const createComposer = ({
 	const { quoteUri } = seed;
 
 	const updates = new SimpleEventEmitter<[]>();
+	const uploads = createVideoUploads(processVideoFile);
 	const slots = createStore<readonly PostSlot[]>([]);
 	const popupHost = createStore<HTMLElement | null>(null);
 	const keys: { current: SuggestionKeyHandler } = { current: () => false };
@@ -214,7 +218,10 @@ export const createComposer = ({
 			KeyBinding.of({ key: 'Ctrl-Enter', run: runPublish }),
 			KeyBinding.of({ mac: 'Cmd-Enter', run: runPublish }),
 		],
-		Wordgard.updateListener.of(() => {
+		Wordgard.updateListener.of((update) => {
+			if (update.docChanged) {
+				uploads.sync(getVideoUploadFiles(update.state.doc));
+			}
 			updates.emit();
 		}),
 	]);
@@ -233,9 +240,10 @@ export const createComposer = ({
 	const endHost = document.createElement('div');
 	const interaction = createStore(seed.interaction);
 
-	const publishing = createStore(false);
+	const publishing = createStore<PublishTask | null>(null);
 	publishing.subscribe(() => {
-		const extension = publishing.get() ? [Wordgard.editable.of(false), GardState.readOnly.of(true)] : [];
+		const extension =
+			publishing.get() !== null ? [Wordgard.editable.of(false), GardState.readOnly.of(true)] : [];
 		wg.dispatch({ effects: lock.reconfigure(extension) });
 	});
 
@@ -265,6 +273,7 @@ export const createComposer = ({
 
 		interaction,
 		publishing,
+		uploads,
 		slots,
 		endHost,
 		suggestionHost: popupHost,
@@ -288,10 +297,14 @@ export const createComposer = ({
 
 			const stopDropping = registerThreadDrop(wg, dnd, container);
 			const stopFileDrops = registerFileDrop(wg, container);
+			const stopUploads = uploads.activate(getVideoUploadFiles(wg.state.doc));
 
 			return () => {
 				stopDropping();
 				stopFileDrops();
+				// cancel before stopping uploads to avoid reporting a publish failure on close.
+				publishing.get()?.cancel();
+				stopUploads();
 				cancelAnimationFrame(focusing);
 				endHost.remove();
 				wg.dom.remove();

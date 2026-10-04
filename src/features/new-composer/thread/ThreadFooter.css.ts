@@ -24,4 +24,5 @@ export const start = style({
 
 export const end = style({
 	display: 'flex',
+	gap: space.sm,
 });

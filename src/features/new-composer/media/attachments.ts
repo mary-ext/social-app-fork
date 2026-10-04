@@ -1,3 +1,5 @@
+import type { Plot } from 'wordgard/doc';
+
 import type { Gif } from '#/lib/media/external-gif/types';
 import { getImageDimensions } from '#/lib/media/metadata';
 import {
@@ -13,7 +15,7 @@ import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
-import type { PostMedia } from '../model/schema';
+import { getPostParam, getPosts, type PostMedia } from '../model/schema';
 
 // GIF picker results share the local GIF's one-per-post rule.
 const toAttachmentKind = (item: PostMedia): AttachmentKind => {
@@ -42,6 +44,48 @@ export const getMediaProblem = (media: readonly PostMedia[]): SelectionError | n
 
 	// non-image attachments need the post's only media embed.
 	return media.length > 1 ? { type: 'oneOnly', kind } : null;
+};
+
+/** a video, local GIF, or voice clip; all publish as video embeds. */
+export type VideoUploadMedia = Extract<PostMedia, { kind: 'gif' | 'video' | 'voice' }>;
+
+/**
+ * checks whether an attachment publishes as a video embed.
+ *
+ * @param item the attachment
+ * @returns whether it is {@link VideoUploadMedia}
+ */
+export const isVideoUploadMedia = (item: PostMedia): item is VideoUploadMedia => {
+	switch (item.kind) {
+		case 'gif':
+		case 'video':
+		case 'voice': {
+			return true;
+		}
+		case 'externalGif':
+		case 'image': {
+			return false;
+		}
+	}
+};
+
+/**
+ * collects the files of attachments that publish as video embeds.
+ *
+ * @param doc the thread document
+ * @returns unique files by object identity
+ */
+export const getVideoUploadFiles = (doc: Plot.Doc): Set<File> => {
+	const files = new Set<File>();
+	for (const { node } of getPosts(doc)) {
+		for (const item of getPostParam(node).media) {
+			if (isVideoUploadMedia(item)) {
+				files.add(item.file);
+			}
+		}
+	}
+
+	return files;
 };
 
 /**

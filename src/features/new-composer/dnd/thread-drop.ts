@@ -159,6 +159,9 @@ export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTML
 
 	const stopDropping = dnd.dropTarget({
 		element: container,
+		canDrop() {
+			return !wg.state.readOnly;
+		},
 		getData() {
 			return { kind: 'thread' };
 		},
@@ -276,6 +279,11 @@ export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => v
 	const onDragOver = (event: DragEvent) => {
 		const transfer = claim(event);
 		if (!transfer) {
+			return;
+		}
+		// still prevent the browser from navigating to the dropped file while read-only.
+		if (wg.state.readOnly) {
+			transfer.dropEffect = 'none';
 			return;
 		}
 

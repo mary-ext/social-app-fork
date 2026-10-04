@@ -11,9 +11,11 @@ import { m } from '#/paraglide/messages';
 
 export function ThreadgateBtn({
 	value,
+	disabled,
 	onChange,
 }: {
 	value: InteractionSettings;
+	disabled?: boolean;
 	onChange: (next: InteractionSettings) => void;
 }) {
 	const handle = Dialog.useDialogHandle();
@@ -28,7 +30,7 @@ export function ThreadgateBtn({
 			<Dialog.Trigger
 				handle={handle}
 				render={
-					<Button color="secondary" size="small" label={label}>
+					<Button color="secondary" size="small" label={label} disabled={disabled}>
 						<ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
 						<ButtonText>{label}</ButtonText>
 						<ButtonIcon icon={TinyChevronIcon} size="_2xs" />

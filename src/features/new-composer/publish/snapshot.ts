@@ -13,6 +13,7 @@ import { getLinkKey, getMediaKey, getTaintedLabels } from '../labels/commands';
 import { getPostLanguage } from '../languages/commands';
 import { getEditedImage, getImageEdit } from '../media/images/image-edits';
 import { getMediaAlt } from '../media/shared/alt-text';
+import { type CaptionTrack, getCaptionProblem, getMediaCaptions } from '../media/videos/captions';
 import { getPostInfo, isSkippedPost } from '../model/post-info';
 import { getPostParam, getPosts, type PostMedia } from '../model/schema';
 import { measureCached } from '../model/text-measurement';
@@ -20,7 +21,16 @@ import { measureCached } from '../model/text-measurement';
 /** a publishable attachment with its metadata. */
 export type PlannedMedia =
 	| { kind: 'image'; blob: Blob; alt: string }
-	| { kind: 'externalGif'; gif: Gif; alt: string };
+	| { kind: 'externalGif'; gif: Gif; alt: string }
+	| {
+			/** normalized video embed, regardless of the source attachment kind. */
+			kind: 'video';
+			file: File;
+			presentation: 'default' | 'gif';
+			alt: string;
+			/** valid caption tracks. */
+			captions: CaptionTrack[];
+	  };
 
 /** a post to publish, detached from the editor. */
 export type PlannedPost = {
@@ -53,11 +63,36 @@ const toPlannedMedia = (state: GardState, item: PostMedia): PlannedMedia => {
 			return { kind: 'externalGif', gif: item.gif, alt };
 		}
 		case 'gif':
-		case 'video':
 		case 'voice': {
-			throw new Error(`can't publish ${item.kind} attachments`);
+			return {
+				kind: 'video',
+				file: item.file,
+				presentation: item.kind === 'gif' ? 'gif' : 'default',
+				alt,
+				captions: [],
+			};
+		}
+		case 'video': {
+			const tracks = getMediaCaptions(state, item.id);
+			return {
+				kind: 'video',
+				file: item.file,
+				presentation: 'default',
+				alt,
+				captions: tracks.filter((track) => getCaptionProblem(track, tracks) === null),
+			};
 		}
 	}
+};
+
+/**
+ * lists the video attachments a publish waits on.
+ *
+ * @param posts the planned posts
+ * @returns the attachments' files
+ */
+export const getPlannedVideos = (posts: readonly PlannedPost[]): File[] => {
+	return posts.flatMap((post) => post.media.flatMap((item) => (item.kind === 'video' ? [item.file] : [])));
 };
 
 /**
@@ -66,7 +101,6 @@ const toPlannedMedia = (state: GardState, item: PostMedia): PlannedMedia => {
  * @param state the editor state; check `getPublishBlocker` first
  * @param defaultLanguage comma-separated BCP-47 codes for posts without a language override
  * @returns the posts to publish, in order
- * @throws if the thread has attachments that can't be published
  */
 export const snapshotThread = (state: GardState, defaultLanguage: string): PlannedPost[] => {
 	return getPosts(state.doc)

@@ -2,6 +2,7 @@ import { reorder } from '@oomfware/tug/reorder';
 
 import type { ChangeSet } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
+import type { Transaction } from 'wordgard/state';
 
 import type { Gif } from '#/lib/media/external-gif/types';
 
@@ -22,6 +23,13 @@ import { createGifMedia, createMedia } from './attachments';
 export type MediaRef = {
 	postId: string;
 	mediaId: string;
+};
+
+// file reads started before publishing may finish after the editor locks.
+const dispatchMediaChange = (wg: Wordgard, spec: Transaction.Spec): void => {
+	if (!wg.state.readOnly) {
+		wg.dispatch(spec);
+	}
 };
 
 /**
@@ -60,7 +68,7 @@ export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMed
 		return;
 	}
 
-	wg.dispatch({
+	dispatchMediaChange(wg, {
 		changes: setPostMediaChange(post.pos, post.node, [...getPostParam(post.node).media, ...media]),
 		userEvent: 'media.add',
 		annotations: ISOLATE_HISTORY,
@@ -87,7 +95,7 @@ export const insertMediaAt = (
 	}
 
 	const existing = getPostParam(post.node).media;
-	wg.dispatch({
+	dispatchMediaChange(wg, {
 		changes: setPostMediaChange(
 			post.pos,
 			post.node,
@@ -110,7 +118,7 @@ export const removeMedia = (wg: Wordgard, { postId, mediaId }: MediaRef): void =
 		return;
 	}
 
-	wg.dispatch({
+	dispatchMediaChange(wg, {
 		changes: setPostMediaChange(
 			post.pos,
 			post.node,
@@ -137,7 +145,7 @@ const liftMedia = (wg: Wordgard, { postId, mediaId }: MediaRef): LiftedMedia | n
 };
 
 const dispatchMove = (wg: Wordgard, changes: ChangeSet.Spec[], selection?: { anchor: number }): void => {
-	wg.dispatch({ changes, selection, userEvent: 'media.move', annotations: ISOLATE_HISTORY });
+	dispatchMediaChange(wg, { changes, selection, userEvent: 'media.move', annotations: ISOLATE_HISTORY });
 };
 
 const moveMedia = (wg: Wordgard, ref: MediaRef, toId: string, toIndex: number | undefined): void => {
@@ -265,7 +273,7 @@ export const moveMediaDown = (wg: Wordgard, ref: MediaRef): void => {
  */
 export const moveMediaToNewPost = (wg: Wordgard, ref: MediaRef): void => {
 	const lifted = liftMedia(wg, ref);
-	if (lifted) {
+	if (lifted && !wg.state.readOnly) {
 		// media-only changes leave the append position unchanged.
 		appendPost(wg, { userEvent: 'media.move', media: [lifted.item], changes: lifted.changes });
 	}
@@ -278,7 +286,7 @@ export const moveMediaToNewPost = (wg: Wordgard, ref: MediaRef): void => {
  * @param media the media to add; nothing is appended when empty
  */
 export const addMediaInNewPost = (wg: Wordgard, media: readonly PostMedia[]): void => {
-	if (media.length > 0) {
+	if (media.length > 0 && !wg.state.readOnly) {
 		appendPost(wg, { userEvent: 'media.add', media });
 	}
 };

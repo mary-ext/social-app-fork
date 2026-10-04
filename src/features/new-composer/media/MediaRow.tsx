@@ -5,12 +5,14 @@ import * as Dialog from '#/components/Dialog';
 import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import { useEditor, useIsActivePost, usePostState } from '../context';
 import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } from '../model/schema';
 import { escapeToEditor } from '../shared/editor-focus';
 import { MEDIA_ID_ATTR } from '../shared/elements';
 import { useRovingFocus } from '../shared/roving-focus';
-import { getMediaProblem } from './attachments';
+import { getMediaProblem, isVideoUploadMedia } from './attachments';
 import { removeMedia } from './commands';
 import {
 	ExternalGifAltTextDialog,
@@ -24,6 +26,7 @@ import { ImageGroup } from './images/ImageGroup';
 import * as css from './MediaRow.css';
 import { getMediaAlt, setMediaAlt } from './shared/alt-text';
 import { refocusMedia } from './shared/MediaTile';
+import { useVideoUpload } from './shared/upload-status';
 import { getMediaCaptions, setMediaCaptions } from './videos/captions';
 import { CaptionsDialog, type VideoCaptionsTarget } from './videos/CaptionsDialog';
 import { VideoAltTextDialog, type VideoAltTextTarget } from './videos/VideoAltTextDialog';
@@ -32,6 +35,20 @@ import { VoiceAltTextDialog, type VoiceAltTextTarget } from './voices/VoiceAltTe
 import { VoiceTile } from './voices/VoiceTile';
 
 const NO_MEDIA: readonly PostMedia[] = [];
+
+function UploadError({ file }: { file: File }) {
+	const upload = useVideoUpload(file);
+	if (upload?.status !== 'failed') {
+		return null;
+	}
+
+	return (
+		<Text size="md_sub" color="negative_600">
+			{upload.error}
+			{upload.jobId !== null && ` (${m['view.composer.video.jobId']({ jobId: upload.jobId })})`}
+		</Text>
+	);
+}
 
 /**
  * a post's attachments and media errors.
@@ -206,6 +223,8 @@ export function MediaRow({ postId }: { postId: string }) {
 						{getSelectionErrorMessage(mediaProblem)}
 					</Text>
 				)}
+
+				{others.map((item) => isVideoUploadMedia(item) && <UploadError key={item.id} file={item.file} />)}
 			</div>
 
 			<ImageAltTextDialog handle={imageAltDialog} onSave={saveAlt} />

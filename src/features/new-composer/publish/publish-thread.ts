@@ -31,12 +31,14 @@ const resolveReplyRef = async (appview: Client, uri: ResourceUri): Promise<Reply
 /**
  * publishes a thread atomically.
  *
- * @param clients API clients, query cache, and destination repo DID
+ * @param clients API clients, query cache, video uploads, and destination repo DID
  * @param options.posts the posts to publish, at least one
  * @param options.replyUri reply parent's AT-URI, or null for a top-level thread
  * @param options.interaction the thread's interaction settings
+ * @param options.signal cancels the publish until the posts are sent
  * @returns the AT-URIs of the published posts, in order
  * @throws {PublishError} if the reply parent is unavailable or {@link resolvePost} rejects a post
+ * @throws the signal's abort reason if `signal` aborts before the posts are sent
  */
 export const publishThread = async (
 	{ did, ...clients }: Omit<ResolveContext, 'resolveHandle'> & { did: Did },
@@ -44,10 +46,12 @@ export const publishThread = async (
 		posts,
 		replyUri,
 		interaction,
+		signal,
 	}: {
 		posts: readonly PlannedPost[];
 		replyUri: ResourceUri | null;
 		interaction: InteractionSettings;
+		signal: AbortSignal;
 	},
 ): Promise<ResourceUri[]> => {
 	const ctx: ResolveContext = { ...clients, resolveHandle: createCachedHandleResolver(clients.appview) };
@@ -113,6 +117,8 @@ export const publishThread = async (
 		}
 	}
 
+	// once sent, applyWrites cannot be cancelled.
+	signal.throwIfAborted();
 	await ok(ctx.pds.post('com.atproto.repo.applyWrites', { input: { repo: did, validate: true, writes } }));
 
 	return uris;

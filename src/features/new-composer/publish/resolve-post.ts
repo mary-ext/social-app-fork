@@ -3,6 +3,7 @@ import type {
 	AppBskyEmbedExternal,
 	AppBskyEmbedGallery,
 	AppBskyEmbedRecordWithMedia,
+	AppBskyEmbedVideo,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 } from '@atcute/bluesky';
@@ -24,6 +25,7 @@ import { trimText } from '#/lib/utils/text';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 
+import { type UploadedVideo, VideoUploadError } from '../media/shared/video-uploads';
 import type { PlannedMedia, PlannedPost } from './snapshot';
 
 /** a publish failure with a message for the user. */
@@ -36,6 +38,12 @@ export type ResolveContext = {
 	queryClient: QueryClient;
 	/** shared across the thread's posts. */
 	resolveHandle: HandleResolver;
+	/**
+	 * waits for a video attachment's upload.
+	 *
+	 * @throws {VideoUploadError} if the upload fails
+	 */
+	waitForVideo: (file: File) => Promise<UploadedVideo>;
 };
 
 /** resolved content for a post record. */
@@ -49,6 +57,8 @@ export type ResolvedPost = {
 type MediaEmbed = AppBskyEmbedRecordWithMedia.Main['media'];
 
 type ImageMedia = Extract<PlannedMedia, { kind: 'image' }>;
+
+type VideoMedia = Extract<PlannedMedia, { kind: 'video' }>;
 
 // thumbnails are optional, so a failed upload leaves the card without one.
 const uploadThumb = async (ctx: ResolveContext, link: ResolvedLink): Promise<AtpBlob | undefined> => {
@@ -78,6 +88,35 @@ const resolveImages = async (ctx: ResolveContext, images: readonly ImageMedia[])
 	return { $type: 'app.bsky.embed.gallery', items };
 };
 
+const resolveVideo = async (
+	ctx: ResolveContext,
+	{ file, presentation, alt, captions }: VideoMedia,
+): Promise<MediaEmbed> => {
+	const [video, tracks] = await Promise.all([
+		ctx.waitForVideo(file).catch((err: unknown) => {
+			throw err instanceof VideoUploadError ? new PublishError(err.message) : err;
+		}),
+		Promise.all(
+			captions.map(async (track): Promise<AppBskyEmbedVideo.Caption> => {
+				return { file: await uploadBlob(ctx.pds, track.file, 'text/vtt'), lang: track.lang };
+			}),
+		),
+	]);
+
+	const width = Math.round(video.width);
+	const height = Math.round(video.height);
+
+	return {
+		$type: 'app.bsky.embed.video',
+		alt: trimText(alt) || undefined,
+		// the lexicon rejects nonpositive aspect ratios.
+		aspectRatio: width > 0 && height > 0 ? { width, height } : undefined,
+		captions: tracks.length > 0 ? tracks : undefined,
+		presentation,
+		video: video.blob,
+	};
+};
+
 const resolveMedia = async (
 	ctx: ResolveContext,
 	media: readonly PlannedMedia[],
@@ -105,6 +144,9 @@ const resolveMedia = async (
 					uri: resolved.uri as GenericUri,
 				},
 			};
+		}
+		case 'video': {
+			return resolveVideo(ctx, first);
 		}
 	}
 };
@@ -204,7 +246,8 @@ const toEmbed = (
  * @param ctx API clients and query cache
  * @param post the planned post
  * @returns the post's record contents
- * @throws {PublishError} if the quote is unavailable, or the post is too long after an embed fails
+ * @throws {PublishError} if the quote is unavailable, a video upload fails, or the post is too long after an
+ *   embed fails
  */
 export const resolvePost = async (ctx: ResolveContext, post: PlannedPost): Promise<ResolvedPost> => {
 	const [media, card, record] = await Promise.all([

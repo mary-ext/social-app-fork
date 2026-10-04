@@ -8,13 +8,16 @@ import { Button } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 import { colors } from '#/styles/colors';
 
+import { useComposer } from '../../context';
 import { keepEditorFocus } from '../../shared/editor-focus';
 import * as css from './TileControls.css';
-import { getUploadLabel, type PendingUpload } from './upload-status';
+import { getUploadLabel } from './upload-status';
+import { isPendingUpload, type PendingUpload, type VideoUploadState } from './video-uploads';
 
 /**
  * controls overlay media by default; `inline` places them in the tile's layout. overlay badges require
@@ -34,14 +37,14 @@ export function TileBadges({ children }: { children: ReactNode }) {
 
 const ChipButton = ({
 	variant,
-	isDone,
+	icon,
 	label,
 	text,
 	tabbable,
 	onClick,
 }: {
 	variant?: TileVariant;
-	isDone: boolean;
+	icon: ReactNode;
 	label: string;
 	text: string;
 	tabbable: boolean;
@@ -56,10 +59,14 @@ const ChipButton = ({
 			onMouseDown={keepEditorFocus}
 			onClick={onClick}
 		>
-			{isDone ? <CheckIcon className={clsx(css.icon, css.chipCheck)} /> : <PlusIcon className={css.icon} />}
+			{icon}
 			{text}
 		</Button>
 	);
+};
+
+const toggleIcon = (isDone: boolean) => {
+	return isDone ? <CheckIcon className={clsx(css.icon, css.chipCheck)} /> : <PlusIcon className={css.icon} />;
 };
 
 /**
@@ -82,7 +89,7 @@ export function AltButton({
 	return (
 		<ChipButton
 			variant={variant}
-			isDone={hasAlt}
+			icon={toggleIcon(hasAlt)}
 			label={hasAlt ? m['view.composer.altText.action.edit']() : m['view.composer.altText.action.add']()}
 			text={hasAlt ? m['view.composer.altText.badge.done']() : m['view.composer.altText.badge.add']()}
 			tabbable={tabbable}
@@ -108,7 +115,7 @@ export function CaptionsButton({
 }) {
 	return (
 		<ChipButton
-			isDone={hasCaptions}
+			icon={toggleIcon(hasCaptions)}
 			label={hasCaptions ? `Edit captions` : `Add captions`}
 			text={hasCaptions ? `Captions` : `Add captions`}
 			tabbable={tabbable}
@@ -178,13 +185,7 @@ export function RemoveButton({
 	);
 }
 
-/**
- * upload progress badge.
- *
- * @param props the pending upload
- * @returns the badge
- */
-export function UploadBadge({ variant, upload }: { variant?: TileVariant; upload: PendingUpload }) {
+const UploadBadge = ({ variant, upload }: { variant?: TileVariant; upload: PendingUpload }) => {
 	const onMedia = variant !== 'inline';
 
 	return (
@@ -192,7 +193,7 @@ export function UploadBadge({ variant, upload }: { variant?: TileVariant; upload
 			{upload.status === 'uploading' ? (
 				<ProgressCircle
 					color={onMedia ? 'white' : colors.primary_500}
-					progress={upload.progress}
+					progress={upload.sent}
 					size={18}
 					trackColor={onMedia ? 'rgba(255, 255, 255, 0.25)' : colors.borderContrastLow}
 				/>
@@ -202,6 +203,48 @@ export function UploadBadge({ variant, upload }: { variant?: TileVariant; upload
 			{getUploadLabel(upload)}
 		</div>
 	);
+};
+
+/**
+ * shows upload progress or a retry button.
+ *
+ * @param props upload, layout, focus order, and fallback content
+ * @returns status while pending or failed; otherwise `children`
+ */
+export function TileUploadStatus({
+	variant,
+	file,
+	upload,
+	tabbable,
+	children,
+}: {
+	variant?: TileVariant;
+	file: File;
+	upload: VideoUploadState | undefined;
+	tabbable: boolean;
+	children?: ReactNode;
+}) {
+	const { uploads } = useComposer();
+
+	let status: ReactNode;
+	if (isPendingUpload(upload)) {
+		status = <UploadBadge variant={variant} upload={upload} />;
+	} else if (upload?.status === 'failed') {
+		status = (
+			<ChipButton
+				variant={variant}
+				icon={<WarningIcon className={clsx(css.icon, css.chipWarning)} />}
+				label={`Retry upload`}
+				text={m['common.action.retry']()}
+				tabbable={tabbable}
+				onClick={() => uploads.retry(file)}
+			/>
+		);
+	} else {
+		return children;
+	}
+
+	return variant === 'inline' ? status : <div className={css.status}>{status}</div>;
 }
 
 /**

@@ -74,6 +74,9 @@ function PostHandle({ postId }: { postId: string }) {
 
 		return dnd.draggable({
 			element: node,
+			canDrag() {
+				return !wg.state.readOnly;
+			},
 			getInitialData() {
 				return {
 					kind: 'post',

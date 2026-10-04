@@ -14,9 +14,10 @@ import {
 	RemoveButton,
 	TileActions,
 	TileBadges,
-	UploadBadge,
+	TileUploadStatus,
 } from '../shared/TileControls';
-import { usePendingUpload } from '../shared/upload-status';
+import { useVideoUpload } from '../shared/upload-status';
+import { isPendingUpload } from '../shared/video-uploads';
 import { hasMediaCaptions } from './captions';
 import * as css from './VideoTile.css';
 
@@ -47,7 +48,7 @@ export function VideoTile({
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const hasCaptions = useEditorState((state) => hasMediaCaptions(state, item.id));
-	const upload = usePendingUpload(item.file);
+	const upload = useVideoUpload(item.file);
 	const tabbable = roving.tabIndex === 0;
 
 	return (
@@ -62,19 +63,15 @@ export function VideoTile({
 		>
 			<video className={css.video} src={getBlobUrl(item.file)} preload="metadata" muted />
 
+			<TileUploadStatus file={item.file} upload={upload} tabbable={tabbable} />
+
 			<TileBadges>
-				{upload ? (
-					<UploadBadge upload={upload} />
-				) : (
-					<>
-						<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
-						<CaptionsButton hasCaptions={hasCaptions} tabbable={tabbable} onClick={onEditCaptions} />
-					</>
-				)}
+				<AltButton hasAlt={hasAlt} tabbable={tabbable} onClick={onEditAlt} />
+				<CaptionsButton hasCaptions={hasCaptions} tabbable={tabbable} onClick={onEditCaptions} />
 			</TileBadges>
 
 			<TileActions>
-				<RemoveButton isUploading={!!upload} onClick={onRemove} />
+				<RemoveButton isUploading={isPendingUpload(upload)} onClick={onRemove} />
 			</TileActions>
 		</MediaTile>
 	);

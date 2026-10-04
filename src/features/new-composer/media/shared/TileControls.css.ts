@@ -30,7 +30,8 @@ const inlineBadge = style({
 const inlineControl = style({
 	backgroundColor: 'transparent',
 	selectors: {
-		[hover()]: { backgroundColor: vars.palette.contrast_100 },
+		[hover(':not(:disabled)')]: { backgroundColor: vars.palette.contrast_100 },
+		'&:disabled': { opacity: 0.5, cursor: 'default' },
 	},
 });
 
@@ -42,6 +43,13 @@ export const badges = style({
 	bottom: space.sm,
 	left: space.sm,
 	gap: 6,
+});
+
+export const status = style({
+	display: 'flex',
+	position: 'absolute',
+	top: space.sm,
+	left: space.sm,
 });
 
 export const chip = recipe(
@@ -64,6 +72,10 @@ export const icon = style([overlayIcon]);
 
 export const chipCheck = style({
 	color: vars.palette.positive_500,
+});
+
+export const chipWarning = style({
+	color: vars.palette.negative_500,
 });
 
 export const uploadBadge = recipe(

@@ -63,6 +63,9 @@ export function MediaTile({
 
 		return dnd.draggable({
 			element: node,
+			canDrag() {
+				return !wg.state.readOnly;
+			},
 			getInitialData() {
 				return { kind: 'media', postId, mediaId: item.id, mediaKind: item.kind, index };
 			},
@@ -93,15 +96,20 @@ export function MediaTile({
 					return;
 				}
 
-				if (event.key === 'Backspace' || event.key === 'Delete') {
-					event.preventDefault();
-					onRemove();
-					return;
-				}
-
 				if (event.key === ' ') {
 					event.preventDefault();
 					onTogglePlayback?.();
+					return;
+				}
+
+				// onRemove also moves focus, even if the edit is blocked.
+				if (wg.state.readOnly) {
+					return;
+				}
+
+				if (event.key === 'Backspace' || event.key === 'Delete') {
+					event.preventDefault();
+					onRemove();
 					return;
 				}
 

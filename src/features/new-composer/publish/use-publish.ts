@@ -14,22 +14,23 @@ import * as Toast from '#/components/Toast';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
-import { useComposer, useEditorState, useThreadInteraction } from '../context';
+import { type PublishTask, useComposer, useEditorState, useThreadInteraction } from '../context';
 import { deletePublishedDraft } from '../drafts/queries';
+import { useFailedUploads } from '../media/shared/upload-status';
 import { useStore } from '../store';
 import { getPublishBlocker, type PublishBlocker } from './blocker';
 import { publishThread } from './publish-thread';
 import { PublishError } from './resolve-post';
-import { snapshotThread } from './snapshot';
+import { getPlannedVideos, snapshotThread } from './snapshot';
 
 /**
- * publishes the composer's thread, then closes the composer.
+ * publishes the composer's thread once its videos finish uploading, then closes the composer.
  *
- * @returns why publishing is unavailable, whether it's in progress, and the publish action
+ * @returns why publishing is unavailable, the publish in progress, and the publish action
  */
 export const usePublish = (): {
 	blocker: PublishBlocker | null;
-	isPublishing: boolean;
+	task: PublishTask | null;
 	publish: () => Promise<void>;
 } => {
 	const composer = useComposer();
@@ -39,28 +40,41 @@ export const usePublish = (): {
 	const router = useRouter();
 	const { currentAccount } = useSession();
 
-	const blocker = useEditorState(getPublishBlocker);
-	const isPublishing = useStore(composer.publishing);
+	const failedUploads = useFailedUploads();
+	const blocker = useEditorState((state) => getPublishBlocker(state, failedUploads));
+	const task = useStore(composer.publishing);
 
 	const publish = async () => {
-		const { replyUri, publishing, wg } = composer;
-		if (publishing.get() || getPublishBlocker(wg.state) !== null) {
+		const { replyUri, publishing, uploads, wg } = composer;
+		if (publishing.get() !== null || getPublishBlocker(wg.state, uploads.getFailed()) !== null) {
 			return;
 		}
 
 		const { appview, pds } = getClients();
 		const posts = snapshotThread(wg.state, postLanguage);
-		publishing.set(true);
+		const controller = new AbortController();
+		const { signal } = controller;
+		publishing.set({ videos: getPlannedVideos(posts), cancel: () => controller.abort() });
 
 		let uris;
 		try {
 			uris = await publishThread(
-				{ appview, pds: pds!, did: currentAccount!.did, queryClient },
-				{ posts, replyUri, interaction },
+				{
+					appview,
+					pds: pds!,
+					did: currentAccount!.did,
+					queryClient,
+					waitForVideo: (file) => uploads.wait(file, signal),
+				},
+				{ posts, replyUri, interaction, signal },
 			);
 		} catch (err) {
+			publishing.set(null);
+			if (signal.aborted) {
+				return;
+			}
+
 			console.error('failed to publish thread', err);
-			publishing.set(false);
 
 			let message: string;
 			if (err instanceof PublishError) {
@@ -110,5 +124,5 @@ export const usePublish = (): {
 		}, 500);
 	};
 
-	return { blocker, isPublishing, publish };
+	return { blocker, task, publish };
 };

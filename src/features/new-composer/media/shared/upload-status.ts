@@ -1,68 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import { m } from '#/paraglide/messages';
 
-export type PendingUpload =
-	| { status: 'compressing' }
-	| { status: 'uploading'; progress: number }
-	| { status: 'processing' };
+import { useComposer } from '../../context';
+import { isPendingUpload, type PendingUpload, type VideoUploadState } from './video-uploads';
 
-const COMPRESS_MS = 1_500;
-const UPLOAD_MS = 4_000;
-const PROCESS_MS = 1_500;
-
-const COMPRESSING: PendingUpload = { status: 'compressing' };
-const PROCESSING: PendingUpload = { status: 'processing' };
-
-// preserve simulated progress across tile remounts without retaining removed files.
-const startTimes = new WeakMap<Blob, number>();
-
-const getStartTime = (file: Blob): number => {
-	let start = startTimes.get(file);
-	if (start === undefined) {
-		start = performance.now();
-		startTimes.set(file, start);
-	}
-
-	return start;
-};
-
-const getStatusAt = (elapsed: number): PendingUpload | null => {
-	if (elapsed < COMPRESS_MS) {
-		return COMPRESSING;
-	}
-	if (elapsed < COMPRESS_MS + UPLOAD_MS) {
-		return { status: 'uploading', progress: (elapsed - COMPRESS_MS) / UPLOAD_MS };
-	}
-	if (elapsed < COMPRESS_MS + UPLOAD_MS + PROCESS_MS) {
-		return PROCESSING;
-	}
-
-	return null;
+/**
+ * subscribes to an attachment's upload.
+ *
+ * @param file the attachment's file
+ * @returns the upload's state, or undefined if it isn't tracked
+ */
+export const useVideoUpload = (file: File): VideoUploadState | undefined => {
+	const { uploads } = useComposer();
+	return useSyncExternalStore(uploads.subscribe, () => uploads.getState(file));
 };
 
 /**
- * simulates upload progress; no file is uploaded.
+ * subscribes to the files whose upload failed.
  *
- * @param file the attachment's file
- * @returns simulated status, or null when the simulation finishes
+ * @returns the failed files
  */
-export const usePendingUpload = (file: Blob): PendingUpload | null => {
-	const [status, setStatus] = useState(() => getStatusAt(performance.now() - getStartTime(file)));
-	const isDone = status === null;
+export const useFailedUploads = (): ReadonlySet<File> => {
+	const { uploads } = useComposer();
+	return useSyncExternalStore(uploads.subscribe, uploads.getFailed);
+};
 
-	useEffect(() => {
-		if (isDone) {
-			return;
+/**
+ * subscribes to average upload progress across the given files.
+ *
+ * @param files the attachments' files
+ * @returns rounded percent, counting completed files as 100%; null if no upload is pending
+ */
+export const useUploadsProgress = (files: readonly File[]): number | null => {
+	const { uploads } = useComposer();
+
+	return useSyncExternalStore(uploads.subscribe, () => {
+		let isPending = false;
+		let total = 0;
+		for (const file of files) {
+			const state = uploads.getState(file);
+			if (isPendingUpload(state)) {
+				isPending = true;
+				total += state.progress;
+			} else if (state?.status === 'done') {
+				total += 1;
+			}
 		}
 
-		const interval = setInterval(() => {
-			setStatus(getStatusAt(performance.now() - getStartTime(file)));
-		}, 100);
-		return () => clearInterval(interval);
-	}, [file, isDone]);
-
-	return status;
+		return isPending ? Math.round((total / files.length) * 100) : null;
+	});
 };
 
 /**
@@ -77,7 +64,7 @@ export const getUploadLabel = (upload: PendingUpload): string => {
 			return m['view.composer.media.upload.compressing']();
 		}
 		case 'uploading': {
-			return m['view.composer.media.upload.uploading']({ percent: Math.round(upload.progress * 100) });
+			return m['view.composer.media.upload.uploading']({ percent: Math.round(upload.sent * 100) });
 		}
 		case 'processing': {
 			return m['view.composer.media.upload.processing']();

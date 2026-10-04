@@ -8,6 +8,10 @@ import { AVATAR_SIZE, RAIL_WIDTH, RIGHT_PADDING } from './shared/layout';
 
 export const root = style({
 	position: 'relative',
+	margin: 0,
+	border: 'none',
+	padding: 0,
+	minInlineSize: 0,
 	// the editor draws its own caret in `currentColor`.
 	color: vars.palette.contrast_1000,
 });
