@@ -3,8 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const status = style({
-	display: 'flex',
-	flexDirection: 'column',
 	alignItems: 'center',
 	justifyContent: 'center',
 	gap: space.md,

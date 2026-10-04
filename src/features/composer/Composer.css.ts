@@ -12,8 +12,6 @@ export const dialogBody = style({
 });
 
 export const scrollContainer = style({
-	display: 'flex',
-	flexDirection: 'column',
 	scrollbarColor: `${vars.palette.contrast_200} transparent`,
 	scrollbarGutter: 'stable',
 });

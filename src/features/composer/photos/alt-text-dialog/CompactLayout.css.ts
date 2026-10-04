@@ -30,6 +30,7 @@ export const media = style({
 	position: 'sticky',
 	top: offsetVar,
 	zIndex: 1,
+	flexShrink: 0,
 	alignItems: 'center',
 	justifyContent: 'center',
 	borderBottom: `1px solid ${vars.palette.contrast_100}`,

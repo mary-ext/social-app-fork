@@ -2,11 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-export const body = style({
-	display: 'flex',
-	flexDirection: 'column',
-});
-
 // square, like the alt text dialog's media pane, so the card's width is what sets the stage's height. it may
 // shrink from there (`flex-shrink` against the card's max height) so a short window letterboxes the stage
 // rather than scrolling the toolbar out of reach — which only starts below roughly 700px of window height.
