@@ -1,7 +1,7 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { isCancelledError } from '#/lib/errors';
-import { compressProfileImage, type ImageMeta } from '#/lib/media/composer-image';
+import { compressProfileImage, type ImageMeta } from '#/lib/media/edit-image';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { openImagePicker } from '#/lib/media/picker';
 

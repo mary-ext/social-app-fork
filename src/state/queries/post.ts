@@ -16,11 +16,19 @@ import { setThreadMute, useIsThreadMuted } from '#/state/thread-mutes';
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 
-export function usePostQuery(uri: ResourceUri | undefined) {
+/**
+ * reads a post by AT-URI.
+ *
+ * @param uri the post's AT-URI; undefined disables the query
+ * @param options.staleTime cache freshness in milliseconds; defaults to 0
+ * @returns the query result
+ */
+export function usePostQuery(uri: ResourceUri | undefined, { staleTime }: { staleTime?: number } = {}) {
 	const { appview } = getClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
 		enabled: !!uri,
+		staleTime,
 		queryFn: async ({ signal }) => {
 			if (!uri) {
 				throw new Error('[unreachable] No URI provided');

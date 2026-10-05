@@ -10,7 +10,6 @@ import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 
-import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { Spinner } from '#/components/Spinner';
@@ -21,6 +20,7 @@ import PaperPlaneIcon from '#/icons/central/PaperPlane_round_filled_radius1_stro
 import { m } from '#/paraglide/messages';
 
 import * as styles from './MessageComposer.css';
+import { MessageInput, useMessageInputApiRef } from './MessageInput';
 
 const MIN_HEIGHT = 40;
 // vertical padding that centers the composer's single line of `md` text (14px × 1.3 snug line-height =
@@ -41,7 +41,7 @@ export function MessageComposer({
 	loading?: boolean;
 }) {
 	const { getDraft, clearDraft } = useMessageDraft();
-	const composerInternalApiRef = useComposerInternalApiRef();
+	const inputApiRef = useMessageInputApiRef();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
 	const { replyTo, clearReply } = useMessageReplies();
 
@@ -58,8 +58,8 @@ export function MessageComposer({
 		if (!replyTo) {
 			return;
 		}
-		composerInternalApiRef.current?.input?.focus();
-	}, [replyTo, composerInternalApiRef]);
+		inputApiRef.current?.input?.focus();
+	}, [replyTo, inputApiRef]);
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
@@ -84,9 +84,9 @@ export function MessageComposer({
 		clearDraft();
 		setEmbed(undefined);
 		clearReply();
-		composerInternalApiRef.current?.clear();
+		inputApiRef.current?.clear();
 
-		composerInternalApiRef.current?.input?.focus();
+		inputApiRef.current?.input?.focus();
 
 		requestAnimationFrame(() => {
 			onSendMessage(
@@ -151,14 +151,14 @@ export function MessageComposer({
 								</EmojiPicker.Trigger>
 								<EmojiPicker.Root
 									handle={emojiPickerHandle}
-									onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
-									nextFocusRef={() => composerInternalApiRef.current?.input?.element}
+									onEmojiSelect={(emoji) => inputApiRef.current?.insert(emoji.native)}
+									nextFocusRef={() => inputApiRef.current?.input?.element}
 								>
 									<EmojiPicker.Picker />
 								</EmojiPicker.Root>
 							</>
 						)}
-						<Composer
+						<MessageInput
 							accessibilityLabel={m['screens.messages.composer.a11y']()}
 							accessibilityHint={m['screens.messages.composer.placeholder']()}
 							placeholder={
@@ -167,7 +167,7 @@ export function MessageComposer({
 									: m['screens.messages.message.action']()
 							}
 							autocompletePlacement="top-start"
-							internalApiRef={composerInternalApiRef}
+							internalApiRef={inputApiRef}
 							defaultValue={text}
 							disabled={loading}
 							autoFocus={true}

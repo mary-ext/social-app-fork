@@ -1,33 +1,13 @@
 import { useEffect } from 'react';
 
-import { mapDefined } from '@mary/array-fns';
-
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { setKeybindScopeActive } from '#/lib/keybinds';
 
 const openDialogs = new Map<string, () => void>();
 
-interface CloseAllDialogsOptions {
-	/** ids of dialogs to leave open. */
-	except?: string[];
-}
-
-/**
- * closes every open dialog.
- *
- * @param opts which dialogs to spare
- */
-export function closeAllDialogs(opts: CloseAllDialogsOptions = {}): void {
-	const except = new Set(opts.except);
-	const closing = mapDefined([...openDialogs], ([id, close]) => {
-		if (except.has(id)) {
-			return;
-		}
-
-		return close;
-	});
-
-	for (const close of closing) {
+/** closes every open dialog. */
+export function closeAllDialogs(): void {
+	for (const close of openDialogs.values()) {
 		close();
 	}
 }

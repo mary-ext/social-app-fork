@@ -119,7 +119,6 @@ export function PostControls({
 	feedContext,
 	reqId,
 	onPressReply,
-	onPostReply,
 	viaRepost,
 }: PostControlsProps): ReactNode {
 	const {
@@ -130,7 +129,7 @@ export function PostControls({
 		onShare,
 		replyDisabled,
 		requireAuth,
-	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, onPostReply });
+	} = usePostControlsActions({ post, feedContext, reqId, viaRepost });
 
 	const repostCount = (post.repostCount ?? 0) + (post.quoteCount ?? 0);
 

@@ -9,7 +9,6 @@ import { isAbortError } from '#/lib/errors';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { resolveShortLink } from '#/lib/links/short-link';
-import { type ComposerImage, createComposerImage } from '#/lib/media/composer-image';
 import { compressLinkThumbImage } from '#/lib/media/compress-image';
 import { createGIFDescription } from '#/lib/media/external-gif/alt-text';
 import { toGifEmbedUrl } from '#/lib/media/external-gif/embed';
@@ -20,7 +19,7 @@ type ResolvedExternalLink = {
 	uri: string;
 	title: string;
 	description: string;
-	thumb: ComposerImage | undefined;
+	thumb: Blob | undefined;
 	/**
 	 * strong refs (URI and CID) of the Atmosphere records backing this external content, resolved by the
 	 * appview from the page's `<link rel>` tags
@@ -202,10 +201,7 @@ async function resolveExternal(uri: string, signal?: AbortSignal): Promise<Resol
 	};
 }
 
-export async function imageToThumb(
-	imageUri: string,
-	signal?: AbortSignal,
-): Promise<ComposerImage | undefined> {
+export async function imageToThumb(imageUri: string, signal?: AbortSignal): Promise<Blob | undefined> {
 	try {
 		const timeoutSignal = AbortSignal.timeout(15e3);
 		const requestSignal = signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
@@ -214,9 +210,7 @@ export async function imageToThumb(
 
 		const { blob } = await compressLinkThumbImage(source);
 		signal?.throwIfAborted();
-		const image = await createComposerImage(blob);
-		signal?.throwIfAborted();
-		return image;
+		return blob;
 	} catch {
 		signal?.throwIfAborted();
 	}

@@ -1,6 +1,6 @@
 import { lazy, type ReactNode, Suspense } from 'react';
 
-import type { ImageMeta, ImageTransformation } from '#/lib/media/composer-image';
+import type { ImageMeta, ImageTransformation } from '#/lib/media/edit-image';
 
 import * as Dialog from '#/components/Dialog';
 import { Spinner } from '#/components/Spinner';

@@ -68,11 +68,9 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 
 	const { openComposer } = useOpenComposer();
 	const optimisticOnPostReply = useNonReactiveCallback((payload: OnPostSuccessData) => {
-		if (payload) {
-			const { replyToUri, posts } = payload;
-			if (replyToUri && posts.length) {
-				thread.actions.insertReplies(replyToUri, posts);
-			}
+		const { replyToUri, posts } = payload;
+		if (replyToUri && posts.length) {
+			thread.actions.insertReplies(replyToUri, posts);
 		}
 	});
 	const onReplyToAnchor = useNonReactiveCallback(() => {
@@ -81,15 +79,7 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 		}
 		const post = anchor.value.post;
 		openComposer({
-			replyTo: {
-				uri: anchor.uri,
-				cid: post.cid,
-				text: post.record.text,
-				author: post.author,
-				embed: post.embed,
-				moderation: anchor.moderation,
-				view: post,
-			},
+			replyTo: post,
 			onPostSuccess: optimisticOnPostReply,
 		});
 

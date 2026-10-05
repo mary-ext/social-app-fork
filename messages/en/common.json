@@ -143,7 +143,6 @@
 	"common.embed.quotedPost": "(quoted post)",
 	"common.error.connection": "There was a problem with your internet connection, please try again",
 	"common.error.generic": "Something went wrong. Please try again.",
-	"common.error.heading": "Error",
 	"common.error.issueConnection": "There was an issue. Please check your internet connection and try again.",
 	"common.error.issueWithDetail": "There was an issue! {error}",
 	"common.error.network": "A network error occurred. Please check your internet connection.",

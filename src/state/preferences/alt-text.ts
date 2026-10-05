@@ -1,19 +1,19 @@
 import { device, useStorageValue } from '#/storage';
 
 /**
- * returns whether alt text is required before posting images.
+ * returns whether to remind about missing alt text before posting.
  *
- * @returns `true` if alt text is required
+ * @returns the saved preference, or true if unset
  */
-export function useRequireAltTextEnabled() {
-	return useStorageValue(device, ['requireAltTextEnabled']) ?? false;
+export function useAltTextReminderEnabled() {
+	return useStorageValue(device, ['requireAltTextEnabled']) ?? true;
 }
 
 /**
- * sets whether alt text is required before posting images.
+ * sets whether to remind about missing alt text before posting.
  *
- * @param value whether to require alt text
+ * @param value whether to show the reminder
  */
-export function setRequireAltTextEnabled(value: boolean) {
+export function setAltTextReminderEnabled(value: boolean) {
 	device.set(['requireAltTextEnabled'], value);
 }

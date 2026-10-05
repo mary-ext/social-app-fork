@@ -6,6 +6,7 @@ import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { useInputModality } from '#/lib/browser/input-modality';
 import { IS_FIREFOX, IS_MOBILE_IOS, IS_SAFARI } from '#/lib/browser/platform';
 import { clamp } from '#/lib/utils/numbers';
+import { formatTime } from '#/lib/utils/time';
 
 import { useAutoplayDisabled } from '#/state/preferences/autoplay';
 
@@ -25,7 +26,7 @@ import { TimeIndicator } from '../TimeIndicator';
 import { ControlButton } from './ControlButton';
 import { Scrubber } from './Scrubber';
 import { SettingsMenu, type VideoQuality, type VideoSubtitles } from './SettingsMenu';
-import { formatTime, useVideoElement, useVideoTime } from './utils';
+import { useVideoElement, useVideoTime } from './utils';
 import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
 

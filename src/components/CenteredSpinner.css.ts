@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { space } from '#/styles/tokens.css';
 
 export const center = style({
+	boxSizing: 'border-box',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',

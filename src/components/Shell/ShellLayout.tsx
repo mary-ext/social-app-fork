@@ -8,6 +8,7 @@ import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
 
+import { ComposerDialog } from '#/features/composer/ComposerDialog';
 import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
@@ -20,9 +21,6 @@ import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 import { Shell } from '#/components/Shell/Shell';
 
 import { useRouter } from '#/router';
-
-import { ComposerDialog } from './ComposerDialog';
-import { NewComposerDialog } from './NewComposerDialog';
 
 const LoggedOut = lazy(() =>
 	import('#/components/Shell/LoggedOut').then((mod) => ({ default: mod.LoggedOut })),
@@ -84,7 +82,6 @@ export function ShellLayout() {
 				<Outlet />
 			</ErrorBoundary>
 			<ComposerDialog />
-			<NewComposerDialog />
 			<SigninDialog />
 			<LinkWarningDialog />
 			<GroupChatJoinDialog />

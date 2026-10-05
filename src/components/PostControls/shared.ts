@@ -22,7 +22,6 @@ export type PostControlsProps = {
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
 	onPressReply: () => void;
-	onPostReply?: (postUri: string | undefined) => void;
 	viaRepost?: { uri: ResourceUri; cid: string };
 };
 
@@ -35,8 +34,7 @@ export function usePostControlsActions({
 	feedContext,
 	reqId,
 	viaRepost,
-	onPostReply,
-}: Pick<PostControlsProps, 'feedContext' | 'onPostReply' | 'post' | 'reqId' | 'viaRepost'>) {
+}: Pick<PostControlsProps, 'feedContext' | 'post' | 'reqId' | 'viaRepost'>) {
 	const { openComposer } = useOpenComposer();
 	const { sendInteraction } = useFeedFeedbackContext();
 	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost);
@@ -122,7 +120,6 @@ export function usePostControlsActions({
 		});
 		openComposer({
 			quote: post,
-			onPost: onPostReply,
 		});
 	};
 

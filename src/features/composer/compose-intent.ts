@@ -1,12 +1,11 @@
-import { readVideoAttachment } from '#/lib/media/read-attachment';
-
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
 
-import { getAttachmentRejectionMessage } from '#/features/composer/media/attachment-messages';
-import { useOpenComposer } from '#/features/composer/open-composer';
-
 import * as Toast from '#/components/Toast';
+
+import { getAttachmentRejectionMessage } from './media/attachment-messages';
+import { readVideoAttachment } from './media/read-attachment';
+import { useOpenComposer } from './open-composer';
 
 export function useComposeIntent() {
 	const { openComposer } = useOpenComposer();
@@ -38,7 +37,7 @@ export function useComposeIntent() {
 
 				openComposer({
 					text: text ?? undefined,
-					videoUri: result.asset,
+					video: result.asset,
 				});
 			})();
 			return;

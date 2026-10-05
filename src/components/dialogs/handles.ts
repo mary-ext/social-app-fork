@@ -4,8 +4,6 @@ import { Dialog } from '@base-ui/react/dialog';
 
 import type { SessionAccount } from '#/state/session';
 
-import type { ComposerOpts } from '#/features/composer/open-composer';
-
 import type { ReportSubject } from '#/components/moderation/ReportDialog/types';
 
 /** the images and the index to open the global lightbox on. */
@@ -25,15 +23,11 @@ export type LinkWarningPayload = {
 	share?: boolean;
 };
 
-export const composerDialogHandle = Dialog.createHandle<ComposerOpts>();
-
 export const groupChatJoinHandle = Dialog.createHandle<{ code: string }>();
 
 export const lightboxHandle = Dialog.createHandle<LightboxPayload>();
 
 export const linkWarningDialogHandle = Dialog.createHandle<LinkWarningPayload>();
-
-export const newComposerDialogHandle = Dialog.createHandle<ComposerOpts>();
 
 export const reportDialogHandle = Dialog.createHandle<{ subject: ReportSubject }>();
 

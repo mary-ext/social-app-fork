@@ -65,7 +65,7 @@ export function useUpsertLiveStatusMutation(
 					try {
 						const img = await imageToThumb(linkMeta.image);
 						if (img) {
-							thumb = await uploadBlob(pds!, img.source.blob);
+							thumb = await uploadBlob(pds!, img);
 						}
 					} catch (e) {
 						console.error('Failed to upload thumbnail for live status', linkMeta.image, e);

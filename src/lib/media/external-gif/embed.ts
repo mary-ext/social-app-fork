@@ -6,7 +6,7 @@ export const tenorHostname = 'media.tenor.com';
 const klipyProxyHostname = 'k.gifs.bsky.app';
 const tenorProxyHostname = 't.gifs.bsky.app';
 
-export const gifUrlParams = {
+const gifUrlParams = {
 	height: 'hh',
 	width: 'ww',
 	mp4: 'mp4',

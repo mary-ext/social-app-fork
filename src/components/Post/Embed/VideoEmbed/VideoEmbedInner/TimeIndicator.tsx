@@ -1,11 +1,13 @@
 import type { RefObject } from 'react';
 
+import { formatTime } from '#/lib/utils/time';
+
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './TimeIndicator.css';
-import { formatTime, useVideoTime } from './web-controls/utils';
+import { useVideoTime } from './web-controls/utils';
 
 export function TimeIndicator({
 	videoRef,

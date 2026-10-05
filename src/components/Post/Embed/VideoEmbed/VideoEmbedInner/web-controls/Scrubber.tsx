@@ -3,11 +3,12 @@ import { type KeyboardEvent, type RefObject, useRef, useState } from 'react';
 import { Slider } from '@base-ui/react/slider';
 
 import { useInputModality } from '#/lib/browser/input-modality';
+import { formatTime } from '#/lib/utils/time';
 
 import { m } from '#/paraglide/messages';
 
 import * as styles from './Scrubber.css';
-import { formatTime, useVideoTime } from './utils';
+import { useVideoTime } from './utils';
 
 // match the video time precision.
 const SEEK_STEP = 0.01;

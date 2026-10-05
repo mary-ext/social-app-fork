@@ -28,7 +28,7 @@ import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import ImageIcon from '#/icons/central/Images1_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-export type GalleryProps = {
+type GalleryProps = {
 	images: AppBskyEmbedGallery.ViewImage[];
 	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;

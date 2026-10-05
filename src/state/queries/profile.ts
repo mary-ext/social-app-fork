@@ -23,7 +23,7 @@ import {
 
 import { createRecord, deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
 import { isRecordNotFoundError } from '#/lib/errors';
-import type { ImageMeta } from '#/lib/media/composer-image';
+import type { ImageMeta } from '#/lib/media/edit-image';
 import { retry } from '#/lib/utils/retry';
 import { until } from '#/lib/utils/until';
 

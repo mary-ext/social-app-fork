@@ -88,7 +88,6 @@ function AnchorPostControls({
 	feedContext,
 	reqId,
 	onPressReply,
-	onPostReply,
 	viaRepost,
 }: PostControlsProps): ReactNode {
 	const {
@@ -99,7 +98,7 @@ function AnchorPostControls({
 		onShare,
 		replyDisabled,
 		requireAuth,
-	} = usePostControlsActions({ post, feedContext, reqId, viaRepost, onPostReply });
+	} = usePostControlsActions({ post, feedContext, reqId, viaRepost });
 
 	return (
 		<div className={css.root}>

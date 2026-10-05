@@ -179,10 +179,11 @@ export function Actions({
  * labeled loading state for deferred dialog content.
  *
  * @param props.fill fills fixed-height popups
+ * @param props.minHeight placeholder height in pixels, to reduce layout shifts
  * @returns the loading spinner
  */
-export function Loading({ fill = false }: { fill?: boolean }) {
-	return <CenteredSpinner fill={fill} label={m['common.status.loading']()} size="xl" />;
+export function Loading({ fill = false, minHeight }: { fill?: boolean; minHeight?: number }) {
+	return <CenteredSpinner fill={fill} label={m['common.status.loading']()} minHeight={minHeight} size="xl" />;
 }
 
 /** Hairline rule between sections. */

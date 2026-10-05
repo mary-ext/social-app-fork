@@ -6,8 +6,13 @@ import { resolveGif, resolveLink } from '#/lib/api/resolve';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 import { STALE } from '#/state/queries/index';
-import { RQKEY_GIF, RQKEY_LINK } from '#/state/queries/resolve-link-key';
 import { getClients } from '#/state/session';
+
+const RQKEY_LINK_ROOT = 'resolve-link';
+const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url];
+
+const RQKEY_GIF_ROOT = 'resolve-gif';
+const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url];
 
 export function useResolveLinkQuery(url: string) {
 	const { appview } = getClients();
@@ -26,15 +31,6 @@ export function fetchResolveLinkQuery(queryClient: QueryClient, appview: Client,
 		queryKey: RQKEY_LINK(url),
 		queryFn: async ({ signal }) => {
 			return await resolveLink(appview, url, signal);
-		},
-	});
-}
-export function useResolveGifQuery(gif: Gif) {
-	return useQuery({
-		queryKey: RQKEY_GIF(gif.url),
-		staleTime: STALE.HOURS.ONE,
-		queryFn: async ({ signal }) => {
-			return await resolveGif(gif, signal);
 		},
 	});
 }

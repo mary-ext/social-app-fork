@@ -12,12 +12,14 @@ type CenteredSpinnerProps = {
 	size?: keyof typeof iconSize;
 	/** Grow to fill a flex-column parent so the spinner centers vertically in an empty region. */
 	fill?: boolean;
+	/** minimum height in pixels, including padding. */
+	minHeight?: number;
 };
 
 /** A {@link Spinner} centered in its own box, tinted with the themed muted text color. */
-export function CenteredSpinner({ label, size, fill = false }: CenteredSpinnerProps) {
+export function CenteredSpinner({ label, size, fill = false, minHeight }: CenteredSpinnerProps) {
 	return (
-		<div className={clsx(styles.center, fill && styles.fill)}>
+		<div className={clsx(styles.center, fill && styles.fill)} style={{ minHeight }}>
 			<Spinner color="default" label={label} size={size} />
 		</div>
 	);

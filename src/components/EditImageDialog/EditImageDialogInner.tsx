@@ -4,12 +4,7 @@ import { Cropper, type CropperConfig, type CropValue } from '@oomfware/cropper';
 
 import { clsx } from 'clsx';
 
-import {
-	cropImage,
-	type ImageCrop,
-	type ImageMeta,
-	type ImageTransformation,
-} from '#/lib/media/composer-image';
+import { cropImage, type ImageCrop, type ImageMeta, type ImageTransformation } from '#/lib/media/edit-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import * as Dialog from '#/components/Dialog';

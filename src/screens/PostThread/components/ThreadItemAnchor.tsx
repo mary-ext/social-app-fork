@@ -186,15 +186,7 @@ function ThreadItemAnchorInner({
 
 	const onPressReply = useNonReactiveCallback(() => {
 		openComposer({
-			replyTo: {
-				uri: post.uri,
-				cid: post.cid,
-				text: record.text,
-				author: post.author,
-				embed: post.embed,
-				moderation,
-				view: post,
-			},
+			replyTo: post,
 			onPostSuccess: onPostSuccess,
 		});
 

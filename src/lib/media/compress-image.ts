@@ -460,10 +460,6 @@ const renderCanvas = (img: HTMLImageElement, w: number, h: number, crop: CropMod
 	return canvas;
 };
 
-export function isUriImage(uri: string): boolean {
-	return /\.(jpg|jpeg|png|webp).*$/.test(uri);
-}
-
 type CropResult = [offsetX: number, offsetY: number, width: number, height: number];
 
 /**

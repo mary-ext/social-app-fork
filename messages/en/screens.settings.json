@@ -1,7 +1,7 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"screens.settings.accessibility.altTextReminder": "Remind me to add alt text before posting",
 	"screens.settings.accessibility.largerAltTextBadges": "Display larger alt text badges",
-	"screens.settings.accessibility.requireAltText": "Require alt text before posting",
 	"screens.settings.accessibility.title": "Accessibility",
 	"screens.settings.ai.apiKey.dialogHint": "Stored on this device only.",
 	"screens.settings.ai.apiKey.fieldLabel": "API key",

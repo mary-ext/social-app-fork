@@ -1,108 +1,61 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
-import type { ModerationDecision } from '@atcute/bluesky-moderation';
-import type { ResourceUri } from '@atcute/lexicons';
+import type { AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { ResolvedLink } from '#/lib/api/resolve';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
-import type { VideoAsset } from '#/lib/media/video/types';
-import { recordUriToShareUrl } from '#/lib/routes/app-links';
 
 import { RQKEY as RQKEY_POST } from '#/state/queries/post';
-import { RQKEY_LINK } from '#/state/queries/resolve-link-key';
 
-import { composerDialogHandle, newComposerDialogHandle } from '#/components/dialogs/handles';
+import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-export interface ComposerOptsPostRef {
-	uri: ResourceUri;
-	cid: string;
-	text: string;
-	author: AppBskyActorDefs.ProfileViewBasic;
-	embed?: AppBskyFeedDefs.PostView['embed'];
-	moderation?: ModerationDecision;
-	/** full post for the reply preview. */
-	view: AppBskyFeedDefs.PostView;
-}
+import type { VideoAsset } from './media/video-asset';
 
-export type OnPostSuccessData =
-	| {
-			replyToUri?: string;
-			posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[];
-	  }
-	| undefined;
+export type OnPostSuccessData = {
+	replyToUri?: string;
+	posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[];
+};
 
 export interface ComposerOpts {
-	replyTo?: ComposerOptsPostRef;
-	onPost?: (postUri: string | undefined) => void;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
 	quote?: AppBskyFeedDefs.PostView;
+	replyTo?: AppBskyFeedDefs.PostView;
 	text?: string;
-	videoUri?: VideoAsset;
+	video?: VideoAsset;
 }
 
-/**
- * registry id for the singleton composer dialog. this stable constant allows the discard flow to close all
- * other dialogs without threading an id through context.
- */
-export const COMPOSER_DIALOG_ID = 'composer';
+/** global composer handle; open through {@link useOpenComposer}. */
+export const composerDialogHandle = Dialog.createHandle<ComposerOpts>();
 
-// retain the flag across navigations that drop the query.
-const USE_NEW_COMPOSER = new URLSearchParams(location.search).has('new-composer');
+/** prevents reply and quote previews from refetching cached posts. publishing fetches a fresh reply parent. */
+export const PREVIEW_STALE_TIME = Infinity;
 
 /**
- * provides an opener for the global composer dialog.
+ * provides an opener for the global composer.
  *
- * @returns the openComposer callback
+ * @returns openComposer, which ignores requests while open or when a block prevents interaction
  */
 export function useOpenComposer() {
 	const queryClient = useQueryClient();
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
-		if (opts.quote) {
-			queryClient.setQueryData(RQKEY_POST(opts.quote.uri), opts.quote);
-
-			const appUrl = recordUriToShareUrl(opts.quote.uri);
-			if (appUrl) {
-				const resolved: ResolvedLink = {
-					type: 'record',
-					kind: 'post',
-					record: {
-						cid: opts.quote.cid,
-						uri: opts.quote.uri,
-					},
-					view: opts.quote,
-				};
-
-				queryClient.setQueryData(RQKEY_LINK(appUrl), resolved);
-			}
-		}
-		const author = opts.replyTo?.author || opts.quote?.author;
-		const isBlocked = !!(
-			author &&
-			(author.viewer?.blocking || author.viewer?.blockedBy || author.viewer?.blockingByList)
-		);
-		if (isBlocked) {
+		const viewer = (opts.replyTo ?? opts.quote)?.author.viewer;
+		if (viewer?.blocking || viewer?.blockedBy || viewer?.blockingByList) {
 			Toast.show(m['common.block.interactionError'](), {
 				type: 'warning',
 			});
 			return;
 		}
-		if (USE_NEW_COMPOSER) {
-			if (!newComposerDialogHandle.isOpen) {
-				if (opts.replyTo) {
-					queryClient.setQueryData(RQKEY_POST(opts.replyTo.uri), opts.replyTo.view);
-				}
-				newComposerDialogHandle.openWithPayload(opts);
-			}
-			return;
-		}
-		// Never replace an already open composer.
 		if (composerDialogHandle.isOpen) {
 			return;
+		}
+		// seed the URI queries so previews render immediately.
+		for (const post of [opts.quote, opts.replyTo]) {
+			if (post) {
+				queryClient.setQueryData(RQKEY_POST(post.uri), post);
+			}
 		}
 		composerDialogHandle.openWithPayload(opts);
 	});
@@ -114,8 +67,5 @@ export function useOpenComposer() {
 export function closeComposer(): void {
 	if (composerDialogHandle.isOpen) {
 		composerDialogHandle.close();
-	}
-	if (newComposerDialogHandle.isOpen) {
-		newComposerDialogHandle.close();
 	}
 }

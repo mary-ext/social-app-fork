@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, getRecord, listRecords, putRecord, uploadBlob } from '#/lib/api/records';
 import { makeRecordUri } from '#/lib/at-uri';
-import type { ImageMeta } from '#/lib/media/composer-image';
+import type { ImageMeta } from '#/lib/media/edit-image';
 import { until } from '#/lib/utils/until';
 
 import { STALE } from '#/state/queries';

@@ -1,11 +1,10 @@
+import { MAX_GALLERY_IMAGES } from '#/lib/constants/composer';
 import { VIDEO_MAX_DURATION_MINUTES, VIDEO_MAX_SIZE_MB } from '#/lib/constants/video';
-import type { AttachmentKind, AttachmentRejection, VideoAttachmentKind } from '#/lib/media/read-attachment';
-
-import { MAX_GALLERY_IMAGES } from '#/features/composer/state/composer';
 
 import { m } from '#/paraglide/messages';
 
-import type { SelectionError } from './select-attachments';
+import type { SelectionError } from './attachments';
+import type { AttachmentKind, AttachmentRejection, VideoAttachmentKind } from './read-attachment';
 
 const getUnsupportedMessage = (kind: AttachmentKind | undefined, mimeType: string): string => {
 	switch (kind) {
@@ -73,16 +72,13 @@ export const getAttachmentRejectionMessage = (rejection: AttachmentRejection): s
 };
 
 /**
- * describes why a file in a batch was left out.
+ * describes a post's media type or count violation.
  *
- * @param error validation failure or selection limit
+ * @param error the violation
  * @returns a localized message
  */
 export const getSelectionErrorMessage = (error: SelectionError): string => {
 	switch (error.type) {
-		case 'rejected': {
-			return getAttachmentRejectionMessage(error.rejection);
-		}
 		case 'mixedTypes': {
 			return m['view.composer.media.multipleTypes']();
 		}

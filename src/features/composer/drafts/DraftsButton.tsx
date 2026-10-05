@@ -1,121 +1,59 @@
-import { MAX_DRAFT_GRAPHEME_LENGTH } from '#/lib/constants/composer';
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
 
 import * as Dialog from '#/components/Dialog';
-import * as Prompt from '#/components/Prompt';
-import { Button, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
+import PageIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { DraftsListDialog } from './DraftsListDialog';
-import type { DraftSaveBlocker } from './state/api';
-import { useSaveDraftMutation } from './state/queries';
-import type { DraftSummary } from './state/schema';
+import { useComposer, useIsPublishing } from '../context';
+import { DiscardPrompt, useDiscardGuard } from '../thread/DiscardPrompt';
+import { DraftsDialog } from './DraftsDialog';
 
-const getBeforeViewingMessage = (blocker: DraftSaveBlocker | undefined, isEditingDraft: boolean): string => {
-	switch (blocker) {
-		case 'tooLong': {
-			return m['view.composer.drafts.beforeViewing.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH });
-		}
-		case 'voiceClip': {
-			return m['view.composer.drafts.beforeViewing.voiceClip']();
-		}
-		case undefined: {
-			return isEditingDraft
-				? m['view.composer.drafts.beforeViewing.unsaved']()
-				: m['view.composer.drafts.beforeViewing.save']();
-		}
-	}
-};
-
+/**
+ * opens the drafts list, first offering to save unsaved changes.
+ *
+ * @param props.onReset clears the saved or discarded thread before opening the list
+ * @param props.onSelect replaces the thread with a saved draft
+ * @returns the header button and its dialogs
+ */
 export function DraftsButton({
-	onSelectDraft,
-	onSaveDraft,
-	onDiscard,
-	isEmpty,
-	isDirty,
-	isEditingDraft,
-	draftSaveBlocker,
+	onReset,
+	onSelect,
 }: {
-	onSelectDraft: (draft: DraftSummary) => void;
-	onSaveDraft: () => Promise<{ success: boolean }>;
-	onDiscard: () => void;
-	isEmpty: boolean;
-	isDirty: boolean;
-	isEditingDraft: boolean;
-	draftSaveBlocker: DraftSaveBlocker | undefined;
+	onReset: () => void;
+	onSelect: (view: AppBskyDraftDefs.DraftView) => Promise<void>;
 }) {
-	const canSaveDraft = draftSaveBlocker === undefined;
-	const draftsDialogHandle = Dialog.useDialogHandle();
-	const savePromptHandle = Prompt.usePromptHandle();
-	const { isPending: isSaving } = useSaveDraftMutation();
-
-	const handlePress = () => {
-		if (isEmpty || !isDirty) {
-			// Composer is empty or has no unsaved changes, go directly to drafts list
-			draftsDialogHandle.open(null);
-		} else {
-			// Composer has unsaved changes, ask what to do
-			savePromptHandle.open(null);
-		}
-	};
-
-	const handleSaveAndOpen = async () => {
-		const { success } = await onSaveDraft();
-		if (success) {
-			draftsDialogHandle.open(null);
-		}
-	};
-
-	const handleDiscardAndOpen = () => {
-		onDiscard();
-		draftsDialogHandle.open(null);
-	};
+	const dialogHandle = Dialog.useDialogHandle();
+	const discard = useDiscardGuard(useComposer());
+	const isPublishing = useIsPublishing();
 
 	return (
 		<>
 			<Button
 				label={m['view.composer.drafts.title']()}
 				variant="ghost"
-				color="primary"
-				shape="default"
+				color="secondary"
+				shape="round"
 				size="small"
-				disabled={isSaving}
-				onClick={handlePress}
+				disabled={isPublishing}
+				onClick={() => {
+					if (!discard.intercept()) {
+						dialogHandle.open(null);
+					}
+				}}
 			>
-				<ButtonText size="md">{m['view.composer.drafts.title']()}</ButtonText>
+				<ButtonIcon icon={PageIcon} />
 			</Button>
-			<DraftsListDialog handle={draftsDialogHandle} onSelectDraft={onSelectDraft} />
-			<Prompt.Outer handle={savePromptHandle}>
-				<Prompt.Content>
-					<Prompt.TitleText>
-						{canSaveDraft
-							? isEditingDraft
-								? m['view.composer.drafts.saveChanges.title']()
-								: m['view.composer.drafts.save.title']()
-							: m['view.composer.drafts.discard.title']()}
-					</Prompt.TitleText>
-					<Prompt.DescriptionText>
-						{getBeforeViewingMessage(draftSaveBlocker, isEditingDraft)}
-					</Prompt.DescriptionText>
-				</Prompt.Content>
-				<Prompt.Actions>
-					{canSaveDraft && (
-						<Prompt.Action
-							cta={
-								isEditingDraft ? m['common.action.saveChanges']() : m['view.composer.drafts.action.save']()
-							}
-							onPress={() => void handleSaveAndOpen()}
-							color="primary"
-						/>
-					)}
-					<Prompt.Action
-						cta={m['common.action.discard']()}
-						onPress={handleDiscardAndOpen}
-						color="negative_subtle"
-					/>
-					<Prompt.Cancel cta={m['view.composer.discard.keepEditing']()} />
-				</Prompt.Actions>
-			</Prompt.Outer>
+
+			<DiscardPrompt
+				{...discard.prompt}
+				onProceed={() => {
+					onReset();
+					dialogHandle.open(null);
+				}}
+			/>
+			<DraftsDialog handle={dialogHandle} onSelect={onSelect} />
 		</>
 	);
 }

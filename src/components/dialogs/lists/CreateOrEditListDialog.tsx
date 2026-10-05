@@ -5,7 +5,7 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
-import type { ImageMeta } from '#/lib/media/composer-image';
+import type { ImageMeta } from '#/lib/media/edit-image';
 import { getShortenedLength, richTextToSourceText } from '#/lib/rich-text';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 

@@ -1,5 +1,7 @@
 export const MAX_POST_GRAPHEME_LENGTH = 300;
 
+export const MAX_GALLERY_IMAGES = 10;
+
 export const MAX_DRAFT_GRAPHEME_LENGTH = 1000;
 export const MAX_DRAFT_IMAGES = 20;
 /** maximum size of a draft caption file, in bytes. */

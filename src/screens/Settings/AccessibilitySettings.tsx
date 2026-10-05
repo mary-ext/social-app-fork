@@ -1,4 +1,4 @@
-import { setRequireAltTextEnabled, useRequireAltTextEnabled } from '#/state/preferences/alt-text';
+import { setAltTextReminderEnabled, useAltTextReminderEnabled } from '#/state/preferences/alt-text';
 import { setLargeAltBadgeEnabled, useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 import { useTitle } from '#/state/use-title';
 
@@ -11,7 +11,7 @@ import { m } from '#/paraglide/messages';
 
 export function AccessibilitySettingsScreen() {
 	useTitle(m['navigation.settings.accessibility.title']());
-	const requireAltTextEnabled = useRequireAltTextEnabled();
+	const altTextReminderEnabled = useAltTextReminderEnabled();
 	const largeAltBadgeEnabled = useLargeAltBadgeEnabled();
 
 	return (
@@ -26,12 +26,12 @@ export function AccessibilitySettingsScreen() {
 				<Settings.List>
 					<Settings.Section titleText={m['common.altText.label']()}>
 						<Settings.SwitchRow
-							label={m['screens.settings.accessibility.requireAltText']()}
-							onChange={setRequireAltTextEnabled}
-							value={requireAltTextEnabled}
+							label={m['screens.settings.accessibility.altTextReminder']()}
+							onChange={setAltTextReminderEnabled}
+							value={altTextReminderEnabled}
 						>
 							<Settings.Icon icon={ImageIcon} />
-							<Settings.Label titleText={m['screens.settings.accessibility.requireAltText']()} />
+							<Settings.Label titleText={m['screens.settings.accessibility.altTextReminder']()} />
 						</Settings.SwitchRow>
 						<Settings.SwitchRow
 							label={m['screens.settings.accessibility.largerAltTextBadges']()}

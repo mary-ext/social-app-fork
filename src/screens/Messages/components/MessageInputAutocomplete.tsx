@@ -1,0 +1,128 @@
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+
+import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
+
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import type { AutocompleteEmoji, AutocompleteItem, AutocompleteProfile } from '#/state/queries/autocomplete';
+
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
+
+import { m } from '#/paraglide/messages';
+
+import * as styles from './MessageInputAutocomplete.css';
+
+export type Placement = 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
+
+type AutocompleteAnchor = {
+	contextElement: Element;
+	getBoundingClientRect: () => DOMRect;
+};
+
+/** mention and emoji suggestions. requires the message input's `BaseAutocomplete.Root`. */
+export function MessageInputAutocomplete({
+	anchor,
+	items,
+	placement = 'bottom',
+	onSelect,
+}: {
+	anchor: AutocompleteAnchor | null;
+	items: AutocompleteItem[];
+	placement?: Placement;
+	onSelect: (item: AutocompleteItem) => void;
+}) {
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `Placement` is a fixed `side` or `side-align` union
+	const [side, align = 'start'] = placement.split('-') as ['bottom' | 'top', 'end' | 'start' | undefined];
+
+	return (
+		<BaseAutocomplete.Portal>
+			<BaseAutocomplete.Positioner
+				align={align}
+				anchor={anchor}
+				className={styles.positioner}
+				positionMethod="fixed"
+				side={side}
+				sideOffset={8}
+			>
+				<BaseAutocomplete.Popup
+					className={styles.popup}
+					// keep the textarea focused (and its selection intact) when a row is clicked.
+					onMouseDown={(e) => e.preventDefault()}
+				>
+					{items.length === 0 ? (
+						<CenteredSpinner label={m['common.status.loading']()} size="xl" />
+					) : (
+						<BaseAutocomplete.List>
+							{items.map((item) => {
+								switch (item.type) {
+									case 'emoji': {
+										return <EmojiItem key={item.key} item={item} onSelect={onSelect} />;
+									}
+									case 'profile': {
+										return <ProfileItem key={item.key} item={item} onSelect={onSelect} />;
+									}
+									default: {
+										return null;
+									}
+								}
+							})}
+						</BaseAutocomplete.List>
+					)}
+				</BaseAutocomplete.Popup>
+			</BaseAutocomplete.Positioner>
+		</BaseAutocomplete.Portal>
+	);
+}
+
+// cloned 1:1 from the search autocomplete's ProfileRow; keep the two in sync.
+function ProfileItem({
+	item,
+	onSelect,
+}: {
+	item: AutocompleteProfile;
+	onSelect: (item: AutocompleteItem) => void;
+}) {
+	const moderationOpts = useModerationOpts();
+	const moderation = moderationOpts
+		? getDisplayRestrictions(moderateProfile(item.profile, moderationOpts), DisplayContext.ProfileMedia)
+		: undefined;
+
+	return (
+		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+			<UserAvatar
+				avatar={item.profile.avatar}
+				className={styles.avatar}
+				moderation={moderation}
+				size={36}
+				type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+			/>
+
+			<span className={styles.text}>
+				<Text numberOfLines={1} weight="medium">
+					{item.profile.handle}
+				</Text>
+				{item.profile.displayName ? (
+					<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
+						{item.profile.displayName}
+					</Text>
+				) : null}
+			</span>
+		</BaseAutocomplete.Item>
+	);
+}
+
+function EmojiItem({
+	item,
+	onSelect,
+}: {
+	item: AutocompleteEmoji;
+	onSelect: (item: AutocompleteItem) => void;
+}) {
+	return (
+		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+			<Text className={styles.emojiGlyph}>{item.value}</Text>
+			<Text className={styles.emojiName}>{item.label}</Text>
+		</BaseAutocomplete.Item>
+	);
+}

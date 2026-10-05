@@ -29,11 +29,6 @@ export type RootProps<Payload = unknown> = {
 	/** A node, or a render function receiving the active trigger's `payload` (undefined while closed). */
 	children?: ReactNode | ((bag: { payload: Payload | undefined }) => ReactNode);
 	handle?: DialogHandle<Payload>;
-	/**
-	 * stable id under which this dialog registers in the shared registry. pass an explicit id when callers need
-	 * to reference it; defaults to a generated one.
-	 */
-	id?: string;
 	/** Prevent clicks outside the popup from dismissing it (the close button and Escape still work). */
 	disablePointerDismissal?: boolean;
 	modal?: boolean | 'trap-focus';
@@ -67,15 +62,13 @@ export function useDialogBackHandler(onBack: (() => void) | undefined) {
 export function Root<Payload = unknown>({
 	children,
 	handle,
-	id: idProp,
 	disablePointerDismissal,
 	modal,
 	open,
 	defaultOpen,
 	onOpenChange,
 }: RootProps<Payload>) {
-	const generatedId = useId();
-	const id = idProp ?? generatedId;
+	const id = useId();
 	const actionsRef = useRef<DialogActions>(null);
 	const registerOpen = useRegisterDialog(id, () => actionsRef.current?.close());
 
