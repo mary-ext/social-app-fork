@@ -1,4 +1,4 @@
-import { definite } from '@mary/array-fns';
+import { definite, difference, unique } from '@mary/array-fns';
 
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 
@@ -49,16 +49,27 @@ export function usePrimaryLanguage() {
 	return useStorageValue(device, ['primaryLanguage']) ?? defaultLanguage;
 }
 
-/** saves the current post language to history. */
-export function savePostLanguageToHistory() {
-	const postLanguage = device.get(['postLanguage']) ?? defaultLanguage;
-	const history = device.get(['postLanguageHistory']) ?? defaultPostLanguageHistory;
-
-	device.set(
-		['postLanguageHistory'],
-		// filter out duplicate `postLanguage` if it exists, and prepend it to the start of the array
-		[postLanguage].concat(history.filter((langs) => langs !== postLanguage)).slice(0, HISTORY_LIMIT),
+/**
+ * prepends nonempty published language selections to history, in thread order. uses the first post's
+ * selection as the default unless empty.
+ *
+ * @param postLanguages each published post's BCP-47 language codes, in thread order
+ */
+export function savePublishedPostLanguages(postLanguages: readonly (readonly string[])[]) {
+	const used = unique(
+		postLanguages.filter((langs) => langs.length !== 0).map((langs) => joinPostLanguages(langs)),
 	);
+	if (used.length === 0) {
+		return;
+	}
+
+	const history = device.get(['postLanguageHistory']) ?? defaultPostLanguageHistory;
+	device.set(['postLanguageHistory'], used.concat(difference(history, used)).slice(0, HISTORY_LIMIT));
+
+	const [first] = postLanguages;
+	if (first !== undefined && first.length !== 0) {
+		device.set(['postLanguage'], joinPostLanguages(first));
+	}
 }
 
 /**
@@ -68,15 +79,6 @@ export function savePostLanguageToHistory() {
  */
 export function setContentLanguages(code2s: string[]) {
 	device.set(['contentLanguages'], code2s);
-}
-
-/**
- * sets the language(s) the user is posting in.
- *
- * @param commaSeparatedLangCodes comma-separated BCP-47 language codes
- */
-export function setPostLanguage(commaSeparatedLangCodes: string) {
-	device.set(['postLanguage'], joinPostLanguages(toPostLanguages(commaSeparatedLangCodes)));
 }
 
 /**

@@ -9,7 +9,7 @@ import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
 import { postCreated } from '#/state/events';
-import { savePostLanguageToHistory, usePostLanguage } from '#/state/preferences/languages';
+import { savePublishedPostLanguages, usePostLanguage } from '#/state/preferences/languages';
 import { getClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
@@ -122,7 +122,7 @@ export const usePublish = (): {
 		if (replyUri === null) {
 			postCreated.emit();
 		}
-		savePostLanguageToHistory();
+		savePublishedPostLanguages(posts.map((post) => post.langs));
 		if (composer.draft) {
 			deletePublishedDraft(queryClient, composer.draft).catch((err: unknown) => {
 				console.error('failed to delete published draft', err);
