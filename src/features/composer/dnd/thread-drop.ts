@@ -125,7 +125,6 @@ export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTML
 				};
 			}
 			case 'media': {
-				scroller.update(input);
 				return getMediaIndicator(source, getMediaDrop(container, wg, input));
 			}
 		}
@@ -143,7 +142,6 @@ export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTML
 			markDropIndicator(wg, getDragIndicator(source.data, location.current.input));
 		},
 		onDragLeave({ source }) {
-			scroller.stop();
 			markDropIndicator(wg, getIdleIndicator(source.data));
 		},
 	});
@@ -151,6 +149,10 @@ export const registerThreadDrop = (wg: Wordgard, dnd: ThreadDnd, container: HTML
 	const stopMonitoring = dnd.monitor({
 		onDragStart({ source }) {
 			markDropIndicator(wg, getIdleIndicator(source.data));
+		},
+		// use the monitor to keep scrolling outside the drop target, including over the dialog's header/footer.
+		onDrag({ location, source }) {
+			scroller.update(location.current.input, { strips: source.data.kind === 'media' });
 		},
 		onDrop({ location, source }) {
 			scroller.stop();
@@ -204,11 +206,7 @@ export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => v
 		}
 
 		const drop = pending.isInside ? getMediaDrop(container, wg, pending) : null;
-		if (drop) {
-			scroller.update(pending);
-		} else {
-			scroller.stop();
-		}
+		scroller.update(pending, { strips: true });
 		pending = null;
 		// open the new post zone as soon as files are over the page.
 		markDropIndicator(wg, { kind: 'media', drop });
