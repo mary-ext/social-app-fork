@@ -51,6 +51,30 @@ export const stripGifUrlParams = (url: URL): URL => {
 	return stripped;
 };
 
+const buildKlipyVideoUrl = (url: URL, slug: string, ext: string): string => {
+	const videoUrl = stripGifUrlParams(url);
+	const parts = videoUrl.pathname.split('/');
+	parts[parts.length - 1] = `${slug}.${ext}`;
+	videoUrl.pathname = parts.join('/');
+	return videoUrl.href;
+};
+
+/**
+ * restores video URLs from a Klipy embed's filename parameters.
+ *
+ * @param url embed URL from {@link toGifEmbedUrl}, optionally proxied
+ * @returns same-host video URLs; missing or empty parameters yield `undefined`
+ */
+export const getKlipyVideoUrls = (url: URL): { mp4: string | undefined; webm: string | undefined } => {
+	const mp4Slug = url.searchParams.get(gifUrlParams.mp4);
+	const webmSlug = url.searchParams.get(gifUrlParams.webm);
+
+	return {
+		mp4: mp4Slug ? buildKlipyVideoUrl(url, mp4Slug, 'mp4') : undefined,
+		webm: webmSlug ? buildKlipyVideoUrl(url, webmSlug, 'webm') : undefined,
+	};
+};
+
 const parseTenorGif = (url: URL): GifEmbedParams | undefined => {
 	if (url.hostname !== tenorHostname) {
 		return undefined;
@@ -97,30 +121,20 @@ const parseKlipyGif = (url: URL): GifEmbedParams | undefined => {
 		return undefined;
 	}
 
-	const webmSlug = url.searchParams.get(gifUrlParams.webm);
-	const mp4Slug = url.searchParams.get(gifUrlParams.mp4);
+	const proxied = new URL(url.href);
+	proxied.hostname = klipyProxyHostname;
 
-	if (!webmSlug && !mp4Slug) {
+	const { mp4, webm } = getKlipyVideoUrls(proxied);
+	if (!mp4 && !webm) {
 		return undefined;
 	}
 
-	const playerUrl = stripGifUrlParams(url);
-	playerUrl.hostname = klipyProxyHostname;
-
-	const buildVideoUrl = (slug: string, ext: string) => {
-		const videoUrl = new URL(playerUrl.href);
-		const parts = videoUrl.pathname.split('/');
-		parts[parts.length - 1] = `${slug}.${ext}`;
-		videoUrl.pathname = parts.join('/');
-		return videoUrl.href;
-	};
-
 	const playerSources: { src: string; type: string }[] = [];
-	if (webmSlug) {
-		playerSources.push({ src: buildVideoUrl(webmSlug, 'webm'), type: 'video/webm' });
+	if (webm) {
+		playerSources.push({ src: webm, type: 'video/webm' });
 	}
-	if (mp4Slug) {
-		playerSources.push({ src: buildVideoUrl(mp4Slug, 'mp4'), type: 'video/mp4' });
+	if (mp4) {
+		playerSources.push({ src: mp4, type: 'video/mp4' });
 	}
 
 	return {
