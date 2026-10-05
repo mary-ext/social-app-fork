@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, type RefObject, useContext } from 'react';
+import { createContext, lazy, type ReactNode, type RefObject, Suspense, useContext } from 'react';
 
 import { Popover } from '@base-ui/react/popover';
 
@@ -10,8 +10,10 @@ import type { Emoji } from '#/components/EmojiPicker/types';
 
 import { m } from '#/paraglide/messages';
 
-import { EmojiPanel } from './EmojiPanel';
+import { PickerPlaceholder } from './components/PickerPlaceholder';
 import * as styles from './EmojiPicker.css';
+
+const EmojiPanel = lazy(() => import('./EmojiPanel').then((mod) => ({ default: mod.EmojiPanel })));
 
 export type { Emoji } from '#/components/EmojiPicker/types';
 
@@ -99,14 +101,16 @@ export function Picker() {
 						return true;
 					}}
 				>
-					<EmojiPanel
-						onEmojiSelect={(emoji, shiftHeld) => {
-							onEmojiSelect(emoji);
-							if (!shiftHeld) {
-								close();
-							}
-						}}
-					/>
+					<Suspense fallback={<PickerPlaceholder />}>
+						<EmojiPanel
+							onEmojiSelect={(emoji, shiftHeld) => {
+								onEmojiSelect(emoji);
+								if (!shiftHeld) {
+									close();
+								}
+							}}
+						/>
+					</Suspense>
 					<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
 				</Popover.Popup>
 			</Popover.Positioner>
