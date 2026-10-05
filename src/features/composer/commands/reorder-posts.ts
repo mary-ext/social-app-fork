@@ -3,8 +3,11 @@ import type { Wordgard } from 'wordgard/editor';
 import { GardSelection, type GardState, type Transaction } from 'wordgard/state';
 
 import { ISOLATE_HISTORY } from '../model/history';
-import { findPostById, getPosts, type ThreadPost } from '../model/schema';
+import { endOfLastLine, findPostById, getPosts, type ThreadPost } from '../model/schema';
 import { findSelectedPost } from '../model/selection';
+
+/** transaction user event for post moves. */
+export const MOVE_POST_EVENT = 'move.post';
 
 const movePostSpec = (state: GardState, post: ThreadPost, target: number): Transaction.Spec => {
 	const posts = getPosts(state.doc);
@@ -38,19 +41,25 @@ const movePostSpec = (state: GardState, post: ThreadPost, target: number): Trans
 	};
 
 	const { anchor, head } = state.selection;
+	// scroll requests follow the selection head.
+	const selection =
+		postAt(head) === run[post.index - first]
+			? GardSelection.range(rebase(anchor), rebase(head))
+			: GardSelection.cursor(endOfLastLine(landed.get(post.node)! + post.node.length));
 
 	return {
 		changes: { from, to, insert: nodes },
 		// an explicit selection prevents the next flush from importing the drag's DOM selection.
-		selection: GardSelection.range(rebase(anchor), rebase(head)),
+		selection,
 		scrollIntoView: true,
-		userEvent: 'move.post',
+		userEvent: MOVE_POST_EVENT,
 		annotations: ISOLATE_HISTORY,
 	};
 };
 
 /**
- * moves a post to an insertion slot, preserving the selection.
+ * moves a post to an insertion slot, preserving the selection if its head is in the post. otherwise places
+ * the caret at the end of the post's text.
  *
  * @param wg the editor
  * @param postId the post's id
