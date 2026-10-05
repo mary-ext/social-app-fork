@@ -3,7 +3,6 @@ import type { ComponentType, ReactNode, SVGProps } from 'react';
 import { clsx } from 'clsx';
 
 import { ProgressCircle } from '#/components/ProgressCircle';
-import { Spinner } from '#/components/Spinner';
 import { Button } from '#/components/web/Button';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
@@ -202,16 +201,12 @@ const UploadBadge = ({ variant, upload }: { variant?: TileVariant; upload: Pendi
 
 	return (
 		<div className={css.uploadBadge({ variant })}>
-			{upload.status === 'uploading' ? (
-				<ProgressCircle
-					color={onMedia ? 'white' : colors.primary_500}
-					progress={upload.sent}
-					size={18}
-					trackColor={onMedia ? 'rgba(255, 255, 255, 0.25)' : colors.borderContrastLow}
-				/>
-			) : (
-				<Spinner color={onMedia ? 'white' : 'default'} label={null} size="md" />
-			)}
+			<ProgressCircle
+				color={onMedia ? 'white' : colors.primary_500}
+				progress={upload.progress}
+				size={18}
+				trackColor={onMedia ? 'rgba(255, 255, 255, 0.25)' : colors.borderContrastLow}
+			/>
 			{getUploadLabel(upload)}
 		</div>
 	);

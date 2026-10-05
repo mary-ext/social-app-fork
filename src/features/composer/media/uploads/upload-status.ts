@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 import { m } from '#/paraglide/messages';
 
 import { useComposer } from '../../context';
-import { isPendingUpload, type PendingUpload, type VideoUploadState } from './video-uploads';
+import { isPendingUpload, type PendingUpload, toPercent, type VideoUploadState } from './video-uploads';
 
 /**
  * subscribes to an attachment's upload.
@@ -13,6 +13,7 @@ import { isPendingUpload, type PendingUpload, type VideoUploadState } from './vi
  */
 export const useVideoUpload = (file: File): VideoUploadState | undefined => {
 	const { uploads } = useComposer();
+
 	return useSyncExternalStore(uploads.subscribe, () => uploads.getState(file));
 };
 
@@ -23,32 +24,21 @@ export const useVideoUpload = (file: File): VideoUploadState | undefined => {
  */
 export const useFailedUploads = (): ReadonlySet<File> => {
 	const { uploads } = useComposer();
+
 	return useSyncExternalStore(uploads.subscribe, uploads.getFailed);
 };
 
 /**
- * subscribes to average upload progress across the given files.
+ * subscribes to pending uploads among the given files.
  *
  * @param files the attachments' files
- * @returns rounded percent, counting completed files as 100%; null if no upload is pending
+ * @returns whether any file has a pending upload; see {@link isPendingUpload}
  */
-export const useUploadsProgress = (files: readonly File[]): number | null => {
+export const useHasPendingUploads = (files: readonly File[]): boolean => {
 	const { uploads } = useComposer();
 
 	return useSyncExternalStore(uploads.subscribe, () => {
-		let isPending = false;
-		let total = 0;
-		for (const file of files) {
-			const state = uploads.getState(file);
-			if (isPendingUpload(state)) {
-				isPending = true;
-				total += state.progress;
-			} else if (state?.status === 'done') {
-				total += 1;
-			}
-		}
-
-		return isPending ? Math.round((total / files.length) * 100) : null;
+		return files.some((file) => isPendingUpload(uploads.getState(file)));
 	});
 };
 
@@ -56,18 +46,19 @@ export const useUploadsProgress = (files: readonly File[]): number | null => {
  * formats upload progress for display.
  *
  * @param upload the pending upload
- * @returns a localized status label
+ * @returns a localized label with the current step's progress
  */
-export const getUploadLabel = (upload: PendingUpload): string => {
-	switch (upload.status) {
+export const getUploadLabel = ({ status, stepProgress }: PendingUpload): string => {
+	const percent = toPercent(stepProgress);
+	switch (status) {
 		case 'compressing': {
-			return m['features.composer.media.upload.compressing']();
+			return m['features.composer.media.upload.compressing']({ percent });
 		}
 		case 'uploading': {
-			return m['features.composer.media.upload.uploading']({ percent: Math.round(upload.sent * 100) });
+			return m['features.composer.media.upload.uploading']({ percent });
 		}
 		case 'processing': {
-			return m['features.composer.media.upload.processing']();
+			return m['features.composer.media.upload.processing']({ percent });
 		}
 	}
 };

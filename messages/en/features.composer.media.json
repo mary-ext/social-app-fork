@@ -30,8 +30,8 @@
 			}
 		}
 	],
-	"features.composer.media.upload.compressing": "Compressing",
-	"features.composer.media.upload.processing": "Processing",
+	"features.composer.media.upload.compressing": "Compressing · {percent}%",
+	"features.composer.media.upload.processing": "Processing · {percent}%",
 	"features.composer.media.upload.uploading": "Uploading · {percent}%",
 	"features.composer.media.video.error.accountTooYoung": "Your account is not yet old enough to upload videos. Please try again later.",
 	"features.composer.media.video.error.dailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",

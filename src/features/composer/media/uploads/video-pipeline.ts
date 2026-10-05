@@ -15,7 +15,7 @@ import { TranscodeError } from '../transcode/errors';
 import { renderVoiceClip, transcodeForUpload } from '../transcode/transcode';
 import { toVideoPayload, type VideoAsset, type VideoPayload, type VoiceAsset } from '../video-asset';
 import { getUploadErrorMessage, uploadToVideoService } from './video-service';
-import { type ProcessVideoFile, VideoUploadError } from './video-uploads';
+import { type ProcessVideoFile, type UploadStep, VideoUploadError } from './video-uploads';
 
 type PreparedVideo = {
 	payload: VideoPayload;
@@ -64,10 +64,12 @@ const runPipeline: ProcessVideoFile = async (file, { setState, signal }) => {
 
 	// phase changes must not move overall progress backwards.
 	let progress = 0;
-	const advance = (phase: ProgressPhase, phaseProgress: number) => {
+	const report = (status: UploadStep, phase: ProgressPhase, phaseProgress: number) => {
 		const [start, end] = PHASE_RANGES[phase];
-		progress = Math.max(progress, start + (end - start) * clamp(phaseProgress, 0, 1));
-		return progress;
+		const stepProgress = clamp(phaseProgress, 0, 1);
+
+		progress = Math.max(progress, start + (end - start) * stepProgress);
+		setState({ status, progress, stepProgress });
 	};
 
 	const read = await readAttachment(file);
@@ -78,7 +80,7 @@ const runPipeline: ProcessVideoFile = async (file, { setState, signal }) => {
 
 	const { attachment } = read;
 	const setProgress = (value: number) => {
-		setState({ status: 'compressing', progress: advance('preparing', value) });
+		report('compressing', 'preparing', value);
 	};
 
 	const { payload, preparationSkipped } = await prepareSerially(async () => {
@@ -99,17 +101,17 @@ const runPipeline: ProcessVideoFile = async (file, { setState, signal }) => {
 	});
 
 	const uploadPhase = preparationSkipped ? 'uploadingWithoutPreparation' : 'uploading';
-	setState({ status: 'uploading', progress: advance(uploadPhase, 0), sent: 0 });
+	report('uploading', uploadPhase, 0);
 
 	const blob = await uploadToVideoService(payload, {
 		pds,
 		pdsUrl,
 		signal,
 		onUploadProgress(sent) {
-			setState({ status: 'uploading', progress: advance(uploadPhase, sent), sent });
+			report('uploading', uploadPhase, sent);
 		},
 		onProcessing(value) {
-			setState({ status: 'processing', progress: advance('processing', value) });
+			report('processing', 'processing', value);
 		},
 	});
 

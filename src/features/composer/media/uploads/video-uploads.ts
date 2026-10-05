@@ -15,16 +15,15 @@ export type UploadedVideo = {
 	height: number;
 };
 
-/** `progress` is overall progress from 0 to 1, including preparation and processing. */
-export type PendingUpload =
-	| { status: 'compressing'; progress: number }
-	| {
-			status: 'uploading';
-			progress: number;
-			/** fraction of the file sent, from 0 to 1. */
-			sent: number;
-	  }
-	| { status: 'processing'; progress: number };
+export type UploadStep = 'compressing' | 'uploading' | 'processing';
+
+export type PendingUpload = {
+	status: UploadStep;
+	/** overall progress, from 0 to 1. */
+	progress: number;
+	/** current step's progress, from 0 to 1. */
+	stepProgress: number;
+};
 
 /** a video attachment's upload state. */
 export type VideoUploadState =
@@ -145,17 +144,20 @@ type Entry = {
 const DONE: VideoUploadState = { status: 'done' };
 const NO_FAILURES: ReadonlySet<File> = new Set();
 
-const toPercent = (fraction: number) => Math.round(fraction * 100);
+/**
+ * converts a fraction to a percentage.
+ *
+ * @param fraction a value from 0 to 1
+ * @returns the percentage rounded to the nearest integer
+ */
+export const toPercent = (fraction: number): number => Math.round(fraction * 100);
 
 // notify subscribers only when visible percentages or the stage change.
 const isSameReport = (prev: PendingUpload, next: PendingUpload): boolean => {
-	if (prev.status !== next.status || toPercent(prev.progress) !== toPercent(next.progress)) {
-		return false;
-	}
 	return (
-		prev.status !== 'uploading' ||
-		next.status !== 'uploading' ||
-		toPercent(prev.sent) === toPercent(next.sent)
+		prev.status === next.status &&
+		toPercent(prev.progress) === toPercent(next.progress) &&
+		toPercent(prev.stepProgress) === toPercent(next.stepProgress)
 	);
 };
 
@@ -199,7 +201,11 @@ export const createVideoUploads = (process: ProcessVideoFile): VideoUploads => {
 
 		const controller = new AbortController();
 		const { signal } = controller;
-		const entry: Entry = { state: { status: 'compressing', progress: 0 }, controller, result: promise };
+		const entry: Entry = {
+			state: { status: 'compressing', progress: 0, stepProgress: 0 },
+			controller,
+			result: promise,
+		};
 		entries.set(file, entry);
 
 		const setState = (state: PendingUpload) => {

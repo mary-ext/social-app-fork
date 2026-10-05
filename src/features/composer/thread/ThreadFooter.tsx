@@ -1,11 +1,11 @@
-import { type ReactNode, useEffect, useEffectEvent } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
 import { useComposer, useIsPublishing, usePostCount, useThreadInteraction } from '../context';
-import { useUploadsProgress } from '../media/uploads/upload-status';
+import { useHasPendingUploads } from '../media/uploads/upload-status';
 import { usePublish } from '../publish/use-publish';
 import { AltTextPrompt, useAltTextGuard } from './AltTextPrompt';
 import * as css from './ThreadFooter.css';
@@ -44,7 +44,7 @@ function PublishButton() {
 	const { handlePublishKey } = useComposer();
 	const altGuard = useAltTextGuard();
 	const { blocker, task, publish } = usePublish();
-	const uploadPercent = useUploadsProgress(task?.videos ?? NO_FILES);
+	const isUploading = useHasPendingUploads(task?.videos ?? NO_FILES);
 	const isThread = usePostCount() > 1;
 	const publishLabel = isThread
 		? m['features.composer.publish.a11y.posts']()
@@ -63,23 +63,9 @@ function PublishButton() {
 		return handlePublishKey(onPublishKey);
 	}, [handlePublishKey]);
 
-	let content: ReactNode;
-	if (task === null) {
-		content = <ButtonText>{publishText}</ButtonText>;
-	} else {
-		content = (
-			<>
-				<ButtonSpinner label={m['features.composer.publish.publishing']()} />
-				{uploadPercent !== null && (
-					<ButtonText>{m['features.composer.media.upload.uploading']({ percent: uploadPercent })}</ButtonText>
-				)}
-			</>
-		);
-	}
-
 	return (
 		<>
-			{task !== null && uploadPercent !== null && (
+			{task !== null && isUploading && (
 				<Button
 					color="secondary"
 					size="small"
@@ -97,7 +83,11 @@ function PublishButton() {
 				disabled={blocker !== null || task !== null}
 				onClick={requestPublish}
 			>
-				{content}
+				{task === null ? (
+					<ButtonText>{publishText}</ButtonText>
+				) : (
+					<ButtonSpinner label={m['features.composer.publish.publishing']()} />
+				)}
 			</Button>
 
 			<AltTextPrompt {...altGuard.prompt} onProceed={() => void publish()} />
