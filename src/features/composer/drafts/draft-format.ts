@@ -2,6 +2,7 @@ import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import type { GenericUri } from '@atcute/lexicons';
 
 import {
+	getKlipyVideoUrls,
 	klipyHostname,
 	parseDimensions,
 	stripGifUrlParams,
@@ -140,16 +141,19 @@ export const parseDraftGif = (uri: string): Gif | undefined => {
 
 	const alt = url.searchParams.get(GIF_ALT_PARAM) ?? '';
 
-	const base = stripGifUrlParams(url);
-	base.searchParams.delete(GIF_ALT_PARAM);
-	const src = base.toString();
+	const embedUrl = new URL(url.href);
+	embedUrl.searchParams.delete(GIF_ALT_PARAM);
+	const src = stripGifUrlParams(embedUrl).toString();
 
-	const format = {
-		url: src,
-		dims: [dimensions.width, dimensions.height] satisfies [number, number],
-		duration: 0,
-		size: 0,
-	};
+	const dims: [number, number] = [dimensions.width, dimensions.height];
+	const toFormat = (formatUrl: string) => ({ url: formatUrl, dims, duration: 0, size: 0 });
+
+	// preserve video formats for inline playback when the draft is published.
+	const videos = getKlipyVideoUrls(embedUrl);
+
+	const format = toFormat(src);
+	const mp4 = videos.mp4 && toFormat(videos.mp4);
+	const webm = videos.webm && toFormat(videos.webm);
 	return {
 		id: '',
 		created: 0,
@@ -161,6 +165,12 @@ export const parseDraftGif = (uri: string): Gif | undefined => {
 		content_description: alt,
 		itemurl: '',
 		url: src,
-		media_formats: { gif: format, preview: format, tinygif: format },
+		media_formats: {
+			gif: format,
+			preview: format,
+			tinygif: format,
+			...(mp4 && { mp4 }),
+			...(webm && { webm }),
+		},
 	};
 };
