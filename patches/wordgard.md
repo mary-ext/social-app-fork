@@ -6,22 +6,8 @@ when an update section excludes its start, skips only widgets at `pos`, which th
 already emitted. the loop previously skipped later widgets too, until a node decoration or the end
 of the point set.
 
-deleting a post containing the caret puts the deletion and the following post's active-post
-attribute in adjacent update sections. the second section skipped that post's header widget at
-`pos + 1`, removing its avatar and handle.
-
-## `dist/editor.js`: keep native selections in post text
-
-on Android, selection handle drags and Gboard's backspace swipe can move the DOM selection into
-header/footer widgets or between posts, leaving a horizontal caret or dismissing the keyboard.
-
-`readDOMSelection` uses `GardSelection.near` to normalize the caret or range ends, biased inward for
-ranges. if the ends cross, it collapses to the normalized head. `setDOMSelection` preserves DOM
-ranges that normalize to the current selection; rewriting them cancels native handle drags.
-
-`readSelectionRange` accepts selections anchored in non-editable widgets while the editor has focus.
-`pollSelection` restores the DOM caret even when normalization leaves the state selection unchanged,
-since no dispatch would otherwise move it out of the widget.
+with the former in-editor headers, deleting the active post triggered this bug: the following post's
+active attribute began a second update section, which skipped its header widget at `pos + 1`.
 
 ## `dist/state.js`: drop the `@__PURE__` annotation on `initField`
 

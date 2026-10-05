@@ -21,7 +21,7 @@ index ef9a7f2035c14c5d4a8b2ec42117bf31ca6b00b7..d00a26ed0200e49e501d3e0e7adddca8
      /**
      Subclass of {@link Pos.Node} that points at a plot node.
 diff --git a/dist/editor.js b/dist/editor.js
-index 04df810151c72f62dafa53f7f19e8d66853a55fb..b76a54d5308409ae1135c253aaf1834c260cc0a9 100644
+index 04df810151c72f62dafa53f7f19e8d66853a55fb..fc620aec5bf69f4ea08c94a8aaeebd7841fa6d1e 100644
 --- a/dist/editor.js
 +++ b/dist/editor.js
 @@ -669,7 +669,7 @@ class PointIterator {
@@ -33,59 +33,6 @@ index 04df810151c72f62dafa53f7f19e8d66853a55fb..b76a54d5308409ae1135c253aaf1834c
                  i++;
          }
          this.fill(i);
-@@ -3381,6 +3381,9 @@ function setDOMSelection(wg) {
-         isEquivalentPosition(anchorDOM.dom, anchorDOM.offset, domSel.anchorNode, domSel.anchorOffset) &&
-         isEquivalentPosition(headDOM.dom, headDOM.offset, domSel.focusNode, domSel.focusOffset))
-         return;
-+    if (!domSel.isCollapsed && wg.contentDOM.contains(domSel.anchorNode) && hasSelection(wg.contentDOM, domSel) &&
-+        readDOMSelection(wg, domSel).eqPos(wg.state.selection))
-+        return;
-     domSel.collapse(anchorDOM.dom, anchorDOM.offset);
-     let failed = false;
-     if (anchor != head)
-@@ -3393,11 +3396,22 @@ function setDOMSelection(wg) {
-     if (!failed)
-         wg.observer.setSelectionRange(anchorDOM, headDOM);
- }
-+function isEditableDOM(node) {
-+    let elt = node.nodeType == 1 ? node : node.parentElement;
-+    return !!elt && elt.isContentEditable;
-+}
- function readDOMSelection(wg, range) {
-     let anchor = wg.posAtDOM(range.anchorNode, range.anchorOffset);
-     let head = range.anchorNode == range.focusNode && range.anchorOffset == range.focusOffset ? anchor
-         : wg.posAtDOM(range.focusNode, range.focusOffset);
--    return GardSelection.range(anchor, head);
-+    if (anchor == head)
-+        return GardSelection.near(wg.state, anchor);
-+    let forward = head > anchor;
-+    let normAnchor = GardSelection.near(wg.state, anchor, forward ? 1 : -1).head;
-+    let normHead = GardSelection.near(wg.state, head, forward ? -1 : 1);
-+    if (forward ? normAnchor >= normHead.head : normAnchor <= normHead.head)
-+        return normHead;
-+    return GardSelection.range(normAnchor, normHead.head);
- }
- function selectionFromTouch(event, wg) {
-     let pos = wg.posAtCoords({ x: event.touches[0].clientX, y: event.touches[0].clientY });
-@@ -3663,6 +3677,9 @@ class DOMObserver {
-                 }
-                 wg.dispatch({ selection: sel, userEvent });
-             }
-+            else if (sel.empty && wg.hasFocus && !wg.inputState.composing &&
-+                wg.docTile.nearest(this.selectionRange.anchorNode) instanceof WidgetTile)
-+                setDOMSelection(wg);
-         }
-     }
-     readSelectionRange() {
-@@ -3679,7 +3696,7 @@ class DOMObserver {
-         if (!range || this.selectionRange.eq(range))
-             return false;
-         let context = range.anchorNode && wg.docTile.nearest(range.anchorNode);
--        if (context instanceof WidgetTile)
-+        if (context instanceof WidgetTile && (wg.root.activeElement != this.dom || isEditableDOM(range.anchorNode)))
-             return false;
-         this.selectionRange.setRange(range);
-         return this.selectionChanged = true;
 diff --git a/dist/state.js b/dist/state.js
 index 0d110081825754f6adaf5368d676794b8d563a82..2fb8b613dd0724bc83b097e76897515fc8cccf40 100644
 --- a/dist/state.js
