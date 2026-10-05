@@ -9,6 +9,7 @@ import {
 	POST_DROP_BEFORE_ATTR,
 	POST_DROP_TARGET_ATTR,
 	POST_ELEMENT,
+	POST_OVERLAY_ATTR,
 } from '../shared/elements';
 import { AVATAR_SIZE, DRAGGING_OPACITY, POST_GAP_CENTER, RIGHT_PADDING } from '../shared/layout';
 
@@ -32,7 +33,7 @@ globalStyle(`${POST_ELEMENT}:first-of-type[${POST_DROP_TARGET_ATTR}]::before`, {
 	top: 0,
 });
 
-globalStyle(`${POST_ELEMENT}[${POST_DRAGGING_ATTR}]`, {
+globalStyle(`${POST_ELEMENT}[${POST_DRAGGING_ATTR}], [${POST_OVERLAY_ATTR}][${POST_DRAGGING_ATTR}]`, {
 	opacity: DRAGGING_OPACITY,
 });
 

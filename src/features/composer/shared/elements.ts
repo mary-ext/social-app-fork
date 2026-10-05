@@ -3,8 +3,17 @@
 /** custom element each post renders as. */
 export const POST_ELEMENT = 'bsky-post';
 
-/** marks the post containing the selection head. */
+/** carries a post's id on its editor element and overlay. */
+export const POST_ID_ATTR = 'data-post-id';
+
+/** identifies post overlay roots. */
+export const POST_OVERLAY_ATTR = 'data-post-overlay';
+
+/** marks the overlay of the post containing the selection head. */
 export const POST_ACTIVE_ATTR = 'data-active';
+
+/** marks the overlay of the post under the pointer. */
+export const POST_HOVERED_ATTR = 'data-hovered';
 
 /** marks the post a media or file drag would land in. */
 export const POST_DROP_TARGET_ATTR = 'data-drop-target';
@@ -15,7 +24,7 @@ export const POST_DROP_BEFORE_ATTR = 'data-drop-before';
 /** insertion marker after the last post. */
 export const POST_DROP_AFTER_ATTR = 'data-drop-after';
 
-/** marks the post being dragged. */
+/** marks the post being dragged, on its editor element and overlay. */
 export const POST_DRAGGING_ATTR = 'data-dragging';
 
 /** marks the composer while an attachment or file is being dragged over the page. */

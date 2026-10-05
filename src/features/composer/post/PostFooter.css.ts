@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { fontWeight, iconSize, space } from '#/styles/tokens.css';
 
+import { control } from '../editor/post-overlays.css';
 import { RIGHT_PADDING } from '../shared/layout';
 import { revealOnHover } from '../shared/reveal.css';
 
@@ -20,19 +21,25 @@ export const root = style([
 const ICON_BUTTON_SIZE = 33;
 const ICON_OFFSET = -(ICON_BUTTON_SIZE - iconSize.lg) / 2;
 
-export const actions = style({
-	display: 'flex',
-	alignItems: 'center',
-	gap: space._2xs,
-	margin: ICON_OFFSET,
-});
+export const actions = style([
+	control,
+	{
+		display: 'flex',
+		alignItems: 'center',
+		gap: space._2xs,
+		margin: ICON_OFFSET,
+	},
+]);
 
-export const status = style({
-	display: 'flex',
-	alignItems: 'center',
-	gap: space.sm,
-	marginBlock: ICON_OFFSET,
-});
+export const status = style([
+	control,
+	{
+		display: 'flex',
+		alignItems: 'center',
+		gap: space.sm,
+		marginBlock: ICON_OFFSET,
+	},
+]);
 
 export const language = style({
 	minWidth: ICON_BUTTON_SIZE,

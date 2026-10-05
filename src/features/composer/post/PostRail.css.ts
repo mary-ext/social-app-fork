@@ -4,6 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { hoverWithin } from '#/styles/interaction';
 import { iconSize, space } from '#/styles/tokens.css';
 
+import { control } from '../editor/post-overlays.css';
 import { AVATAR_SIZE, RAIL_WIDTH } from '../shared/layout';
 
 export const root = style({
@@ -21,22 +22,25 @@ export const root = style({
 	gap: space.xs,
 });
 
-export const handle = style({
-	display: 'block',
-	position: 'relative',
-	flexShrink: 0,
-	border: 'none',
-	borderRadius: '50%',
-	background: 'none',
-	padding: 0,
-	width: AVATAR_SIZE,
-	height: AVATAR_SIZE,
-	cursor: 'grab',
-	selectors: {
-		'&:active': { cursor: 'grabbing' },
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+export const handle = style([
+	control,
+	{
+		display: 'block',
+		position: 'relative',
+		flexShrink: 0,
+		border: 'none',
+		borderRadius: '50%',
+		background: 'none',
+		padding: 0,
+		width: AVATAR_SIZE,
+		height: AVATAR_SIZE,
+		cursor: 'grab',
+		selectors: {
+			'&:active': { cursor: 'grabbing' },
+			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+		},
 	},
-});
+]);
 
 export const handleOverlay = style({
 	display: 'grid',

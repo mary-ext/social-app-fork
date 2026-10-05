@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
@@ -11,4 +11,9 @@ export const attachmentRow = style({
 	gap: space.sm,
 	paddingTop: space.md,
 	paddingRight: RIGHT_PADDING,
+});
+
+// keep the row's padding transparent to caret drags.
+globalStyle(`${attachmentRow} > *`, {
+	pointerEvents: 'auto',
 });

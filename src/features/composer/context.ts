@@ -11,7 +11,7 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 
 import type { ComposerDialogHandles } from './dialogs';
 import type { ThreadDnd } from './dnd/channel';
-import type { PostSlot } from './editor/post-slots';
+import type { PostOverlay } from './editor/post-overlays';
 import type { VideoUploads } from './media/uploads/video-uploads';
 import { findPostById, getPosts, type ThreadPost } from './model/schema';
 import { getActivePostId } from './model/selection';
@@ -76,8 +76,8 @@ export type Composer = {
 	 * @returns cleanup that clears this handler if still current
 	 */
 	handlePublishKey: (handler: () => void) => () => void;
-	/** header and footer hosts, in mount order. */
-	slots: Store<readonly PostSlot[]>;
+	/** portal hosts managed by the post overlay extension. */
+	overlays: Store<readonly PostOverlay[]>;
 	/** host after the editor for the add-post row and new-post drop zone. */
 	endHost: HTMLElement;
 	/** suggestion popup host positioned by the editor, or null when closed. */

@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
+import { control } from '../editor/post-overlays.css';
 import { RIGHT_PADDING } from '../shared/layout';
 import { overlayIcon } from '../shared/overlay.css';
 import { revealOnHover } from '../shared/reveal.css';
@@ -27,6 +28,7 @@ export const number = style({
 
 // overhang the header so the button doesn't grow it.
 export const remove = style([
+	control,
 	revealOnHover,
 	{
 		flexShrink: 0,

@@ -18,9 +18,9 @@ import { createComposerDialogs } from './dialogs';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
-import { activePost, postPlaceholder, threadDecorations } from './editor/decorations';
+import { postPlaceholder, threadDecorations } from './editor/decorations';
 import { restoreSelectionOnFocus } from './editor/focus';
-import { type PostSlot, slotHost } from './editor/post-slots';
+import { createPostOverlays } from './editor/post-overlays';
 import { postScrolling } from './editor/scrolling';
 import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
@@ -140,7 +140,7 @@ export const createComposer = ({
 
 	const updates = new SimpleEventEmitter<[]>();
 	const uploads = createVideoUploads(processVideoFile);
-	const slots = createStore<readonly PostSlot[]>([]);
+	const postOverlays = createPostOverlays();
 	const popupHost = createStore<HTMLElement | null>(null);
 	const keys: { current: SuggestionKeyHandler } = { current: () => false };
 	const lock = GardState.Compartment.define();
@@ -176,20 +176,12 @@ export const createComposer = ({
 		}),
 		languageTaint.field.init(() => seed.languages),
 		threadDecorations,
-		activePost,
 		restoreSelectionOnFocus(),
 		postScrolling,
 		dropIndicator,
 		activeCompletion,
 		suggestionState,
-		slotHost.of({
-			mount(slot) {
-				slots.set([...slots.get(), slot]);
-			},
-			unmount(element) {
-				slots.set(slots.get().filter((slot) => slot.element !== element));
-			},
-		}),
+		postOverlays.extension,
 		suggestionHost.of({
 			mount(element) {
 				popupHost.set(element);
@@ -280,7 +272,7 @@ export const createComposer = ({
 		publishing,
 		uploads,
 		dialogs: createComposerDialogs(),
-		slots,
+		overlays: postOverlays.overlays,
 		endHost,
 		suggestionHost: popupHost,
 		suggestionKeys: keys,
@@ -297,8 +289,11 @@ export const createComposer = ({
 			};
 		},
 		mount(container) {
-			container.append(wg.dom, endHost);
-			// focus after React fills the slots; nearby DOM changes can displace the initial caret.
+			// overlays go between the editor and the end row to keep their controls in that tab order.
+			container.append(wg.dom);
+			const detachOverlays = postOverlays.mount(container);
+			container.append(endHost);
+			// focus after React fills the overlays; nearby DOM changes can displace the initial caret.
 			const focusing = requestAnimationFrame(() => wg.focus());
 
 			const stopDropping = registerThreadDrop(wg, dnd, container);
@@ -313,6 +308,7 @@ export const createComposer = ({
 				stopUploads();
 				cancelAnimationFrame(focusing);
 				endHost.remove();
+				detachOverlays();
 				wg.dom.remove();
 			};
 		},

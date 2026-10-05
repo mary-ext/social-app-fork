@@ -5,7 +5,14 @@ import { getReorderDestinationIndex } from '@oomfware/tug/reorder';
 import type { Wordgard } from 'wordgard/editor';
 
 import { getPostParam, getPosts, splitMedia } from '../model/schema';
-import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR, NEW_POST_ZONE_ATTR, POST_ELEMENT } from '../shared/elements';
+import {
+	IMAGE_GROUP_ATTR,
+	MEDIA_ID_ATTR,
+	NEW_POST_ZONE_ATTR,
+	POST_ELEMENT,
+	POST_ID_ATTR,
+	POST_OVERLAY_ATTR,
+} from '../shared/elements';
 import type { MediaDrop } from './drop-indicators';
 
 /** a pointer position in client coordinates. */
@@ -82,7 +89,7 @@ const getImageDropSlot = (group: Element, x: number): number => {
 /**
  * finds where media dropped at a point would land.
  *
- * @param container the element hosting the editor and the new post zone
+ * @param container the element hosting the editor, its post overlays, and the new post zone
  * @param wg the editor
  * @param point the pointer position
  * @returns the destination, or null for an empty thread
@@ -99,7 +106,9 @@ export const getMediaDrop = (container: Element, wg: Wordgard, point: Point): Me
 		return null;
 	}
 
-	const group = target.element.querySelector(`[${IMAGE_GROUP_ATTR}]`);
+	const group = container.querySelector(
+		`[${POST_OVERLAY_ATTR}][${POST_ID_ATTR}="${CSS.escape(post.id)}"] [${IMAGE_GROUP_ATTR}]`,
+	);
 	if (group) {
 		// ignore horizontal bounds so drops in the rail also pick a slot.
 		const rect = group.getBoundingClientRect();

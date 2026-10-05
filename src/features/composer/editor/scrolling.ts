@@ -10,7 +10,7 @@ import { findActivePost, getActivePostId } from '../model/selection';
 import { findScrollParent } from '../shared/scroll-parent';
 
 const CARET_MARGIN = 24;
-// the footer slot already provides bottom padding.
+// the footer spacer already includes bottom padding.
 const POST_MARGIN = 0;
 
 // the last paragraph may wrap onto multiple visual lines.
@@ -93,7 +93,6 @@ const scrolling = Wordgard.Plugin.define(
 		let postId = getActivePostId(wg.state);
 		// pointer selection must not trigger a whole-post reveal on the next keystroke.
 		let entered = false;
-		let movedFromTop: number | null = null;
 		let frame = 0;
 
 		return {
@@ -104,10 +103,6 @@ const scrolling = Wordgard.Plugin.define(
 
 				const next = getActivePostId(update.state);
 				const moved = update.transactions.some((tr) => tr.isUserEvent(MOVE_POST_EVENT));
-				if (moved) {
-					// save before the DOM update: remounted slots can shrink the scroll range.
-					movedFromTop = findScrollParent(wg.scrollDOM)?.scrollTop ?? null;
-				}
 				if (next !== postId || moved) {
 					postId = next;
 					entered = update.transactions.some((tr) => tr.scrollIntoView);
@@ -117,9 +112,6 @@ const scrolling = Wordgard.Plugin.define(
 				cancelAnimationFrame(frame);
 			},
 			scroll(target: { from: number; to: number }): boolean {
-				const restoreTop = movedFromTop;
-				movedFromTop = null;
-
 				const { selection } = wg.state;
 				if (target.from !== selection.head || target.to !== selection.head) {
 					return false;
@@ -137,21 +129,13 @@ const scrolling = Wordgard.Plugin.define(
 				}
 
 				entered = false;
-				if (restoreTop === null && !revealPost(wg, scroller)) {
+				if (!revealPost(wg, scroller)) {
 					scrollCaretIntoView(wg, scroller);
 				}
 
-				// measure again after React fills the header and footer slots.
+				// measure again after overlay content sizes new spacers.
 				frame = requestAnimationFrame(() => {
-					if (!wg.state.selection.eq(selection)) {
-						return;
-					}
-
-					// empty slots may have clamped the scroll position.
-					if (restoreTop !== null) {
-						scroller.scrollTop = restoreTop;
-					}
-					if (!revealPost(wg, scroller)) {
+					if (wg.state.selection.eq(selection) && !revealPost(wg, scroller)) {
 						scrollCaretIntoView(wg, scroller);
 					}
 				});

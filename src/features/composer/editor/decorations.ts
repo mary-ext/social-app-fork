@@ -4,11 +4,9 @@ import { GardState } from 'wordgard/state';
 import { getEmbedSession } from '../embeds/embed-session';
 import { getPostInfo } from '../model/post-info';
 import { getPosts, isEmptyPost } from '../model/schema';
-import { findActivePost } from '../model/selection';
 import { createOffsetMapper, measureCached } from '../model/text-measurement';
-import { LINE_PLACEHOLDER_ATTR, POST_ACTIVE_ATTR } from '../shared/elements';
+import { LINE_PLACEHOLDER_ATTR } from '../shared/elements';
 import * as css from './decorations.css';
-import { footerWidget, headerWidget } from './post-slots';
 
 /** empty-post placeholder by thread index. */
 export const postPlaceholder = GardState.Facet.define<
@@ -20,7 +18,6 @@ export const postPlaceholder = GardState.Facet.define<
 
 const facetDeco = Decoration.Range.wrapper('span', { attributes: { class: css.facet } });
 const overflowDeco = Decoration.Range.wrapper('span', { attributes: { class: css.overflow } });
-const activeDeco = Decoration.Point.attributes({ [POST_ACTIVE_ATTR]: '' });
 
 type ThreadDecorations = {
 	facets: RangeSet<Decoration.Range>;
@@ -36,7 +33,7 @@ const build = (state: GardState): ThreadDecorations => {
 	const overflow: [number, number, Decoration.Range][] = [];
 	const points: [number, Decoration.Point][] = [];
 
-	for (const { node, pos, index, id } of getPosts(state.doc)) {
+	for (const { node, pos, index } of getPosts(state.doc)) {
 		const { text, measurement } = measureCached(node);
 		const { overflowAt } = getPostInfo(state, node);
 
@@ -56,12 +53,6 @@ const build = (state: GardState): ThreadDecorations => {
 		if (getPlaceholder && isEmptyPost(node)) {
 			points.push([pos + 1, Decoration.Point.attributes({ [LINE_PLACEHOLDER_ATTR]: getPlaceholder(index) })]);
 		}
-
-		// just inside the post's opening token, before its first line.
-		points.push([pos + 1, Decoration.Point.widget(headerWidget.of(id), { side: -1 })]);
-
-		// just inside the post's closing token, after its last line.
-		points.push([pos + node.length - 1, Decoration.Point.widget(footerWidget.of(id), { side: 1 })]);
 	}
 
 	return {
@@ -71,7 +62,7 @@ const build = (state: GardState): ThreadDecorations => {
 	};
 };
 
-/** link highlights, overflow highlights, placeholders, and post slot widgets. */
+/** link highlights, overflow highlights, and placeholders. */
 export const threadDecorations = GardState.Field.define<ThreadDecorations>({
 	create: build,
 	update(value, tr) {
@@ -88,10 +79,4 @@ export const threadDecorations = GardState.Field.define<ThreadDecorations>({
 			Decoration.Point.source.of((state) => state.field(field).points),
 		];
 	},
-});
-
-/** marks the post containing the selection head. */
-export const activePost = Decoration.Point.source.of((state) => {
-	const found = findActivePost(state);
-	return found ? PointSet.create([[found.before, activeDeco]]) : PointSet.empty;
 });

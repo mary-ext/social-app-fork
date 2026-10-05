@@ -145,7 +145,7 @@ function ComposerRoot() {
 		>
 			{replyUri && <ReplyParent uri={replyUri} />}
 
-			<PostSlots />
+			<PostOverlays />
 			<ThreadEndPortal />
 			<Suggestions />
 		</fieldset>
@@ -157,32 +157,19 @@ function ThreadEndPortal() {
 	return createPortal(<ThreadEnd />, endHost);
 }
 
-// post-id keys preserve unaffected portals' state. moved posts get new slot elements and remount.
-function PostSlots() {
-	const { slots } = useComposer();
+function PostOverlays() {
+	const { overlays } = useComposer();
 
-	return useStore(slots).map(({ kind, element, postId }) => {
-		switch (kind) {
-			case 'header': {
-				return createPortal(<HeaderSlot postId={postId} />, element, `header:${postId}`);
-			}
-			case 'footer': {
-				return createPortal(<FooterSlot postId={postId} />, element, `footer:${postId}`);
-			}
-		}
-	});
+	return useStore(overlays).map(({ postId, root, header, footer }) => (
+		<Fragment key={postId}>
+			{createPortal(<PostRail postId={postId} />, root)}
+			{createPortal(<PostHeader postId={postId} />, header)}
+			{createPortal(<PostFooterOverlay postId={postId} />, footer)}
+		</Fragment>
+	));
 }
 
-const HeaderSlot = memo(function HeaderSlot({ postId }: { postId: string }) {
-	return (
-		<>
-			<PostRail postId={postId} />
-			<PostHeader postId={postId} />
-		</>
-	);
-});
-
-const FooterSlot = memo(function FooterSlot({ postId }: { postId: string }) {
+const PostFooterOverlay = memo(function PostFooterOverlay({ postId }: { postId: string }) {
 	return (
 		<>
 			<MediaRow postId={postId} />

@@ -124,6 +124,17 @@ export const markDropIndicator = (wg: Wordgard, indicator: DropIndicator | null)
 	}
 };
 
+/**
+ * reads the post being dragged.
+ *
+ * @param state the editor state
+ * @returns the post's id, or null when no post drag is in progress
+ */
+export const getDraggedPostId = (state: GardState): string | null => {
+	const indicator = state.field(dropIndicator);
+	return indicator?.kind === 'post' ? indicator.postId : null;
+};
+
 /** the drop indicator of an attachment or file drag. */
 export type MediaDrag = Extract<DropIndicator, { kind: 'media' }>;
 
