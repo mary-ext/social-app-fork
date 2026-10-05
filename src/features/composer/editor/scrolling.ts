@@ -3,6 +3,7 @@ import { Wordgard } from 'wordgard/editor';
 
 import { clamp } from '#/lib/utils/numbers';
 
+import { MOVE_POST_EVENT } from '../commands/reorder-posts';
 import { hasAttachments } from '../model/post-info';
 import { endOfLastLine, findPostById } from '../model/schema';
 import { findActivePost, getActivePostId } from '../model/selection';
@@ -92,6 +93,7 @@ const scrolling = Wordgard.Plugin.define(
 		let postId = getActivePostId(wg.state);
 		// pointer selection must not trigger a whole-post reveal on the next keystroke.
 		let entered = false;
+		let movedFromTop: number | null = null;
 		let frame = 0;
 
 		return {
@@ -101,7 +103,12 @@ const scrolling = Wordgard.Plugin.define(
 				}
 
 				const next = getActivePostId(update.state);
-				if (next !== postId) {
+				const moved = update.transactions.some((tr) => tr.isUserEvent(MOVE_POST_EVENT));
+				if (moved) {
+					// save before the DOM update: remounted slots can shrink the scroll range.
+					movedFromTop = findScrollParent(wg.scrollDOM)?.scrollTop ?? null;
+				}
+				if (next !== postId || moved) {
 					postId = next;
 					entered = update.transactions.some((tr) => tr.scrollIntoView);
 				}
@@ -110,6 +117,9 @@ const scrolling = Wordgard.Plugin.define(
 				cancelAnimationFrame(frame);
 			},
 			scroll(target: { from: number; to: number }): boolean {
+				const restoreTop = movedFromTop;
+				movedFromTop = null;
+
 				const { selection } = wg.state;
 				if (target.from !== selection.head || target.to !== selection.head) {
 					return false;
@@ -127,13 +137,21 @@ const scrolling = Wordgard.Plugin.define(
 				}
 
 				entered = false;
-				if (!revealPost(wg, scroller)) {
+				if (restoreTop === null && !revealPost(wg, scroller)) {
 					scrollCaretIntoView(wg, scroller);
 				}
 
-				// recheck after React fills the post's header and footer slots, changing its height.
+				// measure again after React fills the header and footer slots.
 				frame = requestAnimationFrame(() => {
-					if (wg.state.selection.eq(selection) && !revealPost(wg, scroller)) {
+					if (!wg.state.selection.eq(selection)) {
+						return;
+					}
+
+					// empty slots may have clamped the scroll position.
+					if (restoreTop !== null) {
+						scroller.scrollTop = restoreTop;
+					}
+					if (!revealPost(wg, scroller)) {
 						scrollCaretIntoView(wg, scroller);
 					}
 				});
@@ -144,5 +162,5 @@ const scrolling = Wordgard.Plugin.define(
 	(plugin) => Wordgard.scrollHandler.of((wg, target) => wg.plugin(plugin)?.scroll(target) ?? false),
 );
 
-/** keeps the caret visible; scroll requests entering another post reveal it in full if it fits. */
+/** keeps the caret visible; scroll requests on post entry or movement reveal the post if it fits. */
 export const postScrolling = scrolling.extension;
