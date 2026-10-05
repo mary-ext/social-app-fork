@@ -4,6 +4,7 @@
 	"components.editImageDialog.aspectRatio.original": "Original",
 	"components.editImageDialog.rotate.left": "Rotate left",
 	"components.editImageDialog.rotate.right": "Rotate right",
+	"components.editImageDialog.title": "Edit image",
 	"components.editImageDialog.zoom.in": "Zoom in",
 	"components.editImageDialog.zoom.label": "Zoom",
 	"components.editImageDialog.zoom.out": "Zoom out"

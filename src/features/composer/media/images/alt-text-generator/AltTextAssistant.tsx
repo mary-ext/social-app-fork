@@ -35,21 +35,21 @@ const Action = ({ generator }: { generator: Generator }): ReactNode => {
 				<Button
 					className={styles.action}
 					color="primary"
-					label={m['view.composer.altText.generate.action.generate']()}
+					label={m['features.composer.altText.generate.action.generate']()}
 					onClick={generator.generate}
 					size="large"
 					variant="solid"
 				>
 					<ButtonIcon icon={SparkleIcon} />
-					<ButtonText>{m['view.composer.altText.generate.action.generate']()}</ButtonText>
+					<ButtonText>{m['features.composer.altText.generate.action.generate']()}</ButtonText>
 				</Button>
 			);
 		}
 		case 'review': {
 			const label =
 				answeredCount > 0
-					? m['view.composer.altText.generate.action.withAnswers']({ answered: answeredCount })
-					: m['view.composer.altText.generate.action.rewrite']();
+					? m['features.composer.altText.generate.action.withAnswers']({ answered: answeredCount })
+					: m['features.composer.altText.generate.action.rewrite']();
 
 			return (
 				<Button
@@ -70,12 +70,12 @@ const Action = ({ generator }: { generator: Generator }): ReactNode => {
 				<Button
 					className={styles.action}
 					color="secondary"
-					label={m['view.composer.altText.generate.action.stop']()}
+					label={m['features.composer.altText.generate.action.stop']()}
 					onClick={generator.cancel}
 					size="large"
 					variant="outline"
 				>
-					<ButtonText>{m['view.composer.altText.generate.action.stop']()}</ButtonText>
+					<ButtonText>{m['features.composer.altText.generate.action.stop']()}</ButtonText>
 				</Button>
 			);
 		}
@@ -95,13 +95,13 @@ export const AltTextAssistant = ({ generator }: Props): ReactNode => {
 			<div className={styles.header}>
 				<SparkleIcon className={styles.sparkleIcon} />
 				<Text className={styles.headerText} size="md" weight="semiBold">
-					{m['view.composer.altText.generate.title']()}
+					{m['features.composer.altText.generate.title']()}
 				</Text>
 				{phase !== 'idle' && (
 					<Button
 						className={styles.dismiss}
 						color="secondary"
-						label={m['view.composer.altText.generate.action.dismiss']()}
+						label={m['features.composer.altText.generate.action.dismiss']()}
 						onClick={generator.dismiss}
 						shape="round"
 						size="tiny"
@@ -113,7 +113,7 @@ export const AltTextAssistant = ({ generator }: Props): ReactNode => {
 			</div>
 			{phase === 'idle' && (
 				<Text color="textContrastMedium" size="md_sub">
-					{m['view.composer.altText.generate.intro']()}
+					{m['features.composer.altText.generate.intro']()}
 				</Text>
 			)}
 			{isThinking && (
@@ -121,15 +121,15 @@ export const AltTextAssistant = ({ generator }: Props): ReactNode => {
 					<Spinner color="default" label={null} size="md" />
 					<Text className={styles.rowText} color="textContrastMedium" size="md_sub">
 						{draft === null
-							? m['view.composer.altText.generate.status.starting']()
-							: m['view.composer.altText.generate.status.refining']()}
+							? m['features.composer.altText.generate.status.starting']()
+							: m['features.composer.altText.generate.status.refining']()}
 					</Text>
 				</div>
 			)}
 			{phase === 'error' && (
 				<div className={styles.errorBox}>
 					<Text color="negative_600" size="md_sub" weight="semiBold">
-						{m['view.composer.altText.generate.error.title']()}
+						{m['features.composer.altText.generate.error.title']()}
 					</Text>
 					{error !== null && (
 						<Text color="negative_600" size="md_sub">
@@ -154,18 +154,18 @@ export const AltTextAssistant = ({ generator }: Props): ReactNode => {
 						answer={additionalContext}
 						disabled={isThinking}
 						onAnswer={generator.setAdditionalContext}
-						question={m['view.composer.altText.generate.questions.anythingElse']()}
+						question={m['features.composer.altText.generate.questions.anythingElse']()}
 					/>
 				</div>
 			)}
 			{hasEdits && !isThinking && (
 				<Text color="textContrastMedium" size="md_sub">
-					{m['view.composer.altText.generate.editsKept']()}
+					{m['features.composer.altText.generate.editsKept']()}
 				</Text>
 			)}
 			{draft !== null && (
 				<Text color="textContrastLow" size="sm">
-					{m['view.composer.altText.generate.caution']()}
+					{m['features.composer.altText.generate.caution']()}
 				</Text>
 			)}
 			<Action generator={generator} />

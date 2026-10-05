@@ -2,6 +2,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { m } from '#/paraglide/messages';
+
 import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
@@ -44,7 +46,7 @@ export function GifTile({
 			postId={postId}
 			index={index}
 			item={item}
-			label="GIF attachment"
+			label={m['features.composer.media.a11y.gif']()}
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
 			className={css.tile}

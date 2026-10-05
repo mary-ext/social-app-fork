@@ -240,8 +240,8 @@ export const useAltTextGenerator = ({ file, context, onGenerated, text }: Option
 const describeFailure = (error: unknown): string =>
 	describeAiFailure({
 		error,
-		rateLimited: m['view.composer.altText.generate.error.rateLimited'],
-		unavailable: m['view.composer.altText.generate.error.unavailable'],
+		rateLimited: m['features.composer.altText.generate.error.rateLimited'],
+		unavailable: m['features.composer.altText.generate.error.unavailable'],
 	});
 
 const sealLastRound = (rounds: AltTextRound[], edited: string | undefined): AltTextRound[] => {

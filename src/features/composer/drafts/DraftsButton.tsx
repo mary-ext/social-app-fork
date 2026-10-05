@@ -31,7 +31,7 @@ export function DraftsButton({
 	return (
 		<>
 			<Button
-				label={m['view.composer.drafts.title']()}
+				label={m['features.composer.drafts.title']()}
 				variant="ghost"
 				color="secondary"
 				shape="round"

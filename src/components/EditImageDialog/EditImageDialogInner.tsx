@@ -46,7 +46,7 @@ export function EditImageDialogInner({
 		<>
 			<Dialog.Header.Root border>
 				<Dialog.Header.Close disabled={pending} />
-				<Dialog.Header.Title>{m['view.composer.gallery.action.edit']()}</Dialog.Header.Title>
+				<Dialog.Header.Title>{m['components.editImageDialog.title']()}</Dialog.Header.Title>
 				<Dialog.Header.Actions>
 					<Button
 						color="primary"

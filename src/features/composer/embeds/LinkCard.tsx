@@ -61,13 +61,13 @@ type CardKind = LinkEmbedKind | 'quote';
 const getFrameLabel = (kind: CardKind, url: string): string => {
 	switch (kind) {
 		case 'external': {
-			return m['view.composer.embed.a11y.linkPreview']({ niceUrl: toNiceDomain(url) });
+			return m['features.composer.embeds.a11y.linkPreview']({ niceUrl: toNiceDomain(url) });
 		}
 		case 'quote': {
-			return 'Quoted post';
+			return m['features.composer.embeds.a11y.quotedPost']();
 		}
 		case 'record': {
-			return 'Embedded record';
+			return m['features.composer.embeds.a11y.record']();
 		}
 	}
 };
@@ -92,7 +92,10 @@ function RemoveButton({
 		// dismissing removes the focused button.
 		wg.focus();
 	};
-	const removeLabel = kind === 'record' ? 'Remove embed' : 'Remove link preview';
+	const removeLabel =
+		kind === 'record'
+			? m['features.composer.embeds.action.remove']()
+			: m['features.composer.embeds.action.removeLinkPreview']();
 
 	return (
 		<div className={isNotice ? css.noticeActions : css.actions} onMouseDown={keepEditorFocus}>
@@ -156,11 +159,11 @@ function Notice({ icon: Icon, message }: { icon: typeof InfoIcon; message: strin
 }
 
 function NoPreviewNotice() {
-	return <Notice icon={InfoIcon} message="No preview for this link" />;
+	return <Notice icon={InfoIcon} message={m['features.composer.embeds.noPreview']()} />;
 }
 
 function QuoteDisabledNotice() {
-	return <Notice icon={BanIcon} message="This post can't be quoted" />;
+	return <Notice icon={BanIcon} message={m['features.composer.embeds.quoteDisabled']()} />;
 }
 
 // #endregion
@@ -177,7 +180,7 @@ function ExternalPlaceholder() {
 				<div className={css.status}>
 					<Spinner color="default" label={null} size="sm" />
 					<Text size="md_sub" color="textContrastMedium">
-						Fetching preview…
+						{m['features.composer.embeds.fetching']()}
 					</Text>
 				</div>
 			</div>

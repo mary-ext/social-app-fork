@@ -200,7 +200,7 @@ export const createComposer = ({
 		}),
 		postPlaceholder.of((index) => {
 			if (index > 0) {
-				return m['view.composer.thread.action.addPost']();
+				return m['features.composer.thread.placeholder']();
 			}
 			return replyUri ? m['common.compose.replyPlaceholder']() : m['common.compose.placeholder']();
 		}),

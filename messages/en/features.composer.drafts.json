@@ -1,0 +1,65 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.drafts.a11y.video": "Video",
+	"features.composer.drafts.action.delete": "Delete draft",
+	"features.composer.drafts.action.open": "Open draft",
+	"features.composer.drafts.action.save": "Save draft",
+	"features.composer.drafts.action.update": "Update draft",
+	"features.composer.drafts.blocker.captionTooLarge": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Drafts can have caption files up to {n} KB."
+			}
+		}
+	],
+	"features.composer.drafts.blocker.tooLong": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Drafts can have up to {n} characters per post."
+			}
+		}
+	],
+	"features.composer.drafts.blocker.tooManyMedia": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Drafts can have up to {n} images and one video or GIF per post."
+			}
+		}
+	],
+	"features.composer.drafts.discard.message": "This draft will be permanently deleted.",
+	"features.composer.drafts.discard.title": "Discard draft?",
+	"features.composer.drafts.empty": "No drafts yet",
+	"features.composer.drafts.error.delete": "Couldn't delete this draft",
+	"features.composer.drafts.error.load": "Couldn't load your drafts",
+	"features.composer.drafts.error.missingMedia": "Some attachments aren't available on this device",
+	"features.composer.drafts.error.open": "Couldn't open this draft",
+	"features.composer.drafts.error.save": "Couldn't save this draft",
+	"features.composer.drafts.loading": "Loading drafts",
+	"features.composer.drafts.media.missing": "Missing media",
+	"features.composer.drafts.media.storedOn": "Media stored on {deviceName}",
+	"features.composer.drafts.media.storedOtherDevice": "Media stored on another device",
+	"features.composer.drafts.morePosts": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "1 more post",
+				"cp=other": "{n} more posts"
+			}
+		}
+	],
+	"features.composer.drafts.opening": "Opening draft",
+	"features.composer.drafts.save.message": "Save this draft to edit later.",
+	"features.composer.drafts.save.title": "Save draft?",
+	"features.composer.drafts.saved": "Draft saved",
+	"features.composer.drafts.title": "Drafts",
+	"features.composer.drafts.update.message": "Save your changes to this draft.",
+	"features.composer.drafts.update.title": "Update draft?",
+	"features.composer.drafts.updated": "Draft updated"
+}

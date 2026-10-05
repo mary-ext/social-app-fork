@@ -6,6 +6,7 @@ import { Text } from '#/components/Text';
 import { Button } from '#/components/web/Button';
 
 import CrossIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
 
 import { removePost } from '../commands/remove-post';
 import { useEditor, useIsActivePost, usePostCount, usePostState } from '../context';
@@ -45,7 +46,7 @@ function ThreadPosition({ postId, total }: { postId: string; total: number }) {
 			</div>
 			<Button
 				className={css.remove}
-				label="Remove post"
+				label={m['features.composer.thread.action.remove']()}
 				tabIndex={isActive ? 0 : -1}
 				variant="ghost"
 				color="secondary"

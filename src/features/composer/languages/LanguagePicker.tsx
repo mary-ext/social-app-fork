@@ -68,7 +68,7 @@ export const LanguagePopups = ({
 	return (
 		<>
 			<Menu.Root handle={menu}>
-				<Menu.Popup label={m['view.composer.language.selectPost']()}>
+				<Menu.Popup label={m['features.composer.language.selectPost']()}>
 					<Menu.Group>
 						{options.map((option) => {
 							const name = toPostLanguages(option)
@@ -84,14 +84,14 @@ export const LanguagePopups = ({
 					</Menu.Group>
 					<Menu.Separator />
 					<Menu.Item onClick={() => dialog.open(null)}>
-						<Menu.ItemText>{m['view.composer.language.more']()}</Menu.ItemText>
+						<Menu.ItemText>{m['features.composer.language.more']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={ChevronRightIcon} position="right" />
 					</Menu.Item>
 				</Menu.Popup>
 			</Menu.Root>
 
 			<LanguageSelectDialog
-				titleText={m['view.composer.language.chooseTitle']()}
+				titleText={m['features.composer.language.chooseTitle']()}
 				handle={dialog}
 				currentLanguages={currentLanguages}
 				onSelectLanguages={(languages) => setPostLanguage(wg, postId, languages)}

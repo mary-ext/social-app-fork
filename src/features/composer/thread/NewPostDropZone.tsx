@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { Text } from '#/components/Text';
 
 import PlusIcon from '#/icons/central/PlusSmall_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
 
 import { NEW_POST_ZONE_ATTR } from '../shared/elements';
 import * as css from './NewPostDropZone.css';
@@ -20,7 +21,7 @@ export function NewPostDropZone({ isActive }: { isActive: boolean }) {
 				<PlusIcon className={css.icon} />
 			</div>
 			<Text weight="medium" className={css.label}>
-				Drop to add a new post
+				{m['features.composer.thread.dropToAdd']()}
 			</Text>
 		</div>
 	);

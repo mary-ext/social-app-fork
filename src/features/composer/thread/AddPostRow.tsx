@@ -2,6 +2,8 @@ import { useCurrentAccountProfile } from '#/state/queries/profile';
 
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import { appendPost } from '../commands/append-post';
 import { useEditor, useEditorState } from '../context';
 import { isBlankPost } from '../model/post-info';
@@ -38,7 +40,7 @@ export function AddPostRow() {
 				<Avatar profile={profile} size={GHOST_AVATAR_SIZE} noBorder />
 			</span>
 			<Text size="md" className={css.label}>
-				Add to thread
+				{m['features.composer.thread.action.add']()}
 			</Text>
 		</button>
 	);

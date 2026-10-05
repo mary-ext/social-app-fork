@@ -89,14 +89,14 @@ const waitForJob = async (
 			}
 
 			console.error('failed to poll video job', err);
-			throw new VideoUploadError(m['view.composer.video.error.processFailed'](), jobId);
+			throw new VideoUploadError(m['features.composer.media.video.error.processFailed'](), jobId);
 		}
 		failures = 0;
 
 		switch (status.state) {
 			case 'JOB_STATE_COMPLETED': {
 				if (!status.blob) {
-					throw new VideoUploadError(m['view.composer.video.error.processFailed'](), jobId);
+					throw new VideoUploadError(m['features.composer.media.video.error.processFailed'](), jobId);
 				}
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the video service only returns modern blob refs
 				return status.blob as AtpBlob;
@@ -116,19 +116,19 @@ const waitForJob = async (
 const getProcessingErrorMessage = (failureCode: string | undefined, error: string | undefined): string => {
 	switch (failureCode) {
 		case 'encoding_failure': {
-			return m['view.composer.video.error.processEncoding']();
+			return m['features.composer.media.video.error.processEncoding']();
 		}
 		case 'pds_upload_failure': {
-			return m['view.composer.video.error.processHostUpload']();
+			return m['features.composer.media.video.error.processHostUpload']();
 		}
 		case 'pds_upload_unsupported_blob_size': {
-			return m['view.composer.video.error.processHostBlobSize']();
+			return m['features.composer.media.video.error.processHostBlobSize']();
 		}
 		case 'validation_failure': {
-			return getValidationErrorMessage(error) ?? m['view.composer.video.error.processInvalid']();
+			return getValidationErrorMessage(error) ?? m['features.composer.media.video.error.processInvalid']();
 		}
 		default: {
-			return m['view.composer.video.error.processFailed']();
+			return m['features.composer.media.video.error.processFailed']();
 		}
 	}
 };
@@ -136,16 +136,16 @@ const getProcessingErrorMessage = (failureCode: string | undefined, error: strin
 const getValidationErrorMessage = (error: string | undefined): string | undefined => {
 	switch (error) {
 		case 'bad_aspect_ratio': {
-			return m['view.composer.video.error.processAspectRatio']();
+			return m['features.composer.media.video.error.processAspectRatio']();
 		}
 		case 'encoded_video_too_large': {
-			return m['view.composer.video.error.processEncodedTooLarge']();
+			return m['features.composer.media.video.error.processEncodedTooLarge']();
 		}
 		case 'unsupported_codec': {
-			return m['view.composer.video.error.processCodec']();
+			return m['features.composer.media.video.error.processCodec']();
 		}
 		case 'video_too_long': {
-			return m['view.composer.video.error.processTooLong']();
+			return m['features.composer.media.video.error.processTooLong']();
 		}
 	}
 };
@@ -158,42 +158,44 @@ const getValidationErrorMessage = (error: string | undefined): string | undefine
  */
 export const getUploadErrorMessage = (err: unknown): string => {
 	if (err instanceof VideoTooLargeError) {
-		return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
+		return m['features.composer.media.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
 	}
 	if (err instanceof ServerError || err instanceof UploadLimitError) {
 		// https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
 		switch (err.message) {
 			case 'User is not allowed to upload videos': {
-				return m['view.composer.video.error.notAllowed']();
+				return m['features.composer.media.video.error.notAllowed']();
 			}
 			case 'Uploading is disabled at the moment': {
-				return m['view.composer.video.error.waitlist']();
+				return m['features.composer.media.video.error.waitlist']();
 			}
 			case "Failed to get user's upload stats": {
-				return m['view.composer.video.error.permCheckFailed']();
+				return m['features.composer.media.video.error.permCheckFailed']();
 			}
 			case 'User has exceeded daily upload bytes limit': {
-				return m['view.composer.video.error.dailyLimitBytes']();
+				return m['features.composer.media.video.error.dailyLimitBytes']();
 			}
 			case 'User has exceeded daily upload videos limit': {
-				return m['view.composer.video.error.dailyLimitCount']();
+				return m['features.composer.media.video.error.dailyLimitCount']();
 			}
 			case 'Account is not old enough to upload videos': {
-				return m['view.composer.video.error.accountTooYoung']();
+				return m['features.composer.media.video.error.accountTooYoung']();
 			}
 			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)': {
-				return m['view.composer.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
+				return m['features.composer.media.video.error.tooLarge']({ max: VIDEO_MAX_SIZE_MB });
 			}
 			case 'Confirm your email address to upload videos': {
-				return m['view.composer.video.error.emailConfirmRequired']();
+				return m['features.composer.media.video.error.emailConfirmRequired']();
 			}
 		}
 	}
 
 	if (isNetworkError(err)) {
-		return m['view.composer.video.error.uploadConnection']();
+		return m['features.composer.media.video.error.uploadConnection']();
 	}
 
 	console.error('failed to upload video', err);
-	return m['view.composer.video.error.upload']({ message: err instanceof Error ? err.message : '' });
+	return m['features.composer.media.video.error.upload']({
+		message: err instanceof Error ? err.message : '',
+	});
 };

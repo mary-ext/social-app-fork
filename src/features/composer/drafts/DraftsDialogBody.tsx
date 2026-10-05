@@ -57,7 +57,7 @@ export function DraftsDialogBody({
 			handle.close();
 		} catch (err) {
 			console.error('failed to open draft', err);
-			Toast.show(`Couldn't open this draft`, { type: 'error' });
+			Toast.show(m['features.composer.drafts.error.open'](), { type: 'error' });
 		} finally {
 			setRestoringId(null);
 		}
@@ -66,18 +66,20 @@ export function DraftsDialogBody({
 	const header = (
 		<Dialog.Header.Root border>
 			<Dialog.Header.Close />
-			<Dialog.Header.Title>{m['view.composer.drafts.title']()}</Dialog.Header.Title>
+			<Dialog.Header.Title>{m['features.composer.drafts.title']()}</Dialog.Header.Title>
 		</Dialog.Header.Root>
 	);
 
 	if (drafts.length < 1) {
 		let state;
 		if (isPending || isMediaPending) {
-			state = <CenteredSpinner label={m['view.composer.drafts.loading']()} size="xl" fill />;
+			state = <CenteredSpinner label={m['features.composer.drafts.loading']()} size="xl" fill />;
 		} else if (isError) {
-			state = <ErrorState message={`Couldn't load your drafts`} onRetry={() => void refetch()} />;
+			state = (
+				<ErrorState message={m['features.composer.drafts.error.load']()} onRetry={() => void refetch()} />
+			);
 		} else {
-			state = <BlankState icon={PageIcon} message={m['view.composer.drafts.empty']()} />;
+			state = <BlankState icon={PageIcon} message={m['features.composer.drafts.empty']()} />;
 		}
 
 		return (
@@ -108,7 +110,7 @@ export function DraftsDialogBody({
 							deleteDraft(view, {
 								onError(err) {
 									console.error('failed to delete draft', err);
-									Toast.show(`Couldn't delete this draft`, { type: 'error' });
+									Toast.show(m['features.composer.drafts.error.delete'](), { type: 'error' });
 								},
 							});
 						}}

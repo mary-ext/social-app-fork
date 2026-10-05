@@ -2,6 +2,8 @@ import { useAltTextReminderEnabled } from '#/state/preferences/alt-text';
 
 import * as Prompt from '#/components/Prompt';
 
+import { m } from '#/paraglide/messages';
+
 import { useComposer } from '../context';
 import { findMissingAlt } from '../media/alt-text/alt-text';
 import { openAltText } from '../media/media-dialogs';
@@ -70,12 +72,18 @@ export function AltTextPrompt({
 	return (
 		<Prompt.Outer handle={handle}>
 			<Prompt.Content>
-				<Prompt.TitleText>{`Don't forget to make your media accessible`}</Prompt.TitleText>
-				<Prompt.DescriptionText>{`Alt text describes your uploaded media for low-vision users and provides additional context for everyone.`}</Prompt.DescriptionText>
+				<Prompt.TitleText>{m['features.composer.altText.reminder.title']()}</Prompt.TitleText>
+				<Prompt.DescriptionText>
+					{m['features.composer.altText.reminder.description']()}
+				</Prompt.DescriptionText>
 			</Prompt.Content>
 			<Prompt.Actions>
-				<Prompt.Action cta={`Add alt text`} color="primary" onPress={addAlt} />
-				<Prompt.Action cta={`Post anyway`} color="secondary" onPress={onProceed} />
+				<Prompt.Action cta={m['features.composer.altText.action.add']()} color="primary" onPress={addAlt} />
+				<Prompt.Action
+					cta={m['features.composer.publish.action.anyway']()}
+					color="secondary"
+					onPress={onProceed}
+				/>
 			</Prompt.Actions>
 		</Prompt.Outer>
 	);

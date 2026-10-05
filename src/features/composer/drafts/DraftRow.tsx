@@ -75,11 +75,11 @@ export function DraftRow({
 	if (isMissingMedia) {
 		const deviceName = getDraftDeviceName(draft);
 		if (isLocal) {
-			mediaNotice = m['view.composer.media.missing']();
+			mediaNotice = m['features.composer.drafts.media.missing']();
 		} else if (deviceName === undefined) {
-			mediaNotice = m['view.composer.media.storedOtherDevice']();
+			mediaNotice = m['features.composer.drafts.media.storedOtherDevice']();
 		} else {
-			mediaNotice = m['view.composer.media.storedOn']({ deviceName });
+			mediaNotice = m['features.composer.drafts.media.storedOn']({ deviceName });
 		}
 	}
 
@@ -91,7 +91,7 @@ export function DraftRow({
 				type="button"
 				className={css.select}
 				disabled={disabled}
-				aria-label={m['view.composer.drafts.action.open']()}
+				aria-label={m['features.composer.drafts.action.open']()}
 				aria-busy={isRestoring}
 				onClick={onSelect}
 			>
@@ -119,7 +119,9 @@ export function DraftRow({
 									</Text>
 								)}
 							</TimeElapsed>
-							{isRestoring && <Spinner color="default" size="sm" label={`Opening draft`} />}
+							{isRestoring && (
+								<Spinner color="default" size="sm" label={m['features.composer.drafts.opening']()} />
+							)}
 						</div>
 
 						{first?.text.trim() && (
@@ -160,7 +162,7 @@ export function DraftRow({
 							<Avatar profile={profile} size={GHOST_AVATAR_SIZE} noBorder />
 						</span>
 						<Text color="textContrastMedium" size="md">
-							{replyCount === 1 ? `1 more post` : `${replyCount} more posts`}
+							{m['features.composer.drafts.morePosts']({ count: replyCount })}
 						</Text>
 					</div>
 				)}
@@ -184,7 +186,7 @@ export function DraftRow({
 				<Menu.Popup label={m['common.a11y.moreOptions']()} align="end">
 					<Menu.Group>
 						<Menu.Item destructive onClick={() => deletePromptHandle.open(null)}>
-							<Menu.ItemText>{`Delete draft`}</Menu.ItemText>
+							<Menu.ItemText>{m['features.composer.drafts.action.delete']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={TrashIcon} />
 						</Menu.Item>
 					</Menu.Group>
@@ -193,8 +195,8 @@ export function DraftRow({
 
 			<Prompt.Basic
 				handle={deletePromptHandle}
-				title={m['view.composer.drafts.discard.title']()}
-				description={m['view.composer.drafts.discard.message']()}
+				title={m['features.composer.drafts.discard.title']()}
+				description={m['features.composer.drafts.discard.message']()}
 				confirmButtonCta={m['common.action.delete']()}
 				confirmButtonColor="negative"
 				onConfirm={onDelete}
@@ -237,7 +239,7 @@ function DraftThumbnails({
 			)}
 			{hasVideo && (
 				<div className={css.thumbnail}>
-					<PlayIcon className={css.thumbnailIcon} aria-label={`Video`} />
+					<PlayIcon className={css.thumbnailIcon} aria-label={m['features.composer.drafts.a11y.video']()} />
 				</div>
 			)}
 		</div>

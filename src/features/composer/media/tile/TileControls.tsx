@@ -90,8 +90,10 @@ export function AltButton({
 		<ChipButton
 			variant={variant}
 			icon={toggleIcon(hasAlt)}
-			label={hasAlt ? m['view.composer.altText.action.edit']() : m['view.composer.altText.action.add']()}
-			text={hasAlt ? m['view.composer.altText.badge.done']() : m['view.composer.altText.badge.add']()}
+			label={
+				hasAlt ? m['features.composer.altText.action.edit']() : m['features.composer.altText.action.add']()
+			}
+			text={hasAlt ? m['features.composer.altText.badge.done']() : m['features.composer.altText.badge.add']()}
 			tabbable={tabbable}
 			onClick={onClick}
 		/>
@@ -116,8 +118,16 @@ export function CaptionsButton({
 	return (
 		<ChipButton
 			icon={toggleIcon(hasCaptions)}
-			label={hasCaptions ? `Edit captions` : `Add captions`}
-			text={hasCaptions ? `Captions` : `Add captions`}
+			label={
+				hasCaptions
+					? m['features.composer.captions.action.edit']()
+					: m['features.composer.captions.action.add']()
+			}
+			text={
+				hasCaptions
+					? m['features.composer.captions.badge.done']()
+					: m['features.composer.captions.action.add']()
+			}
 			tabbable={tabbable}
 			onClick={onClick}
 		/>
@@ -175,7 +185,9 @@ export function RemoveButton({
 		<TileButton
 			variant={variant}
 			label={
-				isUploading ? m['view.composer.media.cancelUpload']() : m['view.composer.media.removeAttachment']()
+				isUploading
+					? m['features.composer.media.action.cancelUpload']()
+					: m['features.composer.media.action.remove']()
 			}
 			icon={XIcon}
 			// keyboard users remove the tile with Delete or Backspace, so skip this tab stop.
@@ -234,7 +246,7 @@ export function TileUploadStatus({
 			<ChipButton
 				variant={variant}
 				icon={<WarningIcon className={clsx(css.icon, css.chipWarning)} />}
-				label={`Retry upload`}
+				label={m['features.composer.media.action.retryUpload']()}
 				text={m['common.action.retry']()}
 				tabbable={tabbable}
 				onClick={() => uploads.retry(file)}

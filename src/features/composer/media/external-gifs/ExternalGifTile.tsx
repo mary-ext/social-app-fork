@@ -69,7 +69,7 @@ export function ExternalGifTile({
 			postId={postId}
 			index={index}
 			item={item}
-			label="GIF attachment"
+			label={m['features.composer.media.a11y.gif']()}
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
 			className={css.tile}

@@ -1,4 +1,5 @@
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
@@ -11,8 +12,6 @@ import { useVideoUpload } from '../uploads/upload-status';
 import { isPendingUpload } from '../uploads/video-uploads';
 import { VoicePlayer } from './VoicePlayer';
 import * as css from './VoiceTile.css';
-
-const LABEL = 'Voice attachment';
 
 /**
  * voice attachment tile with a seekable waveform.
@@ -38,14 +37,15 @@ export function VoiceTile({
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const upload = useVideoUpload(item.file);
 	const tabbable = roving.tabIndex === 0;
+	const label = m['features.composer.media.a11y.voice']();
 
 	return (
 		<MediaTile
 			postId={postId}
 			index={index}
 			item={item}
-			label={LABEL}
-			dragPreview={<DragChip icon={PlayIcon} label={LABEL} />}
+			label={label}
+			dragPreview={<DragChip icon={PlayIcon} label={label} />}
 			roving={roving}
 			className={css.tile}
 			onRemove={onRemove}

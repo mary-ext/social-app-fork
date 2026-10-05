@@ -61,13 +61,13 @@ export const useUploadsProgress = (files: readonly File[]): number | null => {
 export const getUploadLabel = (upload: PendingUpload): string => {
 	switch (upload.status) {
 		case 'compressing': {
-			return m['view.composer.media.upload.compressing']();
+			return m['features.composer.media.upload.compressing']();
 		}
 		case 'uploading': {
-			return m['view.composer.media.upload.uploading']({ percent: Math.round(upload.sent * 100) });
+			return m['features.composer.media.upload.uploading']({ percent: Math.round(upload.sent * 100) });
 		}
 		case 'processing': {
-			return m['view.composer.media.upload.processing']();
+			return m['features.composer.media.upload.processing']();
 		}
 	}
 };

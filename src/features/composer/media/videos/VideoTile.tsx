@@ -1,6 +1,7 @@
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
+import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
@@ -20,8 +21,6 @@ import { useVideoUpload } from '../uploads/upload-status';
 import { isPendingUpload } from '../uploads/video-uploads';
 import { hasMediaCaptions } from './captions';
 import * as css from './VideoTile.css';
-
-const LABEL = 'Video attachment';
 
 /**
  * video attachment tile.
@@ -50,14 +49,15 @@ export function VideoTile({
 	const hasCaptions = useEditorState((state) => hasMediaCaptions(state, item.id));
 	const upload = useVideoUpload(item.file);
 	const tabbable = roving.tabIndex === 0;
+	const label = m['features.composer.media.a11y.video']();
 
 	return (
 		<MediaTile
 			postId={postId}
 			index={index}
 			item={item}
-			label={LABEL}
-			dragPreview={<DragChip icon={VideoIcon} label={LABEL} />}
+			label={label}
+			dragPreview={<DragChip icon={VideoIcon} label={label} />}
 			roving={roving}
 			onRemove={onRemove}
 		>

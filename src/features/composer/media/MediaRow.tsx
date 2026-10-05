@@ -31,7 +31,7 @@ function UploadError({ file }: { file: File }) {
 	return (
 		<Text size="md_sub" color="negative_600">
 			{upload.error}
-			{upload.jobId !== null && ` (${m['view.composer.video.jobId']({ jobId: upload.jobId })})`}
+			{upload.jobId !== null && ` (${m['features.composer.media.video.jobId']({ jobId: upload.jobId })})`}
 		</Text>
 	);
 }

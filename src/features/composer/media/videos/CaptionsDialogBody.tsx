@@ -9,6 +9,7 @@ import { usePrimaryLanguage } from '#/state/preferences/languages';
 import { codeToLanguageName, resolveLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 import { LANGUAGES, langCode } from '#/locale/languages';
+import { Trans } from '#/locale/Trans';
 
 import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';
@@ -31,8 +32,6 @@ import {
 	MAX_CAPTION_TRACKS,
 } from './captions';
 import * as css from './CaptionsDialogBody.css';
-
-const TITLE = `Captions`;
 
 const byteFormat = new Intl.NumberFormat(LOCALE, { style: 'unit', unit: 'byte', unitDisplay: 'long' });
 const kilobyteFormat = new Intl.NumberFormat(LOCALE, {
@@ -76,7 +75,7 @@ export const CaptionsDialogBody = ({
 	const addFiles = (files: File[]) => {
 		const room = MAX_CAPTION_TRACKS - tracks.length;
 		if (files.length > room) {
-			Toast.show(`Videos can have up to ${MAX_CAPTION_TRACKS} caption files.`);
+			Toast.show(m['features.composer.captions.error.maxFiles']({ max: MAX_CAPTION_TRACKS }));
 		}
 
 		const next = [...tracks];
@@ -121,7 +120,7 @@ export const CaptionsDialogBody = ({
 		<>
 			<Dialog.Header.Root>
 				<Dialog.Header.Close />
-				<Dialog.Header.Title>{TITLE}</Dialog.Header.Title>
+				<Dialog.Header.Title>{m['features.composer.captions.title']()}</Dialog.Header.Title>
 				<Dialog.Header.Actions>
 					<Button
 						color="primary"
@@ -137,7 +136,7 @@ export const CaptionsDialogBody = ({
 
 			<Dialog.Body className={css.body} onDragLeave={dragLeave} onDragOver={dragOver} onDrop={drop}>
 				<Text color="textContrastMedium" leading="snug">
-					{`Add WebVTT (.vtt) caption files, up to ${formatSize(MAX_CAPTION_SIZE)} each.`}
+					{m['features.composer.captions.hint']({ size: formatSize(MAX_CAPTION_SIZE) })}
 				</Text>
 
 				{tracks.length > 0 && (
@@ -162,21 +161,28 @@ export const CaptionsDialogBody = ({
 					<div className={css.dropZone({ active: isDragging })}>
 						{isDragging ? (
 							<Text color="primary_500" weight="semiBold">
-								{`Drop to add caption files`}
+								{m['features.composer.captions.dropToAdd']()}
 							</Text>
 						) : (
-							<>
-								<Text color="textContrastMedium">{`Drop .vtt files here or`}</Text>
-								<Button
-									color="secondary"
-									label={`Choose files`}
-									onClick={() => void openCaptionPicker().then(addFiles)}
-									size="small"
-									variant="outline"
-								>
-									<ButtonText>{`Choose files`}</ButtonText>
-								</Button>
-							</>
+							// the markup renders its text in <Text>; a bare space between the tags is dropped by flex layout.
+							// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+							<Trans
+								message={m['features.composer.captions.dropHint']}
+								markup={{
+									t0: ({ children }) => <Text color="textContrastMedium">{children}</Text>,
+									t1: ({ children }) => (
+										<Button
+											color="secondary"
+											label={m['features.composer.captions.action.choose']()}
+											onClick={() => void openCaptionPicker().then(addFiles)}
+											size="small"
+											variant="outline"
+										>
+											<ButtonText>{children}</ButtonText>
+										</Button>
+									),
+								}}
+							/>
 						)}
 					</div>
 				)}
@@ -188,16 +194,18 @@ export const CaptionsDialogBody = ({
 const getProblemMessage = (problem: CaptionProblem, track: CaptionTrack): string => {
 	switch (problem) {
 		case 'notVtt': {
-			return m['view.composer.captions.error.vttOnly']();
+			return m['features.composer.captions.error.vttOnly']();
 		}
 		case 'tooLarge': {
-			return `File exceeds the ${formatSize(MAX_CAPTION_SIZE)} limit`;
+			return m['features.composer.captions.error.tooLarge']({ size: formatSize(MAX_CAPTION_SIZE) });
 		}
 		case 'noLanguage': {
-			return `Choose a language for this file`;
+			return m['features.composer.captions.error.languageRequired']();
 		}
 		case 'duplicateLanguage': {
-			return `${codeToLanguageName(track.lang, LOCALE)} already has a caption file`;
+			return m['features.composer.captions.error.duplicateLanguage']({
+				language: codeToLanguageName(track.lang, LOCALE),
+			});
 		}
 	}
 };
@@ -243,9 +251,9 @@ const TrackRow = ({
 						<Select.Trigger
 							describedBy={isLanguageProblem ? messageId : undefined}
 							isInvalid={isLanguageProblem}
-							label={m['view.composer.language.select']()}
+							label={m['features.composer.captions.selectLanguage']()}
 						>
-							<Select.Value placeholder={m['view.composer.language.select']()} />
+							<Select.Value placeholder={m['features.composer.captions.selectLanguage']()} />
 							<Select.Icon />
 						</Select.Trigger>
 						<Select.Content
@@ -264,7 +272,7 @@ const TrackRow = ({
 			<Button
 				className={css.remove}
 				color="secondary"
-				label={m['view.composer.captions.action.remove']()}
+				label={m['features.composer.captions.action.remove']()}
 				onClick={onRemove}
 				shape="round"
 				size="tiny"

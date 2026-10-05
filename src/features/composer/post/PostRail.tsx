@@ -14,6 +14,7 @@ import * as Menu from '#/components/Menu';
 import ArrowDownIcon from '#/icons/central/ArrowDown_round_outlined_radius1_stroke2.svg';
 import ArrowUpIcon from '#/icons/central/ArrowUp_round_outlined_radius1_stroke2.svg';
 import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
+import { m } from '#/paraglide/messages';
 
 import { movePostToSlot } from '../commands/reorder-posts';
 import { useComposer, useEditor, usePostCount, usePostState } from '../context';
@@ -56,7 +57,7 @@ const getPostDragPreview = (
 	const text = post ? getPostText(post.node).replaceAll('\n', ' ').trim() : '';
 	// the preview is snapshotted immediately; reuse the thumbnail the rail already loaded.
 	const avatar = profile?.avatar && toImageCdnUrl(profile.avatar, 'avatar_thumbnail');
-	return <DragChip avatar={avatar} label={text || 'Empty post'} />;
+	return <DragChip avatar={avatar} label={text || m['features.composer.thread.emptyPost']()} />;
 };
 
 function PostHandle({ postId }: { postId: string }) {
@@ -95,7 +96,7 @@ function PostHandle({ postId }: { postId: string }) {
 			<Menu.Trigger
 				ref={handleRef}
 				className={css.handle}
-				aria-label="Reorder this post"
+				aria-label={m['features.composer.thread.a11y.reorder']()}
 				// keyboard users reorder from the text with Alt-ArrowUp/ArrowDown.
 				tabIndex={-1}
 				{...{ [POST_HANDLE_ATTR]: postId }}
@@ -116,7 +117,7 @@ function PostHandle({ postId }: { postId: string }) {
 				</span>
 			</Menu.Trigger>
 
-			<Menu.Popup label="Reorder this post" align="start">
+			<Menu.Popup label={m['features.composer.thread.a11y.reorder']()} align="start">
 				<ReorderItems postId={postId} />
 			</Menu.Popup>
 		</Menu.Root>
@@ -137,11 +138,11 @@ function ReorderItems({ postId }: { postId: string }) {
 	return (
 		<Menu.Group>
 			<Menu.Item onClick={() => move(index - 1)} disabled={index <= 0}>
-				<Menu.ItemText>Move up</Menu.ItemText>
+				<Menu.ItemText>{m['features.composer.thread.action.moveUp']()}</Menu.ItemText>
 				<Menu.ItemIcon position="right" icon={ArrowUpIcon} />
 			</Menu.Item>
 			<Menu.Item onClick={() => move(index + 1)} disabled={index === -1 || index === total - 1}>
-				<Menu.ItemText>Move down</Menu.ItemText>
+				<Menu.ItemText>{m['features.composer.thread.action.moveDown']()}</Menu.ItemText>
 				<Menu.ItemIcon position="right" icon={ArrowDownIcon} />
 			</Menu.Item>
 		</Menu.Group>

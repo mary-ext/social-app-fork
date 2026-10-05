@@ -50,7 +50,7 @@ export const EditImageDialog = <T extends EditImageTarget>({
 	return (
 		<Dialog.Root disablePointerDismissal handle={handle}>
 			{({ payload }) => (
-				<Dialog.Popup scroll="body" label={m['view.composer.gallery.action.edit']()}>
+				<Dialog.Popup scroll="body" label={m['components.editImageDialog.title']()}>
 					<Suspense
 						fallback={
 							<Dialog.Body>

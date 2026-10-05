@@ -1,0 +1,26 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.captions.action.add": "Add captions",
+	"features.composer.captions.action.choose": "Choose files",
+	"features.composer.captions.action.edit": "Edit captions",
+	"features.composer.captions.action.remove": "Remove caption file",
+	"features.composer.captions.badge.done": "Captions",
+	"features.composer.captions.dropHint": "{#t0}Drop .vtt files here or{/t0} {#t1}Choose files{/t1}",
+	"features.composer.captions.dropToAdd": "Drop to add caption files",
+	"features.composer.captions.error.duplicateLanguage": "{language} already has a caption file",
+	"features.composer.captions.error.languageRequired": "Choose a language for this file",
+	"features.composer.captions.error.maxFiles": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "Videos can have up to {n} caption files."
+			}
+		}
+	],
+	"features.composer.captions.error.tooLarge": "File exceeds the {size} limit",
+	"features.composer.captions.error.vttOnly": "Only WebVTT (.vtt) files are supported",
+	"features.composer.captions.hint": "Add WebVTT (.vtt) caption files, up to {size} each.",
+	"features.composer.captions.selectLanguage": "Select language...",
+	"features.composer.captions.title": "Captions"
+}

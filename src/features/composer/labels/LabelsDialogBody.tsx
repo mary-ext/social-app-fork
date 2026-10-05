@@ -27,23 +27,23 @@ type Option = {
 const ADULT_OPTIONS: readonly Option[] = [
 	{
 		value: NO_ADULT_LABEL,
-		label: m['view.composer.contentWarning.none'],
+		label: m['features.composer.labels.none'],
 		description: null,
 	},
 	{
 		value: 'sexual',
-		label: m['view.composer.contentWarning.suggestive'],
-		description: m['view.composer.contentWarning.pornDesc'],
+		label: m['features.composer.labels.suggestive'],
+		description: m['features.composer.labels.suggestiveDesc'],
 	},
 	{
 		value: 'nudity',
-		label: m['view.composer.contentWarning.nudity'],
-		description: m['view.composer.contentWarning.nudityDesc'],
+		label: m['features.composer.labels.nudity'],
+		description: m['features.composer.labels.nudityDesc'],
 	},
 	{
 		value: 'porn',
-		label: m['view.composer.contentWarning.porn'],
-		description: m['view.composer.contentWarning.sexualContentDesc'],
+		label: m['features.composer.labels.porn'],
+		description: m['features.composer.labels.pornDesc'],
 	},
 ];
 
@@ -72,7 +72,7 @@ export const LabelsDialogBody = ({
 		<>
 			<Dialog.Header.Root border="scrolling">
 				<Dialog.Header.Close />
-				<Dialog.Header.Title>{m['view.composer.contentWarning.title']()}</Dialog.Header.Title>
+				<Dialog.Header.Title>{m['features.composer.labels.title']()}</Dialog.Header.Title>
 				<Dialog.Header.Actions>
 					<Button
 						color="primary"
@@ -88,10 +88,10 @@ export const LabelsDialogBody = ({
 				<Settings.List surface="flush">
 					<Settings.Section
 						titleText={m['common.moderation.adultContent']()}
-						bodyText={m['view.composer.contentWarning.hint']()}
+						bodyText={m['features.composer.labels.hint']()}
 					>
 						<RadioGroup
-							aria-label={m['view.composer.contentWarning.adultLabels']()}
+							aria-label={m['features.composer.labels.adultLabels']()}
 							value={draft.adult ?? NO_ADULT_LABEL}
 							onValueChange={(value) => {
 								setDraft({ ...draft, adult: isAdultContentLabel(value) ? value : null });
@@ -107,7 +107,7 @@ export const LabelsDialogBody = ({
 
 					<Settings.Section titleText={m['common.status.other']()}>
 						<CheckboxGroup
-							aria-label={m['view.composer.contentWarning.otherLabels']()}
+							aria-label={m['features.composer.labels.otherLabels']()}
 							value={draft.others}
 							onValueChange={(values) => {
 								setDraft({ ...draft, others: OTHER_SELF_LABELS.filter((label) => values.includes(label)) });
@@ -116,7 +116,7 @@ export const LabelsDialogBody = ({
 							<Settings.CheckboxRow label={m['common.moderation.graphicMedia']()} value="graphic-media">
 								<Settings.Label
 									titleText={m['common.moderation.graphicMedia']()}
-									subtitleText={m['view.composer.contentWarning.disturbingDesc']()}
+									subtitleText={m['features.composer.labels.graphicMediaDesc']()}
 								/>
 							</Settings.CheckboxRow>
 						</CheckboxGroup>

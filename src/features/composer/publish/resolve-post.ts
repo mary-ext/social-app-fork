@@ -25,6 +25,8 @@ import { trimText } from '#/lib/utils/text';
 
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 
+import { m } from '#/paraglide/messages';
+
 import { type UploadedVideo, VideoUploadError } from '../media/uploads/video-uploads';
 import type { PlannedMedia, PlannedPost } from './snapshot';
 
@@ -211,7 +213,7 @@ const resolveRecord = async (
 	{ quote, record }: PlannedPost,
 ): Promise<ComAtprotoRepoStrongRef.Main | null> => {
 	if (quote !== null) {
-		const post = await fetchPost(ctx.appview, quote, `The quoted post is no longer available`);
+		const post = await fetchPost(ctx.appview, quote, m['features.composer.publish.error.quoteMissing']());
 		return { uri: post.uri, cid: post.cid };
 	}
 	if (record === null) {
@@ -268,7 +270,7 @@ export const resolvePost = async (ctx: ResolveContext, post: PlannedPost): Promi
 
 	const rt = await prepareRichtext(trimText(text), ctx.resolveHandle);
 	if (getGraphemeLength(rt.text) > MAX_POST_GRAPHEME_LENGTH) {
-		throw new PublishError(`A link preview failed. Shorten the post to stay within the character limit`);
+		throw new PublishError(m['features.composer.publish.error.linkPreviewTooLong']());
 	}
 
 	return {

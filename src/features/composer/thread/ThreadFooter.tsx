@@ -47,9 +47,9 @@ function PublishButton() {
 	const uploadPercent = useUploadsProgress(task?.videos ?? NO_FILES);
 	const isThread = usePostCount() > 1;
 	const publishLabel = isThread
-		? m['view.composer.publish.a11y.posts']()
-		: m['view.composer.publish.a11y.post']();
-	const publishText = isThread ? m['view.composer.publish.action.all']() : m['navigation.post.title']();
+		? m['features.composer.publish.a11y.posts']()
+		: m['features.composer.publish.a11y.post']();
+	const publishText = isThread ? m['features.composer.publish.action.all']() : m['navigation.post.title']();
 
 	// a blocked thread shouldn't prompt; publish re-checks the live state.
 	const requestPublish = () => {
@@ -69,9 +69,9 @@ function PublishButton() {
 	} else {
 		content = (
 			<>
-				<ButtonSpinner label={m['view.composer.publish.publishing']()} />
+				<ButtonSpinner label={m['features.composer.publish.publishing']()} />
 				{uploadPercent !== null && (
-					<ButtonText>{m['view.composer.media.upload.uploading']({ percent: uploadPercent })}</ButtonText>
+					<ButtonText>{m['features.composer.media.upload.uploading']({ percent: uploadPercent })}</ButtonText>
 				)}
 			</>
 		);
@@ -80,7 +80,12 @@ function PublishButton() {
 	return (
 		<>
 			{task !== null && uploadPercent !== null && (
-				<Button color="secondary" size="small" label={`Cancel publishing`} onClick={task.cancel}>
+				<Button
+					color="secondary"
+					size="small"
+					label={m['features.composer.publish.a11y.cancel']()}
+					onClick={task.cancel}
+				>
 					<ButtonText>{m['common.action.cancel']()}</ButtonText>
 				</Button>
 			)}

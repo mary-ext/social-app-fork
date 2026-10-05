@@ -1,0 +1,15 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.labels.adultLabels": "Adult content labels",
+	"features.composer.labels.graphicMediaDesc": "Media that may be disturbing or inappropriate for some audiences.",
+	"features.composer.labels.hint": "Please add any content warning labels that are applicable for the media you are posting.",
+	"features.composer.labels.none": "None",
+	"features.composer.labels.nudity": "Nudity",
+	"features.composer.labels.nudityDesc": "Artistic or non-erotic nudity.",
+	"features.composer.labels.otherLabels": "Other labels",
+	"features.composer.labels.porn": "Porn",
+	"features.composer.labels.pornDesc": "Sexual activity or erotic nudity.",
+	"features.composer.labels.suggestive": "Suggestive",
+	"features.composer.labels.suggestiveDesc": "Pictures meant for adults.",
+	"features.composer.labels.title": "Content warnings"
+}

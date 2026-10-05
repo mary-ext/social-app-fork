@@ -1,0 +1,54 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.altText.action.add": "Add alt text",
+	"features.composer.altText.action.edit": "Edit alt text",
+	"features.composer.altText.badge.add": "Add alt",
+	"features.composer.altText.badge.done": "Alt",
+	"features.composer.altText.charCount": [
+		{
+			"declarations": ["input length", "input max", "local ln = length: number", "local mn = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{ln} of {mn} characters"
+			}
+		}
+	],
+	"features.composer.altText.charCountOverLimit": [
+		{
+			"declarations": ["input length", "input max", "local ln = length: number", "local mn = max: number"],
+			"selectors": [],
+			"match": {
+				"": "{ln} of {mn} characters, over the limit"
+			}
+		}
+	],
+	"features.composer.altText.descriptive": "Descriptive alt text",
+	"features.composer.altText.error.overLimit": "Alt text is over the character limit.",
+	"features.composer.altText.generate.a11y.answerLabel": "Your answer",
+	"features.composer.altText.generate.action.dismiss": "Dismiss",
+	"features.composer.altText.generate.action.generate": "Generate alt text",
+	"features.composer.altText.generate.action.rewrite": "Rewrite",
+	"features.composer.altText.generate.action.stop": "Stop",
+	"features.composer.altText.generate.action.withAnswers": [
+		{
+			"declarations": ["input answered", "local ap = answered: plural", "local n = answered: number"],
+			"selectors": ["ap"],
+			"match": {
+				"ap=one": "Rewrite with 1 answer",
+				"ap=other": "Rewrite with {n} answers"
+			}
+		}
+	],
+	"features.composer.altText.generate.caution": "Generated descriptions get things wrong. Read it over before you post.",
+	"features.composer.altText.generate.editsKept": "You've changed the description. A rewrite will keep your wording and build on it.",
+	"features.composer.altText.generate.error.rateLimited": "You've generated a lot of descriptions. Wait a minute and try again.",
+	"features.composer.altText.generate.error.title": "Couldn't generate a description",
+	"features.composer.altText.generate.error.unavailable": "The description service is unavailable right now.",
+	"features.composer.altText.generate.intro": "Have a model draft a description from the image, then sharpen it by answering what it can't see.",
+	"features.composer.altText.generate.questions.anythingElse": "Anything else?",
+	"features.composer.altText.generate.status.refining": "Working your answers in…",
+	"features.composer.altText.generate.status.starting": "Looking at your image…",
+	"features.composer.altText.generate.title": "AI-generated description",
+	"features.composer.altText.reminder.description": "Alt text describes your uploaded media for low-vision users and provides additional context for everyone.",
+	"features.composer.altText.reminder.title": "Don't forget to make your media accessible"
+}

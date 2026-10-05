@@ -113,7 +113,7 @@ export const usePublish = (): {
 			} else if (isNetworkError(err)) {
 				message = m['lib.upload.postFailed']();
 			} else {
-				message = `Couldn't publish your post`;
+				message = m['features.composer.publish.error.generic']();
 			}
 			Toast.show(message, { type: 'error' });
 			return;
@@ -142,11 +142,11 @@ export const usePublish = (): {
 
 		let message: string;
 		if (uris.length > 1) {
-			message = m['view.composer.publish.postsSent']();
+			message = m['features.composer.publish.postsSent']();
 		} else if (replyUri !== null) {
-			message = m['view.composer.publish.replySent']();
+			message = m['features.composer.publish.replySent']();
 		} else {
-			message = m['view.composer.publish.postSent']();
+			message = m['features.composer.publish.postSent']();
 		}
 
 		// let the dialog finish closing first.
@@ -154,7 +154,7 @@ export const usePublish = (): {
 			Toast.show(message, {
 				type: 'success',
 				action: first && {
-					label: m['view.composer.publish.action.view'](),
+					label: m['features.composer.publish.action.view'](),
 					onPress() {
 						router.navigate({ to: postUriToTarget(first) });
 					},

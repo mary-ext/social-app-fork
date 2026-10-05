@@ -20,7 +20,7 @@ export const QuestionField = ({ answer, disabled, onAnswer, question }: Props): 
 			<TextField.Input
 				className={styles.input}
 				disabled={disabled}
-				label={m['view.composer.altText.generate.a11y.answerLabel']()}
+				label={m['features.composer.altText.generate.a11y.answerLabel']()}
 				maxRows={6}
 				minRows={1}
 				multiline

@@ -95,7 +95,7 @@ export function ThreadComposer({
 		setComposer(createComposer({ seed, replyUri: undefined, onPostSuccess: undefined }));
 
 		if (missingMedia > 0) {
-			Toast.show(`Some attachments aren't available on this device`, { type: 'warning' });
+			Toast.show(m['features.composer.drafts.error.missingMedia'](), { type: 'warning' });
 		}
 	};
 
@@ -106,7 +106,7 @@ export function ThreadComposer({
 			<Dialog.Header.Root border="scrolling">
 				<Dialog.Header.Close />
 				<Dialog.Header.Title>
-					{composer.replyUri ? m['view.composer.title.reply']() : m['view.composer.title.post']()}
+					{composer.replyUri ? m['features.composer.title.reply']() : m['features.composer.title.post']()}
 				</Dialog.Header.Title>
 
 				{composer.replyUri === null && (

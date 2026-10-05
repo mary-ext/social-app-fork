@@ -15,6 +15,8 @@ import {
 
 import { createThreadgateRecord } from '#/state/queries/threadgate/util';
 
+import { m } from '#/paraglide/messages';
+
 import { fetchPost, type ResolveContext, resolvePost } from './resolve-post';
 import type { PlannedPost } from './snapshot';
 
@@ -23,7 +25,7 @@ type Write = ComAtprotoRepoApplyWrites.$input['writes'][number];
 type ReplyRef = AppBskyFeedPost.ReplyRef;
 
 const resolveReplyRef = async (appview: Client, uri: ResourceUri): Promise<ReplyRef> => {
-	const parent = await fetchPost(appview, uri, `The post you're replying to is no longer available`);
+	const parent = await fetchPost(appview, uri, m['features.composer.publish.error.replyMissing']());
 	const parentRef: ComAtprotoRepoStrongRef.Main = { uri: parent.uri, cid: parent.cid };
 	return { root: getPostRecord(parent).reply?.root ?? parentRef, parent: parentRef };
 };

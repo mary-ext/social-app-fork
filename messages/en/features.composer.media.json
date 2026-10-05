@@ -1,0 +1,77 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.media.a11y.gif": "GIF attachment",
+	"features.composer.media.a11y.image": "Image attachment",
+	"features.composer.media.a11y.video": "Video attachment",
+	"features.composer.media.a11y.voice": "Voice attachment",
+	"features.composer.media.action.cancelUpload": "Cancel upload",
+	"features.composer.media.action.editImage": "Edit image",
+	"features.composer.media.action.remove": "Remove attachment",
+	"features.composer.media.action.retryUpload": "Retry upload",
+	"features.composer.media.error.fileTooLarge": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "One or more of your selected files are too large. Maximum size is {n} MB."
+			}
+		}
+	],
+	"features.composer.media.error.fileUnsupported": "One or more of your selected files are not supported.",
+	"features.composer.media.error.multipleTypes": "Selecting multiple media types is not supported.",
+	"features.composer.media.gif.error.oneOnly": "You can only select one GIF at a time.",
+	"features.composer.media.gif.error.tooLong": "GIFs must be {minutes} minutes or less.",
+	"features.composer.media.image.error.maxSelect": [
+		{
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=other": "You can select up to {n} images in total."
+			}
+		}
+	],
+	"features.composer.media.upload.compressing": "Compressing",
+	"features.composer.media.upload.processing": "Processing",
+	"features.composer.media.upload.uploading": "Uploading · {percent}%",
+	"features.composer.media.video.error.accountTooYoung": "Your account is not yet old enough to upload videos. Please try again later.",
+	"features.composer.media.video.error.dailyLimitBytes": "You've reached your daily limit for video uploads (too many bytes)",
+	"features.composer.media.video.error.dailyLimitCount": "You've reached your daily limit for video uploads (too many videos)",
+	"features.composer.media.video.error.emailConfirmRequired": "Please confirm your email address to upload videos.",
+	"features.composer.media.video.error.notAllowed": "You are not allowed to upload videos.",
+	"features.composer.media.video.error.oneOnly": "You can only select one video at a time.",
+	"features.composer.media.video.error.permCheckFailed": "We were unable to determine if you are allowed to upload videos. Please try again.",
+	"features.composer.media.video.error.processAspectRatio": "The selected video has an unsupported aspect ratio.",
+	"features.composer.media.video.error.processCodec": "The selected video uses an unsupported format.",
+	"features.composer.media.video.error.processEncodedTooLarge": "The processed video is too large. Please try again with a smaller file.",
+	"features.composer.media.video.error.processEncoding": "The selected video could not be encoded.",
+	"features.composer.media.video.error.processFailed": "Video failed to process",
+	"features.composer.media.video.error.processHostBlobSize": "Your hosting provider does not support videos this large. Please try again with a smaller file.",
+	"features.composer.media.video.error.processHostUpload": "The video could not be uploaded to your hosting provider. Please try again.",
+	"features.composer.media.video.error.processInvalid": "The selected video could not be processed.",
+	"features.composer.media.video.error.processTooLong": "The selected video is too long.",
+	"features.composer.media.video.error.signedOut": "Sign in to upload videos",
+	"features.composer.media.video.error.tooLarge": [
+		{
+			"declarations": ["input max", "local n = max: number"],
+			"selectors": [],
+			"match": {
+				"": "The selected video is larger than {n} MB. Please try again with a smaller file."
+			}
+		}
+	],
+	"features.composer.media.video.error.tooLong": "Videos must be {minutes} minutes or less.",
+	"features.composer.media.video.error.undecodable": "We couldn’t decode the selected video.",
+	"features.composer.media.video.error.unsupportedType": "Unsupported video type: {mimeType}",
+	"features.composer.media.video.error.upload": "An error occurred while uploading the video. {message}",
+	"features.composer.media.video.error.uploadConnection": "An error occurred while uploading the video. Please check your internet connection and try again.",
+	"features.composer.media.video.error.waitlist": "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!",
+	"features.composer.media.video.jobId": "Job ID: {jobId}",
+	"features.composer.media.voice.a11y.pause": "Pause voice clip",
+	"features.composer.media.voice.a11y.play": "Play voice clip",
+	"features.composer.media.voice.a11y.seek": "Seek voice clip",
+	"features.composer.media.voice.cardLabel": "Voice",
+	"features.composer.media.voice.error.oneOnly": "You can only select one audio file at a time.",
+	"features.composer.media.voice.error.render": "Your audio couldn’t be turned into a voice clip.",
+	"features.composer.media.voice.error.tooLong": "Voice clips must be {minutes} minutes or less.",
+	"features.composer.media.voice.error.unsupportedType": "Unsupported audio type: {mimeType}"
+}

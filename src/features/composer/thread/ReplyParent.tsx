@@ -15,6 +15,8 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 
+import { m } from '#/paraglide/messages';
+
 import { PREVIEW_STALE_TIME } from '../open-composer';
 import { Avatar } from '../post/Avatar';
 import * as css from './ReplyParent.css';
@@ -38,7 +40,7 @@ export function ReplyParent({ uri }: { uri: ResourceUri }) {
 					<div className={css.line} />
 				</div>
 				<Text color="textContrastMedium" size="md">
-					Couldn't load the post you're replying to
+					{m['features.composer.reply.error.load']()}
 				</Text>
 			</div>
 		);
@@ -55,7 +57,10 @@ function ParentPost({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const bodyModui = moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : undefined;
 
 	return (
-		<article className={css.root} aria-label={`Replying to ${author.handle}`}>
+		<article
+			className={css.root}
+			aria-label={m['features.composer.reply.a11y.replyingTo']({ handle: author.handle })}
+		>
 			<div className={css.rail}>
 				<Avatar
 					profile={author}

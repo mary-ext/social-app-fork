@@ -77,7 +77,7 @@ export function ImageTile({
 			postId={postId}
 			index={index}
 			item={item}
-			label="Image attachment"
+			label={m['features.composer.media.a11y.image']()}
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
 			{...getLayoutProps(layout, aspectRatio)}
@@ -92,7 +92,7 @@ export function ImageTile({
 			<TileActions>
 				{onEditImage && (
 					<TileButton
-						label={m['view.composer.gallery.action.edit']()}
+						label={m['features.composer.media.action.editImage']()}
 						icon={PencilIcon}
 						tabbable={tabbable}
 						onClick={onEditImage}

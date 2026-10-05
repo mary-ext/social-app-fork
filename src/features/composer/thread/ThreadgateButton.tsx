@@ -22,8 +22,8 @@ export function ThreadgateButton({
 
 	const anyoneCanInteract = value.replies.type === 'anyone' && value.allowQuotes;
 	const label = anyoneCanInteract
-		? m['view.composer.interaction.anyone']()
-		: m['view.composer.interaction.limited']();
+		? m['features.composer.interaction.anyone']()
+		: m['features.composer.interaction.limited']();
 
 	return (
 		<>

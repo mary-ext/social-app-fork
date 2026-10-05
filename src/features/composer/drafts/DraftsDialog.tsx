@@ -26,7 +26,7 @@ export function DraftsDialog({
 }) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup height="fixed" label={m['view.composer.drafts.title']()} scroll="body">
+			<Dialog.Popup height="fixed" label={m['features.composer.drafts.title']()} scroll="body">
 				<Suspense fallback={<Dialog.Loading fill />}>
 					<DraftsDialogBody handle={handle} onSelect={onSelect} />
 				</Suspense>

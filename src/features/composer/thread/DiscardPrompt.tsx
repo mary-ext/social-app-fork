@@ -9,6 +9,8 @@ import {
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
+import { m } from '#/paraglide/messages';
+
 import { type Composer, useComposer, useThreadInteraction } from '../context';
 import { useSaveDraftMutation } from '../drafts/queries';
 import { type DraftSaveBlocker, getDraftSaveBlocker } from '../drafts/save-blocker';
@@ -85,8 +87,8 @@ export function DiscardPrompt({
 		return (
 			<Prompt.Basic
 				handle={handle}
-				title={`Discard draft?`}
-				confirmButtonCta={`Discard`}
+				title={m['features.composer.discard.replyTitle']()}
+				confirmButtonCta={m['common.action.discard']()}
 				confirmButtonColor="negative"
 				onConfirm={onProceed}
 			/>
@@ -99,12 +101,14 @@ export function DiscardPrompt({
 			{
 				onSuccess() {
 					handle.close();
-					Toast.show(isDraft ? `Draft updated` : `Draft saved`);
+					Toast.show(
+						isDraft ? m['features.composer.drafts.updated']() : m['features.composer.drafts.saved'](),
+					);
 					onProceed();
 				},
 				onError(err) {
 					console.error('failed to save draft', err);
-					Toast.show(`Couldn't save this draft`, { type: 'error' });
+					Toast.show(m['features.composer.drafts.error.save'](), { type: 'error' });
 				},
 			},
 		);
@@ -112,30 +116,34 @@ export function DiscardPrompt({
 
 	let title: string;
 	if (draftSaveBlocker === undefined) {
-		title = isDraft ? `Update draft?` : `Save draft?`;
+		title = isDraft
+			? m['features.composer.drafts.update.title']()
+			: m['features.composer.drafts.save.title']();
 	} else {
-		title = isDraft ? `Discard changes?` : `Discard post?`;
+		title = isDraft ? m['common.discardChanges.title']() : m['features.composer.discard.postTitle']();
 	}
 
 	let message: string | undefined;
 	switch (draftSaveBlocker) {
 		case 'captionTooLarge': {
-			message = `Drafts can have caption files up to ${MAX_DRAFT_CAPTION_SIZE / 1000} KB.`;
+			message = m['features.composer.drafts.blocker.captionTooLarge']({ max: MAX_DRAFT_CAPTION_SIZE / 1000 });
 			break;
 		}
 		case 'tooLong': {
-			message = `Drafts can have up to ${MAX_DRAFT_GRAPHEME_LENGTH} characters per post.`;
+			message = m['features.composer.drafts.blocker.tooLong']({ max: MAX_DRAFT_GRAPHEME_LENGTH });
 			break;
 		}
 		case 'tooManyMedia': {
-			message = `Drafts can have up to ${MAX_DRAFT_IMAGES} images and one video or GIF per post.`;
+			message = m['features.composer.drafts.blocker.tooManyMedia']({ max: MAX_DRAFT_IMAGES });
 			break;
 		}
 		case 'voiceClip': {
 			break;
 		}
 		case undefined: {
-			message = isDraft ? `Save your changes to this draft.` : `Save this draft to edit later.`;
+			message = isDraft
+				? m['features.composer.drafts.update.message']()
+				: m['features.composer.drafts.save.message']();
 			break;
 		}
 	}
@@ -149,15 +157,24 @@ export function DiscardPrompt({
 			<Prompt.Actions>
 				{draftSaveBlocker === undefined && (
 					<Prompt.Action
-						cta={isDraft ? `Update draft` : `Save draft`}
+						cta={
+							isDraft
+								? m['features.composer.drafts.action.update']()
+								: m['features.composer.drafts.action.save']()
+						}
 						color="primary"
 						disabled={isSaving}
 						shouldCloseOnPress={false}
 						onPress={save}
 					/>
 				)}
-				<Prompt.Action cta={`Discard`} color="negative_subtle" disabled={isSaving} onPress={onProceed} />
-				<Prompt.Cancel cta={`Keep editing`} />
+				<Prompt.Action
+					cta={m['common.action.discard']()}
+					color="negative_subtle"
+					disabled={isSaving}
+					onPress={onProceed}
+				/>
+				<Prompt.Cancel cta={m['features.composer.discard.keepEditing']()} />
 			</Prompt.Actions>
 		</Prompt.Outer>
 	);

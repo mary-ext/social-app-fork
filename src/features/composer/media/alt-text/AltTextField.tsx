@@ -42,7 +42,7 @@ export const AltTextHeader = ({
 	return (
 		<Dialog.Header.Root border={border}>
 			<Dialog.Header.Close />
-			<Dialog.Header.Title>{m['view.composer.altText.action.add']()}</Dialog.Header.Title>
+			<Dialog.Header.Title>{m['features.composer.altText.action.add']()}</Dialog.Header.Title>
 			<Dialog.Header.Actions>
 				<Button
 					color="primary"
@@ -88,8 +88,8 @@ export const AltTextField = ({
 	const isOverLimit = alt.length > MAX_ALT_TEXT;
 
 	const counterLabel = isOverLimit
-		? m['view.composer.altText.charCountOverLimit']({ length: alt.length, max: MAX_ALT_TEXT })
-		: m['view.composer.altText.charCount']({ length: alt.length, max: MAX_ALT_TEXT });
+		? m['features.composer.altText.charCountOverLimit']({ length: alt.length, max: MAX_ALT_TEXT })
+		: m['features.composer.altText.charCount']({ length: alt.length, max: MAX_ALT_TEXT });
 
 	return (
 		<>
@@ -107,7 +107,7 @@ export const AltTextField = ({
 						</Text>
 					}
 				>
-					{m['view.composer.altText.descriptive']()}
+					{m['features.composer.altText.descriptive']()}
 				</TextField.LabelText>
 				<TextField.Input
 					autoFocus={autoFocus}
@@ -125,7 +125,7 @@ export const AltTextField = ({
 
 			{/* keep the message stable to avoid announcing each keystroke. */}
 			<div className={css.srOnly} role="status">
-				{isOverLimit ? m['view.composer.altText.error.overLimit']() : ''}
+				{isOverLimit ? m['features.composer.altText.error.overLimit']() : ''}
 			</div>
 		</>
 	);

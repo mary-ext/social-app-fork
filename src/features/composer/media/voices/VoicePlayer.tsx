@@ -136,7 +136,11 @@ export function VoicePlayer({
 	return (
 		<div className={clsx(css.player, className)}>
 			<Button
-				label={isPlaying ? m['view.composer.voice.a11y.pause']() : m['view.composer.voice.a11y.play']()}
+				label={
+					isPlaying
+						? m['features.composer.media.voice.a11y.pause']()
+						: m['features.composer.media.voice.a11y.play']()
+				}
 				color="primary"
 				variant="solid"
 				shape="round"
@@ -150,7 +154,7 @@ export function VoicePlayer({
 			<div
 				className={css.waveform}
 				role="slider"
-				aria-label={m['view.composer.voice.a11y.seek']()}
+				aria-label={m['features.composer.media.voice.a11y.seek']()}
 				aria-valuemin={0}
 				aria-valuemax={Math.round(duration)}
 				aria-valuenow={Math.round(position)}

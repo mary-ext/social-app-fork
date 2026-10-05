@@ -59,7 +59,7 @@ const runPipeline: ProcessVideoFile = async (file, { setState, signal }) => {
 	const { pds, pdsUrl } = getClients();
 	const did = getCurrentDid();
 	if (!pds || !pdsUrl || !did) {
-		throw new VideoUploadError(`Sign in to upload videos`);
+		throw new VideoUploadError(m['features.composer.media.video.error.signedOut']());
 	}
 
 	// phase changes must not move overall progress backwards.
@@ -86,7 +86,7 @@ const runPipeline: ProcessVideoFile = async (file, { setState, signal }) => {
 
 		switch (attachment.type) {
 			case 'image': {
-				throw new VideoUploadError(m['view.composer.video.error.processInvalid']());
+				throw new VideoUploadError(m['features.composer.media.video.error.processInvalid']());
 			}
 			case 'video': {
 				return prepareVideo(attachment.asset, { setProgress, signal });
@@ -129,7 +129,7 @@ const prepareVideo = async (
 		transcoded = await transcodeForUpload({ kind: asset.kind, blob: asset.blob, setProgress, signal });
 	} catch (err) {
 		if (err instanceof TranscodeError && err.code === 'videoUndecodable') {
-			throw new VideoUploadError(m['view.composer.video.error.undecodable']());
+			throw new VideoUploadError(m['features.composer.media.video.error.undecodable']());
 		}
 		throw err;
 	}
@@ -155,7 +155,7 @@ const prepareVoice = async (
 		return await renderVoiceClip({
 			audio: asset.blob,
 			did,
-			label: m['view.composer.voice.cardLabel'](),
+			label: m['features.composer.media.voice.cardLabel'](),
 			pdsUrl,
 			seed: crypto.randomUUID(),
 			// the tile previews the audio itself, not the rendered card.
@@ -187,7 +187,7 @@ const getRenderErrorMessage = (err: unknown, asset: VoiceAsset): string => {
 		}
 		case 'unknown':
 		case 'videoUndecodable': {
-			return m['view.composer.voice.error.render']();
+			return m['features.composer.media.voice.error.render']();
 		}
 	}
 };

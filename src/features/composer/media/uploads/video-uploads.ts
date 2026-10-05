@@ -233,7 +233,7 @@ export const createVideoUploads = (process: ProcessVideoFile): VideoUploads => {
 				const error =
 					err instanceof VideoUploadError
 						? err
-						: new VideoUploadError(m['view.composer.video.error.processFailed']());
+						: new VideoUploadError(m['features.composer.media.video.error.processFailed']());
 				entry.state = { status: 'failed', error: error.message, jobId: error.jobId };
 				refreshFailed();
 				emitter.emit();

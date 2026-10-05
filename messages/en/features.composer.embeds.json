@@ -1,0 +1,11 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.composer.embeds.a11y.linkPreview": "Link preview for {niceUrl}",
+	"features.composer.embeds.a11y.quotedPost": "Quoted post",
+	"features.composer.embeds.a11y.record": "Embedded record",
+	"features.composer.embeds.action.remove": "Remove embed",
+	"features.composer.embeds.action.removeLinkPreview": "Remove link preview",
+	"features.composer.embeds.fetching": "Fetching preview…",
+	"features.composer.embeds.noPreview": "No preview for this link",
+	"features.composer.embeds.quoteDisabled": "This post can't be quoted"
+}

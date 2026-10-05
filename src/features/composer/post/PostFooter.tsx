@@ -91,7 +91,7 @@ export function PostFooter({ postId }: { postId: string }) {
 			<div
 				className={css.root}
 				role="toolbar"
-				aria-label="Post controls"
+				aria-label={m['features.composer.toolbar.a11y.label']()}
 				onMouseDown={keepEditorFocus}
 				onKeyDown={(event) => {
 					escapeToEditor(wg, event);
@@ -128,8 +128,8 @@ export function PostFooter({ postId }: { postId: string }) {
 						render={
 							<Button
 								{...roving.item('gif')}
-								label={m['view.composer.gif.a11y.select']()}
-								aria-description={m['view.composer.gif.a11y.opensPicker']()}
+								label={m['features.composer.toolbar.a11y.gif']()}
+								aria-description={m['features.composer.toolbar.a11y.gifHint']()}
 								variant="ghost"
 								color="secondary"
 								shape="round"
@@ -159,7 +159,7 @@ export function PostFooter({ postId }: { postId: string }) {
 					{canLabel && (
 						<Button
 							{...roving.item('labels')}
-							label={m['view.composer.contentWarning.title']()}
+							label={m['features.composer.labels.title']()}
 							variant="ghost"
 							color={hasLabels ? 'primary' : 'secondary'}
 							shape="round"
@@ -174,7 +174,7 @@ export function PostFooter({ postId }: { postId: string }) {
 					{canSplit && (
 						<Button
 							{...roving.item('split')}
-							label="Split into multiple posts"
+							label={m['features.composer.toolbar.a11y.autoSplit']()}
 							size="tiny"
 							color="secondary"
 							onClick={() => {
@@ -183,7 +183,7 @@ export function PostFooter({ postId }: { postId: string }) {
 								wg.focus();
 							}}
 						>
-							<ButtonText>Auto-split</ButtonText>
+							<ButtonText>{m['features.composer.toolbar.autoSplit']()}</ButtonText>
 						</Button>
 					)}
 
@@ -194,7 +194,7 @@ export function PostFooter({ postId }: { postId: string }) {
 								{...roving.item('language')}
 								ref={languageTrigger}
 								className={css.language}
-								label={m['view.composer.language.selectPost']()}
+								label={m['features.composer.language.selectPost']()}
 								variant="ghost"
 								color="secondary"
 							>
