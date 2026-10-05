@@ -14,6 +14,7 @@ import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
+import { ComposerDialogs } from './ComposerDialogs';
 import { ComposerContext, useComposer, useEditorState, useIsPublishing } from './context';
 import { createBlankSeed, createComposer } from './create-composer';
 import { getMediaDrag } from './dnd/drop-indicators';
@@ -118,6 +119,7 @@ export function NewComposer({
 				</Dialog.Body>
 
 				<ThreadFooter />
+				<ComposerDialogs />
 			</Fragment>
 
 			<DiscardPrompt {...discard.prompt} onProceed={closeComposer} />

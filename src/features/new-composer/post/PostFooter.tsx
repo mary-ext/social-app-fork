@@ -21,15 +21,8 @@ import { m } from '#/paraglide/messages';
 
 import { autoSplitPost } from '../commands/auto-split';
 import { insertTextInPost } from '../commands/insert-text';
-import { useEditor, useIsActivePost, usePostState } from '../context';
-import {
-	canLabelPost,
-	getAttachmentKeys,
-	getTaintedLabels,
-	hasPostLabels,
-	setAttachmentLabels,
-} from '../labels/commands';
-import { LabelsDialog, type LabelsTarget } from '../labels/LabelsDialog';
+import { useComposer, useIsActivePost, usePostState } from '../context';
+import { canLabelPost, getAttachmentKeys, getTaintedLabels, hasPostLabels } from '../labels/commands';
 import { LanguagePopups, useLanguagePicker } from '../languages/LanguagePicker';
 import { attachFiles, attachGif } from '../media/commands';
 import { isOverLimit } from '../model/post-info';
@@ -39,8 +32,6 @@ import { useRovingFocus } from '../shared/roving-focus';
 import { CharCount } from './CharCount';
 import * as css from './PostFooter.css';
 
-type LabelsPayload = LabelsTarget & { keys: readonly string[] };
-
 /**
  * editing controls for a post.
  *
@@ -49,10 +40,9 @@ type LabelsPayload = LabelsTarget & { keys: readonly string[] };
  */
 export function PostFooter({ postId }: { postId: string }) {
 	const { gtPhone } = useBreakpoints();
-	const wg = useEditor();
+	const { wg, dialogs } = useComposer();
 	const languagePicker = useLanguagePicker(postId);
 	const languageTrigger = useRef<HTMLButtonElement>(null);
-	const labelsDialog = Dialog.useDialogHandle<LabelsPayload>();
 	const emojiPicker = EmojiPicker.useEmojiPickerHandle();
 	const gifPicker = Dialog.useDialogHandle();
 	// pickers return focus to the editor after inserting, and to their trigger otherwise.
@@ -88,7 +78,7 @@ export function PostFooter({ postId }: { postId: string }) {
 		}
 
 		const keys = getAttachmentKeys(state, post.node);
-		labelsDialog.openWithPayload({ keys, labels: getTaintedLabels(state, keys) });
+		dialogs.labels.openWithPayload({ keys, labels: getTaintedLabels(state, keys) });
 	};
 
 	return (
@@ -239,12 +229,6 @@ export function PostFooter({ postId }: { postId: string }) {
 					return false;
 				}}
 			/>
-			{canLabel && (
-				<LabelsDialog
-					handle={labelsDialog}
-					onSave={(labels, { keys }) => setAttachmentLabels(wg, keys, labels)}
-				/>
-			)}
 			<LanguagePopups picker={languagePicker} trigger={languageTrigger} />
 		</>
 	);

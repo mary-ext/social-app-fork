@@ -2,8 +2,6 @@ import { createContext, use, useSyncExternalStore } from 'react';
 
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
-
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
@@ -11,6 +9,7 @@ import { type InteractionSettings, interactionSettingsFromPreferences } from '#/
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 
+import type { ComposerDialogHandles } from './dialogs';
 import type { ThreadDnd } from './dnd/channel';
 import type { PostSlot } from './editor/post-slots';
 import type { VideoUploads } from './media/shared/video-uploads';
@@ -65,8 +64,8 @@ export type Composer = {
 	publishing: Store<PublishTask | null>;
 	/** the thread's uploads; active while mounted. */
 	uploads: VideoUploads;
-	/** asks the owning media row to open an attachment's alt text editor, by media id. */
-	altRequests: SimpleEventEmitter<[mediaId: string]>;
+	/** handles for dialogs shared across posts. */
+	dialogs: ComposerDialogHandles;
 	/**
 	 * replaces the editor's publish shortcut handler.
 	 *

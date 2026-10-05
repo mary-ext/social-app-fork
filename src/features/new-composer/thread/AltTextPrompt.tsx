@@ -1,7 +1,9 @@
 import * as Prompt from '#/components/Prompt';
 
 import { useComposer } from '../context';
+import { openAltText } from '../media/media-dialogs';
 import { findMissingAlt } from '../media/shared/alt-text';
+import { getMediaTileSelector } from '../shared/elements';
 
 /** missing alt text guard and its prompt props. */
 export type AltTextGuard = {
@@ -51,13 +53,14 @@ export function AltTextPrompt({
 }: AltTextGuard['prompt'] & {
 	onProceed: () => void;
 }) {
-	const { wg, altRequests } = useComposer();
+	const composer = useComposer();
 
 	const addAlt = () => {
-		// the prompt is modal, so the thread can't change while it's open.
-		const mediaId = findMissingAlt(wg.state);
-		if (mediaId !== undefined) {
-			altRequests.emit(mediaId);
+		const missing = findMissingAlt(composer.wg.state);
+		if (missing !== undefined) {
+			// focus before opening so the dialog returns focus to the tile.
+			document.querySelector<HTMLElement>(getMediaTileSelector(missing.item.id))?.focus();
+			openAltText(composer, missing.postId, missing.item);
 		}
 	};
 

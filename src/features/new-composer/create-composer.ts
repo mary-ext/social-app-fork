@@ -14,6 +14,7 @@ import { zIndex } from '#/styles/tokens.css';
 
 import { threadCommands } from './commands/thread-commands';
 import type { Composer, DraftOrigin, PublishTask } from './context';
+import { createComposerDialogs } from './dialogs';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
@@ -274,7 +275,7 @@ export const createComposer = ({
 		interaction,
 		publishing,
 		uploads,
-		altRequests: new SimpleEventEmitter(),
+		dialogs: createComposerDialogs(),
 		slots,
 		endHost,
 		suggestionHost: popupHost,
