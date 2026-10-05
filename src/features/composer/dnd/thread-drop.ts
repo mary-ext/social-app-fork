@@ -12,38 +12,11 @@ import {
 	moveMediaToNewPost,
 	moveMediaToSlot,
 } from '../media/commands';
-import { getMediaTileSelector, IMAGE_GROUP_ATTR } from '../shared/elements';
+import { revealMedia } from '../media/reveal-media';
 import type { ThreadDnd, ThreadDragData } from './channel';
 import { type DropIndicator, dropIndicator, markDropIndicator, type MediaDrop } from './drop-indicators';
 import { getMediaDrop, getMoveIndex, getPostDropSlot, isFileDrag, type Point } from './drop-targets';
 import { createEdgeScroller } from './edge-scroll';
-
-// carousels re-snap to their previous tile after a reorder; bring the moved one into view instead.
-const revealMedia = (mediaId: string) => {
-	requestAnimationFrame(() => {
-		const tile = document.querySelector(getMediaTileSelector(mediaId));
-		if (!tile) {
-			return;
-		}
-
-		// in Firefox, 'nearest' can snap back to an earlier tile; use 'start' for clipped tiles.
-		let inline: ScrollLogicalPosition = 'nearest';
-		{
-			const group = tile.closest(`[${IMAGE_GROUP_ATTR}]`);
-			if (group) {
-				const rect = tile.getBoundingClientRect();
-				const bounds = group.getBoundingClientRect();
-				// exclude the rail gutter from the visible bounds.
-				const left = bounds.left + parseFloat(getComputedStyle(group).scrollPaddingLeft);
-				if (rect.left < left || rect.right > bounds.right) {
-					inline = 'start';
-				}
-			}
-		}
-
-		tile.scrollIntoView({ block: 'nearest', inline });
-	});
-};
 
 // #region in-page drags
 
@@ -103,6 +76,7 @@ const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): voi
 		}
 	}
 
+	// reordering can re-snap the carousel to its previous tile.
 	revealMedia(mediaId);
 };
 

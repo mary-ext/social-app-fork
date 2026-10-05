@@ -6,23 +6,11 @@ import { clamp } from '#/lib/utils/numbers';
 import { hasAttachments } from '../model/post-info';
 import { endOfLastLine } from '../model/schema';
 import { findActivePost, getActivePostId } from '../model/selection';
+import { findScrollParent } from '../shared/scroll-parent';
 
 const CARET_MARGIN = 24;
 // the footer slot already provides bottom padding.
 const POST_MARGIN = 0;
-
-const findScroller = (element: HTMLElement): HTMLElement | null => {
-	for (let cur = element.parentElement; cur && cur !== document.body; cur = cur.parentElement) {
-		const { overflowY, position } = getComputedStyle(cur);
-		if ((overflowY === 'auto' || overflowY === 'scroll') && cur.scrollHeight > cur.clientHeight) {
-			return cur;
-		}
-		if (position === 'fixed' || position === 'sticky') {
-			return null;
-		}
-	}
-	return null;
-};
 
 // the last paragraph may wrap onto multiple visual lines.
 const isOnLastLine = (wg: Wordgard, post: Pos.Plot, caret: DOMRect): boolean => {
@@ -106,7 +94,7 @@ const scrolling = Wordgard.Plugin.define(
 					return false;
 				}
 
-				const scroller = findScroller(wg.scrollDOM);
+				const scroller = findScrollParent(wg.scrollDOM);
 				if (!scroller) {
 					return false;
 				}
