@@ -7,6 +7,7 @@ import type { Transaction } from 'wordgard/state';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 import { appendPost } from '../commands/append-post';
+import { revealPostEnd } from '../editor/scrolling';
 import { ISOLATE_HISTORY } from '../model/history';
 import {
 	endOfLastLine,
@@ -18,6 +19,7 @@ import {
 } from '../model/schema';
 import { findActivePost } from '../model/selection';
 import { createGifMedia, createMedia } from './attachments';
+import { revealMedia } from './reveal-media';
 
 /** an attachment's id and containing post. */
 export type MediaRef = {
@@ -32,27 +34,37 @@ const dispatchMediaChange = (wg: Wordgard, spec: Transaction.Spec): void => {
 	}
 };
 
-/**
- * classifies and validates files, then appends the accepted ones to a post.
- *
- * @param wg the editor
- * @param postId the post's id
- * @param files the picked or dropped files
- */
-export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
-	const { media } = await createMedia(files);
+// caret scrolling doesn't reveal attachments below the text.
+const addAndRevealMedia = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
 	addMediaTo(wg, postId, media);
+	if (media[0]) {
+		// reveal the tile first, then correct its vertical scroll to include the post's toolbar.
+		revealMedia(media[0].id);
+		revealPostEnd(wg, postId);
+	}
 };
 
 /**
- * appends an external GIF to a post.
+ * validates files, appends accepted media to a post, and scrolls it into view.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ * @param files the picked or pasted files
+ */
+export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
+	const { media } = await createMedia(files);
+	addAndRevealMedia(wg, postId, media);
+};
+
+/**
+ * appends an external GIF to a post and scrolls it into view.
  *
  * @param wg the editor
  * @param postId the post's id
  * @param gif a GIF picker result
  */
 export const attachGif = (wg: Wordgard, postId: string, gif: Gif): void => {
-	addMediaTo(wg, postId, [createGifMedia(gif)]);
+	addAndRevealMedia(wg, postId, [createGifMedia(gif)]);
 };
 
 /**

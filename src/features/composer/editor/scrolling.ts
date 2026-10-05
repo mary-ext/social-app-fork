@@ -4,7 +4,7 @@ import { Wordgard } from 'wordgard/editor';
 import { clamp } from '#/lib/utils/numbers';
 
 import { hasAttachments } from '../model/post-info';
-import { endOfLastLine } from '../model/schema';
+import { endOfLastLine, findPostById } from '../model/schema';
 import { findActivePost, getActivePostId } from '../model/selection';
 import { findScrollParent } from '../shared/scroll-parent';
 
@@ -45,6 +45,27 @@ const revealPost = (wg: Wordgard, scroller: HTMLElement): boolean => {
 
 	scrollRectIntoView(scroller, rect, { top: POST_MARGIN, bottom: POST_MARGIN });
 	return true;
+};
+
+/**
+ * reveals a post on the next animation frame. tall posts align to the bottom to keep the toolbar visible.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ */
+export const revealPostEnd = (wg: Wordgard, postId: string): void => {
+	requestAnimationFrame(() => {
+		const post = findPostById(wg.state.doc, postId);
+		const rect = post && wg.nodeDOM(post.pos)?.getBoundingClientRect();
+		const scroller = findScrollParent(wg.scrollDOM);
+		if (!rect || !scroller) {
+			return;
+		}
+
+		const height = Math.min(rect.height, scroller.clientHeight);
+		const end = new DOMRect(rect.left, rect.bottom - height, rect.width, height);
+		scrollRectIntoView(scroller, end, { top: POST_MARGIN, bottom: POST_MARGIN });
+	});
 };
 
 const scrollCaretIntoView = (wg: Wordgard, scroller: HTMLElement) => {
