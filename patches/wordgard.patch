@@ -33,3 +33,16 @@ index 04df810151c72f62dafa53f7f19e8d66853a55fb..fc620aec5bf69f4ea08c94a8aaeebd78
                  i++;
          }
          this.fill(i);
+diff --git a/dist/state.js b/dist/state.js
+index 0d110081825754f6adaf5368d676794b8d563a82..2fb8b613dd0724bc83b097e76897515fc8cccf40 100644
+--- a/dist/state.js
++++ b/dist/state.js
+@@ -1680,7 +1680,7 @@ class GardState {
+         }
+     });
+ ;return GardState})(GardState);
+-const initField = /*@__PURE__*/GardState.Facet.define({ static: true });
++const initField = GardState.Facet.define({ static: true });
+ function addValue(set, value) {
+     if (set.indexOf(value) < 0)
+         set.push(value);

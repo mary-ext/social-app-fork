@@ -10,6 +10,11 @@ deleting a post containing the caret puts the deletion and the following post's 
 attribute in adjacent update sections. the second section skipped that post's header widget at
 `pos + 1`, removing its avatar and handle.
 
+## `dist/state.js`: drop the `@__PURE__` annotation on `initField`
+
+Terser's `collapse_vars` folds the preceding `GardState` namespace assignment into this call;
+`unused` then drops both, leaving the namespace undefined in production builds.
+
 ## `dist/doc.d.ts`: type `Pos.Node` sibling getters as document nodes
 
 `nextSibling` and `previousSibling` return document nodes, not `Pos.Node` wrappers. correct their
