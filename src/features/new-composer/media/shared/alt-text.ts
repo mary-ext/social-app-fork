@@ -1,6 +1,7 @@
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
+import { getPostParam, getPosts } from '../../model/schema';
 import { defineTaint } from '../../model/taints';
 
 /** alt text keyed by media ID. */
@@ -29,6 +30,22 @@ export const getMediaAlt = (state: GardState, mediaId: string): string => {
  */
 export const hasMediaAlt = (state: GardState, mediaId: string): boolean => {
 	return state.field(altTaint.field).has(mediaId);
+};
+
+/**
+ * finds the thread's first attachment without alt text.
+ *
+ * @param state the editor state
+ * @returns the media's id, or undefined if every attachment has alt text
+ */
+export const findMissingAlt = (state: GardState): string | undefined => {
+	for (const { node } of getPosts(state.doc)) {
+		for (const item of getPostParam(node).media) {
+			if (!hasMediaAlt(state, item.id)) {
+				return item.id;
+			}
+		}
+	}
 };
 
 /**

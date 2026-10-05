@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useEffectEvent } from 'react';
 
 import { ThreadgateBtn } from '#/features/composer/threadgate/ThreadgateBtn';
 
@@ -9,6 +9,7 @@ import { m } from '#/paraglide/messages';
 import { useComposer, useIsPublishing, usePostCount, useThreadInteraction } from '../context';
 import { useUploadsProgress } from '../media/shared/upload-status';
 import { usePublish } from '../publish/use-publish';
+import { AltTextPrompt, useAltTextGuard } from './AltTextPrompt';
 import * as css from './ThreadFooter.css';
 
 /**
@@ -42,6 +43,7 @@ const NO_FILES: readonly File[] = [];
 
 function PublishButton() {
 	const { handlePublishKey } = useComposer();
+	const altGuard = useAltTextGuard();
 	const { blocker, task, publish } = usePublish();
 	const uploadPercent = useUploadsProgress(task?.videos ?? NO_FILES);
 	const isThread = usePostCount() > 1;
@@ -50,9 +52,17 @@ function PublishButton() {
 		: m['view.composer.publish.a11y.post']();
 	const publishText = isThread ? m['view.composer.publish.action.all']() : m['navigation.post.title']();
 
+	// a blocked thread shouldn't prompt; publish re-checks the live state.
+	const requestPublish = () => {
+		if (blocker === null && task === null && !altGuard.intercept()) {
+			void publish();
+		}
+	};
+
+	const onPublishKey = useEffectEvent(requestPublish);
 	useEffect(() => {
-		return handlePublishKey(() => void publish());
-	}, [handlePublishKey, publish]);
+		return handlePublishKey(onPublishKey);
+	}, [handlePublishKey]);
 
 	let content: ReactNode;
 	if (task === null) {
@@ -81,10 +91,12 @@ function PublishButton() {
 				size="small"
 				label={publishLabel}
 				disabled={blocker !== null || task !== null}
-				onClick={() => void publish()}
+				onClick={requestPublish}
 			>
 				{content}
 			</Button>
+
+			<AltTextPrompt {...altGuard.prompt} onProceed={() => void publish()} />
 		</>
 	);
 }

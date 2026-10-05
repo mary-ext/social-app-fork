@@ -2,6 +2,8 @@ import { createContext, use, useSyncExternalStore } from 'react';
 
 import type { ResourceUri } from '@atcute/lexicons';
 
+import type { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
@@ -63,6 +65,8 @@ export type Composer = {
 	publishing: Store<PublishTask | null>;
 	/** the thread's uploads; active while mounted. */
 	uploads: VideoUploads;
+	/** asks the owning media row to open an attachment's alt text editor, by media id. */
+	altRequests: SimpleEventEmitter<[mediaId: string]>;
 	/**
 	 * replaces the editor's publish shortcut handler.
 	 *

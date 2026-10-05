@@ -274,6 +274,7 @@ export const createComposer = ({
 		interaction,
 		publishing,
 		uploads,
+		altRequests: new SimpleEventEmitter(),
 		slots,
 		endHost,
 		suggestionHost: popupHost,

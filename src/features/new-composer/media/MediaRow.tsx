@@ -1,3 +1,5 @@
+import { useEffect, useEffectEvent } from 'react';
+
 import { getSelectionErrorMessage } from '#/features/composer/media/attachment-messages';
 import { type ImageAltTextTarget, ImageAltTextDialog } from '#/features/composer/photos/ImageAltTextDialog';
 
@@ -7,10 +9,10 @@ import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
 
-import { useEditor, useIsActivePost, usePostState } from '../context';
+import { useComposer, useIsActivePost, usePostState } from '../context';
 import { findPostById, getPostParam, getPostText, type PostMedia, splitMedia } from '../model/schema';
 import { escapeToEditor } from '../shared/editor-focus';
-import { MEDIA_ID_ATTR } from '../shared/elements';
+import { getMediaTileSelector, MEDIA_ID_ATTR } from '../shared/elements';
 import { useRovingFocus } from '../shared/roving-focus';
 import { getMediaProblem, isVideoUploadMedia } from './attachments';
 import { removeMedia } from './commands';
@@ -57,7 +59,7 @@ function UploadError({ file }: { file: File }) {
  * @returns the media row, or null if there are no attachments
  */
 export function MediaRow({ postId }: { postId: string }) {
-	const wg = useEditor();
+	const { wg, altRequests } = useComposer();
 	// media keeps its identity through text edits, since posts keep their tags.
 	const media = usePostState(postId, (_state, post) => getPostParam(post.node).media, NO_MEDIA);
 	const isActive = useIsActivePost(postId);
@@ -75,11 +77,6 @@ export function MediaRow({ postId }: { postId: string }) {
 	const captionsDialog = Dialog.useDialogHandle<VideoCaptionsTarget & { mediaId: string }>();
 	const editDialog = Dialog.useDialogHandle<EditImageTarget & { mediaId: string }>();
 
-	if (media.length === 0) {
-		return null;
-	}
-
-	const mediaProblem = getMediaProblem(media);
 	const { images, others } = splitMedia(media);
 
 	const editAlt = (item: PostMedia) => {
@@ -136,6 +133,26 @@ export function MediaRow({ postId }: { postId: string }) {
 			}
 		}
 	};
+
+	const onAltRequest = useEffectEvent((mediaId: string) => {
+		const item = media.find((candidate) => candidate.id === mediaId);
+		if (item) {
+			// focus synchronously so the dialog records the tile as its return target; this also scrolls it
+			// into view.
+			document.querySelector<HTMLElement>(getMediaTileSelector(mediaId))?.focus();
+			editAlt(item);
+		}
+	});
+
+	useEffect(() => {
+		return altRequests.subscribe(onAltRequest);
+	}, [altRequests]);
+
+	if (media.length === 0) {
+		return null;
+	}
+
+	const mediaProblem = getMediaProblem(media);
 
 	const saveAlt = (alt: string, { mediaId }: { mediaId: string }) => {
 		setMediaAlt(wg, { mediaId, alt });
