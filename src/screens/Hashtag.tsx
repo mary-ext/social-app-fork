@@ -167,6 +167,7 @@ function HashtagScreenTab({
 		<List
 			data={posts}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			keyExtractor={(item) => item.uri}
 			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 			ListFooterComponent={

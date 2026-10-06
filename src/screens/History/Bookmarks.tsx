@@ -104,6 +104,7 @@ export function BookmarksTab() {
 		<List
 			data={items}
 			estimateHeight={BOOKMARK_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			keyExtractor={keyExtractor}
 			renderItem={renderItem}
 			ListFooterComponent={

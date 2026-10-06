@@ -208,6 +208,7 @@ function PostResults({ query, sort }: { query: string; sort?: 'latest' | 'top' }
 		<List
 			data={items}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			keyExtractor={(item) => item.uri}
 			ListFooterComponent={
 				<ListTail.Frame>{isFetchingNextPage ? <ListTail.Pending /> : null}</ListTail.Frame>

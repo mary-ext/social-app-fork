@@ -44,6 +44,7 @@ export function LikesTab() {
 		<List
 			data={posts}
 			estimateHeight={LIKE_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			keyExtractor={keyExtractor}
 			renderItem={({ index, item }) => <Post hideTopBorder={index === 0} post={item} />}
 			ListFooterComponent={

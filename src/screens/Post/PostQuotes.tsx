@@ -104,6 +104,7 @@ function PostQuotes({ uri }: { uri: string }) {
 		<List
 			data={quotes}
 			estimateHeight={POST_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			ListFooterComponent={
