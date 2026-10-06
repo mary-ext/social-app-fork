@@ -1,6 +1,6 @@
-import { Leaf, Plot, type Slice, Token } from 'wordgard/doc';
+import { Leaf, Plot, Slice, Token } from 'wordgard/doc';
 import { Wordgard } from 'wordgard/editor';
-import { GardSelection } from 'wordgard/state';
+import { GardSelection, type GardState } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
 import { attachFiles } from '../media/commands';
@@ -46,8 +46,12 @@ const tokenizePastedText = (text: string): Token[] => {
 	return tokens;
 };
 
-/** pastes as plain text so blank-line runs split posts the same way typing them does. */
-export const pastePlainText = Wordgard.pasteHandler.of((wg, event) => {
+const parsePlainText = Wordgard.clipboardTextParser.of((text) => {
+	return Slice.of(tokenizePastedText(text));
+});
+
+// built-in paste prefers HTML; shift-paste bypasses the text parser.
+const pastePlainTextHandler = Wordgard.pasteHandler.of((wg, event) => {
 	const files = event.clipboardData?.files;
 	if (files?.length) {
 		const post = findPost(wg.state.sel.head);
@@ -81,6 +85,9 @@ export const pastePlainText = Wordgard.pasteHandler.of((wg, event) => {
 
 	return true;
 });
+
+/** pastes and drops plain text, splitting posts at blank-line runs. */
+export const pastePlainText: GardState.Extension = [parsePlainText, pastePlainTextHandler];
 
 /** separates copied posts with blank lines so pasting restores the post boundaries. */
 export const copyPlainText = Wordgard.clipboardTextSerializer.of((slice: Slice) => {
