@@ -51,6 +51,8 @@ const MIN_EVICTION = 2;
 const LOOP_RETAIN_MAX = 60;
 
 const PANIC_BUFFER = { back: 2, forward: 8, minimum: 0 };
+const MAX_PANICS = 2;
+
 const MAX_RECOVERIES = 2;
 const RESTART_INTERVAL_MS = 1000;
 const PROGRESS_AFTER_RECOVERY = 1;
@@ -202,6 +204,7 @@ export const attachHlsPlayer = (
 	let lastTimeReport = 0;
 
 	let attempted: { start: number; end: number } | undefined;
+	let panics = 0;
 
 	let stuckAt: number | undefined;
 	let nudges = 0;
@@ -310,7 +313,7 @@ export const attachHlsPlayer = (
 						}
 
 						// keep the chunk and retry after emergency eviction.
-						if (!nextEviction(PANIC_BUFFER)) {
+						if (panics >= MAX_PANICS || !nextEviction(PANIC_BUFFER)) {
 							fail({
 								code: 'media',
 								message: 'SourceBuffer is full with nothing evictable',
@@ -319,10 +322,12 @@ export const attachHlsPlayer = (
 							break;
 						}
 
+						panics++;
 						queue.unshift({ type: 'evict', ...PANIC_BUFFER });
 						continue;
 					}
 
+					panics = 0;
 					queue.shift();
 					return;
 				}
