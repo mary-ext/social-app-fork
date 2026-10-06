@@ -2,6 +2,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
+
 import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../../context';
@@ -50,7 +52,7 @@ export function GifTile({
 			dragPreview={<DragThumbnail src={url} />}
 			roving={roving}
 			className={css.tile}
-			style={assignInlineVars({ [css.ratioVar]: String(item.aspectRatio ?? 1) })}
+			style={assignInlineVars({ [css.ratioVar]: String(getVideoBoxRatio(item.aspectRatio)) })}
 			onRemove={onRemove}
 		>
 			<img className={css.image} src={url} alt="" />

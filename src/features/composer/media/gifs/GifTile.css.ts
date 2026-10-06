@@ -1,10 +1,9 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
-import { getFittedStyle } from '../tile/fitted-tile';
-import { cover } from '../tile/MediaTile.css';
+import { contain, videoRatioVar, videoTile } from '../tile/MediaTile.css';
 
-export const ratioVar = createVar();
+export const ratioVar = videoRatioVar;
 
-export const tile = style(getFittedStyle(ratioVar));
+export const tile = style([videoTile]);
 
-export const image = style([cover]);
+export const image = style([contain]);

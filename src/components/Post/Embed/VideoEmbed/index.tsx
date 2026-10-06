@@ -9,7 +9,7 @@ import { noRowLink } from '#/lib/browser/interactive';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 
 import { ErrorBoundary } from '#/components/ErrorBoundary';
-import { MAX_MEDIA_HEIGHT } from '#/components/Post/Embed/media-constants';
+import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
 import {
 	HLSUnsupportedError,
 	VideoNotFoundError,
@@ -26,8 +26,6 @@ const VideoEmbedInnerWeb = lazy(() =>
 		default: mod.VideoEmbedInnerWeb,
 	})),
 );
-
-const MIN_CARD_WIDTH = 280;
 
 export function VideoEmbed({ embed, authorDid }: { embed: AppBskyEmbedVideo.View; authorDid?: Did }) {
 	const ref = useRef<HTMLDivElement>(null);
@@ -46,11 +44,7 @@ export function VideoEmbed({ embed, authorDid }: { embed: AppBskyEmbedVideo.View
 		}
 	}
 
-	// the box keeps the video's own shape (`index.css` caps the height by clamping the box width), so a
-	// portrait video sits narrow rather than dominating the column — but only down to a floor, past which the
-	// card is too narrow to lay out the controls. below it the box widens and the video letterboxes inside,
-	// which costs a couple of thin bars but keeps the player usable.
-	const boxAspectRatio = Math.max(aspectRatio ?? 1, MIN_CARD_WIDTH / MAX_MEDIA_HEIGHT);
+	const boxAspectRatio = getVideoBoxRatio(aspectRatio);
 
 	const thumbnail = videoThumbnailUrl(embed);
 

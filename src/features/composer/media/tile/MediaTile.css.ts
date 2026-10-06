@@ -1,9 +1,10 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { borderRadius } from '#/styles/tokens.css';
 
 import { DRAGGING_OPACITY } from '../../shared/layout';
+import { getFittedStyle } from './fitted-tile';
 
 export const FOCUS_RING_EXTENT = 4;
 
@@ -35,13 +36,15 @@ export const cover = style({
 	pointerEvents: 'none',
 });
 
-/** media sizing its own tile. */
+/** box width-to-height ratio from `getVideoBoxRatio`. */
+export const videoRatioVar = createVar();
+
+export const videoTile = style([getFittedStyle(videoRatioVar), { backgroundColor: '#000' }]);
+
 export const contain = style({
 	display: 'block',
 	width: '100%',
-	maxHeight: 360,
-	// use 16:9 until intrinsic dimensions are available.
-	aspectRatio: 'auto 16 / 9',
+	height: '100%',
 	objectFit: 'contain',
 	pointerEvents: 'none',
 });

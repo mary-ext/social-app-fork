@@ -1,4 +1,8 @@
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+
 import { getBlobUrl } from '#/lib/utils/blob-url';
+
+import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
@@ -59,6 +63,8 @@ export function VideoTile({
 			label={label}
 			dragPreview={<DragChip icon={VideoIcon} label={label} />}
 			roving={roving}
+			className={css.tile}
+			style={assignInlineVars({ [css.ratioVar]: String(getVideoBoxRatio(item.aspectRatio)) })}
 			onRemove={onRemove}
 		>
 			<video className={css.video} src={getBlobUrl(item.file)} preload="metadata" muted />
