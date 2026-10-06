@@ -10,6 +10,19 @@ import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/
 
 import * as styles from './index.css';
 
+const OWN_IMAGES_ATTRIBUTE = 'data-own-images';
+
+/**
+ * finds a post's lightbox trigger, excluding quoted posts.
+ *
+ * @param root the post's root element
+ * @returns the trigger, or `null` if none is rendered
+ */
+export const findOwnImagesTrigger = (root: HTMLElement): HTMLElement | null => {
+	// inactive tiles and paging buttons have tabindex="-1"
+	return root.querySelector<HTMLElement>(`[${OWN_IMAGES_ATTRIBUTE}] button:not([tabindex="-1"])`);
+};
+
 /** Warm the browser cache with the full-size images so the lightbox opens instantly. */
 function prefetch(uris: string[]) {
 	const run = () => {
@@ -27,6 +40,7 @@ function prefetch(uris: string[]) {
 
 export function ImageEmbed({
 	embed,
+	isWithinQuote,
 	viewContext,
 }: CommonProps & {
 	embed: AppBskyEmbedGallery.View | AppBskyEmbedImages.View;
@@ -53,7 +67,7 @@ export function ImageEmbed({
 	};
 
 	return (
-		<div className={styles.wrapper}>
+		<div className={styles.wrapper} {...(!isWithinQuote && { [OWN_IMAGES_ATTRIBUTE]: '' })}>
 			{images.length === 1 ? (
 				<AutoSizedImage
 					image={images[0]!}

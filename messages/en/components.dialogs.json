@@ -23,7 +23,7 @@
 	"components.dialogs.keybinds.general": "General",
 	"components.dialogs.keybinds.navigation": "Go to",
 	"components.dialogs.keybinds.nextPost": "Next post",
-	"components.dialogs.keybinds.openPost": "Open post",
+	"components.dialogs.keybinds.open": "Open images or post",
 	"components.dialogs.keybinds.posts": "Posts",
 	"components.dialogs.keybinds.previousPost": "Previous post",
 	"components.dialogs.keybinds.then": "then",

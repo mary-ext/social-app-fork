@@ -303,6 +303,7 @@ export function PostThread({ uri }: { uri: ResourceUri }) {
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					estimateHeight={ITEM_HEIGHT_ESTIMATE}
+					keyboardNavigation
 					ListFooterComponent={
 						<div
 							className={clsx(

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -26,6 +26,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import { PostMeta } from '#/components/PostMeta';
@@ -178,10 +179,16 @@ function ThreadItemTreePostInner({
 		});
 	};
 
+	const linkRef = useRef<HTMLElement>(null);
+	const { focusWithin, itemProps } = useNavigablePost(() => {
+		linkRef.current?.click();
+	});
+
 	return (
 		<ThreadItemTreePostOuterWrapper item={item}>
-			<div className={css.hoverable}>
+			<div className={css.hoverable} {...itemProps}>
 				<PostHider
+					ref={linkRef}
 					to={threadTarget}
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
@@ -230,7 +237,7 @@ function ThreadItemTreePostInner({
 										/>
 									)}
 
-									<PostControls post={postShadow} onPressReply={onPressReply} />
+									<PostControls keybindsEnabled={focusWithin} post={postShadow} onPressReply={onPressReply} />
 								</div>
 							</div>
 						</div>

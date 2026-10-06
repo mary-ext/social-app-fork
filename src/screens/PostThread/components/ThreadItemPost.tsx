@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -25,6 +25,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
@@ -90,16 +91,18 @@ function ThreadItemPostOuterWrapper({
 	item,
 	overrides,
 	hoverable,
+	frameProps,
 	children,
 }: Pick<ThreadItemPostProps, 'item' | 'overrides'> & {
 	hoverable?: boolean;
+	frameProps?: PostLayout.FrameProps;
 	children: ReactNode;
 }) {
 	const showTopBorder = !item.ui.showParentReplyLine && overrides?.topBorder !== true;
 
 	return (
 		<GalleryBleed>
-			<PostLayout.Frame hoverable={hoverable} topBorder={showTopBorder}>
+			<PostLayout.Frame hoverable={hoverable} topBorder={showTopBorder} {...frameProps}>
 				{children}
 			</PostLayout.Frame>
 		</GalleryBleed>
@@ -160,6 +163,11 @@ function ThreadItemPostInner({
 		});
 	};
 
+	const linkRef = useRef<HTMLElement>(null);
+	const { focusWithin, itemProps } = useNavigablePost(() => {
+		linkRef.current?.click();
+	});
+
 	const { isActive: live } = useActorStatus(post.author);
 
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
@@ -168,8 +176,9 @@ function ThreadItemPostInner({
 		post: post,
 	});
 	return (
-		<ThreadItemPostOuterWrapper item={item} overrides={overrides} hoverable>
+		<ThreadItemPostOuterWrapper item={item} overrides={overrides} hoverable frameProps={itemProps}>
 			<PostHider
+				ref={linkRef}
 				to={threadTarget}
 				disabled={overrides?.moderation === true}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
@@ -230,7 +239,7 @@ function ThreadItemPostInner({
 								/>
 							</div>
 						)}
-						<PostControls post={postShadow} onPressReply={onPressReply} />
+						<PostControls keybindsEnabled={focusWithin} post={postShadow} onPressReply={onPressReply} />
 					</PostLayout.ContentColumn>
 				</PostLayout.Row>
 			</PostHider>

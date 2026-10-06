@@ -1,4 +1,4 @@
-import { type ReactNode, useRef } from 'react';
+import type { ReactNode } from 'react';
 
 import type {
 	AppBskyActorDefs,
@@ -13,8 +13,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord } from '#/lib/api/record-casts';
-import { useFocusWithin } from '#/lib/hooks/use-focus-within';
-import { useKeybind } from '#/lib/keybinds';
 import type { AppModerationCause } from '#/lib/moderation/causes';
 import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
@@ -32,10 +30,9 @@ import { useActorStatus } from '#/features/liveNow/use-actor-status';
 
 import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
-import { KEYBINDS } from '#/components/keybind-catalog';
-import { listItemProps } from '#/components/List/keyboard-navigation';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
@@ -222,16 +219,8 @@ function FeedItemInner({
 
 	const { isActive: live } = useActorStatus(post.author);
 
-	const frameRef = useRef<HTMLDivElement>(null);
-	const { focusWithin, focusProps } = useFocusWithin();
-
-	useKeybind({
-		keybind: KEYBINDS.openPost,
-		enabled: focusWithin,
-		handle() {
-			// preserve clickthrough logging and profile caching via onBeforePress
-			frameRef.current?.click();
-		},
+	const { focusWithin, itemProps } = useNavigablePost((frame) => {
+		frame.click();
 	});
 
 	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
@@ -259,13 +248,7 @@ function FeedItemInner({
 	return (
 		<GalleryBleed>
 			<BlockLink to={target} state={sourceState} onBeforePress={onBeforePress}>
-				<PostLayout.Frame
-					ref={frameRef}
-					hoverable
-					topBorder={!(hideTopBorder || isThreadChild)}
-					{...listItemProps}
-					{...focusProps}
-				>
+				<PostLayout.Frame hoverable topBorder={!(hideTopBorder || isThreadChild)} {...itemProps}>
 					<PostLayout.Row withHeader>
 						<div className={css.spineSlot}>
 							{isThreadChild && <PostLayout.Spine className={css.replyLineTop} />}

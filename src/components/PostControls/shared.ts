@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { isAbortError } from '#/lib/errors';
+import { useKeybind } from '#/lib/keybinds';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -12,6 +13,7 @@ import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/qu
 import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
+import { KEYBINDS } from '#/components/keybind-catalog';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
@@ -28,15 +30,19 @@ export type PostControlsProps = {
 };
 
 /**
- * The mutation queues, interaction logging, and like/repost/quote/share handlers shared by both action-bar
- * sizes. Holds no layout — the rendering components own their own sizing.
+ * shares post actions and keybinds between compact and anchor controls.
+ *
+ * @param props post data and action-bar options
+ * @returns action handlers, control state, and an auth guard
  */
 export function usePostControlsActions({
 	post,
 	feedContext,
 	reqId,
+	onPressReply,
+	keybindsEnabled,
 	viaRepost,
-}: Pick<PostControlsProps, 'feedContext' | 'post' | 'reqId' | 'viaRepost'>) {
+}: Omit<PostControlsProps, 'keybindsEnabled'> & { keybindsEnabled: boolean }) {
 	const { openComposer } = useOpenComposer();
 	const { sendInteraction } = useFeedFeedbackContext();
 	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost);
@@ -124,6 +130,38 @@ export function usePostControlsActions({
 			quote: post,
 		});
 	};
+
+	useKeybind({
+		keybind: KEYBINDS.like,
+		enabled: keybindsEnabled,
+		handle() {
+			requireAuth(() => onPressToggleLike());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.reply,
+		enabled: keybindsEnabled && !replyDisabled,
+		handle() {
+			requireAuth(() => onPressReply());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.repost,
+		enabled: keybindsEnabled,
+		handle() {
+			requireAuth(() => void onRepost());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.quote,
+		enabled: keybindsEnabled && !post.viewer?.embeddingDisabled,
+		handle() {
+			requireAuth(() => onQuote());
+		},
+	});
 
 	const onShare = () => {
 		sendInteraction({

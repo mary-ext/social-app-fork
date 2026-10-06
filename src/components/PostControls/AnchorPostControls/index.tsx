@@ -88,8 +88,9 @@ function AnchorPostControls({
 	feedContext,
 	reqId,
 	onPressReply,
+	keybindsEnabled,
 	viaRepost,
-}: PostControlsProps): ReactNode {
+}: PostControlsProps & { keybindsEnabled: boolean }): ReactNode {
 	const {
 		hasLikeIconBeenToggled,
 		onPressToggleLike,
@@ -98,7 +99,7 @@ function AnchorPostControls({
 		onShare,
 		replyDisabled,
 		requireAuth,
-	} = usePostControlsActions({ post, feedContext, reqId, viaRepost });
+	} = usePostControlsActions({ post, feedContext, reqId, onPressReply, keybindsEnabled, viaRepost });
 
 	return (
 		<div className={css.root}>

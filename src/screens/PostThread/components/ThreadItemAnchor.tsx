@@ -41,6 +41,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
 import { TranslatedPost } from '#/components/Post/Translated';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
 import * as PostLayout from '#/components/PostLayout';
@@ -211,6 +212,8 @@ function ThreadItemAnchorInner({
 		}
 	};
 
+	const { focusWithin, itemProps } = useNavigablePost();
+
 	const onOpenEmbed = () => {
 		if (postSource) {
 			feedFeedback.sendInteraction({
@@ -226,7 +229,7 @@ function ThreadItemAnchorInner({
 		<>
 			<ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 			<GalleryBleed>
-				<PostLayout.Frame rootPad={isRoot}>
+				<PostLayout.Frame rootPad={isRoot} {...itemProps}>
 					<div className={css.avatarRow}>
 						<div className={css.primary}>
 							<PreviewableUserAvatar
@@ -416,6 +419,7 @@ function ThreadItemAnchorInner({
 
 						<FeedFeedbackProvider value={feedFeedback}>
 							<AnchorPostControls
+								keybindsEnabled={focusWithin}
 								post={postShadow}
 								onPressReply={onPressReply}
 								feedContext={postSource?.feedContext}
