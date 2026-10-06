@@ -11,7 +11,7 @@ overrides:
 patchedDependencies:
   '@base-ui/react': 272b81ec0b275129a9cd134cc3e793c87501a80ad444a031949139826aa22517
   '@vanilla-extract/css': db5f4b15486aaa4226da06516bfb01460b8d79a52973e5b8695b3a3bbc9a4a98
-  wordgard: 58ae07a972db297e3bb0cd63d75e6ce956c39e47ede0f9b8607c2a8b43b140af
+  wordgard: d7665bb5923889f946697bf9295a442a81188bdf9a585288cd2df84f2b9a3fa9
 
 importers:
 
@@ -166,7 +166,7 @@ importers:
         version: 1.5.0(@typescript/typescript6@6.0.2)
       wordgard:
         specifier: 0.5.2
-        version: 0.5.2(patch_hash=58ae07a972db297e3bb0cd63d75e6ce956c39e47ede0f9b8607c2a8b43b140af)
+        version: 0.5.2(patch_hash=d7665bb5923889f946697bf9295a442a81188bdf9a585288cd2df84f2b9a3fa9)
     devDependencies:
       '@inlang/paraglide-js':
         specifier: 2.25.4
@@ -4084,7 +4084,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  wordgard@0.5.2(patch_hash=58ae07a972db297e3bb0cd63d75e6ce956c39e47ede0f9b8607c2a8b43b140af):
+  wordgard@0.5.2(patch_hash=d7665bb5923889f946697bf9295a442a81188bdf9a585288cd2df84f2b9a3fa9):
     dependencies:
       '@marijn/find-cluster-break': 1.0.4
       crelt: 1.0.7
