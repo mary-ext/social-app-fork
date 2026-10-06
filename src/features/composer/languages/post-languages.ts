@@ -17,8 +17,7 @@ const inheritLanguages = (map: TaintMap<string>, tr: Transaction): TaintMap<stri
 	let previous: string | undefined;
 	for (const { id } of getPosts(tr.newDoc)) {
 		const current = next ?? map;
-		// wait for normalizePostIds to assign ids before inheriting languages.
-		const isNew = id !== '' && findPostById(tr.startState.doc, id) === null;
+		const isNew = findPostById(tr.startState.doc, id) === null;
 		if (isNew && previous !== undefined && !current.has(id)) {
 			next ??= new Map(map);
 			next.set(id, previous);

@@ -1,5 +1,5 @@
 import { type ChangeSet, Leaf, type Node, Plot, type Pos } from 'wordgard/doc';
-import { GardState, Transaction } from 'wordgard/state';
+import { Correction, GardState } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
 import type { Gif } from '#/lib/media/external-gif/types';
@@ -97,7 +97,7 @@ export const splitMedia = (media: readonly PostMedia[]): { images: ImageMedia[];
 /** a single post in the thread. holds one paragraph per line of the post's text. */
 export const Post = Plot.Type.define<PostParam>('Post', {
 	blockContent: Paragraph,
-	// fitted posts start with an empty id; normalizePostIds assigns unique ids after the edit.
+	// schema-fitted posts get their ids from normalizePostIds.
 	defaultParam: { id: '', media: [] },
 	// route boundary joins through our handlers. cross-post replacements can still merge posts;
 	// preserveJoinedMedia retains attachments from partially deleted posts.
@@ -150,19 +150,13 @@ export const setPostMediaChange = (pos: number, post: Plot, media: readonly Post
 	return setPostParamChange(pos, { ...getPostParam(post), media });
 };
 
-// widgets and media commands require unique post ids. use an appender because repair positions
-// refer to the edited document; extender changes use the original coordinates by default.
-const normalizePostIds = (trs: readonly Transaction[], state: GardState): Transaction.Spec | null => {
-	// a remote transaction's originating peer repairs its own ids; repeating it here would cascade.
-	if (!trs.some((tr) => tr.docChanged && !tr.annotation(Transaction.remote))) {
-		return null;
-	}
-
+// repair within the edit so language inheritance sees unique post ids.
+const normalizePostIds = Correction.onChildList(ThreadDoc, (doc) => {
 	const seen = new Set<string>();
 	const changes: ChangeSet.Spec[] = [];
 
-	let pos = 0;
-	for (const node of getChildPlots(state.doc)) {
+	let pos = doc.start;
+	for (const node of getChildPlots(doc.node)) {
 		const param = getPostParam(node);
 		if (param.id === '' || seen.has(param.id)) {
 			const id = crypto.randomUUID();
@@ -174,14 +168,13 @@ const normalizePostIds = (trs: readonly Transaction[], state: GardState): Transa
 		pos += node.length;
 	}
 
-	// no user event, so the repair joins the undo event of the edit that caused it.
-	return changes.length > 0 ? { changes } : null;
-};
+	return changes.length > 0 ? changes : null;
+});
 
 /** thread schema with unique post ids. */
 export const threadSchema: GardState.Extension = [
 	GardState.schemaElement.of([ThreadDoc, Post, Paragraph]),
-	Transaction.appender.of(normalizePostIds),
+	normalizePostIds.extension,
 ];
 
 /**
@@ -325,7 +318,7 @@ const getPostIndex = (doc: Plot.Doc): PostIndex => {
 		for (const [i, node] of getChildPlots(doc).entries()) {
 			const post = { node, pos, index: i, id: getPostParam(node).id };
 			posts.push(post);
-			// ids are briefly duplicated or empty until normalizePostIds runs; keep the first.
+			// ids may still be duplicated before normalizePostIds runs; keep the first.
 			if (!byId.has(post.id)) {
 				byId.set(post.id, post);
 			}
