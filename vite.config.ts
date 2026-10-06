@@ -149,8 +149,9 @@ export default defineConfig(({ command, mode }) => {
 				output: {
 					chunkFileNames: 'assets/js/[hash:7].js',
 					assetFileNames: 'assets/[ext]/[hash:7][extname]',
-					codeSplitting,
-					minify,
+					codeSplitting: codeSplitting,
+					comments: { legal: false },
+					minify: minify,
 				},
 			},
 		},
@@ -158,7 +159,8 @@ export default defineConfig(({ command, mode }) => {
 			format: 'es',
 			rolldownOptions: {
 				output: {
-					minify,
+					comments: { legal: false },
+					minify: minify,
 				},
 			},
 		},
