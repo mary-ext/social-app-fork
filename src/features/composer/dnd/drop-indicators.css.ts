@@ -9,10 +9,10 @@ import {
 	POST_DROP_BEFORE_ATTR,
 	POST_DROP_GAP_ATTR,
 	POST_DROP_TARGET_ATTR,
-	POST_ELEMENT,
 	POST_OVERLAY_ATTR,
 } from '../shared/elements';
 import { AVATAR_SIZE, DRAGGING_OPACITY, POST_GAP_CENTER, RIGHT_PADDING } from '../shared/layout';
+import { post } from '../shared/post.css';
 
 /** drop-target tint for a post's pseudo-element. */
 export const DROP_TINT = {
@@ -27,14 +27,14 @@ export const DROP_TINT = {
 } as const;
 
 // tint the target post; image drops also get an insertion line.
-globalStyle(`${POST_ELEMENT}[${POST_DROP_TARGET_ATTR}]::before`, DROP_TINT);
+globalStyle(`${post}[${POST_DROP_TARGET_ATTR}]::before`, DROP_TINT);
 
 // keep the first post's tint inside the scroll container.
-globalStyle(`${POST_ELEMENT}:first-of-type[${POST_DROP_TARGET_ATTR}]::before`, {
+globalStyle(`${post}:first-of-type[${POST_DROP_TARGET_ATTR}]::before`, {
 	top: 0,
 });
 
-globalStyle(`${POST_ELEMENT}[${POST_DRAGGING_ATTR}], [${POST_OVERLAY_ATTR}][${POST_DRAGGING_ATTR}]`, {
+globalStyle(`${post}[${POST_DRAGGING_ATTR}], [${POST_OVERLAY_ATTR}][${POST_DRAGGING_ATTR}]`, {
 	opacity: DRAGGING_OPACITY,
 });
 
@@ -67,11 +67,11 @@ globalStyle(`[${POST_OVERLAY_ATTR}][${POST_DROP_AFTER_ATTR}]::after`, {
 });
 
 // keep the transition outside the gap selector so closing also animates.
-globalStyle(POST_ELEMENT, {
+globalStyle(post, {
 	transition: 'margin-top 150ms ease-out',
 });
 
 // keep the first post's marker inside the scroll container.
-globalStyle(`${POST_ELEMENT}[${POST_DROP_GAP_ATTR}]`, {
+globalStyle(`${post}[${POST_DROP_GAP_ATTR}]`, {
 	marginTop: POST_GAP_CENTER * 2,
 });

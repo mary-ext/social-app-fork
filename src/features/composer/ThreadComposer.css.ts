@@ -4,9 +4,6 @@ import { vars } from '#/styles/contract.css';
 import { TOUCH } from '#/styles/interaction';
 import { fontLeading, fontSize } from '#/styles/tokens.css';
 
-import { LINE_PLACEHOLDER_ATTR, POST_ELEMENT } from './shared/elements';
-import { AVATAR_SIZE, RAIL_WIDTH, RIGHT_PADDING } from './shared/layout';
-
 export const root = style({
 	position: 'relative',
 	margin: 0,
@@ -28,24 +25,4 @@ globalStyle(`${root} wg-content`, {
 	userSelect: 'text',
 	lineHeight: fontLeading.md,
 	fontSize: fontSize.md,
-});
-
-globalStyle(`${root} ${POST_ELEMENT}`, {
-	display: 'block',
-	position: 'relative',
-	paddingLeft: RAIL_WIDTH,
-	minHeight: AVATAR_SIZE,
-});
-
-globalStyle(`${root} ${POST_ELEMENT} p`, {
-	margin: 0,
-	marginRight: RIGHT_PADDING,
-});
-
-globalStyle(`${root} ${POST_ELEMENT} p[${LINE_PLACEHOLDER_ATTR}]::before`, {
-	position: 'absolute',
-	pointerEvents: 'none',
-	userSelect: 'none',
-	color: vars.palette.contrast_500,
-	content: `attr(${LINE_PLACEHOLDER_ATTR})`,
 });

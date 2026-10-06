@@ -3,10 +3,11 @@ import { GardState } from 'wordgard/state';
 
 import { getEmbedSession } from '../embeds/embed-session';
 import { getPostInfo } from '../model/post-info';
-import { getPosts, isEmptyPost } from '../model/schema';
+import { getPosts, isEmptyPost, Post } from '../model/schema';
 import { createOffsetMapper, measureCached } from '../model/text-measurement';
 import { LINE_PLACEHOLDER_ATTR } from '../shared/elements';
-import * as css from './decorations.css';
+import * as post from '../shared/post.css';
+import * as deco from './decorations.css';
 
 /** empty-post placeholder by thread index. */
 export const postPlaceholder = GardState.Facet.define<
@@ -16,8 +17,8 @@ export const postPlaceholder = GardState.Facet.define<
 	combine: (values) => values[0] ?? null,
 });
 
-const facetDeco = Decoration.Range.wrapper('span', { attributes: { class: css.facet } });
-const overflowDeco = Decoration.Range.wrapper('span', { attributes: { class: css.overflow } });
+const facetDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.facet } });
+const overflowDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.overflow } });
 
 type ThreadDecorations = {
 	facets: RangeSet<Decoration.Range>;
@@ -61,6 +62,9 @@ const build = (state: GardState): ThreadDecorations => {
 		points: PointSet.create(points),
 	};
 };
+
+/** applies post layout and placeholder styles to editor elements. */
+export const postClass: GardState.Extension = Decoration.Tag.attribute(Post, 'class', post.post);
 
 /** link highlights, overflow highlights, and placeholders. */
 export const threadDecorations = GardState.Field.define<ThreadDecorations>({

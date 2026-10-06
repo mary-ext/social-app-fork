@@ -18,7 +18,7 @@ import { createComposerDialogs } from './dialogs';
 import { createThreadDnd } from './dnd/channel';
 import { dropIndicator } from './dnd/drop-indicators';
 import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
-import { postPlaceholder, threadDecorations } from './editor/decorations';
+import { postClass, postPlaceholder, threadDecorations } from './editor/decorations';
 import { restoreSelectionOnFocus } from './editor/focus';
 import { createPostOverlays } from './editor/post-overlays';
 import { createPostScrolling } from './editor/scrolling';
@@ -177,6 +177,7 @@ export const createComposer = ({
 			return labels;
 		}),
 		languageTaint.field.init(() => seed.languages),
+		postClass,
 		threadDecorations,
 		restoreSelectionOnFocus(),
 		createPostScrolling(postOverlays.onLayout),
