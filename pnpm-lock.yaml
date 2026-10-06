@@ -212,9 +212,6 @@ importers:
       oxlint-tsgolint:
         specifier: ^7.0.2003
         version: 7.0.2003
-      terser:
-        specifier: ^5.51.2
-        version: 5.51.2
       type-fest:
         specifier: ^5.10.0
         version: 5.10.0
@@ -2967,6 +2964,7 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
+    optional: true
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
@@ -3532,13 +3530,15 @@ snapshots:
 
   boolbase@1.0.0: {}
 
-  buffer-from@1.1.2: {}
+  buffer-from@1.1.2:
+    optional: true
 
   clsx@2.1.1: {}
 
   commander@11.1.0: {}
 
-  commander@2.20.3: {}
+  commander@2.20.3:
+    optional: true
 
   comment-json@4.6.2:
     dependencies:
@@ -3973,8 +3973,10 @@ snapshots:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
+    optional: true
 
-  source-map@0.6.1: {}
+  source-map@0.6.1:
+    optional: true
 
   style-mod@4.1.4: {}
 
@@ -3998,6 +4000,7 @@ snapshots:
       acorn: 8.19.0
       commander: 2.20.3
       source-map-support: 0.5.21
+    optional: true
 
   tinyglobby@0.2.17:
     dependencies:

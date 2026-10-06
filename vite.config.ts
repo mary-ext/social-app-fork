@@ -41,6 +41,10 @@ export default defineConfig(({ command, mode }) => {
 		: `http://localhost?redirect_uri=${encodeURIComponent(oauthRedirectUri)}` +
 			`&scope=${encodeURIComponent(oauthScope)}`;
 
+	const minify: Rolldown.MinifyOptions = {
+		compress: { dropConsole: isProduction },
+	};
+
 	const baseUiFormControls = '(?:checkbox|checkbox-group|radio|radio-group|select|switch)';
 
 	const codeSplitting: Rolldown.CodeSplittingOptions = {
@@ -130,13 +134,6 @@ export default defineConfig(({ command, mode }) => {
 			outDir: 'web-build',
 			emptyOutDir: true,
 			sourcemap: true,
-			minify: 'terser',
-			terserOptions: {
-				compress: {
-					drop_console: isProduction,
-					passes: 2,
-				},
-			},
 			// prevent content hashes from cascading through importers.
 			chunkImportMap: isBuild,
 			modulePreload: { polyfill: false },
@@ -145,11 +142,17 @@ export default defineConfig(({ command, mode }) => {
 					chunkFileNames: 'assets/js/[hash:7].js',
 					assetFileNames: 'assets/[ext]/[hash:7][extname]',
 					codeSplitting,
+					minify,
 				},
 			},
 		},
 		worker: {
 			format: 'es',
+			rolldownOptions: {
+				output: {
+					minify,
+				},
+			},
 		},
 	};
 });
