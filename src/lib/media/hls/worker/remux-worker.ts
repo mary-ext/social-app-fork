@@ -37,6 +37,8 @@ const postChunk = (data: Uint8Array<ArrayBuffer>, myEpoch: number) => {
 let variants: VideoVariant[] = [];
 let subtitleRenditions: SubtitleRendition[] = [];
 const playlists = new Map<string, MediaPlaylist>();
+// renditions share a transport timeline; keep its offset across seeks and quality switches.
+let timestampBase: number | undefined;
 
 let epoch = 0;
 let currentIndex = 0;
@@ -52,6 +54,14 @@ let subtitleRequest: AbortController | undefined;
 
 // #endregion
 
+const resetSession = () => {
+	durationReported = false;
+	playlists.clear();
+	timestampBase = undefined;
+	subtitleRequest?.abort();
+	subtitleRequest = undefined;
+};
+
 const wakeParked = () => {
 	const waiting = parked;
 
@@ -62,36 +72,44 @@ const wakeParked = () => {
 };
 
 const samplesFor = (content: DemuxedMpegTs, base: number) => {
-	const video: MuxSample[] = content.video.map((sample, index, samples) => {
-		const next = samples[index + 1];
-		const previous = samples[index - 1];
+	// `tfdt` decode times and v0 `trun` composition offsets are unsigned. PTS-based alignment
+	// can make B-frame DTS negative, so clamp timestamps while preserving decode order.
+	let floor = 0;
+	const timed = content.video.map((sample) => {
+		const dts = Math.max(sample.dts - base, floor);
+		floor = dts + 1;
+		return { sample, dts, pts: Math.max(sample.pts - base, dts) };
+	});
+
+	const video: MuxSample[] = timed.map(({ sample, dts, pts }, index) => {
+		const next = timed[index + 1];
+		const previous = timed[index - 1];
 
 		let duration = MPEG_TS_TIMESCALE / 30;
 		if (next) {
-			duration = next.dts - sample.dts;
+			duration = next.dts - dts;
 		} else if (previous) {
-			duration = sample.dts - previous.dts;
+			duration = dts - previous.dts;
 		}
 
-		return {
-			data: sample.data,
-			dts: sample.dts - base,
-			duration,
-			key: sample.key,
-			pts: sample.pts - base,
-		};
+		return { data: sample.data, dts, duration, key: sample.key, pts };
 	});
 	const config = content.audioConfig;
-	const audio: MuxSample[] = config
-		? content.audio.map((sample, index, samples) => {
-				const dts = Math.round(((sample.pts - base) * config.sampleRate) / MPEG_TS_TIMESCALE);
-				const next = samples[index + 1];
-				const duration = next
-					? Math.round(((next.pts - sample.pts) * config.sampleRate) / MPEG_TS_TIMESCALE)
-					: 1024;
-				return { data: sample.data, dts, duration, key: true, pts: dts };
-			})
-		: [];
+	const audio: MuxSample[] = [];
+	if (config) {
+		for (const [index, sample] of content.audio.entries()) {
+			const dts = Math.round(((sample.pts - base) * config.sampleRate) / MPEG_TS_TIMESCALE);
+			if (dts < 0) {
+				continue;
+			}
+
+			const next = content.audio[index + 1];
+			const duration = next
+				? Math.round(((next.pts - sample.pts) * config.sampleRate) / MPEG_TS_TIMESCALE)
+				: 1024;
+			audio.push({ data: sample.data, dts, duration, key: true, pts: dts });
+		}
+	}
 
 	return { audio, video };
 };
@@ -180,7 +198,6 @@ const streamFrom = async ({
 		return;
 	}
 
-	let base: number | undefined;
 	let initialized = false;
 	let sequence = 1;
 	for (const segment of playlist.segments.slice(firstIndex)) {
@@ -197,14 +214,14 @@ const streamFrom = async ({
 		}
 
 		const content = demuxMpegTs(resource.bytes);
-		const firstVideo = content.video[0];
-		if (!firstVideo) {
+		if (content.video.length === 0) {
 			throw new Error('MPEG-TS segment contains no video');
 		}
 
-		// align transport timestamps with the playlist.
-		base ??= firstVideo.dts - Math.round(segment.start * MPEG_TS_TIMESCALE);
-		const samples = samplesFor(content, base);
+		// anchor the timeline to the earliest PTS, not decode order.
+		timestampBase ??=
+			Math.min(...content.video.map((sample) => sample.pts)) - Math.round(segment.start * MPEG_TS_TIMESCALE);
+		const samples = samplesFor(content, timestampBase);
 
 		if (!initialized) {
 			const avc = content.avc;
@@ -244,10 +261,7 @@ const load = async (playlist: string, myEpoch: number) => {
 		},
 	});
 
-	durationReported = false;
-	playlists.clear();
-	subtitleRequest?.abort();
-	subtitleRequest = undefined;
+	resetSession();
 	activeRequest = controller;
 	fetchResource = fetch;
 
@@ -341,14 +355,11 @@ self.addEventListener('message', (event) => {
 			break;
 		}
 		case 'stop': {
-			subtitleRequest?.abort();
-			subtitleRequest = undefined;
+			resetSession();
 			fetchResource = undefined;
 			variants = [];
 			subtitleRenditions = [];
-			playlists.clear();
 			bufferAhead = BUFFER_AHEAD.background;
-			durationReported = false;
 			break;
 		}
 		case 'select': {
