@@ -7,6 +7,7 @@ import {
 	POST_DRAGGING_ATTR,
 	POST_DROP_AFTER_ATTR,
 	POST_DROP_BEFORE_ATTR,
+	POST_DROP_GAP_ATTR,
 	POST_DROP_TARGET_ATTR,
 	POST_ELEMENT,
 	POST_OVERLAY_ATTR,
@@ -63,4 +64,14 @@ globalStyle(`[${POST_OVERLAY_ATTR}][${POST_DROP_BEFORE_ATTR}]::before`, {
 globalStyle(`[${POST_OVERLAY_ATTR}][${POST_DROP_AFTER_ATTR}]::after`, {
 	...dropMarker,
 	bottom: POST_GAP_CENTER - DROP_DOT_SIZE / 2,
+});
+
+// keep the transition outside the gap selector so closing also animates.
+globalStyle(POST_ELEMENT, {
+	transition: 'margin-top 150ms ease-out',
+});
+
+// keep the first post's marker inside the scroll container.
+globalStyle(`${POST_ELEMENT}[${POST_DROP_GAP_ATTR}]`, {
+	marginTop: POST_GAP_CENTER * 2,
 });

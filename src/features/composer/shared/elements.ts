@@ -24,6 +24,9 @@ export const POST_DROP_TARGET_ATTR = 'data-drop-target';
 /** insertion marker before a post, on its overlay. */
 export const POST_DROP_BEFORE_ATTR = 'data-drop-before';
 
+/** opens a leading insertion gap on the first editor post. */
+export const POST_DROP_GAP_ATTR = 'data-drop-gap';
+
 /** insertion marker after the last post, on its overlay. */
 export const POST_DROP_AFTER_ATTR = 'data-drop-after';
 

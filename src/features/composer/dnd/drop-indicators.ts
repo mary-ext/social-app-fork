@@ -4,7 +4,7 @@ import { Decoration, PointSet, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
 import { findPostById, getPosts } from '../model/schema';
-import { POST_DRAGGING_ATTR, POST_DROP_TARGET_ATTR } from '../shared/elements';
+import { POST_DRAGGING_ATTR, POST_DROP_GAP_ATTR, POST_DROP_TARGET_ATTR } from '../shared/elements';
 
 /**
  * where dropped media would land.
@@ -53,6 +53,8 @@ const setDropIndicator = Transaction.Effect.define<DropIndicator | null>();
 
 const draggingDeco = Decoration.Point.attributes({ [POST_DRAGGING_ATTR]: '' });
 const dropTargetDeco = Decoration.Point.attributes({ [POST_DROP_TARGET_ATTR]: '' });
+const dropGapDeco = Decoration.Point.attributes({ [POST_DROP_GAP_ATTR]: '' });
+
 /** the current drag's drop indicator, or null outside a drag. */
 export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 	create() {
@@ -88,7 +90,14 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 						return PointSet.empty;
 					}
 
-					return PointSet.create([[post.pos, draggingDeco]]);
+					const marks: [number, typeof draggingDeco][] = [[post.pos, draggingDeco]];
+					const marker = getPostDropMarker(state);
+					const first = getPosts(state.doc)[0];
+					if (marker?.edge === 'before' && first && marker.postId === first.id) {
+						marks.push([first.pos, dropGapDeco]);
+					}
+
+					return PointSet.create(marks);
 				}
 			}
 		});
