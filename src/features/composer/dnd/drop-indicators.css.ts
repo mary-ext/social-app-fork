@@ -54,12 +54,13 @@ const dropMarker = {
 	content: '""',
 } as const;
 
-globalStyle(`${POST_ELEMENT}[${POST_DROP_BEFORE_ATTR}]::before`, {
+// draw on overlays to keep markers above the editor's thread lines.
+globalStyle(`[${POST_OVERLAY_ATTR}][${POST_DROP_BEFORE_ATTR}]::before`, {
 	...dropMarker,
 	top: -POST_GAP_CENTER - DROP_DOT_SIZE / 2,
 });
 
-globalStyle(`${POST_ELEMENT}[${POST_DROP_AFTER_ATTR}]::after`, {
+globalStyle(`[${POST_OVERLAY_ATTR}][${POST_DROP_AFTER_ATTR}]::after`, {
 	...dropMarker,
 	bottom: POST_GAP_CENTER - DROP_DOT_SIZE / 2,
 });

@@ -4,12 +4,7 @@ import { Decoration, PointSet, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
 import { findPostById, getPosts } from '../model/schema';
-import {
-	POST_DRAGGING_ATTR,
-	POST_DROP_AFTER_ATTR,
-	POST_DROP_BEFORE_ATTR,
-	POST_DROP_TARGET_ATTR,
-} from '../shared/elements';
+import { POST_DRAGGING_ATTR, POST_DROP_TARGET_ATTR } from '../shared/elements';
 
 /**
  * where dropped media would land.
@@ -58,9 +53,6 @@ const setDropIndicator = Transaction.Effect.define<DropIndicator | null>();
 
 const draggingDeco = Decoration.Point.attributes({ [POST_DRAGGING_ATTR]: '' });
 const dropTargetDeco = Decoration.Point.attributes({ [POST_DROP_TARGET_ATTR]: '' });
-const dropBeforeDeco = Decoration.Point.attributes({ [POST_DROP_BEFORE_ATTR]: '' });
-const dropAfterDeco = Decoration.Point.attributes({ [POST_DROP_AFTER_ATTR]: '' });
-
 /** the current drag's drop indicator, or null outside a drag. */
 export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 	create() {
@@ -96,16 +88,7 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 						return PointSet.empty;
 					}
 
-					const marks: [number, typeof draggingDeco][] = [[post.pos, draggingDeco]];
-					if (indicator.slot !== null) {
-						// append slots use the last post's trailing edge.
-						const posts = getPosts(state.doc);
-						const at = posts[indicator.slot];
-						const last = posts[posts.length - 1]!;
-						marks.push(at ? [at.pos, dropBeforeDeco] : [last.pos, dropAfterDeco]);
-					}
-
-					return PointSet.create(marks);
+					return PointSet.create([[post.pos, draggingDeco]]);
 				}
 			}
 		});
@@ -133,6 +116,31 @@ export const markDropIndicator = (wg: Wordgard, indicator: DropIndicator | null)
 export const getDraggedPostId = (state: GardState): string | null => {
 	const indicator = state.field(dropIndicator);
 	return indicator?.kind === 'post' ? indicator.postId : null;
+};
+
+/** a post edge marking the insertion destination. */
+export type PostDropMarker = { postId: string; edge: 'after' | 'before' };
+
+/**
+ * resolves the current post drag's insertion marker.
+ *
+ * @param state the editor state
+ * @returns the marker, or null when no post insertion is indicated
+ */
+export const getPostDropMarker = (state: GardState): PostDropMarker | null => {
+	const indicator = state.field(dropIndicator);
+	if (indicator?.kind !== 'post' || indicator.slot === null) {
+		return null;
+	}
+
+	const posts = getPosts(state.doc);
+	const at = posts[indicator.slot];
+	if (at) {
+		return { postId: at.id, edge: 'before' };
+	}
+
+	const last = posts[posts.length - 1];
+	return last ? { postId: last.id, edge: 'after' } : null;
 };
 
 /** the drop indicator of an attachment or file drag. */

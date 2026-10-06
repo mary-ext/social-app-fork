@@ -21,10 +21,10 @@ export const POST_INSTANT_ATTR = 'data-instant';
 /** marks the post a media or file drag would land in. */
 export const POST_DROP_TARGET_ATTR = 'data-drop-target';
 
-/** insertion marker before a post. */
+/** insertion marker before a post, on its overlay. */
 export const POST_DROP_BEFORE_ATTR = 'data-drop-before';
 
-/** insertion marker after the last post. */
+/** insertion marker after the last post, on its overlay. */
 export const POST_DROP_AFTER_ATTR = 'data-drop-after';
 
 /** marks the post being dragged, on its editor element and overlay. */

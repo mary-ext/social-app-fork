@@ -1,12 +1,14 @@
 import { Decoration, PointSet, Widget, Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
-import { getDraggedPostId } from '../dnd/drop-indicators';
+import { getDraggedPostId, getPostDropMarker } from '../dnd/drop-indicators';
 import { getPosts } from '../model/schema';
 import { getActivePostId } from '../model/selection';
 import {
 	POST_ACTIVE_ATTR,
 	POST_DRAGGING_ATTR,
+	POST_DROP_AFTER_ATTR,
+	POST_DROP_BEFORE_ATTR,
 	POST_HOVERED_ATTR,
 	POST_ID_ATTR,
 	POST_INSTANT_ATTR,
@@ -89,9 +91,14 @@ export const createPostOverlays = (): PostOverlays => {
 	const applyState = (state: GardState) => {
 		const activeId = getActivePostId(state);
 		const draggedId = getDraggedPostId(state);
+		const marker = getPostDropMarker(state);
 		for (const { overlay } of entries.values()) {
-			overlay.root.toggleAttribute(POST_ACTIVE_ATTR, overlay.postId === activeId);
-			overlay.root.toggleAttribute(POST_DRAGGING_ATTR, overlay.postId === draggedId);
+			const { postId, root } = overlay;
+			const edge = marker?.postId === postId ? marker.edge : null;
+			root.toggleAttribute(POST_ACTIVE_ATTR, postId === activeId);
+			root.toggleAttribute(POST_DRAGGING_ATTR, postId === draggedId);
+			root.toggleAttribute(POST_DROP_AFTER_ATTR, edge === 'after');
+			root.toggleAttribute(POST_DROP_BEFORE_ATTR, edge === 'before');
 		}
 	};
 
