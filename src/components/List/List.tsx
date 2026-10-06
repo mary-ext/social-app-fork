@@ -17,7 +17,7 @@ import * as css from '#/components/List/List.css';
 import { useIsFocused } from '#/router';
 
 import { ItemSeenObserver } from './ItemSeenObserver';
-import { moveListFocus } from './keyboard-navigation';
+import { ITEM_ATTRIBUTE, moveListFocus } from './keyboard-navigation';
 import { Row } from './Row';
 import { Virtualizer, type VirtualizerMethods } from './Virtualizer';
 
@@ -58,8 +58,8 @@ export type ListProps<ItemT> = {
 	 */
 	estimateHeight?: number;
 	/**
-	 * enables next/previous item keybinds for `listItemProps` on the focused screen. enable on only one list
-	 * per screen, with `scrollRoot` unset.
+	 * enables next/previous keybinds for items marked with `listItemProps`. use on one list per screen;
+	 * requires document scrolling (`scrollRoot` unset).
 	 */
 	keyboardNavigation?: boolean;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
@@ -121,6 +121,15 @@ export function List<ItemT>({
 			moveListFocus(containerRef.current!, -1);
 		},
 	});
+
+	// hidden screens lose DOM focus; restore it only if nothing else has claimed it
+	const lastItemRef = useRef<HTMLElement | null>(null);
+	useEffect(() => {
+		const item = lastItemRef.current;
+		if (keyboardNavigation && isFocused && item?.isConnected && document.activeElement === document.body) {
+			item.focus({ preventScroll: true });
+		}
+	}, [isFocused, keyboardNavigation]);
 
 	useImperativeHandle(
 		ref,
@@ -225,6 +234,13 @@ export function List<ItemT>({
 				return () => observer.disconnect();
 			}}
 			className={css.container({ virtualized: virtualize })}
+			onFocus={
+				keyboardNavigation
+					? (ev) => {
+							lastItemRef.current = ev.target.closest<HTMLElement>(`[${ITEM_ATTRIBUTE}]`);
+						}
+					: undefined
+			}
 		>
 			{onScrolledDownChange && (
 				<Visibility
