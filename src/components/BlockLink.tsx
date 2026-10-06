@@ -142,17 +142,15 @@ export function BlockLink({
 
 	const node = children;
 
+	// without a label, preserve the child's accessibility props and keyboard handler
 	const pressProps = disabled
 		? undefined
 		: {
-				'aria-label': label,
 				onClick,
-				onKeyDown: label ? onKeyDown : undefined,
 				onMouseDown,
 				onAuxClick,
 				onPointerDownCapture,
-				role: label ? 'link' : undefined,
-				tabIndex: label ? 0 : undefined,
+				...(label ? { 'aria-label': label, onKeyDown, role: 'link', tabIndex: 0 } : null),
 			};
 
 	// oxlint-disable-next-line react/refs -- forwards the prop ref
