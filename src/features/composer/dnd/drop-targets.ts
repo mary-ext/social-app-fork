@@ -4,12 +4,11 @@ import { getReorderDestinationIndex } from '@oomfware/tug/reorder';
 
 import type { Wordgard } from 'wordgard/editor';
 
-import { getPostParam, getPosts, splitMedia } from '../model/schema';
+import { getPostParam, getPosts, splitMedia, type ThreadPost } from '../model/schema';
 import {
 	IMAGE_GROUP_ATTR,
 	MEDIA_ID_ATTR,
 	NEW_POST_ZONE_ATTR,
-	POST_ELEMENT,
 	POST_ID_ATTR,
 	POST_OVERLAY_ATTR,
 } from '../shared/elements';
@@ -44,12 +43,21 @@ export const getMoveIndex = (slot: number, from: number): number | null => {
 };
 
 // positions outside the thread resolve to the nearest end post.
-const getPostAt = (wg: Wordgard, clientY: number): { index: number; element: Element } | null => {
-	const posts = [...wg.dom.querySelectorAll(POST_ELEMENT)];
-	const found = posts.findIndex((post) => clientY < post.getBoundingClientRect().bottom);
-	const index = found === -1 ? posts.length - 1 : found;
-	const element = posts[index];
-	return element ? { index, element } : null;
+const getPostAt = (wg: Wordgard, clientY: number): { post: ThreadPost; element: Element } | null => {
+	let last: { post: ThreadPost; element: Element } | null = null;
+	for (const post of getPosts(wg.state.doc)) {
+		const element = wg.nodeDOM(post.pos);
+		if (!element) {
+			continue;
+		}
+
+		last = { post, element };
+		if (clientY < element.getBoundingClientRect().bottom) {
+			break;
+		}
+	}
+
+	return last;
 };
 
 /**
@@ -70,7 +78,7 @@ export const getPostDropSlot = (wg: Wordgard, input: Input): number => {
 		closestEdgeOfTarget: extractClosestEdge(
 			attachClosestEdge({}, { allowedEdges: ['bottom', 'top'], element: target.element, input }),
 		),
-		indexOfTarget: target.index,
+		indexOfTarget: target.post.index,
 		startIndex: -1,
 	});
 };
@@ -100,9 +108,8 @@ export const getMediaDrop = (container: Element, wg: Wordgard, point: Point): Me
 		return { kind: 'newPost' };
 	}
 
-	const target = getPostAt(wg, point.clientY);
-	const post = target && getPosts(wg.state.doc)[target.index];
-	if (!target || !post) {
+	const post = getPostAt(wg, point.clientY)?.post;
+	if (!post) {
 		return null;
 	}
 
