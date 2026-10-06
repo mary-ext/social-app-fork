@@ -9,36 +9,22 @@ import { listItemProps } from '#/components/List/keyboard-navigation';
 import { findOverflowMenuTrigger } from '#/components/PostControls/PostOverflowMenuButton';
 
 /**
- * makes a post focusable for list navigation. while focus is within it, the open keybind opens its images or
- * the post itself, and the post menu keybind opens its overflow menu. Enter opens the post only when the
- * frame itself is focused.
+ * makes a post focusable for list navigation, with image/menu keybinds while it contains focus. Enter
+ * activates the post only when its frame is focused.
  *
- * the post opens by clicking the element attached to `linkRef`, or the frame when it's left unattached, so it
- * goes through the same press handling (profile caching, clickthrough logging) as a pointer would.
- *
- * @returns `focusWithin` for action keybinds, `itemProps` to spread onto the frame, and `linkRef` for a link
- *   that isn't the frame itself
+ * @returns `itemProps` for the frame, `focusWithin` for action keybinds, and `linkRef` to override the frame
+ *   as the Enter click target
  */
 export const useNavigablePost = () => {
 	const frameRef = useRef<HTMLDivElement>(null);
 	const linkRef = useRef<HTMLElement>(null);
 	const { focusWithin, focusProps } = useFocusWithin();
 
-	const open = () => {
-		(linkRef.current ?? frameRef.current)?.click();
-	};
-
 	useKeybind({
-		keybind: KEYBINDS.open,
+		keybind: KEYBINDS.openImages,
 		enabled: focusWithin,
 		handle() {
-			const images = findOwnImagesTrigger(frameRef.current!);
-
-			if (images !== null) {
-				images.click();
-			} else {
-				open();
-			}
+			findOwnImagesTrigger(frameRef.current!)?.click();
 		},
 	});
 
@@ -53,7 +39,8 @@ export const useNavigablePost = () => {
 	const onKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
 		if (ev.key === 'Enter' && ev.target === ev.currentTarget) {
 			ev.preventDefault();
-			open();
+			// reuse click handling for navigation, profile caching, and interaction logging
+			(linkRef.current ?? ev.currentTarget).click();
 		}
 	};
 

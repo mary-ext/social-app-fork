@@ -27,7 +27,12 @@ export const KEYBINDS = {
 		keys: ['k'],
 		label: m['components.dialogs.keybinds.previousPost'],
 	},
-	open: { scope: 'app', group: 'posts', keys: ['o'], label: m['components.dialogs.keybinds.open'] },
+	openImages: {
+		scope: 'app',
+		group: 'posts',
+		keys: ['o'],
+		label: m['components.dialogs.keybinds.openImages'],
+	},
 	like: { scope: 'app', group: 'posts', keys: ['l'], label: m['common.action.like'] },
 	reply: { scope: 'app', group: 'posts', keys: ['r'], label: m['common.action.reply'] },
 	repost: {
