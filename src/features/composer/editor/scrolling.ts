@@ -1,17 +1,20 @@
 import type { Pos } from 'wordgard/doc';
 import { Wordgard } from 'wordgard/editor';
+import { type GardState, Transaction } from 'wordgard/state';
 
 import { clamp } from '#/lib/utils/numbers';
 
-import { MOVE_POST_EVENT } from '../commands/reorder-posts';
 import { hasAttachments } from '../model/post-info';
-import { endOfLastLine, findPostById } from '../model/schema';
-import { findActivePost, getActivePostId } from '../model/selection';
+import { endOfLastLine, findPost, findPostById, getPostParam } from '../model/schema';
+import { findActivePost } from '../model/selection';
 import { findScrollParent } from '../shared/scroll-parent';
+import type { PostOverlays } from './post-overlays';
 
 const CARET_MARGIN = 24;
 // the footer spacer already includes bottom padding.
 const POST_MARGIN = 0;
+// overlay heights can settle over several renders; retry reveals briefly on layout changes.
+const SETTLE_MS = 250;
 
 // the last paragraph may wrap onto multiple visual lines.
 const isOnLastLine = (wg: Wordgard, post: Pos.Plot, caret: DOMRect): boolean => {
@@ -37,38 +40,6 @@ const scrollRectIntoView = (scroller: HTMLElement, rect: DOMRect, margins: Margi
 	}
 };
 
-const revealPost = (wg: Wordgard, scroller: HTMLElement): boolean => {
-	const post = findActivePost(wg.state);
-	const rect = post && wg.nodeDOM(post.before)?.getBoundingClientRect();
-	if (!rect || rect.height > scroller.clientHeight) {
-		return false;
-	}
-
-	scrollRectIntoView(scroller, rect, { top: POST_MARGIN, bottom: POST_MARGIN });
-	return true;
-};
-
-/**
- * reveals a post on the next animation frame. tall posts align to the bottom to keep the toolbar visible.
- *
- * @param wg the editor
- * @param postId the post's id
- */
-export const revealPostEnd = (wg: Wordgard, postId: string): void => {
-	requestAnimationFrame(() => {
-		const post = findPostById(wg.state.doc, postId);
-		const rect = post && wg.nodeDOM(post.pos)?.getBoundingClientRect();
-		const scroller = findScrollParent(wg.scrollDOM);
-		if (!rect || !scroller) {
-			return;
-		}
-
-		const height = Math.min(rect.height, scroller.clientHeight);
-		const end = new DOMRect(rect.left, rect.bottom - height, rect.width, height);
-		scrollRectIntoView(scroller, end, { top: POST_MARGIN, bottom: POST_MARGIN });
-	});
-};
-
 const scrollCaretIntoView = (wg: Wordgard, scroller: HTMLElement) => {
 	const { state } = wg;
 	const { head, headSide } = state.selection;
@@ -88,63 +59,150 @@ const scrollCaretIntoView = (wg: Wordgard, scroller: HTMLElement) => {
 	scrollRectIntoView(scroller, caret, { top: CARET_MARGIN, bottom: CARET_MARGIN });
 };
 
-const scrolling = Wordgard.Plugin.define(
-	(wg) => {
-		let postId = getActivePostId(wg.state);
-		// pointer selection must not trigger a whole-post reveal on the next keystroke.
-		let entered = false;
-		let frame = 0;
+type Reveal = { align: 'end' | 'fit'; postId: string };
 
-		return {
-			update(update: Wordgard.Update) {
-				if (!update.docChanged && !update.selectionSet) {
+const revealPost = Transaction.Effect.define<Reveal>();
+
+/**
+ * requests a whole-post reveal, falling back to the caret if the post is taller than the viewport.
+ *
+ * @param postId the post's id
+ * @returns the transaction effect
+ */
+export const revealWholePost = (postId: string): Transaction.Effect<Reveal> => {
+	return revealPost.of({ align: 'fit', postId });
+};
+
+/**
+ * requests a post reveal, bottom-aligned for tall posts to keep the toolbar visible.
+ *
+ * @param postId the post's id
+ * @returns the transaction effect
+ */
+export const revealPostEnd = (postId: string): Transaction.Effect<Reveal> => {
+	return revealPost.of({ align: 'end', postId });
+};
+
+// pointer selections must not trigger whole-post scrolling.
+const revealEnteredPost = Transaction.extender.of((tr) => {
+	if (!tr.scrollIntoView) {
+		return null;
+	}
+
+	const before = findActivePost(tr.startState);
+	const after = findPost(tr.newDoc.resolve(tr.newSelection.head));
+	if (!after || before?.node.tag === after.node.tag) {
+		return null;
+	}
+
+	return { effects: revealWholePost(getPostParam(after.node).id) };
+});
+
+/**
+ * keeps the caret visible and reveals whole posts on request.
+ *
+ * @param onLayout post overlay layout subscription
+ * @returns the editor extension
+ */
+export const createPostScrolling = (onLayout: PostOverlays['onLayout']): GardState.Extension => {
+	const scrolling = Wordgard.Plugin.define(
+		(wg) => {
+			let pending: Reveal | null = null;
+			let expiry: ReturnType<typeof setTimeout> | undefined;
+			let unsubscribe: (() => void) | undefined;
+
+			// the editor's ancestors only change when it's reattached.
+			let scroller: HTMLElement | null | undefined;
+			const getScroller = () => {
+				if (scroller === undefined) {
+					scroller = findScrollParent(wg.scrollDOM);
+				}
+				return scroller;
+			};
+
+			// returns false when the caret should be scrolled instead.
+			const reveal = ({ align, postId }: Reveal, container: HTMLElement): boolean => {
+				const post = findPostById(wg.state.doc, postId);
+				const rect = post ? wg.nodeDOM(post.pos)?.getBoundingClientRect() : undefined;
+				if (!rect) {
+					return false;
+				}
+				if (align === 'fit' && rect.height > container.clientHeight) {
+					return false;
+				}
+
+				const height = Math.min(rect.height, container.clientHeight);
+				const end = new DOMRect(rect.left, rect.bottom - height, rect.width, height);
+				scrollRectIntoView(container, end, { top: POST_MARGIN, bottom: POST_MARGIN });
+				return true;
+			};
+
+			const applyPending = () => {
+				const container = getScroller();
+				if (!pending || !container) {
 					return;
 				}
-
-				const next = getActivePostId(update.state);
-				const moved = update.transactions.some((tr) => tr.isUserEvent(MOVE_POST_EVENT));
-				if (next !== postId || moved) {
-					postId = next;
-					entered = update.transactions.some((tr) => tr.scrollIntoView);
+				if (!reveal(pending, container)) {
+					scrollCaretIntoView(wg, container);
 				}
-			},
-			disconnect() {
-				cancelAnimationFrame(frame);
-			},
-			scroll(target: { from: number; to: number }): boolean {
-				const { selection } = wg.state;
-				if (target.from !== selection.head || target.to !== selection.head) {
-					return false;
-				}
+			};
 
-				const scroller = findScrollParent(wg.scrollDOM);
-				if (!scroller) {
-					return false;
-				}
-
-				cancelAnimationFrame(frame);
-				if (!entered) {
-					scrollCaretIntoView(wg, scroller);
-					return true;
-				}
-
-				entered = false;
-				if (!revealPost(wg, scroller)) {
-					scrollCaretIntoView(wg, scroller);
-				}
-
-				// measure again after overlay content sizes new spacers.
-				frame = requestAnimationFrame(() => {
-					if (wg.state.selection.eq(selection) && !revealPost(wg, scroller)) {
-						scrollCaretIntoView(wg, scroller);
+			return {
+				connect() {
+					scroller = undefined;
+					unsubscribe = onLayout(applyPending);
+				},
+				update(update: Wordgard.Update) {
+					let request: Reveal | null = null;
+					for (const tr of update.transactions) {
+						for (const effect of tr.effects) {
+							if (effect.is(revealPost)) {
+								request = effect.value;
+							}
+						}
 					}
-				});
-				return true;
-			},
-		};
-	},
-	(plugin) => Wordgard.scrollHandler.of((wg, target) => wg.plugin(plugin)?.scroll(target) ?? false),
-);
 
-/** keeps the caret visible; scroll requests on post entry or movement reveal the post if it fits. */
-export const postScrolling = scrolling.extension;
+					if (!request) {
+						// don't let a pending reveal override later edits or selection changes.
+						if (update.docChanged || update.selectionSet) {
+							pending = null;
+						}
+						return;
+					}
+
+					pending = request;
+					clearTimeout(expiry);
+					expiry = setTimeout(() => {
+						pending = null;
+					}, SETTLE_MS);
+					// scrollIntoView already invokes the scroll handler.
+					if (!update.transactions.some((tr) => tr.scrollIntoView)) {
+						wg.scheduleDOMRead(applyPending);
+					}
+				},
+				disconnect() {
+					clearTimeout(expiry);
+					pending = null;
+					unsubscribe?.();
+				},
+				scroll(target: { from: number; to: number }): boolean {
+					const container = getScroller();
+					const { selection } = wg.state;
+					if (!container || target.from !== selection.head || target.to !== selection.head) {
+						return false;
+					}
+
+					if (pending) {
+						applyPending();
+					} else {
+						scrollCaretIntoView(wg, container);
+					}
+					return true;
+				},
+			};
+		},
+		(plugin) => Wordgard.scrollHandler.of((wg, target) => wg.plugin(plugin)?.scroll(target) ?? false),
+	);
+
+	return [revealEnteredPost, scrolling.extension];
+};

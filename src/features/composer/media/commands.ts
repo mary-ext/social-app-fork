@@ -50,17 +50,12 @@ export const activatePost = (wg: Wordgard, postId: string): void => {
 	}
 };
 
-const appendMediaChange = (post: ThreadPost, media: readonly PostMedia[]): ChangeSet.Spec => {
-	return setPostMediaChange(post.pos, post.node, [...getPostParam(post.node).media, ...media]);
-};
-
-// caret scrolling doesn't reveal attachments below the text.
-const revealAddedMedia = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
-	if (media[0]) {
-		// reveal the tile first, then correct its vertical scroll to include the post's toolbar.
-		revealMedia(media[0].id);
-		revealPostEnd(wg, postId);
-	}
+const appendMediaSpec = (post: ThreadPost, media: readonly PostMedia[]): Transaction.Spec => {
+	return {
+		changes: setPostMediaChange(post.pos, post.node, [...getPostParam(post.node).media, ...media]),
+		userEvent: 'media.add',
+		annotations: ISOLATE_HISTORY,
+	};
 };
 
 /**
@@ -73,8 +68,14 @@ const revealAddedMedia = (wg: Wordgard, postId: string, media: readonly PostMedi
 export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
 	activatePost(wg, postId);
 	const { media } = await createMedia(files);
-	addMediaTo(wg, postId, media);
-	revealAddedMedia(wg, postId, media);
+	const post = findPostById(wg.state.doc, postId);
+	if (!post || !media[0]) {
+		return;
+	}
+
+	// caret scrolling doesn't reveal attachments below the text.
+	dispatchMediaChange(wg, { ...appendMediaSpec(post, media), effects: revealPostEnd(postId) });
+	revealMedia(wg, media[0].id);
 };
 
 /**
@@ -90,15 +91,14 @@ export const attachGif = (wg: Wordgard, postId: string, gif: Gif): void => {
 		return;
 	}
 
-	const media = [createGifMedia(gif)];
+	const item = createGifMedia(gif);
 	// keep the attachment and caret move in the same undo step.
 	dispatchMediaChange(wg, {
-		changes: appendMediaChange(post, media),
+		...appendMediaSpec(post, [item]),
 		selection: getActivationSelection(wg.state, post),
-		userEvent: 'media.add',
-		annotations: ISOLATE_HISTORY,
+		effects: revealPostEnd(postId),
 	});
-	revealAddedMedia(wg, postId, media);
+	revealMedia(wg, item.id);
 };
 
 /**
@@ -114,11 +114,7 @@ export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMed
 		return;
 	}
 
-	dispatchMediaChange(wg, {
-		changes: appendMediaChange(post, media),
-		userEvent: 'media.add',
-		annotations: ISOLATE_HISTORY,
-	});
+	dispatchMediaChange(wg, appendMediaSpec(post, media));
 };
 
 /**

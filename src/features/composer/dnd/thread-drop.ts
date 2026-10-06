@@ -78,7 +78,7 @@ const applyMediaDrop = (wg: Wordgard, source: MediaSource, drop: MediaDrop): voi
 	}
 
 	// reordering can re-snap the carousel to its previous tile.
-	revealMedia(mediaId);
+	revealMedia(wg, mediaId);
 };
 
 // use the displayed destination rather than hit-testing again on drop.

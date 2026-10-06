@@ -1,13 +1,17 @@
+import type { Wordgard } from 'wordgard/editor';
+
 import { getMediaTileSelector, IMAGE_GROUP_ATTR } from '../shared/elements';
 
 /**
  * scrolls an attachment's tile into view on the next animation frame, if present.
  *
+ * @param wg the editor
  * @param mediaId the attachment's id
  */
-export const revealMedia = (mediaId: string): void => {
+export const revealMedia = (wg: Wordgard, mediaId: string): void => {
 	requestAnimationFrame(() => {
-		const tile = document.querySelector(getMediaTileSelector(mediaId));
+		// search the container: attachment tiles live outside the editor.
+		const tile = wg.dom.parentElement?.querySelector(getMediaTileSelector(mediaId));
 		if (!tile) {
 			return;
 		}

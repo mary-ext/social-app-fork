@@ -1,3 +1,5 @@
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+
 import { Decoration, Widget, Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
@@ -33,6 +35,13 @@ export type PostOverlays = {
 	overlays: Store<readonly PostOverlay[]>;
 	/** editor extension hosting the spacers and mirroring post state onto overlays. */
 	extension: GardState.Extension;
+	/**
+	 * subscribes to post overlay layout changes.
+	 *
+	 * @param listener called after spacer heights are updated, before paint
+	 * @returns unsubscribe function
+	 */
+	onLayout: (listener: () => void) => () => void;
 	/**
 	 * attaches the overlays to the composer.
 	 *
@@ -71,6 +80,7 @@ export const createPostOverlays = (): PostOverlays => {
 	let hovered: string | null = null;
 
 	const hosts = new WeakMap<Element, { entry: Entry; kind: SpacerKind }>();
+	const layout = new SimpleEventEmitter<[]>();
 	// resize spacers before paint to keep text and overlays aligned.
 	const resizes = new ResizeObserver((records) => {
 		for (const record of records) {
@@ -86,6 +96,8 @@ export const createPostOverlays = (): PostOverlays => {
 				spacer.style.height = `${size.blockSize}px`;
 			}
 		}
+
+		layout.emit();
 	});
 
 	const applyState = (state: GardState) => {
@@ -277,6 +289,9 @@ export const createPostOverlays = (): PostOverlays => {
 	return {
 		overlays,
 		extension: [spacers, plugin.extension],
+		onLayout(listener) {
+			return layout.subscribe(listener);
+		},
 		mount(container) {
 			container.append(layer);
 			container.addEventListener('pointerover', onPointerOver);

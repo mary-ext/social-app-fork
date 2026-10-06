@@ -2,12 +2,12 @@ import type { Plot } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
 import { GardSelection, type GardState, type Transaction } from 'wordgard/state';
 
+import { revealWholePost } from '../editor/scrolling';
 import { ISOLATE_HISTORY } from '../model/history';
 import { endOfLastLine, findPostById, getPosts, type ThreadPost } from '../model/schema';
 import { findSelectedPost } from '../model/selection';
 
-/** transaction user event for post moves. */
-export const MOVE_POST_EVENT = 'move.post';
+const MOVE_POST_EVENT = 'move.post';
 
 const movePostSpec = (state: GardState, post: ThreadPost, target: number): Transaction.Spec => {
 	const posts = getPosts(state.doc);
@@ -51,6 +51,7 @@ const movePostSpec = (state: GardState, post: ThreadPost, target: number): Trans
 		changes: { from, to, insert: nodes },
 		// an explicit selection prevents the next flush from importing the drag's DOM selection.
 		selection,
+		effects: revealWholePost(post.id),
 		scrollIntoView: true,
 		userEvent: MOVE_POST_EVENT,
 		annotations: ISOLATE_HISTORY,

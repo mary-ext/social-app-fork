@@ -21,7 +21,7 @@ import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
 import { postPlaceholder, threadDecorations } from './editor/decorations';
 import { restoreSelectionOnFocus } from './editor/focus';
 import { createPostOverlays } from './editor/post-overlays';
-import { postScrolling } from './editor/scrolling';
+import { createPostScrolling } from './editor/scrolling';
 import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
 import { getAttachmentKeys, labelTaint } from './labels/attachment-labels';
@@ -179,7 +179,7 @@ export const createComposer = ({
 		languageTaint.field.init(() => seed.languages),
 		threadDecorations,
 		restoreSelectionOnFocus(),
-		postScrolling,
+		createPostScrolling(postOverlays.onLayout),
 		dropIndicator,
 		activeCompletion,
 		suggestionState,
