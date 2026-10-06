@@ -2,13 +2,14 @@ import { BUFFER_AHEAD, type MainToWorker, type PlayerError, type WorkerToMain } 
 import { HttpError, isRetryable, StalledError } from './fetch-policy';
 import { createMp4InitSegment, createMp4MediaSegment, type MuxSample } from './mp4';
 import { demuxMpegTs, MPEG_TS_TIMESCALE, type DemuxedMpegTs } from './mpeg-ts';
-import { createFetcher, type Fetch } from './network';
+import { createFetcher, type Fetch, type Resource } from './network';
 import {
 	parseSubtitleMaster,
 	parseVideoMaster,
 	parseVideoMedia,
 	UnsupportedPlaylistError,
 	type MediaPlaylist,
+	type MediaSegment,
 	type SubtitleRendition,
 	type VideoVariant,
 } from './playlist';
@@ -198,19 +199,44 @@ const streamFrom = async ({
 		return;
 	}
 
+	const segments = playlist.segments.slice(firstIndex);
+	const withinReadAhead = (segment: MediaSegment) => segment.start <= currentTime + bufferAhead;
+	const request = (segment: MediaSegment) => {
+		const promise = fetch('media', segment.url, controller.signal);
+		// a restart or earlier failure may leave this prefetch unawaited.
+		promise.catch(() => {});
+		return promise;
+	};
+	// overlap request latency with the current transfer.
+	const prefetch = (position: number) => {
+		const next = segments[position + 1];
+		return next && withinReadAhead(next) ? request(next) : undefined;
+	};
+
 	let initialized = false;
 	let sequence = 1;
-	for (const segment of playlist.segments.slice(firstIndex)) {
-		while (segment.start > currentTime + bufferAhead) {
-			await new Promise<void>((resolve) => parked.push(resolve));
-			if (epoch !== myEpoch) {
-				return;
+	let prefetched: Promise<Resource> | undefined;
+	for (const [position, segment] of segments.entries()) {
+		let pending = prefetched;
+		if (!pending) {
+			while (!withinReadAhead(segment)) {
+				await new Promise<void>((resolve) => parked.push(resolve));
+				if (epoch !== myEpoch) {
+					return;
+				}
 			}
+
+			pending = request(segment);
 		}
 
-		const resource = await fetch('media', segment.url, controller.signal);
+		// avoid bandwidth contention during startup and recovery.
+		prefetched = position > 0 ? prefetch(position) : undefined;
+		const resource = await pending;
 		if (epoch !== myEpoch) {
 			return;
+		}
+		if (position === 0) {
+			prefetched = prefetch(position);
 		}
 
 		const content = demuxMpegTs(resource.bytes);

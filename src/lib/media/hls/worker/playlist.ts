@@ -7,7 +7,7 @@ import type { Resource } from './network';
 
 export type VideoVariant = Rendition & { url: string; width: number };
 
-type MediaSegment = {
+export type MediaSegment = {
 	duration: number;
 	start: number;
 	url: string;
