@@ -107,9 +107,7 @@ function PostInner({
 		unstableCacheProfileView(queryClient, post.author);
 	};
 
-	const { focusWithin, itemProps } = useNavigablePost((frame) => {
-		frame.click();
-	});
+	const { focusWithin, itemProps } = useNavigablePost();
 
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
 		additionalCauses: [],

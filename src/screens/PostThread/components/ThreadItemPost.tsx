@@ -1,4 +1,4 @@
-import { type ReactNode, useRef } from 'react';
+import type { ReactNode } from 'react';
 
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -163,10 +163,7 @@ function ThreadItemPostInner({
 		});
 	};
 
-	const linkRef = useRef<HTMLElement>(null);
-	const { focusWithin, itemProps } = useNavigablePost(() => {
-		linkRef.current?.click();
-	});
+	const { focusWithin, itemProps, linkRef } = useNavigablePost();
 
 	const { isActive: live } = useActorStatus(post.author);
 

@@ -154,13 +154,7 @@ let NotificationFeedItem = ({
 		unstableCacheProfileView(queryClient, item.notification.author);
 	};
 
-	const { itemProps } = useNavigablePost(
-		itemTarget
-			? (frame) => {
-					frame.click();
-				}
-			: undefined,
-	);
+	const { itemProps } = useNavigablePost();
 
 	const authors: Author[] = uniqueBy(
 		[

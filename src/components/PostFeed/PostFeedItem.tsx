@@ -219,9 +219,7 @@ function FeedItemInner({
 
 	const { isActive: live } = useActorStatus(post.author);
 
-	const { focusWithin, itemProps } = useNavigablePost((frame) => {
-		frame.click();
-	});
+	const { focusWithin, itemProps } = useNavigablePost();
 
 	const isPostHiddenByThreadgate = useIsReplyHidden(post.uri, threadgateRecord);
 	let additionalPostAlerts: AppModerationCause[] = [];

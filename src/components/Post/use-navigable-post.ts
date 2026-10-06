@@ -10,28 +10,34 @@ import { findOverflowMenuTrigger } from '#/components/PostControls/PostOverflowM
 
 /**
  * makes a post focusable for list navigation. while focus is within it, the open keybind opens its images or
- * calls `onOpen`, and the post menu keybind opens its overflow menu. Enter calls `onOpen` only when the frame
- * itself is focused.
+ * the post itself, and the post menu keybind opens its overflow menu. Enter opens the post only when the
+ * frame itself is focused.
  *
- * @param onOpen opens the post from its frame; use the row's click handler to retain profile caching and
- *   clickthrough logging. omit for an already-open post
- * @returns `focusWithin` for action keybinds and `itemProps` to spread onto the frame
+ * the post opens by clicking the element attached to `linkRef`, or the frame when it's left unattached, so it
+ * goes through the same press handling (profile caching, clickthrough logging) as a pointer would.
+ *
+ * @returns `focusWithin` for action keybinds, `itemProps` to spread onto the frame, and `linkRef` for a link
+ *   that isn't the frame itself
  */
-export const useNavigablePost = (onOpen?: (frame: HTMLDivElement) => void) => {
+export const useNavigablePost = () => {
 	const frameRef = useRef<HTMLDivElement>(null);
+	const linkRef = useRef<HTMLElement>(null);
 	const { focusWithin, focusProps } = useFocusWithin();
+
+	const open = () => {
+		(linkRef.current ?? frameRef.current)?.click();
+	};
 
 	useKeybind({
 		keybind: KEYBINDS.open,
 		enabled: focusWithin,
 		handle() {
-			const frame = frameRef.current!;
-			const images = findOwnImagesTrigger(frame);
+			const images = findOwnImagesTrigger(frameRef.current!);
 
 			if (images !== null) {
 				images.click();
 			} else {
-				onOpen?.(frame);
+				open();
 			}
 		},
 	});
@@ -45,11 +51,11 @@ export const useNavigablePost = (onOpen?: (frame: HTMLDivElement) => void) => {
 	});
 
 	const onKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
-		if (ev.key === 'Enter' && ev.target === ev.currentTarget && onOpen !== undefined) {
+		if (ev.key === 'Enter' && ev.target === ev.currentTarget) {
 			ev.preventDefault();
-			onOpen(ev.currentTarget);
+			open();
 		}
 	};
 
-	return { focusWithin, itemProps: { ...listItemProps, ...focusProps, onKeyDown, ref: frameRef } };
+	return { focusWithin, itemProps: { ...listItemProps, ...focusProps, onKeyDown, ref: frameRef }, linkRef };
 };
