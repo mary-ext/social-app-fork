@@ -138,6 +138,14 @@ export default defineConfig(({ command, mode }) => {
 			chunkImportMap: isBuild,
 			modulePreload: { polyfill: false },
 			rolldownOptions: {
+				onLog(level, log, handler) {
+					// ignore "use no memo" directive warnings
+					if (log.code === 'MODULE_LEVEL_DIRECTIVE' && log.message.includes('"use no memo"')) {
+						return;
+					}
+
+					handler(level, log);
+				},
 				output: {
 					chunkFileNames: 'assets/js/[hash:7].js',
 					assetFileNames: 'assets/[ext]/[hash:7][extname]',
