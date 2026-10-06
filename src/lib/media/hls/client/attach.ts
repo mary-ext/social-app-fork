@@ -58,6 +58,9 @@ const STALL_SILENCE_MS = 6000;
 
 // timestamp drift and uneven track boundaries can leave gaps browsers won't cross.
 const MAX_GAP = 0.5;
+// seek inside the range to avoid boundary rounding.
+const GAP_LANDING = 0.05;
+const NUDGE = { step: 0.1, attempts: 3 };
 
 const OPEN_TIMEOUT_MS = 15000;
 
@@ -196,6 +199,9 @@ export const attachHlsPlayer = (
 	let lastTimeReport = 0;
 
 	let attempted: { start: number; end: number } | undefined;
+
+	let stuckAt: number | undefined;
+	let nudges = 0;
 
 	let opened = false;
 
@@ -393,6 +399,29 @@ export const attachHlsPlayer = (
 		return bufferedRanges().find(([start, end]) => time >= start - MAX_GAP && time <= end);
 	};
 
+	const jumpGap = () => {
+		if (video.seeking) {
+			return false;
+		}
+
+		// a stuck playhead can sit a few frames short of the end of its range.
+		const time = video.currentTime;
+		const ranges = bufferedRanges();
+		const current = ranges.find(([start, end]) => time >= start && time <= end);
+		if (current && current[1] - time > MAX_GAP) {
+			return false;
+		}
+
+		const edge = current?.[1] ?? time;
+		const next = ranges.find(([start]) => start > edge && start - edge <= MAX_GAP);
+		if (!next) {
+			return false;
+		}
+
+		video.currentTime = Math.min(next[0] + GAP_LANDING, next[1]);
+		return true;
+	};
+
 	const nearEnd = (time: number) => video.duration - time < STALL_MARGIN;
 
 	const isBufferedAt = (time: number) => {
@@ -456,6 +485,10 @@ export const attachHlsPlayer = (
 			return;
 		}
 
+		if (jumpGap()) {
+			return;
+		}
+
 		const time = video.currentTime;
 		if (isBufferedAt(time) || nearEnd(time)) {
 			return;
@@ -473,9 +506,43 @@ export const attachHlsPlayer = (
 		});
 	};
 
+	// nudge a decoder stall after two checks without playhead progress.
+	const nudgeStall = () => {
+		const time = video.currentTime;
+		const stuck =
+			time === stuckAt &&
+			!video.paused &&
+			!video.seeking &&
+			!video.ended &&
+			!nearEnd(time) &&
+			isBufferedAt(time);
+
+		stuckAt = time;
+		if (!stuck) {
+			return false;
+		}
+		if (nudges >= NUDGE.attempts) {
+			fail({
+				code: 'media',
+				message: `playback stuck at ${time.toFixed(1)}s with media buffered`,
+				fatal: true,
+			});
+			return true;
+		}
+
+		nudges++;
+		recoveredAt = time;
+		video.currentTime = time + NUDGE.step * nudges;
+		return true;
+	};
+
 	// detect silent stalls, including startup while the element is paused.
 	const watchdog = setInterval(() => {
 		if (video.readyState >= video.HAVE_FUTURE_DATA) {
+			stuckAt = undefined;
+			return;
+		}
+		if (nudgeStall()) {
 			return;
 		}
 
@@ -655,6 +722,7 @@ export const attachHlsPlayer = (
 		// only playhead progress confirms that recovery succeeded.
 		if (video.currentTime > recoveredAt + PROGRESS_AFTER_RECOVERY) {
 			recoveries = 0;
+			nudges = 0;
 		}
 
 		evict();
