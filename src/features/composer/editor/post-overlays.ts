@@ -1,8 +1,8 @@
-import { Decoration, PointSet, Widget, Wordgard } from 'wordgard/editor';
+import { Decoration, Widget, Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
 import { getDraggedPostId, getPostDropMarker } from '../dnd/drop-indicators';
-import { getPosts } from '../model/schema';
+import { getPosts, Post } from '../model/schema';
 import { getActivePostId } from '../model/selection';
 import {
 	POST_ACTIVE_ATTR,
@@ -250,25 +250,11 @@ export const createPostOverlays = (): PostOverlays => {
 	const headerSpacer = defineSpacer('header');
 	const footerSpacer = defineSpacer('footer');
 
-	const spacerSets = new WeakMap<GardState['doc'], PointSet<Decoration.Point>>();
-	const spacers = Decoration.Point.source.of((state) => {
-		let set = spacerSets.get(state.doc);
-		if (!set) {
-			const points: [number, Decoration.Point][] = [];
-			for (const { node, pos, id } of getPosts(state.doc)) {
-				points.push([pos, Decoration.Point.attributes({ [POST_ID_ATTR]: id })]);
-				// just inside the post's opening token, before its first line.
-				points.push([pos + 1, Decoration.Point.widget(headerSpacer.of(id), { side: -1 })]);
-				// just inside the post's closing token, after its last line.
-				points.push([pos + node.length - 1, Decoration.Point.widget(footerSpacer.of(id), { side: 1 })]);
-			}
-
-			set = PointSet.create(points);
-			spacerSets.set(state.doc, set);
-		}
-
-		return set;
-	});
+	const spacers: GardState.Extension = [
+		Decoration.Tag.attribute(Post, POST_ID_ATTR, (tag) => tag.param.id),
+		Decoration.Tag.widget(Post, 'start', (tag) => headerSpacer.of(tag.param.id)),
+		Decoration.Tag.widget(Post, 'end', (tag) => footerSpacer.of(tag.param.id)),
+	];
 
 	const plugin = Wordgard.Plugin.define((wg) => {
 		return {
