@@ -41,6 +41,7 @@ import {
 	type PostMedia,
 	threadSchema,
 } from './model/schema';
+import { caretInLines } from './model/selection';
 import type { TaintMap } from './model/taints';
 import { createStore } from './shared/store';
 import {
@@ -154,6 +155,7 @@ export const createComposer = ({
 	const config = GardState.Configuration.create([
 		lock.of([]),
 		threadSchema,
+		caretInLines,
 		history(),
 		threadCommands,
 		embedSessionWith(seed.dismissedLinks),

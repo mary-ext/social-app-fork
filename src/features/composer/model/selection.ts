@@ -1,6 +1,6 @@
 import type { Command } from 'wordgard/command';
 import type { Pos } from 'wordgard/doc';
-import { GardSelection, type GardState } from 'wordgard/state';
+import { GardSelection, type GardState, Transaction } from 'wordgard/state';
 
 import { endOfLastLine, findPost, getPostParam, type ThreadPost } from './schema';
 
@@ -67,6 +67,25 @@ export const selectPost: Command = (wg) => {
 
 	return { selection: GardSelection.range(from, to) };
 };
+
+/** snaps carets outside a text line into an adjacent line. */
+export const caretInLines: GardState.Extension = Transaction.extender.of((tr) => {
+	const { selection } = tr;
+	if (!selection?.isCursor) {
+		return null;
+	}
+
+	// DOM selection reads beside overlay spacers bypass Wordgard's click normalization.
+	const resolved = tr.newDoc.resolve(selection.head);
+	if (resolved.textblockParent) {
+		return null;
+	}
+
+	// search inward at post boundaries to avoid moving the caret to another post.
+	const bias = resolved.index === 0 ? 1 : -1;
+	// sequential avoids remapping a head already in tr.newDoc coordinates.
+	return { selection: (cx) => GardSelection.near(cx, selection.head, bias), sequential: true };
+});
 
 // #endregion
 
