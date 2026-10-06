@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
+import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
@@ -34,9 +35,10 @@ type Props = ComponentProps<typeof BlockLink> & {
 };
 
 /**
- * moderation gate for a post row that renders the post or a warning row.
+ * renders a post or a click-to-reveal moderation warning.
  *
- * @param noOverride prevents revealing the post, allowing only the details dialog.
+ * @param modui.noOverride prevents revealing the post; only the details dialog is available
+ * @param ref receives the post link or warning row
  */
 export function PostHider({
 	to,
@@ -48,6 +50,7 @@ export function PostHider({
 	iconClassName,
 	profile,
 	interpretFilterAsBlur,
+	ref,
 	...props
 }: Props) {
 	const queryClient = useQueryClient();
@@ -65,7 +68,7 @@ export function PostHider({
 		// which clones a single DOM child to inject the press handlers — needs a real element to land them on,
 		// without adding a layout box.
 		return (
-			<BlockLink to={to} onBeforePress={onBeforePress} {...props}>
+			<BlockLink ref={ref} to={to} onBeforePress={onBeforePress} {...props}>
 				<div style={{ display: 'contents' }}>{children}</div>
 			</BlockLink>
 		);
@@ -80,6 +83,7 @@ export function PostHider({
 
 	return (
 		<div
+			ref={mergeRefs<HTMLElement>([ref])}
 			className={clsx(styles.row, !modui.noOverride && styles.revealable, hiderClassName)}
 			onClick={modui.noOverride ? undefined : onRowClick}
 		>
