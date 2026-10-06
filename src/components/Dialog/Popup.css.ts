@@ -47,6 +47,9 @@ export const portal = style(
 	}),
 );
 
+/** marker class for `scroll="body"` popups. */
+export const scrollBody = style({});
+
 export const backdrop = style(
 	layered(components, {
 		position: 'fixed',
@@ -57,6 +60,15 @@ export const backdrop = style(
 
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
+		},
+
+		'@media': {
+			'(width < 800px)': {
+				selectors: {
+					// cover the gap Chrome's bottom toolbar leaves below the popup when the keyboard opens.
+					[`${portal}:has(${scrollBody}) &`]: { backgroundColor: vars.palette.contrast_0 },
+				},
+			},
 		},
 	}),
 );
@@ -114,23 +126,26 @@ export const popup = recipe(
 				none: { padding: 0 },
 			},
 			scroll: {
-				body: {
-					display: 'flex',
-					flexDirection: 'column',
-					padding: 0,
-					maxHeight: '80vh',
-					overflow: 'hidden',
-					overscrollBehavior: 'contain',
-					vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
-					selectors: {
-						[`&:has(${searchOverlap})`]: {
-							vars: {
-								[searchInset]: SEARCH_OVERLAP,
-								[searchScrollInset]: `calc(${SEARCH_OVERLAP} + ${SEARCH_FADE}px)`,
+				body: [
+					scrollBody,
+					{
+						display: 'flex',
+						flexDirection: 'column',
+						padding: 0,
+						maxHeight: '80vh',
+						overflow: 'hidden',
+						overscrollBehavior: 'contain',
+						vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
+						selectors: {
+							[`&:has(${searchOverlap})`]: {
+								vars: {
+									[searchInset]: SEARCH_OVERLAP,
+									[searchScrollInset]: `calc(${SEARCH_OVERLAP} + ${SEARCH_FADE}px)`,
+								},
 							},
 						},
 					},
-				},
+				],
 				viewport: {},
 			},
 			size: {
