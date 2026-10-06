@@ -17,6 +17,7 @@ export const getScrollDivider = (edge: 'bottom' | 'top'): GlobalStyleRule => {
 		display: 'block',
 		position: 'sticky',
 		...placement,
+		flexShrink: 0,
 		zIndex: zIndex.raised,
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
