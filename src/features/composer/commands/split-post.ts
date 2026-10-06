@@ -4,7 +4,14 @@ import { GardSelection } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
 import { ISOLATE_HISTORY } from '../model/history';
-import { findPost, getPostParam, isEmptyLine, newPost, setPostMediaChange } from '../model/schema';
+import {
+	findPost,
+	getPostParam,
+	isEmptyLine,
+	newPost,
+	setPostMediaChange,
+	startOfFirstLine,
+} from '../model/schema';
 import { getCaretContext } from '../model/selection';
 
 /** blank lines required to split, including the line enter adds. */
@@ -122,8 +129,10 @@ export const splitOnBlankLines: Command = (wg) => {
 
 	return {
 		changes: [...split.changes, { from, to, insert: [...before, Plot.End, split.lower, ...after] }],
-		// past the placeholder, the post break, and into the first line.
-		selection: { anchor: from + (before.length ? 2 : 0) + 3 },
+		selection: (context, changes) => {
+			const lower = changes.findInserted((tag) => tag === split.lower) ?? changes.mapPos(to, 1);
+			return GardSelection.near(context, startOfFirstLine(lower), 1);
+		},
 		scrollIntoView: true,
 		userEvent: 'input.split',
 		annotations: ISOLATE_HISTORY,

@@ -1,6 +1,6 @@
 import type { ChangeSet, Plot } from 'wordgard/doc';
 import type { Wordgard } from 'wordgard/editor';
-import { Transaction } from 'wordgard/state';
+import { GardSelection, Transaction } from 'wordgard/state';
 import { Paragraph } from 'wordgard/types';
 
 import { ISOLATE_HISTORY } from '../model/history';
@@ -24,10 +24,10 @@ const joinMedia = (pos: number, kept: Plot, joined: Plot): ChangeSet.Spec[] => {
 	return [setPostMediaChange(pos, kept, [...getPostParam(kept).media, ...media])];
 };
 
-const joinSpec = (changes: ChangeSet.Spec[], anchor: number): Transaction.Spec => {
+const joinSpec = (changes: ChangeSet.Spec[], head: number): Transaction.Spec => {
 	return {
 		changes,
-		selection: { anchor },
+		selection: (_context, mapping) => GardSelection.cursor(mapping.mapPos(head, 1)),
 		scrollIntoView: true,
 		userEvent: 'delete.join',
 		annotations: ISOLATE_HISTORY,
@@ -52,11 +52,7 @@ const joinWithPrevious = (cx: CaretContext): Transaction.Spec | false => {
 	const seamIsBlank = isEmptyLine(prev.content[prev.content.length - 1]) || isEmptyLine(post.node.content[0]);
 	const separator = seamIsBlank ? [] : [Paragraph.create()];
 
-	return joinSpec(
-		[...media, { from: post.before - 1, to: post.start, insert: separator }],
-		// remove two post-boundary tokens; an inserted paragraph adds two tokens back.
-		head - 2 + separator.length * 2,
-	);
+	return joinSpec([...media, { from: post.before - 1, to: post.start, insert: separator }], head);
 };
 
 const joinWithNext = (cx: CaretContext): Transaction.Spec | false => {
