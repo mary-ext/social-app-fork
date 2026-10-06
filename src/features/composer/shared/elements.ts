@@ -15,6 +15,9 @@ export const POST_ACTIVE_ATTR = 'data-active';
 /** marks the overlay of the post under the pointer. */
 export const POST_HOVERED_ATTR = 'data-hovered';
 
+/** disables overlay control fades after edits. */
+export const POST_INSTANT_ATTR = 'data-instant';
+
 /** marks the post a media or file drag would land in. */
 export const POST_DROP_TARGET_ATTR = 'data-drop-target';
 

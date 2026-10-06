@@ -9,6 +9,7 @@ import {
 	POST_DRAGGING_ATTR,
 	POST_HOVERED_ATTR,
 	POST_ID_ATTR,
+	POST_INSTANT_ATTR,
 	POST_OVERLAY_ATTR,
 } from '../shared/elements';
 import { createStore, type Store } from '../shared/store';
@@ -121,6 +122,7 @@ export const createPostOverlays = (): PostOverlays => {
 			return;
 		}
 
+		layer.removeAttribute(POST_INSTANT_ATTR);
 		if (hovered !== null) {
 			entries.get(hovered)?.overlay.root.removeAttribute(POST_HOVERED_ATTR);
 		}
@@ -264,6 +266,7 @@ export const createPostOverlays = (): PostOverlays => {
 	const plugin = Wordgard.Plugin.define((wg) => {
 		return {
 			update(update: Wordgard.Update) {
+				layer.toggleAttribute(POST_INSTANT_ATTR, update.docChanged);
 				applyState(update.state);
 			},
 			// spacers connect during the DOM update, after `update` ran.
