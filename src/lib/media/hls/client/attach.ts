@@ -45,7 +45,6 @@ const canPlayMimeType = (mimeType: string) => MediaSourceClass?.isTypeSupported(
 const BACK_BUFFER = 10;
 // keep eviction beyond the worker's read-ahead boundary.
 const FORWARD_SLACK = 20;
-const TIME_REPORT_MS = 1000;
 const MIN_EVICTION = 2;
 // retain short loops to avoid refetching on each replay.
 const LOOP_RETAIN_MAX = 60;
@@ -54,8 +53,9 @@ const PANIC_BUFFER = { back: 2, forward: 8, minimum: 0 };
 const MAX_PANICS = 2;
 
 const MAX_RECOVERIES = 2;
-const RESTART_INTERVAL_MS = 1000;
+const RESTART_INTERVAL_MS = { seek: 150, recovery: 1000 };
 const PROGRESS_AFTER_RECOVERY = 1;
+
 const STALL_CHECK_MS = 2000;
 const STALL_MARGIN = 0.5;
 // let the worker's idle timeout trigger retries before restarting it.
@@ -67,6 +67,7 @@ const MAX_GAP = 0.5;
 const GAP_LANDING = 0.05;
 const NUDGE = { step: 0.1, attempts: 3 };
 
+const TIME_REPORT_MS = 1000;
 const OPEN_TIMEOUT_MS = 15000;
 
 // #endregion
@@ -445,11 +446,11 @@ export const attachHlsPlayer = (
 		return range[1] - time > STALL_MARGIN || nearEnd(range[1]);
 	};
 
-	const restartAt = (time: number) => {
+	const restartAt = (time: number, interval: number) => {
 		const sinceRestart = performance.now() - lastRestart;
-		if (sinceRestart < RESTART_INTERVAL_MS) {
+		if (sinceRestart < interval) {
 			clearTimeout(deferredRestart);
-			deferredRestart = setTimeout(() => restartAt(time), RESTART_INTERVAL_MS - sinceRestart);
+			deferredRestart = setTimeout(() => restartAt(time, interval), interval - sinceRestart);
 			return false;
 		}
 
@@ -480,7 +481,7 @@ export const attachHlsPlayer = (
 
 		// charge deferred restarts so repeated failures cannot bypass the budget.
 		recoveries++;
-		restartAt(time);
+		restartAt(time, RESTART_INTERVAL_MS.recovery);
 	};
 
 	const onWaiting = () => {
@@ -752,7 +753,7 @@ export const attachHlsPlayer = (
 		}
 
 		setStatus('loading');
-		restartAt(video.currentTime);
+		restartAt(video.currentTime, RESTART_INTERVAL_MS.seek);
 	};
 	video.addEventListener('seeking', onSeeking, { signal });
 
