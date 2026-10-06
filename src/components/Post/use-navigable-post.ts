@@ -6,10 +6,12 @@ import { useKeybind } from '#/lib/keybinds';
 import { findOwnImagesTrigger } from '#/components/ImageEmbed';
 import { KEYBINDS } from '#/components/keybind-catalog';
 import { listItemProps } from '#/components/List/keyboard-navigation';
+import { findOverflowMenuTrigger } from '#/components/PostControls/PostOverflowMenuButton';
 
 /**
  * makes a post focusable for list navigation. while focus is within it, the open keybind opens its images or
- * calls `onOpen`. Enter calls `onOpen` only when the frame itself is focused.
+ * calls `onOpen`, and the post menu keybind opens its overflow menu. Enter calls `onOpen` only when the frame
+ * itself is focused.
  *
  * @param onOpen opens the post from its frame; use the row's click handler to retain profile caching and
  *   clickthrough logging. omit for an already-open post
@@ -31,6 +33,14 @@ export const useNavigablePost = (onOpen?: (frame: HTMLDivElement) => void) => {
 			} else {
 				onOpen?.(frame);
 			}
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.postMenu,
+		enabled: focusWithin,
+		handle() {
+			findOverflowMenuTrigger(frameRef.current!)?.click();
 		},
 	});
 

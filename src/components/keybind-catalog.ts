@@ -37,6 +37,13 @@ export const KEYBINDS = {
 		label: m['components.postControls.repost.action.repost'],
 	},
 	quote: { scope: 'app', group: 'posts', keys: ['q'], label: m['common.quote.post'] },
+	postMenu: { scope: 'app', group: 'posts', keys: ['m'], label: m['components.dialogs.keybinds.postMenu'] },
+	viewAuthor: {
+		scope: 'app',
+		group: 'posts',
+		keys: ['p'],
+		label: m['components.dialogs.keybinds.viewAuthor'],
+	},
 
 	goHome: { scope: 'app', group: 'navigation', keys: ['g', 'h'], label: m['common.nav.home'] },
 	goExplore: { scope: 'app', group: 'navigation', keys: ['g', 'e'], label: m['common.nav.explore'] },

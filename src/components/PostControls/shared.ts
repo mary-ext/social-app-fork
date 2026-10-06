@@ -3,20 +3,26 @@ import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { isAbortError } from '#/lib/errors';
 import { useKeybind } from '#/lib/keybinds';
+import { profileTarget } from '#/lib/routes/targets';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
+import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import { KEYBINDS } from '#/components/keybind-catalog';
 import * as Toast from '#/components/Toast';
+import { navigateTo } from '#/components/web/Link';
 
 import { m } from '#/paraglide/messages';
+import { useRouter } from '#/router';
 
 /** props shared by the post action bar in either size. */
 export type PostControlsProps = {
@@ -43,6 +49,8 @@ export function usePostControlsActions({
 	keybindsEnabled,
 	viaRepost,
 }: Omit<PostControlsProps, 'keybindsEnabled'> & { keybindsEnabled: boolean }) {
+	const queryClient = useQueryClient();
+	const router = useRouter();
 	const { openComposer } = useOpenComposer();
 	const { sendInteraction } = useFeedFeedbackContext();
 	const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, viaRepost);
@@ -160,6 +168,21 @@ export function usePostControlsActions({
 		enabled: keybindsEnabled && !post.viewer?.embeddingDisabled,
 		handle() {
 			requireAuth(() => onQuote());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.viewAuthor,
+		enabled: keybindsEnabled,
+		handle() {
+			sendInteraction({
+				item: post.uri,
+				event: 'app.bsky.feed.defs#clickthroughAuthor',
+				feedContext,
+				reqId,
+			});
+			unstableCacheProfileView(queryClient, post.author);
+			navigateTo(router, router.href(profileTarget(post.author.did)), 'push');
 		},
 	});
 

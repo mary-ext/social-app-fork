@@ -22,6 +22,18 @@ type Props = {
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 };
 
+const OVERFLOW_MENU_ATTRIBUTE = 'data-post-overflow-menu';
+
+/**
+ * finds the {@link PostOverflowMenuButton} trigger within a post.
+ *
+ * @param root the post's root element
+ * @returns the menu button, or `null` if none is rendered
+ */
+export const findOverflowMenuTrigger = (root: HTMLElement): HTMLElement | null => {
+	return root.querySelector<HTMLElement>(`[${OVERFLOW_MENU_ATTRIBUTE}]`);
+};
+
 /**
  * post overflow ("…") menu rendered as a standalone corner button, for surfaces that pin it to the post's
  * top-right rather than the trailing action bar. reuses the compact {@link PostControls} button chrome.
@@ -48,7 +60,12 @@ export function PostOverflowMenuButton({
 			onShowLess={onShowLess}
 			tooltip={m['components.postControls.options.more']()}
 			render={
-				<button type="button" aria-label={m['components.postControls.options.a11y']()} className={css.button}>
+				<button
+					type="button"
+					aria-label={m['components.postControls.options.a11y']()}
+					className={css.button}
+					{...{ [OVERFLOW_MENU_ATTRIBUTE]: '' }}
+				>
 					<span className={css.iconCircle}>
 						<DotsHorizontal className={css.icon} />
 					</span>
