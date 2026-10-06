@@ -2,6 +2,8 @@ import { memo, type ReactNode } from 'react';
 
 import { addDays } from '@mary/date-fns';
 
+import { useTick } from '#/state/tick';
+
 import { clockNumeric, weekdayLong, weekdayMonthDay, weekdayMonthDayYear } from '#/locale/intl/datetime';
 
 import { Text } from '#/components/Text';
@@ -17,7 +19,7 @@ let DateDivider = ({ date: dateStr }: { date: string }): ReactNode => {
 
 	const timestamp = new Date(dateStr);
 
-	const today = new Date();
+	const today = new Date(useTick());
 	const yesterday = addDays(today, -1);
 	const oneWeekAgo = addDays(today, -7);
 

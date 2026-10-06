@@ -7,6 +7,7 @@ import {
 	useRemoveMutedWordMutation,
 	useUpdateMutedWordMutation,
 } from '#/state/queries/preferences';
+import { useTick } from '#/state/tick';
 import { useTitle } from '#/state/use-title';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
@@ -95,14 +96,15 @@ function MutedWordRow({ word }: { word: AppBskyActorDefs.MutedWord }) {
 
 	const isTagOnly = !word.targets.includes('content');
 	const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined;
-	const isExpired = expiryDate ? expiryDate < new Date() : false;
+	const now = useTick(!!expiryDate);
+	const isExpired = expiryDate ? expiryDate.getTime() < now : false;
 
 	// scope is carried by the leading icon, so the subtitle only states timing and follow-exclusion
 	const details = definite([
 		expiryDate
 			? isExpired
 				? m['screens.moderation.mutedWord.expired']()
-				: m['common.mutedWord.expires'](relativeMessageParts(expiryDate, new Date()))
+				: m['common.mutedWord.expires'](relativeMessageParts(expiryDate, new Date(now)))
 			: undefined,
 		word.actorTarget === 'exclude-following'
 			? m['screens.moderation.mutedWord.excludesFollowing']()

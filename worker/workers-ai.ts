@@ -19,8 +19,6 @@ export const createWorkersAiCompletion = (feature: 'description' | 'translation'
 
 		try {
 			result = await env.AI.run(MODEL, {
-				// thinking can produce unparseable output.
-				chat_template_kwargs: { enable_thinking: false },
 				max_tokens: maxTokens,
 				temperature: temperature,
 				messages: toOpenaiChatMessages(messages),

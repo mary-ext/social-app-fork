@@ -7,7 +7,6 @@ trustPolicyIgnoreAfter: 10080
 
 overrides:
   '@types/estree': '1.0.6'
-  'rolldown': '1.2.8'
 
 allowBuilds:
   'core-js-pure': true
@@ -17,12 +16,13 @@ allowBuilds:
   'unrs-resolver': true
   'workerd': true
 
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
   - '@mary-ext/*'
   - '@jsr/mary__*'
-  - '@vitejs/plugin-react@6.1.0'
+  - vite@8.3.3
 
 patchedDependencies:
   '@base-ui/react': patches/@base-ui__react.patch
