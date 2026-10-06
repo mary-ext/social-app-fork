@@ -2,7 +2,7 @@ import type { Command } from 'wordgard/command';
 import type { Pos } from 'wordgard/doc';
 import { GardSelection, type GardState } from 'wordgard/state';
 
-import { findPost, getPostParam } from './schema';
+import { endOfLastLine, findPost, getPostParam, type ThreadPost } from './schema';
 
 // #region caret
 
@@ -100,6 +100,24 @@ export const getActivePostId = (state: GardState): string | null => {
 	}
 
 	return id;
+};
+
+/**
+ * returns a caret selection for an inactive post.
+ *
+ * @param state the editor state
+ * @param post a post from state.doc
+ * @returns a caret at the post's text end, or undefined if already active
+ */
+export const getActivationSelection = (
+	state: GardState,
+	post: ThreadPost,
+): { anchor: number } | undefined => {
+	if (findActivePost(state)?.before === post.pos) {
+		return undefined;
+	}
+
+	return { anchor: endOfLastLine(post.pos + post.node.length) };
 };
 
 // #endregion

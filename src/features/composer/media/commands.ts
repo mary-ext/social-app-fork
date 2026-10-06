@@ -10,14 +10,14 @@ import { appendPost } from '../commands/append-post';
 import { revealPostEnd } from '../editor/scrolling';
 import { ISOLATE_HISTORY } from '../model/history';
 import {
-	endOfLastLine,
 	findPostById,
 	getPostParam,
 	getPosts,
 	type PostMedia,
 	setPostMediaChange,
+	type ThreadPost,
 } from '../model/schema';
-import { findActivePost } from '../model/selection';
+import { getActivationSelection } from '../model/selection';
 import { createGifMedia, createMedia } from './attachments';
 import { revealMedia } from './reveal-media';
 
@@ -34,9 +34,28 @@ const dispatchMediaChange = (wg: Wordgard, spec: Transaction.Spec): void => {
 	}
 };
 
+/**
+ * moves the caret to an inactive post's text end so its attachment controls are tabbable. call before file
+ * reads to avoid moving the caret after further edits.
+ *
+ * @param wg the editor
+ * @param postId the post's id
+ */
+export const activatePost = (wg: Wordgard, postId: string): void => {
+	const { state } = wg;
+	const post = findPostById(state.doc, postId);
+	const selection = post && getActivationSelection(state, post);
+	if (selection && !state.readOnly) {
+		wg.dispatch({ selection });
+	}
+};
+
+const appendMediaChange = (post: ThreadPost, media: readonly PostMedia[]): ChangeSet.Spec => {
+	return setPostMediaChange(post.pos, post.node, [...getPostParam(post.node).media, ...media]);
+};
+
 // caret scrolling doesn't reveal attachments below the text.
-const addAndRevealMedia = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
-	addMediaTo(wg, postId, media);
+const revealAddedMedia = (wg: Wordgard, postId: string, media: readonly PostMedia[]): void => {
 	if (media[0]) {
 		// reveal the tile first, then correct its vertical scroll to include the post's toolbar.
 		revealMedia(media[0].id);
@@ -45,26 +64,41 @@ const addAndRevealMedia = (wg: Wordgard, postId: string, media: readonly PostMed
 };
 
 /**
- * validates files, appends accepted media to a post, and scrolls it into view.
+ * activates a post, appends accepted files as media, and reveals the attachments.
  *
  * @param wg the editor
  * @param postId the post's id
  * @param files the picked or pasted files
  */
 export const attachFiles = async (wg: Wordgard, postId: string, files: Iterable<File>): Promise<void> => {
+	activatePost(wg, postId);
 	const { media } = await createMedia(files);
-	addAndRevealMedia(wg, postId, media);
+	addMediaTo(wg, postId, media);
+	revealAddedMedia(wg, postId, media);
 };
 
 /**
- * appends an external GIF to a post and scrolls it into view.
+ * activates a post, appends an external GIF, and reveals it.
  *
  * @param wg the editor
  * @param postId the post's id
  * @param gif a GIF picker result
  */
 export const attachGif = (wg: Wordgard, postId: string, gif: Gif): void => {
-	addAndRevealMedia(wg, postId, [createGifMedia(gif)]);
+	const post = findPostById(wg.state.doc, postId);
+	if (!post) {
+		return;
+	}
+
+	const media = [createGifMedia(gif)];
+	// keep the attachment and caret move in the same undo step.
+	dispatchMediaChange(wg, {
+		changes: appendMediaChange(post, media),
+		selection: getActivationSelection(wg.state, post),
+		userEvent: 'media.add',
+		annotations: ISOLATE_HISTORY,
+	});
+	revealAddedMedia(wg, postId, media);
 };
 
 /**
@@ -81,7 +115,7 @@ export const addMediaTo = (wg: Wordgard, postId: string, media: readonly PostMed
 	}
 
 	dispatchMediaChange(wg, {
-		changes: setPostMediaChange(post.pos, post.node, [...getPostParam(post.node).media, ...media]),
+		changes: appendMediaChange(post, media),
 		userEvent: 'media.add',
 		annotations: ISOLATE_HISTORY,
 	});
@@ -181,16 +215,11 @@ const moveMedia = (wg: Wordgard, ref: MediaRef, toId: string, toIndex: number | 
 	}
 
 	const at = Math.min(toIndex ?? media.length, media.length);
-	let selection: { anchor: number } | undefined;
-	if (findActivePost(wg.state)?.before !== dest.pos) {
-		// keep the destination post's controls tabbable.
-		// media-only changes leave post positions unchanged.
-		selection = { anchor: endOfLastLine(dest.pos + dest.node.length) };
-	}
+	// media-only changes preserve positions, so the activation selection needs no mapping.
 	dispatchMove(
 		wg,
 		[...lifted.changes, setPostMediaChange(dest.pos, dest.node, media.toSpliced(at, 0, lifted.item))],
-		selection,
+		getActivationSelection(wg.state, dest),
 	);
 };
 

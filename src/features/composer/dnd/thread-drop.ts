@@ -5,6 +5,7 @@ import type { Wordgard } from 'wordgard/editor';
 import { movePostToSlot } from '../commands/reorder-posts';
 import { createMedia } from '../media/attachments';
 import {
+	activatePost,
 	addMediaInNewPost,
 	addMediaTo,
 	insertMediaAt,
@@ -285,6 +286,10 @@ export const registerFileDrop = (wg: Wordgard, container: HTMLElement): (() => v
 		finish();
 		if (!target) {
 			return;
+		}
+
+		if (target.kind === 'post') {
+			activatePost(wg, target.postId);
 		}
 
 		// copy files before the drop event expires.
