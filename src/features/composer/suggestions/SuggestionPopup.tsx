@@ -23,6 +23,7 @@ import {
 	type ActiveCompletion,
 	acceptCompletion,
 	activeCompletion,
+	dismissCompletion,
 	getSuggestionOptionId,
 	markSuggestionState,
 	SUGGESTION_LISTBOX_ID,
@@ -31,10 +32,6 @@ import {
 import * as css from './SuggestionPopup.css';
 
 const SPINNER_DELAY_MS = 200;
-
-const getCompletionKey = (completion: ActiveCompletion) => {
-	return `${completion.type}:${completion.from}:${completion.query}`;
-};
 
 /**
  * suggestions for the completion at the focused editor's caret.
@@ -46,16 +43,13 @@ export function Suggestions() {
 	const host = useStore(suggestionHost);
 	const completion = useEditorState((state) => (wg.hasFocus ? state.field(activeCompletion) : null));
 
-	// keep dismissed suggestions closed until the query changes.
-	const [dismissed, setDismissed] = useState<string | null>(null);
-
 	let open: ActiveCompletion | null = null;
 	if (
 		completion &&
 		// hashtags have no suggestion source yet.
 		completion.type !== 'tag' &&
 		completion.query !== '' &&
-		getCompletionKey(completion) !== dismissed
+		!completion.dismissed
 	) {
 		open = completion;
 	}
@@ -76,7 +70,7 @@ export function Suggestions() {
 			completion={open}
 			host={host}
 			keyHandlerRef={suggestionKeys}
-			onDismiss={() => setDismissed(getCompletionKey(open))}
+			onDismiss={() => dismissCompletion(wg)}
 		/>
 	);
 }

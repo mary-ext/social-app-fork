@@ -12,6 +12,8 @@ export type ActiveCompletion = {
 	from: number;
 	/** end of that range, the caret. */
 	to: number;
+	/** suppresses this completion's suggestions. */
+	dismissed: boolean;
 };
 
 const SUGGESTION_KEYS = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Tab'] as const;
@@ -159,6 +161,7 @@ const findActiveCompletion = (doc: Plot.Doc, selection: GardSelection): ActiveCo
 		query: completion.query,
 		from: line.start + completion.range.start,
 		to: line.start + completion.range.end,
+		dismissed: false,
 	};
 };
 
@@ -167,7 +170,36 @@ const isSameCompletion = (a: ActiveCompletion | null, b: ActiveCompletion | null
 		return a === b;
 	}
 
-	return a.type === b.type && a.from === b.from && a.to === b.to && a.query === b.query;
+	return (
+		a.type === b.type &&
+		a.from === b.from &&
+		a.to === b.to &&
+		a.query === b.query &&
+		a.dismissed === b.dismissed
+	);
+};
+
+const dismissEffect = Transaction.Effect.define();
+
+/**
+ * dismisses suggestions until the query changes or the caret leaves the completion.
+ *
+ * @param wg the editor
+ */
+export const dismissCompletion = (wg: Wordgard): void => {
+	wg.dispatch({ effects: dismissEffect.of(null) });
+};
+
+const isDismissed = (prev: ActiveCompletion | null, next: ActiveCompletion, tr: Transaction): boolean => {
+	if (tr.effects.some((effect) => effect.is(dismissEffect))) {
+		return true;
+	}
+	if (!prev?.dismissed || next.type !== prev.type || next.query !== prev.query) {
+		return false;
+	}
+
+	// unrelated edits must not reopen dismissed suggestions.
+	return next.from === tr.changes.mapPos(prev.from);
 };
 
 /** completion at the caret; retains object identity while unchanged. */
@@ -176,11 +208,19 @@ export const activeCompletion = GardState.Field.define<ActiveCompletion | null>(
 		return findActiveCompletion(state.doc, state.selection);
 	},
 	update(value, tr) {
-		if (!tr.docChanged && tr.selection === undefined) {
-			return value;
+		let next = value;
+		if (tr.docChanged || tr.selection !== undefined) {
+			next = findActiveCompletion(tr.newDoc, tr.newSelection);
+		}
+		if (!next) {
+			return isSameCompletion(value, next) ? value : next;
 		}
 
-		const next = findActiveCompletion(tr.newDoc, tr.newSelection);
+		const dismissed = isDismissed(value, next, tr);
+		if (dismissed !== next.dismissed) {
+			next = { ...next, dismissed };
+		}
+
 		return isSameCompletion(value, next) ? value : next;
 	},
 });
