@@ -1,10 +1,12 @@
-import { type ComponentProps, useState } from 'react';
+import { type ComponentProps, type MouseEvent, useState } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
+
+import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
@@ -69,8 +71,18 @@ export function PostHider({
 		);
 	}
 
+	const onRowClick = (ev: MouseEvent<HTMLDivElement>) => {
+		const interactive = ev.target instanceof Element ? ev.target.closest(INTERACTIVE_SELECTOR) : null;
+		if (interactive === null || !ev.currentTarget.contains(interactive)) {
+			setOverride(true);
+		}
+	};
+
 	return (
-		<div className={clsx(styles.row, hiderClassName)}>
+		<div
+			className={clsx(styles.row, !modui.noOverride && styles.revealable, hiderClassName)}
+			onClick={modui.noOverride ? undefined : onRowClick}
+		>
 			<ModerationDetailsDialog handle={handle} modcause={blur} />
 			<Dialog.Trigger
 				handle={handle}

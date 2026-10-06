@@ -26,6 +26,10 @@ export const row = style(
 	}),
 );
 
+export const revealable = style({
+	cursor: 'pointer',
+});
+
 export const iconButton = style({
 	appearance: 'none',
 	display: 'inline-flex',
