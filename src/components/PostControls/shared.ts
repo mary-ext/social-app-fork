@@ -22,6 +22,8 @@ export type PostControlsProps = {
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
 	onPressReply: () => void;
+	/** enable only for the post containing focus. */
+	keybindsEnabled?: boolean;
 	viaRepost?: { uri: ResourceUri; cid: string };
 };
 

@@ -9,12 +9,15 @@ import {
 } from 'react';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useKeybind } from '#/lib/keybinds';
 
+import { KEYBINDS } from '#/components/keybind-catalog';
 import * as css from '#/components/List/List.css';
 
 import { useIsFocused } from '#/router';
 
 import { ItemSeenObserver } from './ItemSeenObserver';
+import { moveListFocus } from './keyboard-navigation';
 import { Row } from './Row';
 import { Virtualizer, type VirtualizerMethods } from './Virtualizer';
 
@@ -54,6 +57,11 @@ export type ListProps<ItemT> = {
 	 * using this as the placeholder height until a row has been measured.
 	 */
 	estimateHeight?: number;
+	/**
+	 * enables next/previous item keybinds for `listItemProps` on the focused screen. enable on only one list
+	 * per screen, with `scrollRoot` unset.
+	 */
+	keyboardNavigation?: boolean;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
 	onContentSizeChange?: (width: number, height: number) => void;
 	onEndReached?: () => void;
@@ -83,6 +91,7 @@ export function List<ItemT>({
 	ListFooterComponent,
 	ListHeaderComponent,
 	estimateHeight,
+	keyboardNavigation = false,
 	onContentSizeChange,
 	onEndReached,
 	onEndReachedThreshold,
@@ -95,6 +104,23 @@ export function List<ItemT>({
 }: ListProps<ItemT>) {
 	const isFocused = useIsFocused();
 	const virtualizerRef = useRef<VirtualizerMethods>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	useKeybind({
+		keybind: KEYBINDS.nextItem,
+		enabled: keyboardNavigation && isFocused,
+		handle() {
+			moveListFocus(containerRef.current!, 1);
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.previousItem,
+		enabled: keyboardNavigation && isFocused,
+		handle() {
+			moveListFocus(containerRef.current!, -1);
+		},
+	});
 
 	useImperativeHandle(
 		ref,
@@ -183,6 +209,7 @@ export function List<ItemT>({
 	return (
 		<div
 			ref={(node) => {
+				containerRef.current = node;
 				if (!isFocused || onContentSizeChange === undefined || node === null) {
 					return;
 				}

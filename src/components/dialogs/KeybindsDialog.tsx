@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import * as Dialog from '#/components/Dialog';
 import { keybindsDialogHandle } from '#/components/dialogs/handles';
-import { type KeybindGroup, KEYBINDS } from '#/components/Shell/shell-keybinds';
+import { type KeybindGroup, KEYBINDS } from '#/components/keybind-catalog';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -11,6 +11,7 @@ import * as styles from './KeybindsDialog.css';
 
 const GROUP_TITLES: Record<KeybindGroup, () => string> = {
 	general: m['components.dialogs.keybinds.general'],
+	posts: m['components.dialogs.keybinds.posts'],
 	navigation: m['components.dialogs.keybinds.navigation'],
 };
 

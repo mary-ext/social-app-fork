@@ -1,6 +1,9 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
+import { vars } from '#/styles/contract.css';
 import { recipe } from '#/styles/recipe';
+
+import { ITEM_ATTRIBUTE } from './keyboard-navigation';
 
 export const container = recipe(
 	{
@@ -27,6 +30,11 @@ export const row = style({
 	contain: 'content',
 	flexDirection: 'column',
 	flexShrink: 0,
+});
+
+globalStyle(`${row} [${ITEM_ATTRIBUTE}]:focus-visible`, {
+	outline: `2px solid ${vars.palette.primary_500}`,
+	outlineOffset: -2,
 });
 
 export const spacer = style({

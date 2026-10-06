@@ -32,8 +32,8 @@ type BlockLinkProps = {
 	/** structured-cloneable state for the destination history entry. */
 	state?: unknown;
 	/**
-	 * makes the row a focusable link with the specified accessible name, activated by Enter. omit if inner
-	 * links already provide keyboard/AT access to avoid redundant tab stops.
+	 * makes the row an Enter-activated link with this accessible name. omit when the child or its inner links
+	 * already provide keyboard access; the child's accessibility props and keyboard handler are preserved.
 	 */
 	label?: string;
 	className?: string;
@@ -112,6 +112,8 @@ export function BlockLink({
 		// that begins on an interactive sub-region (an image-carousel tile, a button) and releases on the row
 		// body yields a row-targeted click that slips past the target check below. gate on the press origin too.
 		const origin = pressOriginRef.current;
+		// clear the origin so later keyboard/programmatic clicks don't inherit this press
+		pressOriginRef.current = null;
 		const originInteractive = origin?.closest(INTERACTIVE_SELECTOR);
 		if (originInteractive && originInteractive !== e.currentTarget) {
 			return;
@@ -142,7 +144,6 @@ export function BlockLink({
 
 	const node = children;
 
-	// without a label, preserve the child's accessibility props and keyboard handler
 	const pressProps = disabled
 		? undefined
 		: {

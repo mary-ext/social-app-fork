@@ -498,6 +498,7 @@ export function PostFeed({
 			data={feedItems}
 			keyExtractor={(item: FeedRow) => item.key}
 			estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			renderItem={renderItem}
 			ListFooterComponent={
 				<ListTail.Frame border={!isEmpty}>

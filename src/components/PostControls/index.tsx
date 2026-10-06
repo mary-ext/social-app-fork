@@ -10,8 +10,11 @@ import {
 
 import { clsx } from 'clsx';
 
+import { useKeybind } from '#/lib/keybinds';
+
 import { formatPostStatCount } from '#/locale/intl/number';
 
+import { KEYBINDS } from '#/components/keybind-catalog';
 import { AnimatedLikeIcon } from '#/components/PostControls/AnimatedLikeIcon';
 import { CountWheel } from '#/components/PostControls/CountWheel';
 import { Text } from '#/components/Text';
@@ -119,6 +122,7 @@ export function PostControls({
 	feedContext,
 	reqId,
 	onPressReply,
+	keybindsEnabled = false,
 	viaRepost,
 }: PostControlsProps): ReactNode {
 	const {
@@ -132,6 +136,38 @@ export function PostControls({
 	} = usePostControlsActions({ post, feedContext, reqId, viaRepost });
 
 	const repostCount = (post.repostCount ?? 0) + (post.quoteCount ?? 0);
+
+	useKeybind({
+		keybind: KEYBINDS.like,
+		enabled: keybindsEnabled,
+		handle() {
+			requireAuth(() => onPressToggleLike());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.reply,
+		enabled: keybindsEnabled && !replyDisabled,
+		handle() {
+			requireAuth(() => onPressReply());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.repost,
+		enabled: keybindsEnabled,
+		handle() {
+			requireAuth(() => void onRepost());
+		},
+	});
+
+	useKeybind({
+		keybind: KEYBINDS.quote,
+		enabled: keybindsEnabled && !post.viewer?.embeddingDisabled,
+		handle() {
+			requireAuth(() => onQuote());
+		},
+	});
 
 	return (
 		<div className={css.root}>
