@@ -47,6 +47,9 @@ const BACK_BUFFER = 10;
 const FORWARD_SLACK = 20;
 const TIME_REPORT_MS = 1000;
 const MIN_EVICTION = 2;
+// retain short loops to avoid refetching on each replay.
+const LOOP_RETAIN_MAX = 60;
+
 const PANIC_BUFFER = { back: 2, forward: 8, minimum: 0 };
 const MAX_RECOVERIES = 2;
 const RESTART_INTERVAL_MS = 1000;
@@ -384,6 +387,9 @@ export const attachHlsPlayer = (
 
 	const evict = () => {
 		if (queue.some((operation) => operation.type === 'evict')) {
+			return;
+		}
+		if (video.loop && video.duration <= LOOP_RETAIN_MAX) {
 			return;
 		}
 
