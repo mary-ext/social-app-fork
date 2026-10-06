@@ -151,6 +151,7 @@ function AnchorPostControls({
 				</AnchorControlButtonIconBox>
 			</AnchorControlButton>
 			<ShareMenu
+				keybindEnabled={keybindsEnabled}
 				post={post}
 				onShare={onShare}
 				tooltip={m['common.share.action.share']()}

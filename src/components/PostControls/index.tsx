@@ -208,6 +208,7 @@ export function PostControls({
 			</div>
 			<div className={css.secondaryGroup}>
 				<ShareMenu
+					keybindEnabled={keybindsEnabled}
 					post={post}
 					onShare={onShare}
 					tooltip={m['common.share.action.share']()}
