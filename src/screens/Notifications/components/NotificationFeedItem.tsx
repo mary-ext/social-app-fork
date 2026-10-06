@@ -42,6 +42,7 @@ import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
 import * as MediaPreview from '#/components/MediaPreview';
 import { Post } from '#/components/Post/Post';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
@@ -152,6 +153,14 @@ let NotificationFeedItem = ({
 	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, item.notification.author);
 	};
+
+	const { itemProps } = useNavigablePost(
+		itemTarget
+			? (frame) => {
+					frame.click();
+				}
+			: undefined,
+	);
 
 	const authors: Author[] = uniqueBy(
 		[
@@ -491,7 +500,10 @@ let NotificationFeedItem = ({
 	a11yLabel += ` · ${niceTimestamp}`;
 
 	const card = (
-		<div className={css.outer({ topBorder: !hideTopBorder, unread: !item.notification.isRead })}>
+		<div
+			className={css.outer({ topBorder: !hideTopBorder, unread: !item.notification.isRead })}
+			{...itemProps}
+		>
 			<div className={css.iconColumn}>{icon}</div>
 
 			<div className={css.content}>

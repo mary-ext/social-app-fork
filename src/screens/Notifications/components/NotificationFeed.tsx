@@ -57,6 +57,7 @@ export function NotificationFeed({
 			ref={scrollElRef}
 			data={notifications}
 			estimateHeight={NOTIFICATION_ITEM_HEIGHT_ESTIMATE}
+			keyboardNavigation
 			keyExtractor={(item) => item._reactKey}
 			renderItem={renderItem}
 			ListEmptyComponent={

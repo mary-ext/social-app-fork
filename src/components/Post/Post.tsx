@@ -27,6 +27,7 @@ import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
+import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
@@ -106,6 +107,10 @@ function PostInner({
 		unstableCacheProfileView(queryClient, post.author);
 	};
 
+	const { focusWithin, itemProps } = useNavigablePost((frame) => {
+		frame.click();
+	});
+
 	const galleryOffsetStyles = maybeApplyGalleryOffsetStyles({
 		additionalCauses: [],
 		moderation,
@@ -114,7 +119,12 @@ function PostInner({
 	return (
 		<GalleryBleed>
 			<BlockLink to={itemTarget} onBeforePress={onBeforePress}>
-				<article className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style} {...pressable}>
+				<article
+					className={clsx(css.outer, !hideTopBorder && css.outerBorder)}
+					style={style}
+					{...pressable}
+					{...itemProps}
+				>
 					<PostLayout.Row>
 						<PostLayout.AvatarColumn>
 							<PreviewableUserAvatar
@@ -144,7 +154,7 @@ function PostInner({
 								richText={richText}
 								embedStyle={galleryOffsetStyles?.embed}
 							/>
-							<PostControls post={post} onPressReply={onPressReply} />
+							<PostControls keybindsEnabled={focusWithin} post={post} onPressReply={onPressReply} />
 						</PostLayout.ContentColumn>
 					</PostLayout.Row>
 				</article>
