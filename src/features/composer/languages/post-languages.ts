@@ -3,13 +3,14 @@ import type { GardState, Transaction } from 'wordgard/state';
 
 import { joinPostLanguages } from '#/state/preferences/languages';
 
-import { findPostById, getPosts } from '../model/schema';
+import { findPostById, getPosts, Post } from '../model/schema';
 import { defineTaint, type TaintMap } from '../model/taints';
 
 // new posts copy their predecessor's override to keep the thread's language consistent.
 // retain deleted posts' entries so undo restores their languages.
 const inheritLanguages = (map: TaintMap<string>, tr: Transaction): TaintMap<string> => {
-	if (map.size === 0) {
+	// new posts always insert a post tag.
+	if (map.size === 0 || tr.changes.findInserted((tag) => tag.is(Post)) === null) {
 		return map;
 	}
 
