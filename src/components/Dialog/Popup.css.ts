@@ -120,6 +120,7 @@ export const popup = recipe(
 					padding: 0,
 					maxHeight: '80vh',
 					overflow: 'hidden',
+					overscrollBehavior: 'contain',
 					vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
 					selectors: {
 						[`&:has(${searchOverlap})`]: {
