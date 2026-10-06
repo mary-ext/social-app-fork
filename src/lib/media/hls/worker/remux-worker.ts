@@ -15,6 +15,8 @@ import {
 import { streamSubtitleCues } from './subtitles';
 
 const PROGRESS_INTERVAL_MS = 1000;
+// avoid refetching segments whose buffered end falls short of the playlist duration.
+const SEGMENT_LOOKUP_TOLERANCE = 0.25;
 
 // use the worker-global interface instead of Window.
 declare const self: {
@@ -135,9 +137,19 @@ const mediaPlaylist = async (variant: VideoVariant, fetch: Fetch, signal: AbortS
 	return parsed;
 };
 
-const streamFrom = async (index: number, startTime: number, myEpoch: number) => {
+const streamFrom = async ({
+	index,
+	time,
+	from,
+	myEpoch,
+}: {
+	index: number;
+	time: number;
+	from: number;
+	myEpoch: number;
+}) => {
 	currentIndex = index;
-	currentTime = startTime;
+	currentTime = time;
 	const variant = variants[index];
 	if (!variant) {
 		throw new Error(`no rendition at index ${index}`);
@@ -159,7 +171,10 @@ const streamFrom = async (index: number, startTime: number, myEpoch: number) => 
 		post({ type: 'duration', epoch: myEpoch, duration: playlist.duration });
 	}
 
-	const firstIndex = playlist.segments.findIndex((segment) => startTime < segment.start + segment.duration);
+	const firstIndex = playlist.segments.findIndex(
+		(segment) =>
+			from + Math.min(SEGMENT_LOOKUP_TOLERANCE, segment.duration / 2) < segment.start + segment.duration,
+	);
 	if (firstIndex === -1) {
 		post({ type: 'done', epoch: myEpoch });
 		return;
@@ -337,11 +352,21 @@ self.addEventListener('message', (event) => {
 			break;
 		}
 		case 'select': {
-			streamFrom(message.index, message.time, message.epoch).catch(report(message.epoch));
+			streamFrom({
+				index: message.index,
+				time: message.time,
+				from: message.time,
+				myEpoch: message.epoch,
+			}).catch(report(message.epoch));
 			break;
 		}
 		case 'seek': {
-			streamFrom(currentIndex, message.time, message.epoch).catch(report(message.epoch));
+			streamFrom({
+				index: currentIndex,
+				time: message.time,
+				from: message.from,
+				myEpoch: message.epoch,
+			}).catch(report(message.epoch));
 			break;
 		}
 	}

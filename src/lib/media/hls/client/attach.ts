@@ -55,6 +55,10 @@ const STALL_CHECK_MS = 2000;
 const STALL_MARGIN = 0.5;
 // avoid restarting a slow request that is still delivering data.
 const STALL_SILENCE_MS = 6000;
+
+// timestamp drift and uneven track boundaries can leave gaps browsers won't cross.
+const MAX_GAP = 0.5;
+
 const OPEN_TIMEOUT_MS = 15000;
 
 // #endregion
@@ -385,9 +389,20 @@ export const attachHlsPlayer = (
 
 	// #region recovery
 
-	const bufferedAhead = (time: number) => {
-		const range = bufferedRanges().find(([start, end]) => time >= start && time <= end);
-		return range ? range[1] - time : 0;
+	const bufferedRangeAt = (time: number) => {
+		return bufferedRanges().find(([start, end]) => time >= start - MAX_GAP && time <= end);
+	};
+
+	const nearEnd = (time: number) => video.duration - time < STALL_MARGIN;
+
+	const isBufferedAt = (time: number) => {
+		const range = bufferedRangeAt(time);
+		if (!range) {
+			return false;
+		}
+
+		// short clips and final frames may have less than a full stall margin buffered.
+		return range[1] - time > STALL_MARGIN || nearEnd(range[1]);
 	};
 
 	const restartAt = (time: number) => {
@@ -409,7 +424,8 @@ export const attachHlsPlayer = (
 			return true;
 		}
 
-		send({ type: 'seek', epoch: nextEpoch(), time });
+		const from = bufferedRangeAt(time)?.[1] ?? time;
+		send({ type: 'seek', epoch: nextEpoch(), time, from });
 		return true;
 	};
 
@@ -441,7 +457,7 @@ export const attachHlsPlayer = (
 		}
 
 		const time = video.currentTime;
-		if (bufferedAhead(time) > STALL_MARGIN || video.duration - time < STALL_MARGIN) {
+		if (isBufferedAt(time) || nearEnd(time)) {
 			return;
 		}
 
@@ -646,7 +662,7 @@ export const attachHlsPlayer = (
 		recoveries = 0;
 		stopped = false;
 
-		if (bufferedAhead(video.currentTime) > STALL_MARGIN) {
+		if (isBufferedAt(video.currentTime)) {
 			setStatus('ok');
 			return;
 		}

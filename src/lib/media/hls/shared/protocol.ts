@@ -39,7 +39,8 @@ export type PlayerError = {
 export type MainToWorker =
 	| { type: 'load'; epoch: number; playlist: string }
 	| { type: 'select'; epoch: number; index: number; time: number }
-	| { type: 'seek'; epoch: number; time: number }
+	// `time` bounds read-ahead; `from` resumes fetching at or after it. both are in seconds.
+	| { type: 'seek'; epoch: number; time: number; from: number }
 	| { type: 'stop'; epoch: number }
 	| { type: 'time'; time: number }
 	| { type: 'buffer'; ahead: number }
