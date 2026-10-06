@@ -2,15 +2,12 @@ import { lazy, Suspense, useEffect } from 'react';
 
 import { Outlet, resolveMeta, useRoute } from '@oomfware/stacker';
 
-import { useKeybind } from '#/lib/keybinds';
-
-import { focusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 import { closeAllActiveElements } from '#/state/shell/overlays';
 
 import { ComposerDialog } from '#/features/composer/ComposerDialog';
-import { useOpenComposer } from '#/features/composer/open-composer';
 
+import { KeybindsDialog } from '#/components/dialogs/KeybindsDialog';
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
@@ -19,6 +16,7 @@ import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
 import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 import { Shell } from '#/components/Shell/Shell';
+import { useShellKeybinds } from '#/components/Shell/shell-keybinds';
 
 import { useRouter } from '#/router';
 
@@ -34,26 +32,8 @@ export function ShellLayout() {
 	const match = useRoute();
 	const router = useRouter();
 	const { hasSession } = useSession();
-	const { openComposer } = useOpenComposer();
 
-	useKeybind({
-		scope: 'app',
-		keybind: 'n',
-		enabled: hasSession,
-		handle() {
-			openComposer({});
-		},
-	});
-
-	useKeybind({
-		scope: 'app',
-		keybind: '/',
-		handle() {
-			if (!focusSearch.emit()) {
-				router.navigate({ to: { name: 'Explore' } });
-			}
-		},
-	});
+	useShellKeybinds();
 
 	// close dialogs/menus/lightbox when the history entry changes, but NOT on an in-place replace (which
 	// also fires subscribe) — gate on the entry key so clearing a one-shot param can't dismiss the composer.
@@ -83,6 +63,7 @@ export function ShellLayout() {
 			</ErrorBoundary>
 			<ComposerDialog />
 			<SigninDialog />
+			<KeybindsDialog />
 			<LinkWarningDialog />
 			<GroupChatJoinDialog />
 			<Lightbox />

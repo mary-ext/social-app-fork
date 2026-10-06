@@ -30,6 +30,7 @@ export type Device = {
 	deviceId?: string;
 	devMode: boolean;
 	disableAutoplay?: boolean;
+	disableKeybinds?: boolean;
 	/** selected emoji skin tone. */
 	emojiSkinTone?: SkinTone;
 	fontFamily: 'system' | 'theme';

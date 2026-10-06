@@ -25,6 +25,8 @@ export type LinkWarningPayload = {
 
 export const groupChatJoinHandle = Dialog.createHandle<{ code: string }>();
 
+export const keybindsDialogHandle = Dialog.createHandle();
+
 export const lightboxHandle = Dialog.createHandle<LightboxPayload>();
 
 export const linkWarningDialogHandle = Dialog.createHandle<LinkWarningPayload>();

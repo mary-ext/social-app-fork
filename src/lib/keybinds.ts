@@ -8,20 +8,58 @@ type KeybindHandler = (ev: KeyboardEvent) => void;
 /** layer a keybind belongs to. only the highest-precedence active scope runs its keybinds. */
 export type KeybindScope = 'app' | 'dialog' | 'drawer';
 
+/** a scoped key or key sequence. */
+export interface KeybindDefinition {
+	/** scope in which the keybind can run. */
+	scope: KeybindScope;
+	/**
+	 * nonempty, case-sensitive `KeyboardEvent.key` sequence. same-scope sequences must be unique and must not
+	 * prefix one another.
+	 */
+	keys: readonly string[];
+}
+
 const SCOPE_PRECEDENCE: Record<KeybindScope, number> = {
 	app: 0,
 	drawer: 1,
 	dialog: 2,
 };
 
+const SEQUENCE_TIMEOUT_MS = 1_500;
+
+const MODIFIER_KEYS = new Set(['Alt', 'AltGraph', 'CapsLock', 'Control', 'Fn', 'Meta', 'Shift']);
+
+// these controls use printable keys for input or navigation
+const TYPING_TARGET_SELECTOR = [
+	'input',
+	'select',
+	'textarea',
+	'[role="combobox"]',
+	'[role="listbox"]',
+	'[role="menu"]',
+	'[role="searchbox"]',
+	'[role="slider"]',
+	'[role="spinbutton"]',
+	'[role="textbox"]',
+].join(', ');
+
 interface Registration {
-	scope: KeybindScope;
-	keybind: string;
+	definition: KeybindDefinition;
 	handle: KeybindHandler;
 }
 
 const registrations = new Set<Registration>();
 const activeScopes = new Set<KeybindScope>();
+
+let keybindsEnabled = true;
+
+let pending: { scope: KeybindScope; keys: string[] } | undefined;
+let pendingTimeout: ReturnType<typeof setTimeout> | undefined;
+
+const resetSequence = () => {
+	pending = undefined;
+	clearTimeout(pendingTimeout);
+};
 
 const getActiveScope = (): KeybindScope => {
 	let active: KeybindScope = 'app';
@@ -35,35 +73,67 @@ const getActiveScope = (): KeybindScope => {
 	return active;
 };
 
+const isTypingTarget = (ev: KeyboardEvent): boolean => {
+	const target = ev.composedPath()[0];
+	if (!(target instanceof Element)) {
+		return false;
+	}
+
+	return (
+		(target instanceof HTMLElement && target.isContentEditable) ||
+		target.closest(TYPING_TARGET_SELECTOR) !== null
+	);
+};
+
+const startsWith = (keys: readonly string[], prefix: readonly string[]): boolean => {
+	return prefix.length <= keys.length && prefix.every((key, idx) => keys[idx] === key);
+};
+
 window.addEventListener('keydown', (ev) => {
-	if (
-		ev.defaultPrevented ||
-		ev.isComposing ||
-		ev.repeat ||
-		ev.altKey ||
-		ev.ctrlKey ||
-		ev.metaKey ||
-		ev.getModifierState('AltGraph')
-	) {
+	// preserve the sequence across key repeats and modifiers such as shift
+	if (ev.repeat || MODIFIER_KEYS.has(ev.key)) {
 		return;
 	}
 
-	const target = ev.composedPath()[0];
 	if (
-		target instanceof HTMLElement &&
-		(target.isContentEditable || target.closest('input, select, textarea'))
+		ev.defaultPrevented ||
+		ev.isComposing ||
+		ev.altKey ||
+		ev.ctrlKey ||
+		ev.metaKey ||
+		ev.getModifierState('AltGraph') ||
+		!keybindsEnabled ||
+		isTypingTarget(ev)
 	) {
+		resetSequence();
 		return;
 	}
 
 	const scope = getActiveScope();
+	const keys = pending?.scope === scope ? [...pending.keys, ev.key] : [ev.key];
+	resetSequence();
 
+	let isPrefix = false;
 	for (const registration of registrations) {
-		if (registration.scope === scope && ev.key === registration.keybind) {
+		const { definition } = registration;
+		if (definition.scope !== scope || !startsWith(definition.keys, keys)) {
+			continue;
+		}
+
+		if (definition.keys.length === keys.length) {
 			ev.preventDefault();
 			registration.handle(ev);
-			break;
+			return;
 		}
+
+		isPrefix = true;
+	}
+
+	// don't retry a failed sequence as a single-key shortcut
+	if (isPrefix) {
+		ev.preventDefault();
+		pending = { scope, keys };
+		pendingTimeout = setTimeout(resetSequence, SEQUENCE_TIMEOUT_MS);
 	}
 });
 
@@ -81,23 +151,45 @@ export function setKeybindScopeActive(scope: KeybindScope, active: boolean): voi
 	}
 }
 
+/**
+ * enables or disables all registered keybinds.
+ *
+ * @param enabled whether keybinds should run
+ */
+export function setKeybindsEnabled(enabled: boolean): void {
+	keybindsEnabled = enabled;
+	if (!enabled) {
+		resetSequence();
+	}
+}
+
+const warnOnConflict = (definition: KeybindDefinition) => {
+	for (const { definition: other } of registrations) {
+		if (
+			other.scope === definition.scope &&
+			(startsWith(other.keys, definition.keys) || startsWith(definition.keys, other.keys))
+		) {
+			console.error(`keybind \`${definition.keys.join(' ')}\` collides with \`${other.keys.join(' ')}\``);
+		}
+	}
+};
+
 interface UseKeybindOptions {
-	scope: KeybindScope;
-	/** whether the keybind is enabled; a disabled one is left unregistered, so the page keeps the key */
+	/** keep the reference stable to avoid re-registering. */
+	keybind: KeybindDefinition;
+	/** when false, leaves the keybind unregistered. defaults to true. */
 	enabled?: boolean;
-	/** literal, case-sensitive `KeyboardEvent.key` value; shift may produce the character */
-	keybind: string;
-	/** keybind handler */
 	handle: KeybindHandler;
 }
 
 /**
- * registers a shortcut without alt, control, or meta, outside form fields and editable content. composing,
- * repeated, and already-handled key events are ignored.
+ * registers a keybind for the component's lifetime. runs in the active scope, outside text input and
+ * keyboard-operated controls. shift is allowed; alt, control, meta, composing, repeated, and handled events
+ * are ignored.
  *
  * @param options the keybind to register
  */
-export function useKeybind({ scope, keybind, handle, enabled = true }: UseKeybindOptions): void {
+export function useKeybind({ keybind, handle, enabled = true }: UseKeybindOptions): void {
 	const stableHandle = useNonReactiveCallback(handle);
 
 	useEffect(() => {
@@ -105,9 +197,12 @@ export function useKeybind({ scope, keybind, handle, enabled = true }: UseKeybin
 			return;
 		}
 
+		if (import.meta.env.DEV) {
+			warnOnConflict(keybind);
+		}
+
 		const registration: Registration = {
-			scope,
-			keybind,
+			definition: keybind,
 			handle: stableHandle,
 		};
 
@@ -116,5 +211,5 @@ export function useKeybind({ scope, keybind, handle, enabled = true }: UseKeybin
 		return () => {
 			registrations.delete(registration);
 		};
-	}, [enabled, keybind, scope, stableHandle]);
+	}, [enabled, keybind, stableHandle]);
 }

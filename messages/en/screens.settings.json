@@ -1,6 +1,9 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"screens.settings.accessibility.altTextReminder": "Remind me to add alt text before posting",
+	"screens.settings.accessibility.keybinds.enable": "Enable keyboard shortcuts",
+	"screens.settings.accessibility.keybinds.list": "View keyboard shortcuts",
+	"screens.settings.accessibility.keyboard": "Keyboard",
 	"screens.settings.accessibility.largerAltTextBadges": "Display larger alt text badges",
 	"screens.settings.accessibility.title": "Accessibility",
 	"screens.settings.ai.apiKey.dialogHint": "Stored on this device only.",
