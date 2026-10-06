@@ -38,7 +38,7 @@ export const createFetcher = (hooks: FetchHooks): Fetch => {
 				onRetry: policy.reports ? hooks.onRetry : undefined,
 				signal,
 			},
-			async (response) => {
+			async (response, received) => {
 				if (!response.body) {
 					const bytes = await response.bytes();
 
@@ -51,6 +51,7 @@ export const createFetcher = (hooks: FetchHooks): Fetch => {
 				const chunks: Uint8Array[] = [];
 
 				for await (const chunk of response.body) {
+					received();
 					chunks.push(chunk);
 					if (policy.reports && !signal.aborted) {
 						hooks.onBytes(chunk.byteLength);

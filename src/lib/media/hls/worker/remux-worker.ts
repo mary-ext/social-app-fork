@@ -1,5 +1,5 @@
 import { BUFFER_AHEAD, type MainToWorker, type PlayerError, type WorkerToMain } from '../shared/protocol';
-import { HttpError, isRetryable } from './fetch-policy';
+import { HttpError, isRetryable, StalledError } from './fetch-policy';
 import { createMp4InitSegment, createMp4MediaSegment, type MuxSample } from './mp4';
 import { demuxMpegTs, MPEG_TS_TIMESCALE, type DemuxedMpegTs } from './mpeg-ts';
 import { createFetcher, type Fetch } from './network';
@@ -250,7 +250,7 @@ const load = async (playlist: string, myEpoch: number) => {
 
 	const controller = new AbortController();
 	const fetch = createFetcher({
-		onRetry: (failures) => post({ type: 'retrying', epoch, failures }),
+		onRetry: () => post({ type: 'retrying', epoch }),
 		onBytes: () => {
 			const now = performance.now();
 			if (now - lastProgress < PROGRESS_INTERVAL_MS) {
@@ -307,6 +307,11 @@ const toPlayerError = (error: unknown): PlayerError => {
 				return { code: 'network', message, fatal: !isRetryable(error.status) };
 			}
 		}
+	}
+
+	// don't repeat exhausted idle retries through client recovery.
+	if (error instanceof StalledError) {
+		return { code: 'network', message, fatal: true };
 	}
 
 	if (error instanceof TypeError) {

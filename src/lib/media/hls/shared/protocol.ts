@@ -54,6 +54,6 @@ export type WorkerToMain =
 	| { type: 'chunk'; epoch: number; data: Uint8Array<ArrayBuffer> }
 	| { type: 'cues'; id: string; cues: SubtitleCue[] }
 	| { type: 'done'; epoch: number }
-	| { type: 'retrying'; epoch: number; failures: number }
+	| { type: 'retrying'; epoch: number }
 	| { type: 'progress'; epoch: number }
 	| ({ type: 'error'; epoch: number } & PlayerError);

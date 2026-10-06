@@ -53,7 +53,7 @@ const RESTART_INTERVAL_MS = 1000;
 const PROGRESS_AFTER_RECOVERY = 1;
 const STALL_CHECK_MS = 2000;
 const STALL_MARGIN = 0.5;
-// avoid restarting a slow request that is still delivering data.
+// let the worker's idle timeout trigger retries before restarting it.
 const STALL_SILENCE_MS = 6000;
 
 // timestamp drift and uneven track boundaries can leave gaps browsers won't cross.
@@ -596,7 +596,12 @@ export const attachHlsPlayer = (
 				break;
 			}
 			case 'retrying': {
-				setStatus('retrying');
+				// defer client recovery while the worker retries.
+				lastDelivery = performance.now();
+				// don't show a retry status while buffered playback continues.
+				if (status !== 'ok') {
+					setStatus('retrying');
+				}
 
 				break;
 			}
