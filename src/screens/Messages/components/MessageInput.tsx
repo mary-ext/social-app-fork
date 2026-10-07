@@ -178,7 +178,13 @@ export function MessageInput({
 					return;
 				}
 				el.focus();
-				document.execCommand('insertText', false, str);
+				if (document.activeElement === el) {
+					document.execCommand('insertText', false, str);
+					return;
+				}
+				// modal popups can leave the textarea inert, preventing focused insertion.
+				el.setRangeText(str, el.selectionStart, el.selectionEnd, 'end');
+				el.dispatchEvent(new Event('input', { bubbles: true }));
 			},
 		}),
 		[],
