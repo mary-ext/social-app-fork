@@ -18,8 +18,11 @@ export const PRESSED = `[${PRESSED_ATTR}]`;
 /** current-element selector for an active press */
 export const PRESSING = `&${PRESSED}`;
 
-/** hover selector excluding ancestors of open popups, except tooltips; pair with {@link MOUSE} */
-export const HOVER = `:hover:not(:has(:modal, :popover-open:not([popover='hint'])))`;
+/**
+ * hover selector that suppresses ancestor hover while a popup is open. hints suppress it only while hovered;
+ * pair with {@link MOUSE}.
+ */
+export const HOVER = `:hover:not(:has(:modal, :popover-open:not([popover='hint']), :popover-open:hover))`;
 
 /**
  * builds a selector for mouse hover ({@link HOVER}) or active press.

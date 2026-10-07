@@ -66,7 +66,6 @@ export const zIndex = {
 	float: 20,
 	modal: 100,
 	popover: 110,
-	tooltip: 120,
 	toast: 130,
 } as const;
 

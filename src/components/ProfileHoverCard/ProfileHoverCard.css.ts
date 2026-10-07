@@ -1,13 +1,12 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, space } from '#/styles/tokens.css';
 
-export const positioner = style({
-	zIndex: zIndex.tooltip,
-	maxWidth: 'var(--available-width)',
-	maxHeight: 'var(--available-height)',
-});
+const hidden = {
+	transform: 'scale(0.97)',
+	opacity: 0,
+};
 
 export const popup = style({
 	transformOrigin: 'var(--transform-origin)',
@@ -18,11 +17,11 @@ export const popup = style({
 	borderRadius: borderRadius.md,
 	boxShadow: vars.shadow.lg,
 	backgroundColor: vars.palette.contrast_0,
-	maxWidth: '100%',
 	overflow: 'hidden',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.97)', opacity: 0 },
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
 
 const baseCard = style({
