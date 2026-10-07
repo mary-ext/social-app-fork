@@ -12,7 +12,6 @@ import {
 
 import type { Did } from '@atcute/lexicons';
 
-import { CompositeItem, CompositeRoot } from '@base-ui/react/internals/composite';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getReducedMotion } from '#/lib/browser/reduced-motion';
@@ -112,7 +111,7 @@ export function SettingsMenu({
 	const [panel, setPanel] = useState(INITIAL_PANEL);
 	// remount the panel when a closing popup reopens.
 	const [openId, setOpenId] = useState(0);
-	const panelRef = useRef<HTMLElement>(null);
+	const panelRef = useRef<HTMLDivElement>(null);
 
 	const hasQualityChoice = quality.renditions.length > 1;
 	const hasSubtitleChoice = subtitles.tracks.length > 0;
@@ -319,26 +318,18 @@ function Panel({
 	direction,
 	children,
 }: {
-	ref: RefObject<HTMLElement | null>;
+	ref: RefObject<HTMLDivElement | null>;
 	direction?: PanelDirection;
 	children: ReactNode;
 }) {
-	const { compositeProps, rootProps } = useMenuNavigation(ref, {
+	const navigationProps = useMenuNavigation(ref, {
 		navigated: direction !== undefined,
 	});
 
 	return (
-		<CompositeRoot
-			className={styles.panel}
-			orientation="vertical"
-			loopFocus
-			enableHomeAndEndKeys
-			{...compositeProps}
-			rootRef={ref}
-			props={[rootProps, { 'data-direction': direction }]}
-		>
+		<div ref={ref} className={styles.panel} data-direction={direction} {...navigationProps}>
 			{children}
-		</CompositeRoot>
+		</div>
 	);
 }
 
@@ -359,38 +350,34 @@ function MenuRow({
 	'use no memo'; // forwarded props invalidate the generated wrapper cache
 
 	return (
-		<CompositeItem
-			render={
-				<button
-					type="button"
-					className={styles.row}
-					{...menuRowProps(active)}
-					{...props}
-					onKeyDown={(event) => {
-						switch (event.key) {
-							case 'ArrowLeft': {
-								if (!onBack) {
-									return;
-								}
-								event.preventDefault();
-								onBack();
-								break;
-							}
-							case 'ArrowRight': {
-								if (!onOpen) {
-									return;
-								}
-								event.preventDefault();
-								onOpen();
-								break;
-							}
+		<button
+			type="button"
+			className={styles.row}
+			{...menuRowProps(active)}
+			{...props}
+			onKeyDown={(event) => {
+				switch (event.key) {
+					case 'ArrowLeft': {
+						if (!onBack) {
+							return;
 						}
-					}}
-				/>
-			}
+						event.preventDefault();
+						onBack();
+						break;
+					}
+					case 'ArrowRight': {
+						if (!onOpen) {
+							return;
+						}
+						event.preventDefault();
+						onOpen();
+						break;
+					}
+				}
+			}}
 		>
 			{children}
-		</CompositeItem>
+		</button>
 	);
 }
 
