@@ -8,6 +8,7 @@ import { useRender } from '@base-ui/react/use-render';
 import {
 	type Align,
 	getAnchoredStyle,
+	getHintProps,
 	openStateAttributes,
 	type Side,
 	showInTopLayer,
@@ -64,14 +65,7 @@ const MountedPositioner = ({
 		stateAttributesMapping: openStateAttributes,
 		props: mergeProps<'div'>(
 			{
-				// browsers without hint support treat it as manual.
-				popover: 'hint',
-				onToggle(event) {
-					// sync state after native hint dismissal.
-					if (event.newState === 'closed') {
-						setOpen(false, 'light-dismiss', event.nativeEvent);
-					}
-				},
+				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
 				// prevent the popup from intercepting the pointer when hover is disabled.
 				inert: !open || disableHoverablePopup,
 				className: styles.positioner,

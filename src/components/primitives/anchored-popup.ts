@@ -3,6 +3,7 @@ import './position-try.css';
 import {
 	type CSSProperties,
 	type DialogHTMLAttributes,
+	type HTMLAttributes,
 	type RefObject,
 	useLayoutEffect,
 	useState,
@@ -241,6 +242,26 @@ export const getDialogProps = (
 			// without intervening user activation, close requests can skip `cancel`; reopen if rejected.
 			if (!requestClose(event.nativeEvent)) {
 				el.showModal();
+			}
+		},
+	};
+};
+
+/**
+ * configures a hint popover: replaces other hints, leaves auto popovers open.
+ *
+ * @param requestClose receives the native event when the browser closes the hint
+ * @returns props for the popover element
+ */
+export const getHintProps = (
+	requestClose: (event: Event) => void,
+): Pick<HTMLAttributes<HTMLElement>, 'onToggle' | 'popover'> => {
+	return {
+		// browsers without hint support treat it as manual.
+		popover: 'hint',
+		onToggle(event) {
+			if (event.newState === 'closed') {
+				requestClose(event.nativeEvent);
 			}
 		},
 	};
