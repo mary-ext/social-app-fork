@@ -17,6 +17,15 @@ export type Align = 'center' | 'end' | 'start';
 /** minimum distance from the viewport edges, in pixels; one number applies to every side. */
 export type CollisionPadding = number | Partial<Record<Side, number>>;
 
+/**
+ * @param padding uniform or per-edge padding
+ * @param edge viewport edge
+ * @returns edge padding, or `undefined` for an unset edge
+ */
+const resolveCollisionPadding = (padding: CollisionPadding, edge: Side): number | undefined => {
+	return typeof padding === 'number' ? padding : padding[edge];
+};
+
 const isVertical = (side: Side): boolean => {
 	return side === 'top' || side === 'bottom';
 };
@@ -76,12 +85,6 @@ export const getAnchoredStyle = ({
 		[MARGIN[OPPOSITE[side]]]: sideOffset,
 	};
 
-	// margins provide collision padding and flip with the placement.
-	const padding =
-		typeof collisionPadding === 'number'
-			? { bottom: collisionPadding, left: collisionPadding, right: collisionPadding, top: collisionPadding }
-			: collisionPadding;
-
 	const [start, end]: [Side, Side] = isVertical(side) ? ['left', 'right'] : ['top', 'bottom'];
 	const edges: Side[] = [side];
 	// padding the anchor-aligned edge would shift the alignment.
@@ -91,8 +94,9 @@ export const getAnchoredStyle = ({
 	if (align !== 'start') {
 		edges.push(start);
 	}
+	// margins provide collision padding and flip with the placement.
 	for (const edge of edges) {
-		const value = padding[edge];
+		const value = resolveCollisionPadding(collisionPadding, edge);
 		if (value !== undefined) {
 			style[MARGIN[edge]] = value;
 		}
@@ -125,6 +129,22 @@ export const usePresence = (
 	});
 
 	return { mounted: open || present, onTransitionSettled };
+};
+
+/**
+ * prevents focus and input during exit transitions. restore focus in an earlier layout effect before the
+ * element becomes inert.
+ *
+ * @param ref popup positioning element
+ * @param open current open state
+ */
+export const useInertWhileClosed = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
+	useLayoutEffect(() => {
+		const el = ref.current;
+		if (el) {
+			el.inert = !open;
+		}
+	}, [open, ref]);
 };
 
 /**

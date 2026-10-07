@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type Ref, useLayoutEffect } from 'react';
+import type { Ref } from 'react';
 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
@@ -11,6 +11,7 @@ import {
 	getAnchoredStyle,
 	openStateAttributes,
 	type Side,
+	useInertWhileClosed,
 	useTopLayerPresence,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
@@ -54,12 +55,7 @@ export const Positioner = ({
 
 	useTopLayerPresence(positionerRef, open, onTransitionSettled);
 
-	useLayoutEffect(() => {
-		const el = positionerRef.current;
-		if (el) {
-			el.inert = !open;
-		}
-	}, [open, positionerRef]);
+	useInertWhileClosed(positionerRef, open);
 
 	return useRender({
 		render,
