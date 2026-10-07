@@ -1,4 +1,4 @@
-import type { KeyboardEvent, PointerEvent } from 'react';
+import { type KeyboardEvent, type PointerEvent, useState } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
@@ -20,6 +20,25 @@ export const listItemProps = (label?: string) => ({
 	[LABEL_ATTR]: label,
 	tabIndex: -1,
 });
+
+/** @returns focus-based highlight state and handlers to attach to the item */
+export const useItemHighlight = (): {
+	highlighted: boolean;
+	highlightProps: { onFocus: () => void; onBlur: () => void };
+} => {
+	const [highlighted, setHighlighted] = useState(false);
+	return {
+		highlighted,
+		highlightProps: {
+			onFocus() {
+				setHighlighted(true);
+			},
+			onBlur() {
+				setHighlighted(false);
+			},
+		},
+	};
+};
 
 const isDisabled = (item: HTMLElement): boolean => {
 	return item.getAttribute('aria-disabled') === 'true' || item.matches(':disabled');

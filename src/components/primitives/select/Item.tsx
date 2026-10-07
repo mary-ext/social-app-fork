@@ -1,11 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, useState } from 'react';
+import type { HTMLAttributes } from 'react';
 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { listItemProps } from '../list-navigation';
+import { listItemProps, useItemHighlight } from '../list-navigation';
 import { ItemSelectedContext, useRootContext } from './shared';
 
 export type ItemState = {
@@ -31,20 +31,15 @@ export type ItemProps = useRender.ComponentProps<'div', ItemState> & {
  */
 export const Item = ({ render, ref, value, label, disabled = false, ...elementProps }: ItemProps) => {
 	const ctx = useRootContext();
-	const [highlighted, setHighlighted] = useState(false);
+	const { highlighted, highlightProps } = useItemHighlight();
 	const selected = Object.is(value, ctx.value);
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		...listItemProps(label),
+		...highlightProps,
 		role: 'option',
 		'aria-selected': selected,
 		'aria-disabled': disabled || undefined,
-		onFocus() {
-			setHighlighted(true);
-		},
-		onBlur() {
-			setHighlighted(false);
-		},
 		onClick() {
 			if (!disabled) {
 				ctx.select(value);
