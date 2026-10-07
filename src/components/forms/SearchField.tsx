@@ -45,7 +45,13 @@ export function Root({
 	// flicker; preventDefault keeps the click from moving focus off the input we're about to focus.
 	const onMouseDown = (event: MouseEvent<HTMLDivElement>) => {
 		const target = event.target;
-		if (event.defaultPrevented || !(target instanceof Element) || target.closest(INTERACTIVE_SELECTOR)) {
+		// portal events bubble through React without being inside the field's DOM subtree.
+		if (
+			event.defaultPrevented ||
+			!(target instanceof Element) ||
+			!event.currentTarget.contains(target) ||
+			target.closest(INTERACTIVE_SELECTOR)
+		) {
 			return;
 		}
 		event.preventDefault();
