@@ -201,7 +201,6 @@ type BlockAnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'onClick' |
 	children: ReactNode;
 	/** Accessible name; becomes the anchor's `aria-label`. */
 	label?: string;
-	/** Forwarded to the `<a>` so the link can back a headless trigger (e.g. a hover card). */
 	ref?: Ref<HTMLAnchorElement>;
 };
 
@@ -240,7 +239,6 @@ type InlineAnchorProps = Pick<
 		children: ReactNode;
 		/** Accessible name; becomes the anchor's `aria-label`. */
 		label?: string;
-		/** Forwarded to the `<a>` so the link can back a headless trigger (e.g. a Base UI tooltip). */
 		ref?: Ref<HTMLAnchorElement>;
 		/** Underline timing; defaults to `hover`. */
 		underline?: InlineLinkUnderline;

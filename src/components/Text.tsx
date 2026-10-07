@@ -23,7 +23,6 @@ export type TextProps = Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'style'
 	TextStyleProps & {
 		/** Clamp to this many lines with an ellipsis. */
 		numberOfLines?: number;
-		/** Forwarded to the `<span>` so the text can back a headless trigger (e.g. a Base UI tooltip). */
 		ref?: Ref<HTMLSpanElement>;
 		/** Tri-state text selection: omit for the browser default, `true` to force selectable, `false` to lock. */
 		selectable?: boolean;
