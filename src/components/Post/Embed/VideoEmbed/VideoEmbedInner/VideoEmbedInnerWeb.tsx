@@ -4,6 +4,7 @@ import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
+import { IS_ANDROID_CHROMIUM } from '#/lib/browser/platform';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
 import {
 	attachHlsPlayer,
@@ -69,6 +70,7 @@ export function VideoEmbedInnerWeb({
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
 					<video
 						ref={videoRef}
+						className={IS_ANDROID_CHROMIUM ? styles.noOverlay : undefined}
 						poster={videoThumbnailUrl(embed)}
 						style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 						playsInline

@@ -7,3 +7,5 @@ export const IS_SAFARI: boolean = /^((?!chrome|android).)*safari/i.test(
 	navigator.userAgent,
 );
 export const IS_FIREFOX: boolean = /firefox|fxios/i.test(navigator.userAgent);
+export const IS_ANDROID_CHROMIUM: boolean =
+	/android/i.test(navigator.userAgent) && /chrome\//i.test(navigator.userAgent);
