@@ -1,5 +1,3 @@
-import { closeAllPopups } from '@base-ui/react/unstable-close-all-popups';
-
 import { closeAllDialogs } from '#/components/Dialog/registry';
 
 import { setDrawerOpen } from './drawer-open';
@@ -8,6 +6,5 @@ import { setDrawerOpen } from './drawer-open';
 export function closeAllActiveElements() {
 	// the composer and the lightbox are both registered dialogs, so `closeAllDialogs` reaches them too
 	closeAllDialogs();
-	closeAllPopups();
 	setDrawerOpen(false);
 }

@@ -1,13 +1,5 @@
 # `@base-ui/react` patch notes
 
-## `utils/InternalBackdrop.mjs`: drop the `cutout` clip-path
-
-removes the hole around the trigger in an anchored popup's internal backdrop. the backdrop now
-intercepts trigger presses like any other outside press instead of leaving the trigger interactive.
-
-the positioners supply `cutout`, so this affects root `Menu` and `Select` instances and modal
-`Combobox` and `Popover` instances. `Dialog` does not supply a cutout.
-
 ## `utils/popups/popupStoreUtils.mjs`: drop the mid-registration trigger claim
 
 prevents the first detached trigger registered during an imperative open from claiming the popup and
@@ -17,37 +9,14 @@ openers and many post-image `Dialog.Trigger`s.
 `useImplicitActiveTrigger` still claims a trigger when exactly one is registered. an imperative open
 on a multi-trigger handle remains unowned rather than associating it with an unrelated trigger.
 
-## `unstable-close-all-popups`: immediately close floating content
+## `dialog/root/useRenderDialogRoot.mjs` + `drawer/root/DrawerRoot.mjs`: `CloseWatcher` for the Android back gesture
 
-adds `closeAllPopups()`, backed by a registry that only contains mounted floating roots. menus,
-popovers, preview cards, selects, and non-inline autocomplete or combobox popups close and unmount
-synchronously instead of playing their exit animation after navigation moves their trigger.
+moves the drawer's `CloseWatcher` into the shared dialog root so Android back gestures also dismiss
+dialogs and alert dialogs. only dialogs without an open nested dialog register; desktop dismissal
+uses `useDismiss`.
 
-dialogs, drawers, tooltips, and inline autocomplete or combobox content do not register, so their
-existing close behavior and animations are unchanged.
-
-## `combobox/root/AriaCombobox.mjs` + `autocomplete/root/AutocompleteRoot.d.mts`: expose `setActiveIndex` on `actionsRef`
-
-adds `setActiveIndex(index)` to the autocomplete imperative actions. `SearchAutocomplete` uses it to
-set the calendar's initial highlight, continue keyboard navigation across month boundaries, and
-highlight touch or pen targets before an item press.
-
-## `dialog/root/useRenderDialogRoot.mjs` + `popover/root/PopoverRoot.mjs` + `drawer/root/DrawerRoot.mjs`: `CloseWatcher` for the Android back gesture
-
-moves the drawer's Android `CloseWatcher` into the shared dialog root, extending back-gesture
-dismissal to dialogs and alert dialogs, and adds the same behavior to non-nested popovers. a dialog
-registers only when it has no open nested dialog. the change remains Android-only so desktop
-dismissal continues through `useDismiss`.
-
-canceling a `close-watcher` request creates a new watcher because each watcher fires only once. this
-lets `Dialog.Root` handle repeated back gestures as navigation within the dialog.
-
-## `combobox/root/AriaCombobox.mjs` + `combobox/root/AriaCombobox.d.mts`: allow automatic unmounting with `actionsRef`
-
-passing `actionsRef` normally opts into manual unmounting after a closing animation. `autoUnmount`
-keeps Base UI's automatic transition-aware unmounting while still exposing imperative actions.
-`SearchAutocomplete` needs this because it uses `setActiveIndex` but does not manage popup
-animations or call `actions.unmount()`.
+canceled close requests recreate the one-shot watcher, allowing repeated back gestures to navigate
+within a dialog.
 
 ## `slider/control/SliderControl.mjs`: make touch gestures commit
 
@@ -57,10 +26,3 @@ interaction value established by the pointer handler so a tap reaches `onValueCo
 `pointercancel` and `touchcancel` now use the normal end handler, committing the current value and
 clearing drag state and document listeners. the video scrubber relies on `onValueCommitted` to leave
 its seeking state.
-
-## `utils/useAnchoredPopupScrollLock.mjs`: always lock scroll, including touch opens
-
-locks the page whenever an anchored popup requests scroll locking, including touch opens. without
-this, the modal backdrop blocks outside taps while the page can still scroll beneath the popup.
-
-this affects `Menu`, `Select`, `Combobox`, and `Popover`.
