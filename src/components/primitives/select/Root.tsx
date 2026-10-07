@@ -1,15 +1,15 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { addEventListener } from '@base-ui/utils/addEventListener';
-import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
+import { useScrollLock } from '@base-ui/utils/useScrollLock';
 
 import type { InteractionType } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { usePresence } from '../anchored-popup';
+import { isWithinPopup, usePresence } from '../anchored-popup';
 import { createTypeahead } from '../list-navigation';
 import {
 	type OpenChangeReason,
@@ -33,7 +33,7 @@ export type RootProps<Value> = {
 };
 
 /**
- * manages selection and open state for the select parts.
+ * manages selection and modal listbox state. locks scrolling while open.
  *
  * @param props select parts, value, and change callback
  * @returns the select parts without a wrapper element
@@ -68,13 +68,13 @@ export const Root = <Value,>({
 	const anchorName = `--select-${CSS.escape(id)}`;
 
 	const triggerRef = useRef<HTMLElement | null>(null);
-	const positionerRef = useRef<HTMLDivElement | null>(null);
+	const positionerRef = useRef<HTMLDialogElement | null>(null);
 	const popupRef = useRef<HTMLDivElement | null>(null);
 	const typeahead = useConstant(createTypeahead);
 
 	const setOpen = useNonReactiveCallback((next: boolean, request: OpenChangeRequest) => {
 		if (next === open || (next && disabled)) {
-			return;
+			return false;
 		}
 
 		if (next) {
@@ -84,6 +84,7 @@ export const Root = <Value,>({
 			closeReasonRef.current = request.reason;
 		}
 		setOpenState(next);
+		return true;
 	});
 
 	const select = useNonReactiveCallback((next: unknown) => {
@@ -102,37 +103,20 @@ export const Root = <Value,>({
 			return;
 		}
 
-		const isInside = (target: EventTarget | null) => {
-			return (
-				target instanceof Node &&
-				(!!triggerRef.current?.contains(target) || !!positionerRef.current?.contains(target))
-			);
-		};
-
 		const onPointerDown = (event: PointerEvent) => {
-			if (!isInside(event.target)) {
+			const target = event.target;
+			const inside =
+				(target instanceof Node && !!triggerRef.current?.contains(target)) ||
+				isWithinPopup(positionerRef.current, target);
+			if (!inside) {
 				setOpen(false, { reason: 'outside-press', method: '' });
 			}
 		};
-		const onFocusIn = (event: FocusEvent) => {
-			if (!isInside(event.target)) {
-				setOpen(false, { reason: 'focus-out', method: '' });
-			}
-		};
 
-		return mergeCleanups(
-			addEventListener(document, 'pointerdown', onPointerDown),
-			addEventListener(document, 'focusin', onFocusIn),
-		);
+		return addEventListener(document, 'pointerdown', onPointerDown);
 	}, [open, setOpen]);
 
-	// return focus before the closing popup turns inert and drops it.
-	useLayoutEffect(() => {
-		const popup = popupRef.current;
-		if (!open && popup?.contains(document.activeElement)) {
-			triggerRef.current?.focus({ preventScroll: true });
-		}
-	}, [open]);
+	useScrollLock(open);
 
 	const selectedItem = items?.find((item) => Object.is(item.value, value));
 	// an explicit option, such as `null` for "none", takes precedence over the placeholder.

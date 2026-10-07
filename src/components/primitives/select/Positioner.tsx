@@ -7,10 +7,11 @@ import { useRender } from '@base-ui/react/use-render';
 
 import {
 	type Align,
+	getDialogProps,
 	getShrinkingAnchoredStyle,
 	openStateAttributes,
+	showModalInTopLayer,
 	useInertWhileClosed,
-	showInTopLayer,
 	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
@@ -26,8 +27,8 @@ export type PositionerState = {
 /** minimum distance from the viewport edges, in pixels. */
 const COLLISION_PADDING = 5;
 
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
-	ref?: Ref<HTMLDivElement>;
+export type PositionerProps = Omit<useRender.ComponentProps<'dialog', PositionerState>, 'ref'> & {
+	ref?: Ref<HTMLDialogElement>;
 	/** alignment along the trigger's edge. */
 	align?: Align;
 	/** gap between trigger and popup, in pixels. */
@@ -93,7 +94,7 @@ const ANCHOR_EDGE = {
  * positions the listbox in the top layer at the trigger. popup content must be scrollable.
  *
  * @param props placement and element props
- * @returns the positioning element; a `<div>` by default, or `null` while unmounted
+ * @returns the positioning element; a `<dialog>` by default, or `null` while unmounted
  */
 export const Positioner = (props: PositionerProps) => {
 	const { mounted } = useRootContext();
@@ -108,7 +109,7 @@ const MountedPositioner = ({
 	alignItemWithTrigger = true,
 	...elementProps
 }: PositionerProps) => {
-	const { open, openMethod, anchorName, positionerRef, onTransitionSettled } = useRootContext();
+	const { open, openMethod, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
 	const [itemOffset, setItemOffset] = useState<ItemOffset | null>(null);
 
 	useTransitionsSettled(positionerRef, open, onTransitionSettled);
@@ -151,13 +152,13 @@ const MountedPositioner = ({
 
 	return useRender({
 		render,
-		ref: [ref ?? null, positionerRef, showInTopLayer(open)],
+		defaultTagName: 'dialog',
+		ref: [ref ?? null, positionerRef, showModalInTopLayer(open)],
 		state: { open, side: 'bottom', align },
 		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(
+		props: mergeProps<'dialog'>(
 			{
-				popover: 'manual',
-				role: 'presentation',
+				...getDialogProps(open, () => setOpen(false, { reason: 'escape-key', method: '' })),
 				className: `${styles.positioner} ${styles.shrinkingPositioner}`,
 				style,
 			},

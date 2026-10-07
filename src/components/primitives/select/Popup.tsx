@@ -1,13 +1,13 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, useEffect } from 'react';
+import { type HTMLAttributes, useEffect, useLayoutEffect } from 'react';
 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { openStateAttributes } from '../anchored-popup';
+import { leaveModal, openStateAttributes } from '../anchored-popup';
 import { getListItems, getListNavigationProps } from '../list-navigation';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 
@@ -51,12 +51,24 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 		selected?.scrollIntoView({ block: 'nearest' });
 	});
 
+	const focusFinal = useNonReactiveCallback(() => {
+		if (leaveModal(ctx.positionerRef.current)) {
+			triggerRef.current?.focus({ preventScroll: true });
+		}
+	});
+
 	// focus after the positioner enters the top layer.
 	useEffect(() => {
 		if (open) {
 			focusInitial();
 		}
 	}, [open, focusInitial]);
+
+	useLayoutEffect(() => {
+		if (!open) {
+			focusFinal();
+		}
+	}, [open, focusFinal]);
 
 	const navigationProps = getListNavigationProps({ loop: false, typeahead: ctx.typeahead });
 
@@ -77,8 +89,7 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 					return;
 				}
 				case 'Tab': {
-					// resume native tabbing from the trigger.
-					triggerRef.current?.focus({ preventScroll: true });
+					// let Tab advance from the restored trigger focus.
 					setOpen(false, { reason: 'focus-out', method: 'keyboard' });
 					return;
 				}

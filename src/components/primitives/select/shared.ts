@@ -38,10 +38,15 @@ export type RootContextValue = {
 	triggerId: string;
 	popupId: string;
 	triggerRef: RefObject<HTMLElement | null>;
-	positionerRef: RefObject<HTMLDivElement | null>;
+	positionerRef: RefObject<HTMLDialogElement | null>;
 	popupRef: RefObject<HTMLDivElement | null>;
 	typeahead: Typeahead;
-	setOpen: (open: boolean, request: OpenChangeRequest) => void;
+	/**
+	 * @param open requested open state
+	 * @param request reason and interaction details
+	 * @returns whether the change was accepted
+	 */
+	setOpen: (open: boolean, request: OpenChangeRequest) => boolean;
 	/** commits a value and closes the popup. */
 	select: (value: unknown) => void;
 	onTransitionSettled: (open: boolean) => void;
