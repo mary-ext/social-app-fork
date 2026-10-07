@@ -89,7 +89,10 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 					return;
 				}
 				case 'Tab': {
-					// let Tab advance from the restored trigger focus.
+					// let Tab advance from the restored trigger focus; keep Shift+Tab on the trigger.
+					if (event.shiftKey) {
+						event.preventDefault();
+					}
 					setOpen(false, { reason: 'focus-out', method: 'keyboard' });
 					return;
 				}
