@@ -52,7 +52,8 @@ const MountedPositioner = ({
 	sideOffset = 0,
 	...elementProps
 }: PositionerProps) => {
-	const { open, disableHoverablePopup, anchorName, positionerRef, onTransitionSettled } = useRootContext();
+	const { open, disableHoverablePopup, anchorName, positionerRef, setOpen, onTransitionSettled } =
+		useRootContext();
 
 	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
@@ -63,7 +64,14 @@ const MountedPositioner = ({
 		stateAttributesMapping: openStateAttributes,
 		props: mergeProps<'div'>(
 			{
-				popover: 'manual',
+				// browsers without hint support treat it as manual.
+				popover: 'hint',
+				onToggle(event) {
+					// sync state after native hint dismissal.
+					if (event.newState === 'closed') {
+						setOpen(false, 'light-dismiss', event.nativeEvent);
+					}
+				},
 				// prevent the popup from intercepting the pointer when hover is disabled.
 				inert: !open || disableHoverablePopup,
 				className: styles.positioner,

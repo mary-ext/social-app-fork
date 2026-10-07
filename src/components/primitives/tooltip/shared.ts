@@ -4,6 +4,7 @@ import type { Timeout } from '@base-ui/utils/useTimeout';
 
 export type OpenChangeReason =
 	| 'escape-key'
+	| 'light-dismiss'
 	| 'outside-press'
 	| 'trigger-focus'
 	| 'trigger-hover'
