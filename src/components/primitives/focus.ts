@@ -43,7 +43,7 @@ const isTabbable = (el: HTMLElement): boolean => {
  * @param container element to search
  * @returns elements inside the container reachable with Tab, in tree order
  */
-export const getTabbables = (container: Element): HTMLElement[] => {
+const getTabbables = (container: Element): HTMLElement[] => {
 	return Array.from(container.querySelectorAll<HTMLElement>(CANDIDATES)).filter(isTabbable);
 };
 

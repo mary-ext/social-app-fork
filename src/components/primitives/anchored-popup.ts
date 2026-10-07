@@ -2,14 +2,11 @@ import './position-try.css';
 
 import {
 	type CSSProperties,
-	type ReactNode,
-	type ReactPortal,
+	type DialogHTMLAttributes,
 	type RefObject,
 	useLayoutEffect,
 	useState,
 } from 'react';
-
-import { createPortal } from 'react-dom';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
@@ -131,7 +128,7 @@ export const getShrinkingAnchoredStyle = (
  *
  * @param open current open state
  * @param onOpenChangeComplete receives the open state once its transitions finish
- * @returns whether the popup is mounted, and the callback to pass to {@link useTopLayerPresence}
+ * @returns whether the popup is mounted, and the callback to pass to {@link useTransitionsSettled}
  */
 export const usePresence = (
 	open: boolean,
@@ -153,8 +150,7 @@ export const usePresence = (
 };
 
 /**
- * prevents focus and input during exit transitions. restore focus in an earlier layout effect before the
- * element becomes inert.
+ * prevents focus and input during exit transitions. restore focus in an earlier layout effect.
  *
  * @param ref popup positioning element
  * @param open current open state
@@ -168,51 +164,106 @@ export const useInertWhileClosed = (ref: RefObject<HTMLElement | null>, open: bo
 	}, [open, ref]);
 };
 
-const markOthersInert = (keep: Element): (() => void) => {
-	const marked: HTMLElement[] = [];
-	for (let node = keep; node !== document.body && node.parentElement; node = node.parentElement) {
-		for (const sibling of node.parentElement.children) {
-			// preserve inertness owned by another dialog or popover.
-			if (sibling !== node && sibling instanceof HTMLElement && !sibling.inert) {
-				sibling.inert = true;
-				marked.push(sibling);
-			}
-		}
-	}
-
-	return () => {
-		for (const el of marked) {
-			el.inert = false;
+/**
+ * shows an open popover in the top layer. leaves it shown on close for exit transitions before unmounting.
+ *
+ * @param open current open state
+ * @param source invoking element for native Tab order; applied when shown
+ * @returns a ref callback for the popover element
+ */
+export const showInTopLayer = (open: boolean, source?: HTMLElement | null) => {
+	return (el: HTMLElement | null): void => {
+		if (open && el && !el.matches(':popover-open')) {
+			el.showPopover({ source: source ?? undefined });
 		}
 	};
 };
 
 /**
- * makes content outside the popup inert while active. call from the positioning component to support content
- * mounted after opening.
+ * shows an open popup as a modal dialog. pair with {@link getDialogProps}.
  *
- * @param ref popup positioning element
- * @param active whether the popup is open and modal
+ * @param open current open state
+ * @returns a ref callback for the dialog element
  */
-export const useModalInert = (ref: RefObject<HTMLElement | null>, active: boolean): void => {
-	// clear outside inertness before layout effects restore focus.
-	useLayoutEffect(() => {
-		const el = ref.current;
-		if (!active || !el) {
+export const showModalInTopLayer = (open: boolean) => {
+	return (el: HTMLDialogElement | null): void => {
+		if (!open || !el || el.open) {
 			return;
 		}
-		return markOthersInert(el);
-	}, [active, ref]);
+		// reopening during an exit transition.
+		if (el.matches(':popover-open')) {
+			el.hidePopover();
+		}
+		el.showModal();
+	};
 };
 
 /**
- * shows a mounted popover in the top layer and reports completed open/close transitions.
+ * ends modality and keeps the popup in the top layer for exit transitions. call in a close layout effect
+ * before restoring focus; closing the dialog may restore pre-open focus natively.
  *
- * @param ref the popover element
+ * @param el popup positioning dialog, or `null`
+ * @returns whether focus was in the popup or on the body before closing
+ */
+export const leaveModal = (el: HTMLDialogElement | null): boolean => {
+	const active = document.activeElement;
+	const focused = active === document.body || !!el?.contains(active);
+	if (el?.open) {
+		el.close();
+		el.showPopover();
+	}
+	return focused;
+};
+
+/**
+ * routes native dialog dismissal through the popup's close handler.
+ *
+ * @param open current open state
+ * @param requestClose receives the native event; returns whether dismissal was accepted
+ * @returns props for the dialog element
+ */
+export const getDialogProps = (
+	open: boolean,
+	requestClose: (event: Event) => boolean,
+): Pick<DialogHTMLAttributes<HTMLDialogElement>, 'onCancel' | 'onClose' | 'popover' | 'role'> => {
+	return {
+		popover: 'manual',
+		role: 'presentation',
+		onCancel(event) {
+			event.preventDefault();
+			requestClose(event.nativeEvent);
+		},
+		onClose(event) {
+			const el = event.currentTarget;
+			if (!open || el.open || el.matches(':popover-open')) {
+				return;
+			}
+			// without intervening user activation, close requests can skip `cancel`; reopen if rejected.
+			if (!requestClose(event.nativeEvent)) {
+				el.showModal();
+			}
+		},
+	};
+};
+
+/**
+ * @param positioner popup positioning element
+ * @param target event target
+ * @returns whether the target is a descendant of the positioner
+ */
+export const isWithinPopup = (positioner: HTMLElement | null, target: EventTarget | null): boolean => {
+	// backdrop presses target the positioner itself.
+	return target instanceof Node && target !== positioner && !!positioner?.contains(target);
+};
+
+/**
+ * reports completed open/close transitions of a mounted popup.
+ *
+ * @param ref the popup's positioning element
  * @param open current open state
  * @param onSettled receives the open state once its transitions finish
  */
-export const useTopLayerPresence = (
+export const useTransitionsSettled = (
 	ref: RefObject<HTMLElement | null>,
 	open: boolean,
 	onSettled: (open: boolean) => void,
@@ -221,10 +272,6 @@ export const useTopLayerPresence = (
 		const el = ref.current;
 		if (!el) {
 			return;
-		}
-
-		if (!el.matches(':popover-open')) {
-			el.showPopover();
 		}
 
 		// canceled animations reject `finished`; the next effect handles the replacement transitions.
@@ -283,23 +330,6 @@ export const addAnchorName = (el: HTMLElement, name: string): (() => void) => {
 
 /** minimum gap-crossing time for hoverable popups, in milliseconds. */
 export const HOVERABLE_GRACE = 100;
-
-export type PortalContainer = HTMLElement | RefObject<HTMLElement | null> | null;
-
-/**
- * portals popup content. the target controls inherited styles, not top-layer placement.
- *
- * @param children popup content
- * @param container portal target; defaults to `document.body` when absent or the ref is empty
- * @returns a portal into the container
- */
-export const createPopupPortal = (
-	children: ReactNode,
-	container: PortalContainer | undefined,
-): ReactPortal => {
-	const target = container && 'current' in container ? container.current : container;
-	return createPortal(children, target ?? document.body);
-};
 
 export const openStateAttributes = {
 	open: (open: boolean): Record<string, string> => (open ? { 'data-open': '' } : { 'data-closed': '' }),

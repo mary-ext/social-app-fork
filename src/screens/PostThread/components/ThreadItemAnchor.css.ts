@@ -5,7 +5,7 @@ import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 import { OUTER_SPACE } from '#/components/PostLayout.const';
 
 import { colors } from '#/styles/colors';
-import { MOUSE, PRESSING } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSING } from '#/styles/interaction';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 export const contentHiderChild = style({
@@ -143,7 +143,7 @@ export const archivedPill = style({
 	fontFamily: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		[`${MOUSE} &:hover, &:focus-visible, ${PRESSING}`]: {
+		[`${MOUSE} &${HOVER}, &:focus-visible, ${PRESSING}`]: {
 			backgroundColor: colors.contrast_50,
 		},
 	},

@@ -4,7 +4,6 @@ export { Group, type GroupProps } from './Group';
 export { GroupLabel, type GroupLabelProps } from './GroupLabel';
 export { Item, type ItemProps, type ItemState } from './Item';
 export { Popup, type PopupProps, type PopupState } from './Popup';
-export { Portal, type PortalProps } from './Portal';
 export { Positioner, type PositionerProps, type PositionerState } from './Positioner';
 export { Root, type RootProps } from './Root';
 export { Separator, type SeparatorProps } from './Separator';

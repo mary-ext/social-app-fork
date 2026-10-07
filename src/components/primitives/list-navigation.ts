@@ -2,7 +2,7 @@ import { type KeyboardEvent, type PointerEvent, useState } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-// menus can portal into feed rows, so they need a separate item attribute.
+// distinct from `data-list-item` so feed navigation excludes nested menu items.
 const ITEM_ATTR = 'data-nav-item';
 const LABEL_ATTR = 'data-nav-label';
 const ITEM_SELECTOR = `[${ITEM_ATTR}]`;

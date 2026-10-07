@@ -8,7 +8,6 @@ import { useRender } from '@base-ui/react/use-render';
 import { type InteractionType, isMouseLike, toInteractionType } from '#/lib/browser/input-modality';
 
 import { addAnchorName, triggerStateAttributes } from '../anchored-popup';
-import { getFirstTabbable } from '../focus';
 import { type Handle, type OpenChangeRequest, useTriggerRootContext } from './shared';
 
 const OPEN_DELAY = 300;
@@ -97,14 +96,6 @@ export const Trigger = ({
 						trigger: event.currentTarget,
 						method,
 					});
-				},
-				onKeyDown(event) {
-					const popup = ctx.popupRef.current;
-					if (event.key !== 'Tab' || event.shiftKey || !open || ctx.modal || !popup) {
-						return;
-					}
-					event.preventDefault();
-					getFirstTabbable(popup).focus();
 				},
 			};
 		}

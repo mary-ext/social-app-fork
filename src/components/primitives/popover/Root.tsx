@@ -11,7 +11,7 @@ import { useTimeout } from '@base-ui/utils/useTimeout';
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { HOVERABLE_GRACE, usePresence } from '../anchored-popup';
+import { HOVERABLE_GRACE, isWithinPopup, usePresence } from '../anchored-popup';
 import {
 	attachRoot,
 	type Handle,
@@ -76,7 +76,7 @@ export const Root = ({
 	const anchorName = `--popover-${CSS.escape(id)}`;
 	const popupId = `${id}popup`;
 
-	const positionerRef = useRef<HTMLDivElement | null>(null);
+	const positionerRef = useRef<HTMLDialogElement | null>(null);
 	const popupRef = useRef<HTMLDivElement | null>(null);
 	const closeMethodRef = useRef<InteractionType>('');
 	const hoverCloseDelayRef = useRef(0);
@@ -87,11 +87,11 @@ export const Root = ({
 	const setOpen = useNonReactiveCallback((next: boolean, request: OpenChangeRequest) => {
 		timeout.clear();
 		if (next === open) {
-			return;
+			return false;
 		}
 		// ignore trigger clicks immediately after hover opening.
 		if (!next && request.reason === 'trigger-press' && performance.now() < stickUntilRef.current) {
-			return;
+			return false;
 		}
 
 		let canceled = false;
@@ -103,7 +103,7 @@ export const Root = ({
 			},
 		});
 		if (canceled) {
-			return;
+			return false;
 		}
 
 		const method = request.method ?? getInteractionType(request.event);
@@ -120,6 +120,7 @@ export const Root = ({
 			closeMethodRef.current = method;
 		}
 		setOpenState(next);
+		return true;
 	});
 
 	const claimTrigger = useNonReactiveCallback((trigger: HTMLElement) => {
@@ -159,6 +160,8 @@ export const Root = ({
 			) {
 				return;
 			}
+			// avoid a second close request from the native dialog.
+			event.preventDefault();
 			setOpen(false, { reason: 'escape-key', event });
 		};
 
@@ -253,7 +256,7 @@ const isInsideEvent = (
 	ctx: {
 		activeTrigger: HTMLElement | null;
 		insideEventRef: RefObject<Event | null>;
-		positionerRef: RefObject<HTMLDivElement | null>;
+		positionerRef: RefObject<HTMLDialogElement | null>;
 	},
 ): boolean => {
 	const target = event.target;
@@ -263,6 +266,6 @@ const isInsideEvent = (
 	return (
 		ctx.insideEventRef.current === event ||
 		!!ctx.activeTrigger?.contains(target) ||
-		!!ctx.positionerRef.current?.contains(target)
+		isWithinPopup(ctx.positionerRef.current, target)
 	);
 };

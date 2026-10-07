@@ -9,11 +9,13 @@ import {
 	type Align,
 	type CollisionPadding,
 	getAnchoredStyle,
+	getDialogProps,
 	openStateAttributes,
 	type Side,
+	showInTopLayer,
+	showModalInTopLayer,
 	useInertWhileClosed,
-	useModalInert,
-	useTopLayerPresence,
+	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { useRootContext } from './shared';
@@ -25,8 +27,8 @@ export type PositionerState = {
 	align: Align;
 };
 
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
-	ref?: Ref<HTMLDivElement>;
+export type PositionerProps = Omit<useRender.ComponentProps<'dialog', PositionerState>, 'ref'> & {
+	ref?: Ref<HTMLDialogElement>;
 	/** preferred side; flips when space is insufficient. */
 	side?: Side;
 	/** alignment along the trigger's edge. */
@@ -37,12 +39,17 @@ export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerSta
 };
 
 /**
- * anchors a top-layer popup to the active trigger with CSS anchor positioning.
+ * positions the popup in the top layer at the active trigger.
  *
  * @param props placement and element props
- * @returns the positioning element; a `<div>` by default
+ * @returns the positioning element; a `<dialog>` by default, or `null` while unmounted
  */
-export const Positioner = ({
+export const Positioner = (props: PositionerProps) => {
+	const { mounted } = useRootContext();
+	return mounted ? <MountedPositioner {...props} /> : null;
+};
+
+const MountedPositioner = ({
 	render,
 	ref,
 	side = 'bottom',
@@ -51,23 +58,26 @@ export const Positioner = ({
 	collisionPadding = 5,
 	...elementProps
 }: PositionerProps) => {
-	const { open, modal, anchorName, positionerRef, onTransitionSettled } = useRootContext();
+	const { open, modal, anchorName, activeTrigger, positionerRef, setOpen, onTransitionSettled } =
+		useRootContext();
 
-	useTopLayerPresence(positionerRef, open, onTransitionSettled);
-
-	useModalInert(positionerRef, open && modal);
+	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	useInertWhileClosed(positionerRef, open);
 
 	return useRender({
 		render,
-		ref: [ref ?? null, positionerRef],
+		defaultTagName: 'dialog',
+		ref: [
+			ref ?? null,
+			positionerRef,
+			modal ? showModalInTopLayer(open) : showInTopLayer(open, activeTrigger),
+		],
 		state: { open, side, align },
 		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(
+		props: mergeProps<'dialog'>(
 			{
-				popover: 'manual',
-				role: 'presentation',
+				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 				className: styles.positioner,
 				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 			},

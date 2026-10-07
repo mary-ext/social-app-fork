@@ -59,13 +59,7 @@ const onAuxClick = (e: MouseEvent<HTMLElement>) => {
 	target.dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
 };
 
-/**
- * navigates to `to` when its child is clicked, while allowing nested interactive elements and portalled
- * popups to behave normally.
- *
- * clones its single child to attach press behavior, keyboard/AT affordances, and forwarded refs/classnames
- * without rendering a wrapper element.
- */
+/** makes its child a row link to `to`, preserving nested controls and popups. renders no wrapper. */
 export function BlockLink({
 	children,
 	to,
@@ -104,7 +98,7 @@ export function BlockLink({
 
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target;
-		// a portalled popup's click bubbles up the component tree but its DOM node lives elsewhere
+		// ignore clicks bubbling through React from portalled dialogs.
 		if (!(target instanceof Element) || !e.currentTarget.contains(target)) {
 			return;
 		}

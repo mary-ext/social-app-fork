@@ -4,6 +4,7 @@ import { type ComponentPropsWithRef, type MouseEvent, type ReactNode, type Ref, 
 
 import { clsx } from 'clsx';
 
+import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import * as styles from '#/components/forms/SearchField.css';
@@ -12,9 +13,8 @@ import { Button, ButtonIcon } from '#/components/web/Button';
 import XIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
 
-// clicks landing on one of these are handled by the element itself; the field must not steal them to refocus
-// the input. `input`/`textarea` are listed so a direct click keeps native caret placement.
-const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [role="button"], [role="link"]';
+// preserve native caret placement when clicking directly on inputs.
+const OWN_PRESS_SELECTOR = `${INTERACTIVE_SELECTOR}, input, select, textarea`;
 
 export type SearchFieldShape = keyof typeof styles.shape;
 
@@ -50,7 +50,7 @@ export function Root({
 			event.defaultPrevented ||
 			!(target instanceof Element) ||
 			!event.currentTarget.contains(target) ||
-			target.closest(INTERACTIVE_SELECTOR)
+			target.closest(OWN_PRESS_SELECTOR)
 		) {
 			return;
 		}

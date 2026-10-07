@@ -77,42 +77,40 @@ export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProp
 /**
  * picker panel; requires an enclosing {@link Root}.
  *
- * @returns the portaled emoji panel
+ * @returns the emoji panel
  */
 export function Picker() {
 	const { onEmojiSelect, close, nextFocusRef } = useEmojiPickerContext();
 
 	return (
-		<Popover.Portal>
-			<Popover.Positioner sideOffset={5} collisionPadding={5}>
-				<Popover.Popup
-					className={styles.popup}
-					finalFocus={() => {
-						if (!nextFocusRef) {
-							return true;
-						}
-						const el = typeof nextFocusRef === 'function' ? nextFocusRef() : nextFocusRef.current;
-						if (el) {
-							el.focus();
-							return false;
-						}
+		<Popover.Positioner sideOffset={5} collisionPadding={5}>
+			<Popover.Popup
+				className={styles.popup}
+				finalFocus={() => {
+					if (!nextFocusRef) {
 						return true;
-					}}
-				>
-					<Suspense fallback={<PickerPlaceholder />}>
-						<EmojiPanel
-							onEmojiSelect={(emoji, shiftHeld) => {
-								onEmojiSelect(emoji);
-								if (!shiftHeld) {
-									close();
-								}
-							}}
-						/>
-					</Suspense>
-					<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
-				</Popover.Popup>
-			</Popover.Positioner>
-		</Popover.Portal>
+					}
+					const el = typeof nextFocusRef === 'function' ? nextFocusRef() : nextFocusRef.current;
+					if (el) {
+						el.focus();
+						return false;
+					}
+					return true;
+				}}
+			>
+				<Suspense fallback={<PickerPlaceholder />}>
+					<EmojiPanel
+						onEmojiSelect={(emoji, shiftHeld) => {
+							onEmojiSelect(emoji);
+							if (!shiftHeld) {
+								close();
+							}
+						}}
+					/>
+				</Suspense>
+				<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
+			</Popover.Popup>
+		</Popover.Positioner>
 	);
 }
 

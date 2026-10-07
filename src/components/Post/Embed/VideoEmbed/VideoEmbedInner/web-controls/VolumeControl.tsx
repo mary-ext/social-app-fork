@@ -1,4 +1,4 @@
-import type { FocusEvent, KeyboardEvent, RefObject } from 'react';
+import type { FocusEvent, KeyboardEvent } from 'react';
 
 import { Slider } from '@base-ui/react/slider';
 
@@ -23,14 +23,12 @@ export function VolumeControl({
 	open,
 	onOpenChange,
 	drawFocus,
-	fullscreenContainer,
 }: {
 	muted: boolean;
 	changeMuted: (muted: boolean | ((prev: boolean) => boolean)) => void;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	drawFocus: () => void;
-	fullscreenContainer?: RefObject<HTMLElement | null>;
 }) {
 	const volume = useVideoVolume();
 	const isTouch = useInputModality() === 'touch';
@@ -87,9 +85,7 @@ export function VolumeControl({
 	};
 
 	if (isTouch) {
-		return (
-			<ControlButton icon={Icon} label={label} tooltipContainer={fullscreenContainer} onClick={onPressMute} />
-		);
+		return <ControlButton icon={Icon} label={label} onClick={onPressMute} />;
 	}
 
 	return (
@@ -103,30 +99,28 @@ export function VolumeControl({
 				onFocus={onTriggerFocus}
 				onKeyDown={onTriggerKeyDown}
 			/>
-			<Popover.Portal container={fullscreenContainer}>
-				<Popover.Positioner side="top" sideOffset={6} collisionPadding={6}>
-					<Popover.Popup className={styles.popup} initialFocus={false} finalFocus={false}>
-						<Slider.Root
-							orientation="vertical"
-							value={sliderVolume}
-							onValueChange={setSliderVolume}
-							min={0}
-							max={100}
-							step={VOLUME_STEP}
-						>
-							<Slider.Control className={styles.control}>
-								<Slider.Track className={styles.track}>
-									<Slider.Indicator className={styles.indicator} />
-									<Slider.Thumb
-										className={styles.thumb}
-										aria-label={m['components.post.video.a11y.volume']()}
-									/>
-								</Slider.Track>
-							</Slider.Control>
-						</Slider.Root>
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
+			<Popover.Positioner side="top" sideOffset={6} collisionPadding={6}>
+				<Popover.Popup className={styles.popup} initialFocus={false} finalFocus={false}>
+					<Slider.Root
+						orientation="vertical"
+						value={sliderVolume}
+						onValueChange={setSliderVolume}
+						min={0}
+						max={100}
+						step={VOLUME_STEP}
+					>
+						<Slider.Control className={styles.control}>
+							<Slider.Track className={styles.track}>
+								<Slider.Indicator className={styles.indicator} />
+								<Slider.Thumb
+									className={styles.thumb}
+									aria-label={m['components.post.video.a11y.volume']()}
+								/>
+							</Slider.Track>
+						</Slider.Control>
+					</Slider.Root>
+				</Popover.Popup>
+			</Popover.Positioner>
 		</Popover.Root>
 	);
 }

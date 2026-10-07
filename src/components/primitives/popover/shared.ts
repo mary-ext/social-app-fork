@@ -36,20 +36,26 @@ export type OpenChangeRequest = {
 export type RootContextValue = {
 	open: boolean;
 	mounted: boolean;
+	/** effective modality for the current open reason. */
 	modal: boolean;
 	openReason: OpenChangeReason | null;
 	openMethod: InteractionType;
 	anchorName: string;
 	popupId: string;
 	activeTrigger: HTMLElement | null;
-	positionerRef: RefObject<HTMLDivElement | null>;
+	positionerRef: RefObject<HTMLDialogElement | null>;
 	popupRef: RefObject<HTMLDivElement | null>;
 	closeMethodRef: RefObject<InteractionType>;
 	/** records React-tree membership, including events from nested portals. */
 	markInside: (event: Event) => void;
 	/** shared hover timer; opening and closing cancel each other's pending work. */
 	timeout: Timeout;
-	setOpen: (open: boolean, request: OpenChangeRequest) => void;
+	/**
+	 * @param open requested open state
+	 * @param request reason and interaction details
+	 * @returns whether the change was accepted
+	 */
+	setOpen: (open: boolean, request: OpenChangeRequest) => boolean;
 	startHoverClose: (event: Event) => void;
 	/** claims the anchor if unclaimed; returns a cleanup. */
 	claimTrigger: (trigger: HTMLElement) => () => void;

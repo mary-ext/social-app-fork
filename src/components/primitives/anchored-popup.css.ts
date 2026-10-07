@@ -2,7 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 
 // popup styles use @starting-style for entry and [data-closed] for exit; presence waits for transitions.
 
-// reset the browser's popover styles; the popup owns its appearance.
+// reset native popover and dialog styles; the popup owns its appearance.
 export const positioner = style({
 	containerType: 'anchored',
 	positionVisibility: 'anchors-visible',
@@ -12,7 +12,14 @@ export const positioner = style({
 	border: 0,
 	background: 'none',
 	padding: 0,
+	maxWidth: 'none',
+	maxHeight: 'none',
 	color: 'inherit',
+	// override inherited `pointer-events: none`.
+	pointerEvents: 'auto',
+	'::backdrop': {
+		background: 'none',
+	},
 });
 
 export const shrinkingPositioner = style({

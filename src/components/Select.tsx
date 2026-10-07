@@ -104,7 +104,7 @@ export type ContentProps<Value = string> = {
 	renderItem: (item: SelectItem<Value>, selectedValue: Value) => ReactElement;
 };
 
-/** portaled option list. */
+/** option list. */
 export function Content<Value = string>({
 	align,
 	items,
@@ -114,20 +114,18 @@ export function Content<Value = string>({
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- context can't carry `Root`'s generic
 	const selectedValue = useContext(SelectedValueContext) as Value;
 	return (
-		<BaseSelect.Portal>
-			<BaseSelect.Positioner
-				className={styles.positioner({ matchTriggerWidth })}
-				align={align}
-				sideOffset={5}
-				alignItemWithTrigger={false}
-			>
-				<BaseSelect.Popup className={styles.popup}>
-					{items.map((item) => (
-						<Fragment key={String(item.value)}>{renderItem(item, selectedValue)}</Fragment>
-					))}
-				</BaseSelect.Popup>
-			</BaseSelect.Positioner>
-		</BaseSelect.Portal>
+		<BaseSelect.Positioner
+			className={styles.positioner({ matchTriggerWidth })}
+			align={align}
+			sideOffset={5}
+			alignItemWithTrigger={false}
+		>
+			<BaseSelect.Popup className={styles.popup}>
+				{items.map((item) => (
+					<Fragment key={String(item.value)}>{renderItem(item, selectedValue)}</Fragment>
+				))}
+			</BaseSelect.Popup>
+		</BaseSelect.Positioner>
 	);
 }
 

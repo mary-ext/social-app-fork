@@ -8,7 +8,7 @@ import { useRender } from '@base-ui/react/use-render';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { openStateAttributes } from '../anchored-popup';
+import { leaveModal, openStateAttributes } from '../anchored-popup';
 import { getNextTabbable } from '../focus';
 import { createTypeahead, getListItems, getListNavigationProps } from '../list-navigation';
 import { useRootContext } from './shared';
@@ -50,11 +50,10 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	});
 
 	const focusFinal = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
 		const trigger = ctx.activeTrigger;
-		const active = document.activeElement;
+		const focusedInside = leaveModal(ctx.positionerRef.current);
 		// preserve focus moved outside by the user, or by an item opening a dialog.
-		if (!trigger || (active !== document.body && !popup?.contains(active))) {
+		if (!trigger || !focusedInside) {
 			return;
 		}
 		if (tabbedOutRef.current) {
@@ -75,7 +74,6 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 		}
 	}, [open, focusInitial]);
 
-	// restore focus before the positioner's layout effect makes it inert.
 	useLayoutEffect(() => {
 		if (!open) {
 			focusFinal();
@@ -102,7 +100,7 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 					return;
 				}
 				case 'Tab': {
-					// a portal changes DOM order, and a modal menu leaves nothing else tabbable.
+					// close before moving focus; a modal menu leaves nothing else tabbable.
 					event.preventDefault();
 					tabbedOutRef.current = !event.shiftKey;
 					setOpen(false, { reason: 'focus-out', event: event.nativeEvent });

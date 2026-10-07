@@ -52,17 +52,15 @@ export function EmojiReactionPicker({
 			}}
 		>
 			<Popover.Trigger render={render} />
-			<Popover.Portal>
-				<Popover.Positioner sideOffset={5} collisionPadding={{ bottom: 5, left: 5, right: 5 }}>
-					<Popover.Popup className={styles.popup}>
-						{expanded ? (
-							<EmojiPanel onEmojiSelect={(emoji) => handleSelect(emoji.native)} />
-						) : (
-							<QuickReactions message={message} onSelect={handleSelect} onExpand={() => setExpanded(true)} />
-						)}
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
+			<Popover.Positioner sideOffset={5} collisionPadding={{ bottom: 5, left: 5, right: 5 }}>
+				<Popover.Popup className={styles.popup}>
+					{expanded ? (
+						<EmojiPanel onEmojiSelect={(emoji) => handleSelect(emoji.native)} />
+					) : (
+						<QuickReactions message={message} onSelect={handleSelect} onExpand={() => setExpanded(true)} />
+					)}
+				</Popover.Popup>
+			</Popover.Positioner>
 		</Popover.Root>
 	);
 }

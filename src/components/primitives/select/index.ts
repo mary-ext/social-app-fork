@@ -4,7 +4,6 @@ export { Item, type ItemProps, type ItemState } from './Item';
 export { ItemIndicator, type ItemIndicatorProps } from './ItemIndicator';
 export { ItemText, type ItemTextProps } from './ItemText';
 export { Popup, type PopupProps, type PopupState } from './Popup';
-export { Portal, type PortalProps } from './Portal';
 export { Positioner, type PositionerProps, type PositionerState } from './Positioner';
 export { Root, type RootProps } from './Root';
 export type { SelectItem } from './shared';

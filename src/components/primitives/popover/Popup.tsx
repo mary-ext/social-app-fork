@@ -8,14 +8,8 @@ import { useRender } from '@base-ui/react/use-render';
 import { isMouseLike } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { openStateAttributes } from '../anchored-popup';
-import {
-	type FocusTarget,
-	getFirstTabbable,
-	getNextTabbable,
-	getTabbables,
-	resolveFocusTarget,
-} from '../focus';
+import { leaveModal, openStateAttributes } from '../anchored-popup';
+import { type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
 import { useRootContext } from './shared';
 
 export type PopupState = {
@@ -48,7 +42,7 @@ export const Popup = ({
 	...elementProps
 }: PopupProps) => {
 	const ctx = useRootContext();
-	const { open, openReason, popupRef, setOpen, timeout } = ctx;
+	const { open, openReason, popupRef, timeout } = ctx;
 	const managesFocus = openReason !== 'trigger-hover';
 
 	const focusInitial = useNonReactiveCallback(() => {
@@ -61,10 +55,9 @@ export const Popup = ({
 	});
 
 	const focusFinal = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
-		const active = document.activeElement;
+		const focusedInside = leaveModal(ctx.positionerRef.current);
 		// preserve focus moved outside by the user.
-		if (!managesFocus || (active !== document.body && !popup?.contains(active))) {
+		if (!managesFocus || !focusedInside) {
 			return;
 		}
 		const target = resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () => ctx.activeTrigger);
@@ -78,7 +71,6 @@ export const Popup = ({
 		}
 	}, [open, focusInitial]);
 
-	// restore focus before the positioner's layout effect makes it inert.
 	useLayoutEffect(() => {
 		if (!open) {
 			focusFinal();
@@ -97,30 +89,6 @@ export const Popup = ({
 		onFocusCapture: markInside,
 		onKeyDownCapture: markInside,
 		onPointerDownCapture: markInside,
-		onKeyDown(event) {
-			const popup = popupRef.current;
-			const trigger = ctx.activeTrigger;
-			if (event.key !== 'Tab' || ctx.modal || !popup || !trigger) {
-				return;
-			}
-
-			// a portal changes DOM order; resume tabbing relative to the trigger.
-			const tabbables = getTabbables(popup);
-			if (event.shiftKey) {
-				if (event.target === popup || event.target === tabbables[0]) {
-					event.preventDefault();
-					trigger.focus();
-				}
-			} else if (event.target === (tabbables.at(-1) ?? popup)) {
-				const next = getNextTabbable(trigger, ctx.positionerRef.current);
-				if (next) {
-					event.preventDefault();
-					next.focus();
-				} else {
-					setOpen(false, { reason: 'focus-out', event: event.nativeEvent });
-				}
-			}
-		},
 		onPointerEnter() {
 			if (openReason === 'trigger-hover') {
 				timeout.clear();

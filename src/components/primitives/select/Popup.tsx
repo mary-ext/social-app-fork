@@ -77,7 +77,7 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 					return;
 				}
 				case 'Tab': {
-					// resume native tabbing from the trigger, not the portal's DOM position.
+					// resume native tabbing from the trigger.
 					triggerRef.current?.focus({ preventScroll: true });
 					setOpen(false, { reason: 'focus-out', method: 'keyboard' });
 					return;

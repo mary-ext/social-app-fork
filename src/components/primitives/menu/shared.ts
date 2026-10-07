@@ -32,14 +32,18 @@ export type OpenChangeRequest = {
 export type RootContextValue = {
 	open: boolean;
 	mounted: boolean;
-	modal: boolean;
 	openEntry: OpenEntry | null;
 	anchorName: string;
 	popupId: string;
 	activeTriggerId: string | null;
 	activeTrigger: HTMLElement | null;
-	positionerRef: RefObject<HTMLDivElement | null>;
-	setOpen: (open: boolean, request: OpenChangeRequest) => void;
+	positionerRef: RefObject<HTMLDialogElement | null>;
+	/**
+	 * @param open requested open state
+	 * @param request reason and interaction details
+	 * @returns whether the change was accepted
+	 */
+	setOpen: (open: boolean, request: OpenChangeRequest) => boolean;
 	/**
 	 * @param id trigger id
 	 * @param trigger anchor element

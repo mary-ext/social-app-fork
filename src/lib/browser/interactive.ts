@@ -1,5 +1,8 @@
+/** selector for popup positioners */
+export const POPUP_SELECTOR = '[popover]';
+
 /** selector for elements that own their press */
-export const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-no-row-link]';
+export const INTERACTIVE_SELECTOR = `a, button, ${POPUP_SELECTOR}, [role="button"], [role="link"], [data-no-row-link]`;
 
 /** props excluding a region from row navigation and parent press feedback */
 export const noRowLink = { 'data-no-row-link': '' };

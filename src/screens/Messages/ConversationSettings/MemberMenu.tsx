@@ -112,10 +112,7 @@ export function MemberMenu({
 	);
 }
 
-/**
- * The member menu's contents. Base UI's portal only mounts these while the menu is open, so the
- * convo-availability query stays deferred until the user opens the menu.
- */
+// keep the availability query unmounted until the menu opens.
 function MemberMenuItems({
 	profile,
 	displayName,

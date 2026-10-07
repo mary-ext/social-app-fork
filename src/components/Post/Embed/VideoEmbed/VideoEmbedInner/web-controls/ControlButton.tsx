@@ -1,6 +1,6 @@
 'use no memo'; // forwarded props invalidate the generated wrapper cache
 
-import type { ComponentPropsWithRef, ComponentType, RefObject, SVGProps } from 'react';
+import type { ComponentPropsWithRef, ComponentType, SVGProps } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -13,13 +13,11 @@ export function ControlButton({
 	icon: Icon,
 	label,
 	tooltip = true,
-	tooltipContainer,
 	...props
 }: {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 	tooltip?: boolean;
-	tooltipContainer?: RefObject<HTMLElement | null>;
 } & Omit<ComponentPropsWithRef<'button'>, 'children' | 'aria-label'>) {
 	const button = (
 		<button type="button" aria-label={label} className={clsx(styles.button, className)} {...props}>
@@ -31,9 +29,5 @@ export function ControlButton({
 		return button;
 	}
 
-	return (
-		<Tooltip label={label} container={tooltipContainer}>
-			{button}
-		</Tooltip>
-	);
+	return <Tooltip label={label}>{button}</Tooltip>;
 }

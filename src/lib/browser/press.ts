@@ -1,4 +1,4 @@
-import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
+import { INTERACTIVE_SELECTOR, POPUP_SELECTOR } from '#/lib/browser/interactive';
 
 import { PRESSED_ATTR } from '#/styles/interaction';
 
@@ -79,6 +79,10 @@ const findPressable = (from: Element): Element | null => {
 		candidate = candidate.parentElement?.closest(PRESSABLE_SELECTOR) ?? null;
 	}
 
+	// stop press feedback at the popup boundary.
+	if (candidate?.matches(POPUP_SELECTOR)) {
+		return null;
+	}
 	return candidate;
 };
 

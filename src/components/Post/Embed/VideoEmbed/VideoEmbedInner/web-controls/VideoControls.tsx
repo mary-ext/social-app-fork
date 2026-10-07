@@ -290,9 +290,6 @@ export function Controls({
 		}
 	};
 
-	// fullscreen hides body-level portals.
-	const portalContainer = isFullscreen ? fullscreenRef : undefined;
-
 	// pin paused controls for mouse input only.
 	const showControls =
 		settingsOpen ||
@@ -390,7 +387,6 @@ export function Controls({
 						label={
 							playing ? m['components.post.video.action.pause']() : m['components.post.video.action.play']()
 						}
-						tooltipContainer={portalContainer}
 						onClick={onPressPlayPause}
 					/>
 					<div className={styles.spacer} />
@@ -401,7 +397,6 @@ export function Controls({
 						open={volumeOpen}
 						onOpenChange={setVolumeOpen}
 						drawFocus={drawFocus}
-						fullscreenContainer={portalContainer}
 					/>
 					<SettingsMenu
 						render={
@@ -417,7 +412,6 @@ export function Controls({
 						videoCid={videoCid}
 						authorDid={authorDid}
 						onOpenChange={onSettingsOpenChange}
-						fullscreenContainer={portalContainer}
 					/>
 					{!IS_MOBILE_IOS && (
 						<ControlButton
@@ -427,7 +421,6 @@ export function Controls({
 									? m['components.post.video.action.exitFullscreen']()
 									: m['components.post.video.action.enterFullscreen']()
 							}
-							tooltipContainer={portalContainer}
 							onClick={onPressFullscreen}
 						/>
 					)}

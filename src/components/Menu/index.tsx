@@ -28,7 +28,7 @@ export function useMenuHandle(): MenuHandle {
 }
 
 /**
- * renders a styled menu popup in a portal.
+ * renders a styled menu popup.
  *
  * @param props menu content and placement
  * @returns the popup
@@ -49,19 +49,17 @@ export function Popup({
 	minWidth?: number;
 }) {
 	return (
-		<BaseMenu.Portal>
-			<BaseMenu.Positioner align={align} side={side} sideOffset={5} collisionPadding={5}>
-				<BaseMenu.Popup
-					aria-label={label}
-					className={styles.popup}
-					style={
-						minWidth !== undefined ? assignInlineVars({ [styles.minWidthVar]: `${minWidth}px` }) : undefined
-					}
-				>
-					{children}
-				</BaseMenu.Popup>
-			</BaseMenu.Positioner>
-		</BaseMenu.Portal>
+		<BaseMenu.Positioner align={align} side={side} sideOffset={5} collisionPadding={5}>
+			<BaseMenu.Popup
+				aria-label={label}
+				className={styles.popup}
+				style={
+					minWidth !== undefined ? assignInlineVars({ [styles.minWidthVar]: `${minWidth}px` }) : undefined
+				}
+			>
+				{children}
+			</BaseMenu.Popup>
+		</BaseMenu.Positioner>
 	);
 }
 

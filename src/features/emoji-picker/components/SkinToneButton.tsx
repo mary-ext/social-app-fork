@@ -18,22 +18,20 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
-			<Select.Portal>
-				<Select.Positioner className={styles.positioner}>
-					<Select.Popup className={styles.menu}>
-						{TONES.map((value) => (
-							<Select.Item
-								aria-label={m['components.emojiPicker.skinTone.value']({ value })}
-								className={styles.item}
-								key={value}
-								value={value}
-							>
-								<Select.ItemText className={styles.glyph}>{SKIN_HANDS[value - 1]}</Select.ItemText>
-							</Select.Item>
-						))}
-					</Select.Popup>
-				</Select.Positioner>
-			</Select.Portal>
+			<Select.Positioner className={styles.positioner}>
+				<Select.Popup className={styles.menu}>
+					{TONES.map((value) => (
+						<Select.Item
+							aria-label={m['components.emojiPicker.skinTone.value']({ value })}
+							className={styles.item}
+							key={value}
+							value={value}
+						>
+							<Select.ItemText className={styles.glyph}>{SKIN_HANDS[value - 1]}</Select.ItemText>
+						</Select.Item>
+					))}
+				</Select.Popup>
+			</Select.Positioner>
 		</Select.Root>
 	);
 }

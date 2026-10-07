@@ -8,6 +8,8 @@ import {
 	useState,
 } from 'react';
 
+import { POPUP_SELECTOR } from '#/lib/browser/interactive';
+
 import * as Dialog from '#/components/Dialog';
 import { useDialogBackHandler } from '#/components/Dialog/Root';
 import * as styles from '#/components/Navigator.css';
@@ -106,8 +108,13 @@ export const createNavigator = <Routes extends RouteMap>() => {
 			if (e.key !== 'Escape' || e.nativeEvent.isComposing || !canGoBack) {
 				return;
 			}
-			// portalled menus and dialogs handle their own Escape events, which also bubble through React.
-			if (!(e.target instanceof Node) || !e.currentTarget.contains(e.target)) {
+			// leave Escape to nested popups and portalled dialogs.
+			if (
+				e.defaultPrevented ||
+				!(e.target instanceof Element) ||
+				!e.currentTarget.contains(e.target) ||
+				e.target.closest(POPUP_SELECTOR)
+			) {
 				return;
 			}
 			// Base UI layers listen for Escape on the document, so stopping here keeps them open.

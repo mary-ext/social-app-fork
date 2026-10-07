@@ -96,7 +96,6 @@ export function SettingsMenu({
 	videoCid,
 	authorDid,
 	onOpenChange,
-	fullscreenContainer,
 }: {
 	render: ReactElement;
 	tooltip: string;
@@ -105,8 +104,6 @@ export function SettingsMenu({
 	videoCid: string;
 	authorDid?: Did;
 	onOpenChange: (open: boolean) => void;
-	/** portal target while fullscreen. */
-	fullscreenContainer?: RefObject<HTMLElement | null>;
 }) {
 	const [panel, setPanel] = useState(INITIAL_PANEL);
 	// remount the panel when a closing popup reopens.
@@ -247,25 +244,23 @@ export function SettingsMenu({
 				onOpenChange(nextOpen);
 			}}
 		>
-			<Tooltip label={tooltip} container={fullscreenContainer}>
+			<Tooltip label={tooltip}>
 				<Popover.Trigger render={render} />
 			</Tooltip>
-			<Popover.Portal container={fullscreenContainer}>
-				<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={styles.collisionPadding}>
-					<Popover.Popup
-						className={styles.popup}
-						aria-label={label}
-						initialFocus={(openType) => menuInitialFocus(panelRef.current, openType)}
-					>
-						<PanelViewport>
-							<Panel key={`${openId}:${panel.id}`} ref={panelRef} direction={panel.direction}>
-								{renderPanel()}
-							</Panel>
-						</PanelViewport>
-						<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
+			<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={styles.collisionPadding}>
+				<Popover.Popup
+					className={styles.popup}
+					aria-label={label}
+					initialFocus={(openType) => menuInitialFocus(panelRef.current, openType)}
+				>
+					<PanelViewport>
+						<Panel key={`${openId}:${panel.id}`} ref={panelRef} direction={panel.direction}>
+							{renderPanel()}
+						</Panel>
+					</PanelViewport>
+					<Popover.Close className={styles.srOnly}>{m['common.action.close']()}</Popover.Close>
+				</Popover.Popup>
+			</Popover.Positioner>
 		</Popover.Root>
 	);
 }

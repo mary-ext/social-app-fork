@@ -1,7 +1,7 @@
 import { createVar, globalStyle, style, styleVariants } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { MOUSE, PRESSED, TOUCH } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSED, TOUCH } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
@@ -14,7 +14,7 @@ export const root = style({
 	position: 'relative',
 	backgroundColor: rowBg,
 	selectors: {
-		[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &:hover`]: {
+		[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &${HOVER}`]: {
 			vars: {
 				[rowBg]: colors.contrast_25,
 			},
@@ -29,7 +29,7 @@ export const tone = styleVariants({
 			[rowBg]: colors.contrast_50,
 		},
 		selectors: {
-			[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &:hover`]: {
+			[`&:has(a${PRESSED}), &:has(a:focus-visible), ${MOUSE} &${HOVER}`]: {
 				vars: {
 					[rowBg]: colors.contrast_50,
 				},
@@ -160,7 +160,7 @@ export const menu = style({
 			transition: 'none',
 			opacity: 1,
 		},
-		[`${MOUSE} ${root}:hover &`]: {
+		[`${MOUSE} ${root}${HOVER} &`]: {
 			opacity: 1,
 		},
 		[`${TOUCH} &`]: {

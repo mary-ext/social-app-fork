@@ -10,7 +10,7 @@ import { useScrollLock } from '@base-ui/utils/useScrollLock';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { usePresence } from '../anchored-popup';
+import { isWithinPopup, usePresence } from '../anchored-popup';
 import {
 	attachRoot,
 	type Handle,
@@ -31,14 +31,12 @@ export type RootProps = {
 	onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
 	/** receives the open state after animations finish. */
 	onOpenChangeComplete?: (open: boolean) => void;
-	/** makes outside content inert and locks scrolling while open; defaults to `true`. */
-	modal?: boolean;
 	/** handle shared with detached triggers. */
 	handle?: Handle;
 };
 
 /**
- * manages menu state.
+ * manages modal menu state and locks scrolling while open.
  *
  * @param props menu parts, open state, and callbacks
  * @returns the menu parts without a wrapper element
@@ -49,7 +47,6 @@ export const Root = ({
 	defaultOpen = false,
 	onOpenChange,
 	onOpenChangeComplete,
-	modal = true,
 	handle,
 }: RootProps) => {
 	const [open, setOpenState] = useControlled({
@@ -68,7 +65,7 @@ export const Root = ({
 	const anchorName = `--menu-${CSS.escape(id)}`;
 	const popupId = `${id}popup`;
 
-	const positionerRef = useRef<HTMLDivElement | null>(null);
+	const positionerRef = useRef<HTMLDialogElement | null>(null);
 	// trigger registration need not rerender; anchors are read on open.
 	const triggers = useConstant(() => new Map<string, HTMLElement>());
 
@@ -78,7 +75,7 @@ export const Root = ({
 
 	const setOpen = useNonReactiveCallback((next: boolean, request: OpenChangeRequest) => {
 		if (next === open || (request.triggerId !== undefined && !triggers.has(request.triggerId))) {
-			return;
+			return false;
 		}
 
 		let canceled = false;
@@ -90,7 +87,7 @@ export const Root = ({
 			},
 		});
 		if (canceled) {
-			return;
+			return false;
 		}
 
 		if (next) {
@@ -100,6 +97,7 @@ export const Root = ({
 			}
 		}
 		setOpenState(next);
+		return true;
 	});
 
 	const registerTrigger = useNonReactiveCallback((triggerId: string, trigger: HTMLElement) => {
@@ -118,8 +116,8 @@ export const Root = ({
 
 		const isInside = (target: EventTarget | null) => {
 			return (
-				target instanceof Node &&
-				(!!activeTrigger?.contains(target) || !!positionerRef.current?.contains(target))
+				(target instanceof Node && !!activeTrigger?.contains(target)) ||
+				isWithinPopup(positionerRef.current, target)
 			);
 		};
 
@@ -135,26 +133,18 @@ export const Root = ({
 			pressedOutside = false;
 		};
 
-		const onFocusIn = (event: FocusEvent) => {
-			if (!isInside(event.target)) {
-				setOpen(false, { reason: 'focus-out', event });
-			}
-		};
-
 		return mergeCleanups(
 			addEventListener(document, 'pointerdown', onPointerDown),
 			addEventListener(document, 'click', onClick),
-			modal ? undefined : addEventListener(document, 'focusin', onFocusIn),
 		);
-	}, [open, modal, activeTrigger, setOpen]);
+	}, [open, activeTrigger, setOpen]);
 
-	useScrollLock(open && modal, activeTrigger);
+	useScrollLock(open, activeTrigger);
 
 	const ctx = useMemo(
 		(): RootContextValue => ({
 			open,
 			mounted,
-			modal,
 			openEntry,
 			anchorName,
 			popupId,
@@ -168,7 +158,6 @@ export const Root = ({
 		[
 			open,
 			mounted,
-			modal,
 			openEntry,
 			anchorName,
 			popupId,

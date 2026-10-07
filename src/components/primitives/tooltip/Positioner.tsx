@@ -10,7 +10,8 @@ import {
 	getAnchoredStyle,
 	openStateAttributes,
 	type Side,
-	useTopLayerPresence,
+	showInTopLayer,
+	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { useRootContext } from './shared';
@@ -33,12 +34,17 @@ export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerSta
 };
 
 /**
- * anchors a top-layer popup to the trigger with CSS anchor positioning.
+ * positions the tooltip in the top layer at the trigger.
  *
  * @param props placement and element props
- * @returns the positioning element; a `<div>` by default
+ * @returns the positioning element; a `<div>` by default, or `null` while unmounted
  */
-export const Positioner = ({
+export const Positioner = (props: PositionerProps) => {
+	const { mounted } = useRootContext();
+	return mounted ? <MountedPositioner {...props} /> : null;
+};
+
+const MountedPositioner = ({
 	render,
 	ref,
 	side = 'top',
@@ -48,11 +54,11 @@ export const Positioner = ({
 }: PositionerProps) => {
 	const { open, disableHoverablePopup, anchorName, positionerRef, onTransitionSettled } = useRootContext();
 
-	useTopLayerPresence(positionerRef, open, onTransitionSettled);
+	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	return useRender({
 		render,
-		ref: [ref ?? null, positionerRef],
+		ref: [ref ?? null, positionerRef, showInTopLayer(open)],
 		state: { open, side, align },
 		stateAttributesMapping: openStateAttributes,
 		props: mergeProps<'div'>(

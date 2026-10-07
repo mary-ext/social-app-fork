@@ -8,11 +8,12 @@ import { useRender } from '@base-ui/react/use-render';
 import {
 	type Align,
 	type CollisionPadding,
+	getDialogProps,
 	getShrinkingAnchoredStyle,
 	openStateAttributes,
+	showModalInTopLayer,
 	useInertWhileClosed,
-	useModalInert,
-	useTopLayerPresence,
+	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { useRootContext } from './shared';
@@ -24,8 +25,8 @@ export type PositionerState = {
 	align: Align;
 };
 
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
-	ref?: Ref<HTMLDivElement>;
+export type PositionerProps = Omit<useRender.ComponentProps<'dialog', PositionerState>, 'ref'> & {
+	ref?: Ref<HTMLDialogElement>;
 	/** preferred side; flips when space is insufficient. */
 	side?: 'bottom' | 'top';
 	/** alignment along the trigger's edge. */
@@ -39,9 +40,14 @@ export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerSta
  * positions the menu in the top layer at the active trigger. popup content must be scrollable.
  *
  * @param props placement and element props
- * @returns the positioning element; a `<div>` by default
+ * @returns the positioning element; a `<dialog>` by default, or `null` while unmounted
  */
-export const Positioner = ({
+export const Positioner = (props: PositionerProps) => {
+	const { mounted } = useRootContext();
+	return mounted ? <MountedPositioner {...props} /> : null;
+};
+
+const MountedPositioner = ({
 	render,
 	ref,
 	side = 'bottom',
@@ -50,23 +56,21 @@ export const Positioner = ({
 	collisionPadding = 5,
 	...elementProps
 }: PositionerProps) => {
-	const { open, modal, anchorName, positionerRef, onTransitionSettled } = useRootContext();
+	const { open, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
 
-	useTopLayerPresence(positionerRef, open, onTransitionSettled);
-
-	useModalInert(positionerRef, open && modal);
+	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	useInertWhileClosed(positionerRef, open);
 
 	return useRender({
 		render,
-		ref: [ref ?? null, positionerRef],
+		defaultTagName: 'dialog',
+		ref: [ref ?? null, positionerRef, showModalInTopLayer(open)],
 		state: { open, side, align },
 		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(
+		props: mergeProps<'dialog'>(
 			{
-				popover: 'manual',
-				role: 'presentation',
+				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 				className: `${styles.positioner} ${styles.shrinkingPositioner}`,
 				style: getShrinkingAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 			},

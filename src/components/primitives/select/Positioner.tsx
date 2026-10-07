@@ -10,7 +10,8 @@ import {
 	getShrinkingAnchoredStyle,
 	openStateAttributes,
 	useInertWhileClosed,
-	useTopLayerPresence,
+	showInTopLayer,
+	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
@@ -89,13 +90,17 @@ const ANCHOR_EDGE = {
 } as const;
 
 /**
- * positions the top-layer popup at the trigger. content must allow scrolling when the popup shrinks to fit
- * the viewport.
+ * positions the listbox in the top layer at the trigger. popup content must be scrollable.
  *
  * @param props placement and element props
- * @returns the positioning element; a `<div>` by default
+ * @returns the positioning element; a `<div>` by default, or `null` while unmounted
  */
-export const Positioner = ({
+export const Positioner = (props: PositionerProps) => {
+	const { mounted } = useRootContext();
+	return mounted ? <MountedPositioner {...props} /> : null;
+};
+
+const MountedPositioner = ({
 	render,
 	ref,
 	align = 'center',
@@ -106,7 +111,7 @@ export const Positioner = ({
 	const { open, openMethod, anchorName, positionerRef, onTransitionSettled } = useRootContext();
 	const [itemOffset, setItemOffset] = useState<ItemOffset | null>(null);
 
-	useTopLayerPresence(positionerRef, open, onTransitionSettled);
+	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	// measure after entering the top layer; retain the offset through the exit transition.
 	useLayoutEffect(() => {
@@ -146,7 +151,7 @@ export const Positioner = ({
 
 	return useRender({
 		render,
-		ref: [ref ?? null, positionerRef],
+		ref: [ref ?? null, positionerRef, showInTopLayer(open)],
 		state: { open, side: 'bottom', align },
 		stateAttributesMapping: openStateAttributes,
 		props: mergeProps<'div'>(
