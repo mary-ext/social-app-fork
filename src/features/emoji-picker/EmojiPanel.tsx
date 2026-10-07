@@ -4,11 +4,13 @@ import { mapDefined } from '@mary/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { useConstant } from '#/lib/hooks/use-constant';
+
 import {
 	addRecentEmoji,
 	setEmojiSkinTone,
 	useEmojiSkinTone,
-	useRecentEmojis,
+	getRecentEmojis,
 } from '#/state/preferences/emoji';
 
 import * as SearchField from '#/components/forms/SearchField';
@@ -39,7 +41,8 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 		enabled: trimmed !== '',
 	});
 	const skinTone = useEmojiSkinTone();
-	const recents = useRecentEmojis();
+	// freeze recents while open so picks don't move the highlighted emoji.
+	const recents = useConstant(getRecentEmojis);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	const gridRef = useRef<EmojiGridHandle>(null);
 	const pendingJump = useRef<string | null>(null);

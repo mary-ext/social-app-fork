@@ -3,7 +3,6 @@ import type { SkinTone } from '#/storage/schema';
 
 // cap for the picker's recently-used list.
 const RECENTS_LIMIT = 36;
-const NO_RECENTS: readonly string[] = [];
 
 /**
  * returns the preferred emoji skin tone.
@@ -24,12 +23,12 @@ export function setEmojiSkinTone(tone: SkinTone) {
 }
 
 /**
- * returns recently used emoji IDs.
+ * reads recently used emoji IDs.
  *
- * @returns array of emoji IDs
+ * @returns array of emoji IDs, most recent first
  */
-export function useRecentEmojis() {
-	return useStorageValue(device, ['recentEmojis']) ?? NO_RECENTS;
+export function getRecentEmojis(): readonly string[] {
+	return device.get(['recentEmojis']) ?? [];
 }
 
 /**
