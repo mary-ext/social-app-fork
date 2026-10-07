@@ -12,6 +12,16 @@ export type Rendition = {
 	mimeType: string;
 };
 
+/**
+ * selects the initial playback rendition.
+ *
+ * @param renditions candidate renditions
+ * @returns tallest rendition; first on ties
+ * @throws {TypeError} when renditions is empty
+ */
+export const pickRendition = <T extends Rendition>(renditions: T[]) =>
+	renditions.reduce((best, rendition) => (rendition.height > best.height ? rendition : best));
+
 export type SubtitleCue = {
 	start: number;
 	end: number;
@@ -44,8 +54,9 @@ export type MainToWorker =
 	| { type: 'stop'; epoch: number }
 	| { type: 'time'; time: number }
 	| { type: 'buffer'; ahead: number }
-	// subtitle streams are independent of video epochs.
-	| { type: 'subtitle'; id: string | null };
+	// subtitle selection and cache warming do not change the video epoch.
+	| { type: 'subtitle'; id: string | null }
+	| { type: 'warm'; playlist: string };
 
 export type WorkerToMain =
 	| { type: 'renditions'; epoch: number; renditions: Rendition[]; subtitles: SubtitleRenditionInfo[] }

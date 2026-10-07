@@ -1,9 +1,15 @@
-import { BUFFER_AHEAD, type MainToWorker, type PlayerError, type WorkerToMain } from '../shared/protocol';
+import {
+	BUFFER_AHEAD,
+	pickRendition,
+	type MainToWorker,
+	type PlayerError,
+	type WorkerToMain,
+} from '../shared/protocol';
 import { HttpError, isRetryable, StalledError } from './fetch-policy';
 import { createFragmenter } from './fragmenter';
 import { createMp4InitSegment, createMp4MediaSegment, type MuxSample } from './mp4';
 import { createMpegTsDemuxer, MPEG_TS_TIMESCALE } from './mpeg-ts';
-import { createFetcher, createStreamer, type Fetch, type Stream } from './network';
+import { createFetcher, createStreamer, type Fetch, type Resource, type Stream } from './network';
 import {
 	parseSubtitleMaster,
 	parseVideoMaster,
@@ -108,7 +114,7 @@ const mediaPlaylist = async (variant: VideoVariant, fetch: Fetch, signal: AbortS
 	if (cached) {
 		return cached;
 	}
-	const parsed = parseVideoMedia(await fetch('media', variant.url, signal));
+	const parsed = parseVideoMedia(await fetchWarmed(fetch, 'media', variant.url, signal));
 
 	playlists.set(variant.url, parsed);
 
@@ -283,7 +289,7 @@ const load = async (playlist: string, myEpoch: number) => {
 	activeRequest = controller;
 	network = { fetch, stream: createStreamer(hooks) };
 
-	const resource = await fetch('master', playlist, controller.signal);
+	const resource = await fetchWarmed(fetch, 'master', playlist, controller.signal);
 
 	variants = parseVideoMaster(resource);
 	subtitleRenditions = parseSubtitleMaster(resource);
@@ -307,6 +313,36 @@ const load = async (playlist: string, myEpoch: number) => {
 		subtitles: subtitleRenditions.map(({ url, label, language }) => ({ id: url, label, language })),
 	});
 };
+
+// #region warming
+
+const warmFetch = createFetcher({ onBytes: () => {}, onRetry: () => {} });
+const unaborted = new AbortController().signal;
+
+// join in-flight warm requests to avoid duplicate fetches.
+const warming = new Map<string, Promise<Resource>>();
+
+const warmRequest = (kind: 'master' | 'media', url: string) => {
+	const request = warmFetch(kind, url, unaborted);
+
+	warming.set(url, request);
+	request.finally(() => warming.delete(url)).catch(() => {});
+	return request;
+};
+
+const fetchWarmed = (fetch: Fetch, kind: 'master' | 'media', url: string, signal: AbortSignal) => {
+	return warming.get(url)?.catch(() => fetch(kind, url, signal)) ?? fetch(kind, url, signal);
+};
+
+// the worker cannot check MediaSource codec support.
+const warm = async (playlist: string) => {
+	const candidates = parseVideoMaster(await warmRequest('master', playlist));
+	if (candidates.length > 0) {
+		await warmRequest('media', pickRendition(candidates).url);
+	}
+};
+
+// #endregion
 
 const toPlayerError = (error: unknown): PlayerError => {
 	const message = error instanceof Error ? error.message : String(error);
@@ -361,9 +397,12 @@ self.addEventListener('message', (event) => {
 			wakeParked();
 			return;
 		}
-		// subtitle selection does not change the video epoch.
 		case 'subtitle': {
 			selectSubtitles(message.id);
+			return;
+		}
+		case 'warm': {
+			warm(message.playlist).catch(() => {});
 			return;
 		}
 	}

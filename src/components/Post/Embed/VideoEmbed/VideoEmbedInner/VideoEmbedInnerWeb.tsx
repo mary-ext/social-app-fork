@@ -11,6 +11,7 @@ import {
 	isHlsPlayerSupported,
 	type PlayerHandle,
 	type PlayerStatus,
+	warmHlsPlaylist,
 } from '#/lib/media/hls/client/attach';
 import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/shared/protocol';
@@ -145,8 +146,13 @@ function useHlsPlayer({
 	};
 
 	useEffect(() => {
+		if (!canLoad) {
+			// mounted near the viewport before playback is allowed.
+			warmHlsPlaylist(playlist);
+			return;
+		}
 		const video = videoRef.current;
-		if (!video || !canLoad) {
+		if (!video) {
 			return;
 		}
 		if (!isHlsPlayerSupported()) {

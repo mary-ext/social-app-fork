@@ -1,5 +1,6 @@
 import {
 	BUFFER_AHEAD,
+	pickRendition,
 	type MainToWorker,
 	type PlayerError,
 	type Rendition,
@@ -80,16 +81,17 @@ let spareWorker: Worker | undefined;
 // global epochs keep stale replies from matching a new player.
 let epochCounter = 0;
 
+const createWorker = () => {
+	return new Worker(new URL('../worker/remux-worker.ts', import.meta.url), {
+		type: 'module',
+		name: 'remux-worker',
+	});
+};
+
 const acquireWorker = () => {
 	const spare = spareWorker;
 	spareWorker = undefined;
-	return (
-		spare ??
-		new Worker(new URL('../worker/remux-worker.ts', import.meta.url), {
-			type: 'module',
-			name: 'remux-worker',
-		})
-	);
+	return spare ?? createWorker();
 };
 
 const releaseWorker = (worker: Worker) => {
@@ -98,6 +100,33 @@ const releaseWorker = (worker: Worker) => {
 		return;
 	}
 	spareWorker = worker;
+};
+
+// #endregion
+
+// #region warming
+
+// bound deduplication state while scrolling.
+const MAX_WARMED = 20;
+
+const warmed = new Set<string>();
+
+/**
+ * prefetches the master and initial rendition playlists into the HTTP cache; ignores failures.
+ *
+ * @param playlist the master playlist url
+ */
+export const warmHlsPlaylist = (playlist: string) => {
+	if (!MediaSourceClass || warmed.has(playlist)) {
+		return;
+	}
+	if (warmed.size >= MAX_WARMED) {
+		warmed.delete(warmed.values().next().value!);
+	}
+
+	warmed.add(playlist);
+	spareWorker ??= createWorker();
+	spareWorker.postMessage({ type: 'warm', playlist } satisfies MainToWorker, []);
 };
 
 // #endregion
@@ -612,12 +641,10 @@ export const attachHlsPlayer = (
 					break;
 				}
 
-				const tallest = renditions.reduce((best, rendition) => {
-					return rendition.height > best.height ? rendition : best;
-				});
+				const preferred = pickRendition(renditions);
 
-				onRenditions?.(renditions, tallest.index);
-				selectRendition(tallest.index, video.currentTime);
+				onRenditions?.(renditions, preferred.index);
+				selectRendition(preferred.index, video.currentTime);
 				break;
 			}
 			case 'duration': {
