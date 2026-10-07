@@ -1,8 +1,10 @@
-import { createContext, type RefObject, useContext, useSyncExternalStore } from 'react';
+import { createContext, type RefObject, useContext } from 'react';
 
 import type { Timeout } from '@base-ui/utils/useTimeout';
 
 import type { InteractionType } from '#/lib/browser/input-modality';
+
+import { HandleStore } from '../handle-store';
 
 export type OpenChangeReason =
 	| 'close-press'
@@ -69,47 +71,18 @@ export const useRootContext = (): RootContextValue => {
 	return ctx;
 };
 
-type HandleStore = {
-	root: RootContextValue | null;
-	listeners: Set<() => void>;
-	subscribe: (listener: () => void) => () => void;
-	getSnapshot: () => RootContextValue | null;
-};
-
-const handleStores = new WeakMap<Handle, HandleStore>();
-
-const getHandleStore = (handle: Handle): HandleStore => {
-	let store = handleStores.get(handle);
-	if (store === undefined) {
-		const created: HandleStore = {
-			root: null,
-			listeners: new Set(),
-			subscribe(listener) {
-				created.listeners.add(listener);
-				return () => {
-					created.listeners.delete(listener);
-				};
-			},
-			getSnapshot() {
-				return created.root;
-			},
-		};
-		handleStores.set(handle, created);
-		store = created;
-	}
-	return store;
-};
+const handles = new HandleStore<RootContextValue>();
 
 /** connects detached triggers to a `Root` and provides imperative control. */
 export class Handle {
 	/** whether the popover is open; `false` while no root is attached. */
 	get isOpen(): boolean {
-		return getHandleStore(this).root?.open ?? false;
+		return handles.get(this)?.open ?? false;
 	}
 
 	/** closes the popover; ignored while no root is attached. */
 	close(): void {
-		getHandleStore(this).root?.setOpen(false, { reason: 'imperative-action', event: new Event('close') });
+		handles.get(this)?.setOpen(false, { reason: 'imperative-action', event: new Event('close') });
 	}
 }
 
@@ -125,8 +98,7 @@ export const createHandle = (): Handle => {
  * @param root the root's state, or `null` once it unmounts
  */
 export const attachRoot = (handle: Handle, root: RootContextValue | null): void => {
-	const store = getHandleStore(handle);
-	const prev = store.root;
+	const prev = handles.get(handle);
 	// every other field is stable for the lifetime of a root.
 	if (
 		prev !== null &&
@@ -140,15 +112,8 @@ export const attachRoot = (handle: Handle, root: RootContextValue | null): void 
 	) {
 		return;
 	}
-
-	store.root = root;
-	for (const listener of store.listeners) {
-		listener();
-	}
+	handles.attach(handle, root);
 };
-
-const noopSubscribe = (): (() => void) => () => {};
-const getNull = (): null => null;
 
 /**
  * @param handle handle of a detached root; the enclosing root is used otherwise
@@ -157,8 +122,7 @@ const getNull = (): null => null;
  */
 export const useTriggerRootContext = (handle: Handle | undefined): RootContextValue | null => {
 	const enclosing = useContext(RootContext);
-	const store = handle ? getHandleStore(handle) : undefined;
-	const attached = useSyncExternalStore(store?.subscribe ?? noopSubscribe, store?.getSnapshot ?? getNull);
+	const attached = handles.useRoot(handle);
 
 	if (handle) {
 		return attached;
