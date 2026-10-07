@@ -66,7 +66,6 @@ export const zIndex = {
 	float: 20,
 	modal: 100,
 	popover: 110,
-	toast: 130,
 } as const;
 
 export const fontScale = createVar();

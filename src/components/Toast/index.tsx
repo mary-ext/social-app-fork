@@ -1,29 +1,59 @@
-import type { ReactNode } from 'react';
+import { lazy, type ReactNode, Suspense, useEffect, useState, useSyncExternalStore } from 'react';
 
-import { Toast as BaseToast } from '@base-ui/react/toast';
-
-import { ToastViewport } from '#/components/Toast/Toast';
+import { createToastManager } from '#/components/primitives/toast/manager';
 import type { ShowOptions, ToastData } from '#/components/Toast/types';
 
 export type { ToastType } from '#/components/Toast/types';
 
-/** Default auto-dismiss time, in ms. */
+/** default auto-dismiss time, in ms. */
 export const DURATION = 3e3;
 
-// the shared manager lives outside React so `show` can be called from anywhere (including non-component
-// code), while the renderer mounted by `ToastOutlet` consumes the same queue.
-const manager = BaseToast.createToastManager<ToastData>();
+const manager = createToastManager<ToastData>({ timeout: DURATION });
 
-/** Toasts are rendered in a global outlet, placed once near the top of the component tree. */
+const ToastViewport = lazy(() =>
+	import('#/components/Toast/Toast').then((mod) => ({ default: mod.ToastViewport })),
+);
+
+const hasToasts = () => manager.toasts.length > 0;
+
+/**
+ * renders global toasts; mount once at the app root.
+ *
+ * @returns the lazy-loaded viewport, or `null` until loading starts
+ */
 export function ToastOutlet() {
-	return <ToastViewport manager={manager} />;
+	const pending = useSyncExternalStore(manager.subscribe, hasToasts);
+	const [ready, setReady] = useState(false);
+
+	// mount the live region during idle time so later toasts can be announced.
+	useEffect(() => {
+		const load = () => setReady(true);
+		if ('requestIdleCallback' in window) {
+			const handle = requestIdleCallback(load, { timeout: 5e3 });
+			return () => cancelIdleCallback(handle);
+		}
+		const handle = setTimeout(load, 0);
+		return () => clearTimeout(handle);
+	}, []);
+
+	if (pending && !ready) {
+		setReady(true);
+	}
+	if (!ready) {
+		return null;
+	}
+	return (
+		<Suspense>
+			<ToastViewport manager={manager} />
+		</Suspense>
+	);
 }
 
 /**
- * Shows a toast.
+ * shows a toast from component or non-component code.
  *
- * @param content the message — a string or any React node
- * @param options type, duration, an optional action button, a custom icon, or an explicit id
+ * @param content toast message
+ * @param options appearance, duration, action, and id
  */
 export function show(content: ReactNode, { action, duration, icon, id, type = 'default' }: ShowOptions = {}) {
 	const toastId = id ?? crypto.randomUUID();
@@ -37,7 +67,7 @@ export function show(content: ReactNode, { action, duration, icon, id, type = 'd
 		},
 		data: { icon },
 		id: toastId,
-		timeout: duration ?? DURATION,
+		timeout: duration,
 		title: content,
 		type,
 	});

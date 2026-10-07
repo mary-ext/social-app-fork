@@ -3,7 +3,7 @@ import { createVar, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
-import { borderRadius, fontSize, fontWeight, iconSize, lineHeight, zIndex } from '#/styles/tokens.css';
+import { borderRadius, fontSize, fontWeight, iconSize, lineHeight } from '#/styles/tokens.css';
 
 const gap = 8;
 const peek = 8;
@@ -15,34 +15,45 @@ const offsetYVar = createVar();
 
 const firstLineVar = createVar();
 
+// reset browser popover styles.
 export const viewport = style({
 	position: 'fixed',
-	top: 'auto',
-	right: 'auto',
-	bottom: 20,
-	left: 20,
-	zIndex: zIndex.toast,
+	inset: 'auto auto 20px 20px',
+	margin: 0,
 	outline: 0,
+	border: 0,
+	backgroundColor: 'transparent',
+	padding: 0,
 	width: 'min(380px, calc(100vw - 40px))',
+	height: 0,
+	overflow: 'visible',
+	color: 'inherit',
 	'@media': {
 		'(width < 800px)': { width: 'calc(100vw - 40px)' },
 	},
 });
 
+const swipeX = 'var(--toast-swipe-movement-x, 0px)';
+const swipeY = 'var(--toast-swipe-movement-y, 0px)';
+
+// separate swipe translation from stacking so dragging can skip transitions without interrupting the stack.
 export const root = style({
 	vars: {
 		[scaleVar]: 'calc(max(0, 1 - (var(--toast-index) * 0.08)))',
 		[shrinkVar]: `calc(1 - ${scaleVar})`,
 		[heightVar]: 'var(--toast-frontmost-height, var(--toast-height))',
-		[offsetYVar]: `calc(var(--toast-offset-y) * -1 + (var(--toast-index) * ${-gap}px) + var(--toast-swipe-movement-y))`,
+		[offsetYVar]: `calc(var(--toast-offset-y) * -1 + (var(--toast-index) * ${-gap}px))`,
 	},
 	boxSizing: 'border-box',
 	position: 'absolute',
 	bottom: 0,
 	left: 0,
-	transform: `translateX(var(--toast-swipe-movement-x)) translateY(calc(var(--toast-swipe-movement-y) - (var(--toast-index) * ${peek}px) - (${shrinkVar} * ${heightVar}))) scale(${scaleVar})`,
+	translate: `${swipeX} ${swipeY}`,
+	transform: `translateY(calc((var(--toast-index) * ${-peek}px) - (${shrinkVar} * ${heightVar}))) scale(${scaleVar})`,
 	transformOrigin: 'bottom left',
-	transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s, height 0.2s',
+	transitionDuration: '0.4s, 0.4s, 0.4s, 0.2s',
+	transitionProperty: 'translate, transform, opacity, height',
+	transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1), ease, ease',
 	zIndex: 'calc(1000 - var(--toast-index))',
 	borderWidth: 1,
 	borderStyle: 'solid',
@@ -62,20 +73,25 @@ export const root = style({
 	},
 	selectors: {
 		'&[data-expanded]': {
-			transform: `translateX(var(--toast-swipe-movement-x)) translateY(${offsetYVar})`,
+			transform: `translateY(${offsetYVar})`,
 			height: 'var(--toast-height)',
 		},
-		'&[data-starting-style], &[data-ending-style]': {
+		'&[data-swiping]': {
+			transitionDuration: '0s, 0.4s, 0.4s, 0.2s',
+		},
+		'&[data-limited], &[data-closed]': { opacity: 0 },
+		'&[data-closed]:not([data-swipe-direction])': {
 			transform: 'translateY(110%)',
 		},
-		'&[data-limited]': { opacity: 0 },
-		'&[data-ending-style]': { opacity: 0 },
-		'&[data-ending-style][data-swipe-direction="down"]': {
-			transform: 'translateY(calc(var(--toast-swipe-movement-y) + 150%))',
+		'&[data-closed][data-swipe-direction="down"]': {
+			translate: `0 calc(${swipeY} + 150%)`,
 		},
-		'&[data-ending-style][data-swipe-direction="left"]': {
-			transform: `translateX(calc(var(--toast-swipe-movement-x) - 150%)) translateY(${offsetYVar})`,
+		'&[data-closed][data-swipe-direction="left"]': {
+			translate: `calc(${swipeX} - 150%) 0`,
 		},
+	},
+	'@starting-style': {
+		translate: '0 110%',
 	},
 	'@media': {
 		'(width < 800px)': { width: '100%' },

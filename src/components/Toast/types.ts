@@ -2,25 +2,25 @@ import type { ComponentType, SVGProps } from 'react';
 
 export type ToastType = 'default' | 'error' | 'info' | 'success' | 'warning';
 
-/** An optional action button rendered inside a toast (e.g. "Undo", "View"). */
+/** optional toast action. */
 export type ToastAction = {
-	/** Visible button text, also its accessible name. */
+	/** button text and accessible name. */
 	label: string;
 	onPress: () => void;
 };
 
 export type ShowOptions = {
 	action?: ToastAction;
-	/** Time in ms before auto-dismiss; `0` keeps the toast until dismissed. */
+	/** auto-dismiss time in ms; `0` disables it. */
 	duration?: number;
-	/** Overrides the default icon for the toast's {@link ToastType}. */
+	/** overrides the type's default icon. */
 	icon?: ComponentType<SVGProps<SVGSVGElement>>;
-	/** Reusing an id updates the existing toast in place instead of stacking a new one. */
+	/** reusing an id updates an open toast or reopens a closing one. */
 	id?: string;
 	type?: ToastType;
 };
 
-/** Custom per-toast data carried through Base UI's toast manager to the renderer. */
+/** app-specific toast data. */
 export type ToastData = {
 	icon?: ComponentType<SVGProps<SVGSVGElement>>;
 };
