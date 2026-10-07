@@ -133,6 +133,9 @@ export default defineConfig(({ command, mode }) => {
 		build: {
 			outDir: 'web-build',
 			emptyOutDir: true,
+			// TODO: switch back to lightningcss once it parses anchored container queries.
+			// https://github.com/parcel-bundler/lightningcss/issues/1176
+			cssMinify: 'esbuild',
 			sourcemap: true,
 			// prevent content hashes from cascading through importers.
 			chunkImportMap: isBuild,
