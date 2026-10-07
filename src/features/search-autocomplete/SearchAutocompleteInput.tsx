@@ -455,33 +455,43 @@ export function SearchAutocompleteInput({
 			return;
 		}
 
-		// roll over to the adjacent month at grid edges.
 		const index = highlightedIndexRef.current;
 		if (index < 0) {
 			return;
 		}
-		const gridStart = startOfWeek(startOfMonth(visibleMonth));
-		const current = addDays(gridStart, index);
 
-		let target: Date | null = null;
-		if (event.key === 'ArrowUp' && index < 7) {
-			target = addDays(current, -7);
-		} else if (event.key === 'ArrowDown' && index >= CALENDAR_DAY_COUNT - 7) {
-			target = addDays(current, 7);
-		} else if (event.key === 'ArrowLeft' && index === 0) {
-			target = addDays(current, -1);
-		} else if (event.key === 'ArrowRight' && index === CALENDAR_DAY_COUNT - 1) {
-			target = addDays(current, 1);
-		}
-
-		if (target) {
-			if (!isSelectableDate(target)) {
-				event.preventDefault();
-				event.stopPropagation();
+		let step: number;
+		switch (event.key) {
+			case 'ArrowUp': {
+				step = -7;
+				break;
+			}
+			case 'ArrowDown': {
+				step = 7;
+				break;
+			}
+			case 'ArrowLeft': {
+				step = -1;
+				break;
+			}
+			case 'ArrowRight': {
+				step = 1;
+				break;
+			}
+			default: {
 				return;
 			}
-			event.preventDefault();
-			event.stopPropagation();
+		}
+
+		const target = addDays(addDays(startOfWeek(startOfMonth(visibleMonth)), index), step);
+		const selectable = isSelectableDate(target);
+		if (selectable && isSameCalendarMonth(target, visibleMonth)) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		if (selectable) {
 			const targetMonth = startOfMonth(target);
 			pendingHighlightRef.current = differenceInCalendarDays(target, startOfWeek(targetMonth));
 			goToMonth(differenceInCalendarMonths(targetMonth, visibleMonth));
