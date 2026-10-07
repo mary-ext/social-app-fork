@@ -40,6 +40,15 @@ export const useItemHighlight = (): {
 	};
 };
 
+/**
+ * @param event pointer move event
+ * @returns whether a mouse or pen moved
+ */
+export const isHoverMove = (event: PointerEvent): boolean => {
+	// WebKit fires zero-movement events when scrolling beneath a stationary pointer.
+	return isMouseLike(event) && (event.movementX !== 0 || event.movementY !== 0);
+};
+
 const isDisabled = (item: HTMLElement): boolean => {
 	return item.getAttribute('aria-disabled') === 'true' || item.matches(':disabled');
 };
@@ -191,8 +200,7 @@ export const getListNavigationProps = ({ loop, typeahead }: ListNavigationOption
 			}
 		},
 		onPointerMove(event: PointerEvent<HTMLElement>) {
-			// WebKit fires zero-movement events when scrolling beneath a stationary pointer.
-			if (!isMouseLike(event) || (event.movementX === 0 && event.movementY === 0)) {
+			if (!isHoverMove(event)) {
 				return;
 			}
 			const target = event.target;
