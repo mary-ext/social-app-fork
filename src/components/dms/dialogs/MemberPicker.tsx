@@ -6,9 +6,6 @@ import type { Did } from '@atcute/lexicons';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-import { Combobox } from '@base-ui/react/combobox';
-
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
@@ -18,6 +15,8 @@ import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
 import * as SearchField from '#/components/forms/SearchField';
+import * as Autocomplete from '#/components/primitives/autocomplete';
+import * as Combobox from '#/components/primitives/combobox';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
@@ -120,26 +119,17 @@ export function SelectMembersStep({
 
 	return (
 		<Combobox.Root
-			filter={null}
-			inline
 			inputValue={searchText}
-			isItemEqualToValue={(a: AnyProfileView, b: AnyProfileView) => a.did === b.did}
+			isItemEqualToValue={(a, b) => a.did === b.did}
 			items={items}
-			itemToStringLabel={(profile: AnyProfileView) => profile.handle}
 			multiple
-			onInputValueChange={(value, details) => {
-				if (details.reason !== 'input-change') {
-					return;
-				}
-				setSearchText(value);
-			}}
+			onInputValueChange={setSearchText}
 			onValueChange={onMembersChange}
-			open
 			value={members}
 		>
 			<StepHeader actions={primaryButton} navButton={navButton} title={title} />
 
-			<SearchSlot onClear={() => setSearchText('')} overlap={!hasChips} searchText={searchText}>
+			<SearchSlot overlap={!hasChips}>
 				<Combobox.Input
 					render={
 						<SearchField.Input
@@ -266,49 +256,36 @@ function MemberChips({
 }
 
 /**
- * renders the shell for a single-select picker. put all rows in `children` and only navigable rows in
- * `items`.
+ * single-recipient picker shell. rows handle activation through `onClick`.
  *
- * @param items rows navigable by keyboard
- * @param itemToStringValue converts an item to its accessible label
- * @param searchText controlled search text
+ * @param props.children all rows, including non-navigable content
+ * @param props.items rows navigable by keyboard
+ * @param props.onSearchTextChange called when the search text changes
+ * @param props.placeholder search placeholder
+ * @param props.searchText controlled search text
+ * @param props.title step heading
+ * @returns the picker step
  */
-export function PickStepShell<Item>({
+export function PickStepShell({
 	children,
 	items,
-	itemToStringValue,
 	onSearchTextChange,
 	placeholder,
 	searchText,
 	title,
 }: {
 	children: ReactNode;
-	items: Item[];
-	itemToStringValue: (item: Item) => string;
+	items: readonly unknown[];
 	onSearchTextChange: (value: string) => void;
 	placeholder: string;
 	searchText: string;
 	title: string;
 }) {
 	return (
-		<Autocomplete.Root
-			filter={null}
-			inline
-			items={items}
-			itemToStringValue={itemToStringValue}
-			onValueChange={(value, details) => {
-				// do not replace the query with the selected label while the dialog closes.
-				if (details.reason === 'item-press') {
-					return;
-				}
-				onSearchTextChange(value);
-			}}
-			open
-			value={searchText}
-		>
+		<Autocomplete.Root items={items} onValueChange={onSearchTextChange} value={searchText}>
 			<StepHeader title={title} />
 
-			<SearchSlot onClear={() => onSearchTextChange('')} overlap searchText={searchText}>
+			<SearchSlot overlap>
 				<Autocomplete.Input
 					render={
 						<SearchField.Input
@@ -390,25 +367,20 @@ export function StepHeader({
 	);
 }
 
-export function SearchSlot({
-	children,
-	onClear,
-	overlap,
-	searchText,
-}: {
-	children: ReactNode;
-	onClear: () => void;
-	overlap: boolean;
-	searchText: string;
-}) {
+/**
+ * pinned search field with a clear button. requires a combobox or autocomplete root.
+ *
+ * @param props.children the input
+ * @param props.overlap whether the field overlaps the list below
+ * @returns the search row
+ */
+export function SearchSlot({ children, overlap }: { children: ReactNode; overlap: boolean }) {
 	return (
 		<Dialog.Search overlap={overlap}>
 			<SearchField.Root shape="round">
 				<SearchField.Icon />
 				{children}
-				{searchText.length > 0 && (
-					<SearchField.Clear label={m['common.search.action.clear']()} onClick={onClear} />
-				)}
+				<Combobox.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
 			</SearchField.Root>
 		</Dialog.Search>
 	);

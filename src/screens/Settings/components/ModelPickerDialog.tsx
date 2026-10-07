@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { Combobox } from '@base-ui/react/combobox';
 import { clsx } from 'clsx';
 
 import type { AiModelSelection, AiProviderConfigs } from '#/lib/ai/config';
@@ -13,6 +12,7 @@ import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
 import type { ListMethods } from '#/components/List/List';
+import * as Combobox from '#/components/primitives/combobox';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -153,23 +153,21 @@ const DialogInner = ({
 	return (
 		<Combobox.Root
 			autoHighlight
-			filter={null}
-			inline
 			inputValue={search}
 			isItemEqualToValue={(entry, value) => entry.id === value.id}
 			items={listEntries}
-			itemToStringLabel={(entry) => entry.name}
-			itemToStringValue={(entry) => entry.id}
-			onInputValueChange={(value, details) => {
-				if (details.reason === 'input-change') {
-					setSearch(value);
-					listRef.current?.scrollToTop();
+			onInputValueChange={(value) => {
+				setSearch(value);
+				listRef.current?.scrollToTop();
+			}}
+			onItemHighlighted={(_entry, details) => {
+				// mounted items scroll themselves into view.
+				if (details.reason === 'keyboard' && !details.rendered) {
+					listRef.current?.scrollToIndex({ index: details.index });
 				}
 			}}
-			onValueChange={(entry) => setSelected(entry?.id ?? NONE)}
-			open
+			onValueChange={(entry) => setSelected(entry.id)}
 			value={selectedEntry}
-			virtualized
 		>
 			<Dialog.Header.Root>
 				<Dialog.Header.Close />
@@ -194,9 +192,7 @@ const DialogInner = ({
 							/>
 						}
 					/>
-					{search.length > 0 && (
-						<SearchField.Clear label={m['common.search.action.clear']()} onClick={() => setSearch('')} />
-					)}
+					<Combobox.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
 				</SearchField.Root>
 			</Dialog.Search>
 

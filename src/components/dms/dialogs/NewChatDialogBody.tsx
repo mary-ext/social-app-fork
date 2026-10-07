@@ -41,9 +41,6 @@ type ChatListItem = NewGroupChatRowModel | ProfileRow;
 const isChatListItem = (row: ChatListRow): row is ChatListItem =>
 	row.kind === 'newGroupChat' || row.kind === 'profile';
 
-const chatItemToStringValue = (item: ChatListItem): string =>
-	item.kind === 'newGroupChat' ? m['components.dms.group.title']() : item.profile.handle;
-
 /**
  * starts a direct or group chat and reports the new chat ID.
  *
@@ -104,7 +101,6 @@ function SelectChatStep({ canCreateGroups, onSelectRecipient, onStartGroup }: Pi
 	return (
 		<PickStepShell
 			items={rows.filter(isChatListItem)}
-			itemToStringValue={chatItemToStringValue}
 			onSearchTextChange={setSearchText}
 			placeholder={m['components.dms.search.placeholder']()}
 			searchText={searchText}

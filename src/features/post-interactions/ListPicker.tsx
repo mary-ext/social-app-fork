@@ -65,7 +65,6 @@ export function ListPicker({
 		<Picker.Root
 			isItemEqualToValue={(a, b) => a.uri === b.uri}
 			items={visible}
-			itemToStringLabel={(list) => list.name}
 			onSearchTextChange={setSearch}
 			onValueChange={onValueChange}
 			searchText={search}

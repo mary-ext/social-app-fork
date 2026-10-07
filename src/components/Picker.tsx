@@ -1,25 +1,16 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { createContext, type ReactNode, use } from 'react';
-
-import { Combobox } from '@base-ui/react/combobox';
+import type { ReactNode } from 'react';
 
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
 import * as styles from '#/components/Picker.css';
+import * as Combobox from '#/components/primitives/combobox';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-
-type SearchContextValue = {
-	searchText: string;
-	onSearchTextChange: (value: string) => void;
-};
-
-const SearchContext = createContext<SearchContextValue | null>(null);
-SearchContext.displayName = 'PickerSearchContext';
 
 /**
  * searchable multi-select picker for a dialog with `scroll="body"`. compose with {@link Search} and
@@ -28,7 +19,6 @@ SearchContext.displayName = 'PickerSearchContext';
  * @param props.children dialog header, search field and list
  * @param props.isItemEqualToValue compares item identity
  * @param props.items rows currently shown, in order
- * @param props.itemToStringLabel text announced for an item
  * @param props.onSearchTextChange called as the user types or clears the search
  * @param props.onValueChange receives the updated selection
  * @param props.searchText controlled search text
@@ -39,7 +29,6 @@ export function Root<Item>({
 	children,
 	isItemEqualToValue,
 	items,
-	itemToStringLabel,
 	onSearchTextChange,
 	onValueChange,
 	searchText,
@@ -48,36 +37,23 @@ export function Root<Item>({
 	children: ReactNode;
 	isItemEqualToValue: (item: Item, value: Item) => boolean;
 	items: Item[];
-	itemToStringLabel: (item: Item) => string;
 	onSearchTextChange: (value: string) => void;
 	onValueChange: (value: Item[]) => void;
 	searchText: string;
 	value: Item[];
 }) {
 	return (
-		<SearchContext.Provider value={{ searchText, onSearchTextChange }}>
-			<Combobox.Root
-				filter={null}
-				inline
-				inputValue={searchText}
-				isItemEqualToValue={isItemEqualToValue}
-				items={items}
-				itemToStringLabel={itemToStringLabel}
-				multiple
-				onInputValueChange={(next, details) => {
-					// ignore Base UI's selection-triggered input clear so users can select more matches.
-					if (details.reason !== 'input-change') {
-						return;
-					}
-					onSearchTextChange(next);
-				}}
-				onValueChange={onValueChange}
-				open
-				value={value}
-			>
-				{children}
-			</Combobox.Root>
-		</SearchContext.Provider>
+		<Combobox.Root
+			inputValue={searchText}
+			isItemEqualToValue={isItemEqualToValue}
+			items={items}
+			multiple
+			onInputValueChange={onSearchTextChange}
+			onValueChange={onValueChange}
+			value={value}
+		>
+			{children}
+		</Combobox.Root>
 	);
 }
 
@@ -90,12 +66,6 @@ export function Root<Item>({
  * @throws if rendered outside {@link Root}
  */
 export function Search({ label, placeholder }: { label: string; placeholder: string }) {
-	const context = use(SearchContext);
-	if (!context) {
-		throw new Error(`Picker.Search must be used within Picker.Root`);
-	}
-	const { onSearchTextChange, searchText } = context;
-
 	return (
 		<Dialog.Search>
 			<SearchField.Root shape="round">
@@ -103,12 +73,7 @@ export function Search({ label, placeholder }: { label: string; placeholder: str
 				<Combobox.Input
 					render={<SearchField.Input aria-label={label} autoFocus maxLength={50} placeholder={placeholder} />}
 				/>
-				{searchText.length > 0 && (
-					<SearchField.Clear
-						label={m['common.search.action.clear']()}
-						onClick={() => onSearchTextChange('')}
-					/>
-				)}
+				<Combobox.Clear render={<SearchField.Clear label={m['common.search.action.clear']()} />} />
 			</SearchField.Root>
 		</Dialog.Search>
 	);
@@ -121,13 +86,7 @@ export function Search({ label, placeholder }: { label: string; placeholder: str
  * @param props.header content above the rows
  * @returns the list region
  */
-export function List({
-	children,
-	header,
-}: {
-	children: Combobox.List.Props['children'];
-	header?: ReactNode;
-}) {
+export function List({ children, header }: { children: Combobox.ListProps['children']; header?: ReactNode }) {
 	return (
 		// the search field drives list navigation, so keep the scroller out of the tab order.
 		<Dialog.Body className={styles.list} tabIndex={-1}>

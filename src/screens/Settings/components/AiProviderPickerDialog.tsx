@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
 import type { AiProviderConfigs } from '#/lib/ai/config';
@@ -12,6 +11,7 @@ import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
 import * as SearchField from '#/components/forms/SearchField';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';
@@ -69,21 +69,7 @@ const DialogInner = ({
 	}
 
 	return (
-		<Autocomplete.Root
-			autoHighlight="always"
-			filter={null}
-			inline
-			items={visible}
-			itemToStringValue={(provider) => provider.name}
-			onValueChange={(value, details) => {
-				// do not replace the query with the selected label while the dialog closes.
-				if (details.reason !== 'item-press') {
-					setSearch(value);
-				}
-			}}
-			open
-			value={search}
-		>
+		<Autocomplete.Root autoHighlight="always" items={visible} onValueChange={setSearch} value={search}>
 			<Dialog.Header.Root>
 				<Dialog.Header.Close />
 				<Dialog.Header.Title>{titleText}</Dialog.Header.Title>

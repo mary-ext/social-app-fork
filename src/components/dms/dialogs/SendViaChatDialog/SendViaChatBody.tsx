@@ -6,8 +6,6 @@ import type { Did } from '@atcute/lexicons';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
@@ -36,6 +34,7 @@ import {
 } from '#/components/dms/dialogs/MemberPicker';
 import * as css from '#/components/dms/dialogs/MemberPicker.css';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -48,21 +47,6 @@ type ShareTargetItem = ExistingChatRowModel | NewGroupChatRowModel | ProfileRow;
 
 const isShareTargetItem = (row: ShareTargetRow): row is ShareTargetItem =>
 	row.kind === 'existingChat' || row.kind === 'newGroupChat' || row.kind === 'profile';
-
-const shareItemToStringValue = (item: ShareTargetItem): string => {
-	switch (item.kind) {
-		case 'existingChat': {
-			const { convo } = item;
-			return convo.kind === 'group' ? convo.details.name : convo.primaryMember.handle;
-		}
-		case 'newGroupChat': {
-			return m['components.dms.group.title']();
-		}
-		case 'profile': {
-			return item.profile.handle;
-		}
-	}
-};
 
 export function SendViaChatBody({
 	handle,
@@ -127,7 +111,6 @@ function SelectShareTargetStep({
 	return (
 		<PickStepShell
 			items={rows.filter(isShareTargetItem)}
-			itemToStringValue={shareItemToStringValue}
 			onSearchTextChange={setSearchText}
 			placeholder={m['common.action.search']()}
 			searchText={searchText}

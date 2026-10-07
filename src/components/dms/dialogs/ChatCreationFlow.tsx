@@ -4,7 +4,6 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
 import { clsx } from 'clsx';
 
 import { MAX_GROUP_NAME_GRAPHEME_LENGTH } from '#/lib/constants/messages';
@@ -25,6 +24,7 @@ import {
 	StepHeader,
 } from '#/components/dms/dialogs/MemberPicker';
 import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';

@@ -173,7 +173,6 @@ function DialogInner({
 		<Picker.Root
 			isItemEqualToValue={(a, b) => a.did === b.did}
 			items={profiles}
-			itemToStringLabel={(profile) => profile.handle}
 			onSearchTextChange={setSearchText}
 			onValueChange={onValueChange}
 			searchText={searchText}
