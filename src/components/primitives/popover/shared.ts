@@ -69,18 +69,6 @@ export const useRootContext = (): RootContextValue => {
 	return ctx;
 };
 
-export const PortalContainerContext = createContext<RefObject<HTMLDivElement | null> | null>(null);
-PortalContainerContext.displayName = 'PopoverPortalContainerContext';
-
-/**
- * portal target for nested popups that would otherwise render beneath the top layer.
- *
- * @returns the enclosing popover's top-layer element, or `null` outside a popover
- */
-export const usePortalContainer = (): RefObject<HTMLDivElement | null> | null => {
-	return useContext(PortalContainerContext);
-};
-
 type HandleStore = {
 	root: RootContextValue | null;
 	listeners: Set<() => void>;

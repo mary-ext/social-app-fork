@@ -15,7 +15,7 @@ import {
 	useTopLayerPresence,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
-import { PortalContainerContext, useRootContext } from './shared';
+import { useRootContext } from './shared';
 
 export type PositionerState = {
 	open: boolean;
@@ -48,7 +48,6 @@ export const Positioner = ({
 	align = 'center',
 	sideOffset = 0,
 	collisionPadding = 5,
-	children,
 	...elementProps
 }: PositionerProps) => {
 	const { open, anchorName, positionerRef, onTransitionSettled } = useRootContext();
@@ -68,7 +67,6 @@ export const Positioner = ({
 				role: 'presentation',
 				className: styles.positioner,
 				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
-				children: <PortalContainerContext value={positionerRef}>{children}</PortalContainerContext>,
 			},
 			elementProps,
 		),
