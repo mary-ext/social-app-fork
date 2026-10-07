@@ -12,6 +12,7 @@ import {
 	openStateAttributes,
 	type Side,
 	useInertWhileClosed,
+	useModalInert,
 	useTopLayerPresence,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
@@ -50,9 +51,11 @@ export const Positioner = ({
 	collisionPadding = 5,
 	...elementProps
 }: PositionerProps) => {
-	const { open, anchorName, positionerRef, onTransitionSettled } = useRootContext();
+	const { open, modal, anchorName, positionerRef, onTransitionSettled } = useRootContext();
 
 	useTopLayerPresence(positionerRef, open, onTransitionSettled);
+
+	useModalInert(positionerRef, open && modal);
 
 	useInertWhileClosed(positionerRef, open);
 

@@ -169,6 +169,43 @@ export const useInertWhileClosed = (ref: RefObject<HTMLElement | null>, open: bo
 	}, [open, ref]);
 };
 
+const markOthersInert = (keep: Element): (() => void) => {
+	const marked: HTMLElement[] = [];
+	for (let node = keep; node !== document.body && node.parentElement; node = node.parentElement) {
+		for (const sibling of node.parentElement.children) {
+			// preserve inertness owned by another dialog or popover.
+			if (sibling !== node && sibling instanceof HTMLElement && !sibling.inert) {
+				sibling.inert = true;
+				marked.push(sibling);
+			}
+		}
+	}
+
+	return () => {
+		for (const el of marked) {
+			el.inert = false;
+		}
+	};
+};
+
+/**
+ * makes content outside the popup inert while active. call from the positioning component to support content
+ * mounted after opening.
+ *
+ * @param ref popup positioning element
+ * @param active whether the popup is open and modal
+ */
+export const useModalInert = (ref: RefObject<HTMLElement | null>, active: boolean): void => {
+	// clear outside inertness before layout effects restore focus.
+	useLayoutEffect(() => {
+		const el = ref.current;
+		if (!active || !el) {
+			return;
+		}
+		return markOthersInert(el);
+	}, [active, ref]);
+};
+
 /**
  * shows a mounted popover in the top layer and reports completed open/close transitions.
  *

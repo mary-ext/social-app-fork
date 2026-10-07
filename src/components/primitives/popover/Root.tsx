@@ -194,15 +194,6 @@ export const Root = ({
 
 	useScrollLock(open && modal && openMethod !== 'touch', activeTrigger);
 
-	// remove outside inertness before the popup restores focus.
-	useLayoutEffect(() => {
-		const positioner = positionerRef.current;
-		if (!open || !modal || !positioner) {
-			return;
-		}
-		return markOthersInert(positioner);
-	}, [open, modal]);
-
 	const value: RootContextValue = {
 		open,
 		mounted,
@@ -238,25 +229,6 @@ export const Root = ({
 	}, [handle]);
 
 	return <RootContext.Provider value={value}>{children}</RootContext.Provider>;
-};
-
-const markOthersInert = (keep: Element): (() => void) => {
-	const marked: HTMLElement[] = [];
-	for (let node = keep; node !== document.body && node.parentElement; node = node.parentElement) {
-		for (const sibling of node.parentElement.children) {
-			// preserve inertness owned by another dialog or popover.
-			if (sibling !== node && sibling instanceof HTMLElement && !sibling.inert) {
-				sibling.inert = true;
-				marked.push(sibling);
-			}
-		}
-	}
-
-	return () => {
-		for (const el of marked) {
-			el.inert = false;
-		}
-	};
 };
 
 const getInteractionType = (event: Event): InteractionType => {
