@@ -1,7 +1,6 @@
 import { type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import type { SkinTone } from '#/storage/schema';
@@ -31,7 +30,6 @@ type EmojiGridProps = {
 	layout: EmojiLayout;
 	/** reports the section currently scrolled to the top of the viewport. */
 	onActiveSectionChange: (key: string | null) => void;
-	onSelect: (emojiIndex: number, shiftHeld: boolean) => void;
 	skinTone: SkinTone;
 };
 
@@ -41,7 +39,6 @@ export function EmojiGrid({
 	dataset,
 	layout,
 	onActiveSectionChange,
-	onSelect,
 	ref,
 	skinTone,
 }: EmojiGridProps & { ref?: Ref<EmojiGridHandle> }) {
@@ -165,7 +162,6 @@ export function EmojiGrid({
 										className={styles.cell}
 										index={position}
 										key={col}
-										onClick={(event) => onSelect(emojiIndex, event.shiftKey)}
 										value={emojiIndex}
 									>
 										<span className={styles.glyph}>{dataset.nativeAt(emojiIndex, skinTone)}</span>

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { mapDefined } from '@mary/array-fns';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -13,6 +12,7 @@ import {
 } from '#/state/preferences/emoji';
 
 import * as SearchField from '#/components/forms/SearchField';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 
 import { m } from '#/paraglide/messages';
 
@@ -82,24 +82,17 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 
 	return (
 		<Autocomplete.Root
-			filter={null}
 			grid
-			inline
 			items={model.cells}
-			itemToStringValue={(index: number) => data.ids[index]!}
 			onItemHighlighted={(_item, details) => {
+				// mounted cells need the grid's scroll padding too.
 				if (details.reason === 'keyboard' && details.index >= 0) {
 					gridRef.current?.ensureVisible(details.index);
 				}
 			}}
-			onValueChange={(value, details) => {
-				if (details.reason !== 'item-press') {
-					setQuery(value);
-				}
-			}}
-			open
+			onItemPress={(index, { event }) => handleSelect(index, event.shiftKey)}
+			onValueChange={setQuery}
 			value={query}
-			virtualized
 		>
 			<div className={styles.panel}>
 				<div className={styles.searchRow}>
@@ -119,7 +112,6 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 
 				<Autocomplete.List className={styles.list}>
 					<Autocomplete.Empty>
-						{}
 						{!isSearchLoading && (
 							<div className={styles.empty}>{m['components.emojiPicker.search.empty']()}</div>
 						)}
@@ -130,7 +122,6 @@ export function EmojiPanel({ onEmojiSelect }: { onEmojiSelect: (emoji: Emoji, sh
 						dataset={data}
 						layout={model.layout}
 						onActiveSectionChange={setActiveSection}
-						onSelect={handleSelect}
 						ref={gridRef}
 						skinTone={skinTone}
 					/>
