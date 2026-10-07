@@ -5,9 +5,10 @@ import { type HTMLAttributes, type SyntheticEvent, useEffect, useLayoutEffect } 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
+import { isMouseLike } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { isMouseLike, openStateAttributes } from '../anchored-popup';
+import { openStateAttributes } from '../anchored-popup';
 import {
 	type FocusTarget,
 	getFirstTabbable,

@@ -2,10 +2,7 @@ import { createContext, type RefObject, useContext, useSyncExternalStore } from 
 
 import type { Timeout } from '@base-ui/utils/useTimeout';
 
-import type { InputModality } from '#/lib/browser/input-modality';
-
-/** the input that opened or closed the popover; empty when unknown. */
-export type InteractionType = InputModality | '';
+import type { InteractionType } from '#/lib/browser/input-modality';
 
 export type OpenChangeReason =
 	| 'close-press'
@@ -182,21 +179,4 @@ export const useTriggerRootContext = (handle: Handle | undefined): RootContextVa
 		throw new Error(`<Popover.Trigger> requires <Popover.Root> or a handle`);
 	}
 	return enclosing;
-};
-
-/**
- * @param pointerType a pointer event's `pointerType`
- * @returns the matching interaction type, or empty for unknown pointers
- */
-export const toInteractionType = (pointerType: string): InteractionType => {
-	switch (pointerType) {
-		case 'mouse':
-		case 'pen':
-		case 'touch': {
-			return pointerType;
-		}
-		default: {
-			return '';
-		}
-	}
 };

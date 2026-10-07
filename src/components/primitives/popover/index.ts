@@ -8,7 +8,6 @@ export { Root, type RootProps } from './Root';
 export {
 	createHandle,
 	type Handle,
-	type InteractionType,
 	type OpenChangeDetails,
 	type OpenChangeReason,
 	usePortalContainer,

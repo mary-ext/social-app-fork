@@ -12,7 +12,9 @@ import {
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { addAnchorName, HOVERABLE_GRACE, isMouseLike, triggerStateAttributes } from '../anchored-popup';
+import { isMouseLike } from '#/lib/browser/input-modality';
+
+import { addAnchorName, HOVERABLE_GRACE, triggerStateAttributes } from '../anchored-popup';
 import { useRootContext } from './shared';
 
 const OPEN_DELAY = 600;

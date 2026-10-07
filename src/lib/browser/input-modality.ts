@@ -12,6 +12,35 @@ export type InputModality = 'keyboard' | 'mouse' | 'pen' | 'touch';
 /** pointer type last used */
 export type PointerModality = Exclude<InputModality, 'keyboard'>;
 
+/** input for an interaction; `''` when unknown. */
+export type InteractionType = InputModality | '';
+
+/**
+ * @param pointerType a pointer event's `pointerType`
+ * @returns the pointer type, or `''` if unknown
+ */
+export const toInteractionType = (pointerType: string): InteractionType => {
+	switch (pointerType) {
+		case 'mouse':
+		case 'pen':
+		case 'touch': {
+			return pointerType;
+		}
+		default: {
+			return '';
+		}
+	}
+};
+
+/**
+ * @param event pointer event to classify
+ * @returns whether the pointer is a mouse or pen
+ */
+export const isMouseLike = (event: { pointerType: string }): boolean => {
+	// some Linux Chromium builds report mouse input as "pen".
+	return event.pointerType === 'mouse' || event.pointerType === 'pen';
+};
+
 const emitter = new SimpleEventEmitter<[]>();
 
 const initial: PointerModality = IS_TOUCH_DEVICE ? 'touch' : 'mouse';

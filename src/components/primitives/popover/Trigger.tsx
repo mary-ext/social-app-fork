@@ -5,15 +5,11 @@ import { type HTMLAttributes, type Ref, useLayoutEffect, useRef, useState } from
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { addAnchorName, isMouseLike, triggerStateAttributes } from '../anchored-popup';
+import { type InteractionType, isMouseLike, toInteractionType } from '#/lib/browser/input-modality';
+
+import { addAnchorName, triggerStateAttributes } from '../anchored-popup';
 import { getFirstTabbable } from './focus';
-import {
-	type Handle,
-	type InteractionType,
-	type OpenChangeRequest,
-	toInteractionType,
-	useTriggerRootContext,
-} from './shared';
+import { type Handle, type OpenChangeRequest, useTriggerRootContext } from './shared';
 
 const OPEN_DELAY = 300;
 

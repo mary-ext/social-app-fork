@@ -8,19 +8,18 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import { useScrollLock } from '@base-ui/utils/useScrollLock';
 import { useTimeout } from '@base-ui/utils/useTimeout';
 
+import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { HOVERABLE_GRACE, usePresence } from '../anchored-popup';
 import {
 	attachRoot,
 	type Handle,
-	type InteractionType,
 	type OpenChangeDetails,
 	type OpenChangeReason,
 	type OpenChangeRequest,
 	RootContext,
 	type RootContextValue,
-	toInteractionType,
 } from './shared';
 
 const PATIENT_CLICK_THRESHOLD = 500;

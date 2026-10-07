@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 
-import type { InteractionType } from './shared';
+import type { InteractionType } from '#/lib/browser/input-modality';
 
 /**
  * where focus moves when the popup opens or closes.

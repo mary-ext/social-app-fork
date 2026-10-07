@@ -1,6 +1,5 @@
 import {
 	type CSSProperties,
-	type PointerEvent,
 	type ReactNode,
 	type ReactPortal,
 	type RefObject,
@@ -206,15 +205,6 @@ export const addAnchorName = (el: HTMLElement, name: string): (() => void) => {
 
 /** minimum gap-crossing time for hoverable popups, in milliseconds. */
 export const HOVERABLE_GRACE = 100;
-
-/**
- * @param event pointer event to classify
- * @returns whether the pointer is a mouse or pen
- */
-export const isMouseLike = (event: PointerEvent): boolean => {
-	// some Linux Chromium builds report mouse input as "pen".
-	return event.pointerType === 'mouse' || event.pointerType === 'pen';
-};
 
 export type PortalContainer = HTMLElement | RefObject<HTMLElement | null> | null;
 

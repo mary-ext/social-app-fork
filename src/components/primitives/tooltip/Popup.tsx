@@ -5,7 +5,9 @@ import type { HTMLAttributes } from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { HOVERABLE_GRACE, isMouseLike, openStateAttributes } from '../anchored-popup';
+import { isMouseLike } from '#/lib/browser/input-modality';
+
+import { HOVERABLE_GRACE, openStateAttributes } from '../anchored-popup';
 import { useRootContext } from './shared';
 
 export type PopupState = {
