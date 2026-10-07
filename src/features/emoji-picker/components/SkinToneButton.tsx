@@ -1,6 +1,4 @@
-import { Select } from '@base-ui/react/select';
-
-import { usePortalContainer } from '#/components/primitives/popover/shared';
+import * as Select from '#/components/primitives/select';
 
 import { m } from '#/paraglide/messages';
 import type { SkinTone } from '#/storage/schema';
@@ -12,24 +10,15 @@ const SKIN_HANDS = ['✋', '✋🏻', '✋🏼', '✋🏽', '✋🏾', '✋🏿'
 
 const TONES: SkinTone[] = [1, 2, 3, 4, 5, 6];
 
-/** a Base UI Select of tone swatches to choose the active emoji skin tone. */
+/** selects the emoji skin tone. */
 export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) => void; tone: SkinTone }) {
-	const container = usePortalContainer();
-
 	return (
-		<Select.Root
-			value={tone}
-			onValueChange={(next) => {
-				if (next) {
-					onChange(next);
-				}
-			}}
-		>
+		<Select.Root value={tone} onValueChange={onChange}>
 			<Select.Trigger aria-label={m['components.emojiPicker.skinTone.label']()} className={styles.trigger}>
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
-			<Select.Portal container={container}>
+			<Select.Portal>
 				<Select.Positioner className={styles.positioner}>
 					<Select.Popup className={styles.menu}>
 						{TONES.map((value) => (

@@ -4,7 +4,7 @@ import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
 
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
-import { emojiFontFamily, zIndex } from '#/styles/tokens.css';
+import { emojiFontFamily } from '#/styles/tokens.css';
 
 const INSET = 4;
 
@@ -33,7 +33,8 @@ export const trigger = style({
 });
 
 export const positioner = style({
-	zIndex: zIndex.popover,
+	display: 'flex',
+	flexDirection: 'column',
 });
 
 export const menu = style({
@@ -48,11 +49,12 @@ export const menu = style({
 	boxShadow: `0 0 0 1px ${vars.palette.contrast_100}, ${vars.shadow.md}`,
 	backgroundColor: vars.palette.contrast_0,
 	padding: 4,
-	maxHeight: 'var(--available-height)',
+	minHeight: 0,
 	overflowY: 'auto',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
+		'&[data-closed]': { opacity: 0 },
 	},
+	'@starting-style': { opacity: 0 },
 });
 
 export const item = style({
