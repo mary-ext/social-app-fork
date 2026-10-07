@@ -67,9 +67,7 @@ export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProp
 
 	return (
 		<EmojiPickerContext value={value}>
-			<Popover.Root handle={handle} modal={true}>
-				{children}
-			</Popover.Root>
+			<Popover.Root handle={handle}>{children}</Popover.Root>
 		</EmojiPickerContext>
 	);
 }

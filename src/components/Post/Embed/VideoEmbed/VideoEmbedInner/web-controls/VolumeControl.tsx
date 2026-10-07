@@ -89,7 +89,7 @@ export function VolumeControl({
 	}
 
 	return (
-		<Popover.Root open={open} onOpenChange={onPopupOpenChange}>
+		<Popover.Root open={open} modal={false} onOpenChange={onPopupOpenChange}>
 			<Popover.Trigger
 				render={<ControlButton icon={Icon} label={label} tooltip={false} />}
 				openOnHover

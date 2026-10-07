@@ -35,8 +35,8 @@ export type RootProps = {
 	/** receives the open state after animations finish. */
 	onOpenChangeComplete?: (open: boolean) => void;
 	/**
-	 * makes outside content inert and locks scrolling for non-touch opens. hover opens remain non-modal.
-	 * include a `Close` in the popup for touch screen reader users.
+	 * makes outside content inert and locks scrolling for non-touch opens; defaults to `true`. hover opens
+	 * remain non-modal. include a `Close` in the popup for touch screen reader users.
 	 */
 	modal?: boolean;
 	/** handle shared with detached triggers. */
@@ -55,7 +55,7 @@ export const Root = ({
 	defaultOpen = false,
 	onOpenChange,
 	onOpenChangeComplete,
-	modal: modalProp = false,
+	modal: modalProp = true,
 	handle,
 }: RootProps) => {
 	const [open, setOpenState] = useControlled({

@@ -228,7 +228,6 @@ export function SettingsMenu({
 
 	return (
 		<Popover.Root
-			modal
 			onOpenChange={(nextOpen, eventDetails) => {
 				if (!nextOpen && eventDetails.reason === 'escape-key' && panel.id !== 'main') {
 					eventDetails.cancel();
