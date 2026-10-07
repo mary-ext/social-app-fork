@@ -1,9 +1,6 @@
-import { createContext, type PointerEvent, type RefObject, useContext } from 'react';
+import { createContext, type RefObject, useContext } from 'react';
 
 import type { Timeout } from '@base-ui/utils/useTimeout';
-
-/** minimum gap-crossing time for hoverable popups, in milliseconds. */
-export const HOVERABLE_GRACE = 100;
 
 export type OpenChangeReason =
 	| 'escape-key'
@@ -48,17 +45,4 @@ export const useRootContext = (): RootContextValue => {
 		throw new Error(`tooltip parts require <Tooltip.Root>`);
 	}
 	return ctx;
-};
-
-/**
- * @param event pointer event to classify
- * @returns whether the pointer is a mouse or pen
- */
-export const isMouseLike = (event: PointerEvent): boolean => {
-	// some Linux Chromium builds report mouse input as "pen".
-	return event.pointerType === 'mouse' || event.pointerType === 'pen';
-};
-
-export const openStateAttributes = {
-	open: (open: boolean): Record<string, string> => (open ? { 'data-open': '' } : { 'data-closed': '' }),
 };

@@ -5,12 +5,8 @@ import type { HTMLAttributes } from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import {
-	HOVERABLE_GRACE,
-	isMouseLike,
-	openStateAttributes,
-	useRootContext,
-} from '#/components/primitives/tooltip/shared';
+import { HOVERABLE_GRACE, isMouseLike, openStateAttributes } from '../anchored-popup';
+import { useRootContext } from './shared';
 
 export type PopupState = {
 	open: boolean;
@@ -19,8 +15,7 @@ export type PopupState = {
 export type PopupProps = useRender.ComponentProps<'div', PopupState>;
 
 /**
- * style entry with `@starting-style` and exit with `[data-closed]`; unmounting waits for transitions.
- * `--transform-origin` points toward the trigger.
+ * renders tooltip content.
  *
  * @param props content and element props
  * @returns the popup element; a `<div>` by default

@@ -12,7 +12,8 @@ import {
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { HOVERABLE_GRACE, isMouseLike, useRootContext } from '#/components/primitives/tooltip/shared';
+import { addAnchorName, HOVERABLE_GRACE, isMouseLike, triggerStateAttributes } from '../anchored-popup';
+import { useRootContext } from './shared';
 
 const OPEN_DELAY = 600;
 
@@ -30,10 +31,6 @@ export type TriggerProps = Omit<useRender.ComponentProps<'button', TriggerState>
 	closeOnClick?: boolean;
 	/** prevents opening from this trigger. to disable the DOM element, pass `disabled` through `render`. */
 	disabled?: boolean;
-};
-
-const triggerStateAttributes = {
-	open: (open: boolean) => (open ? { 'data-popup-open': '' } : null),
 };
 
 /**
@@ -57,16 +54,12 @@ export const Trigger = ({
 
 	const lastMoveRef = useRef(0);
 
-	// custom triggers may replace inline styles; set the anchor directly before the positioner opens.
 	useLayoutEffect(() => {
 		const el = triggerRef.current;
 		if (!mounted || !el) {
 			return;
 		}
-		el.style.setProperty('anchor-name', anchorName);
-		return () => {
-			el.style.removeProperty('anchor-name');
-		};
+		return addAnchorName(el, anchorName);
 	}, [mounted, triggerRef, anchorName]);
 
 	// check the last movement when the timer fires to avoid restarting it on every move.

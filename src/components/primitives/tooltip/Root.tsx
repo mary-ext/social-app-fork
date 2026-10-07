@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useId, useRef } from 'react';
 
 import { addEventListener } from '@base-ui/utils/addEventListener';
 import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
@@ -9,12 +9,8 @@ import { useTimeout } from '@base-ui/utils/useTimeout';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import {
-	type OpenChangeDetails,
-	type OpenChangeReason,
-	RootContext,
-	type RootContextValue,
-} from '#/components/primitives/tooltip/shared';
+import { usePresence } from '../anchored-popup';
+import { type OpenChangeDetails, type OpenChangeReason, RootContext, type RootContextValue } from './shared';
 
 export type RootProps = {
 	children?: ReactNode;
@@ -55,12 +51,7 @@ export const Root = ({
 	});
 	const open = !disabled && openState;
 
-	// keep content mounted through exit animations.
-	const [present, setPresent] = useState(open);
-	if (open && !present) {
-		setPresent(true);
-	}
-	const mounted = open || present;
+	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
 
 	const anchorName = `--tooltip-${CSS.escape(useId())}`;
 	const blockedRef = useRef(false);
@@ -86,13 +77,6 @@ export const Root = ({
 		if (!canceled) {
 			setOpenState(next);
 		}
-	});
-
-	const onTransitionSettled = useNonReactiveCallback((settledOpen: boolean) => {
-		if (!settledOpen) {
-			setPresent(false);
-		}
-		onOpenChangeComplete?.(settledOpen);
 	});
 
 	useEffect(() => {

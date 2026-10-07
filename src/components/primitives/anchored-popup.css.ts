@@ -1,5 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
+// popup styles use @starting-style for entry and [data-closed] for exit; presence waits for transitions.
+
 // reset the browser's popover styles; the popup owns its appearance.
 export const positioner = style({
 	containerType: 'anchored',
@@ -13,7 +15,7 @@ export const positioner = style({
 	color: 'inherit',
 });
 
-// fallback queries can only style descendants, so the origin is set on the popup.
+// fallback queries only style descendants, so --transform-origin is set on the popup, toward the anchor.
 // browsers without anchored queries retain the preferred side's origin.
 {
 	// [side, origin, origin once flipped, fallback]
