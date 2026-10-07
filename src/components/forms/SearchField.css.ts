@@ -27,7 +27,8 @@ export const field = style({
 	width: '100%',
 	cursor: 'text',
 	selectors: {
-		[hover()]: { borderColor: vars.palette.contrast_100 },
+		// exclude focused inputs so hover specificity doesn't override focus styles.
+		[hover(':not(:has(input:focus))')]: { borderColor: vars.palette.contrast_100 },
 		'&:has(input:focus)': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 	},
 });
@@ -49,7 +50,7 @@ export const icon = style({
 	color: vars.palette.contrast_500,
 	pointerEvents: 'none',
 	selectors: {
-		[hoverWithin(field)]: { color: vars.palette.contrast_800 },
+		[hoverWithin(field, ':not(:has(input:focus))')]: { color: vars.palette.contrast_800 },
 		[`${field}:has(input:focus) &`]: { color: vars.palette.primary_500 },
 	},
 });
