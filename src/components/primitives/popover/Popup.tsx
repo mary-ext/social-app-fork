@@ -15,7 +15,7 @@ import {
 	getNextTabbable,
 	getTabbables,
 	resolveFocusTarget,
-} from './focus';
+} from '../focus';
 import { useRootContext } from './shared';
 
 export type PopupState = {
