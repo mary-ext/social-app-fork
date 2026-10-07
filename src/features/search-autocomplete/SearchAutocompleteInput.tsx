@@ -1,6 +1,5 @@
 import {
 	type KeyboardEvent,
-	type PointerEvent,
 	type ReactNode,
 	type RefObject,
 	useEffect,
@@ -29,8 +28,6 @@ import {
 	startOfWeek,
 } from '@mary/date-fns';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
 import { isInvalidHandle } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { type InputHighlight, useInputHighlights } from '#/lib/hooks/use-input-highlights';
@@ -46,6 +43,7 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { getClients, useSession } from '#/state/session';
 
 import * as SearchField from '#/components/forms/SearchField';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 
 import { m } from '#/paraglide/messages';
 import { getRouter } from '#/router';
@@ -88,39 +86,6 @@ const rememberGotoProfile = async (actor: ActorIdentifier) => {
 		}),
 	);
 	addSearchHistoryEntry({ kind: 'profile', did: profile.did });
-};
-
-/** accessible suggestion value for Base UI. */
-const itemToStringValue = (item: InteractiveItem): string => {
-	switch (item.kind) {
-		case 'date': {
-			return item.iso;
-		}
-		case 'goto': {
-			return item.name;
-		}
-		case 'link': {
-			return item.path;
-		}
-		case 'operator': {
-			return item.operator.name;
-		}
-		case 'operatorValue': {
-			return `${item.op}:${item.value}`;
-		}
-		case 'profile': {
-			return item.profile.handle;
-		}
-		case 'recentProfile': {
-			return item.profile.handle;
-		}
-		case 'recentQuery': {
-			return item.query;
-		}
-		case 'search': {
-			return item.query;
-		}
-	}
 };
 
 const clampToConstraints = (date: Date, constraints: ReturnType<typeof getDateConstraints> | null): Date => {
@@ -192,8 +157,6 @@ export type SearchAutocompleteParts = {
 	/** popup anchor. */
 	fieldRef: RefObject<HTMLDivElement | null>;
 	list: ReactNode;
-	/** attach to the list's popup to keep it open when focus moves inside. */
-	popupRef: RefObject<HTMLDivElement | null>;
 };
 
 /**
@@ -252,9 +215,7 @@ export function SearchAutocompleteInput({
 
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const fieldRef = useRef<HTMLDivElement | null>(null);
-	const popupRef = useRef<HTMLDivElement | null>(null);
-	const actionsRef = useRef<Autocomplete.Root.Actions | null>(null);
-	const highlightedRef = useRef<InteractiveItem | undefined>(undefined);
+	const actionsRef = useRef<Autocomplete.Actions | null>(null);
 	const highlightedIndexRef = useRef<number>(-1);
 	// target cell for keyboard rollover after a month change.
 	const pendingHighlightRef = useRef<number | null>(null);
@@ -480,7 +441,7 @@ export function SearchAutocompleteInput({
 		reset();
 	};
 
-	// handle calendar month navigation before Base UI's grid navigation.
+	// handle month changes and date constraints before grid navigation.
 	const onInputKeyDownCapture = (event: KeyboardEvent<HTMLInputElement>) => {
 		if (mode.kind !== 'date') {
 			return;
@@ -584,26 +545,9 @@ export function SearchAutocompleteInput({
 
 	const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
 		// highlighted items handle Enter; otherwise submit the raw query.
-		if (event.key === 'Enter' && !highlightedRef.current) {
+		if (event.key === 'Enter' && highlightedIndexRef.current === -1) {
 			event.preventDefault();
 			submit(query);
-		}
-	};
-
-	// touch and pen have no hover, so highlight the pressed row before item-press.
-	const onListPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-		if (event.pointerType === 'mouse') {
-			return;
-		}
-		const target = event.target;
-		const pressed = target instanceof Element ? target.closest('[role="option"], [role="gridcell"]') : null;
-		if (!pressed) {
-			return;
-		}
-		const cells = event.currentTarget.querySelectorAll('[role="option"], [role="gridcell"]');
-		const index = Array.prototype.indexOf.call(cells, pressed);
-		if (index >= 0) {
-			actionsRef.current?.setActiveIndex(index);
 		}
 	};
 
@@ -612,37 +556,14 @@ export function SearchAutocompleteInput({
 			actionsRef={actionsRef}
 			// preselect matches, but let the date picker manage its own highlight.
 			autoHighlight={result.kind !== 'date' && query.trim() !== '' ? 'always' : false}
-			autoUnmount
-			filter={null}
 			grid={result.kind === 'date'}
-			inline={inline}
 			items={items}
-			itemToStringValue={itemToStringValue}
-			onItemHighlighted={(item, details) => {
-				highlightedRef.current = item;
+			onItemHighlighted={(_item, details) => {
 				highlightedIndexRef.current = details.index;
 			}}
-			onOpenChange={(next, details) => {
-				// inline lists report item presses here, not in onValueChange.
-				// commit closes the popup only for navigation or submission.
-				if (!next && details.reason === 'item-press') {
-					const item = highlightedRef.current;
-					if (item) {
-						commit(item);
-					}
-					return;
-				}
-				// keep operator hints visible when the field is cleared.
-				if (!next && details.reason === 'input-clear') {
-					return;
-				}
-				setPopupOpen(next);
-			}}
-			onValueChange={(next, details) => {
-				// onOpenChange handles selection; don't replace the query with the item's label.
-				if (details.reason === 'item-press') {
-					return;
-				}
+			onItemPress={commit}
+			onOpenChange={setPopupOpen}
+			onValueChange={(next) => {
 				setQuery(next);
 				syncCaret();
 				// reopen the operator list when the cleared field was dismissed.
@@ -650,7 +571,7 @@ export function SearchAutocompleteInput({
 					setPopupOpen(true);
 				}
 			}}
-			open={open}
+			open={inline ? undefined : popupOpen}
 			value={query}
 		>
 			{children({
@@ -658,13 +579,6 @@ export function SearchAutocompleteInput({
 					<SearchField.Root ref={fieldRef} shape={shape} size={size}>
 						<SearchField.Icon />
 						<Autocomplete.Input
-							onBlur={(event) => {
-								const next = event.relatedTarget;
-								if (fieldRef.current?.contains(next) || popupRef.current?.contains(next)) {
-									return;
-								}
-								setPopupOpen(false);
-							}}
 							onClick={syncCaret}
 							onFocus={() => {
 								setPopupOpen(true);
@@ -682,7 +596,7 @@ export function SearchAutocompleteInput({
 				),
 				fieldRef,
 				list: (
-					<Autocomplete.List className={styles.list} onPointerDown={onListPointerDown}>
+					<Autocomplete.List className={styles.list}>
 						{result.kind === 'date' ? (
 							<CalendarBody days={result.days} onGoToMonth={goToMonth} visibleMonth={result.visibleMonth} />
 						) : (
@@ -692,7 +606,6 @@ export function SearchAutocompleteInput({
 						)}
 					</Autocomplete.List>
 				),
-				popupRef,
 			})}
 		</Autocomplete.Root>
 	);

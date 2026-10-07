@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
 import { useMediaQuery } from '#/lib/browser/media-query';
 
 import { focusSearch } from '#/state/events';
 
 import * as SearchField from '#/components/forms/SearchField';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 
 import { m } from '#/paraglide/messages';
 
@@ -77,21 +76,17 @@ function PopoverSearchAutocomplete({
 				shape={shape}
 				size={size}
 			>
-				{({ field, fieldRef, list, popupRef }) => (
+				{({ field, fieldRef, list }) => (
 					<>
 						{field}
-						<Autocomplete.Portal>
-							<Autocomplete.Positioner
-								align="end"
-								anchor={fieldRef}
-								className={styles.positioner}
-								sideOffset={6}
-							>
-								<Autocomplete.Popup className={styles.popup} ref={popupRef}>
-									{list}
-								</Autocomplete.Popup>
-							</Autocomplete.Positioner>
-						</Autocomplete.Portal>
+						<Autocomplete.Positioner
+							align="end"
+							anchor={fieldRef}
+							className={styles.positioner}
+							sideOffset={6}
+						>
+							<Autocomplete.Popup className={styles.popup}>{list}</Autocomplete.Popup>
+						</Autocomplete.Positioner>
 					</>
 				)}
 			</SearchAutocompleteInput>

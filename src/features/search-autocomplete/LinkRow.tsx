@@ -1,5 +1,4 @@
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';

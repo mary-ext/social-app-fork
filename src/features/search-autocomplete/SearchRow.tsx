@@ -1,7 +1,6 @@
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
 import { Trans } from '#/locale/Trans';
 
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_radius1_stroke2.svg';

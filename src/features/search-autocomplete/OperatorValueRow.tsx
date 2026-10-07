@@ -1,5 +1,4 @@
-import { Autocomplete } from '@base-ui/react/autocomplete';
-
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
