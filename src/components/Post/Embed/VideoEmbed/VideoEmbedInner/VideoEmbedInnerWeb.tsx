@@ -6,14 +6,10 @@ import type { Did } from '@atcute/lexicons';
 import { useIsFullscreen } from '#/lib/browser/fullscreen';
 import { IS_ANDROID_CHROMIUM } from '#/lib/browser/platform';
 import { videoThumbnailUrl } from '#/lib/bsky-cdn';
-import {
-	attachHlsPlayer,
-	isHlsPlayerSupported,
-	type PlayerHandle,
-	type PlayerStatus,
-	warmHlsPlaylist,
-} from '#/lib/media/hls/client/attach';
+import { attachHlsPlayer, type PlayerHandle, type PlayerStatus } from '#/lib/media/hls/client/attach';
+import { isHlsPlayerSupported } from '#/lib/media/hls/client/media-source';
 import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
+import { warmHlsPlaylist } from '#/lib/media/hls/client/worker-pool';
 import { BUFFER_AHEAD, type PlayerError, type Rendition } from '#/lib/media/hls/shared/protocol';
 
 import { setSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences/subtitles';

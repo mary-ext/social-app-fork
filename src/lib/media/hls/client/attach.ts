@@ -6,128 +6,26 @@ import {
 	type Rendition,
 	type WorkerToMain,
 } from '../shared/protocol';
-import {
-	addSubtitleCues,
-	announceSubtitles,
-	resetSubtitleTrack,
-	setSubtitleCueLine,
-	showSubtitleTrack,
-	type ManagedSubtitleTrack,
-	type SubtitleTrack,
-} from './subtitles';
-
-declare const ManagedMediaSource: typeof MediaSource | undefined;
-
-const pickMediaSource = () => {
-	if (typeof ManagedMediaSource !== 'undefined') {
-		return ManagedMediaSource;
-	}
-	if (typeof MediaSource !== 'undefined') {
-		return MediaSource;
-	}
-	return undefined;
-};
-
-const MediaSourceClass = pickMediaSource();
-
-/** @returns whether the browser supports the HLS player. */
-export const isHlsPlayerSupported = () => MediaSourceClass !== undefined;
-
-/**
- * checks whether Media Source Extensions accept a MIME type.
- *
- * @param mimeType MIME type to check
- * @returns whether the MIME type is supported
- */
-const canPlayMimeType = (mimeType: string) => MediaSourceClass?.isTypeSupported(mimeType) ?? false;
+import { canPlayMimeType, MediaSourceClass } from './media-source';
+import { bufferedRangeAt, isBufferedAt, isNearEnd, jumpGap } from './playhead';
+import { createMediaBuffer } from './source-buffer';
+import { createSubtitleController, type SubtitleTrack } from './subtitles';
+import { acquireWorker, allocateEpoch, releaseWorker } from './worker-pool';
 
 // #region policy
-
-const BACK_BUFFER = 10;
-// keep eviction beyond the worker's read-ahead boundary.
-const FORWARD_SLACK = 20;
-const MIN_EVICTION = 2;
-// retain short loops to avoid refetching on each replay.
-const LOOP_RETAIN_MAX = 60;
-
-const PANIC_BUFFER = { back: 2, forward: 8, minimum: 0 };
-const MAX_PANICS = 2;
 
 const MAX_RECOVERIES = 2;
 const RESTART_INTERVAL_MS = { seek: 150, recovery: 1000 };
 const PROGRESS_AFTER_RECOVERY = 1;
 
 const STALL_CHECK_MS = 2000;
-const STALL_MARGIN = 0.5;
 // let the worker's idle timeout trigger retries before restarting it.
 const STALL_SILENCE_MS = 6000;
 
-// timestamp drift and uneven track boundaries can leave gaps browsers won't cross.
-const MAX_GAP = 0.5;
-// seek inside the range to avoid boundary rounding.
-const GAP_LANDING = 0.05;
 const NUDGE = { step: 0.1, attempts: 3 };
 
 const TIME_REPORT_MS = 1000;
 const OPEN_TIMEOUT_MS = 15000;
-
-// #endregion
-
-// #region worker pool
-
-// retain one worker to avoid repeated demuxer startup.
-let spareWorker: Worker | undefined;
-
-// global epochs keep stale replies from matching a new player.
-let epochCounter = 0;
-
-const createWorker = () => {
-	return new Worker(new URL('../worker/remux-worker.ts', import.meta.url), {
-		type: 'module',
-		name: 'remux-worker',
-	});
-};
-
-const acquireWorker = () => {
-	const spare = spareWorker;
-	spareWorker = undefined;
-	return spare ?? createWorker();
-};
-
-const releaseWorker = (worker: Worker) => {
-	if (spareWorker) {
-		worker.terminate();
-		return;
-	}
-	spareWorker = worker;
-};
-
-// #endregion
-
-// #region warming
-
-// bound deduplication state while scrolling.
-const MAX_WARMED = 20;
-
-const warmed = new Set<string>();
-
-/**
- * prefetches the master and initial rendition playlists into the HTTP cache; ignores failures.
- *
- * @param playlist the master playlist url
- */
-export const warmHlsPlaylist = (playlist: string) => {
-	if (!MediaSourceClass || warmed.has(playlist)) {
-		return;
-	}
-	if (warmed.size >= MAX_WARMED) {
-		warmed.delete(warmed.values().next().value!);
-	}
-
-	warmed.add(playlist);
-	spareWorker ??= createWorker();
-	spareWorker.postMessage({ type: 'warm', playlist } satisfies MainToWorker, []);
-};
 
 // #endregion
 
@@ -153,15 +51,6 @@ export type PlayerHandle = {
 	/** releases the player and its resources. */
 	destroy: () => void;
 };
-
-type Operation =
-	| { type: 'append'; data: Uint8Array<ArrayBuffer> }
-	| { type: 'changeType'; mimeType: string }
-	| { type: 'duration'; duration: number }
-	| ({ type: 'evict' } & BufferWindow)
-	| { type: 'end' };
-
-type BufferWindow = { back: number; forward: number; minimum: number };
 
 /**
  * attaches an HLS playlist to a video element.
@@ -194,52 +83,23 @@ export const attachHlsPlayer = (
 	video.currentTime = startTime;
 
 	const worker = acquireWorker();
+	const attachedAt = performance.now();
 
 	const send = (message: MainToWorker) => worker.postMessage(message, []);
-	const nextEpoch = () => (epoch = ++epochCounter);
-	const attachedAt = performance.now();
-	const queue: Operation[] = [];
+	const nextEpoch = () => (epoch = allocateEpoch());
 
-	let sourceBuffer: SourceBuffer | undefined;
-	let sourceMimeType: string | undefined;
+	let epoch = 0;
+	let loaded = false;
+	let destroyed = false;
 
 	let renditions: Rendition[] = [];
 	let selectedRendition = -1;
 	let onRenditions: ((r: Rendition[], selected: number) => void) | undefined;
 
-	let onSubtitles: ((tracks: SubtitleTrack[]) => void) | undefined;
-	let subtitles: ManagedSubtitleTrack[] = [];
-	let selectedSubtitle: string | null = null;
-	let cueLine: number | undefined;
-
 	let onError: ((error: PlayerError) => void) | undefined;
-
-	let epoch = epochCounter;
-	let loaded = false;
-	let recoveries = 0;
-	let stopped = false;
-	let destroyed = false;
-
-	let requestedAhead = BUFFER_AHEAD.background;
-	let sated = false;
-	let forwardBuffer = BUFFER_AHEAD.background + FORWARD_SLACK;
 
 	let status: PlayerStatus = 'loading';
 	let onStatus: ((status: PlayerStatus) => void) | undefined;
-
-	let lastRestart = 0;
-	let deferredRestart: ReturnType<typeof setTimeout> | undefined;
-	let recoveredAt = 0;
-	let lastDelivery = performance.now();
-	let lastTimeReport = 0;
-
-	let attempted: { start: number; end: number } | undefined;
-	let panics = 0;
-
-	let stuckAt: number | undefined;
-	let nudges = 0;
-
-	let opened = false;
 
 	const setStatus = (next: PlayerStatus) => {
 		if (status === next) {
@@ -249,6 +109,35 @@ export const attachHlsPlayer = (
 		onStatus?.(next);
 	};
 
+	let stopped = false;
+	let recoveries = 0;
+	let lastRestart = 0;
+	let deferredRestart: ReturnType<typeof setTimeout> | undefined;
+	let recoveredAt = 0;
+	let lastDelivery = performance.now();
+	let stuckAt: number | undefined;
+	let nudges = 0;
+
+	const fail = (error: PlayerError) => {
+		if (destroyed) {
+			return;
+		}
+		stopped = true;
+		clearTimeout(deferredRestart);
+		loaded = false;
+		buffer.clear();
+		send({ type: 'stop', epoch: nextEpoch() });
+		setStatus('stopped');
+		console.error('[hls]', error.code, error.message);
+		onError?.(error);
+	};
+
+	const buffer = createMediaBuffer({ mediaSource, video, signal, fail });
+	const subtitles = createSubtitleController(video, (id) => send({ type: 'subtitle', id }));
+
+	// #region media source
+
+	let opened = false;
 	const openPromise = new Promise<void>((resolve) => {
 		mediaSource.addEventListener(
 			'sourceopen',
@@ -259,6 +148,9 @@ export const attachHlsPlayer = (
 			{ once: true, signal },
 		);
 	});
+
+	let requestedAhead = BUFFER_AHEAD.background;
+	let sated = false;
 
 	const applyBufferAhead = () => {
 		send({ type: 'buffer', ahead: sated ? 0 : requestedAhead });
@@ -282,221 +174,31 @@ export const attachHlsPlayer = (
 		{ signal },
 	);
 
-	const fail = (error: PlayerError) => {
-		if (destroyed) {
-			return;
-		}
-		stopped = true;
-		clearTimeout(deferredRestart);
-		loaded = false;
-		queue.length = 0;
-		send({ type: 'stop', epoch: nextEpoch() });
-		setStatus('stopped');
-		console.error('[hls]', error.code, error.message);
-		onError?.(error);
-	};
-
-	// #region source buffer
-
-	const bufferedRanges = () => {
-		const ranges: [number, number][] = [];
-		const buffered = sourceBuffer?.buffered;
-		for (let i = 0; i < (buffered?.length ?? 0); i++) {
-			ranges.push([buffered!.start(i), buffered!.end(i)]);
-		}
-		return ranges;
-	};
-
-	// compute one range at a time because each SourceBuffer operation changes `buffered`.
-	const nextEviction = ({ back, forward, minimum }: BufferWindow) => {
-		if (mediaSource.readyState !== 'open') {
-			return null;
-		}
-		const time = video.currentTime;
-		for (const [start, end] of bufferedRanges()) {
-			const behind = Math.min(end, time - back);
-			if (behind - start > minimum) {
-				return { start, end: behind };
-			}
-			const ahead = Math.max(start, time + forward);
-			if (end - ahead > minimum) {
-				return { start: ahead, end };
-			}
-		}
-		return null;
-	};
-
-	const pump = () => {
-		if (destroyed || !sourceBuffer || sourceBuffer.updating) {
-			return;
-		}
-		while (queue.length > 0) {
-			const operation = queue[0]!;
-			switch (operation.type) {
-				case 'append': {
-					try {
-						sourceBuffer.appendBuffer(operation.data);
-					} catch (error) {
-						if (!(error instanceof DOMException) || error.name !== 'QuotaExceededError') {
-							fail({ code: 'media', message: String(error), fatal: true });
-							break;
-						}
-
-						// keep the chunk and retry after emergency eviction.
-						if (panics >= MAX_PANICS || !nextEviction(PANIC_BUFFER)) {
-							fail({
-								code: 'media',
-								message: 'SourceBuffer is full with nothing evictable',
-								fatal: true,
-							});
-							break;
-						}
-
-						panics++;
-						queue.unshift({ type: 'evict', ...PANIC_BUFFER });
-						continue;
-					}
-
-					panics = 0;
-					queue.shift();
-					return;
-				}
-				case 'changeType': {
-					try {
-						sourceBuffer.changeType(operation.mimeType);
-					} catch (error) {
-						fail({ code: 'unsupported', message: String(error), fatal: true });
-						return;
-					}
-
-					break;
-				}
-				case 'duration': {
-					const buffered = sourceBuffer.buffered;
-					const end = buffered.length > 0 ? buffered.end(buffered.length - 1) : 0;
-					// MSE rejects durations shorter than buffered media.
-					if (mediaSource.readyState === 'open' && operation.duration >= end) {
-						try {
-							mediaSource.duration = operation.duration;
-						} catch (error) {
-							console.warn('[hls] could not set duration', error);
-						}
-					}
-
-					break;
-				}
-				case 'evict': {
-					const range = nextEviction(operation);
-					// MSE can keep a range that does not span a complete coded-frame group.
-					if (!range || (range.start === attempted?.start && range.end === attempted.end)) {
-						attempted = undefined;
-						break;
-					}
-
-					attempted = range;
-					try {
-						sourceBuffer.remove(range.start, range.end);
-					} catch (error) {
-						fail({ code: 'media', message: String(error), fatal: true });
-						return;
-					}
-
-					return;
-				}
-				case 'end': {
-					if (mediaSource.readyState === 'open') {
-						try {
-							mediaSource.endOfStream();
-						} catch (error) {
-							fail({ code: 'media', message: String(error), fatal: true });
-							return;
-						}
-					}
-
-					break;
-				}
-			}
-			queue.shift();
-		}
-	};
-
-	const evict = () => {
-		if (queue.some((operation) => operation.type === 'evict')) {
-			return;
-		}
-		if (video.loop && video.duration <= LOOP_RETAIN_MAX) {
-			return;
-		}
-
-		queue.push({ type: 'evict', back: BACK_BUFFER, forward: forwardBuffer, minimum: MIN_EVICTION });
-		pump();
-	};
-
 	// #endregion
 
 	// #region recovery
-
-	const bufferedRangeAt = (time: number) => {
-		return bufferedRanges().find(([start, end]) => time >= start - MAX_GAP && time <= end);
-	};
-
-	const jumpGap = () => {
-		if (video.seeking) {
-			return false;
-		}
-
-		// a stuck playhead can sit a few frames short of the end of its range.
-		const time = video.currentTime;
-		const ranges = bufferedRanges();
-		const current = ranges.find(([start, end]) => time >= start && time <= end);
-		if (current && current[1] - time > MAX_GAP) {
-			return false;
-		}
-
-		const edge = current?.[1] ?? time;
-		const next = ranges.find(([start]) => start > edge && start - edge <= MAX_GAP);
-		if (!next) {
-			return false;
-		}
-
-		video.currentTime = Math.min(next[0] + GAP_LANDING, next[1]);
-		return true;
-	};
-
-	const nearEnd = (time: number) => video.duration - time < STALL_MARGIN;
-
-	const isBufferedAt = (time: number) => {
-		const range = bufferedRangeAt(time);
-		if (!range) {
-			return false;
-		}
-
-		// short clips and final frames may have less than a full stall margin buffered.
-		return range[1] - time > STALL_MARGIN || nearEnd(range[1]);
-	};
 
 	const restartAt = (time: number, interval: number) => {
 		const sinceRestart = performance.now() - lastRestart;
 		if (sinceRestart < interval) {
 			clearTimeout(deferredRestart);
 			deferredRestart = setTimeout(() => restartAt(time, interval), interval - sinceRestart);
-			return false;
+			return;
 		}
 
 		lastRestart = performance.now();
 		// give the restarted request a new silence budget.
 		lastDelivery = performance.now();
 		recoveredAt = time;
-		queue.length = 0;
+		buffer.clear();
 
 		if (!loaded) {
 			send({ type: 'load', epoch: nextEpoch(), playlist });
-			return true;
+			return;
 		}
 
-		const from = bufferedRangeAt(time)?.[1] ?? time;
+		const from = bufferedRangeAt(buffer.ranges(), time)?.[1] ?? time;
 		send({ type: 'seek', epoch: nextEpoch(), time, from });
-		return true;
 	};
 
 	const recover = (time: number, exhausted: PlayerError) => {
@@ -526,12 +228,13 @@ export const attachHlsPlayer = (
 			return;
 		}
 
-		if (jumpGap()) {
+		const ranges = buffer.ranges();
+		if (jumpGap(video, ranges)) {
 			return;
 		}
 
 		const time = video.currentTime;
-		if (isBufferedAt(time) || nearEnd(time)) {
+		if (isBufferedAt(video.duration, ranges, time) || isNearEnd(video.duration, time)) {
 			return;
 		}
 
@@ -555,8 +258,8 @@ export const attachHlsPlayer = (
 			!video.paused &&
 			!video.seeking &&
 			!video.ended &&
-			!nearEnd(time) &&
-			isBufferedAt(time);
+			!isNearEnd(video.duration, time) &&
+			isBufferedAt(video.duration, buffer.ranges(), time);
 
 		stuckAt = time;
 		if (!stuck) {
@@ -592,20 +295,18 @@ export const attachHlsPlayer = (
 
 	// #endregion
 
+	// #region worker messages
+
 	const selectRendition = (index: number, time: number) => {
 		selectedRendition = index;
-		queue.length = 0;
+		buffer.clear();
 		send({ type: 'select', epoch: nextEpoch(), index, time });
 	};
 
 	const handleMessage = async (message: WorkerToMain) => {
 		// subtitle streams use track IDs instead of video epochs.
 		if (message.type === 'cues') {
-			const target = subtitles.find((track) => track.id === message.id);
-			if (target) {
-				addSubtitleCues(target.track, message.cues, cueLine);
-			}
-
+			subtitles.addCues(message.id, message.cues);
 			return;
 		}
 		if (message.epoch !== epoch) {
@@ -625,15 +326,7 @@ export const attachHlsPlayer = (
 				}
 
 				loaded = true;
-
-				if (message.subtitles.length > 0 || subtitles.length > 0) {
-					subtitles = announceSubtitles(video, message.subtitles);
-					onSubtitles?.(subtitles);
-					if (selectedSubtitle !== null) {
-						showSubtitleTrack(subtitles, selectedSubtitle);
-						send({ type: 'subtitle', id: selectedSubtitle });
-					}
-				}
+				subtitles.announce(message.subtitles);
 
 				await openPromise;
 
@@ -648,9 +341,7 @@ export const attachHlsPlayer = (
 				break;
 			}
 			case 'duration': {
-				queue.push({ type: 'duration', duration: message.duration });
-				pump();
-
+				buffer.setDuration(message.duration);
 				break;
 			}
 			case 'init': {
@@ -660,45 +351,14 @@ export const attachHlsPlayer = (
 				if (message.epoch !== epoch || destroyed) {
 					break;
 				}
-				if (message.mimeType === sourceMimeType) {
-					break;
-				}
 
-				if (!sourceBuffer) {
-					if (!canPlayMimeType(message.mimeType)) {
-						fail({
-							code: 'unsupported',
-							message: `MediaSource cannot play ${message.mimeType}`,
-							fatal: true,
-						});
-
-						break;
-					}
-
-					sourceMimeType = message.mimeType;
-					sourceBuffer = mediaSource.addSourceBuffer(message.mimeType);
-					sourceBuffer.addEventListener('updateend', pump, { signal });
-					sourceBuffer.addEventListener(
-						'error',
-						() => {
-							fail({ code: 'media', message: 'SourceBuffer error', fatal: true });
-						},
-						{ signal },
-					);
-				} else {
-					sourceMimeType = message.mimeType;
-					queue.push({ type: 'changeType', mimeType: message.mimeType });
-				}
-
-				pump();
+				buffer.configure(message.mimeType);
 				break;
 			}
 			case 'chunk': {
 				lastDelivery = performance.now();
 				setStatus('ok');
-				queue.push({ type: 'append', data: message.data });
-				pump();
-
+				buffer.append(message.data);
 				break;
 			}
 			case 'retrying': {
@@ -713,13 +373,10 @@ export const attachHlsPlayer = (
 			}
 			case 'progress': {
 				lastDelivery = performance.now();
-
 				break;
 			}
 			case 'done': {
-				queue.push({ type: 'end' });
-				pump();
-
+				buffer.end();
 				break;
 			}
 			case 'error': {
@@ -749,6 +406,11 @@ export const attachHlsPlayer = (
 	worker.addEventListener('error', onWorkerBroken('failed'), { signal });
 	worker.addEventListener('messageerror', onWorkerBroken('sent an undeserializable message'), { signal });
 
+	// #endregion
+
+	// #region video events
+
+	let lastTimeReport = 0;
 	const onTime = () => {
 		const now = performance.now();
 		if (now - lastTimeReport < TIME_REPORT_MS) {
@@ -764,7 +426,7 @@ export const attachHlsPlayer = (
 			nudges = 0;
 		}
 
-		evict();
+		buffer.evict(requestedAhead);
 	};
 	video.addEventListener('timeupdate', onTime, { signal });
 	video.addEventListener('waiting', onWaiting, { signal });
@@ -774,7 +436,7 @@ export const attachHlsPlayer = (
 		recoveries = 0;
 		stopped = false;
 
-		if (isBufferedAt(video.currentTime)) {
+		if (isBufferedAt(video.duration, buffer.ranges(), video.currentTime)) {
 			setStatus('ok');
 			return;
 		}
@@ -784,79 +446,63 @@ export const attachHlsPlayer = (
 	};
 	video.addEventListener('seeking', onSeeking, { signal });
 
+	// #endregion
+
 	send({ type: 'load', epoch: nextEpoch(), playlist });
 	// overwrite the previous player's read-ahead limit.
 	applyBufferAhead();
 
 	return {
-		onRenditions: (fn) => {
+		onRenditions(fn) {
 			onRenditions = fn;
+
 			if (renditions.length > 0) {
 				fn(renditions, selectedRendition);
 			}
 		},
-		onSubtitles: (fn) => {
-			onSubtitles = fn;
-			if (subtitles.length > 0) {
-				fn(subtitles);
-			}
+		onSubtitles(fn) {
+			subtitles.onTracks(fn);
 		},
-		selectSubtitle: (id) => {
-			if (id === selectedSubtitle) {
-				return;
-			}
-
-			selectedSubtitle = id;
-			// subtitle streams restart from their first segment.
-			const target = subtitles.find((track) => track.id === id);
-			if (target) {
-				resetSubtitleTrack(target.track);
-			}
-			showSubtitleTrack(subtitles, id);
-
-			send({ type: 'subtitle', id });
+		selectSubtitle(id) {
+			subtitles.select(id);
 		},
-		setCueLine: (line) => {
-			if (line === cueLine) {
-				return;
-			}
-
-			cueLine = line;
-			for (const { track } of subtitles) {
-				setSubtitleCueLine(track, line);
-			}
+		setCueLine(line) {
+			subtitles.setCueLine(line);
 		},
-		onError: (fn) => {
+		onError(fn) {
 			onError = fn;
 		},
-		onStatus: (fn) => {
+		onStatus(fn) {
 			onStatus = fn;
+
 			fn(status);
 		},
-		select: (index) => {
+		select(index) {
 			selectRendition(index, video.currentTime);
 		},
-		setBufferAhead: (ahead) => {
+		setBufferAhead(ahead) {
 			requestedAhead = ahead;
-			forwardBuffer = ahead + FORWARD_SLACK;
+
 			applyBufferAhead();
 		},
-		destroy: () => {
+		destroy() {
 			if (destroyed) {
 				return;
 			}
+
 			// invalidate in-flight work before releasing its resources.
 			destroyed = true;
 			stopped = true;
 			nextEpoch();
-			queue.length = 0;
+			buffer.clear();
 			clearTimeout(deferredRestart);
 			clearInterval(watchdog);
-			onRenditions = onSubtitles = onError = onStatus = undefined;
+
+			onRenditions = onError = onStatus = undefined;
+
 			teardown.abort();
-			for (const track of subtitles) {
-				track.track.mode = 'disabled';
-			}
+			subtitles.destroy();
+
 			// do not reuse a worker that reported a fatal error.
 			if (status === 'stopped') {
 				worker.terminate();
@@ -864,7 +510,9 @@ export const attachHlsPlayer = (
 				send({ type: 'stop', epoch });
 				releaseWorker(worker);
 			}
+
 			URL.revokeObjectURL(objectUrl);
+
 			// revoking the URL does not detach an active MediaSource.
 			video.removeAttribute('src');
 			video.load();
