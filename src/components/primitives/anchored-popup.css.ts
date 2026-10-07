@@ -15,6 +15,16 @@ export const positioner = style({
 	color: 'inherit',
 });
 
+export const shrinkingPositioner = style({
+	display: 'flex',
+	flexDirection: 'column',
+});
+
+// flex items otherwise retain their content's minimum height.
+globalStyle(`${shrinkingPositioner} > *`, {
+	minHeight: 0,
+});
+
 // fallback queries only style descendants, so --transform-origin is set on the popup, toward the anchor.
 // browsers without anchored queries retain the preferred side's origin.
 {

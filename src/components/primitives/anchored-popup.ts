@@ -1,3 +1,5 @@
+import './position-try.css';
+
 import {
 	type CSSProperties,
 	type ReactNode,
@@ -7,6 +9,7 @@ import {
 	useState,
 } from 'react';
 
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { createPortal } from 'react-dom';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
@@ -103,6 +106,25 @@ export const getAnchoredStyle = ({
 	}
 
 	return style;
+};
+
+/**
+ * anchors a popup above or below, flipping or shrinking to fit the viewport. use with `shrinkingPositioner`
+ * and scrollable popup content.
+ *
+ * @param options anchor name and placement
+ * @returns styles for the positioning element
+ */
+export const getShrinkingAnchoredStyle = (
+	options: Parameters<typeof getAnchoredStyle>[0] & { side: 'bottom' | 'top' },
+): CSSProperties => {
+	const margins = options.sideOffset + (resolveCollisionPadding(options.collisionPadding, options.side) ?? 0);
+	return {
+		...getAnchoredStyle(options),
+		positionTryFallbacks:
+			'flip-block, --anchored-shrink-floored, --anchored-shrink-floored flip-block, --anchored-shrink',
+		...assignInlineVars({ '--anchored-block-margins': `${margins}px` }),
+	};
 };
 
 /**

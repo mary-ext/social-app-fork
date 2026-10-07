@@ -1,0 +1,12 @@
+/*
+ * prefer a side with at least 160px before allowing a smaller popup.
+ * --anchored-block-margins accounts for the anchor gap and viewport padding.
+ */
+@position-try --anchored-shrink-floored {
+	min-height: 160px;
+	max-height: calc(100% - var(--anchored-block-margins));
+}
+
+@position-try --anchored-shrink {
+	max-height: calc(100% - var(--anchored-block-margins));
+}

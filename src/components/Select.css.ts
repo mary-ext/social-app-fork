@@ -53,10 +53,7 @@ export const icon = style(
 
 export const positioner = recipe(
 	{
-		base: {
-			display: 'flex',
-			flexDirection: 'column',
-		},
+		base: {},
 		defaultVariants: {
 			matchTriggerWidth: true,
 		},
@@ -90,7 +87,6 @@ export const popup = style(
 		boxShadow: vars.shadow.md,
 		backgroundColor: vars.palette.contrast_0,
 		padding: space.xs,
-		minHeight: 0,
 		overflowY: 'auto',
 		scrollPaddingBlock: space.xs,
 		selectors: {

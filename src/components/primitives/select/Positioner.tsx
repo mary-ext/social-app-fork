@@ -1,16 +1,13 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import './position-try.css';
-
 import { type CSSProperties, type Ref, useLayoutEffect, useState } from 'react';
 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import {
 	type Align,
-	getAnchoredStyle,
+	getShrinkingAnchoredStyle,
 	openStateAttributes,
 	useInertWhileClosed,
 	useTopLayerPresence,
@@ -138,12 +135,13 @@ export const Positioner = ({
 			maxHeight: `calc(100% - ${pad * 2}px)`,
 		};
 	} else {
-		style = {
-			...getAnchoredStyle({ anchorName, side: 'bottom', align, sideOffset, collisionPadding: pad }),
-			positionTryFallbacks:
-				'flip-block, --select-shrink-floored, --select-shrink-floored flip-block, --select-shrink',
-			...assignInlineVars({ '--select-block-margins': `${sideOffset + pad}px` }),
-		};
+		style = getShrinkingAnchoredStyle({
+			anchorName,
+			side: 'bottom',
+			align,
+			sideOffset,
+			collisionPadding: pad,
+		});
 	}
 
 	return useRender({
@@ -155,7 +153,7 @@ export const Positioner = ({
 			{
 				popover: 'manual',
 				role: 'presentation',
-				className: styles.positioner,
+				className: `${styles.positioner} ${styles.shrinkingPositioner}`,
 				style,
 			},
 			elementProps,
