@@ -47,6 +47,18 @@ export class ByteWriter {
 		this.#view.setUint32(at, value);
 	}
 
+	/**
+	 * writes a signed 32-bit big-endian integer.
+	 *
+	 * @param value integer to write
+	 * @throws {RangeError} when capacity is exceeded
+	 */
+	i32(value: number) {
+		const at = this.#claim(4);
+
+		this.#view.setInt32(at, value);
+	}
+
 	u64(value: number) {
 		const at = this.#claim(8);
 

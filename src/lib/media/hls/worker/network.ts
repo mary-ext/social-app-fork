@@ -21,6 +21,35 @@ const POLICY = {
 
 export type Fetch = (kind: ResourceKind, url: string, signal: AbortSignal) => Promise<Resource>;
 
+export type Stream = (url: string, signal: AbortSignal) => ReadableStream<Uint8Array>;
+
+const fetchChunks = <T>(
+	kind: ResourceKind,
+	url: string,
+	{ hooks, signal }: { hooks: FetchHooks; signal: AbortSignal },
+	read: () => { onChunk: (chunk: Uint8Array) => void; done: (response: Response) => T },
+) => {
+	const policy = POLICY[kind];
+
+	return fetchWithRetry(
+		policy.cdn ? toVideoCdnUrl(url) : url,
+		{ attempts: policy.attempts, onRetry: policy.reports ? hooks.onRetry : undefined, signal },
+		async (response, received) => {
+			const { onChunk, done } = read();
+
+			for await (const chunk of response.body ?? [await response.bytes()]) {
+				received();
+				if (policy.reports && !signal.aborted) {
+					hooks.onBytes(chunk.byteLength);
+				}
+				onChunk(chunk);
+			}
+
+			return done(response);
+		},
+	);
+};
+
 /**
  * creates an HLS resource fetcher.
  *
@@ -28,38 +57,61 @@ export type Fetch = (kind: ResourceKind, url: string, signal: AbortSignal) => Pr
  * @returns resource fetcher
  */
 export const createFetcher = (hooks: FetchHooks): Fetch => {
-	return async (kind, url, signal) => {
-		const policy = POLICY[kind];
+	return (kind, url, signal) => {
+		return fetchChunks(kind, url, { hooks, signal }, () => {
+			const chunks: Uint8Array[] = [];
 
-		return await fetchWithRetry(
-			policy.cdn ? toVideoCdnUrl(url) : url,
-			{
-				attempts: policy.attempts,
-				onRetry: policy.reports ? hooks.onRetry : undefined,
-				signal,
+			return {
+				onChunk: (chunk) => chunks.push(chunk),
+				done: (response): Resource => ({ bytes: concat(chunks), url: response.url }),
+			};
+		});
+	};
+};
+
+/**
+ * creates a media segment streamer that starts requests immediately and buffers until read. retries resume
+ * without repeating delivered bytes.
+ *
+ * @param hooks retry and progress hooks
+ * @returns segment streamer
+ */
+export const createStreamer = (hooks: FetchHooks): Stream => {
+	return (url, signal) => {
+		const cancel = new AbortController();
+		const combined = AbortSignal.any([signal, cancel.signal]);
+		let delivered = 0;
+
+		return new ReadableStream<Uint8Array>({
+			start: (controller) => {
+				fetchChunks('media', url, { hooks, signal: combined }, () => {
+					let skip = delivered;
+
+					return {
+						onChunk: (chunk) => {
+							if (skip >= chunk.byteLength) {
+								skip -= chunk.byteLength;
+								return;
+							}
+
+							const fresh = chunk.subarray(skip);
+
+							skip = 0;
+							delivered += fresh.byteLength;
+							controller.enqueue(fresh);
+						},
+						done: () => {},
+					};
+				}).then(
+					() => {
+						if (!cancel.signal.aborted) {
+							controller.close();
+						}
+					},
+					(error: unknown) => controller.error(error),
+				);
 			},
-			async (response, received) => {
-				if (!response.body) {
-					const bytes = await response.bytes();
-
-					if (policy.reports) {
-						hooks.onBytes(bytes.byteLength);
-					}
-
-					return { bytes, url: response.url };
-				}
-				const chunks: Uint8Array[] = [];
-
-				for await (const chunk of response.body) {
-					received();
-					chunks.push(chunk);
-					if (policy.reports && !signal.aborted) {
-						hooks.onBytes(chunk.byteLength);
-					}
-				}
-
-				return { bytes: concat(chunks), url: response.url };
-			},
-		);
+			cancel: () => cancel.abort(),
+		});
 	};
 };

@@ -5,7 +5,7 @@ import { mapDefined } from '@mary/array-fns';
 import type { Rendition } from '../shared/protocol';
 import type { Resource } from './network';
 
-export type VideoVariant = Rendition & { url: string; width: number };
+export type VideoVariant = Rendition & { hasAudio: boolean; url: string; width: number };
 
 export type MediaSegment = {
 	duration: number;
@@ -69,7 +69,8 @@ export const parseVideoMaster = (resource: Resource): VideoVariant[] => {
 
 		const attributes = parseHlsAttributes(line);
 		const codecs = attributes.get('CODECS') ?? '';
-		const supported = codecs.split(',').every((codec) => codec.startsWith('avc1.') || codec === 'mp4a.40.2');
+		const codecList = codecs.split(',');
+		const supported = codecList.every((codec) => codec.startsWith('avc1.') || codec === 'mp4a.40.2');
 		const resolution = attributes.get('RESOLUTION')?.split('x').map(Number);
 		const uri = uriAfter(lines, lineIndex);
 
@@ -80,6 +81,7 @@ export const parseVideoMaster = (resource: Resource): VideoVariant[] => {
 		variants.push({
 			index: variants.length,
 			bitrate: Number(attributes.get('BANDWIDTH')) || null,
+			hasAudio: codecList.includes('mp4a.40.2'),
 			height: resolution[1]!,
 			mimeType: `video/mp4; codecs="${codecs}"`,
 			url: new URL(uri, resource.url).href,

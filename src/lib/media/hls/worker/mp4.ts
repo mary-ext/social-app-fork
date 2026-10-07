@@ -321,7 +321,8 @@ const writeTrackFragment = (
 	closeBox(writer, tfdt);
 
 	const flags = 0x000001 | 0x000100 | 0x000200 | (video ? 0x000400 | 0x000800 : 0);
-	const trun = openFullBox(writer, 'trun', 0, flags);
+	// version 1 permits negative composition offsets.
+	const trun = openFullBox(writer, 'trun', video ? 1 : 0, flags);
 
 	writer.u32(track.samples.length);
 	const dataOffsetAt = writer.length;
@@ -332,7 +333,7 @@ const writeTrackFragment = (
 		writer.u32(sample.data.byteLength);
 		if (video) {
 			writer.u32(sample.key ? 0x02000000 : 0x01010000);
-			writer.u32(sample.pts - sample.dts);
+			writer.i32(sample.pts - sample.dts);
 		}
 	}
 	closeBox(writer, trun);

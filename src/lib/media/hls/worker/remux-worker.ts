@@ -1,8 +1,9 @@
 import { BUFFER_AHEAD, type MainToWorker, type PlayerError, type WorkerToMain } from '../shared/protocol';
 import { HttpError, isRetryable, StalledError } from './fetch-policy';
+import { createFragmenter } from './fragmenter';
 import { createMp4InitSegment, createMp4MediaSegment, type MuxSample } from './mp4';
-import { demuxMpegTs, MPEG_TS_TIMESCALE, type DemuxedMpegTs } from './mpeg-ts';
-import { createFetcher, type Fetch, type Resource } from './network';
+import { createMpegTsDemuxer, MPEG_TS_TIMESCALE } from './mpeg-ts';
+import { createFetcher, createStreamer, type Fetch, type Stream } from './network';
 import {
 	parseSubtitleMaster,
 	parseVideoMaster,
@@ -18,6 +19,7 @@ import { streamSubtitleCues } from './subtitles';
 const PROGRESS_INTERVAL_MS = 1000;
 // avoid refetching segments whose buffered end falls short of the playlist duration.
 const SEGMENT_LOOKUP_TOLERANCE = 0.25;
+const FRAGMENT_DURATION = MPEG_TS_TIMESCALE / 2;
 
 // use the worker-global interface instead of Window.
 declare const self: {
@@ -38,8 +40,8 @@ const postChunk = (data: Uint8Array<ArrayBuffer>, myEpoch: number) => {
 let variants: VideoVariant[] = [];
 let subtitleRenditions: SubtitleRendition[] = [];
 const playlists = new Map<string, MediaPlaylist>();
-// renditions share a transport timeline; keep its offset across seeks and quality switches.
-let timestampBase: number | undefined;
+// renditions share a transport timeline; keep its offsets across seeks and quality switches.
+let timeline: { base: number; decodeBase: number } | undefined;
 
 let epoch = 0;
 let currentIndex = 0;
@@ -47,7 +49,7 @@ let currentTime = 0;
 let bufferAhead = BUFFER_AHEAD.background;
 let durationReported = false;
 
-let fetchResource: Fetch | undefined;
+let network: { fetch: Fetch; stream: Stream } | undefined;
 let activeRequest: AbortController | undefined;
 let parked: (() => void)[] = [];
 
@@ -58,7 +60,7 @@ let subtitleRequest: AbortController | undefined;
 const resetSession = () => {
 	durationReported = false;
 	playlists.clear();
-	timestampBase = undefined;
+	timeline = undefined;
 	subtitleRequest?.abort();
 	subtitleRequest = undefined;
 };
@@ -72,55 +74,12 @@ const wakeParked = () => {
 	}
 };
 
-const samplesFor = (content: DemuxedMpegTs, base: number) => {
-	// `tfdt` decode times and v0 `trun` composition offsets are unsigned. PTS-based alignment
-	// can make B-frame DTS negative, so clamp timestamps while preserving decode order.
-	let floor = 0;
-	const timed = content.video.map((sample) => {
-		const dts = Math.max(sample.dts - base, floor);
-		floor = dts + 1;
-		return { sample, dts, pts: Math.max(sample.pts - base, dts) };
-	});
-
-	const video: MuxSample[] = timed.map(({ sample, dts, pts }, index) => {
-		const next = timed[index + 1];
-		const previous = timed[index - 1];
-
-		let duration = MPEG_TS_TIMESCALE / 30;
-		if (next) {
-			duration = next.dts - dts;
-		} else if (previous) {
-			duration = dts - previous.dts;
-		}
-
-		return { data: sample.data, dts, duration, key: sample.key, pts };
-	});
-	const config = content.audioConfig;
-	const audio: MuxSample[] = [];
-	if (config) {
-		for (const [index, sample] of content.audio.entries()) {
-			const dts = Math.round(((sample.pts - base) * config.sampleRate) / MPEG_TS_TIMESCALE);
-			if (dts < 0) {
-				continue;
-			}
-
-			const next = content.audio[index + 1];
-			const duration = next
-				? Math.round(((next.pts - sample.pts) * config.sampleRate) / MPEG_TS_TIMESCALE)
-				: 1024;
-			audio.push({ data: sample.data, dts, duration, key: true, pts: dts });
-		}
-	}
-
-	return { audio, video };
-};
-
 const selectSubtitles = (id: string | null) => {
 	subtitleRequest?.abort();
 	subtitleRequest = undefined;
 
 	const rendition = subtitleRenditions.find((candidate) => candidate.url === id);
-	const fetch = fetchResource;
+	const fetch = network?.fetch;
 	if (!rendition || !fetch) {
 		return;
 	}
@@ -173,10 +132,10 @@ const streamFrom = async ({
 	if (!variant) {
 		throw new Error(`no rendition at index ${index}`);
 	}
-	const fetch = fetchResource;
-	if (!fetch) {
+	if (!network) {
 		throw new Error('rendition selected before the master playlist loaded');
 	}
+	const { fetch, stream } = network;
 
 	const controller = new AbortController();
 
@@ -201,21 +160,15 @@ const streamFrom = async ({
 
 	const segments = playlist.segments.slice(firstIndex);
 	const withinReadAhead = (segment: MediaSegment) => segment.start <= currentTime + bufferAhead;
-	const request = (segment: MediaSegment) => {
-		const promise = fetch('media', segment.url, controller.signal);
-		// a restart or earlier failure may leave this prefetch unawaited.
-		promise.catch(() => {});
-		return promise;
-	};
+	const request = (segment: MediaSegment) => stream(segment.url, controller.signal);
 	// overlap request latency with the current transfer.
 	const prefetch = (position: number) => {
 		const next = segments[position + 1];
 		return next && withinReadAhead(next) ? request(next) : undefined;
 	};
-
 	let initialized = false;
 	let sequence = 1;
-	let prefetched: Promise<Resource> | undefined;
+	let prefetched: ReadableStream<Uint8Array> | undefined;
 	for (const [position, segment] of segments.entries()) {
 		let pending = prefetched;
 		if (!pending) {
@@ -231,42 +184,80 @@ const streamFrom = async ({
 
 		// avoid bandwidth contention during startup and recovery.
 		prefetched = position > 0 ? prefetch(position) : undefined;
-		const resource = await pending;
-		if (epoch !== myEpoch) {
-			return;
-		}
-		if (position === 0) {
-			prefetched = prefetch(position);
-		}
 
-		const content = demuxMpegTs(resource.bytes);
-		if (content.video.length === 0) {
-			throw new Error('MPEG-TS segment contains no video');
-		}
+		const demuxer = createMpegTsDemuxer();
+		const fragmenter = createFragmenter();
+		// fragment only when playback is waiting; prefetched segments can be appended whole.
+		const progressive = position === 0 || segment.start <= currentTime;
 
-		// anchor the timeline to the earliest PTS, not decode order.
-		timestampBase ??=
-			Math.min(...content.video.map((sample) => sample.pts)) - Math.round(segment.start * MPEG_TS_TIMESCALE);
-		const samples = samplesFor(content, timestampBase);
-
-		if (!initialized) {
-			const avc = content.avc;
+		const initialize = () => {
+			const avc = demuxer.avc;
 			if (!avc) {
 				throw new Error('H.264 segment contains no decoder configuration');
 			}
 
+			const audioConfig = demuxer.audioConfig;
 			const codecs = [avc.codec];
 
 			initialized = true;
 
-			if (content.audioConfig) {
-				codecs.push(`mp4a.40.${content.audioConfig.objectType}`);
+			if (audioConfig) {
+				codecs.push(`mp4a.40.${audioConfig.objectType}`);
 			}
 
 			post({ type: 'init', epoch: myEpoch, mimeType: `video/mp4; codecs="${codecs.join(',')}"` });
-			postChunk(createMp4InitSegment(variant, avc, content.audioConfig), myEpoch);
+			postChunk(createMp4InitSegment(variant, avc, audioConfig), myEpoch);
+		};
+		// wait for declared audio so the init segment includes its track.
+		const configured = () =>
+			demuxer.avc !== undefined && (!variant.hasAudio || demuxer.audioConfig !== undefined);
+		const timing = () => {
+			if (!timeline) {
+				const start = Math.round(segment.start * MPEG_TS_TIMESCALE);
+				// anchor both timelines at the segment start without making B-frame DTS negative.
+				timeline = {
+					base: fragmenter.earliestPts - start,
+					decodeBase: fragmenter.earliestDts - start,
+				};
+			}
+			return { ...timeline, sampleRate: demuxer.audioConfig?.sampleRate };
+		};
+		const emit = ({ audio, video }: { audio: MuxSample[]; video: MuxSample[] }) => {
+			if (video.length > 0) {
+				postChunk(createMp4MediaSegment(sequence++, video, audio), myEpoch);
+			}
+		};
+
+		for await (const chunk of pending) {
+			if (epoch !== myEpoch) {
+				return;
+			}
+
+			fragmenter.add(demuxer.push(chunk));
+			if (!progressive || fragmenter.queuedDuration < FRAGMENT_DURATION) {
+				continue;
+			}
+			if (!initialized) {
+				if (!configured()) {
+					continue;
+				}
+				initialize();
+			}
+			emit(fragmenter.take(timing()));
 		}
-		postChunk(createMp4MediaSegment(sequence++, samples.video, samples.audio), myEpoch);
+		if (epoch !== myEpoch) {
+			return;
+		}
+
+		fragmenter.add(demuxer.end());
+		if (!initialized) {
+			initialize();
+		}
+		emit(fragmenter.drain(timing()));
+
+		if (position === 0) {
+			prefetched = prefetch(position);
+		}
 	}
 	post({ type: 'done', epoch: myEpoch });
 };
@@ -275,7 +266,7 @@ const load = async (playlist: string, myEpoch: number) => {
 	let lastProgress = 0;
 
 	const controller = new AbortController();
-	const fetch = createFetcher({
+	const hooks = {
 		onRetry: () => post({ type: 'retrying', epoch }),
 		onBytes: () => {
 			const now = performance.now();
@@ -285,11 +276,12 @@ const load = async (playlist: string, myEpoch: number) => {
 			lastProgress = now;
 			post({ type: 'progress', epoch });
 		},
-	});
+	};
+	const fetch = createFetcher(hooks);
 
 	resetSession();
 	activeRequest = controller;
-	fetchResource = fetch;
+	network = { fetch, stream: createStreamer(hooks) };
 
 	const resource = await fetch('master', playlist, controller.signal);
 
@@ -387,7 +379,7 @@ self.addEventListener('message', (event) => {
 		}
 		case 'stop': {
 			resetSession();
-			fetchResource = undefined;
+			network = undefined;
 			variants = [];
 			subtitleRenditions = [];
 			bufferAhead = BUFFER_AHEAD.background;
