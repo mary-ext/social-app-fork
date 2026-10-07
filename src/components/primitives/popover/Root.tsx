@@ -35,8 +35,8 @@ export type RootProps = {
 	/** receives the open state after animations finish. */
 	onOpenChangeComplete?: (open: boolean) => void;
 	/**
-	 * makes outside content inert and locks scrolling for non-touch opens; defaults to `true`. hover opens
-	 * remain non-modal. include a `Close` in the popup for touch screen reader users.
+	 * makes outside content inert and locks scrolling; defaults to `true`. hover opens remain non-modal.
+	 * include a `Close` for touch screen reader users.
 	 */
 	modal?: boolean;
 	/** handle shared with detached triggers. */
@@ -195,7 +195,7 @@ export const Root = ({
 		);
 	}, [open, modal, activeTrigger, setOpen]);
 
-	useScrollLock(open && modal && openMethod !== 'touch', activeTrigger);
+	useScrollLock(open && modal, activeTrigger);
 
 	const value: RootContextValue = {
 		open,
