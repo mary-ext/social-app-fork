@@ -274,7 +274,6 @@ export const useTransitionsSettled = (
 			return;
 		}
 
-		// canceled animations reject `finished`; the next effect handles the replacement transitions.
 		let stale = false;
 		const frame = requestAnimationFrame(() => {
 			// looping animations must not block unmounting.
@@ -287,7 +286,12 @@ export const useTransitionsSettled = (
 						onSettled(open);
 					}
 				},
-				() => {},
+				() => {
+					// native dismissal cancels exit animations without replacement transitions to wait for.
+					if (!stale && !open && !el.matches(':popover-open')) {
+						onSettled(open);
+					}
+				},
 			);
 		});
 
