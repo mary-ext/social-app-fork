@@ -13,7 +13,6 @@ import {
 import type { Did } from '@atcute/lexicons';
 
 import { CompositeItem, CompositeRoot } from '@base-ui/react/internals/composite';
-import { Popover } from '@base-ui/react/popover';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getReducedMotion } from '#/lib/browser/reduced-motion';
@@ -28,6 +27,7 @@ import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
 
 import { useVideoSpeed } from '#/components/Post/Embed/VideoEmbed/video-speed';
+import * as Popover from '#/components/primitives/popover';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -251,8 +251,8 @@ export function SettingsMenu({
 			<Tooltip label={tooltip} container={fullscreenContainer}>
 				<Popover.Trigger render={render} />
 			</Tooltip>
-			<Popover.Portal className={styles.portal} container={fullscreenContainer}>
-				<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={6}>
+			<Popover.Portal container={fullscreenContainer}>
+				<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={styles.collisionPadding}>
 					<Popover.Popup
 						className={styles.popup}
 						aria-label={label}

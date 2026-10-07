@@ -1,10 +1,15 @@
 import { createVar, fallbackVar, keyframes, style } from '@vanilla-extract/css';
 
-import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
+
+export const collisionPadding = 6;
 
 export const panelHeightVar = createVar();
 
-export const portal = style({ zIndex: zIndex.popover });
+const hidden = {
+	scale: '0.95',
+	opacity: 0,
+};
 
 export const popup = style({
 	boxSizing: 'border-box',
@@ -16,11 +21,12 @@ export const popup = style({
 	backdropFilter: 'blur(12px)',
 	padding: space.xs,
 	width: 264,
-	maxWidth: 'var(--available-width)',
+	maxWidth: '100%',
 	transition: 'opacity 0.15s ease, scale 0.15s ease',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { scale: '0.95', opacity: 0 },
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
 
 export const srOnly = style({
@@ -32,7 +38,8 @@ export const viewport = style({
 	overflowX: 'hidden',
 	overflowY: 'auto',
 	height: fallbackVar(panelHeightVar, 'auto'),
-	maxHeight: 'var(--available-height)',
+	// no available-height variable; cap to the viewport minus popup and collision padding.
+	maxHeight: `calc(100dvh - ${(space.xs + collisionPadding) * 2}px)`,
 	transition: 'height 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
 	selectors: {
 		'&[data-transitioning]': { overflowY: 'hidden' },

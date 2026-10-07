@@ -1,12 +1,12 @@
 import type { FocusEvent, KeyboardEvent, RefObject } from 'react';
 
-import { Popover } from '@base-ui/react/popover';
 import { Slider } from '@base-ui/react/slider';
 
 import { useInputModality } from '#/lib/browser/input-modality';
 import { clamp } from '#/lib/utils/numbers';
 
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
+import * as Popover from '#/components/primitives/popover';
 
 import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
@@ -50,7 +50,7 @@ export function VolumeControl({
 		}
 	};
 
-	const onPopupOpenChange = (nextOpen: boolean, eventDetails: Popover.Root.ChangeEventDetails) => {
+	const onPopupOpenChange = (nextOpen: boolean, eventDetails: Popover.OpenChangeDetails) => {
 		if (eventDetails.reason === 'trigger-press') {
 			return;
 		}
@@ -103,7 +103,7 @@ export function VolumeControl({
 				onFocus={onTriggerFocus}
 				onKeyDown={onTriggerKeyDown}
 			/>
-			<Popover.Portal className={styles.portal} container={fullscreenContainer}>
+			<Popover.Portal container={fullscreenContainer}>
 				<Popover.Positioner side="top" sideOffset={6} collisionPadding={6}>
 					<Popover.Popup className={styles.popup} initialFocus={false} finalFocus={false}>
 						<Slider.Root

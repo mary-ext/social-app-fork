@@ -1,9 +1,9 @@
 import { type KeyboardEvent, type PointerEvent, type RefObject, useEffect, useRef, useState } from 'react';
 
-import type { InteractionType } from '@base-ui/utils/useEnhancedClickHandler';
-
 import { type InputModality, useInputModality } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
+
+import type { InteractionType } from '#/components/primitives/popover/shared';
 
 const MENU_ROW = 'data-menu-row';
 const ACTIVE_MENU_ROW = 'data-menu-row-active';

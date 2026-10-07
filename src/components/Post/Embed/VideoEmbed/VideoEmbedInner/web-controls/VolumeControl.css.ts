@@ -1,8 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
-import { borderRadius, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, space } from '#/styles/tokens.css';
 
-export const portal = style({ zIndex: zIndex.popover });
+const hidden = {
+	scale: '0.9',
+	opacity: 0,
+};
 
 export const popup = style({
 	transformOrigin: 'var(--transform-origin)',
@@ -13,8 +16,9 @@ export const popup = style({
 	paddingInline: space.sm,
 	transition: 'opacity 0.15s ease, scale 0.15s ease',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { scale: '0.9', opacity: 0 },
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
 
 export const control = style({
