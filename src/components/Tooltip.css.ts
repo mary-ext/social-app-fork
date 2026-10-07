@@ -1,11 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { zIndex } from '#/styles/tokens.css';
 
-export const positioner = style({
-	zIndex: zIndex.tooltip,
-});
+const hidden = {
+	transform: 'scale(0.95)',
+	opacity: 0,
+};
 
 export const popup = style({
 	boxSizing: 'border-box',
@@ -20,9 +20,7 @@ export const popup = style({
 	paddingInline: 10,
 	whiteSpace: 'nowrap',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': {
-			transform: 'scale(0.95)',
-			opacity: 0,
-		},
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
