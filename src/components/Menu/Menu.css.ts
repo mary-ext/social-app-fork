@@ -3,7 +3,7 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 import * as indicator from '#/components/forms/Indicator.css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, iconSize, zIndex } from '#/styles/tokens.css';
+import { fontSize, iconSize } from '#/styles/tokens.css';
 
 export const iconColor = createVar();
 
@@ -11,9 +11,10 @@ export const minWidthVar = createVar();
 
 export const maxWidthVar = createVar();
 
-export const portal = style({
-	zIndex: zIndex.popover,
-});
+const hidden = {
+	transform: 'scale(0.95)',
+	opacity: 0,
+};
 
 export const popup = style({
 	boxSizing: 'border-box',
@@ -28,12 +29,12 @@ export const popup = style({
 	backgroundColor: vars.palette.contrast_25,
 	padding: 4,
 	minWidth: fallbackVar(minWidthVar, 'auto'),
-	maxWidth: 'min(var(--available-width), 320px)',
-	maxHeight: 'var(--available-height)',
+	maxWidth: 320,
 	overflowY: 'auto',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
 
 export const item = style({

@@ -1,8 +1,7 @@
-import { type MouseEvent, type ReactNode, useRef } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import type { BaseUIEvent } from '@base-ui/react';
 import type { Wordgard } from 'wordgard/editor';
 
 import { toImageCdnUrl } from '#/lib/bsky-cdn';
@@ -42,11 +41,6 @@ export function PostRail({ postId }: { postId: string }) {
 		</div>
 	);
 }
-
-// defer Base UI's menu opening until click so pointer down can start a drag.
-const deferToClick = (event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
-	event.preventBaseUIHandler();
-};
 
 const getPostDragPreview = (
 	wg: Wordgard,
@@ -100,11 +94,9 @@ function PostHandle({ postId }: { postId: string }) {
 				// keyboard users reorder from the text with Alt-ArrowUp/ArrowDown.
 				tabIndex={-1}
 				{...{ [POST_HANDLE_ATTR]: postId }}
-				onMouseDown={(event) => {
-					deferToClick(event);
+				onMouseDown={() => {
 					hadFocus.current = wg.hasFocus;
 				}}
-				onPointerDown={deferToClick}
 				onDragEnd={() => {
 					if (hadFocus.current) {
 						wg.focus();

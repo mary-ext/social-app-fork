@@ -1,57 +1,55 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import type { ComponentType, ReactElement, ReactNode, RefObject, SVGProps } from 'react';
+import type { ComponentType, ReactElement, ReactNode, SVGProps } from 'react';
 
-import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import * as styles from '#/components/Menu/Menu.css';
+import * as BaseMenu from '#/components/primitives/menu';
 import { Text } from '#/components/Text';
 
 import CheckmarkIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke3.svg';
 
-// a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
-// `handle` (from `createHandle`/`useMenuHandle`) to drive a detached Trigger or open it imperatively.
 export const Root = BaseMenu.Root;
 export const Trigger = BaseMenu.Trigger;
 export const Group = BaseMenu.Group;
 
-/** Creates a detached handle to associate a Trigger with a Root or open/close the menu imperatively. */
 export const createHandle = BaseMenu.createHandle;
 
-/** A detached handle for associating a Trigger with a Root or opening/closing a Menu */
-export type MenuHandle<T = void> = BaseMenu.Handle<T>;
+export type MenuHandle = BaseMenu.Handle;
 
-/** Component-local menu handle. */
-export function useMenuHandle<T = void>(): MenuHandle<T> {
-	const handle = useConstant(createHandle<T>);
+/** @returns a menu handle stable for the component's lifetime */
+export function useMenuHandle(): MenuHandle {
+	const handle = useConstant(createHandle);
 	return handle;
 }
 
-/** Portalled positioner + themed popup card. Put `Item`/`Group`/`Separator` inside. */
+/**
+ * renders a styled menu popup in a portal.
+ *
+ * @param props menu content and placement
+ * @returns the popup
+ */
 export function Popup({
 	children,
 	label,
 	align = 'start',
 	side = 'bottom',
 	minWidth,
-	container,
 }: {
 	children: ReactNode;
-	/** Accessible name for the menu. */
+	/** accessible name; defaults to the trigger's name. */
 	label?: string;
-	align?: BaseMenu.Positioner.Props['align'];
-	side?: BaseMenu.Positioner.Props['side'];
-	/** Floor on the popup width, so a short item list still reads as a menu rather than a tooltip. */
+	align?: BaseMenu.PositionerProps['align'];
+	side?: BaseMenu.PositionerProps['side'];
+	/** minimum popup width, in pixels. */
 	minWidth?: number;
-	/** portal target, such as the fullscreen container. */
-	container?: RefObject<HTMLElement | null>;
 }) {
 	return (
-		<BaseMenu.Portal className={styles.portal} container={container}>
+		<BaseMenu.Portal>
 			<BaseMenu.Positioner align={align} side={side} sideOffset={5} collisionPadding={5}>
 				<BaseMenu.Popup
 					aria-label={label}

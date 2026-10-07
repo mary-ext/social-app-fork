@@ -105,7 +105,6 @@ export function RichTextTag({
 						linkStyles.inlineLink({ underline }),
 						atomicSegment,
 					)}
-					nativeButton={false}
 					// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
 					// plain left-click always opens the menu, so suppress the native navigation it would trigger
 					onClick={preventDefault}

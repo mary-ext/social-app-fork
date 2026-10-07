@@ -1,9 +1,7 @@
-import { type MouseEvent, useState } from 'react';
+import { useState } from 'react';
 
 import type { DndChannel } from '@oomfware/tug';
 import { attachClosestEdge, type Edge, extractClosestEdge } from '@oomfware/tug/hitbox';
-
-import type { BaseUIEvent } from '@base-ui/react';
 
 import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -126,10 +124,6 @@ export function FeedRow({
 	);
 }
 
-const preventDefault = (ev: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
-	ev.preventBaseUIHandler();
-};
-
 function DragHandle({
 	canMoveDown,
 	canMoveUp,
@@ -142,8 +136,6 @@ function DragHandle({
 	return (
 		<Menu.Root>
 			<Menu.Trigger
-				onMouseDown={preventDefault}
-				onPointerDown={preventDefault}
 				render={
 					<Button
 						label={m['screens.savedFeeds.reorder.label']()}
