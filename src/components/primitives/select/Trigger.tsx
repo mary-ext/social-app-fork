@@ -8,12 +8,9 @@ import { useRender } from '@base-ui/react/use-render';
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
 import { addAnchorName, triggerStateAttributes } from '../anchored-popup';
-import { getListItems, isTypeaheadKey } from '../list-navigation';
+import { isTypeaheadKey } from '../list-navigation';
+import { listenForRelease } from '../press-release';
 import { useRootContext } from './shared';
-
-// quick releases only select after a drag, avoiding accidental selection beneath the trigger.
-const RELEASE_DELAY = 400;
-const RELEASE_DRAG_DISTANCE = 8;
 
 export type TriggerState = {
 	open: boolean;
@@ -46,42 +43,6 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 		return addAnchorName(el, anchorName);
 	}, [mounted, anchorName, triggerRef]);
 
-	const onPointerUp = (event: PointerEvent, press: { time: number; x: number; y: number }) => {
-		const target = event.target;
-		if (!(target instanceof Element) || triggerRef.current?.contains(target)) {
-			return;
-		}
-		const dragged = Math.hypot(event.clientX - press.x, event.clientY - press.y) >= RELEASE_DRAG_DISTANCE;
-		if (!dragged && event.timeStamp - press.time < RELEASE_DELAY) {
-			return;
-		}
-		const positioner = ctx.positionerRef.current;
-		if (!positioner?.contains(target)) {
-			setOpen(false, { reason: 'outside-press', method: toInteractionType(event.pointerType) });
-			return;
-		}
-		const item = getListItems(positioner).find((candidate) => candidate.contains(target));
-		item?.click();
-	};
-	const listenForRelease = (press: MouseEvent) => {
-		const start = { time: press.timeStamp, x: press.clientX, y: press.clientY };
-		const listener = (event: PointerEvent) => {
-			onPointerUp(event, start);
-		};
-		// Firefox may dispatch the pointerup of a press that is still being handled.
-		const timer = setTimeout(() => {
-			document.addEventListener('pointerup', listener, { once: true, capture: true });
-		});
-		document.addEventListener(
-			'pointerdown',
-			() => {
-				clearTimeout(timer);
-				document.removeEventListener('pointerup', listener, { capture: true });
-			},
-			{ once: true, capture: true },
-		);
-	};
-
 	const commitTypeahead = (key: string) => {
 		const items = ctx.items;
 		if (!items) {
@@ -113,7 +74,13 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 				const method = pointerTypeRef.current || 'mouse';
 				setOpen(!open, { reason: 'trigger-press', method });
 				if (!open) {
-					listenForRelease(event.nativeEvent);
+					listenForRelease(event.nativeEvent, {
+						trigger: event.currentTarget,
+						positionerRef: ctx.positionerRef,
+						onOutsideRelease(release) {
+							setOpen(false, { reason: 'outside-press', method: toInteractionType(release.pointerType) });
+						},
+					});
 				}
 			},
 			onClick(event) {
