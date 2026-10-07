@@ -1,0 +1,12 @@
+/*
+ * prefer a side with at least 160px before allowing a smaller popup.
+ * --select-block-margins accounts for the trigger gap and viewport padding.
+ */
+@position-try --select-shrink-floored {
+	min-height: 160px;
+	max-height: calc(100% - var(--select-block-margins));
+}
+
+@position-try --select-shrink {
+	max-height: calc(100% - var(--select-block-margins));
+}
