@@ -2,13 +2,14 @@ import { type ComponentProps, useState } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
-import { Popover } from '@base-ui/react/popover';
 import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
 import { EmojiPanel } from '#/features/emoji-picker/EmojiPanel';
 import { useEmojiPreload } from '#/features/emoji-picker/preload';
+
+import * as Popover from '#/components/primitives/popover';
 
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -24,7 +25,7 @@ export function EmojiReactionPicker({
 	onEmojiSelect,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	/** The trigger element (a message-hover button); receives Base UI trigger props + `{ open }` state. */
+	/** trigger element or render function; receives popover props and state. */
 	render: ComponentProps<typeof Popover.Trigger>['render'];
 	onEmojiSelect: (emoji: string) => void;
 }) {

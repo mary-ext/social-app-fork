@@ -1,5 +1,7 @@
 import { Select } from '@base-ui/react/select';
 
+import { usePortalContainer } from '#/components/primitives/popover/shared';
+
 import { m } from '#/paraglide/messages';
 import type { SkinTone } from '#/storage/schema';
 
@@ -12,6 +14,8 @@ const TONES: SkinTone[] = [1, 2, 3, 4, 5, 6];
 
 /** a Base UI Select of tone swatches to choose the active emoji skin tone. */
 export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) => void; tone: SkinTone }) {
+	const container = usePortalContainer();
+
 	return (
 		<Select.Root
 			value={tone}
@@ -25,7 +29,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
-			<Select.Portal>
+			<Select.Portal container={container}>
 				<Select.Positioner className={styles.positioner}>
 					<Select.Popup className={styles.menu}>
 						{TONES.map((value) => (

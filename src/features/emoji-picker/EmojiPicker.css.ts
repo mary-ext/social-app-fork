@@ -1,10 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
-import { zIndex } from '#/styles/tokens.css';
-
-export const positioner = style({
-	zIndex: zIndex.popover,
-});
+const hidden = {
+	transform: 'scale(0.95)',
+	opacity: 0,
+};
 
 export const popup = style({
 	transformOrigin: 'var(--transform-origin)',
@@ -13,8 +12,9 @@ export const popup = style({
 	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
 	outline: 0,
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
+		'&[data-closed]': hidden,
 	},
+	'@starting-style': hidden,
 });
 
 export const srOnly = style({

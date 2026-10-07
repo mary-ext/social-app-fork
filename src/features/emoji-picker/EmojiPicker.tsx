@@ -1,12 +1,12 @@
 import { createContext, lazy, type ReactNode, type RefObject, Suspense, useContext } from 'react';
 
-import { Popover } from '@base-ui/react/popover';
-
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { emojiInserted } from '#/features/emoji-picker/emoji-inserted';
 import { useEmojiPreload } from '#/features/emoji-picker/preload';
 import type { Emoji } from '#/features/emoji-picker/types';
+
+import * as Popover from '#/components/primitives/popover';
 
 import { m } from '#/paraglide/messages';
 
@@ -28,35 +28,30 @@ const EmojiPickerContext = createContext<{
 
 export type RootProps = {
 	children: ReactNode;
-	/** Detached handle linking the {@link Trigger} to this Root (see Base UI Popover detached triggers). */
+	/** handle shared with the detached {@link Trigger}. */
 	handle: EmojiPickerHandle;
-	/**
-	 * Called when the user selects an emoji. Fires in addition to the `emojiInserted` event, so callers that
-	 * only need the text insertion can omit it.
-	 */
+	/** receives the selected emoji; `emojiInserted` is emitted even when this callback is omitted. */
 	onEmojiSelect?: (emoji: Emoji) => void;
-	/** Element to return focus to when the picker closes (instead of the trigger). Ref or getter. */
+	/** focus target on close; defaults to the trigger when omitted or empty. */
 	nextFocusRef?: NextFocusRef;
 };
 
-/** The trigger button (a sibling of {@link Root}). Pass a web `Button` via `render` + the shared `handle`. */
+/** trigger for a sibling {@link Root}; pass the shared `handle` and a button via `render`. */
 export const Trigger = Popover.Trigger;
 
-/** Creates a detached handle to associate a {@link Trigger} with a {@link Root} / open-close imperatively. */
-const createHandle = Popover.createHandle;
+export type EmojiPickerHandle = Popover.Handle;
 
-/** A detached handle for the emoji picker popover. */
-export type EmojiPickerHandle = Popover.Handle<void>;
-
-/** Component-local emoji-picker handle. */
+/** @returns a stable emoji picker handle for this component */
 export function useEmojiPickerHandle(): EmojiPickerHandle {
-	const handle = useConstant(createHandle<void>);
+	const handle = useConstant(Popover.createHandle);
 	return handle;
 }
 
 /**
- * emoji picker that opens in a popover. emits an `emojiInserted` event and triggers the optional
- * `onEmojiSelect` callback when an emoji is selected.
+ * provides the emoji picker popover.
+ *
+ * @param props picker content, shared handle, selection callback, and focus target
+ * @returns the picker content within its popover root
  */
 export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProps) {
 	useEmojiPreload({ immediate: true });
@@ -79,16 +74,19 @@ export function Root({ children, handle, onEmojiSelect, nextFocusRef }: RootProp
 	);
 }
 
-/** The picker panel. Must be rendered inside a {@link Root}. */
+/**
+ * picker panel; requires an enclosing {@link Root}.
+ *
+ * @returns the portaled emoji panel
+ */
 export function Picker() {
 	const { onEmojiSelect, close, nextFocusRef } = useEmojiPickerContext();
 
 	return (
 		<Popover.Portal>
-			<Popover.Positioner className={styles.positioner} sideOffset={5} collisionPadding={5}>
+			<Popover.Positioner sideOffset={5} collisionPadding={5}>
 				<Popover.Popup
 					className={styles.popup}
-					// return focus to the caller's target (e.g. the composer text input) rather than the trigger
 					finalFocus={() => {
 						if (!nextFocusRef) {
 							return true;
