@@ -1,11 +1,10 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
-
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import type { AutocompleteEmoji, AutocompleteItem, AutocompleteProfile } from '#/state/queries/autocomplete';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 
@@ -15,81 +14,62 @@ import * as styles from './MessageInputAutocomplete.css';
 
 export type Placement = 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
 
-type AutocompleteAnchor = {
-	contextElement: Element;
-	getBoundingClientRect: () => DOMRect;
-};
-
-/** mention and emoji suggestions. requires the message input's `BaseAutocomplete.Root`. */
+/**
+ * mention and emoji suggestions within the message input's `Autocomplete.Root`.
+ *
+ * @param props.anchor element wrapping the completion text in the overlay
+ * @param props.items suggestions
+ * @param props.placement preferred popup placement
+ * @returns the suggestions popup
+ */
 export function MessageInputAutocomplete({
 	anchor,
 	items,
 	placement = 'bottom',
-	onSelect,
 }: {
-	anchor: AutocompleteAnchor | null;
+	anchor: Element | null;
 	items: AutocompleteItem[];
 	placement?: Placement;
-	onSelect: (item: AutocompleteItem) => void;
 }) {
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `Placement` is a fixed `side` or `side-align` union
 	const [side, align = 'start'] = placement.split('-') as ['bottom' | 'top', 'end' | 'start' | undefined];
 
 	return (
-		<BaseAutocomplete.Portal>
-			<BaseAutocomplete.Positioner
-				align={align}
-				anchor={anchor}
-				className={styles.positioner}
-				positionMethod="fixed"
-				side={side}
-				sideOffset={8}
-			>
-				<BaseAutocomplete.Popup
-					className={styles.popup}
-					// keep the textarea focused (and its selection intact) when a row is clicked.
-					onMouseDown={(e) => e.preventDefault()}
-				>
-					{items.length === 0 ? (
-						<CenteredSpinner label={m['common.status.loading']()} size="xl" />
-					) : (
-						<BaseAutocomplete.List>
-							{items.map((item) => {
-								switch (item.type) {
-									case 'emoji': {
-										return <EmojiItem key={item.key} item={item} onSelect={onSelect} />;
-									}
-									case 'profile': {
-										return <ProfileItem key={item.key} item={item} onSelect={onSelect} />;
-									}
-									default: {
-										return null;
-									}
+		<Autocomplete.Positioner align={align} anchor={anchor} side={side} sideOffset={8}>
+			<Autocomplete.Popup className={styles.popup}>
+				{items.length === 0 ? (
+					<CenteredSpinner label={m['common.status.loading']()} size="xl" />
+				) : (
+					<Autocomplete.List>
+						{items.map((item) => {
+							switch (item.type) {
+								case 'emoji': {
+									return <EmojiItem key={item.key} item={item} />;
 								}
-							})}
-						</BaseAutocomplete.List>
-					)}
-				</BaseAutocomplete.Popup>
-			</BaseAutocomplete.Positioner>
-		</BaseAutocomplete.Portal>
+								case 'profile': {
+									return <ProfileItem key={item.key} item={item} />;
+								}
+								default: {
+									return null;
+								}
+							}
+						})}
+					</Autocomplete.List>
+				)}
+			</Autocomplete.Popup>
+		</Autocomplete.Positioner>
 	);
 }
 
 // cloned 1:1 from the search autocomplete's ProfileRow; keep the two in sync.
-function ProfileItem({
-	item,
-	onSelect,
-}: {
-	item: AutocompleteProfile;
-	onSelect: (item: AutocompleteItem) => void;
-}) {
+function ProfileItem({ item }: { item: AutocompleteProfile }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts
 		? getDisplayRestrictions(moderateProfile(item.profile, moderationOpts), DisplayContext.ProfileMedia)
 		: undefined;
 
 	return (
-		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+		<Autocomplete.Item className={styles.row} value={item}>
 			<UserAvatar
 				avatar={item.profile.avatar}
 				className={styles.avatar}
@@ -108,21 +88,15 @@ function ProfileItem({
 					</Text>
 				) : null}
 			</span>
-		</BaseAutocomplete.Item>
+		</Autocomplete.Item>
 	);
 }
 
-function EmojiItem({
-	item,
-	onSelect,
-}: {
-	item: AutocompleteEmoji;
-	onSelect: (item: AutocompleteItem) => void;
-}) {
+function EmojiItem({ item }: { item: AutocompleteEmoji }) {
 	return (
-		<BaseAutocomplete.Item className={styles.row} value={item} onClick={() => onSelect(item)}>
+		<Autocomplete.Item className={styles.row} value={item}>
 			<Text className={styles.emojiGlyph}>{item.value}</Text>
 			<Text className={styles.emojiName}>{item.label}</Text>
-		</BaseAutocomplete.Item>
+		</Autocomplete.Item>
 	);
 }

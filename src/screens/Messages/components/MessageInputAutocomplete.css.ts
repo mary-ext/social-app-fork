@@ -1,11 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { emojiFontFamily, fontSize, space, zIndex } from '#/styles/tokens.css';
-
-export const positioner = style({
-	zIndex: zIndex.popover,
-});
+import { emojiFontFamily, fontSize, space } from '#/styles/tokens.css';
 
 export const popup = style({
 	boxSizing: 'border-box',
@@ -15,8 +11,6 @@ export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	paddingBlock: space.xs,
 	width: 320,
-	maxWidth: 'var(--available-width)',
-	maxHeight: 'var(--available-height)',
 	overflowX: 'hidden',
 	overflowY: 'auto',
 });

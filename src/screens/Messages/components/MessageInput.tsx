@@ -1,16 +1,23 @@
 import { type Ref, useEffect, useEffectEvent, useImperativeHandle, useRef, useState } from 'react';
 
-import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import { buildSpans, type Completion, findCompletion } from '#/lib/rich-text-input';
+import {
+	buildSpans,
+	type Completion,
+	findCompletion,
+	splitSpans,
+	type TextSpan,
+} from '#/lib/rich-text-input';
 
 import {
 	type AutocompleteItem,
 	parseAutocompleteItemType,
 	useAutocomplete,
 } from '#/state/queries/autocomplete';
+
+import * as Autocomplete from '#/components/primitives/autocomplete';
 
 import * as styles from './MessageInput.css';
 import { MessageInputAutocomplete, type Placement } from './MessageInputAutocomplete';
@@ -96,8 +103,6 @@ export function MessageInput({
 }: MessageInputProps) {
 	const [text, setText] = useState(defaultValue ?? '');
 
-	// Base UI defers value changes during IME composition.
-	const [composingText, setComposingText] = useState<string | null>(null);
 	const [selection, setSelection] = useState(() => {
 		const end = defaultValue?.length ?? 0;
 		return { start: end, end };
@@ -107,10 +112,10 @@ export function MessageInput({
 	const [dismissedCompletion, setDismissedCompletion] = useState<string | null>(null);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
+	const [anchor, setAnchor] = useState<HTMLSpanElement | null>(null);
 
-	const spans = buildSpans(composingText ?? text);
 	const completion = selection.start === selection.end ? findCompletion(text, selection.end) : null;
+	const spans = splitSpans(buildSpans(text), completion?.range);
 	const hasQuery = !!completion && completion.query.length > 0;
 
 	// include the query so edits clear a dismissal.
@@ -127,16 +132,6 @@ export function MessageInput({
 	const autocompleteOpen =
 		hasQuery && completionKey !== dismissedCompletion && (items.length > 0 || isFetching);
 	const hasNavigableAutocomplete = autocompleteOpen && items.length > 0;
-
-	// overlay text nodes change on each edit.
-	const anchor = completion &&
-		overlay && {
-			contextElement: overlay,
-			getBoundingClientRect: () => {
-				const range = rangeFromOffsets(overlay, completion.range.start, completion.range.end);
-				return (range ?? overlay).getBoundingClientRect();
-			},
-		};
 
 	const syncSelection = (el: HTMLInputElement | HTMLTextAreaElement) => {
 		setSelection({ start: el.selectionStart ?? 0, end: el.selectionEnd ?? 0 });
@@ -169,7 +164,6 @@ export function MessageInput({
 			},
 			clear: () => {
 				setText('');
-				setComposingText(null);
 				setSelection({ start: 0, end: 0 });
 			},
 			insert: (str: string) => {
@@ -218,28 +212,21 @@ export function MessageInput({
 	});
 
 	return (
-		<BaseAutocomplete.Root
+		<Autocomplete.Root
 			autoHighlight
 			items={items}
-			// the input owns filtering and value updates.
-			mode="none"
 			open={autocompleteOpen}
-			onOpenChange={(open, details) => {
-				// selection can also close the popup, but is not a dismissal.
-				if (!open && (details.reason === 'escape-key' || details.reason === 'outside-press')) {
+			onItemPress={selectItem}
+			onOpenChange={(open) => {
+				if (!open) {
 					setDismissedCompletion(completionKey);
 				}
 			}}
-			openOnInputClick={false}
 			value={text}
 			onValueChange={(value, details) => {
-				// selectItem handles item presses.
-				if (details.reason === 'input-change' || details.reason === 'input-clear') {
-					setText(value);
-					const el = textareaRef.current;
-					if (el) {
-						syncSelection(el);
-					}
+				setText(value);
+				if (details.event.target instanceof HTMLTextAreaElement) {
+					syncSelection(details.event.target);
 				}
 			}}
 		>
@@ -247,15 +234,12 @@ export function MessageInput({
 				className={clsx(styles.root({ fontSize }), maxRows !== undefined && styles.capped, className)}
 				style={layoutVars}
 			>
-				<div className={styles.overlay} ref={setOverlay} aria-hidden inert>
-					{spans.map((span, i) => (
-						// oxlint-disable-next-line react/no-array-index-key -- positional overlay
-						<span key={i} className={span.facet ? styles.facet : undefined}>
-							{span.raw}
-						</span>
-					))}
+				<div className={styles.overlay} aria-hidden inert>
+					{renderSpans(spans.before)}
+					{spans.inside.length > 0 && <span ref={setAnchor}>{renderSpans(spans.inside)}</span>}
+					{renderSpans(spans.after)}
 				</div>
-				<BaseAutocomplete.Input
+				<Autocomplete.Input
 					render={<textarea rows={1} ref={textareaRef} />}
 					className={styles.textarea}
 					placeholder={placeholder}
@@ -269,28 +253,13 @@ export function MessageInput({
 							syncSelection(e.currentTarget);
 						}
 					}}
-					onChange={(e) => {
-						if (isComposing.current) {
-							setComposingText(e.currentTarget.value);
-						}
-					}}
 					onKeyDown={(e) => {
 						if (isComposing.current) {
-							// Base UI handles Home and End before its IME guard.
-							e.preventBaseUIHandler();
-
 							return;
 						}
 
 						// preserve native textarea navigation when the list does not need the key.
 						switch (e.key) {
-							case 'End':
-							case 'Home': {
-								e.preventBaseUIHandler();
-
-								break;
-							}
-
 							case 'ArrowDown':
 							case 'ArrowUp': {
 								if (!hasNavigableAutocomplete) {
@@ -306,7 +275,6 @@ export function MessageInput({
 									return;
 								}
 
-								// this handler runs before Base UI consumes Enter for selection.
 								if (!hasNavigableAutocomplete) {
 									onRequestSubmit?.({
 										platform: 'web',
@@ -322,56 +290,26 @@ export function MessageInput({
 					}}
 					onPaste={(e) => onPaste?.(e.nativeEvent)}
 					onFocus={onFocus}
-					onBlur={() => {
-						onBlur?.();
-						setDismissedCompletion(completionKey);
-					}}
-					onCompositionStart={(e) => {
+					onBlur={onBlur}
+					onCompositionStart={() => {
 						isComposing.current = true;
-						setComposingText(e.currentTarget.value);
 					}}
 					onCompositionEnd={() => {
 						isComposing.current = false;
-						setComposingText(null);
 					}}
 				/>
 			</div>
 
-			{autocompleteOpen && (
-				<MessageInputAutocomplete
-					anchor={anchor}
-					items={items}
-					placement={autocompletePlacement}
-					onSelect={selectItem}
-				/>
-			)}
-		</BaseAutocomplete.Root>
+			<MessageInputAutocomplete anchor={anchor} items={items} placement={autocompletePlacement} />
+		</Autocomplete.Root>
 	);
 }
 
-/** converts UTF-16 offsets in `root.textContent` to a DOM range. */
-function rangeFromOffsets(root: Node, start: number, end: number): Range | null {
-	const from = findNodePosition(root, start);
-	const to = findNodePosition(root, end);
-	if (!from || !to) {
-		return null;
-	}
-	const range = document.createRange();
-	range.setStart(from.node, from.offset);
-	range.setEnd(to.node, to.offset);
-	return range;
-}
-
-function findNodePosition(node: Node, offset: number): { node: Node; offset: number } | null {
-	if (node.nodeType === Node.TEXT_NODE) {
-		return { node, offset };
-	}
-	for (const child of node.childNodes) {
-		const len = child.textContent?.length ?? 0;
-		if (offset <= len) {
-			return findNodePosition(child, offset);
-		}
-		offset -= len;
-	}
-	return null;
-}
+const renderSpans = (spans: TextSpan[]) => {
+	return spans.map((span, i) => (
+		// oxlint-disable-next-line react/no-array-index-key -- positional overlay
+		<span key={i} className={span.facet ? styles.facet : undefined}>
+			{span.raw}
+		</span>
+	));
+};

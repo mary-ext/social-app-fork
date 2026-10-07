@@ -86,6 +86,48 @@ export function buildSpans(text: string): TextSpan[] {
 	return spans;
 }
 
+export type SplitSpans = {
+	before: TextSpan[];
+	inside: TextSpan[];
+	after: TextSpan[];
+};
+
+/**
+ * splits spans around a range, preserving their facets.
+ *
+ * @param spans ordered spans, as returned by {@link buildSpans}
+ * @param range UTF-16 offsets `[start, end)`; `undefined` puts all spans in `before`
+ * @returns spans before, inside, and after the range
+ */
+export const splitSpans = (
+	spans: TextSpan[],
+	range: { end: number; start: number } | undefined,
+): SplitSpans => {
+	if (!range) {
+		return { before: spans, inside: [], after: [] };
+	}
+
+	const split: SplitSpans = { before: [], inside: [], after: [] };
+	let offset = 0;
+	for (const span of spans) {
+		const start = Math.max(range.start - offset, 0);
+		const end = Math.max(range.end - offset, 0);
+		offset += span.raw.length;
+
+		const pieces = [
+			{ to: split.before, raw: span.raw.slice(0, start) },
+			{ to: split.inside, raw: span.raw.slice(start, end) },
+			{ to: split.after, raw: span.raw.slice(end) },
+		];
+		for (const { to, raw } of pieces) {
+			if (raw) {
+				to.push({ raw, facet: span.facet });
+			}
+		}
+	}
+	return split;
+};
+
 /**
  * finds the autocomplete query ending at the caret.
  *
