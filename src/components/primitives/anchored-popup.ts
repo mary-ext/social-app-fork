@@ -9,7 +9,6 @@ import {
 	useState,
 } from 'react';
 
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { createPortal } from 'react-dom';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
@@ -123,7 +122,7 @@ export const getShrinkingAnchoredStyle = (
 		...getAnchoredStyle(options),
 		positionTryFallbacks:
 			'flip-block, --anchored-shrink-floored, --anchored-shrink-floored flip-block, --anchored-shrink',
-		...assignInlineVars({ '--anchored-block-margins': `${margins}px` }),
+		'--anchored-block-margins': `${margins}px`,
 	};
 };
 
