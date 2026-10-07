@@ -2,22 +2,16 @@
 
 import { createContext, Fragment, type ReactElement, type ReactNode, useContext } from 'react';
 
-import { Select as BaseSelect } from '@base-ui/react/select';
 import { clsx } from 'clsx';
 
+import * as BaseSelect from '#/components/primitives/select';
 import * as styles from '#/components/Select.css';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
-import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
 
-export type SelectItem<Value = string> = {
-	label: string;
-	value: Value;
-};
+export type SelectItem<Value = string> = BaseSelect.SelectItem<Value>;
 
-// feeds the current value to `Content`'s `renderItem` so consumers can style an item against the
-// selection (Base UI only exposes per-item `data-selected`, not the value, inside the render closure).
 const SelectedValueContext = createContext<unknown>(null);
 SelectedValueContext.displayName = 'SelectSelectedValueContext';
 
@@ -26,31 +20,15 @@ export type RootProps<Value = string> = {
 	value: Value;
 	onValueChange: (value: Value) => void;
 	disabled?: boolean;
-	/** The option list. Required for `Value` to auto-render the selected item's label. */
+	/** labels for `Value` and closed-trigger typeahead. */
 	items?: SelectItem<Value>[];
 };
 
-/** Groups the parts of a single-select dropdown built on Base UI's Select. */
+/** groups the parts of a single-select dropdown. */
 export function Root<Value = string>({ children, disabled, items, onValueChange, value }: RootProps<Value>) {
 	return (
 		<SelectedValueContext.Provider value={value}>
-			<BaseSelect.Root
-				items={items}
-				value={value}
-				disabled={disabled}
-				onValueChange={(next) => {
-					if (next !== null) {
-						onValueChange(next);
-						return;
-					}
-					// Base UI reports `null` both for a cleared selection and for an option carrying `null`.
-					// reading the value back off the option is what keeps it typed as `Value`.
-					const nullItem = items?.find((item) => item.value === null);
-					if (nullItem) {
-						onValueChange(nullItem.value);
-					}
-				}}
-			>
+			<BaseSelect.Root items={items} value={value} disabled={disabled} onValueChange={onValueChange}>
 				{children}
 			</BaseSelect.Root>
 		</SelectedValueContext.Provider>
@@ -63,19 +41,13 @@ export type TriggerProps = {
 	describedBy?: string;
 	/** sets `aria-invalid` on the trigger. */
 	isInvalid?: boolean;
-	/**
-	 * Accessible name, applied as `aria-label` to the default trigger button. Omit when `render` supplies an
-	 * element that carries its own label.
-	 */
+	/** `aria-label` for the default button. custom triggers must supply their own accessible name. */
 	label?: string;
-	/**
-	 * replaces the default themed button with a custom web-native element. prefer the children form for the
-	 * common case; reach for `render` only to supply a custom trigger element.
-	 */
-	render?: BaseSelect.Trigger.Props['render'];
+	/** replaces the themed button with a custom trigger element. */
+	render?: BaseSelect.TriggerProps['render'];
 };
 
-/** The button that opens the dropdown. Compose `Value` + `Icon` inside, or pass a custom `render` element. */
+/** dropdown trigger; compose `Value` and `Icon` as children. */
 export function Trigger({ children, describedBy, isInvalid, label, render }: TriggerProps) {
 	const aria = { 'aria-describedby': describedBy, 'aria-invalid': isInvalid };
 
@@ -96,11 +68,11 @@ export function Trigger({ children, describedBy, isInvalid, label, render }: Tri
 export type ValueProps = {
 	placeholder?: string;
 	className?: string;
-	/** Custom formatter for the selected value; defaults to the matched item's label. */
+	/** formats the selected value; defaults to the matched item's label. */
 	children?: (value: string) => ReactNode;
 };
 
-/** Shows the selected item's label (or `placeholder` when nothing is selected). */
+/** shows the selection, or `placeholder` when nothing is selected. */
 export function Value({ children, className, placeholder }: ValueProps) {
 	return (
 		<BaseSelect.Value className={clsx(styles.value, className)} placeholder={placeholder}>
@@ -113,7 +85,7 @@ export type IconProps = {
 	className?: string;
 };
 
-/** The chevron affordance inside the trigger. */
+/** dropdown chevron. */
 export function Icon({ className }: IconProps) {
 	return (
 		<BaseSelect.Icon className={clsx(styles.icon, className)}>
@@ -123,17 +95,16 @@ export function Icon({ className }: IconProps) {
 }
 
 export type ContentProps<Value = string> = {
-	/** How the popup aligns to the trigger along its width. Defaults to Base UI's `center`. */
-	align?: 'center' | 'end' | 'start';
-	/** The options to render. */
+	/** horizontal alignment with the trigger; defaults to `center`. */
+	align?: BaseSelect.Align;
 	items: SelectItem<Value>[];
-	/** stretch the popup to at least the trigger's width. pass `false` to size it to its content instead. */
+	/** minimum width matches the trigger; defaults to `true`. */
 	matchTriggerWidth?: boolean;
-	/** Renders one option; receives the current selection so an item can style itself against it. */
+	/** renders each option with the current selection. */
 	renderItem: (item: SelectItem<Value>, selectedValue: Value) => ReactElement;
 };
 
-/** The portalled, positioned popup that holds the option list. */
+/** portaled option list. */
 export function Content<Value = string>({
 	align,
 	items,
@@ -145,23 +116,15 @@ export function Content<Value = string>({
 	return (
 		<BaseSelect.Portal>
 			<BaseSelect.Positioner
-				className={styles.positioner}
+				className={styles.positioner({ matchTriggerWidth })}
 				align={align}
 				sideOffset={5}
 				alignItemWithTrigger={false}
 			>
-				<BaseSelect.Popup className={styles.popup({ matchTriggerWidth })}>
-					<BaseSelect.ScrollUpArrow className={styles.scrollUpArrow}>
-						<ChevronUpIcon className={styles.chevronIcon} />
-					</BaseSelect.ScrollUpArrow>
-					<BaseSelect.List className={styles.list}>
-						{items.map((item) => (
-							<Fragment key={String(item.value)}>{renderItem(item, selectedValue)}</Fragment>
-						))}
-					</BaseSelect.List>
-					<BaseSelect.ScrollDownArrow className={styles.scrollDownArrow}>
-						<ChevronDownIcon className={styles.chevronIcon} />
-					</BaseSelect.ScrollDownArrow>
+				<BaseSelect.Popup className={styles.popup}>
+					{items.map((item) => (
+						<Fragment key={String(item.value)}>{renderItem(item, selectedValue)}</Fragment>
+					))}
 				</BaseSelect.Popup>
 			</BaseSelect.Positioner>
 		</BaseSelect.Portal>
@@ -171,12 +134,12 @@ export function Content<Value = string>({
 export type ItemProps<Value = string> = {
 	children: ReactNode;
 	value: Value;
-	/** Text used for keyboard typeahead; defaults to the item's text content. */
+	/** text matched by keyboard typeahead. */
 	label: string;
 	className?: string;
 };
 
-/** A single option within `Content`. */
+/** an option within `Content`. */
 export function Item<Value = string>({ children, className, label, value }: ItemProps<Value>) {
 	return (
 		<BaseSelect.Item value={value} label={label} className={clsx(styles.item, className)}>
@@ -185,7 +148,7 @@ export function Item<Value = string>({ children, className, label, value }: Item
 	);
 }
 
-/** The selection checkmark, absolutely positioned in the item's gutter. */
+/** selection checkmark in the item's gutter. */
 export function ItemIndicator() {
 	return (
 		<BaseSelect.ItemIndicator className={styles.indicator}>
@@ -194,7 +157,7 @@ export function ItemIndicator() {
 	);
 }
 
-/** The option's text label. */
+/** option label. */
 export function ItemText({ children }: { children: ReactNode }) {
 	return <BaseSelect.ItemText>{children}</BaseSelect.ItemText>;
 }

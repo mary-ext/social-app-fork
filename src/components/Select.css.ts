@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { fontSize, iconSize, space, zIndex } from '#/styles/tokens.css';
+import { fontSize, iconSize, space } from '#/styles/tokens.css';
 
 export const trigger = style(
 	layered(components, {
@@ -51,33 +51,11 @@ export const icon = style(
 	}),
 );
 
-export const positioner = style(
-	layered(components, {
-		zIndex: zIndex.popover,
-	}),
-);
-
-export const popup = recipe(
+export const positioner = recipe(
 	{
 		base: {
-			boxSizing: 'border-box',
 			display: 'flex',
-			position: 'relative',
 			flexDirection: 'column',
-			transformOrigin: 'var(--transform-origin)',
-			transitionDuration: '150ms',
-			transitionProperty: 'opacity, transform',
-			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-			border: `1px solid ${vars.palette.contrast_100}`,
-			borderRadius: 8,
-			boxShadow: vars.shadow.md,
-			backgroundColor: vars.palette.contrast_0,
-			maxWidth: 'var(--available-width)',
-			maxHeight: 'var(--available-height)',
-			overflow: 'hidden',
-			selectors: {
-				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
-			},
 		},
 		defaultVariants: {
 			matchTriggerWidth: true,
@@ -85,58 +63,42 @@ export const popup = recipe(
 		variants: {
 			matchTriggerWidth: {
 				true: {
-					minWidth: 'var(--anchor-width)',
+					minWidth: 'anchor-size(width)',
 				},
-				false: {
-					minWidth: 'fit-content',
-				},
+				false: {},
 			},
 		},
 	},
-	{ debugId: 'popup', layer: components },
+	{ debugId: 'positioner', layer: components },
 );
 
-const SCROLL_ARROW_HEIGHT = 24;
+const hidden = {
+	transform: 'scale(0.95)',
+	opacity: 0,
+};
 
-export const list = style(
+export const popup = style(
 	layered(components, {
-		flex: 1,
+		boxSizing: 'border-box',
+		transformOrigin: 'var(--transform-origin)',
+		transitionDuration: '150ms',
+		transitionProperty: 'opacity, transform',
+		transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+		outline: 0,
+		border: `1px solid ${vars.palette.contrast_100}`,
+		borderRadius: 8,
+		boxShadow: vars.shadow.md,
+		backgroundColor: vars.palette.contrast_0,
 		padding: space.xs,
 		minHeight: 0,
 		overflowY: 'auto',
-		scrollPaddingBlock: SCROLL_ARROW_HEIGHT + space.xs,
-		scrollPaddingInline: space.xs,
+		scrollPaddingBlock: space.xs,
+		selectors: {
+			'&[data-closed]': hidden,
+		},
+		'@starting-style': hidden,
 	}),
 );
-
-const scrollArrow = style(
-	layered(components, {
-		display: 'flex',
-		right: 0,
-		left: 0,
-		alignItems: 'center',
-		justifyContent: 'center',
-		zIndex: 1,
-		height: SCROLL_ARROW_HEIGHT,
-		color: vars.palette.contrast_1000,
-	}),
-);
-
-export const scrollUpArrow = style([
-	scrollArrow,
-	layered(components, {
-		top: 0,
-		background: `linear-gradient(to bottom, ${vars.palette.contrast_0}, transparent)`,
-	}),
-]);
-
-export const scrollDownArrow = style([
-	scrollArrow,
-	layered(components, {
-		bottom: 0,
-		background: `linear-gradient(to top, ${vars.palette.contrast_0}, transparent)`,
-	}),
-]);
 
 const ITEM_LINE_HEIGHT = 20;
 const ITEM_ICON_SIZE = 16;
