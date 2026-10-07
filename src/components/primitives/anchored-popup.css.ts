@@ -15,7 +15,7 @@ export const positioner = style({
 	maxWidth: 'none',
 	maxHeight: 'none',
 	color: 'inherit',
-	// override inherited `pointer-events: none`.
+	cursor: 'auto',
 	pointerEvents: 'auto',
 	'::backdrop': {
 		background: 'none',
