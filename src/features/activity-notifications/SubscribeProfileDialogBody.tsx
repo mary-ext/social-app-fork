@@ -8,7 +8,6 @@ import type {
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 
-import { RadioGroup } from '@base-ui/react/radio-group';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
@@ -20,6 +19,7 @@ import { RQKEY_getActivitySubscriptions } from '#/features/activity-notification
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';
+import * as Radio from '#/components/primitives/radio';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -172,7 +172,7 @@ export function SubscribeProfileDialogBody({
 				</ProfileCard.Header>
 			)}
 
-			<RadioGroup<SubscriptionChoice>
+			<Radio.Group<SubscriptionChoice>
 				aria-label={m['components.activityNotifications.title']()}
 				onValueChange={(value) => setState(CHOICE_STATES[value])}
 				render={<ChoiceCard.List />}
@@ -189,7 +189,7 @@ export function SubscribeProfileDialogBody({
 					value="posts"
 				/>
 				<ChoiceCard.Radio icon={BellOffIcon} titleText={m['common.status.off']()} value="off" />
-			</RadioGroup>
+			</Radio.Group>
 
 			{error && (
 				<Admonition type="error">

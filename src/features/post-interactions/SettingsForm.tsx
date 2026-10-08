@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-import { RadioGroup } from '@base-ui/react/radio-group';
 
 import {
 	type InteractionSettings,
@@ -14,6 +13,7 @@ import { formatCount } from '#/locale/intl/number';
 
 import { getReplyAudienceSummary } from '#/features/post-interactions/WhoCanReply';
 
+import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 
@@ -147,7 +147,7 @@ function ReplyRows({
 	// keep checkboxes outside the radio group's roving focus. CSS places them between "some" and "nobody".
 	return (
 		<>
-			<RadioGroup<ReplyAudience['type']>
+			<Radio.Group<ReplyAudience['type']>
 				aria-label={m['components.dialogs.reply.description']()}
 				className={styles.radioGroup}
 				onValueChange={onChangeMode}
@@ -175,7 +175,7 @@ function ReplyRows({
 						titleText={m['components.dialogs.reply.nobody']()}
 					/>
 				</Settings.RadioRow>
-			</RadioGroup>
+			</Radio.Group>
 			{replies.type === 'some' && (
 				<CheckboxGroup
 					aria-label={m['components.dialogs.reply.advancedDescription']()}

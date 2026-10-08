@@ -3,12 +3,12 @@
 import type { ComponentProps, ComponentType, ReactNode, SVGProps } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';
-import { Radio } from '@base-ui/react/radio';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
 import * as Collapsible from '#/components/primitives/collapsible';
+import * as Radio from '#/components/primitives/radio';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/Settings.css';
 import { Spinner } from '#/components/Spinner';
@@ -418,7 +418,7 @@ export function SelectRow<T = string>({
 }
 
 /**
- * a radio row. requires a Base UI `RadioGroup` parent.
+ * a radio row. requires a `Radio.Group` parent.
  *
  * @param children the row's label
  */

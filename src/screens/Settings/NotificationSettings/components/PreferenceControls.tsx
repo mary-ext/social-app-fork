@@ -1,11 +1,10 @@
-import { RadioGroup } from '@base-ui/react/radio-group';
-
 import {
 	type NotificationSettingsPreference,
 	type NotificationSettingsPreferenceName,
 	useNotificationSettingsUpdateMutation,
 } from '#/state/queries/notifications/settings';
 
+import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
@@ -96,7 +95,7 @@ export function Inner({
 					<Text size="md" weight="semiBold">
 						{m['screens.settings.activitySubscription.from']()}
 					</Text>
-					<RadioGroup
+					<Radio.Group
 						aria-label={m['screens.settings.notifications.filterHint']()}
 						disabled={!preference.push && !inApp}
 						onValueChange={(include: string) => update({ ...preference, include })}
@@ -109,7 +108,7 @@ export function Inner({
 						<Settings.RadioRow label={m['screens.settings.audience.peopleIFollow']()} value="follows">
 							<Settings.Label titleText={m['screens.settings.audience.peopleIFollow']()} />
 						</Settings.RadioRow>
-					</RadioGroup>
+					</Radio.Group>
 				</div>
 			)}
 		</div>

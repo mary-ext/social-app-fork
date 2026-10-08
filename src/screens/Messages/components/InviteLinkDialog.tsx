@@ -2,8 +2,6 @@ import { type ReactNode, useState } from 'react';
 
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
-import { RadioGroup } from '@base-ui/react/radio-group';
-
 import { targetToShareUrl } from '#/lib/routes/app-links';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
@@ -16,6 +14,7 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';
+import * as Radio from '#/components/primitives/radio';
 import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -203,7 +202,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 						<Text size="md" weight="semiBold">
 							{m['screens.messages.joinSettings.who']()}
 						</Text>
-						<RadioGroup<ChatBskyGroupDefs.JoinLinkView['joinRule']>
+						<Radio.Group<ChatBskyGroupDefs.JoinLinkView['joinRule']>
 							aria-label={m['screens.messages.joinSettings.who']()}
 							onValueChange={(joinRule) => setWhoCanJoin({ ...whoCanJoin, joinRule })}
 							render={<ChoiceCard.List />}
@@ -219,7 +218,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 								titleText={m['screens.settings.audience.peopleIFollow']()}
 								value="followedByOwner"
 							/>
-						</RadioGroup>
+						</Radio.Group>
 					</Stack>
 
 					<ChoiceCard.Checkbox

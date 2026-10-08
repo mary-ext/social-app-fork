@@ -42,7 +42,7 @@ export const card = style({
 			boxShadow: `inset 0 0 0 1px ${vars.palette.primary_500}`,
 			backgroundColor: vars.palette.primary_25,
 		},
-		'&:focus-visible': {
+		'&:is(:focus-visible, :has(> input:focus-visible))': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},

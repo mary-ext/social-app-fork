@@ -5,8 +5,6 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { RadioGroup } from '@base-ui/react/radio-group';
-
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 
 import { getLabelStrings } from '#/state/moderation/use-label-info';
@@ -14,6 +12,7 @@ import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/st
 
 import { LOCALE } from '#/locale/intl/locale';
 
+import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 
@@ -125,7 +124,7 @@ export function LabelerLabelRow({
 				)}
 			</div>
 			{configurable && (
-				<RadioGroup
+				<Radio.Group
 					aria-label={m['common.search.filteringFor']({ name: labelStrings.name })}
 					className={styles.radioGroup}
 					onValueChange={onChangeVisibility}
@@ -140,7 +139,7 @@ export function LabelerLabelRow({
 							<Settings.Label titleText={option.label} />
 						</Settings.RadioRow>
 					))}
-				</RadioGroup>
+				</Radio.Group>
 			)}
 		</Settings.CollapsibleRow>
 	);

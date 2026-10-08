@@ -186,7 +186,7 @@ export const rowInteractive = style({
 	selectors: {
 		// standalone rows have no container-provided hover color
 		[enabledHover]: { backgroundColor: fallbackVar(rowHover, vars.palette.contrast_25) },
-		'&:focus-visible': {
+		'&:is(:focus-visible, :has(> input:focus-visible))': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
 		},
@@ -246,7 +246,7 @@ globalStyle(`:where(${panelRows} > ${item}:first-child)::before`, divider);
 {
 	const led = `${item}:has(> ${leading}, > :first-child > ${leading})`;
 
-	// switches, radios, and checkboxes leave a hidden input between them and the next row
+	// switches and checkboxes leave a hidden input between them and the next row
 	globalStyle(
 		`:is(${led} + ${item}, ${led} + input + ${item}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${item}:first-child)::before`,
 		{ left: ROW_LABEL_INSET },

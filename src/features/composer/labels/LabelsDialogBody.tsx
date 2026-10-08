@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-import { RadioGroup } from '@base-ui/react/radio-group';
 
 import {
 	type AdultContentLabel,
@@ -11,6 +10,7 @@ import {
 } from '#/lib/moderation/self-labels';
 
 import * as Dialog from '#/components/Dialog';
+import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -90,7 +90,7 @@ export const LabelsDialogBody = ({
 						titleText={m['common.moderation.adultContent']()}
 						bodyText={m['features.composer.labels.hint']()}
 					>
-						<RadioGroup
+						<Radio.Group
 							aria-label={m['features.composer.labels.adultLabels']()}
 							value={draft.adult ?? NO_ADULT_LABEL}
 							onValueChange={(value) => {
@@ -102,7 +102,7 @@ export const LabelsDialogBody = ({
 									<Settings.Label titleText={option.label()} subtitleText={option.description?.()} />
 								</Settings.RadioRow>
 							))}
-						</RadioGroup>
+						</Radio.Group>
 					</Settings.Section>
 
 					<Settings.Section titleText={m['common.status.other']()}>

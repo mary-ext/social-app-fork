@@ -1,13 +1,13 @@
 import { Checkbox } from '@base-ui/react/checkbox';
-import { Radio } from '@base-ui/react/radio';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/Indicator.css';
+import * as Radio from '#/components/primitives/radio';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke3.svg';
 
 /**
- * render directly inside a Base UI `Radio.Root`.
+ * render directly inside a `Radio.Root`.
  *
  * @param className extra classes for the outer circle
  * @returns a radio indicator

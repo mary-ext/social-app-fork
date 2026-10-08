@@ -1,11 +1,11 @@
 import type { ComponentProps, ComponentType, SVGProps } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
-import { Radio as BaseRadio } from '@base-ui/react/radio';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/ChoiceCard.css';
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
+import * as RadioPrimitive from '#/components/primitives/radio';
 import { Text } from '#/components/Text';
 
 type CardContentProps = {
@@ -24,7 +24,7 @@ export function List({ className, ...props }: ComponentProps<'div'>) {
 }
 
 /**
- * a radio choice card. requires a Base UI `RadioGroup` parent.
+ * a radio choice card. requires a `Radio.Group` parent.
  *
  * @param icon the leading icon
  * @param titleText the option's name
@@ -33,13 +33,13 @@ export function List({ className, ...props }: ComponentProps<'div'>) {
  */
 export function Radio({ icon: Icon, titleText, value }: CardContentProps & { value: string }) {
 	return (
-		<BaseRadio.Root className={styles.card} value={value}>
+		<RadioPrimitive.Root className={styles.card} value={value}>
 			<Icon aria-hidden className={styles.icon} />
 			<Text className={styles.title} size="md" weight="medium">
 				{titleText}
 			</Text>
 			<RadioIndicator />
-		</BaseRadio.Root>
+		</RadioPrimitive.Root>
 	);
 }
 

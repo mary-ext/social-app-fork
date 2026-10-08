@@ -1,5 +1,3 @@
-import { RadioGroup } from '@base-ui/react/radio-group';
-
 import {
 	useNotificationDeclarationMutation,
 	useNotificationDeclarationQuery,
@@ -7,6 +5,7 @@ import {
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';
+import * as Radio from '#/components/primitives/radio';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
@@ -50,7 +49,7 @@ function Inner() {
 					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</div>
 			) : (
-				<RadioGroup
+				<Radio.Group
 					aria-label={m['screens.settings.activitySubscription.filterHint']()}
 					onValueChange={(value: string) => {
 						mutate({ $type: 'app.bsky.notification.declaration', allowSubscriptions: value });
@@ -73,7 +72,7 @@ function Inner() {
 						titleText={m['screens.settings.audience.noOne']()}
 						value="none"
 					/>
-				</RadioGroup>
+				</Radio.Group>
 			)}
 		</>
 	);
