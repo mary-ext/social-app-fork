@@ -3,7 +3,7 @@ use React Native.
 
 ## development notes
 
-this project uses React Compiler, `@base-ui/react` and Paraglide.
+this project uses React Compiler and Paraglide. UI primitives live in `src/components/primitives`.
 
 ### project management
 
