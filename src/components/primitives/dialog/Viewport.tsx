@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type DialogHTMLAttributes, type Ref, useRef } from 'react';
+import { type DialogHTMLAttributes, type Ref, useCallback, useRef } from 'react';
 
 import { getReturnFocusChain } from '../focus';
 import { mergeProps } from '../merge-props';
@@ -41,14 +41,17 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 	const pressedOutsideRef = useRef(false);
 
 	// capture the opener before `showModal()` moves focus.
-	const captureReturnFocus = (el: HTMLDialogElement | null): void => {
-		if (!open || !el || el.open) {
-			return;
-		}
-		const opener = activeTrigger ?? document.activeElement;
-		returnFocusRef.current =
-			opener instanceof HTMLElement && opener !== document.body ? getReturnFocusChain(opener) : [];
-	};
+	const captureReturnFocus = useCallback(
+		(el: HTMLDialogElement | null): void => {
+			if (!open || !el || el.open) {
+				return;
+			}
+			const opener = activeTrigger ?? document.activeElement;
+			returnFocusRef.current =
+				opener instanceof HTMLElement && opener !== document.body ? getReturnFocusChain(opener) : [];
+		},
+		[open, activeTrigger, returnFocusRef],
+	);
 
 	useTransitionsSettled(viewportRef, open, onTransitionSettled);
 	useInertWhileClosed(viewportRef, open);

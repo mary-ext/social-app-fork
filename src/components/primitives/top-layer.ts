@@ -10,38 +10,67 @@ import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 // #region showing and hiding
 
+// keep callbacks stable to avoid reattaching merged refs on each render.
+
+const ignoreElement = (): void => {};
+
+const showPopover = (el: HTMLElement | null, source: HTMLElement | undefined): void => {
+	if (el && !el.matches(':popover-open')) {
+		el.showPopover({ source });
+	}
+};
+
+const showSourcelessPopover = (el: HTMLElement | null): void => {
+	showPopover(el, undefined);
+};
+
+const sourcedPopoverShowers = new WeakMap<HTMLElement, (el: HTMLElement | null) => void>();
+
 /**
  * shows an open popover in the top layer. leaves it shown on close for exit transitions before unmounting.
  *
  * @param open current open state
  * @param source invoking element for native Tab order; applied when shown
- * @returns a ref callback for the popover element
+ * @returns a popover ref callback, stable for unchanged inputs
  */
-export const showInTopLayer = (open: boolean, source?: HTMLElement | null) => {
-	return (el: HTMLElement | null): void => {
-		if (open && el && !el.matches(':popover-open')) {
-			el.showPopover({ source: source ?? undefined });
-		}
-	};
+export const showInTopLayer = (
+	open: boolean,
+	source?: HTMLElement | null,
+): ((el: HTMLElement | null) => void) => {
+	if (!open) {
+		return ignoreElement;
+	}
+	if (!source) {
+		return showSourcelessPopover;
+	}
+
+	let show = sourcedPopoverShowers.get(source);
+	if (show === undefined) {
+		show = (el) => showPopover(el, source);
+		sourcedPopoverShowers.set(source, show);
+	}
+	return show;
+};
+
+const showModal = (el: HTMLDialogElement | null): void => {
+	if (!el || el.open) {
+		return;
+	}
+	// reopening during an exit transition.
+	if (el.matches(':popover-open')) {
+		el.hidePopover();
+	}
+	el.showModal();
 };
 
 /**
  * shows an open popup as a modal dialog. pair with {@link getDialogProps}.
  *
  * @param open current open state
- * @returns a ref callback for the dialog element
+ * @returns a dialog ref callback, stable for unchanged `open`
  */
-export const showModalInTopLayer = (open: boolean) => {
-	return (el: HTMLDialogElement | null): void => {
-		if (!open || !el || el.open) {
-			return;
-		}
-		// reopening during an exit transition.
-		if (el.matches(':popover-open')) {
-			el.hidePopover();
-		}
-		el.showModal();
-	};
+export const showModalInTopLayer = (open: boolean): ((el: HTMLDialogElement | null) => void) => {
+	return open ? showModal : ignoreElement;
 };
 
 /**
