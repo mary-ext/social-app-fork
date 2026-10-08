@@ -129,6 +129,8 @@ export const isUnclaimedEscape = (event: KeyboardEvent): boolean => {
 	return event.key === 'Escape' && !event.isComposing && !event.defaultPrevented;
 };
 
+const closeVerdicts = new WeakMap<HTMLDialogElement, boolean>();
+
 /**
  * routes native dialog dismissal through the popup's close handler.
  *
@@ -145,15 +147,21 @@ export const getDialogProps = (
 		role: 'presentation',
 		onCancel(event) {
 			event.preventDefault();
-			requestClose(event.nativeEvent);
+			const accepted = requestClose(event.nativeEvent);
+			// non-cancelable dismissal still closes the dialog. reuse this result after any intervening render.
+			if (!event.cancelable) {
+				closeVerdicts.set(event.currentTarget, accepted);
+			}
 		},
 		onClose(event) {
 			const el = event.currentTarget;
+			const verdict = closeVerdicts.get(el);
+			closeVerdicts.delete(el);
 			if (!open || el.open || el.matches(':popover-open')) {
 				return;
 			}
-			// without intervening user activation, close requests can skip `cancel`; reopen if rejected.
-			if (!requestClose(event.nativeEvent)) {
+			// some close requests skip `cancel`, so they need a fresh decision.
+			if (!(verdict ?? requestClose(event.nativeEvent))) {
 				el.showModal();
 			}
 		},
