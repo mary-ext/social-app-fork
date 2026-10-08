@@ -21,7 +21,6 @@ import * as TID from '@atcute/tid';
 
 import { uniqueBy } from '@mary/array-fns';
 
-import { Collapsible } from '@base-ui/react/collapsible';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
@@ -49,6 +48,7 @@ import * as MediaPreview from '#/components/MediaPreview';
 import { Post } from '#/components/Post/Post';
 import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
+import * as Collapsible from '#/components/primitives/collapsible';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Text';
@@ -628,26 +628,14 @@ function AuthorsList({
 	}
 
 	return (
-		<Collapsible.Root open={isExpanded} onOpenChange={onOpenChange}>
+		<Collapsible.Root className={css.authorsCollapsible} open={isExpanded} onOpenChange={onOpenChange}>
 			<Collapsible.Trigger
-				// a non-native button so the trigger can hold the interactive previewable avatars. Base UI's
-				// trigger toggles on every click and ignores a child's `preventDefault`, so a click on a nested
-				// avatar link would both navigate to that profile and expand the list. Suppress the toggle
-				// whenever the press lands on a nested interactive element rather than the chevron/label.
-				nativeButton={false}
-				render={<div />}
 				className={css.authorsTrigger}
 				aria-label={
 					isExpanded
 						? m['view.notifications.a11y.collapseUsers']()
 						: m['view.notifications.a11y.expandUsers']()
 				}
-				onClick={(event) => {
-					const interactive = event.target instanceof Element ? event.target.closest('a, button') : null;
-					if (interactive && interactive !== event.currentTarget) {
-						event.preventBaseUIHandler();
-					}
-				}}
 			>
 				{isExpanded ? (
 					<>
@@ -682,17 +670,15 @@ function AuthorsList({
 					</>
 				)}
 			</Collapsible.Trigger>
-			<Collapsible.Panel className={css.expandPanel}>
-				<div className={css.expandContent}>
-					{authors.map((author, i) => (
-						<ExpandedAuthorProfileCard
-							key={author.profile.did}
-							author={author}
-							moderationOpts={moderationOpts}
-							isLast={i === authors.length - 1}
-						/>
-					))}
-				</div>
+			<Collapsible.Panel className={css.expandContent}>
+				{authors.map((author, i) => (
+					<ExpandedAuthorProfileCard
+						key={author.profile.did}
+						author={author}
+						moderationOpts={moderationOpts}
+						isLast={i === authors.length - 1}
+					/>
+				))}
 			</Collapsible.Panel>
 		</Collapsible.Root>
 	);

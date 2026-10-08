@@ -92,20 +92,25 @@ export const authorChevron = style({
 	alignItems: 'center',
 });
 
-export const expandPanel = style({
-	transition: 'height 200ms ease, opacity 200ms ease',
-	opacity: 1,
-	height: 'var(--collapsible-panel-height)',
-	overflow: 'hidden',
+export const authorsCollapsible = style({
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': {
+		'&::details-content': {
+			transitionDuration: '200ms',
+			transitionProperty: 'block-size, content-visibility, opacity',
+			transitionTimingFunction: 'ease',
 			opacity: 0,
-			height: 0,
+		},
+		'&[open]::details-content': {
+			opacity: 1,
 		},
 	},
 	'@media': {
 		'(prefers-reduced-motion: reduce)': {
-			transition: 'none',
+			selectors: {
+				'&::details-content': {
+					transition: 'none',
+				},
+			},
 		},
 	},
 });

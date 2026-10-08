@@ -8,7 +8,6 @@ import {
 
 import { unique } from '@mary/array-fns';
 
-import { Collapsible } from '@base-ui/react/collapsible';
 import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/display-names';
@@ -23,6 +22,7 @@ import { LOCALE } from '#/locale/intl/locale';
 
 import * as Dialog from '#/components/Dialog';
 import { ModerationDetailsDialog } from '#/components/moderation/ModerationDetailsDialog';
+import * as Collapsible from '#/components/primitives/collapsible';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -45,8 +45,10 @@ type ContentHiderProps = {
 };
 
 /**
- * renders children directly when nothing blurs them, otherwise a blur card with a Base UI {@link Collapsible}
- * disclosure that reveals the content on demand.
+ * hides moderated content, with a disclosure when overrides are permitted.
+ *
+ * @param props moderation restrictions, content, and wrapper classes
+ * @returns the content wrapper with a moderation notice when blurred
  */
 export function ContentHider({
 	modui,
@@ -165,21 +167,21 @@ function ContentHiderActive({
 	);
 
 	return (
-		<Collapsible.Root
-			open={override}
-			onOpenChange={(open) => setOverride(open)}
-			className={clsx(styles.outer, className, activeClassName)}
-		>
+		<div className={clsx(styles.outer, className, activeClassName)}>
 			<ModerationDetailsDialog handle={handle} modcause={blur} />
 			{modui.noOverride ? (
-				// noOverride content can never be revealed; its trigger opens the details dialog instead of toggling.
 				<Dialog.Trigger handle={handle} className={styles.blurButton} aria-label={desc.name}>
 					{triggerInner}
 				</Dialog.Trigger>
 			) : (
-				<Collapsible.Trigger className={styles.blurButton} aria-label={desc.name}>
-					{triggerInner}
-				</Collapsible.Trigger>
+				<Collapsible.Root open={override} onOpenChange={setOverride}>
+					<Collapsible.Trigger className={styles.blurButton} aria-label={desc.name}>
+						{triggerInner}
+					</Collapsible.Trigger>
+					<Collapsible.Panel className={clsx(styles.panel, childContainerClassName)}>
+						{children}
+					</Collapsible.Panel>
+				</Collapsible.Root>
 			)}
 			{desc.source && blur.type === ModerationCauseType.Label && !override && (
 				<Dialog.Trigger
@@ -197,9 +199,6 @@ function ContentHiderActive({
 					</Text>
 				</Dialog.Trigger>
 			)}
-			<Collapsible.Panel className={clsx(styles.panel, childContainerClassName)}>
-				{children}
-			</Collapsible.Panel>
-		</Collapsible.Root>
+		</div>
 	);
 }

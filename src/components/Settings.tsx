@@ -3,12 +3,12 @@
 import type { ComponentProps, ComponentType, ReactNode, SVGProps } from 'react';
 
 import { Checkbox } from '@base-ui/react/checkbox';
-import { Collapsible } from '@base-ui/react/collapsible';
 import { Radio } from '@base-ui/react/radio';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
+import * as Collapsible from '#/components/primitives/collapsible';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/Settings.css';
 import { Spinner } from '#/components/Spinner';
@@ -307,15 +307,14 @@ export function CollapsibleRow({
 	trailing?: ReactNode;
 }) {
 	return (
-		<Collapsible.Root className={styles.item} onOpenChange={onOpenChange} open={open}>
+		<Collapsible.Root
+			className={clsx(styles.item, styles.collapsible)}
+			onOpenChange={onOpenChange}
+			open={open}
+		>
 			<Collapsible.Trigger
-				render={
-					<button
-						aria-label={label}
-						className={clsx(styles.row, styles.rowInteractive, styles.collapsibleTrigger)}
-						type="button"
-					/>
-				}
+				aria-label={label}
+				className={clsx(styles.row, styles.rowInteractive, styles.collapsibleTrigger)}
 			>
 				{icon != null && <Icon icon={icon} />}
 				<Label titleText={titleText} />

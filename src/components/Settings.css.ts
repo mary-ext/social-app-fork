@@ -212,6 +212,15 @@ globalStyle(`${rowPrimarySubtle} ${leading}`, {
 	color: vars.palette.primary_600,
 });
 
+export const collapsible = style({
+	selectors: {
+		'&::details-content': {
+			transitionDuration: '300ms',
+			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+		},
+	},
+});
+
 export const collapsibleTrigger = style({
 	selectors: {
 		'&[data-panel-open]': {
@@ -222,17 +231,7 @@ export const collapsibleTrigger = style({
 
 export const panel = style({
 	boxSizing: 'border-box',
-	transitionDuration: '300ms',
-	transitionProperty: 'height',
-	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-	height: 'var(--collapsible-panel-height)',
-	overflow: 'hidden',
 	vars: { [radiusTop]: '0px' },
-	selectors: {
-		'&[data-starting-style], &[data-ending-style]': {
-			height: 0,
-		},
-	},
 });
 
 export const panelRows = style({
