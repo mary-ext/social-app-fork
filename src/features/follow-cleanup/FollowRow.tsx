@@ -4,11 +4,12 @@ import type { Did } from '@atcute/lexicons';
 import { useQuery } from '@tanstack/react-query';
 
 import { getClaimedHandle } from '#/lib/api/did-document';
-import type { FlaggedFollow } from '#/lib/follow-cleanup';
 
 import { GCTIME, STALE } from '#/state/queries';
 
 import { dateMedium } from '#/locale/intl/datetime';
+
+import type { FlaggedFollow } from '#/features/follow-cleanup/scan';
 
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';

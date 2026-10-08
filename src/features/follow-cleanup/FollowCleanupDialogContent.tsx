@@ -3,19 +3,20 @@ import { useState } from 'react';
 import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
+import { useConstant } from '#/lib/hooks/use-constant';
+import { createRateLimitBudget } from '#/lib/rate-limit-budget';
+
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
+
+import { formatCount } from '#/locale/intl/number';
+
+import { useBulkUnfollowMutation, useFollowCleanupScanQuery } from '#/features/follow-cleanup/queries';
 import {
 	type FlaggedFollow,
 	type FollowIssue,
 	followIssuesBySeverity,
 	type ScanProgress,
-} from '#/lib/follow-cleanup';
-import { useConstant } from '#/lib/hooks/use-constant';
-import { createRateLimitBudget } from '#/lib/rate-limit-budget';
-
-import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useBulkUnfollowMutation, useFollowCleanupScanQuery } from '#/state/queries/follow-cleanup';
-
-import { formatCount } from '#/locale/intl/number';
+} from '#/features/follow-cleanup/scan';
 
 import { BlankState } from '#/components/BlankState';
 import * as Dialog from '#/components/Dialog';

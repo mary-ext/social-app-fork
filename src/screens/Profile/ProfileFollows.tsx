@@ -10,10 +10,11 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
+import { FollowCleanupDialog } from '#/features/follow-cleanup/FollowCleanupDialog';
+
 import { BlankState } from '#/components/BlankState';
 import * as Dialog from '#/components/Dialog';
 import { ErrorState } from '#/components/ErrorState';
-import { FollowCleanupDialog } from '#/components/FollowCleanupDialog';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import * as Menu from '#/components/Menu';

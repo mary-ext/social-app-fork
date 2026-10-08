@@ -1,4 +1,4 @@
-import type { FollowIssue } from '#/lib/follow-cleanup';
+import type { FollowIssue } from '#/features/follow-cleanup/scan';
 
 import { m } from '#/paraglide/messages';
 

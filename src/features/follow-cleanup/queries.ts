@@ -6,7 +6,6 @@ import type { Did, ResourceUri } from '@atcute/lexicons';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { bulkDeleteFollows } from '#/lib/bulk-write-follows';
-import { type FlaggedFollow, type ScanProgress, scanFollows } from '#/lib/follow-cleanup';
 import type { RateLimitBudget } from '#/lib/rate-limit-budget';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
@@ -14,6 +13,8 @@ import { STALE } from '#/state/queries';
 import { RQKEY_ROOT as PROFILE_FOLLOWS_RQKEY_ROOT } from '#/state/queries/profile-follows';
 import { profileQueryKey } from '#/state/queries/profile-key';
 import { getClients, useSession } from '#/state/session';
+
+import { type FlaggedFollow, type ScanProgress, scanFollows } from '#/features/follow-cleanup/scan';
 
 const RQKEY_ROOT = 'follow-cleanup';
 
