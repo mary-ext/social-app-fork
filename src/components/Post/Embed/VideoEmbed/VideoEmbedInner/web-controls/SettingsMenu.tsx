@@ -246,7 +246,7 @@ export function SettingsMenu({
 			<Tooltip label={tooltip}>
 				<Popover.Trigger render={render} />
 			</Tooltip>
-			<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={styles.collisionPadding}>
+			<Popover.Positioner side="top" align="end" sideOffset={6} collisionPadding={6} shrink>
 				<Popover.Popup
 					className={styles.popup}
 					aria-label={label}

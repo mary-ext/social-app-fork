@@ -2,8 +2,6 @@ import { createVar, fallbackVar, keyframes, style } from '@vanilla-extract/css';
 
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
-export const collisionPadding = 6;
-
 export const panelHeightVar = createVar();
 
 const hidden = {
@@ -13,6 +11,8 @@ const hidden = {
 
 export const popup = style({
 	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'column',
 	transformOrigin: 'var(--transform-origin)',
 	overflow: 'hidden',
 	outline: 0,
@@ -38,8 +38,7 @@ export const viewport = style({
 	overflowX: 'hidden',
 	overflowY: 'auto',
 	height: fallbackVar(panelHeightVar, 'auto'),
-	// no available-height variable; cap to the viewport minus popup and collision padding.
-	maxHeight: `calc(100dvh - ${(space.xs + collisionPadding) * 2}px)`,
+	minHeight: 0,
 	transition: 'height 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
 	selectors: {
 		'&[data-transitioning]': { overflowY: 'hidden' },
