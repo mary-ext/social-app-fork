@@ -60,6 +60,17 @@ const OPPOSITE = {
 	top: 'bottom',
 } as const;
 
+// prefer aligned placements before allowing cross-axis shifting.
+const getFallbacks = (side: Side, align: Align): string[] => {
+	const [sideFlip, alignFlip] = isVertical(side)
+		? ['flip-block', 'flip-inline']
+		: ['flip-inline', 'flip-block'];
+	if (align === 'center') {
+		return [sideFlip];
+	}
+	return [sideFlip, alignFlip, `${sideFlip} ${alignFlip}`, side, OPPOSITE[side]];
+};
+
 const MARGIN = {
 	bottom: 'marginBottom',
 	left: 'marginLeft',
@@ -68,7 +79,7 @@ const MARGIN = {
 } as const;
 
 /**
- * anchors a popup with side-flip fallbacks and viewport clearance.
+ * anchors a popup, flipping or shifting to maintain viewport clearance.
  *
  * @param options anchor name and placement
  * @returns styles for the positioning element
@@ -86,11 +97,15 @@ export const getAnchoredStyle = ({
 	sideOffset: number;
 	collisionPadding: CollisionPadding;
 }): CSSProperties => {
+	const inlineMargins =
+		(resolveCollisionPadding(collisionPadding, 'left') ?? 0) +
+		(resolveCollisionPadding(collisionPadding, 'right') ?? 0);
 	const style: CSSProperties = {
 		positionAnchor: anchorName,
 		positionArea: getPositionArea(side, align),
-		positionTryFallbacks: isVertical(side) ? 'flip-block' : 'flip-inline',
+		positionTryFallbacks: getFallbacks(side, align).join(', '),
 		[MARGIN[OPPOSITE[side]]]: sideOffset,
+		'--anchored-inline-margins': `${inlineMargins}px`,
 	};
 
 	const [start, end]: [Side, Side] = isVertical(side) ? ['left', 'right'] : ['top', 'bottom'];
@@ -114,8 +129,8 @@ export const getAnchoredStyle = ({
 };
 
 /**
- * anchors a popup above or below, flipping or shrinking to fit the viewport. use with `shrinkingPositioner`
- * and scrollable popup content.
+ * anchors a popup above or below, flipping, shifting, or shrinking to fit the viewport. requires
+ * `shrinkingPositioner` and scrollable popup content.
  *
  * @param options anchor name and placement
  * @returns styles for the positioning element
@@ -123,11 +138,35 @@ export const getAnchoredStyle = ({
 export const getShrinkingAnchoredStyle = (
 	options: Parameters<typeof getAnchoredStyle>[0] & { side: 'bottom' | 'top' },
 ): CSSProperties => {
-	const margins = options.sideOffset + (resolveCollisionPadding(options.collisionPadding, options.side) ?? 0);
+	const { side, align, sideOffset, collisionPadding } = options;
+	const margins = sideOffset + (resolveCollisionPadding(collisionPadding, side) ?? 0);
+
+	let shrinkFallbacks: string[];
+	if (align === 'center') {
+		shrinkFallbacks = [
+			'--anchored-shrink-floored',
+			'--anchored-shrink-floored flip-block',
+			'--anchored-shrink',
+		];
+	} else {
+		const toSide = side === 'top' ? ' flip-block' : '';
+		const toOpposite = side === 'top' ? '' : ' flip-block';
+		shrinkFallbacks = [
+			'--anchored-shrink-floored',
+			'--anchored-shrink-floored flip-inline',
+			'--anchored-shrink-floored flip-block',
+			'--anchored-shrink-floored flip-block flip-inline',
+			`--anchored-shrink-floored-span${toSide}`,
+			`--anchored-shrink-floored-span${toOpposite}`,
+			'--anchored-shrink',
+			'--anchored-shrink flip-inline',
+			`--anchored-shrink-span${toSide}`,
+		];
+	}
+
 	return {
 		...getAnchoredStyle(options),
-		positionTryFallbacks:
-			'flip-block, --anchored-shrink-floored, --anchored-shrink-floored flip-block, --anchored-shrink',
+		positionTryFallbacks: [...getFallbacks(side, align), ...shrinkFallbacks].join(', '),
 		'--anchored-block-margins': `${margins}px`,
 	};
 };

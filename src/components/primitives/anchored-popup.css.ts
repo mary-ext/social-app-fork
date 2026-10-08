@@ -1,11 +1,20 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
+import { layered } from '#/styles/layers';
+import { reset } from '#/styles/layers.css';
+
 import { topLayerReset } from './top-layer.css';
 
 // popup styles use @starting-style for entry and [data-closed] for exit; presence waits for transitions.
 
 export const positioner = style([
 	topLayerReset,
+	// keep intrinsic width so a narrow position-area triggers fallbacks instead of wrapping.
+	// the reset layer lets consumers override sizing.
+	layered(reset, {
+		width: 'max-content',
+		maxWidth: 'calc(100vw - var(--anchored-inline-margins, 0px))',
+	}),
 	{
 		containerType: 'anchored',
 		positionVisibility: 'anchors-visible',
