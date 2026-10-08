@@ -2,8 +2,8 @@ import { type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 
 import type { Gif } from '#/lib/media/external-gif/types';
 
-import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
-import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
+import * as styles from '#/features/gif-picker/components/GifPickerGrid.css';
+import { GifPickerItem } from '#/features/gif-picker/components/GifPickerItem';
 
 type Props = {
 	/** shown in place of the columns while `items` is empty. */

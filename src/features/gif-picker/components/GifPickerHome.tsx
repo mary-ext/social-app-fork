@@ -2,9 +2,9 @@ import type { Gif } from '#/lib/media/external-gif/types';
 
 import { useRecentGifs } from '#/state/preferences/recent-gifs';
 
-import { GIF_CATEGORIES, type GifCategoryId } from '#/features/gifPicker/categories';
-import * as styles from '#/features/gifPicker/components/GifPickerHome.css';
-import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
+import { GIF_CATEGORIES, type GifCategoryId } from '#/features/gif-picker/categories';
+import * as styles from '#/features/gif-picker/components/GifPickerHome.css';
+import { GifPickerItem } from '#/features/gif-picker/components/GifPickerItem';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';

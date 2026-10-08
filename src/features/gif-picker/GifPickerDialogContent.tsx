@@ -5,11 +5,11 @@ import type { Gif } from '#/lib/media/external-gif/types';
 
 import { addRecentGif } from '#/state/preferences/recent-gifs';
 
-import { type GifCategoryId, getGifCategory } from '#/features/gifPicker/categories';
-import { GifPickerFeed, RecentGifsFeed } from '#/features/gifPicker/components/GifPickerFeed';
-import { GifPickerHome } from '#/features/gifPicker/components/GifPickerHome';
-import * as styles from '#/features/gifPicker/GifPickerDialog.css';
-import { useRetainFeaturedGifs } from '#/features/gifPicker/queries';
+import { type GifCategoryId, getGifCategory } from '#/features/gif-picker/categories';
+import { GifPickerFeed, RecentGifsFeed } from '#/features/gif-picker/components/GifPickerFeed';
+import { GifPickerHome } from '#/features/gif-picker/components/GifPickerHome';
+import * as styles from '#/features/gif-picker/GifPickerDialog.css';
+import { useRetainFeaturedGifs } from '#/features/gif-picker/queries';
 
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';

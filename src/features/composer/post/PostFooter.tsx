@@ -5,7 +5,7 @@ import { openMediaPicker } from '#/lib/media/picker';
 
 import { toPostLanguages } from '#/state/preferences/languages';
 
-import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
+import { GifPickerDialog } from '#/features/gif-picker/GifPickerDialog';
 
 import * as Dialog from '#/components/Dialog';
 import * as EmojiPicker from '#/components/EmojiPicker';

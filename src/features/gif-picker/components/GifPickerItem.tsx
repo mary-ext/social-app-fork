@@ -1,7 +1,7 @@
 import type { Gif } from '#/lib/media/external-gif/types';
 
-import * as styles from '#/features/gifPicker/components/GifPickerItem.css';
-import { gifPreviewUrl } from '#/features/gifPicker/utils';
+import * as styles from '#/features/gif-picker/components/GifPickerItem.css';
+import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import { m } from '#/paraglide/messages';
 

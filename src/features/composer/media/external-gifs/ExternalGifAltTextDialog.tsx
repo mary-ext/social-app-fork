@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { parseGifEmbedFromUrl, toGifEmbedUrl } from '#/lib/media/external-gif/embed';
 import type { Gif } from '#/lib/media/external-gif/types';
 
-import { gifPreviewUrl } from '#/features/gifPicker/utils';
+import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import type * as Dialog from '#/components/Dialog';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';

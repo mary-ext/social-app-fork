@@ -1,4 +1,4 @@
-import * as styles from '#/features/gifPicker/components/GifPickerPlaceholder.css';
+import * as styles from '#/features/gif-picker/components/GifPickerPlaceholder.css';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';

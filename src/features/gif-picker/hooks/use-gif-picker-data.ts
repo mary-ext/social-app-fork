@@ -1,4 +1,4 @@
-import { useFeaturedGifsQuery, useGifSearchQuery } from '#/features/gifPicker/queries';
+import { useFeaturedGifsQuery, useGifSearchQuery } from '#/features/gif-picker/queries';
 
 /**
  * loads a KLIPY feed: search results for `query`, or the featured feed when it's empty.

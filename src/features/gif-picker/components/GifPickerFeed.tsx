@@ -8,13 +8,13 @@ import type { Gif } from '#/lib/media/external-gif/types';
 
 import { useRecentGifs } from '#/state/preferences/recent-gifs';
 
-import * as styles from '#/features/gifPicker/components/GifPickerFeed.css';
-import { GifPickerGrid } from '#/features/gifPicker/components/GifPickerGrid';
+import * as styles from '#/features/gif-picker/components/GifPickerFeed.css';
+import { GifPickerGrid } from '#/features/gif-picker/components/GifPickerGrid';
 import {
 	GifPickerEmptyState,
 	GifPickerErrorState,
-} from '#/features/gifPicker/components/GifPickerPlaceholder';
-import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
+} from '#/features/gif-picker/components/GifPickerPlaceholder';
+import { useGifPickerData } from '#/features/gif-picker/hooks/use-gif-picker-data';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';

@@ -4,7 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { parseGifEmbedFromUrl, toGifEmbedUrl } from '#/lib/media/external-gif/embed';
 
-import { gifPreviewUrl } from '#/features/gifPicker/utils';
+import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Button } from '#/components/web/Button';
