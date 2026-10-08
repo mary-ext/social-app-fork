@@ -47,21 +47,6 @@ export const usePresence = (
 };
 
 /**
- * prevents focus and input during exit transitions. restore focus in an earlier layout effect.
- *
- * @param ref popup positioning element
- * @param open current open state
- */
-export const useInertWhileClosed = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
-	useLayoutEffect(() => {
-		const el = ref.current;
-		if (el) {
-			el.inert = !open;
-		}
-	}, [open, ref]);
-};
-
-/**
  * reports completed open/close transitions of a mounted popup.
  *
  * @param ref the popup's positioning element

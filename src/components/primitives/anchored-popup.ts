@@ -3,12 +3,27 @@ import './position-try.css';
 import { type CSSProperties, type RefObject, useLayoutEffect } from 'react';
 
 import { type DataAttributes, dataAttributes } from './data-attributes';
-import { getOpenAttributes } from './presence';
+import { getOpenAttributes, useTransitionsSettled } from './presence';
+
 export type Side = 'bottom' | 'left' | 'right' | 'top';
 export type Align = 'center' | 'end' | 'start';
 
 /** minimum distance from the viewport edges, in pixels; one number applies to every side. */
 export type CollisionPadding = number | Partial<Record<Side, number>>;
+
+/** default distance from the viewport edges, in pixels. */
+export const COLLISION_PADDING = 5;
+
+export type PlacementProps = {
+	/** preferred side; flips when space is insufficient. */
+	side?: Side;
+	/** alignment along the anchor's edge. */
+	align?: Align;
+	/** gap between anchor and popup, in pixels. */
+	sideOffset?: number;
+	/** viewport clearance; defaults to {@link COLLISION_PADDING}. */
+	collisionPadding?: CollisionPadding;
+};
 
 /**
  * @param padding uniform or per-edge padding
@@ -128,12 +143,23 @@ export const getPositionerAttributes = (open: boolean, side: Side, align: Align)
 };
 
 /**
- * snaps the popup's top-left corner to device pixels on open and resize. replaces inline `translate`.
+ * tracks transitions and snaps an open popup to device pixels. owns inline `translate`. make the positioner
+ * `inert` while closed to block focus and input during exit transitions.
  *
  * @param ref popup positioning element
  * @param open current open state
+ * @param onTransitionSettled receives the open state once its transitions finish
  */
-export const useDevicePixelSnap = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
+export const useAnchoredPositioner = (
+	ref: RefObject<HTMLElement | null>,
+	open: boolean,
+	onTransitionSettled: (open: boolean) => void,
+): void => {
+	useTransitionsSettled(ref, open, onTransitionSettled);
+	useDevicePixelSnap(ref, open);
+};
+
+const useDevicePixelSnap = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
 	useLayoutEffect(() => {
 		const el = ref.current;
 		if (!open || !el) {
@@ -149,14 +175,18 @@ export const useDevicePixelSnap = (ref: RefObject<HTMLElement | null>, open: boo
 			const rect = el.getBoundingClientRect();
 			const left = rect.left - x;
 			const top = rect.top - y;
-			x = Math.round(left * dpr) / dpr - left;
-			y = Math.round(top * dpr) / dpr - top;
-			el.style.translate = `${x}px ${y}px`;
+			const nextX = Math.round(left * dpr) / dpr - left;
+			const nextY = Math.round(top * dpr) / dpr - top;
+			if (nextX !== x || nextY !== y) {
+				x = nextX;
+				y = nextY;
+				el.style.translate = `${x}px ${y}px`;
+			}
 		};
 
 		el.style.removeProperty('translate');
-		snap();
 
+		// ResizeObserver supplies the initial snap before paint.
 		const observer = new ResizeObserver(snap);
 		observer.observe(el);
 		window.addEventListener('resize', snap);

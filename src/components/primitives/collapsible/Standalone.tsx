@@ -3,7 +3,7 @@
 import { type HTMLAttributes, useRef } from 'react';
 
 import { mergeProps } from '../merge-props';
-import { getOpenAttributes, useInertWhileClosed, usePresence, useTransitionsSettled } from '../presence';
+import { getOpenAttributes, usePresence, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import * as styles from './collapsible.css';
 
@@ -36,9 +36,9 @@ const MountedStandalone = ({
 	const panelRef = useRef<HTMLDivElement | null>(null);
 
 	useTransitionsSettled(panelRef, open, onTransitionSettled);
-	useInertWhileClosed(panelRef, open);
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
+		inert: !open,
 		className: styles.standalone,
 	};
 

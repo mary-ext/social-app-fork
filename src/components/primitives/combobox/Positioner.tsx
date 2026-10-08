@@ -4,32 +4,26 @@ import { type HTMLAttributes, type Ref, type RefObject, useId, useLayoutEffect, 
 
 import {
 	addAnchorName,
-	type Align,
-	type CollisionPadding,
+	COLLISION_PADDING,
 	getPositionerAttributes,
 	getShrinkingAnchoredStyle,
-	useDevicePixelSnap,
+	type PlacementProps,
+	useAnchoredPositioner,
 } from '../anchored-popup';
-import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
-import { useInertWhileClosed, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { showInTopLayer } from '../top-layer';
+import * as styles from './combobox.css';
 import { useRootContext } from './shared';
 
-export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> & {
-	ref?: Ref<HTMLDivElement>;
-	/** element to position against; defaults to the input. */
-	anchor?: Element | RefObject<Element | null> | null;
-	/** preferred side; flips or shrinks when space is insufficient. */
-	side?: 'bottom' | 'top';
-	/** alignment along the anchor's edge. */
-	align?: Align;
-	/** gap between anchor and popup, in pixels. */
-	sideOffset?: number;
-	/** minimum distance from the viewport edges, in pixels. */
-	collisionPadding?: CollisionPadding;
-};
+export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> &
+	Omit<PlacementProps, 'side'> & {
+		ref?: Ref<HTMLDivElement>;
+		/** element to position against; defaults to the input. */
+		anchor?: Element | RefObject<Element | null> | null;
+		/** preferred side; flips or shrinks when space is insufficient. */
+		side?: 'bottom' | 'top';
+	};
 
 /**
  * positions the popup in the top layer at the anchor, without moving focus from the input. popup content must
@@ -60,7 +54,7 @@ const MountedPositioner = ({
 	side = 'bottom',
 	align = 'center',
 	sideOffset = 0,
-	collisionPadding = 5,
+	collisionPadding = COLLISION_PADDING,
 	...elementProps
 }: PositionerProps) => {
 	const ctx = useRootContext();
@@ -87,15 +81,12 @@ const MountedPositioner = ({
 		};
 	}, []);
 
-	useTransitionsSettled(positionerRef, open, ctx.onTransitionSettled);
-
-	useInertWhileClosed(positionerRef, open);
-
-	useDevicePixelSnap(positionerRef, open);
+	useAnchoredPositioner(positionerRef, open, ctx.onTransitionSettled);
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		popover: 'manual',
-		className: `${styles.positioner} ${styles.shrinkingPositioner}`,
+		inert: !open,
+		className: styles.positioner,
 		style: getShrinkingAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 	};
 

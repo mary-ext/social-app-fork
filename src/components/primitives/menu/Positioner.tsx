@@ -3,29 +3,24 @@
 import type { Ref } from 'react';
 
 import {
-	type Align,
-	type CollisionPadding,
+	COLLISION_PADDING,
 	getPositionerAttributes,
 	getShrinkingAnchoredStyle,
-	useDevicePixelSnap,
+	type PlacementProps,
+	useAnchoredPositioner,
 } from '../anchored-popup';
-import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
-import { useInertWhileClosed, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showModalInTopLayer } from '../top-layer';
+import * as styles from './menu.css';
 import { useRootContext } from './shared';
 
-export type PositionerProps = Omit<RenderProps<'dialog'>, 'ref'> & {
-	ref?: Ref<HTMLDialogElement>;
-	/** preferred side; flips when space is insufficient. */
-	side?: 'bottom' | 'top';
-	/** alignment along the trigger's edge. */
-	align?: Align;
-	/** gap between trigger and popup, in pixels. */
-	sideOffset?: number;
-	collisionPadding?: CollisionPadding;
-};
+export type PositionerProps = Omit<RenderProps<'dialog'>, 'ref'> &
+	Omit<PlacementProps, 'side'> & {
+		ref?: Ref<HTMLDialogElement>;
+		/** preferred side; flips or shrinks when space is insufficient. */
+		side?: 'bottom' | 'top';
+	};
 
 /**
  * positions the menu in the top layer at the active trigger. popup content must be scrollable.
@@ -44,16 +39,12 @@ const MountedPositioner = ({
 	side = 'bottom',
 	align = 'center',
 	sideOffset = 0,
-	collisionPadding = 5,
+	collisionPadding = COLLISION_PADDING,
 	...elementProps
 }: PositionerProps) => {
 	const { open, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
 
-	useTransitionsSettled(positionerRef, open, onTransitionSettled);
-
-	useInertWhileClosed(positionerRef, open);
-
-	useDevicePixelSnap(positionerRef, open);
+	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
 
 	return useRender({
 		tag: 'dialog',
@@ -63,7 +54,8 @@ const MountedPositioner = ({
 			getPositionerAttributes(open, side, align),
 			{
 				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
-				className: `${styles.positioner} ${styles.shrinkingPositioner}`,
+				inert: !open,
+				className: styles.positioner,
 				style: getShrinkingAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 			},
 			elementProps,

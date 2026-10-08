@@ -3,28 +3,21 @@
 import type { Ref } from 'react';
 
 import {
-	type Align,
 	getAnchoredStyle,
 	getPositionerAttributes,
-	type Side,
-	useDevicePixelSnap,
+	type PlacementProps,
+	useAnchoredPositioner,
 } from '../anchored-popup';
-import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
-import { useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { getHintProps, showInTopLayer } from '../top-layer';
 import { useRootContext } from './shared';
+import * as styles from './tooltip.css';
 
-export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> & {
-	ref?: Ref<HTMLDivElement>;
-	/** preferred side; flips when space is insufficient. */
-	side?: Side;
-	/** alignment along the trigger's edge. */
-	align?: Align;
-	/** gap between trigger and popup, in pixels. */
-	sideOffset?: number;
-};
+export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> &
+	Omit<PlacementProps, 'collisionPadding'> & {
+		ref?: Ref<HTMLDivElement>;
+	};
 
 /**
  * positions the tooltip in the top layer at the trigger.
@@ -48,9 +41,7 @@ const MountedPositioner = ({
 	const { open, disableHoverablePopup, anchorName, positionerRef, setOpen, onTransitionSettled } =
 		useRootContext();
 
-	useTransitionsSettled(positionerRef, open, onTransitionSettled);
-
-	useDevicePixelSnap(positionerRef, open);
+	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
 
 	return useRender({
 		tag: 'div',
@@ -60,7 +51,7 @@ const MountedPositioner = ({
 			getPositionerAttributes(open, side, align),
 			{
 				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
-				// prevent the popup from intercepting the pointer when hover is disabled.
+				// a popup that can't be hovered must not intercept the pointer either.
 				inert: !open || disableHoverablePopup,
 				className: styles.positioner,
 				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding: 0 }),

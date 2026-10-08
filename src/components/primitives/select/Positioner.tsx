@@ -4,19 +4,16 @@ import { type CSSProperties, type Ref, useLayoutEffect, useState } from 'react';
 
 import {
 	type Align,
+	COLLISION_PADDING,
 	getPositionerAttributes,
 	getShrinkingAnchoredStyle,
-	useDevicePixelSnap,
+	useAnchoredPositioner,
 } from '../anchored-popup';
-import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
-import { useInertWhileClosed, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showModalInTopLayer } from '../top-layer';
+import * as styles from './select.css';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
-
-/** minimum distance from the viewport edges, in pixels. */
-const COLLISION_PADDING = 5;
 
 export type PositionerProps = Omit<RenderProps<'dialog'>, 'ref'> & {
 	ref?: Ref<HTMLDialogElement>;
@@ -103,7 +100,7 @@ const MountedPositioner = ({
 	const { open, openMethod, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
 	const [itemOffset, setItemOffset] = useState<ItemOffset | null>(null);
 
-	useTransitionsSettled(positionerRef, open, onTransitionSettled);
+	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
 
 	// measure after entering the top layer; retain the offset through the exit transition.
 	useLayoutEffect(() => {
@@ -118,10 +115,6 @@ const MountedPositioner = ({
 		}
 		setItemOffset(measureItemOffset(positioner, item, align));
 	}, [open, openMethod, alignItemWithTrigger, align, positionerRef]);
-
-	useInertWhileClosed(positionerRef, open);
-
-	useDevicePixelSnap(positionerRef, open);
 
 	const pad = COLLISION_PADDING;
 	let style: CSSProperties;
@@ -151,7 +144,8 @@ const MountedPositioner = ({
 			getPositionerAttributes(open, 'bottom', align),
 			{
 				...getDialogProps(open, () => setOpen(false, { reason: 'escape-key', method: '' })),
-				className: `${styles.positioner} ${styles.shrinkingPositioner}`,
+				inert: !open,
+				className: styles.positioner,
 				style,
 			},
 			elementProps,

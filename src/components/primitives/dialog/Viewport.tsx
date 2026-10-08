@@ -4,7 +4,7 @@ import { type DialogHTMLAttributes, type Ref, useCallback, useRef } from 'react'
 
 import { getReturnFocusChain } from '../focus';
 import { mergeProps } from '../merge-props';
-import { getOpenAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { getOpenAttributes, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showModalInTopLayer, useModalSurface } from '../top-layer';
 import * as styles from './dialog.css';
@@ -54,7 +54,6 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 	);
 
 	useTransitionsSettled(viewportRef, open, onTransitionSettled);
-	useInertWhileClosed(viewportRef, open);
 	useModalSurface(viewportRef, open);
 
 	// toasts are outside the popup too, but must not dismiss the dialog.
@@ -66,6 +65,7 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 
 	const internalProps: DialogHTMLAttributes<HTMLDialogElement> = {
 		...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
+		inert: !open,
 		className: styles.viewport,
 	};
 	if (!disablePointerDismissal) {
