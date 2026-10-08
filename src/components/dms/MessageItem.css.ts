@@ -2,7 +2,7 @@ import { generateIdentifier, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { MOUSE, TOUCH } from '#/styles/interaction';
+import { HOVER, MOUSE, TOUCH } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, emojiFontFamily, iconSize, space } from '#/styles/tokens.css';
 
@@ -117,7 +117,7 @@ export const actions = recipe(
 					transition: 'none',
 					opacity: 1,
 				},
-				[`${MOUSE} ${bubbleRowBase}:hover > &`]: {
+				[`${MOUSE} ${bubbleRowBase}${HOVER} > &`]: {
 					opacity: 1,
 				},
 				// touch users need persistent actions

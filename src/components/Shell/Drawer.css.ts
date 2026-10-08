@@ -3,7 +3,7 @@ import { createVar, style } from '@vanilla-extract/css';
 import { swipeMovementX, swipeProgress, swipeStrength } from '#/components/primitives/drawer/css-vars';
 
 import { vars } from '#/styles/contract.css';
-import { MOUSE, PRESSING } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSING } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { space } from '#/styles/tokens.css';
@@ -143,7 +143,7 @@ export const menuItem = style(
 		color: vars.palette.contrast_1000,
 		cursor: 'pointer',
 		selectors: {
-			[`${MOUSE} &:hover, &:focus-visible, ${PRESSING}`]: {
+			[`${MOUSE} &${HOVER}, &:focus-visible, ${PRESSING}`]: {
 				backgroundColor: vars.palette.contrast_25,
 			},
 			'&:focus-visible': { outline: 'none' },

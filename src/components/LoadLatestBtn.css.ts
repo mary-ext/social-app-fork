@@ -4,7 +4,7 @@ import { bottomBarHeightVar, mainAnchor } from '#/components/Shell/Shell.css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { hoverWithin, MOUSE, PRESSED } from '#/styles/interaction';
+import { HOVER, hoverWithin, MOUSE, PRESSED } from '#/styles/interaction';
 import { iconSize, zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
@@ -57,8 +57,8 @@ export const hover = style({
 	willChange: 'opacity',
 	selectors: {
 		[hoverWithin(button)]: { opacity: 0.5 },
-		[`${MOUSE}.theme--dim ${button}:hover &, .theme--dim ${button}${PRESSED} &`]: { opacity: 0.45 },
-		[`${MOUSE}.theme--dark ${button}:hover &, .theme--dark ${button}${PRESSED} &`]: { opacity: 0.4 },
+		[`${MOUSE}.theme--dim ${button}${HOVER} &, .theme--dim ${button}${PRESSED} &`]: { opacity: 0.45 },
+		[`${MOUSE}.theme--dark ${button}${HOVER} &, .theme--dark ${button}${PRESSED} &`]: { opacity: 0.4 },
 	},
 });
 

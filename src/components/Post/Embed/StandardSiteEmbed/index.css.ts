@@ -2,7 +2,7 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
-import { MOUSE, PRESSED } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSED } from '#/styles/interaction';
 import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, iconSize, space } from '#/styles/tokens.css';
@@ -31,7 +31,7 @@ export const bodyLink = style({
 	color: 'inherit',
 	selectors: {
 		[`${isInteractive} &`]: { cursor: 'pointer' },
-		[`${MOUSE} ${isInteractive} &:hover, ${isInteractive} &${PRESSED}`]: {
+		[`${MOUSE} ${isInteractive} &${HOVER}, ${isInteractive} &${PRESSED}`]: {
 			backgroundColor: colors.contrast_25,
 		},
 		'&:focus-visible': { outline: 'none' },
@@ -89,7 +89,7 @@ export const bodyMedia = style({
 	borderTopStyle: 'solid',
 	borderTopColor: colors.borderContrastLow,
 	selectors: {
-		[`${MOUSE} ${isInteractive} ${bodyLink}:hover &, ${isInteractive} ${bodyLink}${PRESSED} &`]: {
+		[`${MOUSE} ${isInteractive} ${bodyLink}${HOVER} &, ${isInteractive} ${bodyLink}${PRESSED} &`]: {
 			borderTopColor: colors.borderContrastHigh,
 		},
 	},
@@ -230,7 +230,7 @@ export const footer = style({
 	position: 'relative',
 	padding: space.md,
 	selectors: {
-		[`${MOUSE} ${isInteractive} ${bodyLink}:hover ~ &, ${isInteractive} ${bodyLink}${PRESSED} ~ &`]: {
+		[`${MOUSE} ${isInteractive} ${bodyLink}${HOVER} ~ &, ${isInteractive} ${bodyLink}${PRESSED} ~ &`]: {
 			backgroundColor: colors.contrast_25,
 		},
 	},
@@ -257,7 +257,7 @@ export const footerIdentity = style({
 
 export const footerTitle = style({
 	selectors: {
-		[`${MOUSE} ${isInteractive} ${footerFill}:hover ~ ${footerIdentity} &, ${isInteractive} ${footerFill}${PRESSED} ~ ${footerIdentity} &`]:
+		[`${MOUSE} ${isInteractive} ${footerFill}${HOVER} ~ ${footerIdentity} &, ${isInteractive} ${footerFill}${PRESSED} ~ ${footerIdentity} &`]:
 			{ textDecoration: 'underline' },
 	},
 });

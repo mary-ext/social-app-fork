@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { MOUSE } from '#/styles/interaction';
+import { HOVER, MOUSE } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { borderRadius, space } from '#/styles/tokens.css';
 
@@ -43,7 +43,7 @@ export const track = style({
 	transition: 'height 0.1s ease',
 	selectors: {
 		// dragging remains visible on touch
-		[`${MOUSE} ${root}:hover &, ${root}[data-dragging] &`]: { height: 6 },
+		[`${MOUSE} ${root}${HOVER} &, ${root}[data-dragging] &`]: { height: 6 },
 	},
 });
 
@@ -67,7 +67,7 @@ export const thumb = style({
 			inset: -8,
 		},
 		'&:has(:focus-visible)': { outline: '2px solid #fff', outlineOffset: 2 },
-		[`${MOUSE} ${root}:hover &, &:has(:focus-visible)`]: { scale: '1' },
+		[`${MOUSE} ${root}${HOVER} &, &:has(:focus-visible)`]: { scale: '1' },
 		[`${root}[data-dragging] &`]: { scale: '1.5' },
 	},
 });

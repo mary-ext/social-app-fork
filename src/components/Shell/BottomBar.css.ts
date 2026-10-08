@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import * as navBadge from '#/components/Shell/nav-badge.css';
 
 import { colors } from '#/styles/colors';
-import { MOUSE, PRESSING } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSING } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 export const bottomBar = style({
@@ -31,7 +31,7 @@ export const ctrl = style({
 	height: 50,
 	selectors: {
 		'&:focus-visible': { outline: `2px solid ${colors.primary_500}`, outlineOffset: -2 },
-		[`${MOUSE} &:hover`]: { backgroundColor: colors.contrast_25 },
+		[`${MOUSE} &${HOVER}`]: { backgroundColor: colors.contrast_25 },
 		[PRESSING]: { backgroundColor: colors.contrast_50 },
 	},
 });

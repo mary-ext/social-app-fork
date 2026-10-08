@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { withAlpha } from '#/styles/functions';
-import { MOUSE, PRESSED } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSED } from '#/styles/interaction';
 
 export const activeMargin = style({
 	marginTop: 8,
@@ -78,7 +78,7 @@ export const quoteCard = style({
 export const quoteCardHover = style({
 	cursor: 'pointer',
 	selectors: {
-		[`${MOUSE} &:hover, &:has(> ${PRESSED})`]: {
+		[`${MOUSE} &${HOVER}, &:has(> ${PRESSED})`]: {
 			backgroundColor: withAlpha(vars.palette.contrast_50, vars.opacity.hover),
 		},
 	},

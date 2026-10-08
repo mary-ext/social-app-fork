@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { hover, MOUSE, PRESSED } from '#/styles/interaction';
+import { hover, HOVER, MOUSE, PRESSED } from '#/styles/interaction';
 import { space } from '#/styles/tokens.css';
 
 export const body = style({
@@ -37,7 +37,7 @@ export const chip = style({
 	selectors: {
 		[hover()]: { backgroundColor: vars.palette.contrast_100 },
 		'&[data-checked]': { backgroundColor: vars.palette.contrast_900 },
-		[`${MOUSE} &[data-checked]:hover, &[data-checked]${PRESSED}`]: {
+		[`${MOUSE} &[data-checked]${HOVER}, &[data-checked]${PRESSED}`]: {
 			backgroundColor: vars.palette.contrast_975,
 		},
 		'&:has(> input:focus-visible)': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },

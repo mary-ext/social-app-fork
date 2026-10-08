@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { MOUSE, PRESSING } from '#/styles/interaction';
+import { HOVER, MOUSE, PRESSING } from '#/styles/interaction';
 import { borderRadius, iconSize } from '#/styles/tokens.css';
 
 export const button = style({
@@ -17,7 +17,7 @@ export const button = style({
 	width: 32,
 	cursor: 'pointer',
 	selectors: {
-		[`${MOUSE} &:hover, &[data-popup-open], ${PRESSING}`]: {
+		[`${MOUSE} &${HOVER}, &[data-popup-open], ${PRESSING}`]: {
 			backgroundColor: 'rgba(255, 255, 255, 0.2)',
 		},
 		'&:focus-visible': { outline: '2px solid #fff', outlineOffset: 2 },
