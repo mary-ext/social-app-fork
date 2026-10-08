@@ -1,8 +1,8 @@
 import type { Root, RootContent } from 'hast';
 import { createLowlight } from 'lowlight';
 
-import { detectLanguage, LANGUAGES, type LanguageName } from '#/lib/code/grammars';
-import { type Line, type Span, splitLines } from '#/lib/code/lines';
+import { detectLanguage, LANGUAGES, type LanguageName } from '#/features/tangled-strings/code/grammars';
+import { type Line, type Span, splitLines } from '#/features/tangled-strings/code/lines';
 
 const lowlight = createLowlight();
 

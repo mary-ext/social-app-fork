@@ -3,12 +3,13 @@ import type { ActorIdentifier } from '@atcute/lexicons';
 import { clsx } from 'clsx';
 
 import { makeRecordUri } from '#/lib/at-uri';
-import { countLines } from '#/lib/code/lines';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
-import { useTangledStringQuery } from '#/state/queries/tangled-string';
+
+import { countLines } from '#/features/tangled-strings/code/lines';
+import { useTangledStringQuery } from '#/features/tangled-strings/queries';
 
 import * as Dialog from '#/components/Dialog';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
@@ -26,8 +27,8 @@ import { m } from '#/paraglide/messages';
 import { CodeBlock, CodeBlockSkeleton } from './CodeBlock';
 import type { TangledStringTarget } from './detect';
 import { FullFileDialog } from './FullFileDialog';
-import * as css from './index.css';
 import { previewRows } from './metrics';
+import * as css from './TangledStringEmbed.css';
 
 const SKELETON_WIDTH_CYCLE = ['55%', '80%', '40%', '70%', '30%', '65%', '85%', '45%', '60%', '35%'];
 const SKELETON_WIDTHS = Array.from(

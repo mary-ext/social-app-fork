@@ -13,6 +13,9 @@ import { usePostQuery } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
 
+import { parseTangledStringUrl, type TangledStringTarget } from '#/features/tangled-strings/detect';
+import { TangledStringPlaceholder } from '#/features/tangled-strings/Placeholder';
+
 import { useChatInvite } from '#/components/dms/ChatInvite/use-chat-invite';
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { NavigationDisabled } from '#/components/NavigationDisabled';
@@ -21,11 +24,6 @@ import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
-import {
-	parseTangledStringUrl,
-	type TangledStringTarget,
-} from '#/components/Post/Embed/TangledStringEmbed/detect';
-import { TangledStringPlaceholder } from '#/components/Post/Embed/TangledStringEmbed/Placeholder';
 import { Spinner } from '#/components/Spinner';
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
@@ -48,7 +46,9 @@ const StandardSiteEmbed = lazy(() =>
 	import('#/components/Post/Embed/StandardSiteEmbed').then((mod) => ({ default: mod.StandardSiteEmbed })),
 );
 const TangledStringEmbed = lazy(() =>
-	import('#/components/Post/Embed/TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
+	import('#/features/tangled-strings/TangledStringEmbed').then((mod) => ({
+		default: mod.TangledStringEmbed,
+	})),
 );
 
 // #region frame

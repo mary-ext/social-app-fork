@@ -1,4 +1,4 @@
-import * as css from './index.css';
+import * as css from './TangledStringEmbed.css';
 
 export function TangledStringPlaceholder({ className }: { className?: string }) {
 	return (

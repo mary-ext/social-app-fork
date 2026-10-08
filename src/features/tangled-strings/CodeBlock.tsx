@@ -1,8 +1,7 @@
 import { Fragment } from 'react';
 
-import { plainLines, takeLines } from '#/lib/code/lines';
-
-import { useCodeHighlightQuery } from '#/state/queries/code-highlight';
+import { plainLines, takeLines } from '#/features/tangled-strings/code/lines';
+import { useCodeHighlightQuery } from '#/features/tangled-strings/code/queries';
 
 import { Text } from '#/components/Text';
 import * as Skele from '#/components/web/Skeleton';

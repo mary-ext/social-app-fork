@@ -15,6 +15,9 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
+import { parseTangledStringUrl } from '#/features/tangled-strings/detect';
+import { TangledStringPlaceholder } from '#/features/tangled-strings/Placeholder';
+
 import { BlockLink } from '#/components/BlockLink';
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { ImageEmbed } from '#/components/ImageEmbed';
@@ -31,8 +34,6 @@ import { ChatInviteEmbed } from './ChatInviteEmbed';
 import * as css from './index.css';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
 import { isStandardSiteEmbed } from './StandardSiteEmbed/utils';
-import { parseTangledStringUrl } from './TangledStringEmbed/detect';
-import { TangledStringPlaceholder } from './TangledStringEmbed/Placeholder';
 import { type CommonProps, type EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
@@ -43,7 +44,9 @@ const StandardSiteEmbed = lazy(() =>
 );
 
 const TangledStringEmbed = lazy(() =>
-	import('./TangledStringEmbed').then((mod) => ({ default: mod.TangledStringEmbed })),
+	import('#/features/tangled-strings/TangledStringEmbed').then((mod) => ({
+		default: mod.TangledStringEmbed,
+	})),
 );
 
 const ModeratedFeedEmbed = lazy(() =>

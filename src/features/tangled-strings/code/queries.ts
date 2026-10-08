@@ -18,7 +18,7 @@ export function useCodeHighlightQuery({ contents, filename }: { contents: string
 		staleTime: STALE.INFINITY,
 		gcTime: GCTIME.MINUTES.FIVE,
 		async queryFn() {
-			const { highlightSource } = await import('#/lib/code/highlight');
+			const { highlightSource } = await import('#/features/tangled-strings/code/highlight');
 
 			return await highlightSource({ contents, filename });
 		},
