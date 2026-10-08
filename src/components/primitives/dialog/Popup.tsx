@@ -1,14 +1,12 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, useEffect, useLayoutEffect } from 'react';
-
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import type { HTMLAttributes } from 'react';
 
 import { findReturnFocus, type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
-import { leaveModal } from '../top-layer';
+import { useModalFocus } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PopupProps = RenderProps<'div'> & {
@@ -35,41 +33,24 @@ export const Popup = ({ render, ref, initialFocus, finalFocus = true, ...element
 	const ctx = useRootContext();
 	const { open, popupRef } = ctx;
 
-	const focusInitial = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
-		if (!popup) {
-			return;
-		}
-		const target = initialFocus ?? ((type) => (type === 'touch' ? popup : true));
-		resolveFocusTarget(target, ctx.openMethod, () => getFirstTabbable(popup))?.focus({
-			preventScroll: true,
-		});
+	useModalFocus(open, ctx.viewportRef, {
+		initial() {
+			const popup = popupRef.current;
+			if (!popup) {
+				return;
+			}
+			const target = initialFocus ?? ((type) => (type === 'touch' ? popup : true));
+			resolveFocusTarget(target, ctx.openMethod, () => getFirstTabbable(popup))?.focus({
+				preventScroll: true,
+			});
+		},
+		final() {
+			// without a usable default, keep the focus that closing the dialog restored natively.
+			resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () =>
+				findReturnFocus(ctx.returnFocusRef.current),
+			)?.focus();
+		},
 	});
-
-	const focusFinal = useNonReactiveCallback(() => {
-		const focusedInside = leaveModal(ctx.viewportRef.current);
-		// preserve focus moved outside by the user.
-		if (!focusedInside) {
-			return;
-		}
-		// without a usable default, keep the focus that closing the dialog restored natively.
-		resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () =>
-			findReturnFocus(ctx.returnFocusRef.current),
-		)?.focus();
-	});
-
-	// focus after the viewport enters the top layer.
-	useEffect(() => {
-		if (open) {
-			focusInitial();
-		}
-	}, [open, focusInitial]);
-
-	useLayoutEffect(() => {
-		if (!open) {
-			focusFinal();
-		}
-	}, [open, focusFinal]);
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		id: ctx.popupId,

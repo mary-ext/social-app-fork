@@ -11,6 +11,7 @@ import { useTimeout } from '#/lib/hooks/use-timeout';
 import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
+import { isUnclaimedEscape } from '../top-layer';
 import {
 	attachRoot,
 	type Handle,
@@ -139,7 +140,7 @@ export const Root = ({
 		const parts = { activeTrigger, insideEventRef, positionerRef };
 
 		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== 'Escape' || event.isComposing || event.defaultPrevented) {
+			if (!isUnclaimedEscape(event)) {
 				return;
 			}
 			// Escape inside a nested portal should not dismiss the outer popover.

@@ -1,15 +1,14 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, type SyntheticEvent, useEffect, useLayoutEffect } from 'react';
+import type { HTMLAttributes, SyntheticEvent } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
-import { leaveModal } from '../top-layer';
+import { useModalFocus } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PopupProps = RenderProps<'div'> & {
@@ -41,37 +40,19 @@ export const Popup = ({
 	const { open, openReason, popupRef, timeout } = ctx;
 	const managesFocus = openReason !== 'trigger-hover';
 
-	const focusInitial = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
-		if (!popup || !managesFocus) {
-			return;
-		}
-		const target = resolveFocusTarget(initialFocus, ctx.openMethod, () => getFirstTabbable(popup));
-		target?.focus();
+	useModalFocus(open, ctx.positionerRef, {
+		initial() {
+			const popup = popupRef.current;
+			if (popup && managesFocus) {
+				resolveFocusTarget(initialFocus, ctx.openMethod, () => getFirstTabbable(popup))?.focus();
+			}
+		},
+		final() {
+			if (managesFocus) {
+				resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () => ctx.activeTrigger)?.focus();
+			}
+		},
 	});
-
-	const focusFinal = useNonReactiveCallback(() => {
-		const focusedInside = leaveModal(ctx.positionerRef.current);
-		// preserve focus moved outside by the user.
-		if (!managesFocus || !focusedInside) {
-			return;
-		}
-		const target = resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () => ctx.activeTrigger);
-		target?.focus();
-	});
-
-	// focus after the positioner enters the top layer.
-	useEffect(() => {
-		if (open) {
-			focusInitial();
-		}
-	}, [open, focusInitial]);
-
-	useLayoutEffect(() => {
-		if (!open) {
-			focusFinal();
-		}
-	}, [open, focusFinal]);
 
 	const markInside = (event: SyntheticEvent) => {
 		ctx.markInside(event.nativeEvent);

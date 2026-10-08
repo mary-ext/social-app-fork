@@ -1,16 +1,15 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, useEffect, useLayoutEffect, useRef } from 'react';
+import { type HTMLAttributes, useRef } from 'react';
 
 import { useConstant } from '#/lib/hooks/use-constant';
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { getNextTabbable } from '../focus';
 import { createTypeahead, getListItems, getListNavigationProps } from '../list-navigation';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
-import { leaveModal } from '../top-layer';
+import { isUnclaimedEscape, useModalFocus } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PopupProps = RenderProps<'div'>;
@@ -29,52 +28,36 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	const typeahead = useConstant(createTypeahead);
 	const tabbedOutRef = useRef(false);
 
-	const focusInitial = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
-		if (!popup) {
-			return;
-		}
-		if (ctx.openEntry !== null) {
-			const items = getListItems(popup);
-			const entry = ctx.openEntry === 'first' ? items[0] : items.at(-1);
-			if (entry) {
-				entry.focus();
+	useModalFocus(open, ctx.positionerRef, {
+		initial() {
+			tabbedOutRef.current = false;
+			const popup = popupRef.current;
+			if (!popup) {
 				return;
 			}
-		}
-		popup.focus({ preventScroll: true });
-	});
-
-	const focusFinal = useNonReactiveCallback(() => {
-		const trigger = ctx.activeTrigger;
-		const focusedInside = leaveModal(ctx.positionerRef.current);
-		// preserve focus moved outside by the user, or by an item opening a dialog.
-		if (!trigger || !focusedInside) {
-			return;
-		}
-		if (tabbedOutRef.current) {
-			const next = getNextTabbable(trigger, ctx.positionerRef.current);
+			if (ctx.openEntry !== null) {
+				const items = getListItems(popup);
+				const entry = ctx.openEntry === 'first' ? items[0] : items.at(-1);
+				if (entry) {
+					entry.focus();
+					return;
+				}
+			}
+			popup.focus({ preventScroll: true });
+		},
+		final() {
+			const trigger = ctx.activeTrigger;
+			if (!trigger) {
+				return;
+			}
+			const next = tabbedOutRef.current ? getNextTabbable(trigger, ctx.positionerRef.current) : undefined;
 			if (next) {
 				next.focus();
-				return;
+			} else {
+				trigger.focus({ preventScroll: true });
 			}
-		}
-		trigger.focus({ preventScroll: true });
+		},
 	});
-
-	// focus after the positioner enters the top layer.
-	useEffect(() => {
-		if (open) {
-			tabbedOutRef.current = false;
-			focusInitial();
-		}
-	}, [open, focusInitial]);
-
-	useLayoutEffect(() => {
-		if (!open) {
-			focusFinal();
-		}
-	}, [open, focusFinal]);
 
 	const navigationProps = getListNavigationProps({ loop: true, typeahead });
 
@@ -87,7 +70,7 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 		onKeyDown(event) {
 			switch (event.key) {
 				case 'Escape': {
-					if (event.nativeEvent.isComposing) {
+					if (!isUnclaimedEscape(event.nativeEvent)) {
 						return;
 					}
 					// prevent Escape from also closing an enclosing dialog.

@@ -2,11 +2,14 @@ import {
 	type DialogHTMLAttributes,
 	type HTMLAttributes,
 	type RefObject,
+	useEffect,
 	useLayoutEffect,
 	useRef,
 } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+
+import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 // #region showing and hiding
 
@@ -73,15 +76,8 @@ export const showModalInTopLayer = (open: boolean): ((el: HTMLDialogElement | nu
 	return open ? showModal : ignoreElement;
 };
 
-/**
- * ends modality and keeps the popup in the top layer for exit transitions. call in a close layout effect
- * before restoring focus; closing the dialog may restore pre-open focus natively. requires an explicit CSS
- * `display` to preserve exit transitions between `close()` and `showPopover()`.
- *
- * @param el popup positioning dialog, or `null`
- * @returns whether focus was in the popup or on the body before closing
- */
-export const leaveModal = (el: HTMLDialogElement | null): boolean => {
+const leaveModal = (el: HTMLDialogElement | null): boolean => {
+	// close() may restore pre-open focus, so check focus ownership first.
 	const active = document.activeElement;
 	const focused = active === document.body || !!el?.contains(active);
 	if (el?.open) {
@@ -89,6 +85,48 @@ export const leaveModal = (el: HTMLDialogElement | null): boolean => {
 		el.showPopover();
 	}
 	return focused;
+};
+
+/**
+ * manages popup focus and ends modality on close, retaining the top layer for exit transitions. the dialog
+ * needs an explicit CSS `display` to preserve those transitions.
+ *
+ * @param open current open state
+ * @param modalRef popup dialog element
+ * @param focus.initial focuses the initial target after top-layer entry
+ * @param focus.final restores focus only if it was in the popup or on the body
+ */
+export const useModalFocus = (
+	open: boolean,
+	modalRef: RefObject<HTMLDialogElement | null>,
+	focus: { initial: () => void; final: () => void },
+): void => {
+	const focusInitial = useNonReactiveCallback(focus.initial);
+	const focusFinal = useNonReactiveCallback(() => {
+		if (leaveModal(modalRef.current)) {
+			focus.final();
+		}
+	});
+
+	useEffect(() => {
+		if (open) {
+			focusInitial();
+		}
+	}, [open, focusInitial]);
+
+	useLayoutEffect(() => {
+		if (!open) {
+			focusFinal();
+		}
+	}, [open, focusFinal]);
+};
+
+/**
+ * @param event keydown event
+ * @returns whether the event is an Escape press that no other handler has claimed
+ */
+export const isUnclaimedEscape = (event: KeyboardEvent): boolean => {
+	return event.key === 'Escape' && !event.isComposing && !event.defaultPrevented;
 };
 
 /**

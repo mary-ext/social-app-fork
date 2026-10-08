@@ -1,14 +1,12 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, useEffect, useLayoutEffect } from 'react';
-
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import type { HTMLAttributes } from 'react';
 
 import { getListItems, getListNavigationProps } from '../list-navigation';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
-import { leaveModal } from '../top-layer';
+import { isUnclaimedEscape, useModalFocus } from '../top-layer';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 
 export type PopupProps = RenderProps<'div'>;
@@ -24,47 +22,33 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	const ctx = useRootContext();
 	const { open, popupRef, setOpen, triggerRef } = ctx;
 
-	const focusInitial = useNonReactiveCallback(() => {
-		const popup = popupRef.current;
-		if (!popup) {
-			return;
-		}
-		const selected = popup.querySelector<HTMLElement>(SELECTED_ITEM_SELECTOR);
-
-		if (selected && ctx.openMethod !== 'touch') {
-			selected.focus();
-			return;
-		}
-		if (!selected && ctx.openMethod === 'keyboard') {
-			const items = getListItems(popup);
-			const entry = ctx.openEntry === 'last' ? items.at(-1) : items[0];
-			if (entry) {
-				entry.focus();
+	useModalFocus(open, ctx.positionerRef, {
+		initial() {
+			const popup = popupRef.current;
+			if (!popup) {
 				return;
 			}
-		}
-		popup.focus({ preventScroll: true });
-		selected?.scrollIntoView({ block: 'nearest' });
-	});
+			const selected = popup.querySelector<HTMLElement>(SELECTED_ITEM_SELECTOR);
 
-	const focusFinal = useNonReactiveCallback(() => {
-		if (leaveModal(ctx.positionerRef.current)) {
+			if (selected && ctx.openMethod !== 'touch') {
+				selected.focus();
+				return;
+			}
+			if (!selected && ctx.openMethod === 'keyboard') {
+				const items = getListItems(popup);
+				const entry = ctx.openEntry === 'last' ? items.at(-1) : items[0];
+				if (entry) {
+					entry.focus();
+					return;
+				}
+			}
+			popup.focus({ preventScroll: true });
+			selected?.scrollIntoView({ block: 'nearest' });
+		},
+		final() {
 			triggerRef.current?.focus({ preventScroll: true });
-		}
+		},
 	});
-
-	// focus after the positioner enters the top layer.
-	useEffect(() => {
-		if (open) {
-			focusInitial();
-		}
-	}, [open, focusInitial]);
-
-	useLayoutEffect(() => {
-		if (!open) {
-			focusFinal();
-		}
-	}, [open, focusFinal]);
 
 	const navigationProps = getListNavigationProps({ loop: false, typeahead: ctx.typeahead });
 
@@ -76,7 +60,7 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 		onKeyDown(event) {
 			switch (event.key) {
 				case 'Escape': {
-					if (event.nativeEvent.isComposing) {
+					if (!isUnclaimedEscape(event.nativeEvent)) {
 						return;
 					}
 					// prevent Escape from also closing an enclosing dialog.
