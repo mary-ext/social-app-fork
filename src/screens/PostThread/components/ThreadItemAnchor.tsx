@@ -31,6 +31,7 @@ import { Trans } from '#/locale/Trans';
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/live-now/use-actor-status';
 import { WhoCanReply } from '#/features/post-interactions/WhoCanReply';
+import { TranslatedPost } from '#/features/translations/Translated';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
@@ -41,7 +42,6 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import * as EmbedSkeleton from '#/components/Post/Embed/EmbedSkeleton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { AnchorPostControls, AnchorPostControlsSkeleton } from '#/components/PostControls/AnchorPostControls';
 import { PostOverflowMenuButton } from '#/components/PostControls/PostOverflowMenuButton';
