@@ -2,12 +2,7 @@
 
 import type { Ref } from 'react';
 
-import {
-	getAnchoredStyle,
-	getPositionerAttributes,
-	type PlacementProps,
-	useAnchoredPositioner,
-} from '../anchored-popup';
+import { getPositionerProps, type PlacementProps, useAnchoredPositioner } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
 import { getHintProps, showInTopLayer } from '../top-layer';
@@ -48,13 +43,12 @@ const MountedPositioner = ({
 		render,
 		refs: [ref, positionerRef, showInTopLayer(open)],
 		props: mergeProps<'div'>(
-			getPositionerAttributes(open, side, align),
+			getPositionerProps(open, { anchorName, side, align, sideOffset, collisionPadding: 0 }),
 			{
 				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
 				// a popup that can't be hovered must not intercept the pointer either.
 				inert: !open || disableHoverablePopup,
 				className: styles.positioner,
-				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding: 0 }),
 			},
 			elementProps,
 		),

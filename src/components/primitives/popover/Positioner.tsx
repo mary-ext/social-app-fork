@@ -4,9 +4,7 @@ import type { Ref } from 'react';
 
 import {
 	COLLISION_PADDING,
-	getAnchoredStyle,
-	getPositionerAttributes,
-	getShrinkingAnchoredStyle,
+	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
 } from '../anchored-popup';
@@ -49,12 +47,9 @@ const MountedPositioner = ({
 
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
 
-	const placement = { anchorName, side, align, sideOffset, collisionPadding };
 	let className = modal ? styles.modalPositioner : styles.positioner;
-	let style = getAnchoredStyle(placement);
-	if (shrink && (side === 'bottom' || side === 'top')) {
+	if (shrink) {
 		className = styles.shrinkingPositioner;
-		style = getShrinkingAnchoredStyle({ ...placement, side });
 	}
 
 	return useRender({
@@ -62,12 +57,11 @@ const MountedPositioner = ({
 		render,
 		refs: [ref, positionerRef, modal ? showModalInTopLayer(open) : showInTopLayer(open, activeTrigger)],
 		props: mergeProps<'dialog'>(
-			getPositionerAttributes(open, side, align),
+			getPositionerProps(open, { anchorName, side, align, sideOffset, collisionPadding }),
 			{
 				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 				inert: !open,
 				className,
-				style,
 			},
 			elementProps,
 		),

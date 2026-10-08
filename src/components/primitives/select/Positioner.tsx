@@ -1,14 +1,15 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type CSSProperties, type Ref, useLayoutEffect, useState } from 'react';
+import { type HTMLAttributes, type Ref, useLayoutEffect, useState } from 'react';
 
 import {
 	type Align,
 	COLLISION_PADDING,
 	getPositionerAttributes,
-	getShrinkingAnchoredStyle,
+	getPositionerProps,
 	useAnchoredPositioner,
 } from '../anchored-popup';
+import type { DataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showModalInTopLayer } from '../top-layer';
@@ -117,23 +118,24 @@ const MountedPositioner = ({
 	}, [open, openMethod, alignItemWithTrigger, align, positionerRef]);
 
 	const pad = COLLISION_PADDING;
-	let style: CSSProperties;
+	let positionerProps: HTMLAttributes<HTMLDialogElement> & DataAttributes;
 	if (itemOffset) {
 		const { x, y, width, height } = itemOffset;
-		style = {
-			positionAnchor: anchorName,
-			top: `clamp(${pad}px, calc(anchor(center) - ${y}px), calc(100% - ${height + pad}px))`,
-			left: `clamp(${pad}px, calc(anchor(${ANCHOR_EDGE[align]}) - ${x}px), calc(100% - ${width + pad}px))`,
-			maxHeight: `calc(100% - ${pad * 2}px)`,
+		positionerProps = {
+			...getPositionerAttributes(open, 'bottom', align),
+			className: styles.itemAlignedPositioner,
+			style: {
+				positionAnchor: anchorName,
+				top: `clamp(${pad}px, calc(anchor(center) - ${y}px), calc(100% - ${height + pad}px))`,
+				left: `clamp(${pad}px, calc(anchor(${ANCHOR_EDGE[align]}) - ${x}px), calc(100% - ${width + pad}px))`,
+				maxHeight: `calc(100% - ${pad * 2}px)`,
+			},
 		};
 	} else {
-		style = getShrinkingAnchoredStyle({
-			anchorName,
-			side: 'bottom',
-			align,
-			sideOffset,
-			collisionPadding: pad,
-		});
+		positionerProps = {
+			...getPositionerProps(open, { anchorName, side: 'bottom', align, sideOffset, collisionPadding: pad }),
+			className: styles.positioner,
+		};
 	}
 
 	return useRender({
@@ -141,12 +143,10 @@ const MountedPositioner = ({
 		render,
 		refs: [ref, positionerRef, showModalInTopLayer(open)],
 		props: mergeProps<'dialog'>(
-			getPositionerAttributes(open, 'bottom', align),
+			positionerProps,
 			{
 				...getDialogProps(open, () => setOpen(false, { reason: 'escape-key', method: '' })),
 				inert: !open,
-				className: styles.positioner,
-				style,
 			},
 			elementProps,
 		),

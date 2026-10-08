@@ -5,8 +5,7 @@ import { type HTMLAttributes, type Ref, type RefObject, useId, useLayoutEffect, 
 import {
 	addAnchorName,
 	COLLISION_PADDING,
-	getPositionerAttributes,
-	getShrinkingAnchoredStyle,
+	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
 } from '../anchored-popup';
@@ -87,13 +86,16 @@ const MountedPositioner = ({
 		popover: 'manual',
 		inert: !open,
 		className: styles.positioner,
-		style: getShrinkingAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 	};
 
 	return useRender({
 		tag: 'div',
 		render,
 		refs: [ref, positionerRef, showInTopLayer(open)],
-		props: mergeProps<'div'>(getPositionerAttributes(open, side, align), internalProps, elementProps),
+		props: mergeProps<'div'>(
+			getPositionerProps(open, { anchorName, side, align, sideOffset, collisionPadding }),
+			internalProps,
+			elementProps,
+		),
 	});
 };

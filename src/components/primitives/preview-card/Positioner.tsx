@@ -4,8 +4,7 @@ import type { Ref } from 'react';
 
 import {
 	COLLISION_PADDING,
-	getAnchoredStyle,
-	getPositionerAttributes,
+	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
 } from '../anchored-popup';
@@ -50,12 +49,11 @@ const MountedPositioner = ({
 		// oxlint-disable-next-line react/refs -- the trigger commits before the positioner mounts
 		refs: [ref, positionerRef, showInTopLayer(open, triggerRef.current)],
 		props: mergeProps<'div'>(
-			getPositionerAttributes(open, side, align),
+			getPositionerProps(open, { anchorName, side, align, sideOffset, collisionPadding }),
 			{
 				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
 				inert: !open,
 				className: styles.positioner,
-				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 			},
 			elementProps,
 		),

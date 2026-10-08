@@ -1,7 +1,11 @@
+// load @position-try rules here because .css.ts modules can't import plain CSS.
 import './position-try.css';
 
 import { type CSSProperties, type RefCallback, type RefObject, useCallback, useLayoutEffect } from 'react';
 
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+
+import * as styles from './anchored-popup.css';
 import { type DataAttributes, dataAttributes } from './data-attributes';
 import { getOpenAttributes, useTransitionsSettled } from './presence';
 
@@ -25,160 +29,55 @@ export type PlacementProps = {
 	collisionPadding?: CollisionPadding;
 };
 
-/**
- * @param padding uniform or per-edge padding
- * @param edge viewport edge
- * @returns edge padding, or `undefined` for an unset edge
- */
-const resolveCollisionPadding = (padding: CollisionPadding, edge: Side): number | undefined => {
-	return typeof padding === 'number' ? padding : padding[edge];
+const getCollisionPaddingLength = (padding: CollisionPadding, edge: Side): string | undefined => {
+	const value = typeof padding === 'number' ? padding : padding[edge];
+	return value === undefined ? undefined : `${value}px`;
 };
-
-const isVertical = (side: Side): boolean => {
-	return side === 'top' || side === 'bottom';
-};
-
-const getPositionArea = (side: Side, align: Align): string => {
-	// a single side keyword permits shifting near viewport edges; spans align to the anchor's edges.
-	switch (align) {
-		case 'center': {
-			return side;
-		}
-		case 'start': {
-			return isVertical(side) ? `${side} span-x-end` : `${side} span-y-end`;
-		}
-		case 'end': {
-			return isVertical(side) ? `${side} span-x-start` : `${side} span-y-start`;
-		}
-	}
-};
-
-const OPPOSITE = {
-	bottom: 'top',
-	left: 'right',
-	right: 'left',
-	top: 'bottom',
-} as const;
-
-// prefer aligned placements before allowing cross-axis shifting.
-const getFallbacks = (side: Side, align: Align): string[] => {
-	const [sideFlip, alignFlip] = isVertical(side)
-		? ['flip-block', 'flip-inline']
-		: ['flip-inline', 'flip-block'];
-	if (align === 'center') {
-		return [sideFlip];
-	}
-	return [sideFlip, alignFlip, `${sideFlip} ${alignFlip}`, side, OPPOSITE[side]];
-};
-
-const MARGIN = {
-	bottom: 'marginBottom',
-	left: 'marginLeft',
-	right: 'marginRight',
-	top: 'marginTop',
-} as const;
 
 /**
- * anchors a popup, flipping or shifting to maintain viewport clearance.
+ * use with `manualPositioner` for custom positioning.
  *
- * @param options anchor name and placement
- * @returns styles for the positioning element
- */
-export const getAnchoredStyle = ({
-	anchorName,
-	side,
-	align,
-	sideOffset,
-	collisionPadding,
-}: {
-	anchorName: string;
-	side: Side;
-	align: Align;
-	sideOffset: number;
-	collisionPadding: CollisionPadding;
-}): CSSProperties => {
-	const inlineMargins =
-		(resolveCollisionPadding(collisionPadding, 'left') ?? 0) +
-		(resolveCollisionPadding(collisionPadding, 'right') ?? 0);
-	const style: CSSProperties = {
-		positionAnchor: anchorName,
-		positionArea: getPositionArea(side, align),
-		positionTryFallbacks: getFallbacks(side, align).join(', '),
-		[MARGIN[OPPOSITE[side]]]: sideOffset,
-		'--anchored-inline-margins': `${inlineMargins}px`,
-	};
-
-	const [start, end]: [Side, Side] = isVertical(side) ? ['left', 'right'] : ['top', 'bottom'];
-	const edges: Side[] = [side];
-	// padding the anchor-aligned edge would shift the alignment.
-	if (align !== 'end') {
-		edges.push(end);
-	}
-	if (align !== 'start') {
-		edges.push(start);
-	}
-	// margins provide collision padding and flip with the placement.
-	for (const edge of edges) {
-		const value = resolveCollisionPadding(collisionPadding, edge);
-		if (value !== undefined) {
-			style[MARGIN[edge]] = value;
-		}
-	}
-
-	return style;
-};
-
-/**
- * anchors a popup above or below, flipping, shifting, or shrinking to fit the viewport. requires
- * `shrinkingPositioner` and scrollable popup content.
- *
- * @param options anchor name and placement
- * @returns styles for the positioning element
- */
-export const getShrinkingAnchoredStyle = (
-	options: Parameters<typeof getAnchoredStyle>[0] & { side: 'bottom' | 'top' },
-): CSSProperties => {
-	const { side, align, sideOffset, collisionPadding } = options;
-	const margins = sideOffset + (resolveCollisionPadding(collisionPadding, side) ?? 0);
-
-	let shrinkFallbacks: string[];
-	if (align === 'center') {
-		shrinkFallbacks = [
-			'--anchored-shrink-floored',
-			'--anchored-shrink-floored flip-block',
-			'--anchored-shrink',
-		];
-	} else {
-		const toSide = side === 'top' ? ' flip-block' : '';
-		const toOpposite = side === 'top' ? '' : ' flip-block';
-		shrinkFallbacks = [
-			'--anchored-shrink-floored',
-			'--anchored-shrink-floored flip-inline',
-			'--anchored-shrink-floored flip-block',
-			'--anchored-shrink-floored flip-block flip-inline',
-			`--anchored-shrink-floored-span${toSide}`,
-			`--anchored-shrink-floored-span${toOpposite}`,
-			'--anchored-shrink',
-			'--anchored-shrink flip-inline',
-			`--anchored-shrink-span${toSide}`,
-		];
-	}
-
-	return {
-		...getAnchoredStyle(options),
-		positionTryFallbacks: [...getFallbacks(side, align), ...shrinkFallbacks].join(', '),
-		'--anchored-block-margins': `${margins}px`,
-	};
-};
-
-/**
  * @param open whether the popup is open
- * @param side preferred side, before collision handling
+ * @param side popup side
  * @param align requested alignment
- * @returns open-state attributes plus `data-side` and `data-align` for the requested placement
+ * @returns open-state attributes, `data-side`, and `data-align`
  */
 export const getPositionerAttributes = (open: boolean, side: Side, align: Align): DataAttributes => {
 	return { ...getOpenAttributes(open), ...dataAttributes({ side, align }) };
+};
+
+/**
+ * supplies placement props for the `positioner` class.
+ *
+ * @param open whether the popup is open
+ * @param placement anchor name and placement
+ * @returns {@link getPositionerAttributes} plus the anchoring style
+ */
+export const getPositionerProps = (
+	open: boolean,
+	{
+		anchorName,
+		side,
+		align,
+		sideOffset,
+		collisionPadding,
+	}: Required<PlacementProps> & {
+		anchorName: string;
+	},
+): DataAttributes & { style: CSSProperties } => {
+	return {
+		...getPositionerAttributes(open, side, align),
+		style: {
+			positionAnchor: anchorName,
+			...assignInlineVars({
+				[styles.sideOffsetVar]: `${sideOffset}px`,
+				[styles.collisionPaddingVars.bottom]: getCollisionPaddingLength(collisionPadding, 'bottom'),
+				[styles.collisionPaddingVars.left]: getCollisionPaddingLength(collisionPadding, 'left'),
+				[styles.collisionPaddingVars.right]: getCollisionPaddingLength(collisionPadding, 'right'),
+				[styles.collisionPaddingVars.top]: getCollisionPaddingLength(collisionPadding, 'top'),
+			}),
+		},
+	};
 };
 
 /**
