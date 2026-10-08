@@ -1,9 +1,9 @@
 import { type KeyboardEvent, type RefObject, useRef, useState } from 'react';
 
-import { Slider } from '@base-ui/react/slider';
-
 import { useInputModality } from '#/lib/browser/input-modality';
 import { formatTime } from '#/lib/utils/time';
+
+import * as Slider from '#/components/primitives/slider';
 
 import { m } from '#/paraglide/messages';
 
@@ -41,7 +41,7 @@ export function Scrubber({
 	// pair each seek start with one seek end.
 	const seekingRef = useRef(false);
 
-	const onValueChange = (value: number, eventDetails: Slider.Root.ChangeEventDetails) => {
+	const onValueChange = (value: number, eventDetails: Slider.ValueChangeDetails) => {
 		// keyboard seeks do not pause playback.
 		if (eventDetails.reason === 'keyboard') {
 			onSeek(value);

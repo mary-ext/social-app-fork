@@ -1,10 +1,9 @@
-import { Slider } from '@base-ui/react/slider';
-
 import { clamp } from '#/lib/utils/numbers';
 
 import { LOCALE } from '#/locale/intl/locale';
 
 import { setVideoSpeed, useVideoSpeed } from '#/components/Post/Embed/VideoEmbed/video-speed';
+import * as Slider from '#/components/primitives/slider';
 import { Text } from '#/components/Text';
 
 import MinusIcon from '#/icons/central/MinusSmall_round_outlined_radius1_stroke2.svg';
@@ -90,7 +89,7 @@ export function PlaybackSpeedPanel() {
 							<Slider.Thumb
 								className={styles.thumb}
 								aria-label={m['components.post.video.a11y.speed']()}
-								getAriaValueText={(_formatted, value) => formatSpeed(value / 100)}
+								getAriaValueText={(value) => formatSpeed(value / 100)}
 							/>
 						</Slider.Track>
 					</Slider.Control>

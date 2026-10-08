@@ -2,10 +2,9 @@ import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 import { useCropper, useZoomControl } from '@oomfware/cropper';
 
-import { Slider } from '@base-ui/react/slider';
-
 import { LOCALE } from '#/locale/intl/locale';
 
+import * as Slider from '#/components/primitives/slider';
 import * as Select from '#/components/Select';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

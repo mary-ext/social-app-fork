@@ -1,12 +1,11 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 
-import { Slider } from '@base-ui/react/slider';
-
 import { useInputModality } from '#/lib/browser/input-modality';
 import { clamp } from '#/lib/utils/numbers';
 
 import { setVideoVolume, useVideoVolume } from '#/components/Post/Embed/VideoEmbed/video-volume';
 import * as Popover from '#/components/primitives/popover';
+import * as Slider from '#/components/primitives/slider';
 
 import MuteIcon from '#/icons/central/Mute_round_outlined_radius1_stroke2.svg';
 import UnmuteIcon from '#/icons/central/VolumeFull_round_outlined_radius1_stroke2.svg';
