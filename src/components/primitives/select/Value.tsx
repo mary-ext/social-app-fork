@@ -2,11 +2,12 @@
 
 import type { ReactNode } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type ValueProps = Omit<useRender.ComponentProps<'span', { placeholder: boolean }>, 'children'> & {
+export type ValueProps = Omit<RenderProps<'span'>, 'children'> & {
 	/** shown while no value is selected. */
 	placeholder?: ReactNode;
 	/** custom content or formatter; defaults to the `Root.items` label or `String(value)`. */
@@ -37,10 +38,9 @@ export const Value = ({ render, ref, placeholder, children, ...elementProps }: V
 	}
 
 	return useRender({
+		tag: 'span',
 		render,
-		ref,
-		defaultTagName: 'span',
-		state: { placeholder: empty },
-		props: { ...elementProps, children: content },
+		refs: [ref],
+		props: mergeProps<'span'>(dataAttributes({ placeholder: empty }), elementProps, { children: content }),
 	});
 };

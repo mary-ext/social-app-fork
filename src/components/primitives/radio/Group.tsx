@@ -2,25 +2,17 @@
 
 import { type HTMLAttributes, useId, useReducer } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { createChangeDetails } from '../change-details';
+import { mergeProps } from '../merge-props';
+import { getNativeInputAttributes } from '../native-input';
+import { type RenderProps, useRender } from '../render';
 import { GroupContext, type GroupContextValue, type ValueChangeDetails } from './shared';
 
-export type GroupState = {
-	disabled: boolean;
-	readOnly: boolean;
-	required: boolean;
-};
-
-export type GroupProps<Value> = Omit<
-	useRender.ComponentProps<'div', GroupState>,
-	'defaultValue' | 'onChange'
-> & {
+export type GroupProps<Value> = Omit<RenderProps<'div'>, 'defaultValue' | 'onChange'> & {
 	/** controlled value of the checked radio. */
 	value?: Value;
 	/** initial uncontrolled value of the checked radio. */
@@ -96,10 +88,14 @@ export const Group = <Value,>({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { disabled, readOnly, required },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(
+			getNativeInputAttributes({ disabled, readOnly, required }),
+			internalProps,
+			elementProps,
+		),
 	});
 
 	return <GroupContext.Provider value={contextValue}>{element}</GroupContext.Provider>;

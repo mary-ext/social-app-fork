@@ -2,7 +2,7 @@
 
 import { Popup as DialogPopup, type PopupProps } from '../dialog/Popup';
 
-export type { PopupProps, PopupState } from '../dialog/Popup';
+export type { PopupProps } from '../dialog/Popup';
 
 /**
  * renders a {@link DialogPopup} with `role="alertdialog"`.

@@ -2,24 +2,15 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import * as styles from './collapsible.css';
 import { useRootContext } from './shared';
 
-export type TriggerState = {
-	open: boolean;
-	disabled: boolean;
-};
-
-export type TriggerProps = useRender.ComponentProps<'summary', TriggerState>;
-
-const panelTriggerStateAttributes = {
-	open: (open: boolean): Record<string, string> | null => (open ? { 'data-panel-open': '' } : null),
-};
+export type TriggerProps = RenderProps<'summary'>;
 
 const PRESS_OWNER_SELECTOR = `${INTERACTIVE_SELECTOR}, input, label, summary`;
 
@@ -52,11 +43,13 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 	};
 
 	return useRender({
+		tag: 'summary',
 		render,
-		defaultTagName: 'summary',
-		ref,
-		state: { open, disabled },
-		stateAttributesMapping: panelTriggerStateAttributes,
-		props: mergeProps<'summary'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'summary'>(
+			dataAttributes({ 'panel-open': open, disabled }),
+			internalProps,
+			elementProps,
+		),
 	});
 };

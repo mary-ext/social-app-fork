@@ -2,20 +2,15 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { isMouseLike } from '#/lib/browser/input-modality';
 
 import { HOVERABLE_GRACE } from '../anchored-popup';
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState>;
+export type PopupProps = RenderProps<'div'>;
 
 /**
  * renders tooltip content.
@@ -41,10 +36,9 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	}
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

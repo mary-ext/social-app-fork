@@ -5,7 +5,7 @@ import { Viewport as DialogViewport, type ViewportProps } from '../dialog/Viewpo
 import { useSwipeDirection } from './shared';
 import { useSwipeDismiss } from './use-swipe-dismiss';
 
-export type { ViewportProps, ViewportState } from '../dialog/Viewport';
+export type { ViewportProps } from '../dialog/Viewport';
 
 /**
  * renders a {@link DialogViewport} with swipe dismissal.

@@ -1,7 +1,13 @@
 import { createContext, useContext } from 'react';
 
 import type { ChangeDetails } from '../change-details';
-import { type CheckedState, checkedStateAttributes, type NativeInputState } from '../native-input';
+import { type DataAttributes, dataAttributes } from '../data-attributes';
+import {
+	type CheckedState,
+	getCheckedInputAttributes,
+	getNativeInputAttributes,
+	type NativeInputState,
+} from '../native-input';
 
 export type CheckedChangeDetails = ChangeDetails<'none'>;
 
@@ -43,9 +49,11 @@ export const useCheckboxContext = (): CheckboxState => {
  * omits checked/unchecked attributes for indeterminate checkboxes.
  *
  * @param state checkbox state
- * @returns the checked-state attribute mapping
+ * @returns `data-*` attributes for the checkbox's state
  */
-export const getCheckboxStateAttributes = (state: CheckboxState) => ({
-	checked: (checked: boolean): Record<string, string> =>
-		state.indeterminate ? {} : checkedStateAttributes.checked(checked),
-});
+export const getCheckboxAttributes = (state: CheckboxState): DataAttributes => {
+	if (state.indeterminate) {
+		return { ...dataAttributes({ indeterminate: true }), ...getNativeInputAttributes(state) };
+	}
+	return getCheckedInputAttributes(state);
+};

@@ -10,20 +10,14 @@ import {
 	useRef,
 } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type SliderState, sliderStateAttributes, useRootContext, type ValueChangeReason } from './shared';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { getSliderAttributes, useRootContext, type ValueChangeReason } from './shared';
 import * as styles from './slider.css';
-
-export type ThumbState = SliderState;
 
 type InputAriaProps = 'aria-describedby' | 'aria-label' | 'aria-labelledby';
 
-export type ThumbProps = Omit<
-	useRender.ComponentProps<'div', ThumbState>,
-	InputAriaProps | 'onKeyDown' | 'tabIndex'
-> &
+export type ThumbProps = Omit<RenderProps<'div'>, InputAriaProps | 'onKeyDown' | 'tabIndex'> &
 	Pick<AriaAttributes, InputAriaProps> & {
 		/** returns `aria-valuetext` for a value. */
 		getAriaValueText?: (value: number) => string;
@@ -173,10 +167,9 @@ export const Thumb = ({
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, thumbRef],
-		state,
-		stateAttributesMapping: sliderStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, thumbRef],
+		props: mergeProps<'div'>(getSliderAttributes(state), internalProps, elementProps),
 	});
 };

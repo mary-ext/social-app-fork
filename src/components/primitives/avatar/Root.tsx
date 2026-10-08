@@ -2,17 +2,12 @@
 
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { avatarStateAttributes, type ImageLoadingStatus, RootContext, type RootContextValue } from './shared';
+import { type RenderProps, useRender } from '../render';
+import { type ImageLoadingStatus, RootContext, type RootContextValue } from './shared';
 
-export type RootState = {
-	imageLoadingStatus: ImageLoadingStatus;
-};
-
-export type RootProps = useRender.ComponentProps<'span', RootState>;
+export type RootProps = RenderProps<'span'>;
 
 /**
  * holds an avatar's image and fallback.
@@ -40,14 +35,7 @@ export const Root = ({ render, ref, ...elementProps }: RootProps) => {
 
 	const contextValue: RootContextValue = { imageLoadingStatus: status, setImageLoadingStatus };
 
-	const element = useRender({
-		render,
-		defaultTagName: 'span',
-		ref,
-		state: { imageLoadingStatus: status },
-		stateAttributesMapping: avatarStateAttributes,
-		props: elementProps,
-	});
+	const element = useRender({ tag: 'span', render, refs: [ref], props: elementProps });
 
 	return <RootContext.Provider value={contextValue}>{element}</RootContext.Provider>;
 };

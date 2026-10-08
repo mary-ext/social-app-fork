@@ -3,12 +3,10 @@
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { createChangeDetails } from '../change-details';
-import { checkedStateAttributes, type NativeInputRootProps, useNativeInputRoot } from '../native-input';
+import { getCheckedInputAttributes, type NativeInputRootProps, useNativeInputRoot } from '../native-input';
 import { type CheckedChangeDetails, SwitchContext, type SwitchState } from './shared';
 
-export type RootState = SwitchState;
-
-export type RootProps = NativeInputRootProps<RootState> & {
+export type RootProps = NativeInputRootProps & {
 	/** controlled checked state. */
 	checked?: boolean;
 	/** initial uncontrolled checked state. */
@@ -52,7 +50,7 @@ export const Root = ({
 
 	const element = useNativeInputRoot(rootProps, {
 		state,
-		stateAttributesMapping: checkedStateAttributes,
+		attributes: getCheckedInputAttributes(state),
 		input: {
 			type: 'checkbox',
 			role: 'switch',

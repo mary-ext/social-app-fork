@@ -10,13 +10,11 @@ import {
 	CheckboxContext,
 	type CheckboxState,
 	type CheckedChangeDetails,
-	getCheckboxStateAttributes,
+	getCheckboxAttributes,
 	GroupContext,
 } from './shared';
 
-export type RootState = CheckboxState;
-
-export type RootProps = NativeInputRootProps<RootState> & {
+export type RootProps = NativeInputRootProps & {
 	/** controlled checked state; ignored inside a group. */
 	checked?: boolean;
 	/** initial uncontrolled checked state; ignored inside a group. */
@@ -86,7 +84,7 @@ export const Root = ({
 
 	const element = useNativeInputRoot(rootProps, {
 		state,
-		stateAttributesMapping: getCheckboxStateAttributes(state),
+		attributes: getCheckboxAttributes(state),
 		input: {
 			ref: inputRef,
 			type: 'checkbox',

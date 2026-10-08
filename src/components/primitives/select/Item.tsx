@@ -2,20 +2,13 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
 import { listItemProps, useItemHighlight } from '../list-navigation';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { ItemSelectedContext, useRootContext } from './shared';
 
-export type ItemState = {
-	selected: boolean;
-	/** whether the item has focus. */
-	highlighted: boolean;
-	disabled: boolean;
-};
-
-export type ItemProps = useRender.ComponentProps<'div', ItemState> & {
+export type ItemProps = RenderProps<'div'> & {
 	/** value committed on activation. */
 	value: unknown;
 	/** text matched by typeahead; defaults to the item's text content. */
@@ -57,10 +50,14 @@ export const Item = ({ render, ref, value, label, disabled = false, ...elementPr
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { selected, highlighted, disabled },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(
+			dataAttributes({ selected, highlighted, disabled }),
+			internalProps,
+			elementProps,
+		),
 	});
 
 	return <ItemSelectedContext value={selected}>{element}</ItemSelectedContext>;

@@ -1,16 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type BackdropState = {
-	open: boolean;
-};
-
-export type BackdropProps = useRender.ComponentProps<'div', BackdropState>;
+export type BackdropProps = RenderProps<'div'>;
 
 /**
  * renders the dialog backdrop inside `Viewport`.
@@ -22,10 +17,9 @@ export const Backdrop = ({ render, ref, ...elementProps }: BackdropProps) => {
 	const { open, backdropRef } = useRootContext();
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, backdropRef],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>({ role: 'presentation' }, elementProps),
+		refs: [ref, backdropRef],
+		props: mergeProps<'div'>(getOpenAttributes(open), { role: 'presentation' }, elementProps),
 	});
 };

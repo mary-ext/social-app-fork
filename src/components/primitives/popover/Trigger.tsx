@@ -2,24 +2,18 @@
 
 import { type HTMLAttributes, type Ref, useLayoutEffect, useRef, useState } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { type InteractionType, isMouseLike, toInteractionType } from '#/lib/browser/input-modality';
 
 import { addAnchorName } from '../anchored-popup';
-import { triggerStateAttributes } from '../presence';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { type Handle, type OpenChangeRequest, useTriggerRootContext } from './shared';
 
 const OPEN_DELAY = 300;
 
-export type TriggerState = {
-	/** whether the popover is open and anchored to this trigger. */
-	open: boolean;
-	disabled: boolean;
-};
-
-export type TriggerProps = Omit<useRender.ComponentProps<'button', TriggerState>, 'ref'> & {
+export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 	/** handle shared with a detached `Root`. */
 	handle?: Handle;
@@ -141,12 +135,17 @@ export const Trigger = ({
 	}
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref: [ref ?? null, setElement],
-		state: { open, disabled },
-		stateAttributesMapping: triggerStateAttributes,
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'button'>(ariaProps, pressProps, hoverProps, elementProps),
+		refs: [ref, setElement],
+		props: mergeProps<'button'>(
+			getTriggerAttributes(open),
+			dataAttributes({ disabled }),
+			ariaProps,
+			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
+			pressProps,
+			hoverProps,
+			elementProps,
+		),
 	});
 };

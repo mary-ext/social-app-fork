@@ -2,23 +2,21 @@
 
 import type { Ref } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type Align, type CollisionPadding, getAnchoredStyle, type Side } from '../anchored-popup';
-import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import {
+	type Align,
+	type CollisionPadding,
+	getAnchoredStyle,
+	getPositionerAttributes,
+	type Side,
+} from '../anchored-popup';
+import { mergeProps } from '../merge-props';
+import { useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showInTopLayer, showModalInTopLayer } from '../top-layer';
 import * as styles from './popover.css';
 import { useRootContext } from './shared';
 
-export type PositionerState = {
-	open: boolean;
-	/** preferred side, not the resolved placement. */
-	side: Side;
-	align: Align;
-};
-
-export type PositionerProps = Omit<useRender.ComponentProps<'dialog', PositionerState>, 'ref'> & {
+export type PositionerProps = Omit<RenderProps<'dialog'>, 'ref'> & {
 	ref?: Ref<HTMLDialogElement>;
 	/** preferred side; flips when space is insufficient. */
 	side?: Side;
@@ -57,16 +55,11 @@ const MountedPositioner = ({
 	useInertWhileClosed(positionerRef, open);
 
 	return useRender({
+		tag: 'dialog',
 		render,
-		defaultTagName: 'dialog',
-		ref: [
-			ref ?? null,
-			positionerRef,
-			modal ? showModalInTopLayer(open) : showInTopLayer(open, activeTrigger),
-		],
-		state: { open, side, align },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, positionerRef, modal ? showModalInTopLayer(open) : showInTopLayer(open, activeTrigger)],
 		props: mergeProps<'dialog'>(
+			getPositionerAttributes(open, side, align),
 			{
 				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 				className: modal ? styles.modalPositioner : styles.positioner,

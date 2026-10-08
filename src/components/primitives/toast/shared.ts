@@ -9,10 +9,6 @@ export type ToastPlacement = {
 	offsetY: number;
 };
 
-export const expandedStateAttributes = {
-	expanded: (expanded: boolean): Record<string, string> | null => (expanded ? { 'data-expanded': '' } : null),
-};
-
 export type ProviderContextValue = {
 	manager: ToastManager;
 	toasts: readonly ToastObject[];

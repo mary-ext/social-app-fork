@@ -263,7 +263,7 @@ export function MessageInput({
 							case 'ArrowDown':
 							case 'ArrowUp': {
 								if (!hasNavigableAutocomplete) {
-									e.preventBaseUIHandler();
+									e.preventPrimitiveHandler();
 								}
 
 								break;

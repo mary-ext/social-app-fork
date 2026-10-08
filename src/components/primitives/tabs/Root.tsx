@@ -2,12 +2,14 @@
 
 import { useId } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { createChangeDetails } from '../change-details';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import {
 	type Orientation,
 	RootContext,
@@ -16,11 +18,7 @@ import {
 	type ValueChangeDetails,
 } from './shared';
 
-export type RootState = {
-	orientation: Orientation;
-};
-
-export type RootProps = Omit<useRender.ComponentProps<'div', RootState>, 'defaultValue' | 'onChange'> & {
+export type RootProps = Omit<RenderProps<'div'>, 'defaultValue' | 'onChange'> & {
 	/** controlled value of the selected tab; `null` selects none. */
 	value?: TabValue | null;
 	/**
@@ -79,10 +77,10 @@ export const Root = ({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { orientation },
-		props: elementProps,
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ orientation }), elementProps),
 	});
 
 	return <RootContext.Provider value={contextValue}>{element}</RootContext.Provider>;

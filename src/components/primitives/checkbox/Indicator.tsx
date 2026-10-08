@@ -1,12 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useRender } from '@base-ui/react/use-render';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { getCheckboxAttributes, useCheckboxContext } from './shared';
 
-import { type CheckboxState, getCheckboxStateAttributes, useCheckboxContext } from './shared';
-
-export type IndicatorState = CheckboxState;
-
-export type IndicatorProps = useRender.ComponentProps<'span', IndicatorState> & {
+export type IndicatorProps = RenderProps<'span'> & {
 	/** keeps the indicator mounted while unchecked. */
 	keepMounted?: boolean;
 };
@@ -22,12 +20,10 @@ export const Indicator = ({ render, ref, keepMounted = false, ...elementProps }:
 	const state = useCheckboxContext();
 
 	const element = useRender({
+		tag: 'span',
 		render,
-		defaultTagName: 'span',
-		ref,
-		state,
-		stateAttributesMapping: getCheckboxStateAttributes(state),
-		props: elementProps,
+		refs: [ref],
+		props: mergeProps<'span'>(getCheckboxAttributes(state), elementProps),
 	});
 
 	return state.checked || state.indeterminate || keepMounted ? element : null;

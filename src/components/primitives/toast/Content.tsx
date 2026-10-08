@@ -1,24 +1,14 @@
 'use no memo';
 
-import { useRender } from '@base-ui/react/use-render';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { useRootContext } from './shared';
 
-import { expandedStateAttributes, useRootContext } from './shared';
-
-export type ContentState = {
-	expanded: boolean;
-	/** whether the toast is behind the frontmost one. */
-	behind: boolean;
-};
-
-export type ContentProps = useRender.ComponentProps<'div', ContentState>;
-
-const contentStateAttributes = {
-	...expandedStateAttributes,
-	behind: (behind: boolean): Record<string, string> | null => (behind ? { 'data-behind': '' } : null),
-};
+export type ContentProps = RenderProps<'div'>;
 
 /**
- * groups toast content and exposes expanded and behind state for styling.
+ * groups toast content. `data-expanded` marks an expanded stack; `data-behind` marks a non-frontmost toast.
  *
  * @param props element props
  * @returns the content element; a `<div>` by default
@@ -27,10 +17,9 @@ export const Content = ({ render, ref, ...elementProps }: ContentProps) => {
 	const { expanded, behind } = useRootContext();
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { expanded, behind },
-		stateAttributesMapping: contentStateAttributes,
-		props: elementProps,
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ expanded, behind }), elementProps),
 	});
 };

@@ -1,10 +1,10 @@
-export { Backdrop, type BackdropProps, type BackdropState } from './Backdrop';
+export { Backdrop, type BackdropProps } from './Backdrop';
 export { Close, type CloseProps } from './Close';
 export { Description, type DescriptionProps } from './Description';
 export type { FocusTarget } from '../focus';
-export { Popup, type PopupProps, type PopupState } from './Popup';
+export { Popup, type PopupProps } from './Popup';
 export { Root, type RootProps } from './Root';
 export { createHandle, type Handle, type OpenChangeDetails, type OpenChangeReason } from './shared';
 export { Title, type TitleProps } from './Title';
-export { Trigger, type TriggerProps, type TriggerState } from './Trigger';
-export { Viewport, type ViewportProps, type ViewportState } from './Viewport';
+export { Trigger, type TriggerProps } from './Trigger';
+export { Viewport, type ViewportProps } from './Viewport';

@@ -2,22 +2,15 @@
 
 import { type HTMLAttributes, type MouseEvent, useContext, useLayoutEffect, useRef } from 'react';
 
-import type { BaseUIEvent } from '@base-ui/react';
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { isMouseLike } from '#/lib/browser/input-modality';
 
+import { dataAttributes } from '../data-attributes';
 import { isHoverMove } from '../list-navigation';
+import { mergeProps, type PrimitiveEvent } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { ITEM_SELECTOR, ItemSelectedContext, RowContext, useHighlighted, useRootContext } from './shared';
 
-export type ItemState = {
-	selected: boolean;
-	highlighted: boolean;
-	disabled: boolean;
-};
-
-export type ItemProps = useRender.ComponentProps<'div', ItemState> & {
+export type ItemProps = RenderProps<'div'> & {
 	/** the item's value, matched against the root's `items`. */
 	value: unknown;
 	/** position in `items`; required for virtualized lists and repeated values. */
@@ -27,9 +20,9 @@ export type ItemProps = useRender.ComponentProps<'div', ItemState> & {
 };
 
 const disabledGuard = {
-	onClick(event: BaseUIEvent<MouseEvent<HTMLElement>>) {
+	onClick(event: PrimitiveEvent<MouseEvent<HTMLElement>>) {
 		event.preventDefault();
-		event.preventBaseUIHandler();
+		event.preventPrimitiveHandler();
 	},
 };
 
@@ -92,10 +85,15 @@ export const Item = ({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, elementRef],
-		state: { selected, highlighted, disabled },
-		props: mergeProps<'div'>(internalProps, elementProps, disabled ? disabledGuard : undefined),
+		refs: [ref, elementRef],
+		props: mergeProps<'div'>(
+			dataAttributes({ selected, highlighted, disabled }),
+			internalProps,
+			elementProps,
+			disabled ? disabledGuard : undefined,
+		),
 	});
 
 	return <ItemSelectedContext value={selected}>{element}</ItemSelectedContext>;

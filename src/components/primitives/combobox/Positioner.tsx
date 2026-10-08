@@ -2,28 +2,21 @@
 
 import { type HTMLAttributes, type Ref, type RefObject, useId, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import {
 	addAnchorName,
 	type Align,
 	type CollisionPadding,
+	getPositionerAttributes,
 	getShrinkingAnchoredStyle,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
-import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { showInTopLayer } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PositionerState = {
-	open: boolean;
-	/** preferred side, not the resolved placement. */
-	side: 'bottom' | 'top';
-	align: Align;
-};
-
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
+export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> & {
 	ref?: Ref<HTMLDivElement>;
 	/** element to position against; defaults to the input. */
 	anchor?: Element | RefObject<Element | null> | null;
@@ -104,10 +97,9 @@ const MountedPositioner = ({
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, positionerRef, showInTopLayer(open)],
-		state: { open, side, align },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, positionerRef, showInTopLayer(open)],
+		props: mergeProps<'div'>(getPositionerAttributes(open, side, align), internalProps, elementProps),
 	});
 };

@@ -1,11 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { RowContext } from './shared';
 
-export type RowProps = useRender.ComponentProps<'div'>;
+export type RowProps = RenderProps<'div'>;
 
 /**
  * a row of grid items. requires `grid` on the root.
@@ -15,8 +14,9 @@ export type RowProps = useRender.ComponentProps<'div'>;
  */
 export const Row = ({ render, ref, ...elementProps }: RowProps) => {
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
+		refs: [ref],
 		props: mergeProps<'div'>({ role: 'row' }, elementProps),
 	});
 

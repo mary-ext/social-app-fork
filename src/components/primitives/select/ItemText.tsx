@@ -1,13 +1,13 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useRender } from '@base-ui/react/use-render';
+import { type RenderProps, useRender } from '../render';
 
-export type ItemTextProps = useRender.ComponentProps<'span'>;
+export type ItemTextProps = RenderProps<'span'>;
 
 /**
  * @param props element props
  * @returns a wrapper for the item's label; a `<span>` by default
  */
 export const ItemText = ({ render, ref, ...elementProps }: ItemTextProps) => {
-	return useRender({ render, ref, defaultTagName: 'span', props: elementProps });
+	return useRender({ tag: 'span', render, refs: [ref], props: elementProps });
 };

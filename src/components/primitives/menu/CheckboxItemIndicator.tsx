@@ -1,11 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useChecked } from './shared';
 
-export type CheckboxItemIndicatorProps = useRender.ComponentProps<'span'>;
+export type CheckboxItemIndicatorProps = RenderProps<'span'>;
 
 /**
  * renders a decorative indicator while the enclosing checkbox item is checked.
@@ -15,11 +14,11 @@ export type CheckboxItemIndicatorProps = useRender.ComponentProps<'span'>;
  */
 export const CheckboxItemIndicator = ({ render, ref, ...elementProps }: CheckboxItemIndicatorProps) => {
 	const checked = useChecked();
-	return useRender({
+	const element = useRender({
+		tag: 'span',
 		render,
-		ref,
-		defaultTagName: 'span',
-		enabled: checked,
+		refs: [ref],
 		props: mergeProps<'span'>({ 'aria-hidden': true }, elementProps),
 	});
+	return checked ? element : null;
 };

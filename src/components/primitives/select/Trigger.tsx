@@ -2,31 +2,24 @@
 
 import { type HTMLAttributes, type Ref, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
 import { addAnchorName } from '../anchored-popup';
+import { dataAttributes } from '../data-attributes';
 import { isTypeaheadKey } from '../list-navigation';
-import { triggerStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
 import { listenForRelease } from '../press-release';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type TriggerState = {
-	open: boolean;
-	disabled: boolean;
-	/** whether no value is selected. */
-	placeholder: boolean;
-};
-
-export type TriggerProps = Omit<useRender.ComponentProps<'button', TriggerState>, 'ref'> & {
+export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 };
 
 /**
  * toggles the popup on press and opens it with Up/Down. dragging a mouse press onto an item selects it on
- * release; typing selects without opening.
+ * release; typing selects without opening. `data-placeholder` marks an empty selection.
  *
  * @param props element props
  * @returns the trigger element; a `<button>` by default
@@ -125,12 +118,17 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 	};
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref: [ref ?? null, triggerRef],
-		state: { open, disabled, placeholder: ctx.placeholder },
-		stateAttributesMapping: triggerStateAttributes,
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'button'>({ type: 'button', disabled }, ariaProps, interactionProps, elementProps),
+		refs: [ref, triggerRef],
+		props: mergeProps<'button'>(
+			getTriggerAttributes(open),
+			dataAttributes({ disabled, placeholder: ctx.placeholder }),
+			{ type: 'button', disabled },
+			ariaProps,
+			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
+			interactionProps,
+			elementProps,
+		),
 	});
 };

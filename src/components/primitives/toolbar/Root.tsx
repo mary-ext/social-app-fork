@@ -2,18 +2,13 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { CompositeProvider, useCompositeRoot } from '../composite';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { type Orientation, RootContext, type RootContextValue } from './shared';
 
-export type RootState = {
-	disabled: boolean;
-	orientation: Orientation;
-};
-
-export type RootProps = useRender.ComponentProps<'div', RootState> & {
+export type RootProps = RenderProps<'div'> & {
 	/** disables every item; buttons stay focusable unless they opt out. */
 	disabled?: boolean;
 	/** @default 'horizontal' */
@@ -58,10 +53,10 @@ export const Root = ({
 	const value: RootContextValue = { orientation, disabled };
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { disabled, orientation },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ disabled, orientation }), internalProps, elementProps),
 	});
 
 	return (

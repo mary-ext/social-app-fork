@@ -1,15 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useRender } from '@base-ui/react/use-render';
-
-import { openStateAttributes, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type PanelState = {
-	open: boolean;
-};
-
-export type PanelProps = useRender.ComponentProps<'div', PanelState>;
+export type PanelProps = RenderProps<'div'>;
 
 /**
  * unmounts content after `Root`'s close transitions. `[data-closed]` marks the closing phase.
@@ -28,10 +24,9 @@ const MountedPanel = ({ render, ref, ...elementProps }: PanelProps) => {
 	useTransitionsSettled(rootRef, open, onTransitionSettled, '::details-content');
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
-		props: elementProps,
+		refs: [ref],
+		props: mergeProps<'div'>(getOpenAttributes(open), elementProps),
 	});
 };

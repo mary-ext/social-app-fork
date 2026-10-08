@@ -2,10 +2,10 @@
 
 import type { AriaAttributes, InputHTMLAttributes, LabelHTMLAttributes, Ref } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { type DataAttributes, dataAttributes } from './data-attributes';
+import { mergeProps } from './merge-props';
 import * as styles from './native-input.css';
+import { type RenderProps, useRender } from './render';
 
 type InputAriaProps = 'aria-describedby' | 'aria-label' | 'aria-labelledby';
 
@@ -19,8 +19,8 @@ export type NativeInputState = {
  * shared checkbox, radio, and switch props. `render` must produce a `<label>`. `id` and ARIA labels target
  * the input; style root focus with `:has(> input:focus-visible)`.
  */
-export type NativeInputRootProps<State> = Omit<
-	useRender.ComponentProps<'label', State>,
+export type NativeInputRootProps = Omit<
+	RenderProps<'label'>,
 	InputAriaProps | 'defaultChecked' | 'form' | 'id' | 'onChange' | 'value'
 > &
 	Pick<AriaAttributes, InputAriaProps> & {
@@ -38,19 +38,37 @@ export type CheckedState = {
 	checked: boolean;
 };
 
-export const checkedStateAttributes = {
-	checked: (checked: boolean): Record<string, string> =>
-		checked ? { 'data-checked': '' } : { 'data-unchecked': '' },
+/**
+ * @param state control state
+ * @returns `data-disabled`, `data-readonly`, and `data-required` when set
+ */
+export const getNativeInputAttributes = ({
+	disabled,
+	readOnly,
+	required,
+}: NativeInputState): DataAttributes => {
+	return dataAttributes({ disabled, readonly: readOnly, required });
+};
+
+/**
+ * @param state control state
+ * @returns `data-checked` or `data-unchecked`, plus native-input state attributes
+ */
+export const getCheckedInputAttributes = (state: CheckedState & NativeInputState): DataAttributes => {
+	return {
+		...dataAttributes({ checked: state.checked, unchecked: !state.checked }),
+		...getNativeInputAttributes(state),
+	};
 };
 
 /**
  * renders a label root with a visually hidden native input.
  *
  * @param props root attributes and children
- * @param options control state, attribute mapping, and input props
+ * @param options control state, root state attributes, and input props
  * @returns the root element
  */
-export const useNativeInputRoot = <State extends NativeInputState>(
+export const useNativeInputRoot = (
 	{
 		render,
 		ref,
@@ -60,18 +78,14 @@ export const useNativeInputRoot = <State extends NativeInputState>(
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		...elementProps
-	}: Omit<NativeInputRootProps<State>, keyof NativeInputState>,
+	}: Omit<NativeInputRootProps, keyof NativeInputState>,
 	{
 		state,
-		stateAttributesMapping,
+		attributes,
 		input,
 	}: {
-		state: State;
-		stateAttributesMapping?: useRender.Parameters<
-			State,
-			HTMLLabelElement,
-			undefined
-		>['stateAttributesMapping'];
+		state: NativeInputState;
+		attributes: DataAttributes;
 		input: InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> };
 	},
 ) => {
@@ -102,11 +116,9 @@ export const useNativeInputRoot = <State extends NativeInputState>(
 	};
 
 	return useRender({
+		tag: 'label',
 		render,
-		defaultTagName: 'label',
-		ref,
-		state,
-		stateAttributesMapping,
-		props: mergeProps<'label'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'label'>(attributes, internalProps, elementProps),
 	});
 };

@@ -1,8 +1,7 @@
 import type { HTMLAttributes, MouseEvent } from 'react';
 
-import type { BaseUIEvent } from '@base-ui/react';
-
 import { listItemProps, useItemHighlight } from '../list-navigation';
+import type { PrimitiveEvent } from '../merge-props';
 import { useRootContext } from './shared';
 
 export type MenuItemOptions = {
@@ -12,9 +11,9 @@ export type MenuItemOptions = {
 };
 
 const disabledGuard = {
-	onClick(event: BaseUIEvent<MouseEvent<HTMLElement>>) {
+	onClick(event: PrimitiveEvent<MouseEvent<HTMLElement>>) {
 		event.preventDefault();
-		event.preventBaseUIHandler();
+		event.preventPrimitiveHandler();
 	},
 };
 

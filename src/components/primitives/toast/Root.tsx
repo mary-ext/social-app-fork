@@ -2,26 +2,18 @@
 
 import { type HTMLAttributes, useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
 import { useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { getDisplacement, resist, SWIPE_IGNORE_ATTRIBUTE, type SwipeDirection } from '../swipe';
 import type { ToastObject } from './manager';
-import { expandedStateAttributes, RootContext, type RootContextValue, useProviderContext } from './shared';
+import { RootContext, type RootContextValue, useProviderContext } from './shared';
 
-export type RootState = {
-	type: string | undefined;
-	expanded: boolean;
-	limited: boolean;
-	/** whether the toast is transitioning out. */
-	closed: boolean;
-};
-
-export type RootProps = useRender.ComponentProps<'div', RootState> & {
+export type RootProps = RenderProps<'div'> & {
 	toast: ToastObject;
 	/** swipe dismissal directions; defaults to down/right. an empty array disables swiping. */
 	swipeDirection?: SwipeDirection | SwipeDirection[];
@@ -31,13 +23,6 @@ const SWIPE_THRESHOLD = 40;
 const REVERSE_CANCEL_THRESHOLD = 10;
 const LOCK_THRESHOLD = 2;
 const SWIPE_IGNORE_SELECTOR = `${INTERACTIVE_SELECTOR}, input, select, textarea, [${SWIPE_IGNORE_ATTRIBUTE}]`;
-
-const rootStateAttributes = {
-	type: (type: string | undefined): Record<string, string> | null => (type ? { 'data-type': type } : null),
-	...expandedStateAttributes,
-	limited: (limited: boolean): Record<string, string> | null => (limited ? { 'data-limited': '' } : null),
-	closed: (closed: boolean): Record<string, string> | null => (closed ? { 'data-closed': '' } : null),
-};
 
 // resist dragging in directions that cannot dismiss the toast.
 const damp = (
@@ -73,7 +58,7 @@ type Gesture = {
  * renders a dismissible toast. Escape closes it when focus is within the toast. exposes `--toast-index`,
  * `--toast-offset-y`, and `--toast-height` for stacking. swipes set `--toast-swipe-movement-x`/`-y` and
  * `data-swiping`; dismissal sets `data-swipe-direction`. swipes ignore interactive descendants and elements
- * marked `data-swipe-ignore`.
+ * marked `data-swipe-ignore`. `data-closed` marks the exit transition.
  *
  * @param props toast, swipe directions, and element props
  * @returns the toast element; a `<div>` by default
@@ -288,12 +273,15 @@ export const Root = ({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, setElement],
-		state: { type: toast.type, expanded, limited: toast.limited, closed },
-		stateAttributesMapping: rootStateAttributes,
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, setElement],
+		props: mergeProps<'div'>(
+			dataAttributes({ type: toast.type || undefined, expanded, limited: toast.limited, closed }),
+			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
+			internalProps,
+			elementProps,
+		),
 	});
 
 	const ctx: RootContextValue = {

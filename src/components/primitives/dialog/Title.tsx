@@ -2,11 +2,10 @@
 
 import { useLayoutEffect } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type TitleProps = useRender.ComponentProps<'h2'>;
+export type TitleProps = RenderProps<'h2'>;
 
 /**
  * names the dialog.
@@ -20,9 +19,9 @@ export const Title = ({ render, ref, ...elementProps }: TitleProps) => {
 	useLayoutEffect(() => registerLabel('title'), [registerLabel]);
 
 	return useRender({
+		tag: 'h2',
 		render,
-		ref,
-		defaultTagName: 'h2',
+		refs: [ref],
 		props: { ...elementProps, id: titleId },
 	});
 };

@@ -2,17 +2,12 @@
 
 import { type HTMLAttributes, useEffect, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { type TabValue, useRootContext } from './shared';
 
-import { type Orientation, type TabValue, useRootContext } from './shared';
-
-export type PanelState = {
-	hidden: boolean;
-	orientation: Orientation;
-};
-
-export type PanelProps = Omit<useRender.ComponentProps<'div', PanelState>, 'hidden' | 'id'> & {
+export type PanelProps = Omit<RenderProps<'div'>, 'hidden' | 'id'> & {
 	/** pairs the panel with the tab of the same value. */
 	value: TabValue;
 	/** keeps the panel mounted while hidden, so find-in-page can reveal it. */
@@ -66,10 +61,10 @@ export const Panel = ({ render, ref, value, keepMounted = false, ...elementProps
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, panelRef],
-		state: { hidden: !open, orientation },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, panelRef],
+		props: mergeProps<'div'>(dataAttributes({ hidden: !open, orientation }), internalProps, elementProps),
 	});
 
 	return open || keepMounted ? element : null;

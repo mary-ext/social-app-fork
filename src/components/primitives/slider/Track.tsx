@@ -1,14 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type SliderState, sliderStateAttributes, useRootContext } from './shared';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { getSliderAttributes, useRootContext } from './shared';
 import * as styles from './slider.css';
 
-export type TrackState = SliderState;
-
-export type TrackProps = useRender.ComponentProps<'div', TrackState>;
+export type TrackProps = RenderProps<'div'>;
 
 /**
  * spans the slider's full range and positions `Indicator` and `Thumb`.
@@ -20,10 +17,9 @@ export const Track = ({ render, ref, ...elementProps }: TrackProps) => {
 	const { state } = useRootContext();
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state,
-		stateAttributesMapping: sliderStateAttributes,
-		props: mergeProps<'div'>({ className: styles.track }, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(getSliderAttributes(state), { className: styles.track }, elementProps),
 	});
 };

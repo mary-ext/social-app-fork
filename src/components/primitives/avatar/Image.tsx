@@ -2,19 +2,14 @@
 
 import { type ImgHTMLAttributes, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import * as styles from './avatar.css';
-import { type ImageLoadingStatus, imageStateAttributes, useRootContext } from './shared';
+import { getImageAttributes, type ImageLoadingStatus, useRootContext } from './shared';
 
-export type ImageState = {
-	imageLoadingStatus: ImageLoadingStatus;
-};
-
-export type ImageProps = useRender.ComponentProps<'img', ImageState> & {
+export type ImageProps = RenderProps<'img'> & {
 	/** receives each loading status change. */
 	onLoadingStatusChange?: (status: ImageLoadingStatus) => void;
 };
@@ -73,11 +68,9 @@ export const Image = ({ render, ref, src, onLoadingStatusChange, ...elementProps
 	};
 
 	return useRender({
+		tag: 'img',
 		render,
-		defaultTagName: 'img',
-		ref: [ref ?? null, imageRef],
-		state: { imageLoadingStatus },
-		stateAttributesMapping: imageStateAttributes,
-		props: mergeProps<'img'>(internalProps, elementProps),
+		refs: [ref, imageRef],
+		props: mergeProps<'img'>(getImageAttributes(imageLoadingStatus), internalProps, elementProps),
 	});
 };

@@ -2,16 +2,12 @@
 
 import type { HTMLAttributes, ReactNode } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type ListState = {
-	empty: boolean;
-};
-
-export type ListProps = Omit<useRender.ComponentProps<'div', ListState>, 'children'> & {
+export type ListProps = Omit<RenderProps<'div'>, 'children'> & {
 	/** list content, or a function rendering each of the root's `items`. */
 	children?: ReactNode | ((item: never, index: number) => ReactNode);
 };
@@ -41,10 +37,9 @@ export const List = ({ render, ref, children, ...elementProps }: ListProps) => {
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, ctx.listRef],
-		state: { empty: ctx.items.length === 0 },
-		stateAttributesMapping: { empty: (empty) => (empty ? { 'data-empty': '' } : null) },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, ctx.listRef],
+		props: mergeProps<'div'>(dataAttributes({ empty: ctx.items.length === 0 }), internalProps, elementProps),
 	});
 };

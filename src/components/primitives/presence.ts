@@ -2,6 +2,24 @@ import { type RefObject, useLayoutEffect, useState } from 'react';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { type DataAttributes, dataAttributes } from './data-attributes';
+
+/**
+ * @param open whether the popup or panel is open
+ * @returns `data-open` while open, `data-closed` otherwise
+ */
+export const getOpenAttributes = (open: boolean): DataAttributes => {
+	return dataAttributes({ open, closed: !open });
+};
+
+/**
+ * @param open whether the trigger's popup is open
+ * @returns `data-popup-open` while open
+ */
+export const getTriggerAttributes = (open: boolean): DataAttributes => {
+	return dataAttributes({ 'popup-open': open });
+};
+
 /**
  * keeps a popup mounted until its exit transitions finish.
  *
@@ -125,12 +143,4 @@ const parseTimes = (list: string): number[] => {
 		const time = parseFloat(value);
 		return value.trim().endsWith('ms') ? time : time * 1000;
 	});
-};
-
-export const openStateAttributes = {
-	open: (open: boolean): Record<string, string> => (open ? { 'data-open': '' } : { 'data-closed': '' }),
-};
-
-export const triggerStateAttributes = {
-	open: (open: boolean): Record<string, string> | null => (open ? { 'data-popup-open': '' } : null),
 };

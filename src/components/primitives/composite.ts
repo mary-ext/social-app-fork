@@ -11,7 +11,7 @@ import {
 	useState,
 } from 'react';
 
-import type { BaseUIEvent } from '@base-ui/react';
+import type { PrimitiveEvent } from './merge-props';
 
 // context ids isolate nested composites and let toggle groups join a toolbar's navigation.
 const ITEM_ATTR = 'data-composite-item';
@@ -212,19 +212,19 @@ export const useCompositeItem = ({ active, disabled }: CompositeItemOptions) => 
 /** props from {@link useCompositeItem} for an item inside a composite. */
 export type CompositeItemProps = NonNullable<ReturnType<typeof useCompositeItem>>;
 
-const block = (event: BaseUIEvent<MouseEvent<HTMLElement> | PointerEvent<HTMLElement>>) => {
+const block = (event: PrimitiveEvent<MouseEvent<HTMLElement> | PointerEvent<HTMLElement>>) => {
 	event.preventDefault();
-	event.preventBaseUIHandler();
+	event.preventPrimitiveHandler();
 };
 
 /** blocks activation while keeping disabled items focusable. merge after consumer props to run first. */
 export const focusableDisabledGuard = {
 	onClick: block,
 	onPointerDown: block,
-	onKeyDown(event: BaseUIEvent<KeyboardEvent<HTMLElement>>) {
+	onKeyDown(event: PrimitiveEvent<KeyboardEvent<HTMLElement>>) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			event.preventBaseUIHandler();
+			event.preventPrimitiveHandler();
 		}
 	},
 };

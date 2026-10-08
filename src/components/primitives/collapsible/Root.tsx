@@ -2,23 +2,19 @@
 
 import { type DetailsHTMLAttributes, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { openStateAttributes, usePresence } from '../presence';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes, usePresence } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import * as styles from './collapsible.css';
 import { type OpenChangeDetails, RootContext, type RootContextValue } from './shared';
 
-export type RootState = {
-	open: boolean;
-	disabled: boolean;
-};
-
 // native `name` groups would close siblings without updating React state.
-export type RootProps = Omit<useRender.ComponentProps<'details', RootState>, 'name' | 'open'> & {
+export type RootProps = Omit<RenderProps<'details'>, 'name' | 'open'> & {
 	/** controlled open state. */
 	open?: boolean;
 	/** initial uncontrolled open state. */
@@ -83,12 +79,15 @@ export const Root = ({
 	const value: RootContextValue = { open, disabled, mounted, rootRef, setOpen, onTransitionSettled };
 
 	const element = useRender({
+		tag: 'details',
 		render,
-		defaultTagName: 'details',
-		ref: [ref ?? null, rootRef],
-		state: { open, disabled },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'details'>(internalProps, elementProps),
+		refs: [ref, rootRef],
+		props: mergeProps<'details'>(
+			getOpenAttributes(open),
+			dataAttributes({ disabled }),
+			internalProps,
+			elementProps,
+		),
 	});
 
 	return <RootContext.Provider value={value}>{element}</RootContext.Provider>;

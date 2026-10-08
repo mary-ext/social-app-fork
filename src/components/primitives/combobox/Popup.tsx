@@ -2,17 +2,12 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState>;
+export type PopupProps = RenderProps<'div'>;
 
 /**
  * the popup's visible container. presses inside it keep focus on the input.
@@ -30,10 +25,9 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { open: expanded },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(getOpenAttributes(expanded), internalProps, elementProps),
 	});
 };

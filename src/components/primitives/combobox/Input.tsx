@@ -2,20 +2,14 @@
 
 import { type InputHTMLAttributes, type KeyboardEvent, useCallback, useState } from 'react';
 
-import type { BaseUIEvent } from '@base-ui/react';
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { triggerStateAttributes } from '../presence';
+import { mergeProps, type PrimitiveEvent } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { ITEM_SELECTOR, type RootContextValue, useActiveIndex, useRootContext } from './shared';
 
-export type InputState = {
-	open: boolean;
-};
-
-export type InputProps = Omit<useRender.ComponentProps<'input', InputState>, 'onKeyDown'> & {
-	/** runs before the built-in key handling; call `preventBaseUIHandler()` to skip it. */
-	onKeyDown?: (event: BaseUIEvent<KeyboardEvent<HTMLInputElement>>) => void;
+export type InputProps = Omit<RenderProps<'input'>, 'onKeyDown'> & {
+	/** runs before the built-in key handling; call `preventPrimitiveHandler()` to skip it. */
+	onKeyDown?: (event: PrimitiveEvent<KeyboardEvent<HTMLInputElement>>) => void;
 };
 
 const isPlainKey = (event: KeyboardEvent): boolean => {
@@ -200,11 +194,9 @@ export const Input = ({ render, ref, ...elementProps }: InputProps) => {
 	};
 
 	return useRender({
+		tag: 'input',
 		render,
-		defaultTagName: 'input',
-		ref: [ref ?? null, ctx.inputRef, detectInput],
-		state: { open: expanded },
-		stateAttributesMapping: triggerStateAttributes,
-		props: mergeProps<'input'>(internalProps, elementProps),
+		refs: [ref, ctx.inputRef, detectInput],
+		props: mergeProps<'input'>(getTriggerAttributes(expanded), internalProps, elementProps),
 	});
 };

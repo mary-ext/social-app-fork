@@ -1,11 +1,10 @@
 'use no memo';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type ActionProps = useRender.ComponentProps<'button'>;
+export type ActionProps = RenderProps<'button'>;
 
 /**
  * renders the toast's action button with its `actionProps`.
@@ -18,9 +17,9 @@ export const Action = ({ render, ref, ...elementProps }: ActionProps) => {
 	const props = mergeProps<'button'>({ type: 'button' }, elementProps, toast.actionProps);
 
 	const element = useRender({
+		tag: 'button',
 		render,
-		ref,
-		defaultTagName: 'button',
+		refs: [ref],
 		props,
 	});
 

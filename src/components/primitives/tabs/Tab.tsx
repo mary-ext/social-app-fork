@@ -2,19 +2,13 @@
 
 import type { ButtonHTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useCompositeItem } from '../composite';
-import { type Orientation, type TabValue, useListContext, useRootContext } from './shared';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { type TabValue, useListContext, useRootContext } from './shared';
 
-export type TabState = {
-	active: boolean;
-	disabled: boolean;
-	orientation: Orientation;
-};
-
-export type TabProps = Omit<useRender.ComponentProps<'button', TabState>, 'id' | 'value'> & {
+export type TabProps = Omit<RenderProps<'button'>, 'id' | 'value'> & {
 	/** pairs the tab with the panel of the same value. */
 	value: TabValue;
 	/** keeps the tab reachable with arrow keys but never selects it. */
@@ -55,10 +49,13 @@ export const Tab = ({ render, ref, value, disabled = false, ...elementProps }: T
 	};
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref,
-		state: { active, disabled, orientation },
-		props: mergeProps<'button'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'button'>(
+			dataAttributes({ active, disabled, orientation }),
+			internalProps,
+			elementProps,
+		),
 	});
 };

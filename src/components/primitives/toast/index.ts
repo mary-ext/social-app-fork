@@ -1,6 +1,6 @@
 export { Action, type ActionProps } from './Action';
 export { Close, type CloseProps } from './Close';
-export { Content, type ContentProps, type ContentState } from './Content';
+export { Content, type ContentProps } from './Content';
 export { Description, type DescriptionProps } from './Description';
 export {
 	createToastManager,
@@ -12,8 +12,8 @@ export {
 	type ToastUpdateOptions,
 } from './manager';
 export { Provider, type ProviderProps } from './Provider';
-export { Root, type RootProps, type RootState } from './Root';
+export { Root, type RootProps } from './Root';
 export type { SwipeDirection } from '../swipe';
 export { Title, type TitleProps } from './Title';
 export { useToastManager, type UseToastManagerReturnValue } from './use-toast-manager';
-export { Viewport, type ViewportProps, type ViewportState } from './Viewport';
+export { Viewport, type ViewportProps } from './Viewport';

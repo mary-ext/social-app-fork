@@ -2,12 +2,10 @@
 
 import { useLayoutEffect, useRef } from 'react';
 
-import { checkedStateAttributes, type NativeInputRootProps, useNativeInputRoot } from '../native-input';
+import { getCheckedInputAttributes, type NativeInputRootProps, useNativeInputRoot } from '../native-input';
 import { RadioContext, type RadioState, useGroupContext } from './shared';
 
-export type RootState = RadioState;
-
-export type RootProps = NativeInputRootProps<RootState> & {
+export type RootProps = NativeInputRootProps & {
 	/** the group's value while this radio is checked. */
 	value: unknown;
 };
@@ -36,6 +34,7 @@ export const Root = ({
 		readOnly: group.readOnly || readOnly,
 		required: group.required || required,
 	};
+	const attributes = getCheckedInputAttributes(state);
 
 	// rejected changes need an explicit reset: the browser already unchecked the previous radio.
 	useLayoutEffect(() => {
@@ -48,7 +47,7 @@ export const Root = ({
 
 	const element = useNativeInputRoot(rootProps, {
 		state,
-		stateAttributesMapping: checkedStateAttributes,
+		attributes,
 		input: {
 			ref: inputRef,
 			type: 'radio',

@@ -1,5 +1,7 @@
 import { createContext, useContext } from 'react';
 
+import { type DataAttributes, dataAttributes } from '../data-attributes';
+
 export type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 export type RootContextValue = {
@@ -22,24 +24,10 @@ export const useRootContext = (): RootContextValue => {
 	return ctx;
 };
 
-// expose status to render callbacks; only `Image` gets loading-state attributes.
-export const avatarStateAttributes = {
-	imageLoadingStatus: () => null,
-};
-
-export const imageStateAttributes = {
-	imageLoadingStatus: (status: ImageLoadingStatus): Record<string, string> | null => {
-		switch (status) {
-			case 'idle':
-			case 'loading': {
-				return { 'data-loading': '' };
-			}
-			case 'error': {
-				return { 'data-error': '' };
-			}
-			case 'loaded': {
-				return null;
-			}
-		}
-	},
+/**
+ * @param status image loading status
+ * @returns `data-loading` for idle/loading, `data-error` for error, or no attributes for loaded
+ */
+export const getImageAttributes = (status: ImageLoadingStatus): DataAttributes => {
+	return dataAttributes({ loading: status === 'idle' || status === 'loading', error: status === 'error' });
 };

@@ -2,23 +2,21 @@
 
 import type { Ref } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type Align, type CollisionPadding, getAnchoredStyle, type Side } from '../anchored-popup';
+import {
+	type Align,
+	type CollisionPadding,
+	getAnchoredStyle,
+	getPositionerAttributes,
+	type Side,
+} from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
-import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { getHintProps, showInTopLayer } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PositionerState = {
-	open: boolean;
-	/** preferred side, not the resolved placement. */
-	side: Side;
-	align: Align;
-};
-
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
+export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> & {
 	ref?: Ref<HTMLDivElement>;
 	/** preferred side; flips when space is insufficient. */
 	side?: Side;
@@ -56,12 +54,12 @@ const MountedPositioner = ({
 	useInertWhileClosed(positionerRef, open);
 
 	return useRender({
+		tag: 'div',
 		render,
 		// oxlint-disable-next-line react/refs -- the trigger commits before the positioner mounts
-		ref: [ref ?? null, positionerRef, showInTopLayer(open, triggerRef.current)],
-		state: { open, side, align },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, positionerRef, showInTopLayer(open, triggerRef.current)],
 		props: mergeProps<'div'>(
+			getPositionerAttributes(open, side, align),
 			{
 				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
 				className: styles.positioner,

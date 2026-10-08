@@ -2,19 +2,16 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { type CheckedChangeDetails, GroupContext, type GroupContextValue } from './shared';
 
-export type GroupState = {
-	disabled: boolean;
-};
-
-export type GroupProps = Omit<useRender.ComponentProps<'div', GroupState>, 'defaultValue' | 'onChange'> & {
+export type GroupProps = Omit<RenderProps<'div'>, 'defaultValue' | 'onChange'> & {
 	/** controlled values of the checked checkboxes. */
 	value?: readonly string[];
 	/** initial uncontrolled values of the checked checkboxes. */
@@ -66,10 +63,10 @@ export const Group = ({
 	const contextValue: GroupContextValue = { value, disabled, setGroupValue };
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { disabled },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ disabled }), internalProps, elementProps),
 	});
 
 	return <GroupContext.Provider value={contextValue}>{element}</GroupContext.Provider>;

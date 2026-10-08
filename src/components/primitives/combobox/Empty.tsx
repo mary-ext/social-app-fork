@@ -1,11 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type EmptyProps = useRender.ComponentProps<'div'>;
+export type EmptyProps = RenderProps<'div'>;
 
 /**
  * announces its children when there are no items.
@@ -18,8 +17,9 @@ export const Empty = ({ render, ref, children, ...elementProps }: EmptyProps) =>
 
 	// keep the live region mounted so changes to its content are announced.
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
+		refs: [ref],
 		props: mergeProps<'div'>(
 			{
 				role: 'status',

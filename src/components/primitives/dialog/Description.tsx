@@ -2,11 +2,10 @@
 
 import { useLayoutEffect } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
-
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type DescriptionProps = useRender.ComponentProps<'p'>;
+export type DescriptionProps = RenderProps<'p'>;
 
 /**
  * describes the dialog.
@@ -20,9 +19,9 @@ export const Description = ({ render, ref, ...elementProps }: DescriptionProps) 
 	useLayoutEffect(() => registerLabel('description'), [registerLabel]);
 
 	return useRender({
+		tag: 'p',
 		render,
-		ref,
-		defaultTagName: 'p',
+		refs: [ref],
 		props: { ...elementProps, id: descriptionId },
 	});
 };

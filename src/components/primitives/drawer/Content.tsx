@@ -1,10 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { CONTENT_ATTRIBUTE } from './shared';
 
-export type ContentProps = useRender.ComponentProps<'div'>;
+export type ContentProps = RenderProps<'div'>;
 
 /**
  * preserves mouse text selection inside the drawer; touch can still swipe.
@@ -14,8 +14,9 @@ export type ContentProps = useRender.ComponentProps<'div'>;
  */
 export const Content = ({ render, ref, ...elementProps }: ContentProps) => {
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		props: { [CONTENT_ATTRIBUTE]: '', ...elementProps },
+		refs: [ref],
+		props: mergeProps<'div'>({ [CONTENT_ATTRIBUTE]: '' }, elementProps),
 	});
 };

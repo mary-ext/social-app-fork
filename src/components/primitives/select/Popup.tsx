@@ -2,21 +2,16 @@
 
 import { type HTMLAttributes, useEffect, useLayoutEffect } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { getListItems, getListNavigationProps } from '../list-navigation';
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { leaveModal } from '../top-layer';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState>;
+export type PopupProps = RenderProps<'div'>;
 
 /**
  * renders the listbox. opening focuses the selected item, or the first/last item for keyboard opens without a
@@ -103,11 +98,10 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, popupRef],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, popupRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

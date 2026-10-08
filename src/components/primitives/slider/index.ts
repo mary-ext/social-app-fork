@@ -1,6 +1,6 @@
-export { Control, type ControlProps, type ControlState } from './Control';
-export { Indicator, type IndicatorProps, type IndicatorState } from './Indicator';
-export { Root, type RootProps, type RootState } from './Root';
+export { Control, type ControlProps } from './Control';
+export { Indicator, type IndicatorProps } from './Indicator';
+export { Root, type RootProps } from './Root';
 export type { Orientation, ValueChangeDetails, ValueChangeReason, ValueCommitDetails } from './shared';
-export { Thumb, type ThumbProps, type ThumbState } from './Thumb';
-export { Track, type TrackProps, type TrackState } from './Track';
+export { Thumb, type ThumbProps } from './Thumb';
+export { Track, type TrackProps } from './Track';

@@ -2,12 +2,11 @@
 
 import { useId, useMemo, useState } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { GroupContext, type GroupContextValue } from './shared';
 
-export type GroupProps = useRender.ComponentProps<'div'>;
+export type GroupProps = RenderProps<'div'>;
 
 /**
  * groups related items, named by an optional `GroupLabel`.
@@ -33,8 +32,9 @@ export const Group = ({ render, ref, ...elementProps }: GroupProps) => {
 	);
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
+		refs: [ref],
 		props: mergeProps<'div'>(
 			{ role: 'group', 'aria-labelledby': labelled ? labelId : undefined },
 			elementProps,

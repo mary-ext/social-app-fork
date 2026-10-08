@@ -2,27 +2,25 @@
 
 import { type HTMLAttributes, useRef, useState } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { clamp } from '#/lib/utils/numbers';
 
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import {
+	getSliderAttributes,
 	type Orientation,
 	RootContext,
 	type RootContextValue,
 	type SliderState,
-	sliderStateAttributes,
 	snapToStep,
 	type ValueChangeDetails,
 	type ValueCommitDetails,
 } from './shared';
 
-export type RootState = SliderState;
-
-export type RootProps = Omit<useRender.ComponentProps<'div', RootState>, 'defaultValue' | 'onChange'> & {
+export type RootProps = Omit<RenderProps<'div'>, 'defaultValue' | 'onChange'> & {
 	/** controlled value. */
 	value?: number;
 	/** initial uncontrolled value; defaults to `min`. */
@@ -115,7 +113,7 @@ export const Root = ({
 		onValueCommitted?.(committed, { reason, event });
 	});
 
-	const state: RootState = { value, disabled, dragging, orientation };
+	const state: SliderState = { value, disabled, dragging, orientation };
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		role: 'group',
@@ -138,11 +136,10 @@ export const Root = ({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state,
-		stateAttributesMapping: sliderStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(getSliderAttributes(state), internalProps, elementProps),
 	});
 
 	return <RootContext.Provider value={contextValue}>{element}</RootContext.Provider>;

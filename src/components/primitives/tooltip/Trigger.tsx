@@ -9,22 +9,17 @@ import {
 	useRef,
 } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { isMouseLike } from '#/lib/browser/input-modality';
 
 import { addAnchorName, HOVERABLE_GRACE } from '../anchored-popup';
-import { triggerStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
 const OPEN_DELAY = 600;
 
-export type TriggerState = {
-	open: boolean;
-};
-
-export type TriggerProps = Omit<useRender.ComponentProps<'button', TriggerState>, 'ref'> & {
+export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 	/** pointer rest time before opening, in milliseconds. */
 	delay?: number;
@@ -158,12 +153,10 @@ export const Trigger = ({
 	}
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref: [ref ?? null, triggerRef],
-		state: { open },
-		stateAttributesMapping: triggerStateAttributes,
+		refs: [ref, triggerRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'button'>(internalProps, elementProps),
+		props: mergeProps<'button'>(getTriggerAttributes(open), internalProps, elementProps),
 	});
 };

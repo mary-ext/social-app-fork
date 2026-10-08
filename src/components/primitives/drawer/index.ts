@@ -1,12 +1,12 @@
-export { Backdrop, type BackdropProps, type BackdropState } from '../dialog/Backdrop';
+export { Backdrop, type BackdropProps } from '../dialog/Backdrop';
 export { Close, type CloseProps } from '../dialog/Close';
 export { Content, type ContentProps } from './Content';
 export { Description, type DescriptionProps } from '../dialog/Description';
 export type { FocusTarget } from '../focus';
-export { Popup, type PopupProps, type PopupState } from './Popup';
+export { Popup, type PopupProps } from './Popup';
 export { Root, type RootProps } from './Root';
 export { createHandle, type Handle, type OpenChangeDetails, type OpenChangeReason } from '../dialog/shared';
 export type { SwipeDirection } from '../swipe';
 export { Title, type TitleProps } from '../dialog/Title';
-export { Trigger, type TriggerProps, type TriggerState } from '../dialog/Trigger';
-export { Viewport, type ViewportProps, type ViewportState } from './Viewport';
+export { Trigger, type TriggerProps } from '../dialog/Trigger';
+export { Viewport, type ViewportProps } from './Viewport';

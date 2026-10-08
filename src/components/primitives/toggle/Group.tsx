@@ -2,23 +2,18 @@
 
 import { type HTMLAttributes, useContext } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { CompositeProvider, useCompositeRoot } from '../composite';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { RootContext as ToolbarContext, useToolbarDisabled } from '../toolbar/shared';
 import { GroupContext, type GroupContextValue, type Orientation, type PressedChangeDetails } from './shared';
 
-export type GroupState = {
-	disabled: boolean;
-	multiple: boolean;
-	orientation: Orientation;
-};
-
-export type GroupProps = Omit<useRender.ComponentProps<'div', GroupState>, 'defaultValue' | 'onChange'> & {
+export type GroupProps = Omit<RenderProps<'div'>, 'defaultValue' | 'onChange'> & {
 	/** controlled values of the pressed toggles. */
 	value?: readonly string[];
 	/** initial uncontrolled values of the pressed toggles. */
@@ -95,10 +90,14 @@ export const Group = ({
 	const contextValue: GroupContextValue = { value, disabled, setGroupValue };
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { disabled, multiple, orientation },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(
+			dataAttributes({ disabled, multiple, orientation }),
+			internalProps,
+			elementProps,
+		),
 	});
 
 	return (

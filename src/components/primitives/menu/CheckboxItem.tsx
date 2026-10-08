@@ -1,19 +1,12 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { CheckedContext } from './shared';
 import { useMenuItem } from './use-menu-item';
 
-export type CheckboxItemState = {
-	checked: boolean;
-	/** whether the item has focus. */
-	highlighted: boolean;
-	disabled: boolean;
-};
-
-export type CheckboxItemProps = useRender.ComponentProps<'div', CheckboxItemState> & {
+export type CheckboxItemProps = RenderProps<'div'> & {
 	checked: boolean;
 	/** called with the toggled state on press, Enter or Space. */
 	onCheckedChange: (checked: boolean) => void;
@@ -43,10 +36,11 @@ export const CheckboxItem = ({
 	const item = useMenuItem({ label, disabled, closeOnClick });
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { checked, highlighted: item.highlighted, disabled },
+		refs: [ref],
 		props: mergeProps<'div'>(
+			dataAttributes({ checked, highlighted: item.highlighted, disabled }),
 			{
 				role: 'menuitemcheckbox',
 				'aria-checked': checked,

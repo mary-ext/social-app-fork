@@ -2,17 +2,14 @@
 
 import { type HTMLAttributes, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { clamp } from '#/lib/utils/numbers';
 
-import { type SliderState, sliderStateAttributes, useRootContext, type ValueChangeReason } from './shared';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { getSliderAttributes, useRootContext, type ValueChangeReason } from './shared';
 import * as styles from './slider.css';
 
-export type ControlState = SliderState;
-
-export type ControlProps = useRender.ComponentProps<'div', ControlState> & {
+export type ControlProps = RenderProps<'div'> & {
 	/**
 	 * focuses the thumb on pointer press; `false` preserves current focus.
 	 *
@@ -144,11 +141,10 @@ export const Control = ({ render, ref, focusOnPress = true, ...elementProps }: C
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state,
-		stateAttributesMapping: sliderStateAttributes,
+		refs: [ref],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		props: mergeProps<'div'>(getSliderAttributes(state), internalProps, elementProps),
 	});
 };

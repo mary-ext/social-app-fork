@@ -1,16 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { GroupContext, useRootContext, useToolbarDisabled } from './shared';
 
-import { GroupContext, type Orientation, useRootContext, useToolbarDisabled } from './shared';
-
-export type GroupState = {
-	disabled: boolean;
-	orientation: Orientation;
-};
-
-export type GroupProps = useRender.ComponentProps<'div', GroupState> & {
+export type GroupProps = RenderProps<'div'> & {
 	/** disables every item in the group. */
 	disabled?: boolean;
 };
@@ -27,10 +22,10 @@ export const Group = ({ render, ref, disabled: disabledProp = false, ...elementP
 	const disabled = useToolbarDisabled() || disabledProp;
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { disabled, orientation },
-		props: mergeProps<'div'>({ role: 'group' }, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ disabled, orientation }), { role: 'group' }, elementProps),
 	});
 
 	return <GroupContext.Provider value={disabled}>{element}</GroupContext.Provider>;

@@ -2,22 +2,17 @@
 
 import { type HTMLAttributes, type SyntheticEvent, useEffect, useLayoutEffect } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { isMouseLike } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { leaveModal } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState> & {
+export type PopupProps = RenderProps<'div'> & {
 	/**
 	 * focus target on open; defaults to the first tabbable element, or the popup if none. touch opens leave
 	 * focus unchanged to avoid showing the virtual keyboard.
@@ -103,11 +98,10 @@ export const Popup = ({
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, popupRef],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, popupRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

@@ -1,13 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useRender } from '@base-ui/react/use-render';
+import { mergeProps } from '../merge-props';
+import { getCheckedInputAttributes } from '../native-input';
+import { type RenderProps, useRender } from '../render';
+import { useRadioContext } from './shared';
 
-import { checkedStateAttributes } from '../native-input';
-import { type RadioState, useRadioContext } from './shared';
-
-export type IndicatorState = RadioState;
-
-export type IndicatorProps = useRender.ComponentProps<'span', IndicatorState> & {
+export type IndicatorProps = RenderProps<'span'> & {
 	/** keeps the indicator mounted while unchecked. */
 	keepMounted?: boolean;
 };
@@ -23,12 +21,10 @@ export const Indicator = ({ render, ref, keepMounted = false, ...elementProps }:
 	const state = useRadioContext();
 
 	const element = useRender({
+		tag: 'span',
 		render,
-		defaultTagName: 'span',
-		ref,
-		state,
-		stateAttributesMapping: checkedStateAttributes,
-		props: elementProps,
+		refs: [ref],
+		props: mergeProps<'span'>(getCheckedInputAttributes(state), elementProps),
 	});
 
 	return state.checked || keepMounted ? element : null;

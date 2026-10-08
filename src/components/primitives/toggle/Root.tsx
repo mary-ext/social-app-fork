@@ -2,21 +2,17 @@
 
 import { type ButtonHTMLAttributes, useContext, useId } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 
 import { createChangeDetails } from '../change-details';
 import { focusableDisabledGuard, useCompositeItem } from '../composite';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useToolbarDisabled } from '../toolbar/shared';
 import { GroupContext, type PressedChangeDetails } from './shared';
 
-export type RootState = {
-	pressed: boolean;
-	disabled: boolean;
-};
-
-export type RootProps = Omit<useRender.ComponentProps<'button', RootState>, 'form' | 'type' | 'value'> & {
+export type RootProps = Omit<RenderProps<'button'>, 'form' | 'type' | 'value'> & {
 	/** controlled pressed state; ignored inside a group. */
 	pressed?: boolean;
 	/** initial uncontrolled pressed state; ignored inside a group. */
@@ -90,11 +86,11 @@ export const Root = ({
 	};
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref,
-		state: { pressed, disabled },
+		refs: [ref],
 		props: mergeProps<'button'>(
+			dataAttributes({ pressed, disabled }),
 			internalProps,
 			elementProps,
 			!nativeButton && disabled ? focusableDisabledGuard : undefined,

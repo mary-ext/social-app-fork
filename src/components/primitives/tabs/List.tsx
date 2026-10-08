@@ -2,17 +2,13 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { CompositeProvider, useCompositeRoot } from '../composite';
-import { ListContext, type Orientation, useRootContext } from './shared';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { ListContext, useRootContext } from './shared';
 
-export type ListState = {
-	orientation: Orientation;
-};
-
-export type ListProps = useRender.ComponentProps<'div', ListState> & {
+export type ListProps = RenderProps<'div'> & {
 	/** selects tabs as arrow keys focus them, rather than on Enter or Space. */
 	activateOnFocus?: boolean;
 	/**
@@ -47,10 +43,10 @@ export const List = ({
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { orientation },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ orientation }), internalProps, elementProps),
 	});
 
 	return (

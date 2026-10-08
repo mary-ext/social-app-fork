@@ -1,9 +1,9 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 
-export type SeparatorProps = useRender.ComponentProps<'div'>;
+export type SeparatorProps = RenderProps<'div'>;
 
 /**
  * divides groups of items.
@@ -13,8 +13,9 @@ export type SeparatorProps = useRender.ComponentProps<'div'>;
  */
 export const Separator = ({ render, ref, ...elementProps }: SeparatorProps) => {
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
+		refs: [ref],
 		props: mergeProps<'div'>({ role: 'separator' }, elementProps),
 	});
 };

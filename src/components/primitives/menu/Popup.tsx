@@ -2,23 +2,18 @@
 
 import { type HTMLAttributes, useEffect, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { getNextTabbable } from '../focus';
 import { createTypeahead, getListItems, getListNavigationProps } from '../list-navigation';
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { leaveModal } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState>;
+export type PopupProps = RenderProps<'div'>;
 
 /**
  * renders a menu. keyboard opens focus the first or last item; other opens focus the menu. closing restores
@@ -113,11 +108,10 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, popupRef],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, popupRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

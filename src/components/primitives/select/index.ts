@@ -1,11 +1,11 @@
 export type { Align } from '../anchored-popup';
 export { Icon, type IconProps } from './Icon';
-export { Item, type ItemProps, type ItemState } from './Item';
+export { Item, type ItemProps } from './Item';
 export { ItemIndicator, type ItemIndicatorProps } from './ItemIndicator';
 export { ItemText, type ItemTextProps } from './ItemText';
-export { Popup, type PopupProps, type PopupState } from './Popup';
-export { Positioner, type PositionerProps, type PositionerState } from './Positioner';
+export { Popup, type PopupProps } from './Popup';
+export { Positioner, type PositionerProps } from './Positioner';
 export { Root, type RootProps } from './Root';
 export type { SelectItem } from './shared';
-export { Trigger, type TriggerProps, type TriggerState } from './Trigger';
+export { Trigger, type TriggerProps } from './Trigger';
 export { Value, type ValueProps } from './Value';

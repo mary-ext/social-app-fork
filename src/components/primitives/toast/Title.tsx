@@ -1,10 +1,9 @@
 'use no memo';
 
-import { useRender } from '@base-ui/react/use-render';
-
+import { type RenderProps, useRender } from '../render';
 import { useLabel } from './use-label';
 
-export type TitleProps = useRender.ComponentProps<'h2'>;
+export type TitleProps = RenderProps<'h2'>;
 
 /**
  * sets the toast's accessible name, using children or the toast's `title`.
@@ -16,9 +15,9 @@ export const Title = ({ render, ref, children, ...elementProps }: TitleProps) =>
 	const label = useLabel('title', children);
 
 	const element = useRender({
+		tag: 'h2',
 		render,
-		ref,
-		defaultTagName: 'h2',
+		refs: [ref],
 		props: { ...elementProps, id: label.id, children: label.children },
 	});
 

@@ -2,21 +2,15 @@
 
 import { type HTMLAttributes, type Ref, useId, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
-import { triggerStateAttributes } from '../presence';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { type Handle, useTriggerRoot } from './shared';
 
-export type TriggerState = {
-	/** whether the dialog is open and was opened by this trigger. */
-	open: boolean;
-	disabled: boolean;
-};
-
-export type TriggerProps<Payload = void> = Omit<useRender.ComponentProps<'button', TriggerState>, 'ref'> & {
+export type TriggerProps<Payload = void> = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 	/** handle shared with a detached `Root`. */
 	handle?: Handle<Payload>;
@@ -46,13 +40,11 @@ export const Trigger = <Payload = void,>({
 
 	const open = controls !== null;
 
-	let triggerProps: HTMLAttributes<HTMLElement> = {};
+	const triggerProps: HTMLAttributes<HTMLElement> = {};
 	if (attached) {
-		triggerProps = {
-			'aria-haspopup': 'dialog',
-			'aria-expanded': open,
-			'aria-controls': controls ?? undefined,
-		};
+		triggerProps['aria-haspopup'] = 'dialog';
+		triggerProps['aria-expanded'] = open;
+		triggerProps['aria-controls'] = controls ?? undefined;
 
 		if (!disabled) {
 			triggerProps.onPointerDown = (event) => {
@@ -72,12 +64,15 @@ export const Trigger = <Payload = void,>({
 	}
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref,
-		state: { open, disabled },
-		stateAttributesMapping: triggerStateAttributes,
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'button'>(triggerProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'button'>(
+			getTriggerAttributes(open),
+			dataAttributes({ disabled }),
+			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
+			triggerProps,
+			elementProps,
+		),
 	});
 };

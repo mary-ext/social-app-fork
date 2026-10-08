@@ -2,23 +2,18 @@
 
 import { type HTMLAttributes, type Ref, useLayoutEffect } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { isMouseLike } from '#/lib/browser/input-modality';
 
 import { addAnchorName } from '../anchored-popup';
-import { triggerStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { type OpenChangeReason, useRootContext } from './shared';
 
 const OPEN_DELAY = 600;
 const CLOSE_DELAY = 300;
 
-export type TriggerState = {
-	open: boolean;
-};
-
-export type TriggerProps = Omit<useRender.ComponentProps<'a', TriggerState>, 'ref'> & {
+export type TriggerProps = Omit<RenderProps<'a'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 	/** delay before opening on hover or keyboard focus, in milliseconds. */
 	delay?: number;
@@ -116,12 +111,10 @@ export const Trigger = ({
 	};
 
 	return useRender({
+		tag: 'a',
 		render,
-		defaultTagName: 'a',
-		ref: [ref ?? null, triggerRef],
-		state: { open },
-		stateAttributesMapping: triggerStateAttributes,
+		refs: [ref, triggerRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'a'>(internalProps, elementProps),
+		props: mergeProps<'a'>(getTriggerAttributes(open), internalProps, elementProps),
 	});
 };

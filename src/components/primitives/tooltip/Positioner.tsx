@@ -2,23 +2,15 @@
 
 import type { Ref } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type Align, getAnchoredStyle, type Side } from '../anchored-popup';
+import { type Align, getAnchoredStyle, getPositionerAttributes, type Side } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
-import { openStateAttributes, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { getHintProps, showInTopLayer } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PositionerState = {
-	open: boolean;
-	/** preferred side, not the resolved placement. */
-	side: Side;
-	align: Align;
-};
-
-export type PositionerProps = Omit<useRender.ComponentProps<'div', PositionerState>, 'ref'> & {
+export type PositionerProps = Omit<RenderProps<'div'>, 'ref'> & {
 	ref?: Ref<HTMLDivElement>;
 	/** preferred side; flips when space is insufficient. */
 	side?: Side;
@@ -53,11 +45,11 @@ const MountedPositioner = ({
 	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, positionerRef, showInTopLayer(open)],
-		state: { open, side, align },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, positionerRef, showInTopLayer(open)],
 		props: mergeProps<'div'>(
+			getPositionerAttributes(open, side, align),
 			{
 				...getHintProps((event) => setOpen(false, 'light-dismiss', event)),
 				// prevent the popup from intercepting the pointer when hover is disabled.

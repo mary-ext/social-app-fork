@@ -1,11 +1,10 @@
 'use no memo';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useProviderContext, useRootContext } from './shared';
 
-export type CloseProps = useRender.ComponentProps<'button'>;
+export type CloseProps = RenderProps<'button'>;
 
 /**
  * closes the toast when pressed.
@@ -18,9 +17,9 @@ export const Close = ({ render, ref, ...elementProps }: CloseProps) => {
 	const { toast } = useRootContext();
 
 	return useRender({
+		tag: 'button',
 		render,
-		ref,
-		defaultTagName: 'button',
+		refs: [ref],
 		props: mergeProps<'button'>(
 			{
 				type: 'button',

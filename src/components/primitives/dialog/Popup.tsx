@@ -2,21 +2,16 @@
 
 import { type HTMLAttributes, useEffect, useLayoutEffect } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { findReturnFocus, type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
-import { openStateAttributes } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { leaveModal } from '../top-layer';
 import { useRootContext } from './shared';
 
-export type PopupState = {
-	open: boolean;
-};
-
-export type PopupProps = useRender.ComponentProps<'div', PopupState> & {
+export type PopupProps = RenderProps<'div'> & {
 	/**
 	 * focus target on open; defaults to the first tabbable element, or the popup on touch to avoid opening the
 	 * virtual keyboard.
@@ -86,11 +81,10 @@ export const Popup = ({ render, ref, initialFocus, finalFocus = true, ...element
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, popupRef, autofocus],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, popupRef, autofocus],
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };
 

@@ -1,17 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useMenuItem } from './use-menu-item';
 
-export type ItemState = {
-	/** whether the item has focus. */
-	highlighted: boolean;
-	disabled: boolean;
-};
-
-export type ItemProps = useRender.ComponentProps<'div', ItemState> & {
+export type ItemProps = RenderProps<'div'> & {
 	/** text matched by typeahead; defaults to the item's text content. */
 	label?: string;
 	disabled?: boolean;
@@ -36,9 +30,15 @@ export const Item = ({
 	const item = useMenuItem({ label, disabled, closeOnClick });
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { highlighted: item.highlighted, disabled },
-		props: mergeProps<'div'>({ role: 'menuitem' }, item.props, elementProps, item.guardProps),
+		refs: [ref],
+		props: mergeProps<'div'>(
+			dataAttributes({ highlighted: item.highlighted, disabled }),
+			{ role: 'menuitem' },
+			item.props,
+			elementProps,
+			item.guardProps,
+		),
 	});
 };

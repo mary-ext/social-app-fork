@@ -1,14 +1,11 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { type SliderState, sliderStateAttributes, useRootContext } from './shared';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { getSliderAttributes, useRootContext } from './shared';
 import * as styles from './slider.css';
 
-export type IndicatorState = SliderState;
-
-export type IndicatorProps = useRender.ComponentProps<'div', IndicatorState>;
+export type IndicatorProps = RenderProps<'div'>;
 
 /**
  * fills the track from its minimum to the current value.
@@ -20,10 +17,9 @@ export const Indicator = ({ render, ref, ...elementProps }: IndicatorProps) => {
 	const { state } = useRootContext();
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state,
-		stateAttributesMapping: sliderStateAttributes,
-		props: mergeProps<'div'>({ className: styles.indicator }, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(getSliderAttributes(state), { className: styles.indicator }, elementProps),
 	});
 };

@@ -2,6 +2,8 @@ import { createContext, type RefObject, useContext } from 'react';
 
 import { clamp } from '#/lib/utils/numbers';
 
+import { type DataAttributes, dataAttributes } from '../data-attributes';
+
 export type Orientation = 'horizontal' | 'vertical';
 
 export type ValueChangeReason = 'drag' | 'input-change' | 'keyboard' | 'track-press';
@@ -25,8 +27,12 @@ export type SliderState = {
 	orientation: Orientation;
 };
 
-export const sliderStateAttributes = {
-	value: (): null => null,
+/**
+ * @param state slider state
+ * @returns `data-disabled`, `data-dragging`, and `data-orientation` attributes
+ */
+export const getSliderAttributes = ({ disabled, dragging, orientation }: SliderState): DataAttributes => {
+	return dataAttributes({ disabled, dragging, orientation });
 };
 
 export type RootContextValue = {

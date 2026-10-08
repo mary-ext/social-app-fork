@@ -2,16 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
-import { useRender } from '@base-ui/react/use-render';
 import { useTimeout } from '@base-ui/utils/useTimeout';
 
-import { avatarStateAttributes, type ImageLoadingStatus, useRootContext } from './shared';
+import { type RenderProps, useRender } from '../render';
+import { useRootContext } from './shared';
 
-export type FallbackState = {
-	imageLoadingStatus: ImageLoadingStatus;
-};
-
-export type FallbackProps = useRender.ComponentProps<'span', FallbackState> & {
+export type FallbackProps = RenderProps<'span'> & {
 	/** milliseconds before showing the fallback. */
 	delay?: number;
 };
@@ -36,14 +32,7 @@ export const Fallback = ({ render, ref, delay = 0, ...elementProps }: FallbackPr
 		}
 	}, [waiting, delay, timeout]);
 
-	const element = useRender({
-		render,
-		defaultTagName: 'span',
-		ref,
-		state: { imageLoadingStatus },
-		stateAttributesMapping: avatarStateAttributes,
-		props: elementProps,
-	});
+	const element = useRender({ tag: 'span', render, refs: [ref], props: elementProps });
 
 	return imageLoadingStatus !== 'loaded' && delayPassed ? element : null;
 };

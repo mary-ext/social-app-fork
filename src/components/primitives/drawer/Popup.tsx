@@ -4,7 +4,7 @@ import { Popup as DialogPopup, type PopupProps } from '../dialog/Popup';
 import { useRootContext } from '../dialog/shared';
 import { useSwipeDirection } from './shared';
 
-export type { PopupProps, PopupState } from '../dialog/Popup';
+export type { PopupProps } from '../dialog/Popup';
 
 /**
  * renders a {@link DialogPopup} that focuses itself on open by default. `data-swipe-direction` identifies the

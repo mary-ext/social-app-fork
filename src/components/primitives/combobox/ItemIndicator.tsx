@@ -1,11 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useItemSelected } from './shared';
 
-export type ItemIndicatorProps = useRender.ComponentProps<'span'>;
+export type ItemIndicatorProps = RenderProps<'span'>;
 
 /**
  * renders a decorative indicator for the selected item.
@@ -16,10 +15,9 @@ export type ItemIndicatorProps = useRender.ComponentProps<'span'>;
 export const ItemIndicator = ({ render, ref, ...elementProps }: ItemIndicatorProps) => {
 	const selected = useItemSelected();
 	const element = useRender({
+		tag: 'span',
 		render,
-		ref,
-		defaultTagName: 'span',
-		enabled: selected,
+		refs: [ref],
 		props: mergeProps<'span'>({ 'aria-hidden': true }, elementProps),
 	});
 	return selected ? element : null;

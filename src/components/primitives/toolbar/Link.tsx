@@ -1,16 +1,12 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { useCompositeItem } from '../composite';
-import { type Orientation, useRootContext } from './shared';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { useRootContext } from './shared';
 
-export type LinkState = {
-	orientation: Orientation;
-};
-
-export type LinkProps = useRender.ComponentProps<'a', LinkState>;
+export type LinkProps = RenderProps<'a'>;
 
 /**
  * a link in the toolbar's navigation; unaffected by the toolbar's disabled state.
@@ -24,10 +20,9 @@ export const Link = ({ render, ref, ...elementProps }: LinkProps) => {
 	const item = useCompositeItem({ active: false, disabled: false });
 
 	return useRender({
+		tag: 'a',
 		render,
-		defaultTagName: 'a',
-		ref,
-		state: { orientation },
-		props: mergeProps<'a'>(item, elementProps),
+		refs: [ref],
+		props: mergeProps<'a'>(dataAttributes({ orientation }), item, elementProps),
 	});
 };

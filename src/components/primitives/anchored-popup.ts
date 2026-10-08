@@ -2,6 +2,8 @@ import './position-try.css';
 
 import type { CSSProperties } from 'react';
 
+import { type DataAttributes, dataAttributes } from './data-attributes';
+import { getOpenAttributes } from './presence';
 export type Side = 'bottom' | 'left' | 'right' | 'top';
 export type Align = 'center' | 'end' | 'start';
 
@@ -113,6 +115,16 @@ export const getShrinkingAnchoredStyle = (
 			'flip-block, --anchored-shrink-floored, --anchored-shrink-floored flip-block, --anchored-shrink',
 		'--anchored-block-margins': `${margins}px`,
 	};
+};
+
+/**
+ * @param open whether the popup is open
+ * @param side preferred side, before collision handling
+ * @param align requested alignment
+ * @returns open-state attributes plus `data-side` and `data-align` for the requested placement
+ */
+export const getPositionerAttributes = (open: boolean, side: Side, align: Align): DataAttributes => {
+	return { ...getOpenAttributes(open), ...dataAttributes({ side, align }) };
 };
 
 /**

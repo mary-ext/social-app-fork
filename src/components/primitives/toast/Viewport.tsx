@@ -2,21 +2,18 @@
 
 import { type HTMLAttributes, useEffect, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
 import { createPortal } from 'react-dom';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { getTopModalSurface, moveKeepingAnimations, subscribeModalSurfaces } from '../top-layer';
-import { expandedStateAttributes, useProviderContext } from './shared';
+import { useProviderContext } from './shared';
 
-export type ViewportState = {
-	expanded: boolean;
-};
-
-export type ViewportProps = useRender.ComponentProps<'div', ViewportState> & {
+export type ViewportProps = RenderProps<'div'> & {
 	/** localized name of the region. */
 	'aria-label': string;
 };
@@ -155,12 +152,11 @@ export const Viewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 	};
 
 	const element = useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, viewportRef],
-		state: { expanded },
-		stateAttributesMapping: expandedStateAttributes,
+		refs: [ref, viewportRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'div'>(internalProps, elementProps),
+		props: mergeProps<'div'>(dataAttributes({ expanded }), internalProps, elementProps),
 	});
 
 	return createPortal(element, host);

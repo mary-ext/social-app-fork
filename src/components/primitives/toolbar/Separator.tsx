@@ -2,16 +2,12 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { type Orientation, useRootContext } from './shared';
 
-export type SeparatorState = {
-	orientation: Orientation;
-};
-
-export type SeparatorProps = useRender.ComponentProps<'div', SeparatorState> & {
+export type SeparatorProps = RenderProps<'div'> & {
 	/** defaults to the opposite of the toolbar's orientation. */
 	orientation?: Orientation;
 };
@@ -33,9 +29,9 @@ export const Separator = ({ render, ref, orientation: orientationProp, ...elemen
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
-		state: { orientation },
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref],
+		props: mergeProps<'div'>(dataAttributes({ orientation }), internalProps, elementProps),
 	});
 };

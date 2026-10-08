@@ -2,23 +2,17 @@
 
 import { type HTMLAttributes, type Ref, useId, useLayoutEffect, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
 import { addAnchorName } from '../anchored-popup';
-import { triggerStateAttributes } from '../presence';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { getTriggerAttributes } from '../presence';
 import { listenForRelease } from '../press-release';
+import { type RenderProps, useRender } from '../render';
 import { type Handle, type RootContextValue, useTriggerRootContext } from './shared';
 
-export type TriggerState = {
-	/** whether the menu is open and anchored to this trigger. */
-	open: boolean;
-	disabled: boolean;
-};
-
-export type TriggerProps = Omit<useRender.ComponentProps<'button', TriggerState>, 'ref'> & {
+export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
 	/** handle shared with a detached `Root`. */
 	handle?: Handle;
@@ -77,13 +71,13 @@ export const Trigger = ({
 		: {};
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref: [ref ?? null, elementRef],
-		state: { open, disabled },
-		stateAttributesMapping: triggerStateAttributes,
+		refs: [ref, elementRef],
 		props: mergeProps<'button'>(
-			{ id, type: render === undefined ? 'button' : undefined },
+			getTriggerAttributes(open),
+			dataAttributes({ disabled }),
+			{ id },
 			ariaProps,
 			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 			ctx && !disabled ? getPressProps(ctx, id, pointerTypeRef, pressToggledRef) : undefined,

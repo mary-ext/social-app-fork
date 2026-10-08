@@ -2,20 +2,15 @@
 
 import { type DialogHTMLAttributes, type Ref, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { getReturnFocusChain } from '../focus';
-import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import { getDialogProps, showModalInTopLayer, useModalSurface } from '../top-layer';
 import * as styles from './dialog.css';
 import { useRootContext } from './shared';
 
-export type ViewportState = {
-	open: boolean;
-};
-
-export type ViewportProps = Omit<useRender.ComponentProps<'dialog', ViewportState>, 'ref'> & {
+export type ViewportProps = Omit<RenderProps<'dialog'>, 'ref'> & {
 	ref?: Ref<HTMLDialogElement>;
 };
 
@@ -84,12 +79,10 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 	}
 
 	return useRender({
+		tag: 'dialog',
 		render,
-		defaultTagName: 'dialog',
-		ref: [ref ?? null, viewportRef, captureReturnFocus, showModalInTopLayer(open)],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
+		refs: [ref, viewportRef, captureReturnFocus, showModalInTopLayer(open)],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-		props: mergeProps<'dialog'>(internalProps, elementProps),
+		props: mergeProps<'dialog'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

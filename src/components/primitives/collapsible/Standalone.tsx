@@ -2,17 +2,12 @@
 
 import { type HTMLAttributes, useRef } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
-import { openStateAttributes, useInertWhileClosed, usePresence, useTransitionsSettled } from '../presence';
+import { mergeProps } from '../merge-props';
+import { getOpenAttributes, useInertWhileClosed, usePresence, useTransitionsSettled } from '../presence';
+import { type RenderProps, useRender } from '../render';
 import * as styles from './collapsible.css';
 
-export type StandaloneState = {
-	open: boolean;
-};
-
-export type StandaloneProps = useRender.ComponentProps<'div', StandaloneState> & {
+export type StandaloneProps = RenderProps<'div'> & {
 	/** whether the panel is expanded. */
 	open: boolean;
 };
@@ -48,10 +43,9 @@ const MountedStandalone = ({
 	};
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref: [ref ?? null, panelRef],
-		state: { open },
-		stateAttributesMapping: openStateAttributes,
-		props: mergeProps<'div'>(internalProps, elementProps),
+		refs: [ref, panelRef],
+		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

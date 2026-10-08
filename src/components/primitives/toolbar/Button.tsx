@@ -2,19 +2,13 @@
 
 import type { ButtonHTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
 import { focusableDisabledGuard, useCompositeItem } from '../composite';
-import { type Orientation, useRootContext, useToolbarDisabled } from './shared';
+import { dataAttributes } from '../data-attributes';
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
+import { useRootContext, useToolbarDisabled } from './shared';
 
-export type ButtonState = {
-	disabled: boolean;
-	focusable: boolean;
-	orientation: Orientation;
-};
-
-export type ButtonProps = useRender.ComponentProps<'button', ButtonState> & {
+export type ButtonProps = RenderProps<'button'> & {
 	/** blocks activation. */
 	disabled?: boolean;
 	/**
@@ -59,11 +53,11 @@ export const Button = ({
 	};
 
 	return useRender({
+		tag: 'button',
 		render,
-		defaultTagName: 'button',
-		ref,
-		state: { disabled, focusable, orientation },
+		refs: [ref],
 		props: mergeProps<'button'>(
+			dataAttributes({ disabled, focusable, orientation }),
 			internalProps,
 			elementProps,
 			disabled && focusable ? focusableDisabledGuard : undefined,

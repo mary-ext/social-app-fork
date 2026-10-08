@@ -2,12 +2,11 @@
 
 import { useLayoutEffect } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useGroupContext } from './shared';
 
-export type GroupLabelProps = useRender.ComponentProps<'div'>;
+export type GroupLabelProps = RenderProps<'div'>;
 
 /**
  * names the enclosing group.
@@ -21,8 +20,9 @@ export const GroupLabel = ({ render, ref, ...elementProps }: GroupLabelProps) =>
 	useLayoutEffect(registerLabel, [registerLabel]);
 
 	return useRender({
+		tag: 'div',
 		render,
-		ref,
+		refs: [ref],
 		props: mergeProps<'div'>({ id: labelId }, elementProps),
 	});
 };

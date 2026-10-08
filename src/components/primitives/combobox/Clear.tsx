@@ -2,12 +2,11 @@
 
 import type { ButtonHTMLAttributes } from 'react';
 
-import { mergeProps } from '@base-ui/react/merge-props';
-import { useRender } from '@base-ui/react/use-render';
-
+import { mergeProps } from '../merge-props';
+import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
-export type ClearProps = useRender.ComponentProps<'button'>;
+export type ClearProps = RenderProps<'button'>;
 
 /**
  * empties the input and refocuses it. shown while the input has text, outside the tab order.
@@ -32,10 +31,9 @@ export const Clear = ({ render, ref, ...elementProps }: ClearProps) => {
 	};
 
 	const element = useRender({
+		tag: 'button',
 		render,
-		ref,
-		defaultTagName: 'button',
-		enabled: visible,
+		refs: [ref],
 		props: mergeProps<'button'>(internalProps, elementProps),
 	});
 	return visible ? element : null;
