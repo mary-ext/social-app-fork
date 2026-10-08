@@ -56,10 +56,13 @@ export function DesktopFeeds() {
 		}
 		const reselectedActive = next.length === 0;
 
-		window.scrollTo(0, 0);
-
 		setSelectedFeed(feed);
-		router.navigate({ to: { name: 'Home' } });
+		// Home follows the selected feed; navigating again would duplicate history and reset focus.
+		if (target.name === 'Home') {
+			window.scrollTo(0, 0);
+		} else {
+			router.navigate({ to: { name: 'Home' } });
+		}
 
 		if (reselectedActive && feed === selectedFeed) {
 			softReset.emit();
