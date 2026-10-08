@@ -47,7 +47,8 @@ export const getInteractionType = (event: Event): InteractionType => {
 	if (event instanceof PointerEvent && event.pointerType !== '') {
 		return toInteractionType(event.pointerType);
 	}
-	if (event instanceof TouchEvent) {
+	// desktop Firefox leaves `TouchEvent` undefined.
+	if (typeof TouchEvent !== 'undefined' && event instanceof TouchEvent) {
 		return 'touch';
 	}
 	if (event instanceof MouseEvent) {
