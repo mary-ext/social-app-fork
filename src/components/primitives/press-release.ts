@@ -1,4 +1,6 @@
-import type { RefObject } from 'react';
+import { type HTMLAttributes, type RefObject, useRef } from 'react';
+
+import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
 import { isWithinPopup } from './anchored-popup';
 import { getListItems } from './list-navigation';
@@ -83,4 +85,90 @@ export const listenForRelease = (
 		},
 		{ once: true, capture: true },
 	);
+};
+
+export type ListTriggerPressOptions = {
+	open: boolean;
+	/** `undefined` while no popup is attached. */
+	positionerRef: RefObject<HTMLElement | null> | undefined;
+	/**
+	 * requests a toggle on mouse/pen mousedown, or click for touch, keyboard, and draggable triggers.
+	 *
+	 * @param event source event
+	 * @param method input type
+	 */
+	onPress: (event: Event, method: InteractionType) => void;
+	/**
+	 * requests opening with Up or Down.
+	 *
+	 * @param event source event
+	 * @param entry item to focus
+	 */
+	onArrowOpen: (event: Event, entry: 'first' | 'last') => void;
+	/**
+	 * requests closing after an outside drag or hold release.
+	 *
+	 * @param event pointer release outside both trigger and popup
+	 */
+	onOutsideRelease: (event: PointerEvent) => void;
+};
+
+/**
+ * handles list-popup activation and drag-to-select.
+ *
+ * @param options popup state and callbacks
+ * @returns props for the trigger
+ */
+export const useListTriggerPress = ({
+	open,
+	positionerRef,
+	onPress,
+	onArrowOpen,
+	onOutsideRelease,
+}: ListTriggerPressOptions): HTMLAttributes<HTMLElement> => {
+	const pointerTypeRef = useRef<InteractionType>('');
+	const pressToggledRef = useRef(false);
+
+	return {
+		onPointerDown(event) {
+			pointerTypeRef.current = toInteractionType(event.pointerType);
+			pressToggledRef.current = false;
+		},
+		onMouseDown(event) {
+			if (event.button !== 0 || pointerTypeRef.current === 'touch') {
+				return;
+			}
+			// preventing mousedown would cancel a native drag, so draggable triggers open on click.
+			if (event.currentTarget.closest('[draggable="true"]')) {
+				return;
+			}
+			// keep native mousedown focus from competing with popup focus.
+			event.preventDefault();
+			pressToggledRef.current = true;
+
+			onPress(event.nativeEvent, pointerTypeRef.current || 'mouse');
+			if (!open && positionerRef) {
+				listenForRelease(event.nativeEvent, {
+					trigger: event.currentTarget,
+					positionerRef,
+					onOutsideRelease,
+				});
+			}
+		},
+		onClick(event) {
+			// keyboard activation dispatches a click without a press.
+			const keyboard = event.detail === 0;
+			if (!keyboard && pressToggledRef.current) {
+				pressToggledRef.current = false;
+				return;
+			}
+			onPress(event.nativeEvent, keyboard ? 'keyboard' : pointerTypeRef.current || 'mouse');
+		},
+		onKeyDown(event) {
+			if (!open && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+				event.preventDefault();
+				onArrowOpen(event.nativeEvent, event.key === 'ArrowDown' ? 'first' : 'last');
+			}
+		},
+	};
 };

@@ -1,15 +1,15 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, type Ref, useRef } from 'react';
+import type { HTMLAttributes, Ref } from 'react';
 
-import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
+import { toInteractionType } from '#/lib/browser/input-modality';
 
 import { useAnchorName } from '../anchored-popup';
 import { dataAttributes } from '../data-attributes';
 import { isTypeaheadKey } from '../list-navigation';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
-import { listenForRelease } from '../press-release';
+import { useListTriggerPress } from '../press-release';
 import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
@@ -27,7 +27,6 @@ export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 	const ctx = useRootContext();
 	const { open, disabled, mounted, anchorName, setOpen, triggerRef } = ctx;
-	const pointerTypeRef = useRef<InteractionType>('');
 
 	const anchorRef = useAnchorName(mounted ? anchorName : undefined);
 
@@ -47,60 +46,30 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 		return true;
 	};
 
-	let interactionProps: HTMLAttributes<HTMLElement> = {};
+	const pressProps = useListTriggerPress({
+		open,
+		positionerRef: ctx.positionerRef,
+		onPress(_event, method) {
+			setOpen(!open, { reason: 'trigger-press', method });
+		},
+		onArrowOpen(_event, entry) {
+			setOpen(true, { reason: 'list-navigation', method: 'keyboard', entry });
+		},
+		onOutsideRelease(event) {
+			setOpen(false, { reason: 'outside-press', method: toInteractionType(event.pointerType) });
+		},
+	});
+
+	let interactionProps: HTMLAttributes<HTMLElement> | undefined;
 	if (!disabled) {
-		interactionProps = {
-			onPointerDown(event) {
-				pointerTypeRef.current = toInteractionType(event.pointerType);
-			},
-			onMouseDown(event) {
-				if (event.button !== 0 || pointerTypeRef.current === 'touch') {
-					return;
-				}
-				// keep native mousedown focus from competing with popup focus.
-				event.preventDefault();
-				const method = pointerTypeRef.current || 'mouse';
-				setOpen(!open, { reason: 'trigger-press', method });
-				if (!open) {
-					listenForRelease(event.nativeEvent, {
-						trigger: event.currentTarget,
-						positionerRef: ctx.positionerRef,
-						onOutsideRelease(release) {
-							setOpen(false, { reason: 'outside-press', method: toInteractionType(release.pointerType) });
-						},
-					});
-				}
-			},
-			onClick(event) {
-				// mouse presses toggle on mousedown.
-				if (event.detail !== 0 && pointerTypeRef.current !== 'touch') {
-					return;
-				}
-				const method = event.detail === 0 ? 'keyboard' : 'touch';
-				setOpen(!open, { reason: 'trigger-press', method });
-			},
+		interactionProps = mergeProps<'button'>(pressProps, {
 			onKeyDown(event) {
-				if (open) {
-					return;
-				}
-				switch (event.key) {
-					case 'ArrowDown':
-					case 'ArrowUp': {
-						event.preventDefault();
-						setOpen(true, {
-							reason: 'list-navigation',
-							method: 'keyboard',
-							entry: event.key === 'ArrowDown' ? 'first' : 'last',
-						});
-						return;
-					}
-				}
-				if (isTypeaheadKey(event) && commitTypeahead(event.key)) {
+				if (!open && isTypeaheadKey(event) && commitTypeahead(event.key)) {
 					// keep Space within a typed sequence from opening the popup.
 					event.preventDefault();
 				}
 			},
-		};
+		});
 	}
 
 	const ariaProps: HTMLAttributes<HTMLElement> = {

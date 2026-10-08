@@ -2,15 +2,13 @@
 
 import { type HTMLAttributes, type Ref, useId, useLayoutEffect, useRef } from 'react';
 
-import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
-
 import { useAnchorName } from '../anchored-popup';
 import { dataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
-import { listenForRelease } from '../press-release';
+import { useListTriggerPress } from '../press-release';
 import { type RenderProps, useRender } from '../render';
-import { type Handle, type RootContextValue, useTriggerRootContext } from './shared';
+import { type Handle, useTriggerRootContext } from './shared';
 
 export type TriggerProps = Omit<RenderProps<'button'>, 'ref'> & {
 	ref?: Ref<HTMLElement>;
@@ -38,8 +36,6 @@ export const Trigger = ({
 	const generatedId = useId();
 	const id = idProp ?? generatedId;
 	const elementRef = useRef<HTMLElement | null>(null);
-	const pointerTypeRef = useRef<InteractionType>('');
-	const pressToggledRef = useRef(false);
 
 	const active = ctx?.activeTriggerId === id;
 	const open = !!ctx?.open && active;
@@ -54,6 +50,44 @@ export const Trigger = ({
 		return registerTrigger(id, el);
 	}, [registerTrigger, id]);
 	const anchorRef = useAnchorName(active && ctx.mounted ? ctx.anchorName : undefined);
+
+	const pressProps = useListTriggerPress({
+		open: !!ctx?.open,
+		positionerRef: ctx?.positionerRef,
+		onPress(event, method) {
+			ctx?.setOpen(!ctx.open, {
+				reason: 'trigger-press',
+				event,
+				triggerId: id,
+				entry: method === 'keyboard' ? 'first' : undefined,
+			});
+		},
+		onArrowOpen(event, entry) {
+			ctx?.setOpen(true, { reason: 'list-navigation', event, triggerId: id, entry });
+		},
+		onOutsideRelease(event) {
+			ctx?.setOpen(false, { reason: 'outside-press', event });
+		},
+	});
+
+	let interactionProps: HTMLAttributes<HTMLElement> | undefined;
+	if (ctx && !disabled) {
+		interactionProps = mergeProps<'button'>(pressProps, {
+			onKeyDown(event) {
+				// buttons activate on Space natively; other elements, like links, do not.
+				if (ctx.open || event.key !== ' ' || event.currentTarget instanceof HTMLButtonElement) {
+					return;
+				}
+				event.preventDefault();
+				ctx.setOpen(true, {
+					reason: 'trigger-press',
+					event: event.nativeEvent,
+					triggerId: id,
+					entry: 'first',
+				});
+			},
+		});
+	}
 
 	const ariaProps: HTMLAttributes<HTMLElement> = ctx
 		? {
@@ -73,89 +107,8 @@ export const Trigger = ({
 			{ id },
 			ariaProps,
 			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
-			ctx && !disabled ? getPressProps(ctx, id, pointerTypeRef, pressToggledRef) : undefined,
+			interactionProps,
 			elementProps,
 		),
 	});
-};
-
-const getPressProps = (
-	ctx: RootContextValue,
-	id: string,
-	pointerTypeRef: { current: InteractionType },
-	pressToggledRef: { current: boolean },
-): HTMLAttributes<HTMLElement> => {
-	const { setOpen } = ctx;
-
-	return {
-		onPointerDown(event) {
-			pointerTypeRef.current = toInteractionType(event.pointerType);
-			pressToggledRef.current = false;
-		},
-		onMouseDown(event) {
-			if (event.button !== 0 || pointerTypeRef.current === 'touch') {
-				return;
-			}
-			// preventing mousedown would cancel a native drag, so draggable triggers open on click.
-			if (event.currentTarget.closest('[draggable="true"]')) {
-				return;
-			}
-			// keep native mousedown focus from competing with popup focus.
-			event.preventDefault();
-			pressToggledRef.current = true;
-
-			setOpen(!ctx.open, { reason: 'trigger-press', event: event.nativeEvent, triggerId: id });
-			if (!ctx.open) {
-				listenForRelease(event.nativeEvent, {
-					trigger: event.currentTarget,
-					positionerRef: ctx.positionerRef,
-					onOutsideRelease(release) {
-						setOpen(false, { reason: 'outside-press', event: release });
-					},
-				});
-			}
-		},
-		onClick(event) {
-			// keyboard activation dispatches a click without a press.
-			const keyboard = event.detail === 0;
-			// mousedown already toggled the menu.
-			if (!keyboard && pressToggledRef.current) {
-				pressToggledRef.current = false;
-				return;
-			}
-			setOpen(!ctx.open, {
-				reason: 'trigger-press',
-				event: event.nativeEvent,
-				triggerId: id,
-				entry: keyboard ? 'first' : undefined,
-			});
-		},
-		onKeyDown(event) {
-			if (ctx.open) {
-				return;
-			}
-			switch (event.key) {
-				case 'ArrowDown':
-				case 'ArrowUp': {
-					event.preventDefault();
-					setOpen(true, {
-						reason: 'list-navigation',
-						event: event.nativeEvent,
-						triggerId: id,
-						entry: event.key === 'ArrowDown' ? 'first' : 'last',
-					});
-					return;
-				}
-				case ' ': {
-					// buttons activate on Space natively; other elements, like links, do not.
-					if (event.currentTarget instanceof HTMLButtonElement) {
-						return;
-					}
-					event.preventDefault();
-					setOpen(true, { reason: 'trigger-press', event: event.nativeEvent, triggerId: id, entry: 'first' });
-					return;
-				}
-			}
-		},
-	};
 };
