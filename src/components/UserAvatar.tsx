@@ -8,7 +8,7 @@ import { clsx } from 'clsx';
 
 import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
 
 import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';

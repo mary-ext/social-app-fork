@@ -21,7 +21,7 @@ import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/ses
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import * as Menu from '#/components/Menu';

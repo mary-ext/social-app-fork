@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import * as styles from '#/features/liveNow/components/LiveIndicator.css';
+import * as styles from '#/features/live-now/components/LiveIndicator.css';
 
 import { Text } from '#/components/Text';
 

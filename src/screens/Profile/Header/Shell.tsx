@@ -4,9 +4,9 @@ import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderati
 
 import { clsx } from 'clsx';
 
-import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
+import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
+import { LiveStatusDialog } from '#/features/live-now/components/LiveStatusDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { lightboxHandle } from '#/components/dialogs/handles';

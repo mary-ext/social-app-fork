@@ -9,8 +9,8 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { LiveStatusDialog } from '#/features/live-now/components/LiveStatusDialog';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import * as Dialog from '#/components/Dialog';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';

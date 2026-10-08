@@ -13,7 +13,7 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { niceDate } from '#/locale/intl/datetime';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';

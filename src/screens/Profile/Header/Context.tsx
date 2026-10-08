@@ -10,7 +10,7 @@ import type { Shadow } from '#/state/cache/types';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Toast from '#/components/Toast';

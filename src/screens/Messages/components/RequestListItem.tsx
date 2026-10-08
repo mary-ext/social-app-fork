@@ -12,7 +12,7 @@ import { useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-s
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';

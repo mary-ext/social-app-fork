@@ -29,7 +29,7 @@ import { formatPostStatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';

@@ -16,8 +16,8 @@ import {
 	useLiveLinkMetaQuery,
 	useRemoveLiveStatusMutation,
 	useUpsertLiveStatusMutation,
-} from '#/features/liveNow';
-import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
+} from '#/features/live-now';
+import { LinkPreview } from '#/features/live-now/components/LinkPreview';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';

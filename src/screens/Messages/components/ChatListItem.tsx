@@ -15,7 +15,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';

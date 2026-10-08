@@ -17,7 +17,7 @@ import { setDrawerOpen, useIsDrawerOpen } from '#/state/shell/drawer-open';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
 import { ProfileBadges } from '#/components/ProfileBadges';

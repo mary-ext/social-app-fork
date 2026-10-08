@@ -12,15 +12,15 @@ import { retry } from '#/lib/utils/retry';
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { getClients, useSession } from '#/state/session';
 
-import { useLiveNowConfig } from '#/features/liveNow/use-actor-status';
-import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
+import { useLiveNowConfig } from '#/features/live-now/use-actor-status';
+import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/live-now/utils';
 
 import type { DialogHandle } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-export * from '#/features/liveNow/utils';
+export * from '#/features/live-now/utils';
 
 export function useLiveLinkMetaQuery(url: string | null) {
 	const liveNowConfig = useLiveNowConfig();

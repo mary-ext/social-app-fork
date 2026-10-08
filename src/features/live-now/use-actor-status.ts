@@ -12,7 +12,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useSession } from '#/state/session';
 import { useTick } from '#/state/tick';
 
-import { isLiveNowUrlAllowed } from '#/features/liveNow/utils';
+import { isLiveNowUrlAllowed } from '#/features/live-now/utils';
 
 export const DEFAULT_ALLOWED_DOMAINS = [
 	'beehiiv.com',

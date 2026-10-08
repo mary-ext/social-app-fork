@@ -17,8 +17,8 @@ import {
 	getLiveServiceNames,
 	useLiveLinkMetaQuery,
 	useUpsertLiveStatusMutation,
-} from '#/features/liveNow';
-import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
+} from '#/features/live-now';
+import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
 
 import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';

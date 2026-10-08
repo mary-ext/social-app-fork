@@ -18,10 +18,10 @@ import {
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
-import { GoLiveDialog } from '#/features/liveNow/components/GoLiveDialog';
-import { GoLiveDisabledDialog } from '#/features/liveNow/components/GoLiveDisabledDialog';
-import { useActorStatus, useLiveNowConfig } from '#/features/liveNow/use-actor-status';
+import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
+import { GoLiveDialog } from '#/features/live-now/components/GoLiveDialog';
+import { GoLiveDisabledDialog } from '#/features/live-now/components/GoLiveDisabledDialog';
+import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
 
 import * as Dialog from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';

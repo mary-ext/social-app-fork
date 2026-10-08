@@ -26,7 +26,7 @@ import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';

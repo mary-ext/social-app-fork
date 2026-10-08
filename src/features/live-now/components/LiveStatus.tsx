@@ -9,8 +9,8 @@ import { toNiceDomain } from '#/lib/links/nice-domain';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import * as css from '#/features/liveNow/components/LiveStatus.css';
+import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
+import * as css from '#/features/live-now/components/LiveStatus.css';
 
 import { reportDialogHandle } from '#/components/dialogs/handles';
 import { EmbedThumb } from '#/components/EmbedThumb';

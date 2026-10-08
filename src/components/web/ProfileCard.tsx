@@ -21,7 +21,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { BlockLink } from '#/components/BlockLink';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';

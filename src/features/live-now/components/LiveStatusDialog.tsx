@@ -4,7 +4,7 @@ import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@at
 
 import { profileTarget } from '#/lib/routes/targets';
 
-import * as css from '#/features/liveNow/components/LiveStatusDialog.css';
+import * as css from '#/features/live-now/components/LiveStatusDialog.css';
 
 import * as Dialog from '#/components/Dialog';
 
@@ -12,7 +12,7 @@ import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
 const LiveStatus = lazy(() =>
-	import('#/features/liveNow/components/LiveStatus').then((mod) => ({ default: mod.LiveStatus })),
+	import('#/features/live-now/components/LiveStatus').then((mod) => ({ default: mod.LiveStatus })),
 );
 
 /**

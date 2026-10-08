@@ -14,7 +14,7 @@ import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
-import { useActorStatus } from '#/features/liveNow/use-actor-status';
+import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 
