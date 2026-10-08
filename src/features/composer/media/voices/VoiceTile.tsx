@@ -1,3 +1,5 @@
+import { hasMediaAlt } from '#/features/composer/media/alt-text';
+
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -5,7 +7,6 @@ import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { VoiceMedia } from '../../model/schema';
 import type { RovingItemProps } from '../../shared/roving-focus';
-import { hasMediaAlt } from '../alt-text/alt-text';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileUploadStatus } from '../tile/TileControls';
 import { useVideoUpload } from '../uploads/upload-status';

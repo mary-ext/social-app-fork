@@ -2,6 +2,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { hasMediaAlt } from '#/features/composer/media/alt-text';
+
 import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
@@ -11,7 +13,6 @@ import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import type { RovingItemProps } from '../../shared/roving-focus';
-import { hasMediaAlt } from '../alt-text/alt-text';
 import { MediaTile } from '../tile/MediaTile';
 import {
 	AltButton,

@@ -4,6 +4,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { hasMediaAlt } from '#/features/composer/media/alt-text';
+
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
 
@@ -14,7 +16,6 @@ import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { ImageMedia } from '../../model/schema';
 import type { RovingItemProps } from '../../shared/roving-focus';
-import { hasMediaAlt } from '../alt-text/alt-text';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from '../tile/TileControls';
 import { getEditedImage, getImageEdit } from './image-edits';

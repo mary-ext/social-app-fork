@@ -4,6 +4,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { parseGifEmbedFromUrl, toGifEmbedUrl } from '#/lib/media/external-gif/embed';
 
+import { hasMediaAlt } from '#/features/composer/media/alt-text';
 import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
@@ -16,7 +17,6 @@ import { DragThumbnail } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import { keepEditorFocus } from '../../shared/editor-focus';
 import type { RovingItemProps } from '../../shared/roving-focus';
-import { hasMediaAlt } from '../alt-text/alt-text';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges } from '../tile/TileControls';
 import * as css from './ExternalGifTile.css';

@@ -1,6 +1,6 @@
 import type { Composer } from '../context';
 import { findPostById, getPostParam, getPostText, type PostMedia, type VideoMedia } from '../model/schema';
-import { getMediaAlt } from './alt-text/alt-text';
+import { getMediaAlt } from './alt-text';
 import { type EditableImage, getEditedImage, getImageEdit } from './images/image-edits';
 import { getMediaCaptions } from './videos/captions';
 

@@ -4,7 +4,7 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import * as Dialog from '#/components/Dialog';
 
-import type { AltTextContext } from './alt-text-generator/types';
+import type { AltTextContext } from './generator/types';
 
 const ImageAltTextDialogBody = lazy(() =>
 	import('./ImageAltTextDialogBody').then((mod) => ({ default: mod.ImageAltTextDialogBody })),

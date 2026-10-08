@@ -26,7 +26,7 @@ import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
 import { getAttachmentKeys, labelTaint } from './labels/attachment-labels';
 import { languageTaint } from './languages/post-languages';
-import { altTaint } from './media/alt-text/alt-text';
+import { altTaint } from './media/alt-text';
 import { getVideoUploadFiles } from './media/attachments';
 import { imageEditTaint } from './media/images/image-edits';
 import { processVideoFile } from './media/uploads/video-pipeline';

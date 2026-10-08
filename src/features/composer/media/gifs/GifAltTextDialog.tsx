@@ -2,11 +2,12 @@ import type { ReactNode } from 'react';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { AltTextDialog, type AltTextView } from '#/features/alt-text/AltTextDialog';
+
 import type * as Dialog from '#/components/Dialog';
 
 import { m } from '#/paraglide/messages';
 
-import { AltTextDialog, type AltTextView } from '../alt-text/AltTextDialog';
 import * as css from './GifAltTextDialog.css';
 
 export type GifAltTextTarget = {

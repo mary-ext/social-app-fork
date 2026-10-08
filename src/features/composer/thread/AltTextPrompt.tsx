@@ -1,11 +1,12 @@
 import { useAltTextReminderEnabled } from '#/state/preferences/alt-text';
 
+import { findMissingAlt } from '#/features/composer/media/alt-text';
+
 import * as Prompt from '#/components/Prompt';
 
 import { m } from '#/paraglide/messages';
 
 import { useComposer } from '../context';
-import { findMissingAlt } from '../media/alt-text/alt-text';
 import { openAltText } from '../media/media-dialogs';
 import { getMediaTileSelector } from '../shared/elements';
 

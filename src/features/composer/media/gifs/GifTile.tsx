@@ -2,6 +2,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
+import { hasMediaAlt } from '#/features/composer/media/alt-text';
+
 import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
 
 import { m } from '#/paraglide/messages';
@@ -10,7 +12,6 @@ import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import type { RovingItemProps } from '../../shared/roving-focus';
-import { hasMediaAlt } from '../alt-text/alt-text';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges, TileUploadStatus } from '../tile/TileControls';
 import { useVideoUpload } from '../uploads/upload-status';

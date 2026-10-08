@@ -1,3 +1,4 @@
+import type { ImageAltTextTarget } from '#/features/alt-text/ImageAltTextDialog';
 import type { EditImageTarget } from '#/features/image-editing/EditImageDialog';
 
 import * as Dialog from '#/components/Dialog';
@@ -5,7 +6,6 @@ import * as Dialog from '#/components/Dialog';
 import type { LabelsTarget } from './labels/LabelsDialog';
 import type { ExternalGifAltTextTarget } from './media/external-gifs/ExternalGifAltTextDialog';
 import type { GifAltTextTarget } from './media/gifs/GifAltTextDialog';
-import type { ImageAltTextTarget } from './media/images/ImageAltTextDialog';
 import type { VideoCaptionsTarget } from './media/videos/CaptionsDialog';
 import type { VideoAltTextTarget } from './media/videos/VideoAltTextDialog';
 import type { VoiceAltTextTarget } from './media/voices/VoiceAltTextDialog';

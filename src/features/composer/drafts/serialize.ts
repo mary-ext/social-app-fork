@@ -19,12 +19,13 @@ import type { useGetPost } from '#/state/queries/post';
 import { fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import { getClients } from '#/state/session';
 
+import { getMediaAlt } from '#/features/composer/media/alt-text';
+
 import { getEmbedSession } from '../embeds/embed-session';
 import { selectPostEmbeds } from '../embeds/link-embeds';
 import { getPostQuoteUri } from '../embeds/thread-quote';
 import { getAttachmentKeys, getTaintedLabels } from '../labels/attachment-labels';
 import { getPostLanguage } from '../languages/post-languages';
-import { getMediaAlt } from '../media/alt-text/alt-text';
 import { getEditedImage, getImageEdit } from '../media/images/image-edits';
 import { type CaptionTrack, getMediaCaptions } from '../media/videos/captions';
 import { getPostParam, getPosts, getPostText } from '../model/schema';

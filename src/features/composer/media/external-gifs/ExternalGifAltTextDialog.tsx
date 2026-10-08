@@ -3,14 +3,13 @@ import type { ReactNode } from 'react';
 import { parseGifEmbedFromUrl, toGifEmbedUrl } from '#/lib/media/external-gif/embed';
 import type { Gif } from '#/lib/media/external-gif/types';
 
+import { AltTextDialog, type AltTextView } from '#/features/alt-text/AltTextDialog';
 import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import type * as Dialog from '#/components/Dialog';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
 
 import { m } from '#/paraglide/messages';
-
-import { AltTextDialog, type AltTextView } from '../alt-text/AltTextDialog';
 
 /** GIF alt text dialog payload. */
 export type ExternalGifAltTextTarget = {

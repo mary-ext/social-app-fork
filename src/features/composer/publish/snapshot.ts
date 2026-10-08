@@ -9,9 +9,10 @@ import type { SelfLabel } from '#/lib/moderation/self-labels';
 
 import { toPostLanguages } from '#/state/preferences/languages';
 
+import { getMediaAlt } from '#/features/composer/media/alt-text';
+
 import { getLinkKey, getMediaKey, getTaintedLabels } from '../labels/attachment-labels';
 import { getPostLanguage } from '../languages/post-languages';
-import { getMediaAlt } from '../media/alt-text/alt-text';
 import { getEditedImage, getImageEdit } from '../media/images/image-edits';
 import { type CaptionTrack, getCaptionProblem, getMediaCaptions } from '../media/videos/captions';
 import { getPostInfo, isSkippedPost } from '../model/post-info';

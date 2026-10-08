@@ -1,13 +1,13 @@
+import { ImageAltTextDialog } from '#/features/alt-text/ImageAltTextDialog';
 import { EditImageDialog } from '#/features/image-editing/EditImageDialog';
 
 import { useComposer } from './context';
 import { setAttachmentLabels } from './labels/attachment-labels';
 import { LabelsDialog } from './labels/LabelsDialog';
-import { setMediaAlt } from './media/alt-text/alt-text';
+import { setMediaAlt } from './media/alt-text';
 import { ExternalGifAltTextDialog } from './media/external-gifs/ExternalGifAltTextDialog';
 import { GifAltTextDialog } from './media/gifs/GifAltTextDialog';
 import { setImageEdit } from './media/images/image-edits';
-import { ImageAltTextDialog } from './media/images/ImageAltTextDialog';
 import { setMediaCaptions } from './media/videos/captions';
 import { CaptionsDialog } from './media/videos/CaptionsDialog';
 import { VideoAltTextDialog } from './media/videos/VideoAltTextDialog';

@@ -6,12 +6,12 @@ import { trimText } from '#/lib/utils/text';
 
 import { m } from '#/paraglide/messages';
 
-import { AltTextField, AltTextHeader, canSaveAlt } from '../alt-text/AltTextField';
-import { CompactLayout } from './alt-text-dialog/CompactLayout';
-import { WideLayout } from './alt-text-dialog/WideLayout';
-import { AltTextAssistant } from './alt-text-generator/AltTextAssistant';
-import { useAltTextGenerator } from './alt-text-generator/use-generator';
+import { AltTextField, AltTextHeader, canSaveAlt } from './AltTextField';
+import { AltTextAssistant } from './generator/AltTextAssistant';
+import { useAltTextGenerator } from './generator/use-generator';
 import type { ImageAltTextTarget } from './ImageAltTextDialog';
+import { CompactLayout } from './layouts/CompactLayout';
+import { WideLayout } from './layouts/WideLayout';
 
 /**
  * alt text editor with generated suggestions.

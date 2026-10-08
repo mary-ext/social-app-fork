@@ -1,8 +1,8 @@
 import type { Wordgard } from 'wordgard/editor';
 import type { GardState } from 'wordgard/state';
 
-import { getPostParam, getPosts, type PostMedia } from '../../model/schema';
-import { defineTaint } from '../../model/taints';
+import { getPostParam, getPosts, type PostMedia } from '#/features/composer/model/schema';
+import { defineTaint } from '#/features/composer/model/taints';
 
 /** alt text keyed by media ID. */
 export const altTaint = defineTaint<string>({
