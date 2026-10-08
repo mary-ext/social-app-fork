@@ -1,5 +1,7 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
+import { ROUND_SIZE } from '#/components/web/Button.css';
+
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
@@ -67,6 +69,32 @@ export const invalid = style(
 		},
 	}),
 );
+
+// keep equal top, bottom, and end gaps as the font scales.
+const passwordToggleInset = `calc((${fontSize.md} * ${lineHeight} + ${
+	paddingBlock * 2 + borderWidth * 2 - ROUND_SIZE.small
+}px) / 2)`;
+
+export const passwordRoot = style({
+	position: 'relative',
+});
+
+export const passwordInput = style(
+	layered(components, {
+		paddingInlineEnd: `calc(${passwordToggleInset} * 2 + ${ROUND_SIZE.small}px)`,
+	}),
+);
+
+export const passwordToggle = style({
+	position: 'absolute',
+	insetBlock: 0,
+	insetInlineEnd: passwordToggleInset,
+	marginBlock: 'auto',
+	selectors: {
+		// the default ghost hover blends into the field; tint its current background instead.
+		[hover()]: { backgroundColor: `color-mix(in srgb, ${vars.palette.contrast_1000} 8%, transparent)` },
+	},
+});
 
 export const multiline = style(
 	layered(components, {

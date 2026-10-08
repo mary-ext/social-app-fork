@@ -10,6 +10,7 @@
 	"screens.settings.ai.apiKey.fieldLabel": "API key",
 	"screens.settings.ai.apiKey.notSet": "No API key",
 	"screens.settings.ai.apiKey.placeholder": "sk-…",
+	"screens.settings.ai.apiKey.reveal": "Show API key",
 	"screens.settings.ai.apiKey.signIn": "Sign in with OpenRouter",
 	"screens.settings.ai.apiKey.signInError": "Couldn't finish signing in with OpenRouter.",
 	"screens.settings.ai.apiKey.signedInToast": "Your OpenRouter key is ready.",

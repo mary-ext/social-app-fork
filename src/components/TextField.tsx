@@ -10,13 +10,19 @@ import {
 	type Ref,
 	useContext,
 	useId,
+	useState,
 } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import * as PasswordInputPrimitive from '#/components/primitives/password-input';
 import { LabelText as BaseLabelText } from '#/components/Text';
 import * as styles from '#/components/TextField.css';
+import { Button, ButtonIcon } from '#/components/web/Button';
+
+import EyeOpenIcon from '#/icons/central/EyeOpen_round_outlined_radius1_stroke2.svg';
+import EyeSlashIcon from '#/icons/central/EyeSlash_round_outlined_radius1_stroke2.svg';
 
 type FieldContextValue = {
 	/** Generated id linking a field's {@link LabelText} to its {@link Input}; `undefined` outside a {@link Root}. */
@@ -112,8 +118,6 @@ export type InputProps = {
 	autoComplete?: ComponentPropsWithoutRef<'input'>['autoComplete'];
 	/** Auto-capitalization behaviour for the single-line `<input>`. */
 	autoCapitalize?: ComponentPropsWithoutRef<'input'>['autoCapitalize'];
-	/** Input type for the single-line `<input>`; `password` masks what's typed. Ignored when `multiline`. */
-	type?: 'password' | 'text';
 	onChangeText?: (value: string) => void;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
@@ -138,7 +142,6 @@ export function Input({
 	isInvalid,
 	autoComplete,
 	autoCapitalize,
-	type = 'text',
 	onChangeText,
 	onKeyDown,
 	onFocus,
@@ -180,7 +183,7 @@ export function Input({
 		<input
 			ref={ref}
 			id={inputId}
-			type={type}
+			type="text"
 			className={cls}
 			aria-label={label}
 			aria-describedby={describedBy}
@@ -199,5 +202,90 @@ export function Input({
 			onFocus={onFocus}
 			onBlur={onBlur}
 		/>
+	);
+}
+
+export type PasswordInputProps = Pick<
+	InputProps,
+	| 'autoComplete'
+	| 'autoFocus'
+	| 'defaultValue'
+	| 'describedBy'
+	| 'disabled'
+	| 'isInvalid'
+	| 'label'
+	| 'onChangeText'
+	| 'placeholder'
+	| 'value'
+> & {
+	ref?: Ref<HTMLInputElement>;
+	/** fixed accessible name for the reveal button, e.g. "Show API key". */
+	revealLabel: string;
+	/** requests a password-manager opt-out. */
+	ignorePasswordManagers?: boolean;
+};
+
+/**
+ * a password field with a visibility toggle.
+ *
+ * @param props field and toggle props
+ * @returns the field
+ */
+export function PasswordInput({
+	ref,
+	label,
+	revealLabel,
+	describedBy,
+	value,
+	defaultValue,
+	placeholder,
+	autoFocus,
+	disabled,
+	isInvalid,
+	autoComplete,
+	ignorePasswordManagers,
+	onChangeText,
+}: PasswordInputProps) {
+	const { id, isInvalid: ctxInvalid } = useContext(FieldContext);
+	const invalid = isInvalid ?? ctxInvalid;
+	const [visible, setVisible] = useState(false);
+
+	return (
+		<PasswordInputPrimitive.Root
+			className={styles.passwordRoot}
+			disabled={disabled}
+			id={id}
+			onVisibleChange={setVisible}
+			visible={visible}
+		>
+			<PasswordInputPrimitive.Input
+				ref={ref}
+				className={clsx(styles.input, styles.passwordInput, invalid && styles.invalid)}
+				aria-label={label}
+				aria-describedby={describedBy}
+				aria-invalid={invalid || undefined}
+				value={value}
+				defaultValue={defaultValue}
+				placeholder={placeholder}
+				autoFocus={autoFocus}
+				autoComplete={autoComplete}
+				ignorePasswordManagers={ignorePasswordManagers}
+				onChange={(e) => onChangeText?.(e.currentTarget.value)}
+			/>
+			<PasswordInputPrimitive.Toggle
+				render={
+					<Button
+						className={styles.passwordToggle}
+						color="secondary"
+						label={revealLabel}
+						shape="round"
+						size="small"
+						variant="ghost"
+					>
+						<ButtonIcon icon={visible ? EyeSlashIcon : EyeOpenIcon} />
+					</Button>
+				}
+			/>
+		</PasswordInputPrimitive.Root>
 	);
 }

@@ -138,14 +138,14 @@ const DialogInner = ({ close, payload }: { close: () => void; payload: AiProvide
 			<Stack gap="md">
 				<TextField.Root>
 					<TextField.LabelText>{m['screens.settings.ai.apiKey.fieldLabel']()}</TextField.LabelText>
-					<TextField.Input
+					<TextField.PasswordInput
 						autoFocus
-						autoCapitalize="none"
 						autoComplete="off"
+						ignorePasswordManagers
 						label={m['screens.settings.ai.apiKey.fieldLabel']()}
 						onChangeText={setDraft}
 						placeholder={m['screens.settings.ai.apiKey.placeholder']()}
-						type="password"
+						revealLabel={m['screens.settings.ai.apiKey.reveal']()}
 						value={draft}
 					/>
 				</TextField.Root>
