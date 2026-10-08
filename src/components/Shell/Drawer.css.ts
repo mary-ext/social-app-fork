@@ -1,50 +1,47 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import { swipeMovementX, swipeProgress, swipeStrength } from '#/components/primitives/drawer/css-vars';
+
 import { vars } from '#/styles/contract.css';
 import { MOUSE, PRESSING } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
-import { space, zIndex } from '#/styles/tokens.css';
+import { space } from '#/styles/tokens.css';
 
 const swipeEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const exitDuration = `calc(var(${swipeStrength}) * 400ms)`;
 
 export const PROFILE_AVATAR_SIZE = 52;
 
-export const portal = style(
-	layered(components, {
-		zIndex: zIndex.modal,
-	}),
-);
-
 export const backdrop = style(
 	layered(components, {
-		position: 'fixed',
+		position: 'absolute',
 		inset: 0,
 		transitionDuration: '450ms',
 		transitionProperty: 'opacity',
 		transitionTimingFunction: swipeEase,
-		opacity: 'calc(1 - var(--drawer-swipe-progress))',
+		opacity: `calc(1 - var(${swipeProgress}))`,
 		minHeight: '100dvh',
 		selectors: {
 			'.theme--light &': { backgroundColor: 'rgba(0, 57, 117, 0.1)' },
 			'.theme--dark &': { backgroundColor: 'rgba(1, 82, 168, 0.1)' },
 			'.theme--dim &': { backgroundColor: 'rgba(10, 13, 16, 0.8)' },
-			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 			'&[data-swiping]': { transitionDuration: '0ms' },
-			'&[data-ending-style]': { transitionDuration: 'calc(var(--drawer-swipe-strength) * 400ms)' },
+			'&[data-closed]': { opacity: 0, transitionDuration: exitDuration },
 		},
+		'@starting-style': { opacity: 0 },
 	}),
 );
 
 export const viewport = style(
 	layered(components, {
 		display: 'flex',
-		position: 'fixed',
-		inset: 0,
 	}),
 );
 
 const bleed = createVar();
+// compensate for the negative bleed margin; the extra 2px keeps the border offscreen.
+const hidden = `translateX(calc(-100% + ${bleed} - 2px))`;
 
 export const popup = style(
 	layered(components, {
@@ -52,7 +49,7 @@ export const popup = style(
 		boxSizing: 'border-box',
 		display: 'flex',
 		flexDirection: 'column',
-		transform: 'translateX(var(--drawer-swipe-movement-x))',
+		transform: `translateX(var(${swipeMovementX}))`,
 		transition: `transform 450ms ${swipeEase}`,
 		marginLeft: `calc(-1 * ${bleed})`,
 		outline: 0,
@@ -67,11 +64,10 @@ export const popup = style(
 		touchAction: 'auto',
 		willChange: 'transform',
 		selectors: {
-			'&[data-starting-style], &[data-ending-style]': {
-				transform: `translateX(calc(-100% + ${bleed} - 2px))`,
-			},
-			'&[data-ending-style]': { transitionDuration: 'calc(var(--drawer-swipe-strength) * 400ms)' },
+			'&[data-swiping]': { transitionDuration: '0ms' },
+			'&[data-closed]': { transform: hidden, transitionDuration: exitDuration },
 		},
+		'@starting-style': { transform: hidden },
 	}),
 );
 

@@ -2,7 +2,6 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { Drawer as BaseDrawer } from '@base-ui/react/drawer';
 import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/display-names';
@@ -20,6 +19,7 @@ import { Trans } from '#/locale/Trans';
 import { useActorStatus } from '#/features/live-now/use-actor-status';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';
+import * as BaseDrawer from '#/components/primitives/drawer';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as styles from '#/components/Shell/Drawer.css';
 import { NavSignInCard } from '#/components/Shell/NavSignInCard';
@@ -51,18 +51,16 @@ export function Drawer() {
 
 	return (
 		<BaseDrawer.Root onOpenChange={setDrawerOpen} open={isOpen} swipeDirection="left">
-			<BaseDrawer.Portal className={styles.portal}>
+			<BaseDrawer.Viewport className={styles.viewport}>
 				<BaseDrawer.Backdrop className={styles.backdrop} />
-				<BaseDrawer.Viewport className={styles.viewport}>
-					<BaseDrawer.Popup className={styles.popup}>
-						{/* Drawer.Title is itself the heading text host (an <h2>) */}
-						<BaseDrawer.Title className={styles.srOnly}>{m['navigation.drawer.title']()}</BaseDrawer.Title>
-						<BaseDrawer.Content className={styles.content}>
-							<DrawerContent />
-						</BaseDrawer.Content>
-					</BaseDrawer.Popup>
-				</BaseDrawer.Viewport>
-			</BaseDrawer.Portal>
+				<BaseDrawer.Popup className={styles.popup}>
+					{/* Drawer.Title is itself the heading text host (an <h2>) */}
+					<BaseDrawer.Title className={styles.srOnly}>{m['navigation.drawer.title']()}</BaseDrawer.Title>
+					<BaseDrawer.Content className={styles.content}>
+						<DrawerContent />
+					</BaseDrawer.Content>
+				</BaseDrawer.Popup>
+			</BaseDrawer.Viewport>
 		</BaseDrawer.Root>
 	);
 }
