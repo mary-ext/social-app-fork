@@ -8,6 +8,7 @@ import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
+import { useCompositeItem } from '#/components/primitives/composite';
 
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -15,7 +16,6 @@ import { m } from '#/paraglide/messages';
 import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { ImageMedia } from '../../model/schema';
-import type { RovingItemProps } from '../../shared/roving-focus';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from '../tile/TileControls';
 import { getEditedImage, getImageEdit } from './image-edits';
@@ -51,7 +51,6 @@ export function ImageTile({
 	index,
 	item,
 	layout,
-	roving,
 	onEditAlt,
 	onEditImage,
 	onRemove,
@@ -60,7 +59,6 @@ export function ImageTile({
 	index: number;
 	item: ImageMedia;
 	layout: ImageLayout;
-	roving: RovingItemProps;
 	onEditAlt: () => void;
 	/** omit for images that can't be edited. */
 	onEditImage?: () => void;
@@ -71,7 +69,8 @@ export function ImageTile({
 	const image = getEditedImage(item, edit);
 	const url = getBlobUrl(image.blob);
 	const aspectRatio = getAspectRatio(image.dimensions);
-	const tabbable = roving.tabIndex === 0;
+	const composite = useCompositeItem({ active: false, disabled: false });
+	const tabbable = composite?.tabIndex === 0;
 
 	return (
 		<MediaTile
@@ -80,7 +79,7 @@ export function ImageTile({
 			item={item}
 			label={m['features.composer.media.a11y.image']()}
 			dragPreview={<DragThumbnail src={url} />}
-			roving={roving}
+			composite={composite}
 			{...getLayoutProps(layout, aspectRatio)}
 			onRemove={onRemove}
 		>

@@ -1,12 +1,13 @@
 import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
+import { useCompositeItem } from '#/components/primitives/composite';
+
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { VoiceMedia } from '../../model/schema';
-import type { RovingItemProps } from '../../shared/roving-focus';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileUploadStatus } from '../tile/TileControls';
 import { useVideoUpload } from '../uploads/upload-status';
@@ -24,20 +25,19 @@ export function VoiceTile({
 	postId,
 	index,
 	item,
-	roving,
 	onEditAlt,
 	onRemove,
 }: {
 	postId: string;
 	index: number;
 	item: VoiceMedia;
-	roving: RovingItemProps;
 	onEditAlt: () => void;
 	onRemove: () => void;
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const upload = useVideoUpload(item.file);
-	const tabbable = roving.tabIndex === 0;
+	const composite = useCompositeItem({ active: false, disabled: false });
+	const tabbable = composite?.tabIndex === 0;
 	const label = m['features.composer.media.a11y.voice']();
 
 	return (
@@ -47,7 +47,7 @@ export function VoiceTile({
 			item={item}
 			label={label}
 			dragPreview={<DragChip icon={PlayIcon} label={label} />}
-			roving={roving}
+			composite={composite}
 			className={css.tile}
 			onRemove={onRemove}
 		>

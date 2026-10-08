@@ -8,6 +8,7 @@ import { hasMediaAlt } from '#/features/composer/media/alt-text';
 import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
+import { useCompositeItem } from '#/components/primitives/composite';
 import { Button } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
@@ -16,7 +17,6 @@ import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import { keepEditorFocus } from '../../shared/editor-focus';
-import type { RovingItemProps } from '../../shared/roving-focus';
 import { MediaTile } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges } from '../tile/TileControls';
 import * as css from './ExternalGifTile.css';
@@ -31,14 +31,12 @@ export function ExternalGifTile({
 	postId,
 	index,
 	item,
-	roving,
 	onEditAlt,
 	onRemove,
 }: {
 	postId: string;
 	index: number;
 	item: Extract<PostMedia, { kind: 'externalGif' }>;
-	roving: RovingItemProps;
 	onEditAlt: () => void;
 	onRemove: () => void;
 }) {
@@ -49,7 +47,8 @@ export function ExternalGifTile({
 	const player = parseGifEmbedFromUrl(toGifEmbedUrl(item.gif));
 	// reuse the poster for dragging to avoid loading the animated GIF.
 	const url = gifPreviewUrl((player ? item.gif.media_formats.preview : item.gif.media_formats.gif).url);
-	const tabbable = roving.tabIndex === 0;
+	const composite = useCompositeItem({ active: false, disabled: false });
+	const tabbable = composite?.tabIndex === 0;
 
 	const togglePlayback = () => {
 		const video = videoRef.current;
@@ -71,7 +70,7 @@ export function ExternalGifTile({
 			item={item}
 			label={m['features.composer.media.a11y.gif']()}
 			dragPreview={<DragThumbnail src={url} />}
-			roving={roving}
+			composite={composite}
 			className={css.tile}
 			style={assignInlineVars({ [css.ratioVar]: String(item.aspectRatio ?? 1) })}
 			onRemove={onRemove}

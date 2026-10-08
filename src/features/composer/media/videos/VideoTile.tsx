@@ -5,6 +5,7 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
 import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
+import { useCompositeItem } from '#/components/primitives/composite';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
@@ -12,7 +13,6 @@ import { m } from '#/paraglide/messages';
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
-import type { RovingItemProps } from '../../shared/roving-focus';
 import { MediaTile } from '../tile/MediaTile';
 import {
 	AltButton,
@@ -37,7 +37,6 @@ export function VideoTile({
 	postId,
 	index,
 	item,
-	roving,
 	onEditAlt,
 	onEditCaptions,
 	onRemove,
@@ -45,7 +44,6 @@ export function VideoTile({
 	postId: string;
 	index: number;
 	item: Extract<PostMedia, { kind: 'video' }>;
-	roving: RovingItemProps;
 	onEditAlt: () => void;
 	onEditCaptions: () => void;
 	onRemove: () => void;
@@ -53,7 +51,8 @@ export function VideoTile({
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const hasCaptions = useEditorState((state) => hasMediaCaptions(state, item.id));
 	const upload = useVideoUpload(item.file);
-	const tabbable = roving.tabIndex === 0;
+	const composite = useCompositeItem({ active: false, disabled: false });
+	const tabbable = composite?.tabIndex === 0;
 	const label = m['features.composer.media.a11y.video']();
 
 	return (
@@ -63,7 +62,7 @@ export function VideoTile({
 			item={item}
 			label={label}
 			dragPreview={<DragChip icon={VideoIcon} label={label} />}
-			roving={roving}
+			composite={composite}
 			className={css.tile}
 			style={assignInlineVars({ [css.ratioVar]: String(getVideoBoxRatio(item.aspectRatio)) })}
 			onRemove={onRemove}

@@ -2,12 +2,13 @@ import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import { clsx } from 'clsx';
 
+import type { CompositeItemProps } from '#/components/primitives/composite';
+
 import { useComposer } from '../../context';
 import { setDragPreview } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import { refocusSoon } from '../../shared/editor-focus';
 import { getMediaTileSelector, MEDIA_ID_ATTR } from '../../shared/elements';
-import type { RovingItemProps } from '../../shared/roving-focus';
 import { moveMediaDown, moveMediaUp, nudgeMedia } from '../commands';
 import * as css from './MediaTile.css';
 
@@ -32,7 +33,7 @@ export function MediaTile({
 	item,
 	label,
 	dragPreview,
-	roving,
+	composite,
 	className,
 	style,
 	onRemove,
@@ -44,7 +45,7 @@ export function MediaTile({
 	item: PostMedia;
 	label: string;
 	dragPreview: ReactNode;
-	roving: RovingItemProps;
+	composite: CompositeItemProps | undefined;
 	className?: string;
 	style?: CSSProperties;
 	/** called on Delete or Backspace while the tile is focused. */
@@ -84,7 +85,7 @@ export function MediaTile({
 	return (
 		<div
 			ref={tileRef}
-			{...roving}
+			{...composite}
 			className={clsx(css.tile, className, isDragging && css.dragging)}
 			style={style}
 			role="group"

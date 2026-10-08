@@ -14,7 +14,6 @@ import type { ImageMedia } from '../../model/schema';
 import { keepEditorFocus } from '../../shared/editor-focus';
 import { IMAGE_GROUP_ATTR, MEDIA_ID_ATTR } from '../../shared/elements';
 import { RAIL_WIDTH } from '../../shared/layout';
-import type { RovingFocus } from '../../shared/roving-focus';
 import { type EditableImage, getEditedImage, getImageEdits, isEditableImage } from './image-edits';
 import * as css from './ImageGroup.css';
 import { ImageTile } from './ImageTile';
@@ -69,14 +68,12 @@ const onStripFocus = (event: FocusEvent<HTMLDivElement>) => {
 export function ImageGroup({
 	postId,
 	images,
-	roving,
 	onEditAlt,
 	onEditImage,
 	onRemove,
 }: {
 	postId: string;
 	images: readonly ImageMedia[];
-	roving: RovingFocus<string>;
 	onEditAlt: (item: ImageMedia) => void;
 	onEditImage: (item: EditableImage) => void;
 	onRemove: (item: ImageMedia) => void;
@@ -109,7 +106,6 @@ export function ImageGroup({
 					index={index}
 					item={item}
 					layout={layout}
-					roving={roving.item(item.id)}
 					onEditAlt={() => onEditAlt(item)}
 					onEditImage={isEditableImage(item) ? () => onEditImage(item) : undefined}
 					onRemove={() => onRemove(item)}

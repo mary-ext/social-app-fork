@@ -1,3 +1,4 @@
+import { CompositeProvider, useCompositeRoot } from '#/components/primitives/composite';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';
@@ -6,7 +7,6 @@ import { useComposer, useIsActivePost, usePostState } from '../context';
 import { getPostParam, type PostMedia, splitMedia } from '../model/schema';
 import { escapeToEditor } from '../shared/editor-focus';
 import { MEDIA_ID_ATTR } from '../shared/elements';
-import { useRovingFocus } from '../shared/roving-focus';
 import { getSelectionErrorMessage } from './attachment-messages';
 import { getMediaProblem, isVideoUploadMedia } from './attachments';
 import { removeMedia } from './commands';
@@ -49,10 +49,12 @@ export function MediaRow({ postId }: { postId: string }) {
 	const media = usePostState(postId, (_state, post) => getPostParam(post.node).media, NO_MEDIA);
 	const isActive = useIsActivePost(postId);
 
-	const roving = useRovingFocus(
-		media.map((item) => item.id),
-		{ tabbable: isActive },
-	);
+	const composite = useCompositeRoot({
+		orientation: 'horizontal',
+		loopFocus: false,
+		homeEnd: true,
+		tabbable: isActive,
+	});
 
 	const { images, others } = splitMedia(media);
 
@@ -83,61 +85,62 @@ export function MediaRow({ postId }: { postId: string }) {
 	return (
 		<div
 			className={css.root}
+			onFocus={composite.props.onFocus}
 			onKeyDown={(event) => {
 				escapeToEditor(wg, event);
-				roving.onKeyDown(event);
+				composite.props.onKeyDown(event);
 			}}
 		>
-			{images.length > 0 && (
-				<ImageGroup
-					postId={postId}
-					images={images}
-					roving={roving}
-					onEditAlt={(item) => openAltText(composer, postId, item)}
-					onEditImage={(item) => openImageEditor(composer, item)}
-					onRemove={remove}
-				/>
-			)}
+			<CompositeProvider value={composite.context}>
+				{images.length > 0 && (
+					<ImageGroup
+						postId={postId}
+						images={images}
+						onEditAlt={(item) => openAltText(composer, postId, item)}
+						onEditImage={(item) => openImageEditor(composer, item)}
+						onRemove={remove}
+					/>
+				)}
 
-			{others.map((item, index) => {
-				const props = {
-					postId,
-					index: images.length + index,
-					roving: roving.item(item.id),
-					onEditAlt: () => openAltText(composer, postId, item),
-					onRemove: () => remove(item),
-				};
+				{others.map((item, index) => {
+					const props = {
+						postId,
+						index: images.length + index,
+						onEditAlt: () => openAltText(composer, postId, item),
+						onRemove: () => remove(item),
+					};
 
-				switch (item.kind) {
-					case 'gif': {
-						return <GifTile key={item.id} {...props} item={item} />;
+					switch (item.kind) {
+						case 'gif': {
+							return <GifTile key={item.id} {...props} item={item} />;
+						}
+						case 'externalGif': {
+							return <ExternalGifTile key={item.id} {...props} item={item} />;
+						}
+						case 'video': {
+							return (
+								<VideoTile
+									key={item.id}
+									{...props}
+									item={item}
+									onEditCaptions={() => openCaptions(composer, item)}
+								/>
+							);
+						}
+						case 'voice': {
+							return <VoiceTile key={item.id} {...props} item={item} />;
+						}
 					}
-					case 'externalGif': {
-						return <ExternalGifTile key={item.id} {...props} item={item} />;
-					}
-					case 'video': {
-						return (
-							<VideoTile
-								key={item.id}
-								{...props}
-								item={item}
-								onEditCaptions={() => openCaptions(composer, item)}
-							/>
-						);
-					}
-					case 'voice': {
-						return <VoiceTile key={item.id} {...props} item={item} />;
-					}
-				}
-			})}
+				})}
 
-			{mediaProblem && (
-				<Text size="md_sub" color="negative_600">
-					{getSelectionErrorMessage(mediaProblem)}
-				</Text>
-			)}
+				{mediaProblem && (
+					<Text size="md_sub" color="negative_600">
+						{getSelectionErrorMessage(mediaProblem)}
+					</Text>
+				)}
 
-			{others.map((item) => isVideoUploadMedia(item) && <UploadError key={item.id} file={item.file} />)}
+				{others.map((item) => isVideoUploadMedia(item) && <UploadError key={item.id} file={item.file} />)}
+			</CompositeProvider>
 		</div>
 	);
 }
