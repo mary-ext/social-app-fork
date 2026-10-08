@@ -8,6 +8,7 @@ import type {
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 
+import { RadioGroup } from '@base-ui/react/radio-group';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
@@ -17,7 +18,7 @@ import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscri
 import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import * as Toggle from '#/components/forms/Toggle';
+import * as ChoiceCard from '#/components/forms/ChoiceCard';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -25,9 +26,10 @@ import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonSpinner, type ButtonProps, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
+import BellOffIcon from '#/icons/central/BellOff_round_outlined_radius1_stroke2.svg';
+import BubbleIcon from '#/icons/central/Bubble2_round_outlined_radius1_stroke2.svg';
+import BubblesIcon from '#/icons/central/Bubbles_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
-
-import * as styles from './SubscribeProfileDialog.css';
 
 type SubscriptionChoice = 'all' | 'off' | 'posts';
 
@@ -61,18 +63,6 @@ export function SubscribeProfileDialogBody({
 	const [state, setState] = useState(initialState);
 
 	const selected: SubscriptionChoice = state.post ? (state.reply ? 'all' : 'posts') : 'off';
-
-	const onSelect = ([value]: string[]) => {
-		// the group is a radio set over `CHOICE_STATES`, but `Toggle.Group` reports a bare `string[]`
-		switch (value) {
-			case 'all':
-			case 'off':
-			case 'posts': {
-				setState(CHOICE_STATES[value]);
-				break;
-			}
-		}
-	};
 
 	const {
 		mutate: saveChanges,
@@ -181,32 +171,24 @@ export function SubscribeProfileDialogBody({
 				</ProfileCard.Header>
 			)}
 
-			<Toggle.Group
-				className={styles.radioList}
-				label={m['components.activityNotifications.title']()}
-				onChange={onSelect}
-				type="radio"
-				values={[selected]}
+			<RadioGroup<SubscriptionChoice>
+				aria-label={m['components.activityNotifications.title']()}
+				onValueChange={(value) => setState(CHOICE_STATES[value])}
+				render={<ChoiceCard.List />}
+				value={selected}
 			>
-				<Toggle.RadioItem label={m['components.activityNotifications.postsAndReplies']()} value="all">
-					<Toggle.Panel>
-						<Toggle.RadioIndicator />
-						<Toggle.PanelText>{m['components.activityNotifications.postsAndReplies']()}</Toggle.PanelText>
-					</Toggle.Panel>
-				</Toggle.RadioItem>
-				<Toggle.RadioItem label={m['components.activityNotifications.postsOnly']()} value="posts">
-					<Toggle.Panel>
-						<Toggle.RadioIndicator />
-						<Toggle.PanelText>{m['components.activityNotifications.postsOnly']()}</Toggle.PanelText>
-					</Toggle.Panel>
-				</Toggle.RadioItem>
-				<Toggle.RadioItem label={m['common.status.off']()} value="off">
-					<Toggle.Panel>
-						<Toggle.RadioIndicator />
-						<Toggle.PanelText>{m['common.status.off']()}</Toggle.PanelText>
-					</Toggle.Panel>
-				</Toggle.RadioItem>
-			</Toggle.Group>
+				<ChoiceCard.Radio
+					icon={BubblesIcon}
+					titleText={m['components.activityNotifications.postsAndReplies']()}
+					value="all"
+				/>
+				<ChoiceCard.Radio
+					icon={BubbleIcon}
+					titleText={m['components.activityNotifications.postsOnly']()}
+					value="posts"
+				/>
+				<ChoiceCard.Radio icon={BellOffIcon} titleText={m['common.status.off']()} value="off" />
+			</RadioGroup>
 
 			{error && (
 				<Admonition type="error">

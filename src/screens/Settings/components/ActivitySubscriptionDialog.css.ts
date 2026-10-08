@@ -9,12 +9,6 @@ export const header = style({
 	marginBottom: space.md,
 });
 
-export const radioList = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.sm,
-});
-
 export const loaderWrap = style({
 	display: 'flex',
 	alignItems: 'center',

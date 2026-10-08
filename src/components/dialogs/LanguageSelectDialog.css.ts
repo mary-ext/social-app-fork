@@ -1,20 +1,20 @@
 import { style } from '@vanilla-extract/css';
 
+import { ROW_LABEL_INSET, ROW_PADDING_BLOCK } from '#/components/Settings.css';
+
 import { colors } from '#/styles/colors';
-import { hover } from '#/styles/interaction';
 import { recipe } from '#/styles/recipe';
 import { space } from '#/styles/tokens.css';
 
 const DIALOG_PADDING = space.lg;
-const ROW_BLOCK_PADDING = space.md;
 
 export const group = style({
 	display: 'contents',
 });
 
 export const list = style({
-	paddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
-	scrollPaddingBottom: DIALOG_PADDING - ROW_BLOCK_PADDING,
+	paddingBottom: DIALOG_PADDING - ROW_PADDING_BLOCK,
+	scrollPaddingBottom: DIALOG_PADDING - ROW_PADDING_BLOCK,
 });
 
 export const sectionHeader = recipe(
@@ -30,7 +30,7 @@ export const sectionHeader = recipe(
 					paddingTop: space._2xl,
 				},
 				false: {
-					paddingTop: ROW_BLOCK_PADDING,
+					paddingTop: ROW_PADDING_BLOCK,
 				},
 			},
 		},
@@ -38,36 +38,15 @@ export const sectionHeader = recipe(
 	{ debugId: 'sectionHeader' },
 );
 
-export const item = style({
-	boxSizing: 'border-box',
-	outlineOffset: -2,
-	paddingBlock: ROW_BLOCK_PADDING,
-	paddingInline: DIALOG_PADDING,
-	width: '100%',
-	selectors: {
-		[hover(':not([data-disabled])')]: {
-			backgroundColor: colors.contrast_25,
-		},
-	},
-});
-
 export const itemBorder = style({
 	position: 'relative',
 	'::after': {
 		position: 'absolute',
 		right: DIALOG_PADDING,
 		bottom: 0,
-		left: DIALOG_PADDING,
+		left: ROW_LABEL_INSET,
 		borderBottom: `1px solid ${colors.borderContrastLow}`,
 		content: '""',
-	},
-});
-
-export const itemLabel = style({
-	flex: 1,
-	minWidth: 0,
-	selectors: {
-		'[data-disabled] &': { color: colors.textContrastLow },
 	},
 });
 

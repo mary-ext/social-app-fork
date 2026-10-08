@@ -5,6 +5,8 @@ import {
 } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
+import { RadioGroup } from '@base-ui/react/radio-group';
+
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 
 import { getLabelStrings } from '#/state/moderation/use-label-info';
@@ -12,7 +14,6 @@ import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/st
 
 import { LOCALE } from '#/locale/intl/locale';
 
-import * as Toggle from '#/components/forms/Toggle';
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 
@@ -95,7 +96,7 @@ export function LabelerLabelRow({
 	];
 	const options = canWarn ? allOptions : allOptions.filter((option) => option.value !== 'warn');
 
-	const onChangeVisibility = ([selected]: string[]) => {
+	const onChangeVisibility = (selected: string) => {
 		const option = options.find((candidate) => toggleValue(candidate.value) === selected);
 		if (option) {
 			mutate({ label: identifier, labelerDid, visibility: option.value });
@@ -107,42 +108,39 @@ export function LabelerLabelRow({
 			label={labelStrings.name}
 			onOpenChange={onOpenChange}
 			open={open}
-			panel="body"
 			titleText={labelStrings.name}
 			trailing={!disabled && <Settings.Value text={labelOptions[effective]} />}
 		>
-			<Text color="textContrastMedium" size="md_sub">
-				{labelStrings.description}
-			</Text>
-			{adultDisabled && (
-				<span className={styles.note}>
-					<CircleInfo className={styles.circleInfoIcon} />
-					<Text color="textContrastMedium" size="sm" weight="medium">
-						{m['components.moderation.adultContent.disabled']()}
-					</Text>
-				</span>
-			)}
+			<div className={styles.details}>
+				<Text color="textContrastMedium" size="md_sub">
+					{labelStrings.description}
+				</Text>
+				{adultDisabled && (
+					<span className={styles.note}>
+						<CircleInfo className={styles.circleInfoIcon} />
+						<Text color="textContrastMedium" size="sm" weight="medium">
+							{m['components.moderation.adultContent.disabled']()}
+						</Text>
+					</span>
+				)}
+			</div>
 			{configurable && (
-				<Toggle.Group
-					className={styles.radioList}
-					label={m['common.search.filteringFor']({ name: labelStrings.name })}
-					onChange={onChangeVisibility}
-					type="radio"
-					values={[toggleValue(pref)]}
+				<RadioGroup
+					aria-label={m['common.search.filteringFor']({ name: labelStrings.name })}
+					className={styles.radioGroup}
+					onValueChange={onChangeVisibility}
+					value={toggleValue(pref)}
 				>
 					{options.map((option) => (
-						<Toggle.RadioItem
+						<Settings.RadioRow
 							key={toggleValue(option.value)}
 							label={option.label}
 							value={toggleValue(option.value)}
 						>
-							<Toggle.Panel>
-								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{option.label}</Toggle.PanelText>
-							</Toggle.Panel>
-						</Toggle.RadioItem>
+							<Settings.Label titleText={option.label} />
+						</Settings.RadioRow>
 					))}
-				</Toggle.Group>
+				</RadioGroup>
 			)}
 		</Settings.CollapsibleRow>
 	);

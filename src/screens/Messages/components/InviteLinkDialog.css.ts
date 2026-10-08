@@ -24,12 +24,6 @@ export const memberValue = style({
 	marginBlock: space.sm,
 });
 
-export const radioList = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.xs,
-});
-
 export const chainLinkBrokenIcon = style({
 	width: iconSize._4xl,
 	height: iconSize._4xl,

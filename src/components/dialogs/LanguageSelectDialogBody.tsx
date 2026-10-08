@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
-import { clsx } from 'clsx';
+import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 
 import { usePostLanguageHistory } from '#/state/preferences/languages';
 
@@ -14,7 +14,7 @@ import * as Dialog from '#/components/Dialog';
 import type { LanguageSelectDialogProps } from '#/components/dialogs/LanguageSelectDialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
 import { SearchInput } from '#/components/forms/SearchInput';
-import * as Toggle from '#/components/forms/Toggle';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 
@@ -109,14 +109,14 @@ export function LanguageSelectDialogBody({
 		...displayedLanguages.all.map((lang) => ({ type: 'item' as const, lang })),
 	];
 
+	const maxReached = maxLanguages != null && checkedCodes.length >= maxLanguages;
+
 	return (
-		<Toggle.Group
+		<CheckboxGroup
+			aria-label={m['components.dialogs.language.selectTitle']()}
 			className={styles.group}
-			label={m['components.dialogs.language.selectTitle']()}
-			maxSelections={maxLanguages}
-			onChange={setCheckedCodes}
-			type="checkbox"
-			values={checkedCodes}
+			onValueChange={setCheckedCodes}
+			value={checkedCodes}
 		>
 			<Dialog.Header.Root>
 				<Dialog.Header.Close />
@@ -161,22 +161,21 @@ export function LanguageSelectDialogBody({
 					}
 
 					const name = languageName(item.lang, LOCALE);
+					const code = langCode(item.lang);
 
 					return (
-						<Toggle.Item
-							className={clsx(styles.item, index !== listData.length - 1 && styles.itemBorder)}
+						<Settings.CheckboxRow
+							className={listData[index + 1]?.type === 'item' ? styles.itemBorder : undefined}
+							disabled={maxReached && !checkedCodes.includes(code)}
 							label={name}
-							name={langCode(item.lang)}
+							value={code}
 						>
-							<Text className={styles.itemLabel} color="textContrastHigh" numberOfLines={1} weight="semiBold">
-								{name}
-							</Text>
-							<Toggle.CheckboxIndicator />
-						</Toggle.Item>
+							<Settings.Label titleText={name} />
+						</Settings.CheckboxRow>
 					);
 				}}
 			/>
-		</Toggle.Group>
+		</CheckboxGroup>
 	);
 }
 

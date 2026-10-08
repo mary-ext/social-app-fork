@@ -10,7 +10,7 @@ import { GCTIME, STALE } from '#/state/queries';
 
 import { dateMedium } from '#/locale/intl/datetime';
 
-import * as Toggle from '#/components/forms/Toggle';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -56,14 +56,13 @@ export const FollowRow = ({
 	const followedAt = follow.followedAt && formatFollowedAt(follow.followedAt);
 
 	return (
-		<Toggle.Item
+		<Settings.CheckboxRow
 			checked={selected}
 			className={styles.row}
 			disabled={isUnfollowing}
 			label={profile?.handle ?? claimedHandle ?? did}
 			onChange={() => onToggle(did)}
 		>
-			<Toggle.CheckboxIndicator />
 			<div className={styles.rowBody}>
 				{profile ? (
 					<ProfileCard.Header>
@@ -104,6 +103,6 @@ export const FollowRow = ({
 					)}
 				</span>
 			</div>
-		</Toggle.Item>
+		</Settings.CheckboxRow>
 	);
 };

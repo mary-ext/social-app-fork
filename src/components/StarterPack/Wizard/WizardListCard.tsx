@@ -16,7 +16,7 @@ import { useSession } from '#/state/session';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
-import * as Toggle from '#/components/forms/Toggle';
+import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -73,25 +73,23 @@ function WizardListCard({
 
 	if (btnType === 'checkbox') {
 		return (
-			<Toggle.Item
-				checked={included}
-				onChange={onPress}
+			<Settings.CheckboxRow
+				checked={!!included}
+				className={css.checkboxRow}
 				disabled={disabled}
 				label={
 					included
 						? m['components.starterPack.membership.action.remove']({ name: displayName })
 						: m['components.starterPack.membership.action.add']({ name: displayName })
 				}
-				className={css.row}
+				onChange={onPress}
 			>
 				{rowContent}
-				<Toggle.CheckboxIndicator />
-			</Toggle.Item>
+			</Settings.CheckboxRow>
 		);
 	}
 
-	// the remove variant is a static row with an inline button — not a toggle, so it can't be a Toggle.Item
-	// (that renders a <button>, and the remove control would be an invalid nested <button>).
+	// a CheckboxRow would nest the remove button inside another button
 	return (
 		<div className={css.row}>
 			{rowContent}

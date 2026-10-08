@@ -2,6 +2,8 @@ import { type ReactNode, useState } from 'react';
 
 import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 
+import { RadioGroup } from '@base-ui/react/radio-group';
+
 import { targetToShareUrl } from '#/lib/routes/app-links';
 
 import { useCreateJoinLink } from '#/state/queries/messages/create-join-link';
@@ -13,7 +15,7 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 
 import * as Dialog from '#/components/Dialog';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
-import * as Toggle from '#/components/forms/Toggle';
+import * as ChoiceCard from '#/components/forms/ChoiceCard';
 import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
@@ -24,6 +26,9 @@ import ArrowRightIcon from '#/icons/central/ArrowRight_round_outlined_radius1_st
 import ArrowShareRightIcon from '#/icons/central/ArrowShareRight_round_outlined_radius1_stroke2.svg';
 import ChainLinkBrokenIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
 import EditIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
+import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
+import PeopleAddedIcon from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
+import ShieldCheckIcon from '#/icons/central/ShieldCheck_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { CopyLinkField } from './CopyLinkField';
@@ -60,16 +65,14 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 	const { joinLink } = convo.details;
 
 	const [step, setStep] = useState(joinLink ? Step.MANAGE : Step.INFO);
-	const [whoCanJoin, setWhoCanJoin] = useState(joinLink ? joinLinkToKey(joinLink) : 'anyone');
+	const [whoCanJoin, setWhoCanJoin] = useState(joinLink ? toRules(joinLink) : DEFAULT_RULES);
 
-	// Resync local state when the server-side join link rules change (mutation
-	// success, refetch, or change from another client). Keyed on the rule string
-	// so identity-only refetches don't bump a user mid-edit.
-	const joinLinkRuleKey = joinLink ? joinLinkToKey(joinLink) : null;
+	// compare rules, not object identity, so refetches don't discard edits
+	const joinLinkRuleKey = joinLink ? rulesToKey(joinLink) : null;
 	const [prevKey, setPrevKey] = useState(joinLinkRuleKey);
 	if (joinLinkRuleKey !== prevKey) {
 		setStep(joinLinkRuleKey ? Step.MANAGE : Step.INFO);
-		setWhoCanJoin(joinLinkRuleKey ?? 'anyone');
+		setWhoCanJoin(joinLink ? toRules(joinLink) : DEFAULT_RULES);
 		setPrevKey(joinLinkRuleKey);
 	}
 
@@ -110,11 +113,6 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 		},
 	});
 	const isSaving = isCreating || isEditing;
-	const onWhoCanJoinChange = ([value]: string[]) => {
-		if (value) {
-			setWhoCanJoin(value);
-		}
-	};
 
 	const whoCanJoinOptions = [
 		{
@@ -190,7 +188,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 		}
 		case Step.GENERATE: {
 			const linkEnabled = joinLink?.enabledStatus === 'enabled';
-			const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin;
+			const linkHasChanged = linkEnabled && joinLinkRuleKey !== rulesToKey(whoCanJoin);
 
 			return (
 				<StepLayout
@@ -201,25 +199,35 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 					}
 					subtitle={m['screens.messages.joinSettings.hint']()}
 				>
-					<Toggle.Group
-						label={m['screens.messages.joinSettings.label']()}
-						type="radio"
-						values={[whoCanJoin]}
-						onChange={onWhoCanJoinChange}
-						className={css.radioList}
-					>
-						{whoCanJoinOptions.map((option) => {
-							const label = isOwner ? option.owner : option.member;
-							return (
-								<Toggle.RadioItem key={option.name} label={label} value={option.name}>
-									<Toggle.Panel>
-										<Toggle.RadioIndicator />
-										<Toggle.PanelText>{label}</Toggle.PanelText>
-									</Toggle.Panel>
-								</Toggle.RadioItem>
-							);
-						})}
-					</Toggle.Group>
+					<Stack gap="sm">
+						<Text size="md" weight="semiBold">
+							{m['screens.messages.joinSettings.who']()}
+						</Text>
+						<RadioGroup<ChatBskyGroupDefs.JoinLinkView['joinRule']>
+							aria-label={m['screens.messages.joinSettings.who']()}
+							onValueChange={(joinRule) => setWhoCanJoin({ ...whoCanJoin, joinRule })}
+							render={<ChoiceCard.List />}
+							value={whoCanJoin.joinRule}
+						>
+							<ChoiceCard.Radio
+								icon={GlobeIcon}
+								titleText={m['screens.messages.joinSettings.anyone']()}
+								value="anyone"
+							/>
+							<ChoiceCard.Radio
+								icon={PeopleAddedIcon}
+								titleText={m['screens.settings.audience.peopleIFollow']()}
+								value="followedByOwner"
+							/>
+						</RadioGroup>
+					</Stack>
+
+					<ChoiceCard.Checkbox
+						checked={whoCanJoin.requireApproval}
+						icon={ShieldCheckIcon}
+						onChange={(requireApproval) => setWhoCanJoin({ ...whoCanJoin, requireApproval })}
+						titleText={m['screens.messages.joinSettings.requireApproval']()}
+					/>
 
 					<Button
 						label={
@@ -233,7 +241,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 						size="large"
 						disabled={isSaving}
 						onClick={() => {
-							const { joinRule, requireApproval } = keyToJoinLink(whoCanJoin);
+							const { joinRule, requireApproval } = whoCanJoin;
 							if (linkEnabled) {
 								if (!linkHasChanged) {
 									setStep(Step.MANAGE);
@@ -279,7 +287,7 @@ function DialogInner({ convo, handle, isOwner, owner }: DialogInnerProps) {
 				: new URL('/chat', location.origin).toString();
 			const createdAt = joinLink ? new Date(joinLink.createdAt) : null;
 			const currentOption =
-				whoCanJoinOptions.find((o) => o.name === (joinLink ? joinLinkToKey(joinLink) : null)) ??
+				whoCanJoinOptions.find((o) => o.name === (joinLink ? rulesToKey(joinLink) : null)) ??
 				whoCanJoinOptions[0]!;
 			const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0]!.owner;
 			const memberValue = currentOption?.member ?? whoCanJoinOptions[0]!.member;
@@ -458,15 +466,14 @@ function StepLayout({
 	);
 }
 
-function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string {
-	return `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`;
+type JoinLinkRules = Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'>;
+
+const DEFAULT_RULES: JoinLinkRules = { joinRule: 'anyone', requireApproval: false };
+
+function toRules({ joinRule, requireApproval }: JoinLinkRules): JoinLinkRules {
+	return { joinRule, requireApproval };
 }
 
-function keyToJoinLink(key: string): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> {
-	const [joinRule, requireApproval] = key.split(':');
-	return {
-		// the key is built from our own `whoCanJoinOptions` names, so its rule segment is always one of these
-		joinRule: joinRule === 'followedByOwner' ? 'followedByOwner' : 'anyone',
-		requireApproval: requireApproval === 'requireApproval',
-	};
+function rulesToKey({ joinRule, requireApproval }: JoinLinkRules): string {
+	return `${joinRule}${requireApproval ? ':requireApproval' : ''}`;
 }

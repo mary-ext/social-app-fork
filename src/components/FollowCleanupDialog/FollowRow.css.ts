@@ -1,21 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { hover } from '#/styles/interaction';
 import { borderRadius, monoFontFamily, space } from '#/styles/tokens.css';
 
 export const row = style({
-	boxSizing: 'border-box',
-	alignItems: 'flex-start',
-	gap: space.md,
 	borderTop: `1px solid ${colors.borderContrastLow}`,
-	paddingBlock: space.md,
-	paddingInline: space.lg,
-	selectors: {
-		[hover()]: {
-			backgroundColor: colors.contrast_25,
-		},
-	},
 });
 
 export const rowBody = style({

@@ -15,6 +15,10 @@ export const row = style({
 	width: '100%',
 });
 
+export const checkboxRow = style({
+	borderBottom: `1px solid ${colors.borderContrastLow}`,
+});
+
 export const textCol = style({
 	display: 'flex',
 	flex: 1,

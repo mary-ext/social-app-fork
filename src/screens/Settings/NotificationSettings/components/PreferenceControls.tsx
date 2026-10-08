@@ -1,10 +1,12 @@
+import { RadioGroup } from '@base-ui/react/radio-group';
+
 import {
 	type NotificationSettingsPreference,
 	type NotificationSettingsPreferenceName,
 	useNotificationSettingsUpdateMutation,
 } from '#/state/queries/notifications/settings';
 
-import * as Toggle from '#/components/forms/Toggle';
+import * as Settings from '#/components/Settings';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
@@ -60,103 +62,55 @@ export function Inner({
 }) {
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
-	const channels = [];
-	if ('list' in preference && preference.list) {
-		channels.push('list');
-	}
-	if (preference.push) {
-		channels.push('push');
-	}
-
-	const onChangeChannels = (change: string[]) => {
-		const newPreference = {
-			...preference,
-			...('list' in preference ? { list: change.includes('list') } : {}),
-			push: change.includes('push'),
-		} as typeof preference;
-
+	const update = (newPreference: NotificationSettingsPreference) => {
 		mutate({
 			[name]: newPreference,
 			...Object.fromEntries(syncOthers.map((key) => [key, newPreference])),
 		});
 	};
 
-	const onChangeFilter = ([change]: string[]) => {
-		if (change !== 'all' && change !== 'follows') {
-			throw new Error('Invalid filter');
-		}
-
-		const newPreference = {
-			...preference,
-			include: change,
-		} satisfies typeof preference;
-
-		mutate({
-			[name]: newPreference,
-			...Object.fromEntries(syncOthers.map((key) => [key, newPreference])),
-		});
-	};
+	const inApp = 'list' in preference ? preference.list : false;
 
 	return (
 		<div className={styles.container}>
-			<Toggle.Group
-				className={styles.channels}
-				label={m['screens.settings.notifications.channel.selectPrompt']()}
-				onChange={onChangeChannels}
-				type="checkbox"
-				values={channels}
-			>
-				<Toggle.Item
-					className={styles.switchRow}
+			<Settings.Section>
+				<Settings.SwitchRow
 					label={m['screens.settings.notifications.channel.receivePush']()}
-					name="push"
+					onChange={(push) => update({ ...preference, push })}
+					value={preference.push}
 				>
-					<Text className={styles.switchLabel} size="md">
-						{m['screens.settings.notifications.channel.pushNotifications']()}
-					</Text>
-					<Toggle.Switch />
-				</Toggle.Item>
+					<Settings.Label titleText={m['screens.settings.notifications.channel.pushNotifications']()} />
+				</Settings.SwitchRow>
 				{allowDisableInApp && 'list' in preference && (
-					<Toggle.Item
-						className={styles.switchRow}
+					<Settings.SwitchRow
 						label={m['screens.settings.notifications.channel.receiveInApp']()}
-						name="list"
+						onChange={(list) => update({ ...preference, list })}
+						value={preference.list}
 					>
-						<Text className={styles.switchLabel} size="md">
-							{m['screens.settings.notifications.channel.inAppNotifications']()}
-						</Text>
-						<Toggle.Switch />
-					</Toggle.Item>
+						<Settings.Label titleText={m['screens.settings.notifications.channel.inAppNotifications']()} />
+					</Settings.SwitchRow>
 				)}
-			</Toggle.Group>
+			</Settings.Section>
 			{'include' in preference && (
-				<>
-					<div className={styles.divider} />
+				<div className={styles.filter}>
 					<Text size="md" weight="semiBold">
 						{m['screens.settings.activitySubscription.from']()}
 					</Text>
-					<Toggle.Group
-						className={styles.radioList}
-						disabled={channels.length === 0}
-						label={m['screens.settings.notifications.filterHint']()}
-						onChange={onChangeFilter}
-						type="radio"
-						values={[preference.include]}
+					<RadioGroup
+						aria-label={m['screens.settings.notifications.filterHint']()}
+						disabled={!preference.push && !inApp}
+						onValueChange={(include: string) => update({ ...preference, include })}
+						render={<Settings.Group />}
+						value={preference.include}
 					>
-						<Toggle.RadioItem label={m['screens.settings.audience.everyone']()} value="all">
-							<Toggle.Panel>
-								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{m['screens.settings.audience.everyone']()}</Toggle.PanelText>
-							</Toggle.Panel>
-						</Toggle.RadioItem>
-						<Toggle.RadioItem label={m['screens.settings.audience.peopleIFollow']()} value="follows">
-							<Toggle.Panel>
-								<Toggle.RadioIndicator />
-								<Toggle.PanelText>{m['screens.settings.audience.peopleIFollow']()}</Toggle.PanelText>
-							</Toggle.Panel>
-						</Toggle.RadioItem>
-					</Toggle.Group>
-				</>
+						<Settings.RadioRow label={m['screens.settings.audience.everyone']()} value="all">
+							<Settings.Label titleText={m['screens.settings.audience.everyone']()} />
+						</Settings.RadioRow>
+						<Settings.RadioRow label={m['screens.settings.audience.peopleIFollow']()} value="follows">
+							<Settings.Label titleText={m['screens.settings.audience.peopleIFollow']()} />
+						</Settings.RadioRow>
+					</RadioGroup>
+				</div>
 			)}
 		</div>
 	);

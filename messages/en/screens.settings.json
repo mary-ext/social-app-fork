@@ -129,7 +129,6 @@
 	"screens.settings.notifications.channel.pushNotifications": "Push notifications",
 	"screens.settings.notifications.channel.receiveInApp": "Receive in-app notifications",
 	"screens.settings.notifications.channel.receivePush": "Receive push notifications",
-	"screens.settings.notifications.channel.selectPrompt": "Select your preferred notification channels",
 	"screens.settings.notifications.chat.newMessages": "New messages",
 	"screens.settings.notifications.chat.newMessagesA11y": "Settings for notifications for new messages",
 	"screens.settings.notifications.chat.newMessagesHint": "Get notifications when people send you messages.",

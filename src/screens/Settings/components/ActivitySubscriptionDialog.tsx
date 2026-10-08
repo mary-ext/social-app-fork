@@ -1,14 +1,19 @@
+import { RadioGroup } from '@base-ui/react/radio-group';
+
 import {
 	useNotificationDeclarationMutation,
 	useNotificationDeclarationQuery,
 } from '#/state/queries/activity-subscriptions';
 
 import * as Dialog from '#/components/Dialog';
-import * as Toggle from '#/components/forms/Toggle';
+import * as ChoiceCard from '#/components/forms/ChoiceCard';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 
+import CircleBanIcon from '#/icons/central/CircleBanSign_round_outlined_radius1_stroke2.svg';
+import PeopleIcon from '#/icons/central/People_round_outlined_radius1_stroke2.svg';
+import PeopleAddedIcon from '#/icons/central/PeopleAdded_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import * as styles from './ActivitySubscriptionDialog.css';
@@ -28,10 +33,6 @@ function Inner() {
 	const { data: declaration, isError, isPending } = useNotificationDeclarationQuery();
 	const { mutate } = useNotificationDeclarationMutation();
 
-	const onChangeFilter = ([value]: string[]) => {
-		mutate({ $type: 'app.bsky.notification.declaration', allowSubscriptions: value! });
-	};
-
 	return (
 		<>
 			<div className={styles.header}>
@@ -49,32 +50,30 @@ function Inner() {
 					<Spinner color="default" label={m['common.status.loading']()} size="_2xl" />
 				</div>
 			) : (
-				<Toggle.Group
-					className={styles.radioList}
-					label={m['screens.settings.activitySubscription.filterHint']()}
-					onChange={onChangeFilter}
-					type="radio"
-					values={[declaration.value.allowSubscriptions]}
+				<RadioGroup
+					aria-label={m['screens.settings.activitySubscription.filterHint']()}
+					onValueChange={(value: string) => {
+						mutate({ $type: 'app.bsky.notification.declaration', allowSubscriptions: value });
+					}}
+					render={<ChoiceCard.List />}
+					value={declaration.value.allowSubscriptions}
 				>
-					<Toggle.RadioItem label={m['screens.settings.audience.anyoneWhoFollowsMe']()} value="followers">
-						<Toggle.Panel>
-							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.settings.audience.anyoneWhoFollowsMe']()}</Toggle.PanelText>
-						</Toggle.Panel>
-					</Toggle.RadioItem>
-					<Toggle.RadioItem label={m['screens.settings.audience.onlyFollowersIFollow']()} value="mutuals">
-						<Toggle.Panel>
-							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.settings.audience.onlyFollowersIFollow']()}</Toggle.PanelText>
-						</Toggle.Panel>
-					</Toggle.RadioItem>
-					<Toggle.RadioItem label={m['screens.settings.audience.noOne']()} value="none">
-						<Toggle.Panel>
-							<Toggle.RadioIndicator />
-							<Toggle.PanelText>{m['screens.settings.audience.noOne']()}</Toggle.PanelText>
-						</Toggle.Panel>
-					</Toggle.RadioItem>
-				</Toggle.Group>
+					<ChoiceCard.Radio
+						icon={PeopleIcon}
+						titleText={m['screens.settings.audience.anyoneWhoFollowsMe']()}
+						value="followers"
+					/>
+					<ChoiceCard.Radio
+						icon={PeopleAddedIcon}
+						titleText={m['screens.settings.audience.onlyFollowersIFollow']()}
+						value="mutuals"
+					/>
+					<ChoiceCard.Radio
+						icon={CircleBanIcon}
+						titleText={m['screens.settings.audience.noOne']()}
+						value="none"
+					/>
+				</RadioGroup>
 			)}
 		</>
 	);
