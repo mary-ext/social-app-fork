@@ -87,9 +87,6 @@ importers:
       '@atcute/xrpc-server':
         specifier: ^2.0.3
         version: 2.0.3(@atcute/cid@2.5.0)(@atcute/lexicons@2.1.1)(@typescript/typescript6@6.0.2)
-      '@base-ui/react':
-        specifier: ^1.8.0
-        version: 1.8.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@base-ui/utils':
         specifier: ^0.4.0
         version: 0.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -2603,6 +2600,7 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
       use-sync-external-store: 1.7.0(react@19.3.0)
+    optional: true
 
   '@base-ui/utils@0.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
@@ -2799,17 +2797,20 @@ snapshots:
   '@floating-ui/core@1.8.0':
     dependencies:
       '@floating-ui/utils': 0.2.12
+    optional: true
 
   '@floating-ui/dom@1.8.0':
     dependencies:
       '@floating-ui/core': 1.8.0
       '@floating-ui/utils': 0.2.12
+    optional: true
 
   '@floating-ui/react-dom@2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@floating-ui/dom': 1.8.0
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
+    optional: true
 
   '@floating-ui/utils@0.2.12': {}
 
