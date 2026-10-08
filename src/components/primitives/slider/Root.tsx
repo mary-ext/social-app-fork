@@ -7,6 +7,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { clamp } from '#/lib/utils/numbers';
 
+import { createChangeDetails } from '../change-details';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
 import {
@@ -93,15 +94,9 @@ export const Root = ({
 			return null;
 		}
 
-		let canceled = false;
-		onValueChange?.(next, {
-			reason,
-			event,
-			cancel() {
-				canceled = true;
-			},
-		});
-		if (canceled) {
+		const details = createChangeDetails(reason, event);
+		onValueChange?.(next, details);
+		if (details.isCanceled) {
 			return null;
 		}
 

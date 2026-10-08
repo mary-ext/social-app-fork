@@ -2,6 +2,7 @@ import { createContext, type RefObject, useContext } from 'react';
 
 import type { InteractionType } from '#/lib/browser/input-modality';
 
+import type { ChangeDetails } from '../change-details';
 import { HandleStore } from '../handle-store';
 
 /** `escape-key` includes platform close requests, such as Android back. */
@@ -13,14 +14,7 @@ export type OpenChangeReason =
 	| 'swipe'
 	| 'trigger-press';
 
-export type OpenChangeDetails = {
-	reason: OpenChangeReason;
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-	/** whether a listener has canceled this request. */
-	readonly isCanceled: boolean;
-};
+export type OpenChangeDetails = ChangeDetails<OpenChangeReason>;
 
 export type OpenChangeRequest = {
 	reason: OpenChangeReason;

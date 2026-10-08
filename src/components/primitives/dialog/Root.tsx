@@ -8,6 +8,7 @@ import { useScrollLock } from '@base-ui/utils/useScrollLock';
 import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import {
 	attachRoot,
@@ -78,18 +79,9 @@ export const Root = <Payload = void,>({
 			return false;
 		}
 
-		let canceled = false;
-		onOpenChange?.(next, {
-			reason: request.reason,
-			event: request.event,
-			cancel() {
-				canceled = true;
-			},
-			get isCanceled() {
-				return canceled;
-			},
-		});
-		if (canceled) {
+		const details = createChangeDetails(request.reason, request.event);
+		onOpenChange?.(next, details);
+		if (details.isCanceled) {
 			return false;
 		}
 

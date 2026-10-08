@@ -1,5 +1,6 @@
 import { createContext, type RefObject, useContext } from 'react';
 
+import type { ChangeDetails } from '../change-details';
 import { HandleStore } from '../handle-store';
 
 export type OpenChangeReason =
@@ -11,12 +12,7 @@ export type OpenChangeReason =
 	| 'outside-press'
 	| 'trigger-press';
 
-export type OpenChangeDetails = {
-	reason: OpenChangeReason;
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-};
+export type OpenChangeDetails = ChangeDetails<OpenChangeReason>;
 
 export type OpenEntry = 'first' | 'last';
 

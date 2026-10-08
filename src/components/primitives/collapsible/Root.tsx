@@ -6,6 +6,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
+import { createChangeDetails } from '../change-details';
 import { dataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes, usePresence } from '../presence';
@@ -56,14 +57,9 @@ export const Root = ({
 			return false;
 		}
 
-		let canceled = false;
-		onOpenChange?.(next, {
-			event,
-			cancel() {
-				canceled = true;
-			},
-		});
-		if (canceled) {
+		const details = createChangeDetails('none', event);
+		onOpenChange?.(next, details);
+		if (details.isCanceled) {
 			return false;
 		}
 

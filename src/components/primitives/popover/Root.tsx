@@ -12,6 +12,7 @@ import { getInteractionType, type InteractionType } from '#/lib/browser/input-mo
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
+import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import {
 	attachRoot,
@@ -95,15 +96,9 @@ export const Root = ({
 			return false;
 		}
 
-		let canceled = false;
-		onOpenChange?.(next, {
-			reason: request.reason,
-			event: request.event,
-			cancel() {
-				canceled = true;
-			},
-		});
-		if (canceled) {
+		const details = createChangeDetails(request.reason, request.event);
+		onOpenChange?.(next, details);
+		if (details.isCanceled) {
 			return false;
 		}
 

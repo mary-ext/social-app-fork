@@ -4,6 +4,7 @@ import type { Timeout } from '@base-ui/utils/useTimeout';
 
 import type { InteractionType } from '#/lib/browser/input-modality';
 
+import type { ChangeDetails } from '../change-details';
 import { HandleStore } from '../handle-store';
 
 export type OpenChangeReason =
@@ -15,12 +16,7 @@ export type OpenChangeReason =
 	| 'trigger-hover'
 	| 'trigger-press';
 
-export type OpenChangeDetails = {
-	reason: OpenChangeReason;
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-};
+export type OpenChangeDetails = ChangeDetails<OpenChangeReason>;
 
 export type OpenChangeRequest = {
 	reason: OpenChangeReason;

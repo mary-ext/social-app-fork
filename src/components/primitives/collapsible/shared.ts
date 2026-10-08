@@ -1,10 +1,8 @@
 import { createContext, type RefObject, useContext } from 'react';
 
-export type OpenChangeDetails = {
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-};
+import type { ChangeDetails } from '../change-details';
+
+export type OpenChangeDetails = ChangeDetails<'none'>;
 
 export type RootContextValue = {
 	open: boolean;

@@ -2,18 +2,14 @@ import { createContext, type RefObject, useContext } from 'react';
 
 import { clamp } from '#/lib/utils/numbers';
 
+import type { ChangeDetails } from '../change-details';
 import { type DataAttributes, dataAttributes } from '../data-attributes';
 
 export type Orientation = 'horizontal' | 'vertical';
 
 export type ValueChangeReason = 'drag' | 'input-change' | 'keyboard' | 'track-press';
 
-export type ValueChangeDetails = {
-	reason: ValueChangeReason;
-	event: Event;
-	/** cancels this change. */
-	cancel(): void;
-};
+export type ValueChangeDetails = ChangeDetails<ValueChangeReason>;
 
 export type ValueCommitDetails = {
 	reason: ValueChangeReason;
