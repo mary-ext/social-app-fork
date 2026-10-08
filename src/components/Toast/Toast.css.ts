@@ -1,5 +1,7 @@
 import { createVar, style, styleVariants } from '@vanilla-extract/css';
 
+import * as toastVars from '#/components/primitives/toast/css-vars';
+
 import { vars } from '#/styles/contract.css';
 import { withAlpha } from '#/styles/functions';
 import { hover } from '#/styles/interaction';
@@ -33,28 +35,30 @@ export const viewport = style({
 	},
 });
 
-const swipeX = 'var(--toast-swipe-movement-x, 0px)';
-const swipeY = 'var(--toast-swipe-movement-y, 0px)';
+const swipeX = `var(${toastVars.swipeMovementX}, 0px)`;
+const swipeY = `var(${toastVars.swipeMovementY}, 0px)`;
+const index = `var(${toastVars.index})`;
+const height = `var(${toastVars.height})`;
 
 // separate swipe translation from stacking so dragging can skip transitions without interrupting the stack.
 export const root = style({
 	vars: {
-		[scaleVar]: 'calc(max(0, 1 - (var(--toast-index) * 0.08)))',
+		[scaleVar]: `calc(max(0, 1 - (${index} * 0.08)))`,
 		[shrinkVar]: `calc(1 - ${scaleVar})`,
-		[heightVar]: 'var(--toast-frontmost-height, var(--toast-height))',
-		[offsetYVar]: `calc(var(--toast-offset-y) * -1 + (var(--toast-index) * ${-gap}px))`,
+		[heightVar]: `var(${toastVars.frontmostHeight}, ${height})`,
+		[offsetYVar]: `calc(var(${toastVars.offsetY}) * -1 + (${index} * ${-gap}px))`,
 	},
 	boxSizing: 'border-box',
 	position: 'absolute',
 	bottom: 0,
 	left: 0,
 	translate: `${swipeX} ${swipeY}`,
-	transform: `translateY(calc((var(--toast-index) * ${-peek}px) - (${shrinkVar} * ${heightVar}))) scale(${scaleVar})`,
+	transform: `translateY(calc((${index} * ${-peek}px) - (${shrinkVar} * ${heightVar}))) scale(${scaleVar})`,
 	transformOrigin: 'bottom left',
 	transitionDuration: '0.4s, 0.4s, 0.4s, 0.2s',
 	transitionProperty: 'translate, transform, opacity, height',
 	transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1), ease, ease',
-	zIndex: 'calc(1000 - var(--toast-index))',
+	zIndex: `calc(1000 - ${index})`,
 	borderWidth: 1,
 	borderStyle: 'solid',
 	borderRadius: borderRadius.md,
@@ -74,7 +78,7 @@ export const root = style({
 	selectors: {
 		'&[data-expanded]': {
 			transform: `translateY(${offsetYVar})`,
-			height: 'var(--toast-height)',
+			height,
 		},
 		'&[data-swiping]': {
 			transitionDuration: '0s, 0.4s, 0.4s, 0.2s',

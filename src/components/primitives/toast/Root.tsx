@@ -10,6 +10,7 @@ import { mergeProps } from '../merge-props';
 import { useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
 import { getDisplacement, resist, SWIPE_IGNORE_ATTRIBUTE, type SwipeDirection } from '../swipe';
+import * as vars from './css-vars';
 import type { ToastObject } from './manager';
 import { RootContext, type RootContextValue, useProviderContext } from './shared';
 
@@ -37,8 +38,8 @@ const damp = (
 
 // avoid React renders on pointer movement.
 const setMovement = (el: HTMLElement, x: number, y: number): void => {
-	el.style.setProperty('--toast-swipe-movement-x', `${x}px`);
-	el.style.setProperty('--toast-swipe-movement-y', `${y}px`);
+	el.style.setProperty(vars.swipeMovementX, `${x}px`);
+	el.style.setProperty(vars.swipeMovementY, `${y}px`);
 };
 
 const DEFAULT_SWIPE_DIRECTION: SwipeDirection[] = ['down', 'right'];
@@ -55,10 +56,9 @@ type Gesture = {
 };
 
 /**
- * renders a dismissible toast. Escape closes it when focus is within the toast. exposes `--toast-index`,
- * `--toast-offset-y`, and `--toast-height` for stacking. swipes set `--toast-swipe-movement-x`/`-y` and
- * `data-swiping`; dismissal sets `data-swipe-direction`. swipes ignore interactive descendants and elements
- * marked `data-swipe-ignore`. `data-closed` marks the exit transition.
+ * renders a toast with swipe dismissal; Escape dismisses when focus is inside. swipes skip interactive
+ * descendants and `data-swipe-ignore`. exposes `data-swiping`, `data-swipe-direction`, and `data-closed`; see
+ * `css-vars.ts` for stacking and swipe offsets.
  *
  * @param props toast, swipe directions, and element props
  * @returns the toast element; a `<div>` by default
@@ -145,8 +145,8 @@ export const Root = ({
 		const el = rootRef.current;
 		if (el && !closed) {
 			delete el.dataset.swipeDirection;
-			el.style.removeProperty('--toast-swipe-movement-x');
-			el.style.removeProperty('--toast-swipe-movement-y');
+			el.style.removeProperty(vars.swipeMovementX);
+			el.style.removeProperty(vars.swipeMovementY);
 		}
 	}, [closed]);
 
@@ -266,9 +266,9 @@ export const Root = ({
 		style: {
 			// prevent scrolling from cancelling touch swipes.
 			touchAction: directions.length > 0 ? 'none' : undefined,
-			'--toast-index': placement.index,
-			'--toast-offset-y': `${placement.offsetY}px`,
-			'--toast-height': toast.height ? `${toast.height}px` : undefined,
+			[vars.index]: placement.index,
+			[vars.offsetY]: `${placement.offsetY}px`,
+			[vars.height]: toast.height ? `${toast.height}px` : undefined,
 		},
 	};
 

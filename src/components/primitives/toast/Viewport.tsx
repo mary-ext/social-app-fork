@@ -11,6 +11,7 @@ import { dataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
 import { getTopModalSurface, moveKeepingAnimations, subscribeModalSurfaces } from '../top-layer';
+import * as vars from './css-vars';
 import { useProviderContext } from './shared';
 
 export type ViewportProps = RenderProps<'div'> & {
@@ -147,7 +148,7 @@ export const Viewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 			}
 		},
 		style: {
-			'--toast-frontmost-height': frontmostHeight ? `${frontmostHeight}px` : undefined,
+			[vars.frontmostHeight]: frontmostHeight ? `${frontmostHeight}px` : undefined,
 		},
 	};
 
