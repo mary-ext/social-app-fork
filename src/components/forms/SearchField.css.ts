@@ -27,9 +27,12 @@ export const field = style({
 	width: '100%',
 	cursor: 'text',
 	selectors: {
-		// exclude focused inputs so hover specificity doesn't override focus styles.
-		[hover(':not(:has(input:focus))')]: { borderColor: vars.palette.contrast_100 },
-		'&:has(input:focus)': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
+		// hover must not override focus styles.
+		[hover(':not(:has(input:focus), :focus-visible)')]: { borderColor: vars.palette.contrast_100 },
+		'&:has(input:focus), &:focus-visible': {
+			borderColor: vars.palette.primary_500,
+			backgroundColor: vars.palette.primary_25,
+		},
 	},
 });
 
@@ -50,28 +53,57 @@ export const icon = style({
 	color: vars.palette.contrast_500,
 	pointerEvents: 'none',
 	selectors: {
-		[hoverWithin(field, ':not(:has(input:focus))')]: { color: vars.palette.contrast_800 },
-		[`${field}:has(input:focus) &`]: { color: vars.palette.primary_500 },
+		[hoverWithin(field, ':not(:has(input:focus), :focus-visible)')]: { color: vars.palette.contrast_800 },
+		[`${field}:has(input:focus) &, ${field}:focus-visible &`]: { color: vars.palette.primary_500 },
 	},
 });
 
-export const input = style({
-	appearance: 'none',
+const text = style({
 	flex: 1,
-	margin: 0,
-	outline: 'none',
-	border: 'none',
-	backgroundColor: 'transparent',
 	paddingBlock: fallbackVar(inputPaddingVar, `${INPUT_PADDING}px`),
-	paddingInline: 0,
 	minWidth: 0,
 	lineHeight: LINE_HEIGHT,
 	color: vars.palette.contrast_1000,
-	fontFamily: 'inherit',
 	fontSize: fontSize.md,
-	selectors: {
-		'&::placeholder': { color: vars.palette.contrast_500, userSelect: 'none' },
+});
+
+export const input = style([
+	text,
+	{
+		appearance: 'none',
+		margin: 0,
+		outline: 'none',
+		border: 'none',
+		backgroundColor: 'transparent',
+		paddingInline: 0,
+		fontFamily: 'inherit',
+		selectors: {
+			'&::placeholder': { color: vars.palette.contrast_500, userSelect: 'none' },
+		},
 	},
+]);
+
+export const trigger = style({
+	appearance: 'none',
+	margin: 0,
+	outline: 'none',
+	paddingBlock: 0,
+	textAlign: 'start',
+	cursor: 'pointer',
+});
+
+export const value = style([
+	text,
+	{
+		overflow: 'hidden',
+		// preserve input whitespace so highlight offsets still match.
+		whiteSpace: 'pre',
+		textOverflow: 'ellipsis',
+	},
+]);
+
+export const placeholder = style({
+	color: vars.palette.contrast_500,
 });
 
 export const clear = style({

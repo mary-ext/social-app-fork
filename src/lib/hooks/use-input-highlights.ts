@@ -2,16 +2,9 @@
 
 import { type RefObject, useLayoutEffect } from 'react';
 
-const isSupported = typeof HTMLInputElement.prototype.createValueRange === 'function' && 'highlights' in CSS;
+import { addHighlightRanges, isHighlightSupported, type TextHighlight } from '#/lib/browser/text-highlights';
 
-export interface InputHighlight {
-	/** highlight name, as returned by `highlightStyle()` */
-	name: string;
-	/** inclusive UTF-16 offset in the input value */
-	start: number;
-	/** exclusive UTF-16 offset in the input value */
-	end: number;
-}
+const isSupported = isHighlightSupported && typeof HTMLInputElement.prototype.createValueRange === 'function';
 
 /**
  * highlights input text with the CSS Custom Highlight API; no-op when unsupported.
@@ -21,7 +14,7 @@ export interface InputHighlight {
  */
 export const useInputHighlights = (
 	ref: RefObject<HTMLInputElement | null>,
-	highlights: readonly InputHighlight[],
+	highlights: readonly TextHighlight[],
 ): void => {
 	if (!isSupported) {
 		return;
@@ -34,24 +27,12 @@ export const useInputHighlights = (
 			return;
 		}
 
-		const owned: [highlight: Highlight, range: OpaqueRange][] = [];
-
-		for (const { name, start, end } of highlights) {
-			let highlight = CSS.highlights.get(name);
-			if (highlight === undefined) {
-				highlight = new Highlight();
-				CSS.highlights.set(name, highlight);
-			}
-
-			const range = input.createValueRange(start, end);
-			highlight.add(range);
-
-			owned.push([highlight, range]);
-		}
+		const ranges = highlights.map(({ start, end }) => input.createValueRange(start, end));
+		const remove = addHighlightRanges(highlights.map(({ name }, i) => [name, ranges[i]!]));
 
 		return () => {
-			for (const [highlight, range] of owned) {
-				highlight.delete(range);
+			remove();
+			for (const range of ranges) {
 				range.disconnect();
 			}
 		};

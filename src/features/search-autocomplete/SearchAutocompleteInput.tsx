@@ -28,9 +28,10 @@ import {
 	startOfWeek,
 } from '@mary/date-fns';
 
+import type { TextHighlight } from '#/lib/browser/text-highlights';
 import { isInvalidHandle } from '#/lib/display-names';
 import { useConstant } from '#/lib/hooks/use-constant';
-import { type InputHighlight, useInputHighlights } from '#/lib/hooks/use-input-highlights';
+import { useInputHighlights } from '#/lib/hooks/use-input-highlights';
 
 import { focusSearch } from '#/state/events';
 import {
@@ -113,12 +114,12 @@ const splicePosition = (tokens: Token[], tokenIndex: number): [start: number, en
 };
 
 /**
- * converts query tokens to syntax highlight ranges.
+ * assigns syntax highlight names to query ranges.
  *
  * @param tokens parsed query
- * @returns highlight ranges for {@link useInputHighlights}
+ * @returns highlight ranges in the query text
  */
-export const getSyntaxHighlights = (tokens: Token[]): InputHighlight[] => {
+export const getSyntaxHighlights = (tokens: Token[]): TextHighlight[] => {
 	return getSyntaxRanges(tokens).map(({ kind, start, end }) => ({
 		name: styles.syntaxHighlights[kind],
 		start,
@@ -145,12 +146,6 @@ export type SearchAutocompleteFieldProps = SearchAutocompleteProps & {
 	size?: SearchField.SearchFieldSize;
 };
 
-/** a caret or selection range within the search input. */
-export type InputSelection = {
-	start: number;
-	end: number;
-};
-
 /** field and suggestions for the caller to lay out. */
 export type SearchAutocompleteParts = {
 	field: ReactNode;
@@ -165,8 +160,7 @@ export type SearchAutocompleteParts = {
  * @param autoFocus focus the field on mount
  * @param children lays out the field and list
  * @param fixedFilters operators supplied outside the editable query
- * @param initialQuery initial query; changing it resets the field
- * @param initialSelection selection to restore before autofocusing
+ * @param initialQuery query to seed the field
  * @param inline always show the list, without a popup
  * @param onNavigate navigate to an in-app path
  * @param onNavigateToProfile open the selected profile
@@ -181,7 +175,6 @@ export function SearchAutocompleteInput({
 	children,
 	fixedFilters = NO_FIXED_FILTERS,
 	initialQuery = '',
-	initialSelection,
 	inline,
 	onNavigate,
 	onNavigateToProfile,
@@ -192,7 +185,6 @@ export function SearchAutocompleteInput({
 }: SearchAutocompleteFieldProps & {
 	autoFocus: boolean;
 	children: (parts: SearchAutocompleteParts) => ReactNode;
-	initialSelection?: InputSelection;
 	inline: boolean;
 }) {
 	const { currentAccount } = useSession();
@@ -227,20 +219,13 @@ export function SearchAutocompleteInput({
 	}, []);
 
 	useLayoutEffect(() => {
-		const el = inputRef.current;
-		if (!autoFocus || !el) {
-			return;
+		if (autoFocus) {
+			inputRef.current?.focus();
 		}
-
-		// the focus handler reads the caret position.
-		if (initialSelection) {
-			el.setSelectionRange(initialSelection.start, initialSelection.end);
-		}
-		el.focus();
-	}, [autoFocus, initialSelection]);
+	}, [autoFocus]);
 
 	const [query, setQuery] = useState(initialQuery);
-	const [caret, setCaret] = useState(initialSelection?.end ?? initialQuery.length);
+	const [caret, setCaret] = useState(initialQuery.length);
 	const [popupOpen, setPopupOpen] = useState(false);
 	const open = inline || popupOpen;
 	const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));

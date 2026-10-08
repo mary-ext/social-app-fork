@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { tokenize } from '@atcute/bluesky-search-parser';
 
-import { useInputHighlights } from '#/lib/hooks/use-input-highlights';
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { highlightText } from '#/lib/browser/text-highlights';
 
 import { focusSearch } from '#/state/events';
 
@@ -16,13 +15,12 @@ import { useFocusEffect } from '#/router';
 import * as styles from './DialogSearchAutocomplete.css';
 import {
 	getSyntaxHighlights,
-	type InputSelection,
 	SearchAutocompleteInput,
 	type SearchAutocompleteFieldProps,
 } from './SearchAutocompleteInput';
 
 /**
- * opens a fullscreen search dialog, preserving the tapped caret position.
+ * fullscreen search dialog with a search-field trigger.
  *
  * @param autoFocus open the dialog on mount
  * @param fixedFilters operators supplied outside the editable query
@@ -33,7 +31,7 @@ import {
  * @param placeholder text shown when empty
  * @param shape corner shape for both fields
  * @param size size preset for both fields
- * @returns the trigger field and search dialog
+ * @returns the trigger button and search dialog
  */
 export function DialogSearchAutocomplete({
 	autoFocus,
@@ -47,43 +45,23 @@ export function DialogSearchAutocomplete({
 	...props
 }: SearchAutocompleteFieldProps) {
 	const handle = Dialog.useDialogHandle();
-	const [selection, setSelection] = useState<InputSelection>({
-		start: initialQuery.length,
-		end: initialQuery.length,
-	});
-
-	const triggerRef = useRef<HTMLInputElement | null>(null);
-	// wait for click: pointer focus fires before the caret moves.
-	const pointerDownRef = useRef(false);
-
-	// handle.open triggers onOpenChange, which updates the dialog registry.
-	const openAt = (next: InputSelection) => {
-		setSelection(next);
-		handle.open();
-	};
-
-	const openAtEnd = useNonReactiveCallback(() => {
-		openAt({ start: initialQuery.length, end: initialQuery.length });
-	});
 
 	useEffect(() => {
 		if (autoFocus) {
-			openAtEnd();
+			handle.open();
 		}
-	}, [autoFocus, openAtEnd]);
+	}, [autoFocus, handle]);
 
 	// subscribe only on the active screen; the open dialog handles its own focus events.
 	useFocusEffect(() => {
 		return focusSearch.subscribe(() => {
 			if (!handle.isOpen) {
-				openAtEnd();
+				handle.open();
 			}
 		});
 	});
 
 	const syntaxHighlights = useMemo(() => getSyntaxHighlights(tokenize(initialQuery)), [initialQuery]);
-
-	useInputHighlights(triggerRef, syntaxHighlights);
 
 	// close before navigation to avoid covering the destination screen.
 	const closeThen =
@@ -95,45 +73,22 @@ export function DialogSearchAutocomplete({
 
 	return (
 		<>
-			<SearchField.Root shape={shape} size={size}>
-				<SearchField.Icon />
-				<SearchField.Input
-					onBlur={() => {
-						pointerDownRef.current = false;
-					}}
-					// editing happens in the dialog; this field only supplies the initial caret.
-					onChange={() => {}}
-					onClick={(event) => {
-						if (!pointerDownRef.current) {
-							return;
-						}
-						pointerDownRef.current = false;
-
-						const el = event.currentTarget;
-						openAt({ start: el.selectionStart ?? el.value.length, end: el.selectionEnd ?? el.value.length });
-					}}
-					onFocus={() => {
-						if (!pointerDownRef.current) {
-							openAtEnd();
-						}
-					}}
-					onPointerCancel={() => {
-						pointerDownRef.current = false;
-					}}
-					onPointerDown={() => {
-						pointerDownRef.current = true;
-					}}
-					placeholder={placeholder}
-					ref={triggerRef}
-					value={initialQuery}
-				/>
-			</SearchField.Root>
+			<Dialog.Trigger
+				handle={handle}
+				render={
+					<SearchField.Trigger
+						placeholder={placeholder}
+						shape={shape}
+						size={size}
+						value={initialQuery}
+						valueRef={(el) => (el ? highlightText(el, syntaxHighlights) : undefined)}
+					/>
+				}
+			/>
 
 			<Dialog.Root handle={handle}>
 				<Dialog.Popup
-					// restoring trigger focus would reopen the dialog.
-					finalFocus={false}
-					// the search field restores its caret before focusing itself.
+					// the search input handles autofocus.
 					initialFocus={false}
 					label={placeholder}
 					scroll="body"
@@ -142,7 +97,6 @@ export function DialogSearchAutocomplete({
 						{...props}
 						autoFocus
 						initialQuery={initialQuery}
-						initialSelection={selection}
 						inline
 						onNavigate={closeThen(onNavigate)}
 						onNavigateToProfile={closeThen(onNavigateToProfile)}

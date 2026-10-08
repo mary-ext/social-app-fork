@@ -16,15 +16,17 @@ import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_
 // preserve native caret placement when clicking directly on inputs.
 const OWN_PRESS_SELECTOR = `${INTERACTIVE_SELECTOR}, input, select, textarea`;
 
+/** `default` has rounded corners; `round` is pill-shaped. */
 export type SearchFieldShape = keyof typeof styles.shape;
 
+/** `default` uses standard spacing; `small` is compact. */
 export type SearchFieldSize = keyof typeof styles.size;
 
 /**
  * search field container. clicking outside its interactive controls focuses the input.
  *
- * @param shape `default` for rounded corners; `round` for a pill shape
- * @param size `default` for standard spacing; `small` for compact spacing
+ * @param shape field corner shape
+ * @param size field size preset
  */
 export function Root({
 	children,
@@ -77,6 +79,49 @@ export function Icon() {
 /** styled search input. */
 export function Input({ className, ...props }: ComponentPropsWithRef<'input'>) {
 	return <input type="text" {...props} className={clsx(styles.input, className)} />;
+}
+
+/**
+ * search-field button for opening a separate search UI.
+ *
+ * @param placeholder text shown when `value` is empty
+ * @param shape field corner shape
+ * @param size field size preset
+ * @param value query text to display
+ * @param valueRef span containing only the query text; absent when empty
+ * @returns the trigger button
+ */
+export function Trigger({
+	className,
+	placeholder,
+	shape = 'default',
+	size = 'default',
+	value,
+	valueRef,
+	...props
+}: {
+	placeholder: string;
+	shape?: SearchFieldShape;
+	size?: SearchFieldSize;
+	value: string;
+	valueRef?: Ref<HTMLSpanElement>;
+} & Omit<ComponentPropsWithRef<'button'>, 'children' | 'value'>) {
+	return (
+		<button
+			type="button"
+			{...props}
+			className={clsx(styles.field, styles.shape[shape], styles.size[size], styles.trigger, className)}
+		>
+			<Icon />
+			{value ? (
+				<span className={styles.value} ref={valueRef}>
+					{value}
+				</span>
+			) : (
+				<span className={clsx(styles.value, styles.placeholder)}>{placeholder}</span>
+			)}
+		</button>
+	);
 }
 
 /**
