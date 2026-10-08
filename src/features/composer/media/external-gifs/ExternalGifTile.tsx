@@ -8,7 +8,6 @@ import { hasMediaAlt } from '#/features/composer/media/alt-text';
 import { gifPreviewUrl } from '#/features/gif-picker/utils';
 
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
-import { useCompositeItem } from '#/components/primitives/composite';
 import { Button } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
@@ -17,7 +16,7 @@ import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
 import { keepEditorFocus } from '../../shared/editor-focus';
-import { MediaTile } from '../tile/MediaTile';
+import { MediaTile, useMediaTileComposite } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges } from '../tile/TileControls';
 import * as css from './ExternalGifTile.css';
 
@@ -47,8 +46,7 @@ export function ExternalGifTile({
 	const player = parseGifEmbedFromUrl(toGifEmbedUrl(item.gif));
 	// reuse the poster for dragging to avoid loading the animated GIF.
 	const url = gifPreviewUrl((player ? item.gif.media_formats.preview : item.gif.media_formats.gif).url);
-	const composite = useCompositeItem({ active: false, disabled: false });
-	const tabbable = composite?.tabIndex === 0;
+	const { composite, tabbable } = useMediaTileComposite();
 
 	const togglePlayback = () => {
 		const video = videoRef.current;

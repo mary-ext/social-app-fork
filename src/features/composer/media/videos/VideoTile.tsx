@@ -5,7 +5,6 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
 import { getVideoBoxRatio } from '#/components/Post/Embed/media-constants';
-import { useCompositeItem } from '#/components/primitives/composite';
 
 import VideoIcon from '#/icons/central/VideoClip_round_outlined_radius3_stroke1.svg';
 import { m } from '#/paraglide/messages';
@@ -13,7 +12,7 @@ import { m } from '#/paraglide/messages';
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { PostMedia } from '../../model/schema';
-import { MediaTile } from '../tile/MediaTile';
+import { MediaTile, useMediaTileComposite } from '../tile/MediaTile';
 import {
 	AltButton,
 	CaptionsButton,
@@ -51,8 +50,7 @@ export function VideoTile({
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const hasCaptions = useEditorState((state) => hasMediaCaptions(state, item.id));
 	const upload = useVideoUpload(item.file);
-	const composite = useCompositeItem({ active: false, disabled: false });
-	const tabbable = composite?.tabIndex === 0;
+	const { composite, tabbable } = useMediaTileComposite();
 	const label = m['features.composer.media.a11y.video']();
 
 	return (

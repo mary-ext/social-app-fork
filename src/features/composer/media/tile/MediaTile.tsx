@@ -2,7 +2,7 @@ import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import { clsx } from 'clsx';
 
-import type { CompositeItemProps } from '#/components/primitives/composite';
+import { type CompositeItemProps, useCompositeItem } from '#/components/primitives/composite';
 
 import { useComposer } from '../../context';
 import { setDragPreview } from '../../dnd/DragPreview';
@@ -19,6 +19,16 @@ import * as css from './MediaTile.css';
  */
 export const refocusMedia = (mediaId: string): void => {
 	refocusSoon(getMediaTileSelector(mediaId));
+};
+
+/**
+ * joins the media row's roving tab order.
+ *
+ * @returns composite props for `MediaTile` and whether its controls are tabbable
+ */
+export const useMediaTileComposite = (): { composite: CompositeItemProps | undefined; tabbable: boolean } => {
+	const composite = useCompositeItem({ active: false, disabled: false });
+	return { composite, tabbable: composite?.tabIndex === 0 };
 };
 
 /**

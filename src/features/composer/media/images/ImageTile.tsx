@@ -8,7 +8,6 @@ import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
 import { getTileStyle } from '#/components/ImageEmbed/carousel/strip';
 import { getAspectRatio } from '#/components/ImageEmbed/carousel/utils';
-import { useCompositeItem } from '#/components/primitives/composite';
 
 import PencilIcon from '#/icons/central/PencilLine_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -16,7 +15,7 @@ import { m } from '#/paraglide/messages';
 import { useEditorState } from '../../context';
 import { DragThumbnail } from '../../dnd/DragPreview';
 import type { ImageMedia } from '../../model/schema';
-import { MediaTile } from '../tile/MediaTile';
+import { MediaTile, useMediaTileComposite } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileBadges, TileButton } from '../tile/TileControls';
 import { getEditedImage, getImageEdit } from './image-edits';
 import * as css from './ImageTile.css';
@@ -69,8 +68,7 @@ export function ImageTile({
 	const image = getEditedImage(item, edit);
 	const url = getBlobUrl(image.blob);
 	const aspectRatio = getAspectRatio(image.dimensions);
-	const composite = useCompositeItem({ active: false, disabled: false });
-	const tabbable = composite?.tabIndex === 0;
+	const { composite, tabbable } = useMediaTileComposite();
 
 	return (
 		<MediaTile

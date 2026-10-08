@@ -1,14 +1,12 @@
 import { hasMediaAlt } from '#/features/composer/media/alt-text';
 
-import { useCompositeItem } from '#/components/primitives/composite';
-
 import PlayIcon from '#/icons/central/Play_round_filled_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useEditorState } from '../../context';
 import { DragChip } from '../../dnd/DragPreview';
 import type { VoiceMedia } from '../../model/schema';
-import { MediaTile } from '../tile/MediaTile';
+import { MediaTile, useMediaTileComposite } from '../tile/MediaTile';
 import { AltButton, RemoveButton, TileActions, TileUploadStatus } from '../tile/TileControls';
 import { useVideoUpload } from '../uploads/upload-status';
 import { isPendingUpload } from '../uploads/video-uploads';
@@ -36,8 +34,7 @@ export function VoiceTile({
 }) {
 	const hasAlt = useEditorState((state) => hasMediaAlt(state, item.id));
 	const upload = useVideoUpload(item.file);
-	const composite = useCompositeItem({ active: false, disabled: false });
-	const tabbable = composite?.tabIndex === 0;
+	const { composite, tabbable } = useMediaTileComposite();
 	const label = m['features.composer.media.a11y.voice']();
 
 	return (
