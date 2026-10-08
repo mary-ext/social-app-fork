@@ -152,13 +152,7 @@ const surfaces: HTMLElement[] = [];
 const supportsMoveBefore = 'moveBefore' in Element.prototype;
 const emitter = new SimpleEventEmitter<[]>();
 
-/**
- * registers a modal as a host for toasts. call after it enters the top layer; unregister after modality ends.
- *
- * @param surface untransformed modal element, so fixed-position content stays viewport-relative
- * @returns a function that unregisters the surface
- */
-export const pushModalSurface = (surface: HTMLElement): (() => void) => {
+const pushModalSurface = (surface: HTMLElement): (() => void) => {
 	surfaces.push(surface);
 	emitter.emit();
 	return () => {

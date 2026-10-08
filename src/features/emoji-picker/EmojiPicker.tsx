@@ -81,7 +81,7 @@ export function Picker() {
 	const { onEmojiSelect, close, nextFocusRef } = useEmojiPickerContext();
 
 	return (
-		<Popover.Positioner sideOffset={5} collisionPadding={5}>
+		<Popover.Positioner sideOffset={5}>
 			<Popover.Popup
 				className={styles.popup}
 				finalFocus={() => {

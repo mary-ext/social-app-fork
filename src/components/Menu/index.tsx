@@ -49,7 +49,7 @@ export function Popup({
 	minWidth?: number;
 }) {
 	return (
-		<BaseMenu.Positioner align={align} side={side} sideOffset={5} collisionPadding={5}>
+		<BaseMenu.Positioner align={align} side={side} sideOffset={5}>
 			<BaseMenu.Popup
 				aria-label={label}
 				className={styles.popup}

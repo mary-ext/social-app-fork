@@ -18,7 +18,7 @@ export function SkinToneButton({ onChange, tone }: { onChange: (tone: SkinTone) 
 				<Select.Value className={styles.glyph}>{(value: SkinTone) => SKIN_HANDS[value - 1]}</Select.Value>
 			</Select.Trigger>
 
-			<Select.Positioner className={styles.positioner}>
+			<Select.Positioner>
 				<Select.Popup className={styles.menu}>
 					{TONES.map((value) => (
 						<Select.Item

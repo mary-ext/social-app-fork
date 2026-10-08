@@ -32,11 +32,6 @@ export const trigger = style({
 	},
 });
 
-export const positioner = style({
-	display: 'flex',
-	flexDirection: 'column',
-});
-
 export const menu = style({
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -49,7 +44,6 @@ export const menu = style({
 	boxShadow: `0 0 0 1px ${vars.palette.contrast_100}, ${vars.shadow.md}`,
 	backgroundColor: vars.palette.contrast_0,
 	padding: 4,
-	minHeight: 0,
 	overflowY: 'auto',
 	selectors: {
 		'&[data-closed]': { opacity: 0 },
