@@ -1,4 +1,4 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { createVar, globalStyle, style } from '@vanilla-extract/css';
 
 import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
 
@@ -36,6 +36,17 @@ export const search = style(
 export const searchOverlap = style(
 	layered(components, {
 		marginBottom: `calc(-1 * ${SEARCH_OVERLAP})`,
+	}),
+);
+
+// a popup-wide `:has()` would also match search fields in nested dialogs.
+globalStyle(
+	`${searchOverlap} ~ *`,
+	layered(components, {
+		vars: {
+			[searchInset]: SEARCH_OVERLAP,
+			[searchScrollInset]: `calc(${SEARCH_OVERLAP} + ${SEARCH_FADE}px)`,
+		},
 	}),
 );
 
@@ -133,14 +144,6 @@ export const popup = recipe(
 						overflow: 'hidden',
 						overscrollBehavior: 'contain',
 						vars: { [searchInset]: '0px', [searchScrollInset]: '0px' },
-						selectors: {
-							[`&:has(${searchOverlap})`]: {
-								vars: {
-									[searchInset]: SEARCH_OVERLAP,
-									[searchScrollInset]: `calc(${SEARCH_OVERLAP} + ${SEARCH_FADE}px)`,
-								},
-							},
-						},
 					},
 				],
 				viewport: {},
