@@ -5,7 +5,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import * as Dialog from '#/components/Dialog';
 
 const VerificationsDialogBody = lazy(() =>
-	import('#/components/verification/VerificationsDialogBody').then((mod) => ({
+	import('#/features/verification/VerificationsDialogBody').then((mod) => ({
 		default: mod.VerificationsDialogBody,
 	})),
 );

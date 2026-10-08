@@ -9,6 +9,8 @@ import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
+import { useSimpleVerificationState } from '#/features/verification/verification-state';
+
 import * as Dialog from '#/components/Dialog';
 import { EditableBanner } from '#/components/EditableBanner';
 import { EditableUserAvatar } from '#/components/EditableUserAvatar';
@@ -16,7 +18,6 @@ import { Notice } from '#/components/Notice';
 import type * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
-import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 

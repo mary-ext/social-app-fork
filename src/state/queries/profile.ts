@@ -37,8 +37,9 @@ import { PROFILE_RQKEY_ROOT, profileQueryKey } from '#/state/queries/profile-key
 import { cancelScheduledUnmutes } from '#/state/queries/timed-mutes';
 import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
 import { useUnstableProfileViewCache } from '#/state/queries/unstable-profile-cache';
-import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { getAccountProfileView, getClients, useSession } from '#/state/session';
+
+import { useUpdateProfileVerificationCache } from '#/features/verification/use-update-verification-cache';
 
 import { LIST_CONVOS_RQKEY_ROOT } from './messages/list-conversations-key';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';

@@ -4,10 +4,11 @@ import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
+import * as css from '#/features/verification/VerifierDialog.css';
+
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
-import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import Logo from '#/icons/brands/Bluesky.svg';

@@ -6,11 +6,12 @@ import { useSession } from '#/state/session';
 
 import { dateLong } from '#/locale/intl/datetime';
 
+import { useSimpleVerificationState } from '#/features/verification/verification-state';
+import * as css from '#/features/verification/VerificationsDialog.css';
+
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
-import { useSimpleVerificationState } from '#/components/verification';
-import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as ProfileCard from '#/components/web/ProfileCard';

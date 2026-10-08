@@ -5,11 +5,12 @@ import { clsx } from 'clsx';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFontScaleMultiplier } from '#/state/preferences/appearance';
 
+import { useSimpleVerificationState } from '#/features/verification/verification-state';
+import { VerificationCheck } from '#/features/verification/VerificationCheck';
+import { VerificationCheckButton } from '#/features/verification/VerificationCheckButton';
+
 import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
 import * as css from '#/components/ProfileBadges.css';
-import { useSimpleVerificationState } from '#/components/verification';
-import { VerificationCheck } from '#/components/verification/VerificationCheck';
-import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
