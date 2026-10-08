@@ -49,11 +49,13 @@ export const useInertWhileClosed = (ref: RefObject<HTMLElement | null>, open: bo
  * @param ref the popup's positioning element
  * @param open current open state
  * @param onSettled receives the open state once its transitions finish
+ * @param untrackedPseudoElement pseudo-element whose computed transition timing must also elapse
  */
 export const useTransitionsSettled = (
 	ref: RefObject<HTMLElement | null>,
 	open: boolean,
 	onSettled: (open: boolean) => void,
+	untrackedPseudoElement?: string,
 ): void => {
 	useLayoutEffect(() => {
 		const el = ref.current;
@@ -62,12 +64,21 @@ export const useTransitionsSettled = (
 		}
 
 		let stale = false;
+		let timeout: ReturnType<typeof setTimeout> | undefined;
 		const frame = requestAnimationFrame(() => {
+			const pending: Promise<unknown>[] = [];
+			if (untrackedPseudoElement !== undefined) {
+				// `getAnimations()` may omit pseudo-element transitions, notably `::details-content`.
+				const delay = getTransitionTime(getComputedStyle(el, untrackedPseudoElement));
+				pending.push(new Promise((resolve) => (timeout = setTimeout(resolve, delay))));
+			}
 			// looping animations must not block unmounting.
-			const animations = el
-				.getAnimations({ subtree: true })
-				.filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity);
-			Promise.all(animations.map((animation) => animation.finished)).then(
+			for (const animation of el.getAnimations({ subtree: true })) {
+				if (animation.effect?.getComputedTiming().endTime !== Infinity) {
+					pending.push(animation.finished);
+				}
+			}
+			Promise.all(pending).then(
 				() => {
 					if (!stale) {
 						onSettled(open);
@@ -85,8 +96,29 @@ export const useTransitionsSettled = (
 		return () => {
 			stale = true;
 			cancelAnimationFrame(frame);
+			clearTimeout(timeout);
 		};
-	}, [open, ref, onSettled]);
+	}, [open, ref, onSettled, untrackedPseudoElement]);
+};
+
+/** @returns the longest transition duration plus delay, in milliseconds */
+const getTransitionTime = (style: CSSStyleDeclaration): number => {
+	const durations = parseTimes(style.transitionDuration);
+	const delays = parseTimes(style.transitionDelay);
+
+	// CSS repeats shorter timing lists.
+	let max = 0;
+	for (let i = 0, n = Math.max(durations.length, delays.length); i < n; i++) {
+		max = Math.max(max, durations[i % durations.length]! + delays[i % delays.length]!);
+	}
+	return max;
+};
+
+const parseTimes = (list: string): number[] => {
+	return list.split(',').map((value) => {
+		const time = parseFloat(value);
+		return value.trim().endsWith('ms') ? time : time * 1000;
+	});
 };
 
 export const openStateAttributes = {
