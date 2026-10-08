@@ -10,6 +10,7 @@ import {
 	useRef,
 } from 'react';
 
+import { focusWithVisibility } from '../focus';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
 import { getSliderAttributes, useRootContext, type ValueChangeReason } from './shared';
@@ -96,14 +97,10 @@ export const Thumb = ({
 		return null;
 	};
 
-	// pointer focus suppresses the ring; refocus to restore it for keyboard use.
+	// suppress containing popovers' focus-out dismissal during the blur/focus pair.
 	const restoreFocusVisible = (input: HTMLInputElement) => {
-		if (input.matches(':focus-visible')) {
-			return;
-		}
 		refocusingRef.current = true;
-		input.blur();
-		input.focus({ preventScroll: true, focusVisible: true });
+		focusWithVisibility(input, { focusVisible: true, preventScroll: true });
 		refocusingRef.current = false;
 	};
 
@@ -121,7 +118,6 @@ export const Thumb = ({
 		'aria-labelledby': ariaLabelledBy,
 		'aria-orientation': orientation,
 		'aria-valuetext': getAriaValueText?.(value),
-		// refocusing must not trigger a containing popover's focus-out dismissal.
 		onFocus(event) {
 			if (refocusingRef.current) {
 				event.stopPropagation();
