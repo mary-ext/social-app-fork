@@ -1,18 +1,7 @@
-import { useState } from 'react';
-
-import {
-	type InteractionSettings,
-	interactionSettingsFromPreferences,
-	isInteractionSettingsEqual,
-} from '#/lib/interaction-settings';
+import { interactionSettingsFromPreferences, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-
-import * as Toggle from '#/components/forms/Toggle';
-import { Text } from '#/components/Text';
-
-import { m } from '#/paraglide/messages';
 
 import type { DraftInteractionSettingsDialogProps } from './DraftSettingsDialog';
 import { SettingsFlow } from './SettingsFlow';
@@ -26,46 +15,19 @@ import { SettingsFlow } from './SettingsFlow';
 export function DraftSettingsBody({ handle, value, onSave }: DraftInteractionSettingsDialogProps) {
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: saveDefaults } = usePostInteractionSettingsMutation();
-	const [saveAsDefault, setSaveAsDefault] = useState(false);
-
-	const defaults = preferences && interactionSettingsFromPreferences(preferences.postInteractionSettings);
-	const differsFromDefaults = (draft: InteractionSettings) => {
-		return defaults !== undefined && !isInteractionSettingsEqual(draft, defaults);
-	};
 
 	return (
 		<SettingsFlow
+			defaults={preferences && interactionSettingsFromPreferences(preferences.postInteractionSettings)}
 			handle={handle}
 			initialValue={value}
-			onSave={async (draft) => {
-				if (saveAsDefault && differsFromDefaults(draft)) {
+			onSave={async (draft, { saveAsDefault }) => {
+				if (saveAsDefault) {
 					await saveDefaults(draft);
 				}
 				if (!isInteractionSettingsEqual(draft, value)) {
 					onSave(draft);
 				}
-			}}
-			renderFooter={(draft) => {
-				if (!defaults) {
-					return null;
-				}
-				if (!differsFromDefaults(draft)) {
-					return (
-						<Text color="textContrastMedium" size="md">
-							{m['components.dialogs.mutedWord.defaultSettings']()}
-						</Text>
-					);
-				}
-				return (
-					<Toggle.Item
-						checked={saveAsDefault}
-						label={m['components.dialogs.mutedWord.saveOptions']()}
-						onChange={setSaveAsDefault}
-					>
-						<Toggle.CheckboxIndicator />
-						<Text size="md">{m['components.dialogs.mutedWord.saveOptions']()}</Text>
-					</Toggle.Item>
-				);
 			}}
 		/>
 	);

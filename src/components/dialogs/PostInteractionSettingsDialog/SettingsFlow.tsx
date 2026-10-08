@@ -1,6 +1,6 @@
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 
-import type { InteractionSettings } from '#/lib/interaction-settings';
+import { type InteractionSettings, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
 import * as Dialog from '#/components/Dialog';
 import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
@@ -12,18 +12,19 @@ import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 export type SettingsFlowProps = {
+	/** account defaults; enables the save-as-default option. */
+	defaults?: InteractionSettings;
 	handle: Dialog.DialogHandle;
 	/** initial draft; later prop changes are ignored. */
 	initialValue: InteractionSettings;
 	/**
-	 * saves the draft; closes on success or shows an error toast on failure.
+	 * persists the draft. the dialog closes on success or shows an error toast if this throws.
 	 *
 	 * @param value edited settings
+	 * @param options.saveAsDefault true only when selected and the draft differs from `defaults`
 	 * @returns a promise if saving is asynchronous
 	 */
-	onSave: (value: InteractionSettings) => void | Promise<void>;
-	/** renders the pinned footer for the current draft. */
-	renderFooter?: (draft: InteractionSettings) => ReactNode;
+	onSave: (value: InteractionSettings, options: { saveAsDefault: boolean }) => void | Promise<void>;
 	/** shows reply settings as a read-only summary. */
 	replySettingsDisabled?: boolean;
 };
@@ -50,21 +51,25 @@ export function SettingsFlow(props: SettingsFlowProps) {
 }
 
 function SettingsFlowInner({
+	defaults,
 	handle,
 	initialValue,
 	onSave,
-	renderFooter,
 	replySettingsDisabled,
 }: SettingsFlowProps) {
 	const { push, route } = SettingsNavigator.useNavigator();
 
 	const [draft, setDraft] = useState(initialValue);
+	// preserve the selection while the list picker unmounts the form
+	const [saveAsDefault, setSaveAsDefault] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
+
+	const differsFromDefaults = defaults !== undefined && !isInteractionSettingsEqual(draft, defaults);
 
 	const save = async () => {
 		setIsSaving(true);
 		try {
-			await onSave(draft);
+			await onSave(draft, { saveAsDefault: saveAsDefault && differsFromDefaults });
 			handle.close();
 		} catch (e) {
 			console.error('failed to save post interaction settings', e);
@@ -87,8 +92,6 @@ function SettingsFlowInner({
 			);
 		}
 		case 'settings': {
-			const footerContent = renderFooter?.(draft);
-
 			return (
 				<>
 					<Dialog.Header.Root border="scrolling">
@@ -112,10 +115,16 @@ function SettingsFlowInner({
 							onChange={setDraft}
 							onOpenLists={() => push({ name: 'lists' })}
 							replySettingsDisabled={replySettingsDisabled}
+							saveAsDefault={
+								defaults && {
+									checked: saveAsDefault,
+									differsFromDefaults,
+									onChange: setSaveAsDefault,
+								}
+							}
 							value={draft}
 						/>
 					</Dialog.Body>
-					{footerContent && <Dialog.Footer>{footerContent}</Dialog.Footer>}
 				</>
 			);
 		}

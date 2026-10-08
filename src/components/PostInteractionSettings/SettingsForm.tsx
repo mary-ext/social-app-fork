@@ -30,6 +30,14 @@ export type PostInteractionSettingsFormProps = {
 	onChange: (next: InteractionSettings) => void;
 	onOpenLists: () => void;
 	replySettingsDisabled?: boolean;
+	saveAsDefault?: SaveAsDefaultOption;
+};
+
+type SaveAsDefaultOption = {
+	checked: boolean;
+	/** false disables and unchecks the option. */
+	differsFromDefaults: boolean;
+	onChange: (checked: boolean) => void;
 };
 
 /**
@@ -39,6 +47,7 @@ export type PostInteractionSettingsFormProps = {
  * @param props.onChange receives the updated settings
  * @param props.onOpenLists opens the picker for lists whose members can reply
  * @param props.replySettingsDisabled shows reply settings as a read-only summary
+ * @param props.saveAsDefault save-as-default checkbox state and handler; omitted hides the option
  * @returns the settings list
  */
 export function PostInteractionSettingsForm({
@@ -46,6 +55,7 @@ export function PostInteractionSettingsForm({
 	onChange,
 	onOpenLists,
 	replySettingsDisabled,
+	saveAsDefault,
 }: PostInteractionSettingsFormProps) {
 	return (
 		<Settings.List surface="flush">
@@ -78,6 +88,26 @@ export function PostInteractionSettingsForm({
 					/>
 				</Settings.SwitchRow>
 			</Settings.Section>
+
+			{saveAsDefault && (
+				<Settings.Section>
+					<Settings.CheckboxRow
+						checked={saveAsDefault.differsFromDefaults && saveAsDefault.checked}
+						disabled={!saveAsDefault.differsFromDefaults}
+						label={m['components.dialogs.mutedWord.saveOptions']()}
+						onChange={saveAsDefault.onChange}
+					>
+						<Settings.Label
+							subtitleText={
+								saveAsDefault.differsFromDefaults
+									? undefined
+									: m['components.dialogs.mutedWord.defaultSettings']()
+							}
+							titleText={m['components.dialogs.mutedWord.saveOptions']()}
+						/>
+					</Settings.CheckboxRow>
+				</Settings.Section>
+			)}
 		</Settings.List>
 	);
 }
