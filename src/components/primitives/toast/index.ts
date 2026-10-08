@@ -12,7 +12,8 @@ export {
 	type ToastUpdateOptions,
 } from './manager';
 export { Provider, type ProviderProps } from './Provider';
-export { Root, type RootProps, type RootState, type SwipeDirection } from './Root';
+export { Root, type RootProps, type RootState } from './Root';
+export type { SwipeDirection } from '../swipe';
 export { Title, type TitleProps } from './Title';
 export { useToastManager, type UseToastManagerReturnValue } from './use-toast-manager';
 export { Viewport, type ViewportProps, type ViewportState } from './Viewport';

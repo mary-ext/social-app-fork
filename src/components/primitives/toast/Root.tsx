@@ -9,10 +9,9 @@ import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { useTransitionsSettled } from '../presence';
+import { getDisplacement, resist, SWIPE_IGNORE_ATTRIBUTE, type SwipeDirection } from '../swipe';
 import type { ToastObject } from './manager';
 import { expandedStateAttributes, RootContext, type RootContextValue, useProviderContext } from './shared';
-
-export type SwipeDirection = 'down' | 'left' | 'right' | 'up';
 
 export type RootState = {
 	type: string | undefined;
@@ -31,30 +30,13 @@ export type RootProps = useRender.ComponentProps<'div', RootState> & {
 const SWIPE_THRESHOLD = 40;
 const REVERSE_CANCEL_THRESHOLD = 10;
 const LOCK_THRESHOLD = 2;
-const SWIPE_IGNORE_SELECTOR = `${INTERACTIVE_SELECTOR}, input, select, textarea, [data-swipe-ignore]`;
+const SWIPE_IGNORE_SELECTOR = `${INTERACTIVE_SELECTOR}, input, select, textarea, [${SWIPE_IGNORE_ATTRIBUTE}]`;
 
 const rootStateAttributes = {
 	type: (type: string | undefined): Record<string, string> | null => (type ? { 'data-type': type } : null),
 	...expandedStateAttributes,
 	limited: (limited: boolean): Record<string, string> | null => (limited ? { 'data-limited': '' } : null),
 	closed: (closed: boolean): Record<string, string> | null => (closed ? { 'data-closed': '' } : null),
-};
-
-const getDisplacement = (direction: SwipeDirection, x: number, y: number): number => {
-	switch (direction) {
-		case 'down': {
-			return y;
-		}
-		case 'left': {
-			return -x;
-		}
-		case 'right': {
-			return x;
-		}
-		case 'up': {
-			return -y;
-		}
-	}
 };
 
 // resist dragging in directions that cannot dismiss the toast.
@@ -65,7 +47,7 @@ const damp = (
 	negative: SwipeDirection,
 ): number => {
 	const allowed = directions.includes(delta > 0 ? positive : negative);
-	return allowed ? delta : Math.sign(delta) * Math.abs(delta) ** 0.5;
+	return allowed ? delta : resist(delta);
 };
 
 // avoid React renders on pointer movement.
