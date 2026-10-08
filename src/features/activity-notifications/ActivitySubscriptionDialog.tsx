@@ -3,7 +3,7 @@ import { RadioGroup } from '@base-ui/react/radio-group';
 import {
 	useNotificationDeclarationMutation,
 	useNotificationDeclarationQuery,
-} from '#/state/queries/activity-subscriptions';
+} from '#/features/activity-notifications/queries';
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';

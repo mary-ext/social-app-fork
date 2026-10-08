@@ -14,8 +14,9 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 import { cleanError } from '#/lib/errors';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
 import { getClients } from '#/state/session';
+
+import { RQKEY_getActivitySubscriptions } from '#/features/activity-notifications/queries';
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';

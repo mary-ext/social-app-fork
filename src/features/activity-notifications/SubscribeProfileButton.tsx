@@ -1,7 +1,8 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
+import { SubscribeProfileDialog } from '#/features/activity-notifications/SubscribeProfileDialog';
+
 import * as Dialog from '#/components/Dialog';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

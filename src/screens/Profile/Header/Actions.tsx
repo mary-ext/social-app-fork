@@ -1,4 +1,5 @@
-import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
+import { SubscribeProfileButton } from '#/features/activity-notifications/SubscribeProfileButton';
+
 import * as Dialog from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
 import * as Prompt from '#/components/Prompt';

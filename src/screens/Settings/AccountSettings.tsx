@@ -4,13 +4,15 @@ import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 import { useContentVisibilityMutation, useContentVisibilityQuery } from '#/state/queries/content-visibility';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
+
+import { ActivitySubscriptionDialog } from '#/features/activity-notifications/ActivitySubscriptionDialog';
+import { useNotificationDeclarationQuery } from '#/features/activity-notifications/queries';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/Settings';
@@ -23,7 +25,6 @@ import MagnifyingGlassIcon from '#/icons/central/MagnifyingGlass_round_outlined_
 import RobotIcon from '#/icons/central/Robot_round_outlined_radius0_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
 import { PrivacyRequestDialog } from './components/PrivacyRequestDialog';
 

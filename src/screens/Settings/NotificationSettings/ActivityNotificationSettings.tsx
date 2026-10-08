@@ -5,7 +5,6 @@ import { cleanError } from '#/lib/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActivitySubscriptionsQuery } from '#/state/queries/activity-subscriptions';
 import {
 	useNotificationSettingsQuery,
 	useNotificationSettingsUpdateMutation,
@@ -14,7 +13,9 @@ import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
-import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
+import { useActivitySubscriptionsQuery } from '#/features/activity-notifications/queries';
+import { SubscribeProfileDialog } from '#/features/activity-notifications/SubscribeProfileDialog';
+
 import * as Dialog from '#/components/Dialog';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
