@@ -328,7 +328,7 @@ function WizardInner({
 							label={m['common.action.edit']()}
 							color="secondary"
 							size="small"
-							onClick={() => editDialogHandle.open(null)}
+							onClick={() => editDialogHandle.open()}
 						>
 							<ButtonText>{m['common.action.edit']()}</ButtonText>
 						</Button>

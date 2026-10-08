@@ -60,10 +60,10 @@ export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 		if (isThreadAuthor) {
 			// wait briefly for prefetch, then open while showing the spinner.
 			void Promise.race([prefetchPromise.current, new Promise((res) => setTimeout(res, 200))]).finally(() => {
-				editDialogHandle.open(null);
+				editDialogHandle.open();
 			});
 		} else {
-			infoDialogHandle.open(null);
+			infoDialogHandle.open();
 		}
 	};
 

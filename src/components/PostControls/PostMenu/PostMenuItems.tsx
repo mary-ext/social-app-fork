@@ -410,9 +410,7 @@ function PostMenuItems({
 											: m['components.postControls.replyVisibility.hide.action']()
 									}
 									onClick={
-										isReplyHiddenByThreadgate
-											? onToggleReplyVisibility
-											: () => hideReplyConfirmHandle.open(null)
+										isReplyHiddenByThreadgate ? onToggleReplyVisibility : () => hideReplyConfirmHandle.open()
 									}
 								>
 									<Menu.ItemText>
@@ -435,7 +433,7 @@ function PostMenuItems({
 									onClick={
 										quoteEmbed.isDetached
 											? onToggleQuotePostAttachment
-											: () => quotePostDetachConfirmHandle.open(null)
+											: () => quotePostDetachConfirmHandle.open()
 									}
 								>
 									<Menu.ItemText>
@@ -467,9 +465,9 @@ function PostMenuItems({
 										}
 										onClick={() => {
 											if (postAuthor.viewer?.muted) {
-												unmutePromptHandle.open(null);
+												unmutePromptHandle.open();
 											} else {
-												mutePromptHandle.open(null);
+												mutePromptHandle.open();
 											}
 										}}
 									>
@@ -484,7 +482,7 @@ function PostMenuItems({
 									{!postAuthor.viewer?.blocking && (
 										<Menu.Item
 											label={m['common.block.action.blockAccount']()}
-											onClick={() => blockPromptHandle.open(null)}
+											onClick={() => blockPromptHandle.open()}
 										>
 											<Menu.ItemText>{m['common.block.action.blockAccount']()}</Menu.ItemText>
 											<Menu.ItemIcon icon={PersonX} position="right" />
@@ -493,7 +491,7 @@ function PostMenuItems({
 
 									<Menu.Item
 										label={m['components.postControls.report.post']()}
-										onClick={() => reportDialogHandle.open(null)}
+										onClick={() => reportDialogHandle.open()}
 									>
 										<Menu.ItemText>{m['components.postControls.report.post']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Warning} position="right" />
@@ -505,13 +503,13 @@ function PostMenuItems({
 								<>
 									<Menu.Item
 										label={m['components.postControls.interaction.edit']()}
-										onClick={() => postInteractionSettingsHandle.open(null)}
+										onClick={() => postInteractionSettingsHandle.open()}
 										onMouseEnter={() => void prefetchPostInteractionSettings()}
 									>
 										<Menu.ItemText>{m['components.postControls.interaction.edit']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Gear} position="right" />
 									</Menu.Item>
-									<Menu.Item label={m['common.post.delete']()} onClick={() => deletePromptHandle.open(null)}>
+									<Menu.Item label={m['common.post.delete']()} onClick={() => deletePromptHandle.open()}>
 										<Menu.ItemText>{m['common.post.delete']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Trash} position="right" />
 									</Menu.Item>

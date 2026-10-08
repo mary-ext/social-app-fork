@@ -98,7 +98,7 @@ function OverflowMenu() {
 					<Menu.Group>
 						<Menu.Item
 							label={m['components.followCleanupDialog.title']()}
-							onClick={() => cleanupHandle.open(null)}
+							onClick={() => cleanupHandle.open()}
 						>
 							<Menu.ItemText>{m['components.followCleanupDialog.title']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={PeopleRemoveRoundIcon} position="right" />

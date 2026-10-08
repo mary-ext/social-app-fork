@@ -21,7 +21,7 @@ export function ListsScreen() {
 	const createListHandle = Dialog.useDialogHandle();
 
 	const onPressNewList = () => {
-		createListHandle.open(null);
+		createListHandle.open();
 	};
 
 	const onCreateList = (uri: string) => {

@@ -135,7 +135,7 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 							color="secondary"
 							disabled={record === undefined}
 							label={viewFileLabel}
-							onClick={() => dialog.open(null)}
+							onClick={() => dialog.open()}
 							size="tiny"
 							variant="ghost"
 						>

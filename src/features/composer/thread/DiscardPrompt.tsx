@@ -54,7 +54,7 @@ export const useDiscardGuard = (composer: Composer): DiscardGuard => {
 				draftSaveBlocker: getDraftSaveBlocker(composer.wg.state),
 				isDraft: composer.draft !== null,
 			});
-			handle.open(null);
+			handle.open();
 			return true;
 		},
 		prompt: { handle, ...snapshot },

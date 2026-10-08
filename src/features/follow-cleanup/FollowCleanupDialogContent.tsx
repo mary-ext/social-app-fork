@@ -274,7 +274,7 @@ const CleanupFlow = () => {
 						color="negative"
 						disabled={selectedCount === 0 || isUnfollowing}
 						label={unfollowLabel}
-						onClick={() => confirmHandle.open(null)}
+						onClick={() => confirmHandle.open()}
 						size="small"
 						variant="solid"
 					>

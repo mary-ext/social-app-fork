@@ -48,7 +48,7 @@ export function MessagesListBlockedFooter({
 
 	const onUnblockPress = () => {
 		if (listBlocks.length) {
-			blockedByListPromptHandle.open(null);
+			blockedByListPromptHandle.open();
 		} else {
 			void queueUnblock();
 		}
@@ -84,7 +84,7 @@ export function MessagesListBlockedFooter({
 					className={css.button}
 					color="secondary_inverted"
 					label={m['common.chat.action.leave']()}
-					onClick={() => leaveConvoPromptHandle.open(null)}
+					onClick={() => leaveConvoPromptHandle.open()}
 					size="large"
 				>
 					<ButtonIcon icon={LeaveIcon} />

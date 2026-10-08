@@ -76,7 +76,7 @@ export function AccountSettingsScreen() {
 
 						<Settings.ButtonRow
 							label={m['screens.settings.export.action.export']()}
-							onPress={() => exportCarHandle.open(null)}
+							onPress={() => exportCarHandle.open()}
 						>
 							<Settings.Icon icon={CarIcon} />
 							<Settings.Label titleText={m['screens.settings.export.action.export']()} />
@@ -86,7 +86,7 @@ export function AccountSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.privacy.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.activitySubscription.allowNotifying']()}
-							onPress={() => activityHandle.open(null)}
+							onPress={() => activityHandle.open()}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label
@@ -173,7 +173,7 @@ const PrivacyRequestRow = ({
 
 	return (
 		<>
-			<Settings.ButtonRow label={titleText} onPress={() => handle.open(null)}>
+			<Settings.ButtonRow label={titleText} onPress={() => handle.open()}>
 				<Settings.Icon icon={icon} />
 				<Settings.Label loading={!isError && loading} subtitleText={subtitleText} titleText={titleText} />
 			</Settings.ButtonRow>

@@ -195,7 +195,7 @@ function SubscriptionRow({
 					<Button
 						color="primary"
 						label={m['screens.settings.notifications.activity.a11y.edit']({ handle: profile.handle })}
-						onClick={() => editHandle.open(null)}
+						onClick={() => editHandle.open()}
 						size="small"
 						variant="solid"
 					>

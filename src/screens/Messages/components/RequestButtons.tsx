@@ -127,7 +127,7 @@ export function RejectMenu({
 							<Menu.ItemIcon icon={PersonXIcon} position="right" />
 						</Menu.Item>
 						{reportSubject && (
-							<Menu.Item label={m['common.chat.action.report']()} onClick={() => reportHandle.open(null)}>
+							<Menu.Item label={m['common.chat.action.report']()} onClick={() => reportHandle.open()}>
 								<Menu.ItemText>{m['common.chat.action.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={FlagIcon} position="right" />
 							</Menu.Item>
@@ -149,7 +149,7 @@ export function RejectMenu({
 							if (sender) {
 								unstableCacheProfileView(queryClient, sender);
 							}
-							blockOrDeleteHandle.open(null);
+							blockOrDeleteHandle.open();
 						}}
 					/>
 					<AfterReportDialog
@@ -166,7 +166,7 @@ export function RejectMenu({
 						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportDid}
-						onAfterSubmit={() => blockOrDeleteHandle.open(null)}
+						onAfterSubmit={() => blockOrDeleteHandle.open()}
 					/>
 					<AfterReportDialog
 						convo={convo}

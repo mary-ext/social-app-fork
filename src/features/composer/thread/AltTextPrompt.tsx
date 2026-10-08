@@ -39,7 +39,7 @@ export const useAltTextGuard = (): AltTextGuard => {
 				return false;
 			}
 
-			handle.open(null);
+			handle.open();
 			return true;
 		},
 		prompt: { handle },

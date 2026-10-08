@@ -181,7 +181,7 @@ function SwitchMenuItems({
 				<Menu.ItemIcon icon={PlusIcon} />
 				<Menu.ItemText>{m['common.account.action.addAnother']()}</Menu.ItemText>
 			</Menu.Item>
-			<Menu.Item label={m['common.session.action.signOut']()} onClick={() => signOutPromptHandle.open(null)}>
+			<Menu.Item label={m['common.session.action.signOut']()} onClick={() => signOutPromptHandle.open()}>
 				<Menu.ItemIcon icon={LeaveIcon} />
 				<Menu.ItemText>{m['common.session.action.signOut']()}</Menu.ItemText>
 			</Menu.Item>

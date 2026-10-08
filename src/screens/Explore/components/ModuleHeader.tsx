@@ -115,7 +115,7 @@ function PinButtonInner({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 				color="secondary"
 				disabled={isPending}
 				label={m['common.feeds.action.add']()}
-				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
+				onClick={isSaved ? () => removePromptHandle.open() : () => void toggleSave()}
 				shape="round"
 				size="small"
 				variant="ghost"

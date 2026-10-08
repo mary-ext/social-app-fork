@@ -66,7 +66,7 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 					currentScreen="conversation"
 					icon={true}
 					label={m['common.action.leave']()}
-					onClick={() => leaveConvoPromptHandle.open(null)}
+					onClick={() => leaveConvoPromptHandle.open()}
 					size="large"
 				/>
 				<LeaveConvoPrompt

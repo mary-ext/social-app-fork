@@ -1,29 +1,13 @@
 import { style } from '@vanilla-extract/css';
 
+import { backdrop as dialogBackdrop } from '#/components/Dialog/Popup.css';
+
 import { vars } from '#/styles/contract.css';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { zIndex } from '#/styles/tokens.css';
 
-export const portal = style(
-	layered(components, {
-		zIndex: zIndex.modal,
-	}),
-);
-
-export const backdrop = style(
-	layered(components, {
-		position: 'fixed',
-		inset: 0,
-		transitionDuration: '150ms',
-		transitionProperty: 'opacity',
-		backgroundColor: 'rgba(0, 0, 0, 0.8)',
-		selectors: {
-			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
-		},
-	}),
-);
+export const backdrop = style([dialogBackdrop]);
 
 export const viewport = style(
 	layered(components, {
@@ -56,8 +40,9 @@ export const popup = recipe(
 			padding: 24,
 			width: '100%',
 			selectors: {
-				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
+				'&[data-closed]': { transform: 'scale(0.95)', opacity: 0 },
 			},
+			'@starting-style': { transform: 'scale(0.95)', opacity: 0 },
 		},
 		defaultVariants: { size: 'default' },
 		variants: {

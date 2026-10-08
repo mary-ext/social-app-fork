@@ -59,7 +59,7 @@ export function DialogSearchAutocomplete({
 	// handle.open triggers onOpenChange, which updates the dialog registry.
 	const openAt = (next: InputSelection) => {
 		setSelection(next);
-		handle.open(null);
+		handle.open();
 	};
 
 	const openAtEnd = useNonReactiveCallback(() => {

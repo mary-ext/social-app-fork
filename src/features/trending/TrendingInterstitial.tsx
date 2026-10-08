@@ -61,7 +61,7 @@ export function TrendingInterstitial() {
 						color="secondary"
 						shape="round"
 						label={m['components.trendingTopics.a11y.hide']()}
-						onClick={() => trendingPrompt.open(null)}
+						onClick={() => trendingPrompt.open()}
 						className={css.hideButton}
 					>
 						<ButtonIcon icon={XIcon} size="xs" />

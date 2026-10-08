@@ -209,7 +209,7 @@ function SaveButtonInner({ pin, view }: { pin?: boolean; view: AppBskyFeedDefs.G
 				color={isSaved ? 'secondary' : 'primary'}
 				disabled={isPending}
 				label={m['common.feeds.action.add']()}
-				onClick={isSaved ? () => removePromptHandle.open(null) : () => void toggleSave()}
+				onClick={isSaved ? () => removePromptHandle.open() : () => void toggleSave()}
 				size="small"
 				variant="solid"
 			>

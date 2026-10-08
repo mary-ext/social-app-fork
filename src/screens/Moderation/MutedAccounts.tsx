@@ -143,7 +143,7 @@ function OverflowMenu() {
 					<Menu.Item
 						destructive
 						label={m['screens.moderation.mute.unmuteAll.action']()}
-						onClick={() => clearHandle.open(null)}
+						onClick={() => clearHandle.open()}
 					>
 						<Menu.ItemText>{m['screens.moderation.mute.unmuteAll.action']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={Unmute} position="right" />

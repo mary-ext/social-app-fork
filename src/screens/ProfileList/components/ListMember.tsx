@@ -76,7 +76,7 @@ export const ListMember = memo(function ListMember({
 									<Menu.Item
 										destructive
 										label={m['screens.profileList.members.remove']()}
-										onClick={() => removePromptHandle.open(null)}
+										onClick={() => removePromptHandle.open()}
 									>
 										<Menu.ItemIcon icon={TrashIcon} />
 										<Menu.ItemText>{m['screens.profileList.members.remove']()}</Menu.ItemText>

@@ -1,10 +1,10 @@
 import type { LightboxImage } from '@oomfware/lightbox';
 
-import { Dialog } from '@base-ui/react/dialog';
-
 import type { SessionAccount } from '#/state/session';
 
 import type { ReportSubject } from '#/features/reporting/types';
+
+import * as Dialog from '#/components/primitives/dialog';
 
 /** the images and the index to open the global lightbox on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };

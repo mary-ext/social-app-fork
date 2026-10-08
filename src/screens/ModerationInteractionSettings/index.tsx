@@ -74,7 +74,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			<div className={styles.formBleed}>
 				<PostInteractionSettingsForm
 					onChange={setDraft}
-					onOpenLists={() => listsHandle.open(null)}
+					onOpenLists={() => listsHandle.open()}
 					value={draft}
 				/>
 			</div>

@@ -74,7 +74,7 @@ export function AiSettingsScreen() {
 
 						<Settings.ButtonRow
 							label={m['screens.settings.ai.provider.add']()}
-							onPress={() => pickerDialogHandle.open(null)}
+							onPress={() => pickerDialogHandle.open()}
 						>
 							<Settings.Icon icon={PlusIcon} />
 							<Settings.Label titleText={m['screens.settings.ai.provider.add']()} />
@@ -188,7 +188,7 @@ const ModelRow = ({
 
 	return (
 		<>
-			<Settings.ButtonRow label={titleText} onPress={() => dialogHandle.open(null)}>
+			<Settings.ButtonRow label={titleText} onPress={() => dialogHandle.open()}>
 				<Settings.Icon icon={icon} />
 				<Settings.Label titleText={titleText} subtitleText={subtitleText} />
 			</Settings.ButtonRow>

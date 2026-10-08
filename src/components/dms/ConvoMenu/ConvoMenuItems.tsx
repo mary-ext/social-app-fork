@@ -96,7 +96,7 @@ export function ConvoMenuItems({
 
 	const toggleBlock = () => {
 		if (listBlocks.length) {
-			blockedByListPromptHandle.open(null);
+			blockedByListPromptHandle.open();
 			return;
 		}
 
@@ -114,7 +114,7 @@ export function ConvoMenuItems({
 					<Menu.Item
 						destructive
 						label={m['components.dms.leave.action.conversation']()}
-						onClick={() => leaveConvoPromptHandle.open(null)}
+						onClick={() => leaveConvoPromptHandle.open()}
 					>
 						<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 						<Menu.ItemText>{m['components.dms.leave.action.conversation']()}</Menu.ItemText>
@@ -176,7 +176,7 @@ export function ConvoMenuItems({
 								<Menu.Item
 									destructive
 									label={m['common.chat.action.report']()}
-									onClick={() => reportHandle.open(null)}
+									onClick={() => reportHandle.open()}
 								>
 									<Menu.ItemIcon icon={Flag} />
 									<Menu.ItemText>{m['common.chat.action.report']()}</Menu.ItemText>
@@ -188,7 +188,7 @@ export function ConvoMenuItems({
 							<Menu.Item
 								destructive
 								label={m['components.dms.leave.action.conversation']()}
-								onClick={() => leaveConvoPromptHandle.open(null)}
+								onClick={() => leaveConvoPromptHandle.open()}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 								<Menu.ItemText>{m['components.dms.leave.action.conversation']()}</Menu.ItemText>
@@ -214,7 +214,7 @@ export function ConvoMenuItems({
 							if (sender) {
 								unstableCacheProfileView(queryClient, sender);
 							}
-							blockOrDeleteHandle.open(null);
+							blockOrDeleteHandle.open();
 						}}
 					/>
 					<AfterReportDialog
@@ -231,7 +231,7 @@ export function ConvoMenuItems({
 						convoId={convoId}
 						did={reportDid}
 						handle={reportHandle}
-						onAfterSubmit={() => deleteHandle.open(null)}
+						onAfterSubmit={() => deleteHandle.open()}
 					/>
 					<AfterReportDialog
 						convo={convo}

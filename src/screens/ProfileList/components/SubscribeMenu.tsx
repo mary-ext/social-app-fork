@@ -62,14 +62,14 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 					<Menu.Group>
 						<Menu.Item
 							label={m['screens.profileList.mute.action.accounts']()}
-							onClick={() => subscribeMutePromptHandle.open(null)}
+							onClick={() => subscribeMutePromptHandle.open()}
 						>
 							<Menu.ItemText>{m['screens.profileList.mute.action.accounts']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={MuteIcon} />
 						</Menu.Item>
 						<Menu.Item
 							label={m['screens.profileList.block.action.accounts']()}
-							onClick={() => subscribeBlockPromptHandle.open(null)}
+							onClick={() => subscribeBlockPromptHandle.open()}
 						>
 							<Menu.ItemText>{m['screens.profileList.block.action.accounts']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={PersonXIcon} />

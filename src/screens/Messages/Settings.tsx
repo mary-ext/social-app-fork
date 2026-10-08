@@ -92,7 +92,7 @@ export function MessagesSettingsScreen() {
 					<Settings.Section>
 						<Settings.ButtonRow
 							label={m['screens.messages.export.action']()}
-							onPress={() => exportCarHandle.open(null)}
+							onPress={() => exportCarHandle.open()}
 						>
 							<Settings.Icon icon={CarIcon} />
 							<Settings.Label titleText={m['screens.messages.export.action']()} />

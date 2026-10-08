@@ -39,8 +39,6 @@ export function ProfileHeaderShell({ children }: { children: ReactNode }): React
 
 	const canViewMedia = !(mediaModeration.blurs.length > 0 && mediaModeration.noOverride);
 
-	// open the lightbox via Dialog.Trigger, not an imperative openWithPayload: the singleton also hosts every
-	// post image's trigger, and Base UI would let one of those clobber an imperatively-set payload
 	const bannerImage = (
 		<UserBanner
 			type={isLabeler ? 'labeler' : 'default'}
@@ -98,7 +96,7 @@ export function ProfileHeaderShell({ children }: { children: ReactNode }): React
 						type="button"
 						className={css.avatarButton}
 						aria-label={avatarLabel}
-						onClick={() => liveStatusHandle.open(null)}
+						onClick={() => liveStatusHandle.open()}
 					>
 						{avatarBody}
 					</button>

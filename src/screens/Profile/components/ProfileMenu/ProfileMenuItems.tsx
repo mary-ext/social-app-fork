@@ -93,7 +93,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 	};
 
 	const onPressAddToStarterPacks = () => {
-		addToStarterPacksDialogHandle.open(null);
+		addToStarterPacksDialogHandle.open();
 	};
 
 	const onPressShare = () => {
@@ -166,7 +166,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 	};
 
 	const onPressReportAccount = () => {
-		reportDialogHandle.open(null);
+		reportDialogHandle.open();
 	};
 
 	const onPressShareATUri = () => {
@@ -185,7 +185,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 						label={m['view.profile.sharing.action.copyLink']()}
 						onClick={() => {
 							if (showLoggedOutWarning) {
-								loggedOutWarningPromptHandle.open(null);
+								loggedOutWarningPromptHandle.open();
 							} else {
 								onPressShare();
 							}
@@ -213,10 +213,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 								<Menu.ItemText>{m['common.starterPack.action.add']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={StarterPack} />
 							</Menu.Item>
-							<Menu.Item
-								label={m['view.profile.list.add']()}
-								onClick={() => addToListsDialogHandle.open(null)}
-							>
+							<Menu.Item label={m['view.profile.list.add']()} onClick={() => addToListsDialogHandle.open()}>
 								<Menu.ItemText>{m['view.profile.list.add']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={ListAdd} />
 							</Menu.Item>
@@ -231,9 +228,9 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 									}
 									onClick={() => {
 										if (status.isDisabled) {
-											goLiveDisabledDialogHandle.open(null);
+											goLiveDisabledDialogHandle.open();
 										} else {
-											goLiveDialogHandle.open(null);
+											goLiveDialogHandle.open();
 										}
 									}}
 								>
@@ -278,9 +275,9 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 												}
 												onClick={() => {
 													if (profile.viewer?.muted) {
-														unmutePromptHandle.open(null);
+														unmutePromptHandle.open();
 													} else {
-														mutePromptHandle.open(null);
+														mutePromptHandle.open();
 													}
 												}}
 											>
@@ -294,7 +291,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 											{profile.viewer?.muted && (
 												<Menu.Item
 													label={m['common.mute.action.changeDuration']()}
-													onClick={() => changeMuteDurationPromptHandle.open(null)}
+													onClick={() => changeMuteDurationPromptHandle.open()}
 												>
 													<Menu.ItemText>{m['common.mute.action.changeDuration']()}</Menu.ItemText>
 													<Menu.ItemIcon icon={Timer} />
@@ -309,7 +306,7 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 													? m['common.block.action.unblockAccount']()
 													: m['common.block.action.blockAccount']()
 											}
-											onClick={() => blockPromptHandle.open(null)}
+											onClick={() => blockPromptHandle.open()}
 										>
 											<Menu.ItemText>
 												{profile.viewer?.blocking

@@ -35,7 +35,7 @@ export function CreateListFromStarterPackDialog({
 
 	const onPressCreate = () => {
 		handle.close();
-		createListHandle.open(null);
+		createListHandle.open();
 	};
 
 	const onListCreated = (listUri: string) => {

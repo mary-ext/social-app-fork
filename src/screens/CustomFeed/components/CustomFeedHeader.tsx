@@ -74,7 +74,7 @@ export function CustomFeedHeader({ info, isTrending }: { info: FeedSourceFeedInf
 	// close this dialog before opening the report dialog so they don't stack on top of each other
 	const onPressReport = () => {
 		infoHandle.close();
-		reportDialogHandle.open(null);
+		reportDialogHandle.open();
 	};
 
 	const [likeUri, setLikeUri] = useState(info.likeUri || '');
@@ -242,7 +242,7 @@ export function CustomFeedHeader({ info, isTrending }: { info: FeedSourceFeedInf
 						variant="ghost"
 						shape="round"
 						color="secondary"
-						onClick={() => infoHandle.open(null)}
+						onClick={() => infoHandle.open()}
 					>
 						<ButtonIcon icon={Ellipsis} size="lg" />
 					</Button>

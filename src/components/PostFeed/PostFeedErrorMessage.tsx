@@ -109,7 +109,7 @@ function FeedgenErrorMessage({
 	};
 
 	const onPressRemoveFeed = () => {
-		removePromptHandle.open(null);
+		removePromptHandle.open();
 	};
 
 	const onRemoveFeed = async () => {

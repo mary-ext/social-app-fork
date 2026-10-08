@@ -1,15 +1,11 @@
 import { keyframes, style } from '@vanilla-extract/css';
 
 import { hover } from '#/styles/interaction';
-import { borderRadius, iconSize, space, zIndex } from '#/styles/tokens.css';
+import { borderRadius, iconSize, space } from '#/styles/tokens.css';
 
 const fadeIn = keyframes({
 	from: { opacity: 0 },
 	to: { opacity: 1 },
-});
-
-export const portal = style({
-	zIndex: zIndex.modal,
 });
 
 export const backdrop = style({
@@ -19,8 +15,9 @@ export const backdrop = style({
 	opacity: 1,
 	background: 'rgba(0, 0, 0, 0.92)',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
+		'&[data-closed]': { opacity: 0 },
 	},
+	'@starting-style': { opacity: 0 },
 });
 
 export const popup = style({
@@ -29,8 +26,9 @@ export const popup = style({
 	transition: 'opacity 200ms ease, transform 200ms ease',
 	outline: 'none',
 	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.96)', opacity: 0 },
+		'&[data-closed]': { transform: 'scale(0.96)', opacity: 0 },
 	},
+	'@starting-style': { transform: 'scale(0.96)', opacity: 0 },
 });
 
 export const viewport = style({

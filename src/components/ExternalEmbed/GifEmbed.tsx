@@ -115,7 +115,7 @@ function AltBadge({ text }: { text: string }) {
 				type="button"
 				className={styles.altBadge}
 				aria-label={m['common.altText.show']()}
-				onClick={() => handle.open(null)}
+				onClick={() => handle.open()}
 			>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
 					{m['common.altText.badge']()}

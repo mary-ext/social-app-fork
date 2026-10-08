@@ -29,7 +29,7 @@ export const MessageContextMenu = ({
 	message: ChatBskyConvoDefs.MessageView;
 	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOptions | undefined;
-	/** The trigger element (a message-hover button); receives Base UI trigger props + `{ open }` state. */
+	/** message-hover button renderer; receives trigger props and `{ open }` state. */
 	render: ComponentProps<typeof Menu.Trigger>['render'];
 }): ReactNode => {
 	const { currentAccount } = useSession();

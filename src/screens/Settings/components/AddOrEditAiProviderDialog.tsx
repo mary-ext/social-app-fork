@@ -160,7 +160,7 @@ const DialogInner = ({ close, payload }: { close: () => void; payload: AiProvide
 						<Button
 							color="negative"
 							label={m['common.action.remove']()}
-							onClick={() => removePromptHandle.open(null)}
+							onClick={() => removePromptHandle.open()}
 							size="small"
 							variant="ghost"
 						>

@@ -30,7 +30,7 @@ export function EditProfileDialog({
 					// caused by the discard prompt itself) — save/discard close imperatively and pass through
 					if (!open && dirty && details.reason !== 'imperative-action') {
 						details.cancel();
-						cancelHandle.open(null);
+						cancelHandle.open();
 					}
 				}}
 			>

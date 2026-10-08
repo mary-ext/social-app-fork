@@ -447,7 +447,7 @@ export type InlineButtonProps = Pick<TextProps, 'align' | 'color' | 'leading' | 
 		children: ReactNode;
 		/** Accessible name; becomes the button's `aria-label`. */
 		label?: string;
-		/** Forwarded to the `<button>` so it can back a headless trigger (e.g. a Base UI dialog). */
+		/** forwarded to the underlying button for headless triggers. */
 		ref?: Ref<HTMLButtonElement>;
 		/** Underline timing; defaults to `hover`. */
 		underline?: InlineLinkUnderline;

@@ -38,7 +38,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 		<ChatFooter heading={m['screens.messages.connection.ended']()} icon={CircleXIcon}>
 			{isOwner ? null : (
 				<>
-					<button className={css.action} onClick={() => leaveChatPrompt.open(null)} type="button">
+					<button className={css.action} onClick={() => leaveChatPrompt.open()} type="button">
 						<Text color="negative_500" numberOfLines={1} size="sm" weight="semiBold">
 							{m['common.chat.action.leave']()}
 						</Text>

@@ -48,7 +48,7 @@ function Inner() {
 						color="secondary"
 						shape="round"
 						label={m['components.trendingTopics.a11y.options']()}
-						onClick={() => trendingPrompt.open(null)}
+						onClick={() => trendingPrompt.open()}
 						className={css.optionsButton}
 					>
 						<ButtonIcon icon={Ellipsis} size="xs" />

@@ -76,7 +76,7 @@ export function UnblockButton() {
 				color="secondary"
 				disabled={!hasSession}
 				label={m['common.block.action.unblock']()}
-				onClick={() => unblockHandle.open(null)}
+				onClick={() => unblockHandle.open()}
 				size="small"
 			>
 				<ButtonText>{m['common.block.action.unblock']()}</ButtonText>

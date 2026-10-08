@@ -83,7 +83,7 @@ export const LanguagePopups = ({
 						})}
 					</Menu.Group>
 					<Menu.Separator />
-					<Menu.Item onClick={() => dialog.open(null)}>
+					<Menu.Item onClick={() => dialog.open()}>
 						<Menu.ItemText>{m['features.composer.language.more']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={ChevronRightIcon} position="right" />
 					</Menu.Item>

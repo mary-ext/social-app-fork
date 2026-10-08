@@ -39,7 +39,7 @@ export function DraftsButton({
 				disabled={isPublishing}
 				onClick={() => {
 					if (!discard.intercept()) {
-						dialogHandle.open(null);
+						dialogHandle.open();
 					}
 				}}
 			>
@@ -50,7 +50,7 @@ export function DraftsButton({
 				{...discard.prompt}
 				onProceed={() => {
 					onReset();
-					dialogHandle.open(null);
+					dialogHandle.open();
 				}}
 			/>
 			<DraftsDialog handle={dialogHandle} onSelect={onSelect} />

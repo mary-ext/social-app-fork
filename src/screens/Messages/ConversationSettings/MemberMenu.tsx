@@ -188,7 +188,7 @@ function MemberMenuItems({
 								? m['screens.messages.block.unblock']({ name: displayName })
 								: m['screens.messages.block.block']({ name: displayName })
 						}
-						onClick={() => blockMemberHandle.open(null)}
+						onClick={() => blockMemberHandle.open()}
 					>
 						<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon} />
 						<Menu.ItemText>
@@ -202,7 +202,7 @@ function MemberMenuItems({
 					<Menu.Item
 						destructive
 						label={m['screens.messages.members.remove.a11y']({ name: displayName })}
-						onClick={() => removeMemberPrompt.open(null)}
+						onClick={() => removeMemberPrompt.open()}
 					>
 						<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 						<Menu.ItemText>{m['screens.messages.members.remove.action']()}</Menu.ItemText>

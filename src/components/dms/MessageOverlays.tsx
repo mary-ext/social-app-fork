@@ -55,7 +55,7 @@ export function MessageOverlays({ children }: { children: ReactNode }) {
 
 	const openDeleteMessage = (message: ChatBskyConvoDefs.MessageView) => {
 		setDeleteTarget(message);
-		deleteControl.open(null);
+		deleteControl.open();
 	};
 
 	const openReportMessage = (
@@ -63,14 +63,14 @@ export function MessageOverlays({ children }: { children: ReactNode }) {
 		senderProfile: AnyProfileView | undefined,
 	) => {
 		setReportTarget({ message, senderProfile });
-		reportHandle.open(null);
+		reportHandle.open();
 	};
 
 	// AfterReportDialog is conditionally mounted, so we can't open it in the same tick that we set its
 	// target - the handle isn't attached yet. Open in an effect after the dialog has mounted.
 	useEffect(() => {
 		if (afterReportTarget) {
-			afterReportHandle.open(null);
+			afterReportHandle.open();
 		}
 	}, [afterReportTarget, afterReportHandle]);
 

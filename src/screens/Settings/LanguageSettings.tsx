@@ -106,7 +106,7 @@ export function LanguageSettingsScreen() {
 						</Settings.SelectRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.language.content.select']()}
-							onPress={() => contentLanguagePrefsHandle.open(null)}
+							onPress={() => contentLanguagePrefsHandle.open()}
 						>
 							<Settings.Icon icon={FilterIcon} />
 							<Settings.Label

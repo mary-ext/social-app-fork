@@ -97,7 +97,7 @@ export function SettingsScreen() {
 						<Settings.ActionRow
 							color="negative"
 							label={m['common.session.action.signOut']()}
-							onPress={() => signOutPromptHandle.open(null)}
+							onPress={() => signOutPromptHandle.open()}
 						>
 							<Settings.Label titleText={m['common.session.action.signOut']()} />
 						</Settings.ActionRow>

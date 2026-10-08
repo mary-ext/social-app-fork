@@ -64,7 +64,6 @@ export const zIndex = {
 	base: 0,
 	raised: 10,
 	float: 20,
-	modal: 100,
 	popover: 110,
 } as const;
 

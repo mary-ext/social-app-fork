@@ -108,7 +108,7 @@ export const createNavigator = <Routes extends RouteMap>() => {
 			if (e.key !== 'Escape' || e.nativeEvent.isComposing || !canGoBack) {
 				return;
 			}
-			// leave Escape to nested popups and portalled dialogs.
+			// leave Escape to nested popups and dialogs.
 			if (
 				e.defaultPrevented ||
 				!(e.target instanceof Element) ||
@@ -117,9 +117,8 @@ export const createNavigator = <Routes extends RouteMap>() => {
 			) {
 				return;
 			}
-			// Base UI layers listen for Escape on the document, so stopping here keeps them open.
+			// consume Escape before document handlers or the enclosing dialog can act on it.
 			e.stopPropagation();
-			// prevent CloseWatcher from handling the same Escape and popping a second route.
 			e.preventDefault();
 			pop();
 		};
@@ -161,7 +160,7 @@ export function BackOrCloseButton() {
 	const { canGoBack, key, pop } = navigator;
 	const ref = useRef<HTMLButtonElement>(null);
 
-	// restore focus before Base UI moves it to the popup, outside the navigator's Escape handler.
+	// focus would otherwise fall to the body, outside the navigator's Escape handler.
 	useLayoutEffect(() => {
 		if (key === 0) {
 			return;

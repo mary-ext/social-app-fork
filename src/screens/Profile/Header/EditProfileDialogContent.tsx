@@ -71,7 +71,7 @@ export const EditProfileDialogContent = ({
 
 	const onRequestClose = () => {
 		if (dirty) {
-			cancelHandle.open(null);
+			cancelHandle.open();
 		} else {
 			handle.close();
 		}

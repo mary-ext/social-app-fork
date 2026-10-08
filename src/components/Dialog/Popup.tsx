@@ -2,7 +2,6 @@
 
 import { type HTMLAttributes, type ReactNode, type Ref, useRef } from 'react';
 
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import { useVisualViewportVars } from '#/lib/browser/visual-viewport';
@@ -10,25 +9,24 @@ import { useVisualViewportVars } from '#/lib/browser/visual-viewport';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as styles from '#/components/Dialog/Popup.css';
 import { NavigationEnabled } from '#/components/NavigationDisabled';
+import * as BaseDialog from '#/components/primitives/dialog';
 import { Text } from '#/components/Text';
 
 import TimesIcon from '#/icons/central/CrossLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagation();
-
 type CardProps = {
 	children: ReactNode;
 	className?: string;
 	/** element focused when the dialog closes. `false` leaves focus where it is. */
-	finalFocus?: BaseDialog.Popup.Props['finalFocus'];
+	finalFocus?: BaseDialog.FocusTarget;
 	/**
 	 * defaults to content height. `fixed` (600px) and `tall` (80vh) prevent resizing between loading and
 	 * content states. with `scroll="body"`, capped at 80vh on wide screens; ignored below 800px.
 	 */
 	height?: 'content' | 'fixed' | 'tall';
 	/** element focused when the dialog opens. `false` lets the content manage its own focus. */
-	initialFocus?: BaseDialog.Popup.Props['initialFocus'];
+	initialFocus?: BaseDialog.FocusTarget;
 	/** accessible name when the dialog has no `Title`. */
 	label?: string;
 	/** `none` drops the card's own padding, for full-bleed content that reapplies padding per-section. */
@@ -43,18 +41,18 @@ type CardProps = {
 };
 
 /**
- * Portalled backdrop + scrollable viewport. Wraps a {@link Card}; use this split form (rather than the bundled
- * {@link Popup}) when you need a viewport-level sibling of the card — e.g. an outer-anchored {@link Close},
- * which must sit outside the card so the card's scale-in transform doesn't capture its `fixed` positioning.
+ * scrollable modal viewport with a backdrop. use with {@link Card} when content needs siblings outside the
+ * card, such as an outer {@link Close} whose fixed positioning would be captured by the card's transform.
+ *
+ * @param props.children card and viewport-level content
+ * @returns the modal viewport
  */
 export function Viewport({ children }: { children: ReactNode }) {
 	return (
-		<BaseDialog.Portal className={styles.portal}>
-			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
-			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
-				<NavigationEnabled>{children}</NavigationEnabled>
-			</BaseDialog.Viewport>
-		</BaseDialog.Portal>
+		<BaseDialog.Viewport className={styles.viewport}>
+			<BaseDialog.Backdrop className={styles.backdrop} />
+			<NavigationEnabled>{children}</NavigationEnabled>
+		</BaseDialog.Viewport>
 	);
 }
 
@@ -90,9 +88,10 @@ export function Card({
 }
 
 /**
- * Portalled backdrop + scrollable viewport + themed popup card. Put dialog content inside. The common case;
- * reach for {@link Viewport} + {@link Card} directly when you need a viewport-level sibling like an outer
- * {@link Close}.
+ * combines {@link Viewport} and {@link Card}.
+ *
+ * @param props content, layout, and focus options
+ * @returns the themed dialog popup
  */
 export function Popup(props: CardProps) {
 	return (

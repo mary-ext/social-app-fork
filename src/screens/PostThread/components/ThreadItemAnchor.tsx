@@ -476,7 +476,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				type="button"
 				className={css.archivedPill}
 				aria-label={m['screens.postThread.archive.label']()}
-				onClick={() => handle.open(null)}
+				onClick={() => handle.open()}
 			>
 				<CalendarClockIcon aria-hidden className={css.calendarClockIcon} />
 				<Text size="xs" weight="semiBold" color="textContrastMedium">

@@ -118,7 +118,7 @@ function CuratedProfileList({
 	const isHidden = list.labels?.some((l) => l.val === '!hide') ?? false;
 	const isOwner = currentAccount?.did === list.creator.did;
 	const addUserDialogHandle = Dialog.useDialogHandle();
-	const onPressAddUser = () => addUserDialogHandle.open(null);
+	const onPressAddUser = () => addUserDialogHandle.open();
 	const [{ tab }, replaceParams] = useParams('ProfileList');
 	const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
@@ -172,7 +172,7 @@ function ModerationProfileList({
 }) {
 	const isHidden = list.labels?.some((l) => l.val === '!hide') ?? false;
 	const addUserDialogHandle = Dialog.useDialogHandle();
-	const onPressAddUser = () => addUserDialogHandle.open(null);
+	const onPressAddUser = () => addUserDialogHandle.open();
 
 	useTitle(isHidden ? m['screens.profileList.hide.hiddenToast']() : list.name);
 

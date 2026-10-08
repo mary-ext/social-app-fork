@@ -8,13 +8,13 @@ import {
 	useLightboxState,
 } from '@oomfware/lightbox';
 
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import { downloadImage } from '#/lib/media/download-image';
 
 import type { LightboxPayload } from '#/components/dialogs/handles';
 import * as Menu from '#/components/Menu';
+import * as BaseDialog from '#/components/primitives/dialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 
@@ -41,9 +41,7 @@ export function LightboxContents({
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const [chromeVisible, setChromeVisible] = useState(true);
 
-	// each open starts with the chrome shown; Base UI keeps this content mounted after close, so reopening
-	// the same instance would otherwise inherit whatever the last session toggled it to. reset during render
-	// (against the previous open value) so the reopened lightbox never commits a stale hidden-chrome frame.
+	// reopening mid-exit keeps this instance; reset during render to avoid a frame with hidden chrome.
 	const [prevOpen, setPrevOpen] = useState(open);
 	if (prevOpen !== open) {
 		setPrevOpen(open);
@@ -226,7 +224,8 @@ function Chrome() {
 			>
 				<ArrowRightIcon className={styles.controlIcon} />
 			</button>
-			<div className={styles.topLeft}>
+			{/* exclude the menu's backdrop from lightbox gestures. */}
+			<div className={styles.topLeft} data-lightbox-passthrough>
 				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={m['components.lightbox.a11y.options']()}>
 						<EllipsisIcon className={styles.controlIconRotated} />

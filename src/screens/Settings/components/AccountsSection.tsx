@@ -194,7 +194,7 @@ function OtherAccountRow({
 					<Menu.Popup label={m['screens.settings.account.options']()}>
 						<Menu.Item
 							label={m['screens.settings.account.remove']()}
-							onClick={() => removePromptHandle.open(null)}
+							onClick={() => removePromptHandle.open()}
 						>
 							<Menu.ItemText>{m['screens.settings.account.remove']()}</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} />

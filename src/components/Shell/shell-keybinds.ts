@@ -45,7 +45,7 @@ export function useShellKeybinds() {
 	useKeybind({
 		keybind: KEYBINDS.showKeybinds,
 		handle() {
-			keybindsDialogHandle.open(null);
+			keybindsDialogHandle.open();
 		},
 	});
 

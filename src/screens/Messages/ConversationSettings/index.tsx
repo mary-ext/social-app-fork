@@ -371,7 +371,7 @@ function SettingsHeader({
 	const handlePromptName = () => {
 		setNewGroupName(groupName);
 		setEditNameInputKey((k) => k + 1);
-		editNamePrompt.open(null);
+		editNamePrompt.open();
 	};
 
 	const handleEditName = () => {
@@ -460,7 +460,7 @@ function SettingsHeader({
 									? m['screens.messages.lock.label']()
 									: m['screens.messages.lock.action.lock']()
 							}
-							onClick={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open(null)}
+							onClick={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open()}
 						/>
 					) : null}
 					{reportSubjectDid ? (
@@ -468,7 +468,7 @@ function SettingsHeader({
 							icon={FlagIcon}
 							label={m['screens.messages.report.group']()}
 							text={m['common.action.report']()}
-							onClick={() => reportHandle.open(null)}
+							onClick={() => reportHandle.open()}
 						/>
 					) : null}
 					<SettingsButton
@@ -476,7 +476,7 @@ function SettingsHeader({
 						icon={ArrowBoxLeftIcon}
 						label={m['screens.messages.leave.a11y']()}
 						text={m['common.action.leave']()}
-						onClick={isOwner ? () => leaveAndLockChatPrompt.open(null) : () => leaveChatPrompt.open(null)}
+						onClick={isOwner ? () => leaveAndLockChatPrompt.open() : () => leaveChatPrompt.open()}
 					/>
 				</div>
 			</div>
@@ -508,7 +508,7 @@ function SettingsHeader({
 						handle={reportHandle}
 						convoId={convo.view.id}
 						did={reportSubjectDid}
-						onAfterSubmit={() => deleteHandle.open(null)}
+						onAfterSubmit={() => deleteHandle.open()}
 					/>
 					<AfterReportDialog
 						convo={convo}

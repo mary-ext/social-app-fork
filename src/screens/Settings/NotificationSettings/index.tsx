@@ -63,7 +63,7 @@ export function NotificationSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.notifications.interactions.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.like.title']()}
-							onPress={() => likeHandle.open(null)}
+							onPress={() => likeHandle.open()}
 						>
 							<Settings.Icon icon={HeartIcon} />
 							<Settings.Label
@@ -74,7 +74,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.follow.title']()}
-							onPress={() => followHandle.open(null)}
+							onPress={() => followHandle.open()}
 						>
 							<Settings.Icon icon={PersonPlusIcon} />
 							<Settings.Label
@@ -85,7 +85,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.reply.title']()}
-							onPress={() => replyHandle.open(null)}
+							onPress={() => replyHandle.open()}
 						>
 							<Settings.Icon icon={BubbleIcon} />
 							<Settings.Label
@@ -96,7 +96,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.mention.title']()}
-							onPress={() => mentionHandle.open(null)}
+							onPress={() => mentionHandle.open()}
 						>
 							<Settings.Icon icon={AtIcon} />
 							<Settings.Label
@@ -107,7 +107,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.quote.title']()}
-							onPress={() => quoteHandle.open(null)}
+							onPress={() => quoteHandle.open()}
 						>
 							<Settings.Icon icon={CloseQuoteIcon} />
 							<Settings.Label
@@ -118,7 +118,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.repost.title']()}
-							onPress={() => repostHandle.open(null)}
+							onPress={() => repostHandle.open()}
 						>
 							<Settings.Icon icon={RepostIcon} />
 							<Settings.Label
@@ -131,7 +131,7 @@ export function NotificationSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.notifications.viaRepost.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.likeViaRepost.title']()}
-							onPress={() => likeRepostHandle.open(null)}
+							onPress={() => likeRepostHandle.open()}
 						>
 							<Settings.Icon icon={LikeRepostIcon} />
 							<Settings.Label
@@ -142,7 +142,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.repostViaRepost.title']()}
-							onPress={() => repostRepostHandle.open(null)}
+							onPress={() => repostRepostHandle.open()}
 						>
 							<Settings.Icon icon={RepostRepostIcon} />
 							<Settings.Label
@@ -155,7 +155,7 @@ export function NotificationSettingsScreen() {
 					<Settings.Section titleText={m['screens.settings.notifications.chat.title']()}>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.chat.newMessagesA11y']()}
-							onPress={() => chatHandle.open(null)}
+							onPress={() => chatHandle.open()}
 						>
 							<Settings.Icon icon={MessageIcon} />
 							<Settings.Label
@@ -172,7 +172,7 @@ export function NotificationSettingsScreen() {
 						</Settings.ButtonRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.chat.newRequestsA11y']()}
-							onPress={() => chatRequestHandle.open(null)}
+							onPress={() => chatRequestHandle.open()}
 						>
 							<Settings.Icon icon={EnvelopeIcon} />
 							<Settings.Label
@@ -202,7 +202,7 @@ export function NotificationSettingsScreen() {
 						</Settings.LinkRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.notifications.everythingElse.title']()}
-							onPress={() => miscHandle.open(null)}
+							onPress={() => miscHandle.open()}
 						>
 							<Settings.Icon icon={ShapesIcon} />
 							<Settings.Label

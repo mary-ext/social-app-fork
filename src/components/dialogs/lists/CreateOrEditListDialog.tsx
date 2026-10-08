@@ -71,7 +71,7 @@ export function CreateOrEditListDialog({
 					// by the discard prompt itself) — Save/Discard close imperatively and pass through
 					if (!open && dirty && details.reason !== 'imperative-action') {
 						details.cancel();
-						cancelHandle.open(null);
+						cancelHandle.open();
 					}
 				}}
 			>
@@ -162,7 +162,7 @@ function DialogInner({
 
 	const onRequestClose = () => {
 		if (dirty) {
-			cancelHandle.open(null);
+			cancelHandle.open();
 		} else {
 			handle.close();
 		}

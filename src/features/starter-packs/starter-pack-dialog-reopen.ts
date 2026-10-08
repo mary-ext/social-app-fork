@@ -55,6 +55,6 @@ export const useStarterPackDialogReopen = (handle: DialogHandle, targetDid: stri
 		// the shell closes every dialog whenever the navigation state changes, and that listener sits
 		// above the navigator — so it runs *after* this focus effect, on the very navigation that
 		// brought us back here. reopen once the effect flush (and with it the close) is done.
-		queueMicrotask(() => handle.open(null));
+		queueMicrotask(() => handle.open());
 	});
 };

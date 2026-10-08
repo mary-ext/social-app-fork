@@ -183,7 +183,7 @@ function ChatCreationSteps({ handle, onChatReady, pickStep: PickStep }: ChatCrea
 
 	const onStartGroup = () => {
 		if (!canCreateGroups) {
-			accountTooNewHandle.open(null);
+			accountTooNewHandle.open();
 			return;
 		}
 		// discard selections from a previous group attempt.

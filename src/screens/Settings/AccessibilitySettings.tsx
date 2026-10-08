@@ -58,7 +58,7 @@ export function AccessibilitySettingsScreen() {
 						</Settings.SwitchRow>
 						<Settings.ButtonRow
 							label={m['screens.settings.accessibility.keybinds.list']()}
-							onPress={() => keybindsDialogHandle.open(null)}
+							onPress={() => keybindsDialogHandle.open()}
 						>
 							<Settings.Icon icon={BulletListIcon} />
 							<Settings.Label titleText={m['screens.settings.accessibility.keybinds.list']()} />

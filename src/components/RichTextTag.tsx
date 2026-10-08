@@ -146,7 +146,7 @@ export function RichTextTag({
 								? m['components.richTextTag.unmute']({ prefixedTag })
 								: m['components.richTextTag.mute']({ prefixedTag })
 						}
-						onClick={() => muteConfirmHandle.open(null)}
+						onClick={() => muteConfirmHandle.open()}
 					>
 						<Menu.ItemText>
 							{isMuted

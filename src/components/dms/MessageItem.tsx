@@ -399,12 +399,7 @@ function BlockedPlaceholder({
 
 	return (
 		<>
-			<button
-				aria-label={label}
-				className={css.blockedButton}
-				onClick={() => control.open(null)}
-				type="button"
-			>
+			<button aria-label={label} className={css.blockedButton} onClick={() => control.open()} type="button">
 				<div
 					className={clsx(
 						css.blockedBubble,

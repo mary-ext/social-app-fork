@@ -98,7 +98,7 @@ export function BlockLink({
 
 	const onClick = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target;
-		// ignore clicks bubbling through React from portalled dialogs.
+		// ignore clicks bubbling through React from portals.
 		if (!(target instanceof Element) || !e.currentTarget.contains(target)) {
 			return;
 		}

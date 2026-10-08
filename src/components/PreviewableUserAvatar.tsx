@@ -71,7 +71,7 @@ export function PreviewableUserAvatar({
 			className={styles.preview}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
-			onClick={() => liveHandle.open(null)}
+			onClick={() => liveHandle.open()}
 		>
 			{avatarEl}
 		</button>

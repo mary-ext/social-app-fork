@@ -83,7 +83,7 @@ function ShareMenuItems({ post, onShare: onShareProp }: ShareMenuItemsProps): Re
 				{hasSession && (
 					<Menu.Item
 						label={m['components.postControls.share.sendViaDm']()}
-						onClick={() => sendViaChatHandle.open(null)}
+						onClick={() => sendViaChatHandle.open()}
 					>
 						<Menu.ItemText>{m['components.postControls.share.sendViaDm']()}</Menu.ItemText>
 						<Menu.ItemIcon icon={Send} position="right" />

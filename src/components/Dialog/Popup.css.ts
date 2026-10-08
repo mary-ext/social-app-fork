@@ -41,37 +41,8 @@ export const searchOverlap = style(
 
 // #endregion
 
-export const portal = style(
-	layered(components, {
-		zIndex: zIndex.modal,
-	}),
-);
-
 /** marker class for `scroll="body"` popups. */
 export const scrollBody = style({});
-
-export const backdrop = style(
-	layered(components, {
-		position: 'fixed',
-		inset: 0,
-		transitionDuration: '150ms',
-		transitionProperty: 'opacity',
-		backgroundColor: 'rgba(0, 0, 0, 0.8)',
-
-		selectors: {
-			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
-		},
-
-		'@media': {
-			'(width < 800px)': {
-				selectors: {
-					// cover the gap Chrome's bottom toolbar leaves below the popup when the keyboard opens.
-					[`${portal}:has(${scrollBody}) &`]: { backgroundColor: vars.palette.contrast_0 },
-				},
-			},
-		},
-	}),
-);
 
 export const viewport = style(
 	layered(components, {
@@ -96,6 +67,31 @@ export const viewport = style(
 	}),
 );
 
+export const backdrop = style(
+	layered(components, {
+		position: 'fixed',
+		inset: 0,
+		transitionDuration: '150ms',
+		transitionProperty: 'opacity',
+		backgroundColor: 'rgba(0, 0, 0, 0.8)',
+
+		selectors: {
+			'&[data-closed]': { opacity: 0 },
+		},
+
+		'@starting-style': { opacity: 0 },
+
+		'@media': {
+			'(width < 800px)': {
+				selectors: {
+					// cover the gap Chrome's bottom toolbar leaves below the popup when the keyboard opens.
+					[`${viewport}:has(${scrollBody}) &`]: { backgroundColor: vars.palette.contrast_0 },
+				},
+			},
+		},
+	}),
+);
+
 export const popup = recipe(
 	{
 		base: {
@@ -111,8 +107,9 @@ export const popup = recipe(
 			padding: 24,
 			width: '100%',
 			selectors: {
-				'&[data-starting-style], &[data-ending-style]': { transform: 'scale(0.95)', opacity: 0 },
+				'&[data-closed]': { transform: 'scale(0.95)', opacity: 0 },
 			},
+			'@starting-style': { transform: 'scale(0.95)', opacity: 0 },
 		},
 		defaultVariants: { height: 'content', padding: 'default', scroll: 'viewport', size: 'default' },
 		variants: {
@@ -177,9 +174,10 @@ export const popup = recipe(
 							height: 'var(--visual-viewport-height, 100dvh)',
 							maxHeight: 'none',
 							selectors: {
-								'&[data-starting-style], &[data-ending-style]': {
-									transform: 'translateY(32px)',
-									opacity: 0,
+								'&[data-closed]': { transform: 'translateY(32px)', opacity: 0 },
+								// vanilla-extract emits the base starting style last; outrank it.
+								[`${scrollBody}&`]: {
+									'@starting-style': { transform: 'translateY(32px)', opacity: 0 },
 								},
 							},
 						},
@@ -346,8 +344,9 @@ export const close = recipe(
 					transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
 					zIndex: zIndex.raised,
 					selectors: {
-						[`${viewport}[data-starting-style] &, ${viewport}[data-ending-style] &`]: { opacity: 0 },
+						[`${viewport}[data-closed] &`]: { opacity: 0 },
 					},
+					'@starting-style': { opacity: 0 },
 					'@media': {
 						'(width < 800px)': { display: 'none' },
 					},

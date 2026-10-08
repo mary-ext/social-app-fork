@@ -56,7 +56,7 @@ export function AltBadge({
 				type="button"
 				className={clsx(styles.altBadge, position === 'top-right' && styles.altBadgeTopRight)}
 				aria-label={m['common.altText.show']()}
-				onClick={() => handle.open(null)}
+				onClick={() => handle.open()}
 			>
 				<Text size="xs" weight="bold" className={styles.badgeText}>
 					{m['common.altText.badge']()}

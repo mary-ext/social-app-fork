@@ -109,17 +109,14 @@ export function OverflowMenu({
 								<Menu.ItemText>{m['common.action.edit']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Pencil} position="right" />
 							</Menu.Item>
-							<Menu.Item
-								label={m['screens.starterPack.delete.action']()}
-								onClick={() => deleteHandle.open(null)}
-							>
+							<Menu.Item label={m['screens.starterPack.delete.action']()} onClick={() => deleteHandle.open()}>
 								<Menu.ItemText>{m['common.action.delete']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Trash} position="right" />
 							</Menu.Item>
 							<Menu.Item
 								label={m['screens.starterPack.list.create']()}
 								onClick={() => {
-									convertToListHandle.open(null);
+									convertToListHandle.open();
 								}}
 							>
 								<Menu.ItemText>{m['screens.starterPack.list.createFromMembers']()}</Menu.ItemText>
@@ -135,17 +132,14 @@ export function OverflowMenu({
 								</Menu.Item>
 							</Menu.Group>
 
-							<Menu.Item
-								label={m['screens.starterPack.report']()}
-								onClick={() => reportDialogHandle.open(null)}
-							>
+							<Menu.Item label={m['screens.starterPack.report']()} onClick={() => reportDialogHandle.open()}>
 								<Menu.ItemText>{m['screens.starterPack.report']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={CircleInfo} position="right" />
 							</Menu.Item>
 							{starterPack.list && (
 								<OptOutMenuItem
 									disabled={isOptOutPending}
-									onClick={() => optOutHandle.open(null)}
+									onClick={() => optOutHandle.open()}
 									optedOut={!!optOut}
 								/>
 							)}

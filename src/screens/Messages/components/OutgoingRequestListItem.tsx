@@ -43,7 +43,7 @@ export function OutgoingRequestListItem({
 				type="button"
 				className={css.row}
 				aria-label={m['screens.messages.requests.rescind.action']()}
-				onClick={() => prompt.open(null)}
+				onClick={() => prompt.open()}
 			>
 				<AvatarBubbles profiles={[convoView.owner]} count={convoView.memberCount} size={48} />
 

@@ -105,10 +105,7 @@ export function MessagesScreen() {
 	if (isWithinSplitView) {
 		return (
 			<>
-				<SayHiBlankState
-					chatDisabled={chatStatus?.chatDisabled}
-					onStartChat={() => newChatHandle.open(null)}
-				/>
+				<SayHiBlankState chatDisabled={chatStatus?.chatDisabled} onStartChat={() => newChatHandle.open()} />
 				<NewChatDialog handle={newChatHandle} onNewChat={onNewChat} />
 			</>
 		);
@@ -143,7 +140,7 @@ export function ChatList({
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	const openChatControl = () => {
-		newChatHandle.open(null);
+		newChatHandle.open();
 	};
 
 	const { data, isPending, isFetchingNextPage, fetchNextPage, isError, error, refetch } = useListConvosQuery({
@@ -253,7 +250,7 @@ export function Header({
 	const requestCount = unreadCounts?.unreadRequestConvos ?? 0;
 
 	const openChatControl = () => {
-		newChatHandle.open(null);
+		newChatHandle.open();
 	};
 
 	return (

@@ -2,11 +2,10 @@
 
 import { type ComponentType, type ReactNode, type SVGProps, useId } from 'react';
 
-import { AlertDialog } from '@base-ui/react/alert-dialog';
-
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { useRegisterDialog } from '#/components/Dialog/registry';
+import * as AlertDialog from '#/components/primitives/alert-dialog';
 import * as styles from '#/components/Prompt/Prompt.css';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -17,21 +16,20 @@ type Color = 'negative' | 'negative_subtle' | 'primary' | 'secondary';
 
 export const Trigger = AlertDialog.Trigger;
 
-/** Creates a detached handle to open/close a Prompt imperatively or from a detached Trigger. */
-export const createHandle = AlertDialog.createHandle;
+/** @returns a handle for imperative control and detached prompt triggers */
+export const createHandle = (): PromptHandle => AlertDialog.createHandle();
 
-/** A detached handle for opening/closing a Prompt */
-export type PromptHandle<T = void> = AlertDialog.Handle<T>;
+export type PromptHandle = AlertDialog.Handle;
 
-/** Component-local prompt handle. */
-export function usePromptHandle<T = void>(): PromptHandle<T> {
-	const handle = useConstant(createHandle<T>);
+/** @returns a stable, component-local prompt handle */
+export function usePromptHandle(): PromptHandle {
+	const handle = useConstant(createHandle);
 	return handle;
 }
 
 type Size = 'default' | 'wide';
 
-/** A confirmation dialog (no backdrop/Escape dismissal — an explicit action is required). */
+/** themed alert dialog. */
 export function Outer({
 	children,
 	handle,
@@ -45,12 +43,10 @@ export function Outer({
 	const registerOpen = useRegisterDialog(id, () => handle.close());
 	return (
 		<AlertDialog.Root handle={handle} onOpenChange={(open) => registerOpen(open)}>
-			<AlertDialog.Portal className={styles.portal}>
-				<AlertDialog.Backdrop className={styles.backdrop} forceRender />
-				<AlertDialog.Viewport className={styles.viewport}>
-					<AlertDialog.Popup className={styles.popup({ size })}>{children}</AlertDialog.Popup>
-				</AlertDialog.Viewport>
-			</AlertDialog.Portal>
+			<AlertDialog.Viewport className={styles.viewport}>
+				<AlertDialog.Backdrop className={styles.backdrop} />
+				<AlertDialog.Popup className={styles.popup({ size })}>{children}</AlertDialog.Popup>
+			</AlertDialog.Viewport>
 		</AlertDialog.Root>
 	);
 }

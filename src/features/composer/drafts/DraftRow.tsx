@@ -185,7 +185,7 @@ export function DraftRow({
 				/>
 				<Menu.Popup label={m['common.a11y.moreOptions']()} align="end">
 					<Menu.Group>
-						<Menu.Item destructive onClick={() => deletePromptHandle.open(null)}>
+						<Menu.Item destructive onClick={() => deletePromptHandle.open()}>
 							<Menu.ItemText>{m['features.composer.drafts.action.delete']()}</Menu.ItemText>
 							<Menu.ItemIcon position="right" icon={TrashIcon} />
 						</Menu.Item>

@@ -2,10 +2,10 @@
 
 import type { ComponentType, ReactNode, Ref, SVGProps } from 'react';
 
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/Dialog/Header.css';
+import * as BaseDialog from '#/components/primitives/dialog';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

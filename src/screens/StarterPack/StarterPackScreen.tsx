@@ -210,13 +210,13 @@ function StarterPackScreenLoaded({
 
 	const onOpenShareDialog = () => {
 		void prefetchImage(getStarterPackOgCard(starterPack));
-		shareDialogHandle.open(null);
+		shareDialogHandle.open();
 	};
 
 	useEffect(() => {
 		if (routeParams.new) {
 			void prefetchImage(getStarterPackOgCard(starterPack));
-			shareDialogHandle.open(null);
+			shareDialogHandle.open();
 		}
 	}, [routeParams.new, shareDialogHandle, starterPack]);
 

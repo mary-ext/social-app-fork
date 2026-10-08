@@ -34,7 +34,7 @@ export function MissingFeed({
 				type="button"
 				aria-label={type === 'feed' ? m['view.feeds.feed.error.connect']() : m['view.feeds.list.deleted']()}
 				className={styles.button({ borderTop: !hideTopBorder })}
-				onClick={() => handle.open(null)}
+				onClick={() => handle.open()}
 			>
 				<div className={styles.iconBox}>
 					<WarningIcon className={styles.warningIcon} />

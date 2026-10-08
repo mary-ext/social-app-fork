@@ -54,7 +54,7 @@ export function MutedWordsScreen() {
 					<Button
 						color="secondary"
 						label={m['common.mutedWord.action.add']()}
-						onClick={() => dialogHandle.open(null)}
+						onClick={() => dialogHandle.open()}
 						size="small"
 					>
 						<ButtonIcon icon={Plus} />
@@ -171,7 +171,7 @@ function MutedWordRow({ word }: { word: AppBskyActorDefs.MutedWord }) {
 							<Menu.Item
 								destructive
 								label={m['screens.moderation.mutedWord.remove.confirm']()}
-								onClick={() => removeHandle.open(null)}
+								onClick={() => removeHandle.open()}
 							>
 								<Menu.ItemText>{m['common.action.remove']()}</Menu.ItemText>
 								<Menu.ItemIcon icon={Trash} position="right" />

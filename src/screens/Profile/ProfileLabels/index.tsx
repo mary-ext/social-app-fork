@@ -103,7 +103,7 @@ function LabelerActions({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 
 	// signing in mid-flow replaces the screen, so ask for the session before the confirmation
 	const onRequestToggle = (subscribe: boolean) => {
-		requireAuth(() => (subscribe ? subscribeConfirmPrompt : unsubscribeConfirmPrompt).open(null));
+		requireAuth(() => (subscribe ? subscribeConfirmPrompt : unsubscribeConfirmPrompt).open());
 	};
 
 	const onToggleSubscription = async (subscribe: boolean): Promise<void> => {
@@ -111,7 +111,7 @@ function LabelerActions({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDe
 			await toggleSubscription({ did: creator.did, subscribe });
 		} catch (e) {
 			if (e instanceof Error && e.message === 'MAX_LABELERS') {
-				subscribeLimitPrompt.open(null);
+				subscribeLimitPrompt.open();
 				return;
 			}
 			console.error('Failed to subscribe to labeler', e);

@@ -107,14 +107,14 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 						<Menu.Group>
 							<Menu.Item
 								label={m['screens.profileList.edit.details']()}
-								onClick={() => editListHandle.open(null)}
+								onClick={() => editListHandle.open()}
 							>
 								<Menu.ItemText>{m['screens.profileList.edit.details']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={PencilLineIcon} />
 							</Menu.Item>
 							<Menu.Item
 								label={m['screens.profileList.delete.list']()}
-								onClick={() => deleteListPromptHandle.open(null)}
+								onClick={() => deleteListPromptHandle.open()}
 							>
 								<Menu.ItemText>{m['screens.profileList.delete.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={TrashIcon} />
@@ -124,7 +124,7 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 						<Menu.Group>
 							<Menu.Item
 								label={m['screens.profileList.report.list']()}
-								onClick={() => reportDialogHandle.open(null)}
+								onClick={() => reportDialogHandle.open()}
 							>
 								<Menu.ItemText>{m['screens.profileList.report.list']()}</Menu.ItemText>
 								<Menu.ItemIcon position="right" icon={WarningIcon} />
@@ -132,7 +132,7 @@ export function MoreOptionsMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 							{isReferenceList && (
 								<OptOutMenuItem
 									disabled={isOptOutPending}
-									onClick={() => optOutHandle.open(null)}
+									onClick={() => optOutHandle.open()}
 									optedOut={!!optOut}
 								/>
 							)}
