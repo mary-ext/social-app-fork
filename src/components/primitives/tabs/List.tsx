@@ -45,7 +45,7 @@ export const List = ({
 	const element = useRender({
 		tag: 'div',
 		render,
-		refs: [ref],
+		refs: [ref, composite.setRoot],
 		props: mergeProps<'div'>(dataAttributes({ orientation }), internalProps, elementProps),
 	});
 

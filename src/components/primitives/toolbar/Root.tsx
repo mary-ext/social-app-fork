@@ -55,7 +55,7 @@ export const Root = ({
 	const element = useRender({
 		tag: 'div',
 		render,
-		refs: [ref],
+		refs: [ref, composite.setRoot],
 		props: mergeProps<'div'>(dataAttributes({ disabled, orientation }), internalProps, elementProps),
 	});
 

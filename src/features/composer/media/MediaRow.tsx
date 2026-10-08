@@ -49,7 +49,7 @@ export function MediaRow({ postId }: { postId: string }) {
 	const media = usePostState(postId, (_state, post) => getPostParam(post.node).media, NO_MEDIA);
 	const isActive = useIsActivePost(postId);
 
-	const composite = useCompositeRoot({
+	const { setRoot, ...composite } = useCompositeRoot({
 		orientation: 'horizontal',
 		loopFocus: false,
 		homeEnd: true,
@@ -84,6 +84,7 @@ export function MediaRow({ postId }: { postId: string }) {
 
 	return (
 		<div
+			ref={setRoot}
 			className={css.root}
 			onFocus={composite.props.onFocus}
 			onKeyDown={(event) => {

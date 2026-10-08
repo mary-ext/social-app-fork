@@ -4,10 +4,13 @@ import {
 	type KeyboardEvent,
 	type MouseEvent,
 	type PointerEvent,
+	type RefCallback,
+	useCallback,
 	useContext,
 	useId,
 	useLayoutEffect,
 	useReducer,
+	useRef,
 	useState,
 } from 'react';
 
@@ -35,8 +38,8 @@ CompositeContext.displayName = 'CompositeContext';
 /** provides a composite to its items. */
 export const CompositeProvider = CompositeContext.Provider;
 
-const getItems = (id: string): HTMLElement[] => {
-	return Array.from(document.querySelectorAll<HTMLElement>(`[${ITEM_ATTR}="${CSS.escape(id)}"]`));
+const getItems = (root: HTMLElement, id: string): HTMLElement[] => {
+	return Array.from(root.querySelectorAll<HTMLElement>(`[${ITEM_ATTR}="${CSS.escape(id)}"]`));
 };
 
 const isItemOf = (target: EventTarget, id: string): target is HTMLElement => {
@@ -84,10 +87,11 @@ export type CompositeRootOptions = {
 
 /**
  * manages a roving tab stop for {@link useCompositeItem}. prefers the focused, active, last focused, then
- * first enabled item. `aria-disabled` items remain arrow-key reachable but aren't fallback tab stops.
+ * first enabled item. `aria-disabled` items remain arrow-key reachable but aren't fallback tab stops. items
+ * must be descendants of the element attached to `setRoot`.
  *
  * @param options navigation behavior
- * @returns context for `CompositeProvider` and handlers for the root element
+ * @returns provider context, root ref callback, and root event handlers
  */
 export const useCompositeRoot = ({
 	orientation,
@@ -96,12 +100,17 @@ export const useCompositeRoot = ({
 	tabbable,
 }: CompositeRootOptions): {
 	context: CompositeContextValue;
+	setRoot: RefCallback<HTMLElement>;
 	props: {
 		onFocus: (event: FocusEvent<HTMLElement>) => void;
 		onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
 	};
 } => {
 	const id = useId();
+	const rootRef = useRef<HTMLElement | null>(null);
+	const setRoot = useCallback((el: HTMLElement | null) => {
+		rootRef.current = el;
+	}, []);
 	const [tabStop, setTabStop] = useState<string | null>(null);
 	// item changes can occur without a root render.
 	const [, invalidate] = useReducer((count: number) => count + 1, 0);
@@ -109,7 +118,11 @@ export const useCompositeRoot = ({
 	// item order and visibility come from the committed DOM.
 	// oxlint-disable-next-line react-hooks/exhaustive-deps -- runs after every render on purpose
 	useLayoutEffect(() => {
-		const items = getItems(id);
+		const root = rootRef.current;
+		if (root === null) {
+			return;
+		}
+		const items = getItems(root, id);
 		const focused = items.find((item) => item === document.activeElement);
 		const current = items.find((item) => item.getAttribute(KEY_ATTR) === tabStop);
 		const next =
@@ -127,6 +140,7 @@ export const useCompositeRoot = ({
 
 	return {
 		context: { id, tabStop, tabbable, invalidate },
+		setRoot,
 		props: {
 			onFocus(event) {
 				if (isItemOf(event.target, id)) {
@@ -148,7 +162,7 @@ export const useCompositeRoot = ({
 					return;
 				}
 
-				const items = getItems(id).filter(canFocus);
+				const items = getItems(event.currentTarget, id).filter(canFocus);
 				let next: HTMLElement | undefined;
 				if (homeEnd && (key === 'Home' || key === 'End')) {
 					next = key === 'Home' ? items[0] : items.at(-1);

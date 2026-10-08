@@ -92,7 +92,7 @@ export const Group = ({
 	const element = useRender({
 		tag: 'div',
 		render,
-		refs: [ref],
+		refs: [ref, inToolbar ? undefined : composite.setRoot],
 		props: mergeProps<'div'>(
 			dataAttributes({ disabled, multiple, orientation }),
 			internalProps,
