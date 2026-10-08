@@ -75,6 +75,38 @@ export const getNextTabbable = (reference: Element, exclude: Element | null): HT
 };
 
 /**
+ * call before containing popups close; their triggers' `aria-controls` links disappear on close.
+ *
+ * @param opener element that opened the popup
+ * @returns the opener, then the trigger of each open popup containing it, innermost first
+ */
+export const getReturnFocusChain = (opener: HTMLElement): HTMLElement[] => {
+	const triggers = new Map<string, HTMLElement>();
+	for (const trigger of document.querySelectorAll<HTMLElement>('[aria-controls]')) {
+		for (const id of trigger.getAttribute('aria-controls')!.split(' ')) {
+			triggers.set(id, trigger);
+		}
+	}
+
+	const chain = [opener];
+	for (let node = opener.parentElement; node !== null; node = node.parentElement) {
+		const trigger = node.id ? triggers.get(node.id) : undefined;
+		if (trigger) {
+			chain.push(trigger);
+		}
+	}
+	return chain;
+};
+
+/**
+ * @param chain candidates from {@link getReturnFocusChain}
+ * @returns the first connected, visible candidate, or `null`
+ */
+export const findReturnFocus = (chain: readonly HTMLElement[]): HTMLElement | null => {
+	return chain.find((el) => el.isConnected && el.checkVisibility({ visibilityProperty: true })) ?? null;
+};
+
+/**
  * @param target focus target option
  * @param type interaction type that opened or closed the popup
  * @param getDefault resolves the default target

@@ -53,6 +53,23 @@ export class HandleStore<Root> {
 		const entry = this.#getEntry(handle);
 		return useSyncExternalStore(entry.subscribe, entry.getSnapshot);
 	}
+
+	/**
+	 * subscribes to selected root state; rerenders when the selected value changes.
+	 *
+	 * @param handle detached handle, or `undefined` to skip subscribing
+	 * @param select maps root state (`null` when unattached) to a value stable under `Object.is` for unchanged
+	 *   state
+	 * @returns the derived value
+	 */
+	useSelector<T>(handle: object | undefined, select: (root: Root | null) => T): T {
+		if (handle === undefined) {
+			return useSyncExternalStore(noopSubscribe, () => select(null));
+		}
+
+		const entry = this.#getEntry(handle);
+		return useSyncExternalStore(entry.subscribe, () => select(entry.root));
+	}
 	/* oxlint-enable react/rules-of-hooks */
 
 	#getEntry(handle: object): Entry<Root> {

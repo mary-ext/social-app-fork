@@ -1,4 +1,10 @@
-import type { DialogHTMLAttributes, HTMLAttributes } from 'react';
+import {
+	type DialogHTMLAttributes,
+	type HTMLAttributes,
+	type RefObject,
+	useLayoutEffect,
+	useRef,
+} from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
@@ -40,7 +46,8 @@ export const showModalInTopLayer = (open: boolean) => {
 
 /**
  * ends modality and keeps the popup in the top layer for exit transitions. call in a close layout effect
- * before restoring focus; closing the dialog may restore pre-open focus natively.
+ * before restoring focus; closing the dialog may restore pre-open focus natively. requires an explicit CSS
+ * `display` to preserve exit transitions between `close()` and `showPopover()`.
  *
  * @param el popup positioning dialog, or `null`
  * @returns whether focus was in the popup or on the body before closing
@@ -136,6 +143,33 @@ export const pushModalSurface = (surface: HTMLElement): (() => void) => {
 			emitter.emit();
 		}
 	};
+};
+
+/**
+ * registers an open modal as a toast host. call from an ancestor of the part that ends modality, so toasts
+ * move out only after modality ends.
+ *
+ * @param ref untransformed modal element
+ * @param open current open state
+ */
+export const useModalSurface = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
+	const releaseRef = useRef<(() => void) | null>(null);
+
+	useLayoutEffect(() => {
+		if (open && ref.current) {
+			releaseRef.current ??= pushModalSurface(ref.current);
+		} else {
+			releaseRef.current?.();
+			releaseRef.current = null;
+		}
+	}, [open, ref]);
+
+	useLayoutEffect(() => {
+		return () => {
+			releaseRef.current?.();
+			releaseRef.current = null;
+		};
+	}, []);
 };
 
 /** @returns the topmost registered modal surface, or `null` if none is open */
