@@ -2,7 +2,6 @@ import type { ComponentPropsWithoutRef, Ref } from 'react';
 
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
-import { Avatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -10,6 +9,7 @@ import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
 import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
 
+import * as Avatar from '#/components/primitives/avatar';
 import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';
 
