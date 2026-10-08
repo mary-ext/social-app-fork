@@ -72,6 +72,7 @@ export function UserAvatar({
 	const finalShape = shape ?? (type === 'user' ? 'circle' : 'square');
 	const radius = finalShape === 'circle' ? '50%' : `${squareRadius(size)}px`;
 	const DefaultAvatar = DEFAULT_AVATARS[type];
+	const isThumbnail = size < 90;
 
 	return (
 		<Avatar.Root
@@ -88,7 +89,9 @@ export function UserAvatar({
 				<span className={styles.imageClip}>
 					<Avatar.Image
 						className={clsx(styles.image, moderation?.blurs.length && styles.blurred)}
-						src={hackModifyThumbnailPath(avatar, size < 90)}
+						// profile-sized avatars may be the LCP image; load them eagerly.
+						loading={isThumbnail ? 'lazy' : undefined}
+						src={hackModifyThumbnailPath(avatar, isThumbnail)}
 						onLoadingStatusChange={(status) => {
 							if (status === 'loaded') {
 								onLoad?.();
