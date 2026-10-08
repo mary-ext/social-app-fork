@@ -8,7 +8,7 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 import { useTimeout } from '#/lib/hooks/use-timeout';
 
-import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
+import { HOVERABLE_GRACE, isWithinPopup, listenForOutsideClick } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import { isUnclaimedEscape } from '../top-layer';
@@ -157,22 +157,6 @@ export const Root = ({
 			setOpen(false, { reason: 'escape-key', event });
 		};
 
-		// wait for a complete outside click to avoid dismissing on drags; touch dismisses on contact.
-		let pressedOutside = false;
-		const onPointerDown = (event: PointerEvent) => {
-			pressedOutside = !isInsideEvent(event, parts);
-			if (pressedOutside && event.pointerType === 'touch') {
-				pressedOutside = false;
-				setOpen(false, { reason: 'outside-press', event });
-			}
-		};
-		const onClick = (event: MouseEvent) => {
-			if (pressedOutside && !isInsideEvent(event, parts)) {
-				setOpen(false, { reason: 'outside-press', event });
-			}
-			pressedOutside = false;
-		};
-
 		const onFocusIn = (event: FocusEvent) => {
 			if (!isInsideEvent(event, parts)) {
 				setOpen(false, { reason: 'focus-out', event });
@@ -182,8 +166,12 @@ export const Root = ({
 		const controller = new AbortController();
 		const { signal } = controller;
 		document.addEventListener('keydown', onKeyDown, { signal });
-		document.addEventListener('pointerdown', onPointerDown, { signal });
-		document.addEventListener('click', onClick, { signal });
+		listenForOutsideClick({
+			signal,
+			isInside: (event) => isInsideEvent(event, parts),
+			onOutside: (event) => setOpen(false, { reason: 'outside-press', event }),
+			dismissTouchOnContact: true,
+		});
 		if (!modal) {
 			document.addEventListener('focusin', onFocusIn, { signal });
 		}

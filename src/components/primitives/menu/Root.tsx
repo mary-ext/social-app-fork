@@ -7,7 +7,7 @@ import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 
-import { isWithinPopup } from '../anchored-popup';
+import { isWithinPopup, listenForOutsideClick } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import {
@@ -112,22 +112,14 @@ export const Root = ({
 			);
 		};
 
-		// wait for click to ignore drags and keep outside content inert until the press ends.
-		let pressedOutside = false;
-		const onPointerDown = (event: PointerEvent) => {
-			pressedOutside = !isInside(event.target);
-		};
-		const onClick = (event: MouseEvent) => {
-			if (pressedOutside && !isInside(event.target)) {
-				setOpen(false, { reason: 'outside-press', event });
-			}
-			pressedOutside = false;
-		};
-
 		const controller = new AbortController();
-		const { signal } = controller;
-		document.addEventListener('pointerdown', onPointerDown, { signal });
-		document.addEventListener('click', onClick, { signal });
+		// keep outside content inert until the touch press ends.
+		listenForOutsideClick({
+			signal: controller.signal,
+			isInside: (event) => isInside(event.target),
+			onOutside: (event) => setOpen(false, { reason: 'outside-press', event }),
+			dismissTouchOnContact: false,
+		});
 		return () => controller.abort();
 	}, [open, activeTrigger, setOpen]);
 

@@ -207,6 +207,44 @@ export const isWithinPopup = (positioner: HTMLElement | null, target: EventTarge
 	return target instanceof Node && target !== positioner && !!positioner?.contains(target);
 };
 
+/**
+ * calls `onOutside` for clicks that start and end outside the popup and trigger.
+ *
+ * @param options.signal removes the listeners once aborted
+ * @param options.isInside whether an event belongs to the popup or its trigger
+ * @param options.onOutside receives the dismissing click or touch press
+ * @param options.dismissTouchOnContact dismisses touch presses on contact instead of on click
+ */
+export const listenForOutsideClick = ({
+	signal,
+	isInside,
+	onOutside,
+	dismissTouchOnContact,
+}: {
+	signal: AbortSignal;
+	isInside: (event: Event) => boolean;
+	onOutside: (event: Event) => void;
+	dismissTouchOnContact: boolean;
+}): void => {
+	let pressedOutside = false;
+	const onPointerDown = (event: PointerEvent) => {
+		pressedOutside = !isInside(event);
+		if (pressedOutside && dismissTouchOnContact && event.pointerType === 'touch') {
+			pressedOutside = false;
+			onOutside(event);
+		}
+	};
+	const onClick = (event: MouseEvent) => {
+		if (pressedOutside && !isInside(event)) {
+			onOutside(event);
+		}
+		pressedOutside = false;
+	};
+
+	document.addEventListener('pointerdown', onPointerDown, { signal });
+	document.addEventListener('click', onClick, { signal });
+};
+
 const anchorNames = new WeakMap<HTMLElement, string[]>();
 
 // custom triggers may replace inline styles, so write anchor names directly.
