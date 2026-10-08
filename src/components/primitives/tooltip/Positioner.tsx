@@ -2,7 +2,13 @@
 
 import type { Ref } from 'react';
 
-import { type Align, getAnchoredStyle, getPositionerAttributes, type Side } from '../anchored-popup';
+import {
+	type Align,
+	getAnchoredStyle,
+	getPositionerAttributes,
+	type Side,
+	useDevicePixelSnap,
+} from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
 import { useTransitionsSettled } from '../presence';
@@ -43,6 +49,8 @@ const MountedPositioner = ({
 		useRootContext();
 
 	useTransitionsSettled(positionerRef, open, onTransitionSettled);
+
+	useDevicePixelSnap(positionerRef, open);
 
 	return useRender({
 		tag: 'div',

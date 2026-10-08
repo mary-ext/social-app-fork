@@ -1,6 +1,6 @@
 import './position-try.css';
 
-import type { CSSProperties } from 'react';
+import { type CSSProperties, type RefObject, useLayoutEffect } from 'react';
 
 import { type DataAttributes, dataAttributes } from './data-attributes';
 import { getOpenAttributes } from './presence';
@@ -125,6 +125,46 @@ export const getShrinkingAnchoredStyle = (
  */
 export const getPositionerAttributes = (open: boolean, side: Side, align: Align): DataAttributes => {
 	return { ...getOpenAttributes(open), ...dataAttributes({ side, align }) };
+};
+
+/**
+ * snaps the popup's top-left corner to device pixels on open and resize. replaces inline `translate`.
+ *
+ * @param ref popup positioning element
+ * @param open current open state
+ */
+export const useDevicePixelSnap = (ref: RefObject<HTMLElement | null>, open: boolean): void => {
+	useLayoutEffect(() => {
+		const el = ref.current;
+		if (!open || !el) {
+			return;
+		}
+
+		// fractional anchor coordinates can paint the popup a pixel larger than its content once compositing ends.
+		// translate preserves anchor collision handling.
+		let x = 0;
+		let y = 0;
+		const snap = (): void => {
+			const dpr = devicePixelRatio;
+			const rect = el.getBoundingClientRect();
+			const left = rect.left - x;
+			const top = rect.top - y;
+			x = Math.round(left * dpr) / dpr - left;
+			y = Math.round(top * dpr) / dpr - top;
+			el.style.translate = `${x}px ${y}px`;
+		};
+
+		el.style.removeProperty('translate');
+		snap();
+
+		const observer = new ResizeObserver(snap);
+		observer.observe(el);
+		window.addEventListener('resize', snap);
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('resize', snap);
+		};
+	}, [open, ref]);
 };
 
 /**

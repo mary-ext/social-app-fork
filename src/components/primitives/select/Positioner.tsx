@@ -2,7 +2,12 @@
 
 import { type CSSProperties, type Ref, useLayoutEffect, useState } from 'react';
 
-import { type Align, getPositionerAttributes, getShrinkingAnchoredStyle } from '../anchored-popup';
+import {
+	type Align,
+	getPositionerAttributes,
+	getShrinkingAnchoredStyle,
+	useDevicePixelSnap,
+} from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
 import { useInertWhileClosed, useTransitionsSettled } from '../presence';
@@ -115,6 +120,8 @@ const MountedPositioner = ({
 	}, [open, openMethod, alignItemWithTrigger, align, positionerRef]);
 
 	useInertWhileClosed(positionerRef, open);
+
+	useDevicePixelSnap(positionerRef, open);
 
 	const pad = COLLISION_PADDING;
 	let style: CSSProperties;

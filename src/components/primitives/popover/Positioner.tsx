@@ -8,6 +8,7 @@ import {
 	getAnchoredStyle,
 	getPositionerAttributes,
 	type Side,
+	useDevicePixelSnap,
 } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { useInertWhileClosed, useTransitionsSettled } from '../presence';
@@ -53,6 +54,8 @@ const MountedPositioner = ({
 	useTransitionsSettled(positionerRef, open, onTransitionSettled);
 
 	useInertWhileClosed(positionerRef, open);
+
+	useDevicePixelSnap(positionerRef, open);
 
 	return useRender({
 		tag: 'dialog',

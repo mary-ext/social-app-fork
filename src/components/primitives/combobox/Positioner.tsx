@@ -8,6 +8,7 @@ import {
 	type CollisionPadding,
 	getPositionerAttributes,
 	getShrinkingAnchoredStyle,
+	useDevicePixelSnap,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
 import { mergeProps } from '../merge-props';
@@ -89,6 +90,8 @@ const MountedPositioner = ({
 	useTransitionsSettled(positionerRef, open, ctx.onTransitionSettled);
 
 	useInertWhileClosed(positionerRef, open);
+
+	useDevicePixelSnap(positionerRef, open);
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		popover: 'manual',
