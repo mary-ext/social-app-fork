@@ -33,6 +33,30 @@ export const toInteractionType = (pointerType: string): InteractionType => {
 };
 
 /**
+ * @param event event that triggered an interaction
+ * @returns the input that produced it, or `''` if unknown
+ */
+export const getInteractionType = (event: Event): InteractionType => {
+	if (event instanceof KeyboardEvent) {
+		return 'keyboard';
+	}
+	// keyboard activation dispatches a click without a press.
+	if (event.type === 'click' && event instanceof MouseEvent && event.detail === 0) {
+		return 'keyboard';
+	}
+	if (event instanceof PointerEvent && event.pointerType !== '') {
+		return toInteractionType(event.pointerType);
+	}
+	if (event instanceof TouchEvent) {
+		return 'touch';
+	}
+	if (event instanceof MouseEvent) {
+		return 'mouse';
+	}
+	return '';
+};
+
+/**
  * @param event pointer event to classify
  * @returns whether the pointer is a mouse or pen
  */

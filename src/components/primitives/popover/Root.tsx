@@ -8,7 +8,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import { useScrollLock } from '@base-ui/utils/useScrollLock';
 import { useTimeout } from '@base-ui/utils/useTimeout';
 
-import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
+import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
@@ -233,23 +233,6 @@ export const Root = ({
 	}, [handle]);
 
 	return <RootContext.Provider value={value}>{children}</RootContext.Provider>;
-};
-
-const getInteractionType = (event: Event): InteractionType => {
-	if (event instanceof KeyboardEvent) {
-		return 'keyboard';
-	}
-	// keyboard activation dispatches a click without a press.
-	if (event.type === 'click' && event instanceof MouseEvent && event.detail === 0) {
-		return 'keyboard';
-	}
-	if (event instanceof PointerEvent && event.pointerType !== '') {
-		return toInteractionType(event.pointerType);
-	}
-	if (event instanceof MouseEvent) {
-		return 'mouse';
-	}
-	return '';
 };
 
 const isInsideEvent = (
