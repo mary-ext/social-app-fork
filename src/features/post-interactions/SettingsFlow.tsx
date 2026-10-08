@@ -2,10 +2,11 @@ import { useState } from 'react';
 
 import { type InteractionSettings, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
+import { ListPicker } from '#/features/post-interactions/ListPicker';
+import { PostInteractionSettingsForm } from '#/features/post-interactions/SettingsForm';
+
 import * as Dialog from '#/components/Dialog';
 import { BackOrCloseButton, createNavigator } from '#/components/Navigator';
-import { ListPicker } from '#/components/PostInteractionSettings/ListPicker';
-import { PostInteractionSettingsForm } from '#/components/PostInteractionSettings/SettingsForm';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 

@@ -1,7 +1,8 @@
 import type { InteractionSettings } from '#/lib/interaction-settings';
 
+import { DraftInteractionSettingsDialog } from '#/features/post-interactions/DraftSettingsDialog';
+
 import * as Dialog from '#/components/Dialog';
-import { DraftInteractionSettingsDialog } from '#/components/dialogs/PostInteractionSettingsDialog/DraftSettingsDialog';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import TinyChevronIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';

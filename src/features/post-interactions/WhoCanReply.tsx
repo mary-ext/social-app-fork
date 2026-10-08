@@ -11,11 +11,12 @@ import { listTarget, profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
-import * as Dialog from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
-} from '#/components/dialogs/PostInteractionSettingsDialog';
+} from '#/features/post-interactions/PostInteractionSettingsDialog';
+
+import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';

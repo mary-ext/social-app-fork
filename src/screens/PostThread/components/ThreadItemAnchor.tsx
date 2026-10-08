@@ -30,6 +30,7 @@ import { Trans } from '#/locale/Trans';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 import { useActorStatus } from '#/features/live-now/use-actor-status';
+import { WhoCanReply } from '#/features/post-interactions/WhoCanReply';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
@@ -53,7 +54,6 @@ import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
-import { WhoCanReply } from '#/components/WhoCanReply';
 
 import CalendarClockIcon from '#/icons/central/CalendarClock_round_outlined_radius1_stroke2.svg';
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';

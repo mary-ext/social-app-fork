@@ -12,9 +12,10 @@ import {
 
 import { formatCount } from '#/locale/intl/number';
 
+import { getReplyAudienceSummary } from '#/features/post-interactions/WhoCanReply';
+
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
-import { getReplyAudienceSummary } from '#/components/WhoCanReply';
 
 import ListIcon from '#/icons/central/BulletList_round_outlined_radius1_stroke2.svg';
 import QuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';

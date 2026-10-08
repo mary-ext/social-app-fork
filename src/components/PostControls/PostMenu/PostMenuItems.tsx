@@ -31,13 +31,13 @@ import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { isPostInLanguage } from '#/locale/helpers';
 
-import { ReportDialog } from '#/features/reporting/ReportDialog';
-
-import * as Dialog from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
-} from '#/components/dialogs/PostInteractionSettingsDialog';
+} from '#/features/post-interactions/PostInteractionSettingsDialog';
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
+import * as Dialog from '#/components/Dialog';
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';

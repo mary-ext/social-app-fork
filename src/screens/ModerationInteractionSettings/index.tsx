@@ -2,13 +2,14 @@ import { useState } from 'react';
 
 import { interactionSettingsFromPreferences, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
-import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useTitle } from '#/state/use-title';
 
+import { ListPicker } from '#/features/post-interactions/ListPicker';
+import { usePostInteractionSettingsMutation } from '#/features/post-interactions/queries';
+import { PostInteractionSettingsForm } from '#/features/post-interactions/SettingsForm';
+
 import * as Dialog from '#/components/Dialog';
-import { ListPicker } from '#/components/PostInteractionSettings/ListPicker';
-import { PostInteractionSettingsForm } from '#/components/PostInteractionSettings/SettingsForm';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
