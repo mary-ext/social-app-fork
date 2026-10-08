@@ -91,7 +91,7 @@ export function Section({
 	);
 }
 
-/** groups related rows; inset within a settings list. supports Base UI's `render` prop. */
+/** inset group of related settings rows. */
 export function Group({ className, ...props }: ComponentProps<'div'>) {
 	return <div {...props} className={clsx(styles.group, className)} />;
 }

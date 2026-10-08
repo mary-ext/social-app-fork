@@ -74,18 +74,13 @@ export function Icon() {
 	return <MagnifyingGlassIcon className={styles.icon} />;
 }
 
-/**
- * the styled field input. render it directly, or via a Base UI input's `render` prop to inherit the shared
- * styling.
- */
+/** styled search input. */
 export function Input({ className, ...props }: ComponentPropsWithRef<'input'>) {
 	return <input type="text" {...props} className={clsx(styles.input, className)} />;
 }
 
 /**
- * trailing clear button (×); out of the tab order since keyboard users clear by editing. usable standalone
- * (pass `onClick`) or as a Base UI `render` target (e.g. `<Autocomplete.Clear render={<Clear label={…}
- * />}>`), which injects the press/visibility behavior. `children` is fixed to the × icon.
+ * trailing clear button; excluded from the tab order.
  *
  * @param label accessible name
  */

@@ -14,7 +14,7 @@ type CardContentProps = {
 };
 
 /**
- * stacks choice cards. supports Base UI's `render` prop.
+ * stacks choice cards.
  *
  * @param props container attributes and children
  * @returns a vertical card list

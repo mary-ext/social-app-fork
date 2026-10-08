@@ -143,8 +143,7 @@ function DialogInner({
 		}
 	};
 
-	// Base UI hands back the full next selection; the single profile that differs from the current members is
-	// the one that was toggled.
+	// diff the combobox's full selection to find the toggled profile.
 	const onValueChange = (next: AnyProfileView[]) => {
 		const nextDids = new Set(next.map((profile) => profile.did));
 		const toggled =

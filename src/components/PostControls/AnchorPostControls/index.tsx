@@ -43,8 +43,6 @@ function AnchorControlButton({
 	...rest
 }: AnchorControlButtonProps) {
 	const button = (
-		// Base UI's `Menu.Trigger render={...}` and `Tooltip` clone this with their own props
-		// (aria/data/handlers/id/ref) merged in, so spread them all onto the button.
 		<button
 			type="button"
 			aria-label={label}

@@ -46,8 +46,6 @@ type AuthorLinkProps = Pick<
 function AuthorLink({ disabled, label, onPress, ref, to, ...text }: AuthorLinkProps) {
 	'use no memo'; // forwarded text props invalidate the generated wrapper cache
 
-	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
-	// element ref either way, so narrow it at the boundary.
 	if (disabled) {
 		return <Text ref={ref} {...text} />;
 	}

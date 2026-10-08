@@ -40,8 +40,7 @@ import {
 } from './ChatRowData';
 import { useIsWithinSplitView } from './splitView/context';
 
-// the dots button every row hands to its ConvoMenu as the trigger. a factory rather than a component so
-// Base UI's `render` receives the Button element itself and can clone its trigger props onto it.
+// use a factory so `render` clones the Button rather than a wrapper.
 const menuTrigger = () => (
 	<Button
 		className={css.menuIcon}

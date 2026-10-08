@@ -59,9 +59,6 @@ function PostControlButton({
 	...rest
 }: PostControlButtonProps) {
 	const button = (
-		// Base UI's `Menu.Trigger render={...}` and `Tooltip` both clone this with their own props
-		// (aria/data/handlers/id/ref) merged in, so spread them all onto the button — forwarding only the
-		// ref wouldn't open the menu.
 		<button
 			type="button"
 			aria-label={label}
