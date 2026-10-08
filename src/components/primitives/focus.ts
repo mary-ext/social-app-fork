@@ -41,18 +41,10 @@ const isTabbable = (el: HTMLElement): boolean => {
 
 /**
  * @param container element to search
- * @returns elements inside the container reachable with Tab, in tree order
- */
-const getTabbables = (container: Element): HTMLElement[] => {
-	return Array.from(container.querySelectorAll<HTMLElement>(CANDIDATES)).filter(isTabbable);
-};
-
-/**
- * @param container element to search
  * @returns the first tabbable element inside the container, or the container itself
  */
 export const getFirstTabbable = (container: HTMLElement): HTMLElement => {
-	return getTabbables(container)[0] ?? container;
+	return container.querySelectorAll<HTMLElement>(CANDIDATES).values().find(isTabbable) ?? container;
 };
 
 /**
