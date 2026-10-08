@@ -11,7 +11,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import * as styles from '#/components/Menu/Menu.css';
 import { Text } from '#/components/Text';
 
-import CheckmarkIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import CheckmarkIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke3.svg';
 
 // a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
 // `handle` (from `createHandle`/`useMenuHandle`) to drive a detached Trigger or open it imperatively.

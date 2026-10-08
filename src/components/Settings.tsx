@@ -8,6 +8,7 @@ import { Radio } from '@base-ui/react/radio';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
+import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/Settings.css';
 import { Spinner } from '#/components/Spinner';
@@ -15,7 +16,6 @@ import { Text } from '#/components/Text';
 import { type LinkProps, useInternalLink } from '#/components/web/Link';
 import * as Skele from '#/components/web/Skeleton';
 
-import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
 import ChevronDownIcon from '#/icons/central/ChevronBottom_round_outlined_radius1_stroke2.svg';
 import ChevronRightIcon from '#/icons/central/ChevronRight_round_outlined_radius1_stroke2.svg';
 import ChevronUpIcon from '#/icons/central/ChevronTop_round_outlined_radius1_stroke2.svg';
@@ -91,7 +91,7 @@ export function Section({
 	);
 }
 
-/** an inset group of related rows. accepts `div` props for use with Base UI's `render` prop. */
+/** groups related rows; inset within a settings list. supports Base UI's `render` prop. */
 export function Group({ className, ...props }: ComponentProps<'div'>) {
 	return <div {...props} className={clsx(styles.group, className)} />;
 }
@@ -440,35 +440,46 @@ export function RadioRow({
 			className={clsx(styles.row, styles.rowInteractive, className)}
 			value={value}
 		>
-			<span className={clsx(styles.leading, styles.radio)}>
-				<Radio.Indicator className={styles.radioDot} />
-			</span>
+			<RadioIndicator className={styles.leading} />
 			{children}
 		</Radio.Root>
 	);
 }
 
+type CheckboxRowState =
+	| { value: string; checked?: never; onChange?: never }
+	| { value?: never; checked: boolean; onChange: (checked: boolean) => void };
+
 /**
- * a checkbox row. requires a Base UI `CheckboxGroup` parent.
+ * a checkbox row. use `value` with a Base UI `CheckboxGroup`, or `checked` and `onChange` standalone.
  *
  * @param children the row's label
+ * @param disabled prevents toggling the row
  */
 export function CheckboxRow({
+	checked,
 	children,
+	className,
+	disabled,
 	label,
+	onChange,
 	value,
-}: {
+}: CheckboxRowState & {
 	children: ReactNode;
+	className?: string;
+	disabled?: boolean;
 	label: string;
-	value: string;
 }) {
 	return (
-		<Checkbox.Root aria-label={label} className={clsx(styles.row, styles.rowInteractive)} value={value}>
-			<span className={clsx(styles.leading, styles.checkbox)}>
-				<Checkbox.Indicator className={styles.checkboxIndicator}>
-					<CheckIcon className={styles.checkIcon} />
-				</Checkbox.Indicator>
-			</span>
+		<Checkbox.Root
+			aria-label={label}
+			checked={checked}
+			className={clsx(styles.row, styles.rowInteractive, className)}
+			disabled={disabled}
+			onCheckedChange={onChange}
+			value={value}
+		>
+			<CheckboxIndicator className={styles.leading} />
 			{children}
 		</Checkbox.Root>
 	);

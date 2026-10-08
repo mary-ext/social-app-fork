@@ -1,5 +1,7 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
+import * as indicator from '#/components/forms/Indicator.css';
+
 import { vars } from '#/styles/contract.css';
 import { fontSize, iconSize, zIndex } from '#/styles/tokens.css';
 
@@ -137,7 +139,4 @@ export const itemCheckbox = style([
 	},
 ]);
 
-export const itemCheckboxMark = style({
-	width: 14,
-	height: 14,
-});
+export const itemCheckboxMark = style([indicator.checkIcon]);

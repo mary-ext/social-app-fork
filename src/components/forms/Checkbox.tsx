@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { clsx } from 'clsx';
 
-import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2.svg';
+import { CheckboxIndicator } from '#/components/forms/Indicator';
 
 import * as styles from './Checkbox.css';
 
@@ -27,10 +27,6 @@ export const Checkbox = ({ className, ...props }: CheckboxProps) => (
 		nativeButton
 		render={<button type="button" />}
 	>
-		<span aria-hidden className={styles.box}>
-			<BaseCheckbox.Indicator className={styles.indicator}>
-				<CheckIcon className={styles.checkIcon} />
-			</BaseCheckbox.Indicator>
-		</span>
+		<CheckboxIndicator />
 	</BaseCheckbox.Root>
 );

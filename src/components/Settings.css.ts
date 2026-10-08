@@ -1,4 +1,4 @@
-import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, globalStyle, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
@@ -6,8 +6,13 @@ import { iconSize, space } from '#/styles/tokens.css';
 
 const LEADING_SIZE = 22;
 const ROW_GAP = 14;
-const ROW_PADDING_BLOCK = 14;
 const GROUP_RADIUS = 12;
+
+/** label offset for rows with a leading icon or indicator. */
+export const ROW_LABEL_INSET = space.lg + LEADING_SIZE + ROW_GAP;
+
+/** vertical row padding, shared with list containers. */
+export const ROW_PADDING_BLOCK = 14;
 
 // inherited variables let rows adapt to their container's corners and hover color
 const containerRadius = createVar();
@@ -129,7 +134,7 @@ export const card = style([
 	},
 ]);
 
-export const group = style([tinted, { marginInline: space.lg }]);
+export const group = style([tinted, { selectors: { [`${list} &`]: { marginInline: space.lg } } }]);
 
 // #endregion
 
@@ -179,7 +184,8 @@ export const rowInteractive = style({
 	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
-		[enabledHover]: { backgroundColor: rowHover },
+		// standalone rows have no container-provided hover color
+		[enabledHover]: { backgroundColor: fallbackVar(rowHover, vars.palette.contrast_25) },
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
@@ -237,16 +243,14 @@ export const panelRows = style({
 // low specificity lets the label inset below override the divider's left edge
 globalStyle(`:where(${panelRows} > ${item}:first-child)::before`, divider);
 
-// align dividers with the preceding row's label. for disclosures, use the trigger when closed
-// and the last panel row when open.
+// align dividers with the preceding label. use disclosure triggers, since panel rows are nested.
 {
-	const labelInset = space.lg + LEADING_SIZE + ROW_GAP;
-	const led = `${item}:has(> ${leading}, > :first-child:not([data-panel-open]) > ${leading}, > ${panel} > :nth-last-child(1 of ${item}) > ${leading})`;
+	const led = `${item}:has(> ${leading}, > :first-child > ${leading})`;
 
 	// switches, radios, and checkboxes leave a hidden input between them and the next row
 	globalStyle(
 		`:is(${led} + ${item}, ${led} + input + ${item}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${item}:first-child)::before`,
-		{ left: labelInset },
+		{ left: ROW_LABEL_INSET },
 	);
 }
 
@@ -335,39 +339,6 @@ export const switchThumb = style({
 	selectors: {
 		'[data-checked] &': { transform: 'translateX(18px)' },
 	},
-});
-
-const indicator = style({
-	boxSizing: 'border-box',
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color, border-color',
-	border: `2px solid ${vars.palette.contrast_300}`,
-	selectors: {
-		'[data-checked] > &': {
-			borderColor: vars.palette.primary_500,
-			backgroundColor: vars.palette.primary_500,
-		},
-	},
-});
-
-export const radio = style([indicator, { borderRadius: 999 }]);
-
-export const radioDot = style({
-	borderRadius: 999,
-	backgroundColor: vars.palette.white,
-	width: 8,
-	height: 8,
-});
-
-export const checkbox = style([indicator, { borderRadius: 6, color: vars.palette.white }]);
-
-export const checkboxIndicator = style({
-	display: 'flex',
-});
-
-export const checkIcon = style({
-	width: 14,
-	height: 14,
 });
 
 // #endregion

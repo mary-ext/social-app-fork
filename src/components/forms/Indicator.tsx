@@ -1,0 +1,37 @@
+import { Checkbox } from '@base-ui/react/checkbox';
+import { Radio } from '@base-ui/react/radio';
+import { clsx } from 'clsx';
+
+import * as styles from '#/components/forms/Indicator.css';
+
+import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke3.svg';
+
+/**
+ * render directly inside a Base UI `Radio.Root`.
+ *
+ * @param className extra classes for the outer circle
+ * @returns a radio indicator
+ */
+export function RadioIndicator({ className }: { className?: string }) {
+	return (
+		<span aria-hidden className={clsx(styles.radio, className)}>
+			<Radio.Indicator className={styles.radioDot} />
+		</span>
+	);
+}
+
+/**
+ * render directly inside a Base UI `Checkbox.Root`.
+ *
+ * @param className extra classes for the outer box
+ * @returns a checkbox indicator with checked and indeterminate states
+ */
+export function CheckboxIndicator({ className }: { className?: string }) {
+	return (
+		<span aria-hidden className={clsx(styles.checkbox, className)}>
+			<Checkbox.Indicator className={styles.checkboxIndicator}>
+				<CheckIcon className={styles.checkIcon} />
+			</Checkbox.Indicator>
+		</span>
+	);
+}
