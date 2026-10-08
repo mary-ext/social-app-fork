@@ -11,12 +11,13 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
+import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';
+import { ReportConversationDialog } from '#/features/reporting/ReportConversationDialog';
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
-import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
-import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
 import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import {
 	Button as WebButton,

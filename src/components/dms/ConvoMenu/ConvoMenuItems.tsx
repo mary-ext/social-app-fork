@@ -11,14 +11,15 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
+import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';
+import { ReportConversationDialog } from '#/features/reporting/ReportConversationDialog';
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
-import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
-import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
 import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 

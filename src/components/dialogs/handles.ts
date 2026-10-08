@@ -4,7 +4,7 @@ import { Dialog } from '@base-ui/react/dialog';
 
 import type { SessionAccount } from '#/state/session';
 
-import type { ReportSubject } from '#/components/moderation/ReportDialog/types';
+import type { ReportSubject } from '#/features/reporting/types';
 
 /** the images and the index to open the global lightbox on. */
 export type LightboxPayload = { images: LightboxImage[]; index: number };

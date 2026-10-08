@@ -22,6 +22,7 @@ import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/live-now/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/live-now/components/GoLiveDisabledDialog';
 import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
+import { ReportDialog } from '#/features/reporting/ReportDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
@@ -33,7 +34,6 @@ import {
 	MuteAccountPrompt,
 	UnmuteAccountPrompt,
 } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { useAccountMute } from '#/components/moderation/use-account-mute';
 import * as Prompt from '#/components/Prompt';
 import { shareText, shareUrl } from '#/components/sharing';

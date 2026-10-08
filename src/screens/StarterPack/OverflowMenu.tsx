@@ -5,10 +5,11 @@ import { cleanError } from '#/lib/errors';
 import { useDeleteStarterPackMutation, useStarterPackOptOutMutation } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
 import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
 import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';

@@ -20,9 +20,10 @@ import { useSession } from '#/state/session';
 import { formatCount } from '#/locale/intl/number';
 import { Trans } from '#/locale/Trans';
 
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { RichText } from '#/components/RichText';
 import { shareUrl } from '#/components/sharing';
 import { Stack } from '#/components/Stack';

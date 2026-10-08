@@ -16,10 +16,11 @@ import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
+import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';
+import { ReportConversationDialog } from '#/features/reporting/ReportConversationDialog';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
-import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
-import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import {
 	type ConvoWithDetails,
 	getConvoReportSubject,

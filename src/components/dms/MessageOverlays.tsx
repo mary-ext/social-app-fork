@@ -7,10 +7,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useConvoActive } from '#/state/messages/convo';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
-import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReactionsDialog } from '#/components/dms/ReactionsDialog';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 

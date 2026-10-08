@@ -6,7 +6,7 @@ import { Spinner } from '#/components/Spinner';
 
 import { m } from '#/paraglide/messages';
 
-import * as styles from './index.css';
+import * as styles from './ReportDialog.css';
 import type { ReportSubject } from './types';
 
 const Content = lazy(() => import('./ReportDialogContent').then((mod) => ({ default: mod.Content })));

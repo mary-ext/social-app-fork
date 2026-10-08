@@ -1,7 +1,8 @@
 import type { Did } from '@atcute/lexicons';
 
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import type { DialogHandle } from '#/components/Dialog';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 
 export function ReportConversationDialog({
 	handle,

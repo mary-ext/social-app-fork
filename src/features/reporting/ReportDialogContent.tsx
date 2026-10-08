@@ -32,7 +32,7 @@ import {
 } from './const';
 import { useCopyForSubject } from './copy';
 import { reportErrorMessage } from './errors';
-import * as styles from './index.css';
+import * as styles from './ReportDialog.css';
 import type { ParsedReportSubject, ReportSubject } from './types';
 import { parseReportSubject } from './utils/parseReportSubject';
 import { type ReportCategoryConfig, type ReportOption, useReportOptions } from './utils/useReportOptions';

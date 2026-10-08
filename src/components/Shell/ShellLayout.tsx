@@ -7,13 +7,13 @@ import { closeAllActiveElements } from '#/state/shell/overlays';
 
 import { ComposerDialog } from '#/features/composer/ComposerDialog';
 import { Lightbox } from '#/features/lightbox';
+import { GlobalReportDialog } from '#/features/reporting/ReportDialog';
 
 import { KeybindsDialog } from '#/components/dialogs/KeybindsDialog';
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
 import { SigninDialog } from '#/components/dialogs/Signin';
 import { ErrorBoundary } from '#/components/ErrorBoundary';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
-import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
 import { RouteLoadingScreen } from '#/components/RouteLoadingScreen';
 import { Shell } from '#/components/Shell/Shell';
 import { useShellKeybinds } from '#/components/Shell/shell-keybinds';

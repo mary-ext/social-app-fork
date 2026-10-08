@@ -3,7 +3,7 @@ import type { ToolsOzoneReportDefs } from '@atcute/ozone';
 
 import { OzoneReason, RootReason } from '#/lib/moderation/report-reasons';
 
-import type { ParsedReportSubject } from '#/components/moderation/ReportDialog/types';
+import type { ParsedReportSubject } from '#/features/reporting/types';
 
 /**
  * Mapping of new (Ozone namespace) reason types to old reason types.

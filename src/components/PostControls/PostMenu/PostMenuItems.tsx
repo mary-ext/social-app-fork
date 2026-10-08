@@ -31,6 +31,8 @@ import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 
 import { isPostInLanguage } from '#/locale/helpers';
 
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
@@ -40,7 +42,6 @@ import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import { MuteAccountPrompt, UnmuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import { useAccountMute } from '#/components/moderation/use-account-mute';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';

@@ -13,10 +13,11 @@ import {
 } from '#/state/queries/list';
 import { useSession } from '#/state/session';
 
+import { ReportDialog } from '#/features/reporting/ReportDialog';
+
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import * as Menu from '#/components/Menu';
-import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import { shareUrl } from '#/components/sharing';
 import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';
