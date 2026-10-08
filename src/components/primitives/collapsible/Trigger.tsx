@@ -12,7 +12,7 @@ import { useRootContext } from './shared';
 
 export type TriggerProps = RenderProps<'summary'>;
 
-const PRESS_OWNER_SELECTOR = `${INTERACTIVE_SELECTOR}, input, label, summary`;
+const PRESS_OWNER_SELECTOR = `${INTERACTIVE_SELECTOR}, input, label`;
 
 /**
  * toggles the panel unless a nested control handles the press or `onClick` calls `preventDefault()`.
