@@ -10,19 +10,26 @@ export const player = style({
 	minWidth: 0,
 });
 
-export const waveform = style({
+export const scrubber = style({
 	flex: 1,
 	minWidth: 0,
+});
+
+export const waveform = style({
 	height: 28,
 	cursor: 'pointer',
-	touchAction: 'none',
 	selectors: {
-		'&:focus-visible': {
+		'&:has(:focus-visible)': {
 			borderRadius: 2,
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},
 	},
+});
+
+export const waveformTrack = style({
+	width: '100%',
+	height: '100%',
 });
 
 export const bars = style({

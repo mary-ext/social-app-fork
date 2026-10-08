@@ -1,4 +1,4 @@
-import { type KeyboardEvent, type PointerEvent, useEffect, useId, useRef, useState } from 'react';
+import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
 
 import { clsx } from 'clsx';
 
@@ -6,6 +6,7 @@ import { getBlobUrl } from '#/lib/utils/blob-url';
 import { clamp } from '#/lib/utils/numbers';
 import { formatTime } from '#/lib/utils/time';
 
+import * as Slider from '#/components/primitives/slider';
 import { Button, ButtonIcon } from '#/components/web/Button';
 
 import PauseIcon from '#/icons/central/Pause_round_filled_radius1_stroke2.svg';
@@ -18,6 +19,7 @@ import * as css from './VoicePlayer.css';
 import { BAR_COUNT, useWaveform } from './waveform';
 
 const SEEK_STEP = 5;
+const SCRUB_STEP = 0.01;
 
 // keeps silent stretches visible as a baseline.
 const MIN_PEAK = 0.08;
@@ -99,12 +101,8 @@ export function VoicePlayer({
 		setPosition(clamped);
 	};
 
-	const seekToPointer = (event: PointerEvent<HTMLElement>) => {
-		const rect = event.currentTarget.getBoundingClientRect();
-		seek(((event.clientX - rect.left) / rect.width) * duration);
-	};
-
-	const onScrubKeyDown = (event: KeyboardEvent) => {
+	// use a larger keyboard step without coarsening pointer scrubbing.
+	const onScrubKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
 		switch (event.key) {
 			case 'ArrowLeft':
 			case 'ArrowDown': {
@@ -114,14 +112,6 @@ export function VoicePlayer({
 			case 'ArrowRight':
 			case 'ArrowUp': {
 				seek(position + SEEK_STEP);
-				break;
-			}
-			case 'Home': {
-				seek(0);
-				break;
-			}
-			case 'End': {
-				seek(duration);
 				break;
 			}
 			default: {
@@ -151,54 +141,51 @@ export function VoicePlayer({
 				<ButtonIcon icon={isPlaying ? PauseIcon : PlayIcon} />
 			</Button>
 
-			<div
-				className={css.waveform}
-				role="slider"
-				aria-label={m['features.composer.media.voice.a11y.seek']()}
-				aria-valuemin={0}
-				aria-valuemax={Math.round(duration)}
-				aria-valuenow={Math.round(position)}
-				aria-valuetext={formatTime(position)}
-				tabIndex={tabbable ? 0 : -1}
-				// prevent tile dragging while scrubbing.
-				onMouseDown={keepEditorFocus}
-				onPointerDown={(event) => {
-					event.currentTarget.setPointerCapture(event.pointerId);
-					seekToPointer(event);
-				}}
-				onPointerMove={(event) => {
-					if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-						seekToPointer(event);
-					}
-				}}
-				onKeyDown={onScrubKeyDown}
+			<Slider.Root
+				className={css.scrubber}
+				value={position}
+				min={0}
+				max={duration}
+				step={SCRUB_STEP}
+				largeStep={SEEK_STEP}
+				onValueChange={seek}
 			>
-				{/* clipping lets progress advance within each bar. */}
-				<svg className={css.bars} aria-hidden>
-					<defs>
-						<clipPath id={clipId}>
-							{peaks.map((peak, index) => {
-								const height = Math.max(peak, MIN_PEAK) * 100;
-								return (
-									<rect
-										// oxlint-disable-next-line react/no-array-index-key -- positional
-										key={index}
-										x={`${(index + BAR_INSET) * slot}%`}
-										y={`${(100 - height) / 2}%`}
-										width={`${(1 - BAR_INSET * 2) * slot}%`}
-										height={`${height}%`}
-										rx={1.5}
-									/>
-								);
-							})}
-						</clipPath>
-					</defs>
-					<g clipPath={`url(#${clipId})`}>
-						<rect className={css.track} width="100%" height="100%" />
-						<rect className={css.played} width={`${progress * 100}%`} height="100%" />
-					</g>
-				</svg>
-			</div>
+				{/* keep editor focus for undo shortcuts. */}
+				<Slider.Control className={css.waveform} focusOnPress={false}>
+					<Slider.Track className={css.waveformTrack}>
+						<svg className={css.bars} aria-hidden>
+							<defs>
+								<clipPath id={clipId}>
+									{peaks.map((peak, index) => {
+										const height = Math.max(peak, MIN_PEAK) * 100;
+										return (
+											<rect
+												// oxlint-disable-next-line react/no-array-index-key -- positional
+												key={index}
+												x={`${(index + BAR_INSET) * slot}%`}
+												y={`${(100 - height) / 2}%`}
+												width={`${(1 - BAR_INSET * 2) * slot}%`}
+												height={`${height}%`}
+												rx={1.5}
+											/>
+										);
+									})}
+								</clipPath>
+							</defs>
+							<g clipPath={`url(#${clipId})`}>
+								<rect className={css.track} width="100%" height="100%" />
+								<rect className={css.played} width={`${progress * 100}%`} height="100%" />
+							</g>
+						</svg>
+						<Slider.Thumb
+							aria-label={m['features.composer.media.voice.a11y.seek']()}
+							getAriaValueText={formatTime}
+							tabIndex={tabbable ? undefined : -1}
+							onKeyDown={onScrubKeyDown}
+						/>
+					</Slider.Track>
+				</Slider.Control>
+			</Slider.Root>
 
 			<span className={css.time}>{formatTime(isPlaying || position > 0 ? position : duration)}</span>
 
