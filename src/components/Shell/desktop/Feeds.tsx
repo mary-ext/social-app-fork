@@ -1,12 +1,10 @@
-import { Toggle } from '@base-ui/react/toggle';
-import { ToggleGroup } from '@base-ui/react/toggle-group';
-
 import { getLocalizedFeedName } from '#/lib/feed-names';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 
+import * as Toggle from '#/components/primitives/toggle';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { Link } from '#/components/web/Link';
@@ -50,8 +48,7 @@ export function DesktopFeeds() {
 	const activeValue = activeFeed ?? (target.name === 'Feeds' ? MORE_FEEDS : undefined);
 
 	const onValueChange = (next: string[]) => {
-		// More feeds is an <a> that navigates itself, so it never reports here. single-select: clicking another
-		// feed yields `[feed]`, re-clicking the active one yields `[]`.
+		// an empty selection reselects the active feed; "More feeds" navigates through its link.
 		const nextValue = next[0];
 		const feed = nextValue ? pinnedFeedInfos.find((info) => info.uri === nextValue)?.uri : activeFeed;
 		if (!feed) {
@@ -70,7 +67,7 @@ export function DesktopFeeds() {
 	};
 
 	return (
-		<ToggleGroup
+		<Toggle.Group
 			className={css.group}
 			orientation="vertical"
 			value={activeValue ? [activeValue] : []}
@@ -79,7 +76,7 @@ export function DesktopFeeds() {
 			{pinnedFeedInfos.map((feedInfo) => (
 				<FeedItem key={feedInfo.uri} feedInfo={feedInfo} />
 			))}
-			<Toggle
+			<Toggle.Root
 				value={MORE_FEEDS}
 				nativeButton={false}
 				render={
@@ -93,7 +90,7 @@ export function DesktopFeeds() {
 					</Link>
 				}
 			/>
-		</ToggleGroup>
+		</Toggle.Group>
 	);
 }
 
@@ -102,7 +99,7 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 	const displayName = getLocalizedFeedName(feedInfo);
 
 	return (
-		<Toggle
+		<Toggle.Root
 			value={feedInfo.uri}
 			className={css.item}
 			aria-label={displayName}
@@ -124,6 +121,6 @@ function FeedItem({ feedInfo }: { feedInfo: SavedFeedSourceInfo }) {
 			<Text size="md" numberOfLines={1} className={css.label}>
 				{displayName}
 			</Text>
-		</Toggle>
+		</Toggle.Root>
 	);
 }

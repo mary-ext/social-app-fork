@@ -1,5 +1,4 @@
-import { Toggle } from '@base-ui/react/toggle';
-import { ToggleGroup } from '@base-ui/react/toggle-group';
+import * as Toggle from '#/components/primitives/toggle';
 
 import { m } from '#/paraglide/messages';
 
@@ -17,7 +16,7 @@ export function CategoryNav({
 	onJump: (key: string) => void;
 }) {
 	return (
-		<ToggleGroup
+		<Toggle.Group
 			aria-label={m['components.emojiPicker.category.a11y']()}
 			className={styles.nav}
 			onValueChange={(groupValue) => {
@@ -30,7 +29,7 @@ export function CategoryNav({
 			value={active ? [active] : []}
 		>
 			{CATEGORIES.map(({ icon: Icon, key, label }) => (
-				<Toggle
+				<Toggle.Root
 					aria-label={label()}
 					className={styles.navButton}
 					disabled={key === 'recent' && !hasRecents}
@@ -39,8 +38,8 @@ export function CategoryNav({
 					value={key}
 				>
 					<Icon className={styles.navIcon} />
-				</Toggle>
+				</Toggle.Root>
 			))}
-		</ToggleGroup>
+		</Toggle.Group>
 	);
 }
