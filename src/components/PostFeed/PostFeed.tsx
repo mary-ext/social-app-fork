@@ -24,12 +24,13 @@ import {
 } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
 
+import { TrendingInterstitial, useShowTrendingInterstitial } from '#/features/trending/TrendingInterstitial';
+
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import { RichText } from '#/components/RichText';
-import { TrendingInterstitial, useShowTrendingInterstitial } from '#/components/TrendingInterstitial';
 
 import { m } from '#/paraglide/messages';
 import { useFocusEffect, useIsFocused } from '#/router';

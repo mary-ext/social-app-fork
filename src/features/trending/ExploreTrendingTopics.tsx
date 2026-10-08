@@ -8,9 +8,11 @@ import {
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useIsTrendingEnabled } from '#/state/preferences/trending';
-import { type TrendingTopic, useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 
 import { formatCount } from '#/locale/intl/number';
+
+import * as css from '#/features/trending/ExploreTrendingTopics.css';
+import { type TrendingTopic, useGetTrendsQuery } from '#/features/trending/queries';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { RichText } from '#/components/RichText';
@@ -19,8 +21,6 @@ import { Link } from '#/components/web/Link';
 import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
-
-import * as css from './ExploreTrendingTopics.css';
 
 const TOPIC_COUNT = 5;
 

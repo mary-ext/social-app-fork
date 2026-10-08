@@ -12,6 +12,7 @@ import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSugges
 import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 
 import { useSuggestedStarterPacksQuery } from '#/features/starter-packs/queries/suggested-starter-packs';
+import { ExploreTrendingTopics } from '#/features/trending/ExploreTrendingTopics';
 
 import type { SearchTabId } from '#/screens/Search/SearchResults';
 
@@ -38,7 +39,6 @@ import * as ModuleHeader from './components/ModuleHeader';
 import { StarterPackCard, StarterPackCardSkeleton } from './components/StarterPackCard';
 import * as css from './Explore.css';
 import { SuggestedAccountsTabBar, SuggestedProfileCard } from './modules/ExploreSuggestedAccounts';
-import { ExploreTrendingTopics } from './modules/ExploreTrendingTopics';
 
 type ExploreSearchButtonModule = 'suggestedAccounts' | 'suggestedFeeds';
 
