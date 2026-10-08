@@ -99,12 +99,44 @@ export const findReturnFocus = (chain: readonly HTMLElement[]): HTMLElement | nu
 };
 
 /**
+ * sets focus and `:focus-visible`, even on the active element.
+ *
+ * @param el element to focus
+ * @param options focus options
+ */
+export const focusWithVisibility = (
+	el: HTMLElement,
+	options: FocusOptions & { focusVisible: boolean },
+): void => {
+	// focus() on the active element does not update `:focus-visible`.
+	if (el === document.activeElement && el.matches(':focus-visible') !== options.focusVisible) {
+		el.blur();
+	}
+	el.focus(options);
+};
+
+/**
+ * applies {@link FocusTarget}, showing a focus ring only for keyboard input.
+ *
  * @param target focus target option
  * @param type interaction type that opened or closed the popup
- * @param getDefault resolves the default target
- * @returns the element to focus, or `null` to leave focus alone
+ * @param getDefault resolves the default target; `null` leaves focus unchanged
+ * @param options additional focus options
  */
-export const resolveFocusTarget = (
+export const focusTarget = (
+	target: FocusTarget,
+	type: InteractionType,
+	getDefault: () => HTMLElement | null,
+	options?: Omit<FocusOptions, 'focusVisible'>,
+): void => {
+	const el = resolveFocusTarget(target, type, getDefault);
+	// programmatic focus can inherit an editable field's focus ring.
+	if (el) {
+		focusWithVisibility(el, { ...options, focusVisible: type === 'keyboard' });
+	}
+};
+
+const resolveFocusTarget = (
 	target: FocusTarget,
 	type: InteractionType,
 	getDefault: () => HTMLElement | null,

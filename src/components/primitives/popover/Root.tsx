@@ -2,7 +2,7 @@
 
 import { type ReactNode, type RefObject, useEffect, useId, useRef, useState } from 'react';
 
-import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
+import { type InteractionType, resolveInteractionType } from '#/lib/browser/input-modality';
 import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
@@ -98,7 +98,7 @@ export const Root = ({
 			return false;
 		}
 
-		const method = request.method ?? getInteractionType(request.event);
+		const method = request.method ?? resolveInteractionType(request.event);
 		if (next) {
 			setOpenReason(request.reason);
 			setOpenMethod(method);

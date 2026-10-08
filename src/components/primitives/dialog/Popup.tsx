@@ -2,7 +2,7 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { findReturnFocus, type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
+import { findReturnFocus, type FocusTarget, focusTarget, getFirstTabbable } from '../focus';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -40,15 +40,11 @@ export const Popup = ({ render, ref, initialFocus, finalFocus = true, ...element
 				return;
 			}
 			const target = initialFocus ?? ((type) => (type === 'touch' ? popup : true));
-			resolveFocusTarget(target, ctx.openMethod, () => getFirstTabbable(popup))?.focus({
-				preventScroll: true,
-			});
+			focusTarget(target, ctx.openMethod, () => getFirstTabbable(popup), { preventScroll: true });
 		},
 		final() {
 			// without a usable default, keep the focus that closing the dialog restored natively.
-			resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () =>
-				findReturnFocus(ctx.returnFocusRef.current),
-			)?.focus();
+			focusTarget(finalFocus, ctx.closeMethodRef.current, () => findReturnFocus(ctx.returnFocusRef.current));
 		},
 	});
 

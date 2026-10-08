@@ -4,7 +4,7 @@ import type { HTMLAttributes, SyntheticEvent } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
+import { type FocusTarget, focusTarget, getFirstTabbable } from '../focus';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -44,12 +44,12 @@ export const Popup = ({
 		initial() {
 			const popup = popupRef.current;
 			if (popup && managesFocus) {
-				resolveFocusTarget(initialFocus, ctx.openMethod, () => getFirstTabbable(popup))?.focus();
+				focusTarget(initialFocus, ctx.openMethod, () => getFirstTabbable(popup));
 			}
 		},
 		final() {
 			if (managesFocus) {
-				resolveFocusTarget(finalFocus, ctx.closeMethodRef.current, () => ctx.activeTrigger)?.focus();
+				focusTarget(finalFocus, ctx.closeMethodRef.current, () => ctx.activeTrigger);
 			}
 		},
 	});

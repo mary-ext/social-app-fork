@@ -89,8 +89,21 @@ const onPointerEvent = (evt: PointerEvent) => {
 	setModality(next);
 };
 
+const TEXT_INPUT_TYPES = new Set(['email', 'number', 'password', 'search', 'tel', 'text', 'url']);
+
+const isTextEntry = (target: EventTarget | undefined): boolean => {
+	if (target instanceof HTMLInputElement) {
+		return TEXT_INPUT_TYPES.has(target.type);
+	}
+	return target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
+};
+
 const onKeyDown = (evt: KeyboardEvent) => {
 	if (['Alt', 'Control', 'Meta', 'Shift'].includes(evt.key)) {
+		return;
+	}
+	// virtual keyboards also emit keydown (e.g. Enter and Backspace on Gboard).
+	if (evt.key !== 'Escape' && evt.key !== 'Tab' && isTextEntry(evt.composedPath()[0])) {
 		return;
 	}
 
@@ -117,9 +130,27 @@ const subscribe = (listener: () => void) => {
 	};
 };
 
-const getSnapshot = () => modality;
+/**
+ * reads without subscribing to input changes.
+ *
+ * @returns the last tracked input modality
+ */
+export const getInputModality = (): InputModality => {
+	return modality;
+};
 
-/** mirrors pointer modality onto `<html>` for input-aware styles */
+/**
+ * classifies interactions whose events may lack input information, such as imperative calls or native
+ * dismissals.
+ *
+ * @param event event that triggered an interaction
+ * @returns the event's input type, falling back to {@link getInputModality} if unknown
+ */
+export const resolveInteractionType = (event: Event): InputModality => {
+	return getInteractionType(event) || getInputModality();
+};
+
+/** starts input tracking and mirrors pointer modality onto `<html>` for input-aware styles */
 export const initInputModality = (): void => {
 	const root = document.documentElement;
 
@@ -134,11 +165,10 @@ export const initInputModality = (): void => {
 };
 
 /**
- * Reactive input modality hook, for behavior that has to follow the input in use rather than what the device
- * is capable of.
+ * subscribes to input modality changes.
  *
  * @returns the input modality of the most recent interaction
  */
 export const useInputModality = (): InputModality => {
-	return useSyncExternalStore(subscribe, getSnapshot);
+	return useSyncExternalStore(subscribe, getInputModality);
 };
