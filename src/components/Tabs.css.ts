@@ -1,5 +1,6 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { hover } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
@@ -97,6 +98,13 @@ export const tabContent = style({
 	},
 	selectors: {
 		[`${tab}[data-active] &::after`]: { backgroundColor: vars.palette.primary_500 },
+	},
+});
+
+export const tabLabel = style({
+	selectors: {
+		[`${tab} &`]: { color: colors.textContrastMedium },
+		[`${tab}[data-active] &`]: { color: colors.text },
 	},
 });
 

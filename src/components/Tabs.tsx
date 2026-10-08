@@ -158,16 +158,13 @@ export const Tab = ({ value, className, icon: Icon, label, ...rest }: TabProps) 
 		<TabsPrimitive.Tab
 			value={value}
 			className={clsx(styles.tab, styles.tabVariant[variant], className)}
-			render={(props, state) => (
-				<button {...props}>
-					<span className={styles.tabContent}>
-						{Icon && <Icon className={styles.tabIcon} />}
-						<Text color={state.active ? 'text' : 'textContrastMedium'}>{label}</Text>
-					</span>
-				</button>
-			)}
 			{...rest}
-		/>
+		>
+			<span className={styles.tabContent}>
+				{Icon && <Icon className={styles.tabIcon} />}
+				<Text className={styles.tabLabel}>{label}</Text>
+			</span>
+		</TabsPrimitive.Tab>
 	);
 };
 

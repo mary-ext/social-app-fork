@@ -1,4 +1,4 @@
-import { type ComponentProps, useRef } from 'react';
+import { type ReactElement, useRef } from 'react';
 
 import type { ChatBskyActorGetStatus, ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -313,7 +313,7 @@ export function Header({
 	);
 }
 
-function ChatSettingsMenu({ render }: { render: ComponentProps<typeof Menu.Trigger>['render'] }) {
+function ChatSettingsMenu({ render }: { render: ReactElement }) {
 	const router = useRouter();
 
 	const { mutate: markAllChatsRead } = useUpdateAllRead('accepted', {

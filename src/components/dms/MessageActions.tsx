@@ -1,8 +1,6 @@
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { clsx } from 'clsx';
-
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants/messages';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -72,31 +70,29 @@ export function MessageActions({
 				<EmojiReactionPicker
 					message={message}
 					onEmojiSelect={onEmojiSelect}
-					render={(props) => (
+					render={
 						<button
-							{...props}
 							aria-label={m['components.dms.reaction.action.add']()}
-							className={clsx(props.className, reactionStyles.trigger)}
+							className={reactionStyles.trigger}
 							type="button"
 						>
 							<EmojiSmileIcon className={reactionStyles.triggerIcon} />
 						</button>
-					)}
+					}
 				/>
 			)}
 			<MessageContextMenu
 				message={message}
 				moderationOpts={moderationOpts}
-				render={(props) => (
+				render={
 					<button
-						{...props}
 						aria-label={m['components.dms.message.a11y.options']()}
-						className={clsx(props.className, reactionStyles.trigger)}
+						className={reactionStyles.trigger}
 						type="button"
 					>
 						<DotsHorizontalIcon className={reactionStyles.triggerIcon} />
 					</button>
-				)}
+				}
 				senderProfile={senderProfile}
 			/>
 		</>

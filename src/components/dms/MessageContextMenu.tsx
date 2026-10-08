@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -29,8 +29,8 @@ export const MessageContextMenu = ({
 	message: ChatBskyConvoDefs.MessageView;
 	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOptions | undefined;
-	/** message-hover button renderer; receives trigger props and `{ open }` state. */
-	render: ComponentProps<typeof Menu.Trigger>['render'];
+	/** menu trigger shown on message hover. */
+	render: ReactElement;
 }): ReactNode => {
 	const { currentAccount } = useSession();
 	const { openDeleteMessage, openReportMessage } = useMessageDialogs();

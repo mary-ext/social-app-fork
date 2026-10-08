@@ -1,4 +1,4 @@
-import { type ComponentProps, useState } from 'react';
+import { type ReactElement, useState } from 'react';
 
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 
@@ -25,8 +25,8 @@ export function EmojiReactionPicker({
 	onEmojiSelect,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	/** trigger element or render function; receives popover props and state. */
-	render: ComponentProps<typeof Popover.Trigger>['render'];
+	/** popover trigger. */
+	render: ReactElement;
 	onEmojiSelect: (emoji: string) => void;
 }) {
 	const [open, setOpen] = useState(false);
