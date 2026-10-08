@@ -90,7 +90,7 @@ function WizardListCard({
 		);
 	}
 
-	// a CheckboxRow would nest the remove button inside another button
+	// keep the remove button outside a checkbox label.
 	return (
 		<div className={css.row}>
 			{rowContent}

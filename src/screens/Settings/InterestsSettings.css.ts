@@ -27,10 +27,8 @@ export const chipWrap = style({
 });
 
 export const chip = style({
-	appearance: 'none',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
-	border: 'none',
 	borderRadius: 999,
 	backgroundColor: vars.palette.contrast_50,
 	paddingBlock: space.sm,
@@ -42,7 +40,7 @@ export const chip = style({
 		[`${MOUSE} &[data-checked]:hover, &[data-checked]${PRESSED}`]: {
 			backgroundColor: vars.palette.contrast_975,
 		},
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+		'&:has(> input:focus-visible)': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},
 });
 

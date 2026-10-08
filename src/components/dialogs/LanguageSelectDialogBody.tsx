@@ -2,8 +2,6 @@ import { useState } from 'react';
 
 import { mapDefined, unique } from '@mary/array-fns';
 
-import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-
 import { usePostLanguageHistory } from '#/state/preferences/languages';
 
 import { languageName, resolveLanguageName } from '#/locale/helpers';
@@ -14,6 +12,7 @@ import * as Dialog from '#/components/Dialog';
 import type { LanguageSelectDialogProps } from '#/components/dialogs/LanguageSelectDialog';
 import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
 import { SearchInput } from '#/components/forms/SearchInput';
+import * as Checkbox from '#/components/primitives/checkbox';
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -112,7 +111,7 @@ export function LanguageSelectDialogBody({
 	const maxReached = maxLanguages != null && checkedCodes.length >= maxLanguages;
 
 	return (
-		<CheckboxGroup
+		<Checkbox.Group
 			aria-label={m['components.dialogs.language.selectTitle']()}
 			className={styles.group}
 			onValueChange={setCheckedCodes}
@@ -175,7 +174,7 @@ export function LanguageSelectDialogBody({
 					);
 				}}
 			/>
-		</CheckboxGroup>
+		</Checkbox.Group>
 	);
 }
 

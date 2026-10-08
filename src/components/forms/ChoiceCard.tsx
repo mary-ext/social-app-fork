@@ -1,10 +1,10 @@
 import type { ComponentProps, ComponentType, SVGProps } from 'react';
 
-import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/ChoiceCard.css';
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
+import * as CheckboxPrimitive from '#/components/primitives/checkbox';
 import * as RadioPrimitive from '#/components/primitives/radio';
 import { Text } from '#/components/Text';
 
@@ -59,12 +59,12 @@ export function Checkbox({
 	titleText,
 }: CardContentProps & { checked: boolean; onChange: (checked: boolean) => void }) {
 	return (
-		<BaseCheckbox.Root checked={checked} className={styles.card} onCheckedChange={onChange}>
+		<CheckboxPrimitive.Root checked={checked} className={styles.card} onCheckedChange={onChange}>
 			<Icon aria-hidden className={styles.icon} />
 			<Text className={styles.title} size="md" weight="medium">
 				{titleText}
 			</Text>
 			<CheckboxIndicator />
-		</BaseCheckbox.Root>
+		</CheckboxPrimitive.Root>
 	);
 }

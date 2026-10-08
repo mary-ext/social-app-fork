@@ -2,11 +2,11 @@
 
 import type { ComponentProps, ComponentType, ReactNode, SVGProps } from 'react';
 
-import { Checkbox } from '@base-ui/react/checkbox';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
+import * as Checkbox from '#/components/primitives/checkbox';
 import * as Collapsible from '#/components/primitives/collapsible';
 import * as Radio from '#/components/primitives/radio';
 import * as Select from '#/components/Select';
@@ -450,7 +450,7 @@ type CheckboxRowState =
 	| { value?: never; checked: boolean; onChange: (checked: boolean) => void };
 
 /**
- * a checkbox row. use `value` with a Base UI `CheckboxGroup`, or `checked` and `onChange` standalone.
+ * a checkbox row. use `value` within a `Checkbox.Group`, or `checked` and `onChange` standalone.
  *
  * @param children the row's label
  * @param disabled prevents toggling the row

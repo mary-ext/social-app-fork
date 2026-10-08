@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-
 import {
 	type InteractionSettings,
 	NO_REPLY_GROUPS,
@@ -13,6 +11,7 @@ import { formatCount } from '#/locale/intl/number';
 
 import { getReplyAudienceSummary } from '#/features/post-interactions/WhoCanReply';
 
+import * as Checkbox from '#/components/primitives/checkbox';
 import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Text } from '#/components/Text';
@@ -177,7 +176,7 @@ function ReplyRows({
 				</Settings.RadioRow>
 			</Radio.Group>
 			{replies.type === 'some' && (
-				<CheckboxGroup
+				<Checkbox.Group
 					aria-label={m['components.dialogs.reply.advancedDescription']()}
 					className={styles.nest}
 					onValueChange={(values: string[]) => {
@@ -212,7 +211,7 @@ function ReplyRows({
 							</Text>
 						)}
 					</Settings.ButtonRow>
-				</CheckboxGroup>
+				</Checkbox.Group>
 			)}
 		</>
 	);

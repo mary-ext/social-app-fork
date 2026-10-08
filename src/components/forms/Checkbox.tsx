@@ -1,16 +1,11 @@
-import type { ComponentProps } from 'react';
-
-import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { clsx } from 'clsx';
 
 import { CheckboxIndicator } from '#/components/forms/Indicator';
+import * as CheckboxPrimitive from '#/components/primitives/checkbox';
 
 import * as styles from './Checkbox.css';
 
-type CheckboxProps = Omit<
-	ComponentProps<typeof BaseCheckbox.Root>,
-	'children' | 'className' | 'nativeButton' | 'render'
-> & {
+type CheckboxProps = Omit<CheckboxPrimitive.RootProps, 'children' | 'className' | 'render'> & {
 	className?: string;
 };
 
@@ -18,15 +13,10 @@ type CheckboxProps = Omit<
  * renders a checkbox with checked, unchecked, and indeterminate states.
  *
  * @param props checkbox state, accessibility attributes, and event handlers
- * @returns a styled checkbox button
+ * @returns a styled checkbox
  */
 export const Checkbox = ({ className, ...props }: CheckboxProps) => (
-	<BaseCheckbox.Root
-		{...props}
-		className={clsx(styles.root, className)}
-		nativeButton
-		render={<button type="button" />}
-	>
+	<CheckboxPrimitive.Root {...props} className={clsx(styles.root, className)}>
 		<CheckboxIndicator />
-	</BaseCheckbox.Root>
+	</CheckboxPrimitive.Root>
 );

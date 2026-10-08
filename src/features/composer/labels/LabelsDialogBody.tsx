@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-
 import {
 	type AdultContentLabel,
 	isAdultContentLabel,
@@ -10,6 +8,7 @@ import {
 } from '#/lib/moderation/self-labels';
 
 import * as Dialog from '#/components/Dialog';
+import * as Checkbox from '#/components/primitives/checkbox';
 import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';
 import { Button, ButtonText } from '#/components/web/Button';
@@ -106,7 +105,7 @@ export const LabelsDialogBody = ({
 					</Settings.Section>
 
 					<Settings.Section titleText={m['common.status.other']()}>
-						<CheckboxGroup
+						<Checkbox.Group
 							aria-label={m['features.composer.labels.otherLabels']()}
 							value={draft.others}
 							onValueChange={(values) => {
@@ -119,7 +118,7 @@ export const LabelsDialogBody = ({
 									subtitleText={m['features.composer.labels.graphicMediaDesc']()}
 								/>
 							</Settings.CheckboxRow>
-						</CheckboxGroup>
+						</Checkbox.Group>
 					</Settings.Section>
 				</Settings.List>
 			</Dialog.Body>

@@ -13,14 +13,12 @@ export const list = style({
 const checked = '&[data-checked]';
 
 export const card = style({
-	appearance: 'none',
 	boxSizing: 'border-box',
 	display: 'flex',
 	gap: space.md,
 	alignItems: 'center',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color, border-color, box-shadow',
-	margin: 0,
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 14,
 	backgroundColor: vars.palette.contrast_0,
@@ -28,9 +26,6 @@ export const card = style({
 	paddingRight: 14,
 	paddingLeft: 10,
 	width: '100%',
-	textAlign: 'left',
-	color: 'inherit',
-	font: 'inherit',
 	cursor: 'pointer',
 	selectors: {
 		[hover(':not([data-checked], [data-disabled])')]: {
@@ -42,7 +37,7 @@ export const card = style({
 			boxShadow: `inset 0 0 0 1px ${vars.palette.primary_500}`,
 			backgroundColor: vars.palette.primary_25,
 		},
-		'&:is(:focus-visible, :has(> input:focus-visible))': {
+		'&:has(> input:focus-visible)': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: 2,
 		},

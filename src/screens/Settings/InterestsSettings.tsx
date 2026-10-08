@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { Checkbox } from '@base-ui/react/checkbox';
-import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
@@ -19,6 +17,7 @@ import { useTitle } from '#/state/use-title';
 
 import { createSuggestedStarterPacksQueryKey } from '#/features/starter-packs/queries/suggested-starter-packs';
 
+import * as Checkbox from '#/components/primitives/checkbox';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -137,7 +136,7 @@ function Inner({
 			{interests.length === 0 && (
 				<Admonition type="tip">{m['screens.settings.interests.recommendTwo']()}</Admonition>
 			)}
-			<CheckboxGroup
+			<Checkbox.Group
 				aria-label={m['screens.settings.interests.selectPrompt']()}
 				className={styles.chipWrap}
 				onValueChange={(value) => onChangeInterests(value)}
@@ -146,14 +145,14 @@ function Inner({
 				{allInterests.map((interest) => {
 					const name = interestDisplayNames[interest]!();
 					return (
-						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} name={interest}>
+						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} value={interest}>
 							<Text className={styles.chipText} selectable={false} size="md_sub" weight="semiBold">
 								{name}
 							</Text>
 						</Checkbox.Root>
 					);
 				})}
-			</CheckboxGroup>
+			</Checkbox.Group>
 		</>
 	);
 }

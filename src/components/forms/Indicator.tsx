@@ -1,7 +1,7 @@
-import { Checkbox } from '@base-ui/react/checkbox';
 import { clsx } from 'clsx';
 
 import * as styles from '#/components/forms/Indicator.css';
+import * as Checkbox from '#/components/primitives/checkbox';
 import * as Radio from '#/components/primitives/radio';
 
 import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke3.svg';
@@ -21,7 +21,7 @@ export function RadioIndicator({ className }: { className?: string }) {
 }
 
 /**
- * render directly inside a Base UI `Checkbox.Root`.
+ * render directly inside a `Checkbox.Root`.
  *
  * @param className extra classes for the outer box
  * @returns a checkbox indicator with checked and indeterminate states
