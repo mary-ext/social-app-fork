@@ -2,12 +2,9 @@
 
 import { type ReactNode, useEffect, useId, useRef } from 'react';
 
-import { addEventListener } from '@base-ui/utils/addEventListener';
-import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
-import { useControlled } from '@base-ui/utils/useControlled';
-import { useTimeout } from '@base-ui/utils/useTimeout';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useTimeout } from '#/lib/hooks/use-timeout';
 
 import { HOVERABLE_GRACE } from '../anchored-popup';
 import { usePresence } from '../presence';
@@ -41,8 +38,6 @@ export const Root = ({
 	const [open, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'PreviewCard',
-		state: 'open',
 	});
 
 	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
@@ -119,11 +114,12 @@ export const Root = ({
 			}
 		};
 
-		return mergeCleanups(
-			addEventListener(document, 'keydown', onKeyDown),
-			addEventListener(document, 'pointerdown', onPointerDown, true),
-			addEventListener(document, 'focusin', onFocusIn),
-		);
+		const controller = new AbortController();
+		const { signal } = controller;
+		document.addEventListener('keydown', onKeyDown, { signal });
+		document.addEventListener('pointerdown', onPointerDown, { capture: true, signal });
+		document.addEventListener('focusin', onFocusIn, { signal });
+		return () => controller.abort();
 	}, [open, setOpen]);
 
 	const value: RootContextValue = {

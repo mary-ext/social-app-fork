@@ -2,12 +2,10 @@
 
 import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react';
 
-import { addEventListener } from '@base-ui/utils/addEventListener';
-import { useScrollLock } from '@base-ui/utils/useScrollLock';
-
 import type { InteractionType } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 
 import { isWithinPopup } from '../anchored-popup';
 import { createTypeahead } from '../list-navigation';
@@ -115,7 +113,9 @@ export const Root = <Value,>({
 			}
 		};
 
-		return addEventListener(document, 'pointerdown', onPointerDown);
+		const controller = new AbortController();
+		document.addEventListener('pointerdown', onPointerDown, { signal: controller.signal });
+		return () => controller.abort();
 	}, [open, setOpen]);
 
 	useScrollLock(open);

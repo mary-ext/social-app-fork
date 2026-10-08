@@ -2,8 +2,7 @@
 
 import type { HTMLAttributes } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { dataAttributes } from '../data-attributes';
@@ -42,8 +41,6 @@ export const Group = ({
 	const [value, setValueState] = useControlled({
 		controlled: valueProp,
 		default: defaultValue,
-		name: 'CheckboxGroup',
-		state: 'value',
 	});
 
 	const setGroupValue = useNonReactiveCallback<GroupContextValue['setGroupValue']>(

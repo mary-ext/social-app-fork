@@ -1,6 +1,6 @@
 import { createContext, type RefObject, useContext } from 'react';
 
-import type { Timeout } from '@base-ui/utils/useTimeout';
+import type { Timeout } from '#/lib/hooks/use-timeout';
 
 export type OpenChangeReason =
 	| 'escape-key'

@@ -2,13 +2,10 @@
 
 import { type ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import { addEventListener } from '@base-ui/utils/addEventListener';
-import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
-import { useControlled } from '@base-ui/utils/useControlled';
-import { useScrollLock } from '@base-ui/utils/useScrollLock';
-
 import { useConstant } from '#/lib/hooks/use-constant';
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 
 import { isWithinPopup } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
@@ -54,8 +51,6 @@ export const Root = ({
 	const [open, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'Menu',
-		state: 'open',
 	});
 
 	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
@@ -129,13 +124,14 @@ export const Root = ({
 			pressedOutside = false;
 		};
 
-		return mergeCleanups(
-			addEventListener(document, 'pointerdown', onPointerDown),
-			addEventListener(document, 'click', onClick),
-		);
+		const controller = new AbortController();
+		const { signal } = controller;
+		document.addEventListener('pointerdown', onPointerDown, { signal });
+		document.addEventListener('click', onClick, { signal });
+		return () => controller.abort();
 	}, [open, activeTrigger, setOpen]);
 
-	useScrollLock(open, activeTrigger);
+	useScrollLock(open);
 
 	const ctx = useMemo(
 		(): RootContextValue => ({

@@ -2,8 +2,7 @@
 
 import { type HTMLAttributes, useRef, useState } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { clamp } from '#/lib/utils/numbers';
 
@@ -79,8 +78,6 @@ export const Root = ({
 	const [rawValue, setValueState] = useControlled({
 		controlled: valueProp,
 		default: defaultValue ?? min,
-		name: 'Slider',
-		state: 'value',
 	});
 	const value = clamp(rawValue, min, max);
 

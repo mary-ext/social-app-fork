@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { useControlled } from '@base-ui/utils/useControlled';
+import { useControlled } from '#/lib/hooks/use-controlled';
 
 import { createChangeDetails } from '../change-details';
 import { getCheckedInputAttributes, type NativeInputRootProps, useNativeInputRoot } from '../native-input';
@@ -42,8 +42,6 @@ export const Root = ({
 	const [checked, setCheckedState] = useControlled({
 		controlled: checkedProp,
 		default: defaultChecked,
-		name: 'Switch',
-		state: 'checked',
 	});
 
 	const state: SwitchState = { checked, disabled, readOnly, required };

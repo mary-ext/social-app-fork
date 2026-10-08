@@ -1,8 +1,7 @@
 import { createContext, type RefObject, useContext } from 'react';
 
-import type { Timeout } from '@base-ui/utils/useTimeout';
-
 import type { InteractionType } from '#/lib/browser/input-modality';
+import type { Timeout } from '#/lib/hooks/use-timeout';
 
 import type { ChangeDetails } from '../change-details';
 import { HandleStore } from '../handle-store';

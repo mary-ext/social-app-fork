@@ -2,7 +2,7 @@
 
 import { useContext, useLayoutEffect, useRef } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
+import { useControlled } from '#/lib/hooks/use-controlled';
 
 import { createChangeDetails } from '../change-details';
 import { type NativeInputRootProps, useNativeInputRoot } from '../native-input';
@@ -61,8 +61,6 @@ export const Root = ({
 	const [checkedState, setCheckedState] = useControlled({
 		controlled: checkedProp,
 		default: defaultChecked,
-		name: 'Checkbox',
-		state: 'checked',
 	});
 	const checked = group && value !== undefined ? group.value.includes(value) : checkedState;
 

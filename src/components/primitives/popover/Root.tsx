@@ -2,14 +2,11 @@
 
 import { type ReactNode, type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 
-import { addEventListener } from '@base-ui/utils/addEventListener';
-import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
-import { useControlled } from '@base-ui/utils/useControlled';
-import { useScrollLock } from '@base-ui/utils/useScrollLock';
-import { useTimeout } from '@base-ui/utils/useTimeout';
-
 import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
+import { useTimeout } from '#/lib/hooks/use-timeout';
 
 import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
@@ -63,8 +60,6 @@ export const Root = ({
 	const [open, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'Popover',
-		state: 'open',
 	});
 
 	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
@@ -183,15 +178,18 @@ export const Root = ({
 			}
 		};
 
-		return mergeCleanups(
-			addEventListener(document, 'keydown', onKeyDown),
-			addEventListener(document, 'pointerdown', onPointerDown),
-			addEventListener(document, 'click', onClick),
-			modal ? undefined : addEventListener(document, 'focusin', onFocusIn),
-		);
+		const controller = new AbortController();
+		const { signal } = controller;
+		document.addEventListener('keydown', onKeyDown, { signal });
+		document.addEventListener('pointerdown', onPointerDown, { signal });
+		document.addEventListener('click', onClick, { signal });
+		if (!modal) {
+			document.addEventListener('focusin', onFocusIn, { signal });
+		}
+		return () => controller.abort();
 	}, [open, modal, activeTrigger, setOpen]);
 
-	useScrollLock(open && modal, activeTrigger);
+	useScrollLock(open && modal);
 
 	const value: RootContextValue = {
 		open,

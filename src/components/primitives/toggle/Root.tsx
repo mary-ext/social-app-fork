@@ -2,7 +2,7 @@
 
 import { type ButtonHTMLAttributes, useContext, useId } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
+import { useControlled } from '#/lib/hooks/use-controlled';
 
 import { createChangeDetails } from '../change-details';
 import { focusableDisabledGuard, useCompositeItem } from '../composite';
@@ -56,8 +56,6 @@ export const Root = ({
 	const [pressedState, setPressedState] = useControlled({
 		controlled: pressedProp,
 		default: defaultPressed,
-		name: 'Toggle',
-		state: 'pressed',
 	});
 	const pressed = group ? group.value.includes(value) : pressedState;
 	const disabled = disabledProp || (group?.disabled ?? toolbarDisabled);

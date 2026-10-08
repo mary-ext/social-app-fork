@@ -2,8 +2,7 @@
 
 import { type DetailsHTMLAttributes, useRef } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { createChangeDetails } from '../change-details';
@@ -45,8 +44,6 @@ export const Root = ({
 	const [open, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'Collapsible',
-		state: 'open',
 	});
 
 	const rootRef = useRef<HTMLDetailsElement | null>(null);

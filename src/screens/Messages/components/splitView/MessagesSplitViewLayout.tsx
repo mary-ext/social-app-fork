@@ -1,6 +1,7 @@
 import { Outlet } from '@oomfware/stacker';
 
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
+import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 import { conversationTarget } from '#/lib/routes/targets';
 
 import { CurrentConvoIdProvider } from '#/state/messages/current-convo-id';
@@ -9,9 +10,8 @@ import { ListConvosProvider } from '#/state/queries/messages/list-conversations'
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';
-import { LockScroll } from '#/components/LockScroll';
 
-import { useRouter, useTarget } from '#/router';
+import { useIsFocused, useRouter, useTarget } from '#/router';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
@@ -44,6 +44,9 @@ function MessagesSplitViewLayoutInner() {
 	const target = useTarget();
 	const router = useRouter();
 
+	// the columns scroll independently of the page.
+	useScrollLock(useIsFocused());
+
 	const onNewChat = (conversation: string) => router.navigate({ to: conversationTarget(conversation) });
 
 	const selectedChat =
@@ -53,7 +56,6 @@ function MessagesSplitViewLayoutInner() {
 
 	return (
 		<div className={css.container}>
-			<LockScroll />
 			<SplitViewProvider side="left">
 				<div className={css.leftColumn}>
 					<ChatListHeader newChatHandle={newChatHandle} chatStatus={chatStatus} />

@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { useTimeout } from '@base-ui/utils/useTimeout';
-
 import { type RenderProps, useRender } from '../render';
 import { useRootContext } from './shared';
 
@@ -22,15 +20,15 @@ export type FallbackProps = RenderProps<'span'> & {
 export const Fallback = ({ render, ref, delay = 0, ...elementProps }: FallbackProps) => {
 	const { imageLoadingStatus } = useRootContext();
 	const [delayPassed, setDelayPassed] = useState(delay === 0);
-	const timeout = useTimeout();
 
 	const waiting = !delayPassed && imageLoadingStatus !== 'loaded';
 	useEffect(() => {
-		if (waiting) {
-			timeout.start(delay, () => setDelayPassed(true));
-			return timeout.clear;
+		if (!waiting) {
+			return;
 		}
-	}, [waiting, delay, timeout]);
+		const timer = setTimeout(() => setDelayPassed(true), delay);
+		return () => clearTimeout(timer);
+	}, [waiting, delay]);
 
 	const element = useRender({ tag: 'span', render, refs: [ref], props: elementProps });
 

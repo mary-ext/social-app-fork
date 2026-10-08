@@ -2,11 +2,10 @@
 
 import { type ReactNode, useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-import { useScrollLock } from '@base-ui/utils/useScrollLock';
-
 import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 
 import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
@@ -54,8 +53,6 @@ export const Root = <Payload = void,>({
 	const [open, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'Dialog',
-		state: 'open',
 	});
 
 	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
@@ -105,7 +102,7 @@ export const Root = <Payload = void,>({
 		};
 	}, []);
 
-	useScrollLock(open, activeTrigger?.element);
+	useScrollLock(open);
 
 	const value: RootContextValue = {
 		open,

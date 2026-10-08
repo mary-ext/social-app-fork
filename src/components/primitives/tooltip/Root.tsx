@@ -2,12 +2,9 @@
 
 import { type ReactNode, useEffect, useId, useRef } from 'react';
 
-import { addEventListener } from '@base-ui/utils/addEventListener';
-import { mergeCleanups } from '@base-ui/utils/mergeCleanups';
-import { useControlled } from '@base-ui/utils/useControlled';
-import { useTimeout } from '@base-ui/utils/useTimeout';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { useTimeout } from '#/lib/hooks/use-timeout';
 
 import { usePresence } from '../presence';
 import { type OpenChangeDetails, type OpenChangeReason, RootContext, type RootContextValue } from './shared';
@@ -46,8 +43,6 @@ export const Root = ({
 	const [openState, setOpenState] = useControlled({
 		controlled: openProp,
 		default: defaultOpen,
-		name: 'Tooltip',
-		state: 'open',
 	});
 	const open = !disabled && openState;
 
@@ -101,10 +96,11 @@ export const Root = ({
 			}
 		};
 
-		return mergeCleanups(
-			addEventListener(document, 'keydown', onKeyDown),
-			addEventListener(document, 'pointerdown', onPointerDown, true),
-		);
+		const controller = new AbortController();
+		const { signal } = controller;
+		document.addEventListener('keydown', onKeyDown, { signal });
+		document.addEventListener('pointerdown', onPointerDown, { capture: true, signal });
+		return () => controller.abort();
 	}, [open, setOpen]);
 
 	const value: RootContextValue = {

@@ -2,8 +2,7 @@
 
 import { type HTMLAttributes, useId, useReducer } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { createChangeDetails } from '../change-details';
@@ -53,8 +52,6 @@ export const Group = <Value,>({
 	const [value, setValueState] = useControlled({
 		controlled: valueProp,
 		default: defaultValue,
-		name: 'RadioGroup',
-		state: 'value',
 	});
 	const fallbackName = useId();
 	const [revision, resync] = useReducer((count: number) => count + 1, 0);

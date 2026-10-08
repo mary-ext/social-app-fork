@@ -2,8 +2,7 @@
 
 import { type HTMLAttributes, useContext } from 'react';
 
-import { useControlled } from '@base-ui/utils/useControlled';
-
+import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { CompositeProvider, useCompositeRoot } from '../composite';
@@ -57,8 +56,6 @@ export const Group = ({
 	const [value, setValueState] = useControlled({
 		controlled: valueProp,
 		default: defaultValue,
-		name: 'ToggleGroup',
-		state: 'value',
 	});
 	const disabled = useToolbarDisabled() || disabledProp;
 
