@@ -79,6 +79,7 @@ export const avatarsRow = style({
 	display: 'flex',
 	flexDirection: 'row',
 	alignItems: 'center',
+	userSelect: 'none',
 });
 
 export const moreCount = style({
