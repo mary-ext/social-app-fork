@@ -170,7 +170,7 @@ export const Root = ({
 			signal,
 			isInside: (event) => isInsideEvent(event, parts),
 			onOutside: (event) => setOpen(false, { reason: 'outside-press', event }),
-			dismissTouchOnContact: true,
+			dismissTouchOnContact: !modal,
 		});
 		if (!modal) {
 			document.addEventListener('focusin', onFocusIn, { signal });

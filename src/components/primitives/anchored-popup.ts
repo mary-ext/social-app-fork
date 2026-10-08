@@ -148,6 +148,8 @@ export const isWithinPopup = (positioner: HTMLElement | null, target: EventTarge
 /**
  * calls `onOutside` for clicks that start and end outside the popup and trigger.
  *
+ * modal popups must wait for click; closing on touch contact lets the tap reach content underneath.
+ *
  * @param options.signal removes the listeners once aborted
  * @param options.isInside whether an event belongs to the popup or its trigger
  * @param options.onOutside receives the dismissing click or touch press
