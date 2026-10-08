@@ -21,6 +21,8 @@ export const modalViewport = style(
 		maxHeight: 'none',
 		color: 'inherit',
 		cursor: 'auto',
+		// pointer-events still inherits from the DOM host in the top layer.
+		pointerEvents: 'auto',
 		'::backdrop': {
 			background: 'none',
 		},
