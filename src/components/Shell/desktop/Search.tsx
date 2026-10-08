@@ -2,7 +2,8 @@ import type { AnyProfileView } from '@atcute/bluesky';
 
 import { profileTarget } from '#/lib/routes/targets';
 
-import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
+import { SearchAutocomplete } from '#/features/search-autocomplete/SearchAutocomplete';
+
 import { useNavigateToPath } from '#/components/web/Link';
 
 import { useRouter } from '#/router';

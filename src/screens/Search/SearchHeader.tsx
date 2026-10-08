@@ -6,11 +6,12 @@ import { definite, mapDefined } from '@mary/array-fns';
 
 import { profileTarget } from '#/lib/routes/targets';
 
+import { isOperatorName } from '#/features/search-autocomplete/query-syntax';
+import { SearchAutocomplete } from '#/features/search-autocomplete/SearchAutocomplete';
+
 import type { SearchTabId } from '#/screens/Search/SearchResults';
 import { makeSearchQuery, type Params } from '#/screens/Search/utils';
 
-import { isOperatorName } from '#/components/SearchAutocomplete/query-syntax';
-import { SearchAutocomplete } from '#/components/SearchAutocomplete/SearchAutocomplete';
 import * as Layout from '#/components/web/Layout';
 import { useNavigateToPath } from '#/components/web/Link';
 
