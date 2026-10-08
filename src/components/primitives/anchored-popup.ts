@@ -1,6 +1,6 @@
 import './position-try.css';
 
-import { type CSSProperties, type RefObject, useLayoutEffect } from 'react';
+import { type CSSProperties, type RefCallback, type RefObject, useCallback, useLayoutEffect } from 'react';
 
 import { type DataAttributes, dataAttributes } from './data-attributes';
 import { getOpenAttributes, useTransitionsSettled } from './presence';
@@ -235,6 +235,21 @@ export const addAnchorName = (el: HTMLElement, name: string): (() => void) => {
 			(anchorNames.get(el) ?? []).filter((other) => other !== name),
 		);
 	};
+};
+
+/**
+ * @param name dashed anchor name, or `undefined` to skip registration
+ * @returns a ref callback, stable for an unchanged name, that adds on attach and removes on detach
+ */
+export const useAnchorName = (name: string | undefined): RefCallback<HTMLElement> => {
+	return useCallback(
+		(el: HTMLElement | null) => {
+			if (el && name !== undefined) {
+				return addAnchorName(el, name);
+			}
+		},
+		[name],
+	);
 };
 
 /** minimum gap-crossing time for hoverable popups, in milliseconds. */

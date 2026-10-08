@@ -4,7 +4,7 @@ import { type HTMLAttributes, type Ref, useId, useLayoutEffect, useRef } from 'r
 
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
-import { addAnchorName } from '../anchored-popup';
+import { useAnchorName } from '../anchored-popup';
 import { dataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
@@ -44,6 +44,7 @@ export const Trigger = ({
 	const active = ctx?.activeTriggerId === id;
 	const open = !!ctx?.open && active;
 
+	// use an effect: ref reattachment would reorder fallback triggers.
 	const registerTrigger = ctx?.registerTrigger;
 	useLayoutEffect(() => {
 		const el = elementRef.current;
@@ -52,15 +53,7 @@ export const Trigger = ({
 		}
 		return registerTrigger(id, el);
 	}, [registerTrigger, id]);
-
-	const anchorName = active && ctx.mounted ? ctx.anchorName : undefined;
-	useLayoutEffect(() => {
-		const el = elementRef.current;
-		if (!el || anchorName === undefined) {
-			return;
-		}
-		return addAnchorName(el, anchorName);
-	}, [anchorName]);
+	const anchorRef = useAnchorName(active && ctx.mounted ? ctx.anchorName : undefined);
 
 	const ariaProps: HTMLAttributes<HTMLElement> = ctx
 		? {
@@ -73,7 +66,7 @@ export const Trigger = ({
 	return useRender({
 		tag: 'button',
 		render,
-		refs: [ref, elementRef],
+		refs: [ref, elementRef, anchorRef],
 		props: mergeProps<'button'>(
 			getTriggerAttributes(open),
 			dataAttributes({ disabled }),

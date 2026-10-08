@@ -1,10 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, type Ref, useLayoutEffect, useRef } from 'react';
+import { type HTMLAttributes, type Ref, useRef } from 'react';
 
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
-import { addAnchorName } from '../anchored-popup';
+import { useAnchorName } from '../anchored-popup';
 import { dataAttributes } from '../data-attributes';
 import { isTypeaheadKey } from '../list-navigation';
 import { mergeProps } from '../merge-props';
@@ -29,13 +29,7 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 	const { open, disabled, mounted, anchorName, setOpen, triggerRef } = ctx;
 	const pointerTypeRef = useRef<InteractionType>('');
 
-	useLayoutEffect(() => {
-		const el = triggerRef.current;
-		if (!el || !mounted) {
-			return;
-		}
-		return addAnchorName(el, anchorName);
-	}, [mounted, anchorName, triggerRef]);
+	const anchorRef = useAnchorName(mounted ? anchorName : undefined);
 
 	const commitTypeahead = (key: string) => {
 		const items = ctx.items;
@@ -120,7 +114,7 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 	return useRender({
 		tag: 'button',
 		render,
-		refs: [ref, triggerRef],
+		refs: [ref, triggerRef, anchorRef],
 		props: mergeProps<'button'>(
 			getTriggerAttributes(open),
 			dataAttributes({ disabled, placeholder: ctx.placeholder }),

@@ -1,17 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import {
-	type HTMLAttributes,
-	type MouseEvent,
-	type PointerEvent,
-	type Ref,
-	useLayoutEffect,
-	useRef,
-} from 'react';
+import { type HTMLAttributes, type MouseEvent, type PointerEvent, type Ref, useRef } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { addAnchorName, HOVERABLE_GRACE } from '../anchored-popup';
+import { HOVERABLE_GRACE, useAnchorName } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -51,14 +44,7 @@ export const Trigger = ({
 	const disabled = disabledProp ?? ctx.disabled;
 
 	const lastMoveRef = useRef(0);
-
-	useLayoutEffect(() => {
-		const el = triggerRef.current;
-		if (!mounted || !el) {
-			return;
-		}
-		return addAnchorName(el, anchorName);
-	}, [mounted, triggerRef, anchorName]);
+	const anchorRef = useAnchorName(mounted ? anchorName : undefined);
 
 	// check the last movement when the timer fires to avoid restarting it on every move.
 	const rest = (event: PointerEvent) => {
@@ -155,7 +141,7 @@ export const Trigger = ({
 	return useRender({
 		tag: 'button',
 		render,
-		refs: [ref, triggerRef],
+		refs: [ref, triggerRef, anchorRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 		props: mergeProps<'button'>(getTriggerAttributes(open), internalProps, elementProps),
 	});

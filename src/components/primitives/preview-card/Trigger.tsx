@@ -1,10 +1,10 @@
 'use no memo';
 
-import { type HTMLAttributes, type Ref, useLayoutEffect } from 'react';
+import type { HTMLAttributes, Ref } from 'react';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { addAnchorName } from '../anchored-popup';
+import { useAnchorName } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -47,13 +47,7 @@ export const Trigger = ({
 		timeout,
 	} = useRootContext();
 
-	useLayoutEffect(() => {
-		const el = triggerRef.current;
-		if (!mounted || !el) {
-			return;
-		}
-		return addAnchorName(el, anchorName);
-	}, [mounted, triggerRef, anchorName]);
+	const anchorRef = useAnchorName(mounted ? anchorName : undefined);
 
 	const scheduleOpen = (reason: OpenChangeReason, event: Event) => {
 		if (open) {
@@ -113,7 +107,7 @@ export const Trigger = ({
 	return useRender({
 		tag: 'a',
 		render,
-		refs: [ref, triggerRef],
+		refs: [ref, triggerRef, anchorRef],
 		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 		props: mergeProps<'a'>(getTriggerAttributes(open), internalProps, elementProps),
 	});

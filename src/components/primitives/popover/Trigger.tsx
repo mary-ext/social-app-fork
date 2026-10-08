@@ -1,10 +1,10 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type HTMLAttributes, type Ref, useLayoutEffect, useRef, useState } from 'react';
+import { type HTMLAttributes, type Ref, useCallback, useRef, useState } from 'react';
 
 import { type InteractionType, isMouseLike, toInteractionType } from '#/lib/browser/input-modality';
 
-import { addAnchorName } from '../anchored-popup';
+import { useAnchorName } from '../anchored-popup';
 import { dataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
@@ -51,20 +51,15 @@ export const Trigger = ({
 	const open = !!ctx?.open && active;
 
 	const claimTrigger = ctx?.claimTrigger;
-	useLayoutEffect(() => {
-		if (!claimTrigger || !element) {
-			return;
-		}
-		return claimTrigger(element);
-	}, [claimTrigger, element]);
-
-	const anchorName = active && ctx.mounted ? ctx.anchorName : undefined;
-	useLayoutEffect(() => {
-		if (!element || anchorName === undefined) {
-			return;
-		}
-		return addAnchorName(element, anchorName);
-	}, [element, anchorName]);
+	const claimRef = useCallback(
+		(el: HTMLElement | null) => {
+			if (el && claimTrigger) {
+				return claimTrigger(el);
+			}
+		},
+		[claimTrigger],
+	);
+	const anchorRef = useAnchorName(active && ctx.mounted ? ctx.anchorName : undefined);
 
 	let ariaProps: HTMLAttributes<HTMLElement> = {};
 	let pressProps: HTMLAttributes<HTMLElement> = {};
@@ -137,7 +132,7 @@ export const Trigger = ({
 	return useRender({
 		tag: 'button',
 		render,
-		refs: [ref, setElement],
+		refs: [ref, setElement, claimRef, anchorRef],
 		props: mergeProps<'button'>(
 			getTriggerAttributes(open),
 			dataAttributes({ disabled }),
