@@ -1,5 +1,9 @@
 import type { DialogHTMLAttributes, HTMLAttributes } from 'react';
 
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+
+// #region showing and hiding
+
 /**
  * shows an open popover in the top layer. leaves it shown on close for exit transitions before unmounting.
  *
@@ -102,3 +106,90 @@ export const getHintProps = (
 	};
 };
 
+// #endregion
+
+// #region modal surfaces
+
+// content outside a modal is inert even when painted above it; toasts must move inside.
+
+const surfaces: HTMLElement[] = [];
+const supportsMoveBefore = 'moveBefore' in Element.prototype;
+const emitter = new SimpleEventEmitter<[]>();
+
+/**
+ * registers a modal as a host for toasts. call after it enters the top layer; unregister after modality ends.
+ *
+ * @param surface untransformed modal element, so fixed-position content stays viewport-relative
+ * @returns a function that unregisters the surface
+ */
+export const pushModalSurface = (surface: HTMLElement): (() => void) => {
+	surfaces.push(surface);
+	emitter.emit();
+	return () => {
+		const index = surfaces.lastIndexOf(surface);
+		if (index === -1) {
+			return;
+		}
+		surfaces.splice(index, 1);
+		// removing a lower surface leaves the topmost one in place.
+		if (index === surfaces.length) {
+			emitter.emit();
+		}
+	};
+};
+
+/** @returns the topmost registered modal surface, or `null` if none is open */
+export const getTopModalSurface = (): HTMLElement | null => {
+	return surfaces.at(-1) ?? null;
+};
+
+/**
+ * @param listener called when the topmost modal surface may have changed
+ * @returns a function that unsubscribes
+ */
+export const subscribeModalSurfaces = (listener: () => void): (() => void) => {
+	return emitter.subscribe(listener);
+};
+
+/**
+ * reparents an element without resetting animation progress.
+ *
+ * @param parent new parent
+ * @param node node to move
+ */
+export const moveKeepingAnimations = (parent: Element, node: Element): void => {
+	if (supportsMoveBefore) {
+		parent.moveBefore(node, null);
+		return;
+	}
+
+	// insertBefore restarts CSS animations; restore their times after the move.
+	const saved = node.getAnimations({ subtree: true }).map((animation) => ({
+		target: animation.effect instanceof KeyframeEffect ? animation.effect.target : null,
+		key: getAnimationKey(animation),
+		currentTime: animation.currentTime,
+	}));
+
+	parent.insertBefore(node, null);
+
+	for (const animation of node.getAnimations({ subtree: true })) {
+		const target = animation.effect instanceof KeyframeEffect ? animation.effect.target : null;
+		const key = getAnimationKey(animation);
+		const match = saved.find((entry) => entry.target === target && entry.key === key);
+		if (match) {
+			animation.currentTime = match.currentTime;
+		}
+	}
+};
+
+const getAnimationKey = (animation: Animation): string | null => {
+	if (animation instanceof CSSAnimation) {
+		return `animation:${animation.animationName}`;
+	}
+	if (animation instanceof CSSTransition) {
+		return `transition:${animation.transitionProperty}`;
+	}
+	return null;
+};
+
+// #endregion
