@@ -292,12 +292,8 @@ export const Root = <Item,>({
 	const multiple = selection.multiple;
 	const ctx = useMemo((): RootContextValue => {
 		const matches = toMatcher(isEqual);
+		// explicit item indices avoid building this lookup.
 		const indexByItem = new Map<unknown, number>();
-		for (const [index, item] of items.entries()) {
-			if (!indexByItem.has(item)) {
-				indexByItem.set(item, index);
-			}
-		}
 
 		return {
 			items,
@@ -315,6 +311,13 @@ export const Root = <Item,>({
 			positionerRef,
 			takeScrollRequest,
 			indexOf(value) {
+				if (indexByItem.size === 0) {
+					for (const [index, item] of items.entries()) {
+						if (!indexByItem.has(item)) {
+							indexByItem.set(item, index);
+						}
+					}
+				}
 				return indexByItem.get(value) ?? items.findIndex((item) => matches(item, value));
 			},
 			getItemId(index) {
