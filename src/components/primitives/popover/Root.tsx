@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type ReactNode, type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, type RefObject, useEffect, useId, useRef, useState } from 'react';
 
 import { getInteractionType, type InteractionType } from '#/lib/browser/input-modality';
 import { useControlled } from '#/lib/hooks/use-controlled';
@@ -13,13 +13,13 @@ import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import { isUnclaimedEscape } from '../top-layer';
 import {
-	attachRoot,
 	type Handle,
 	type OpenChangeDetails,
 	type OpenChangeReason,
 	type OpenChangeRequest,
 	RootContext,
 	type RootContextValue,
+	useAttachRoot,
 } from './shared';
 
 const PATIENT_CLICK_THRESHOLD = 500;
@@ -212,19 +212,7 @@ export const Root = ({
 		onTransitionSettled,
 	};
 
-	useLayoutEffect(() => {
-		if (handle) {
-			attachRoot(handle, value);
-		}
-	});
-	useLayoutEffect(() => {
-		if (!handle) {
-			return;
-		}
-		return () => {
-			attachRoot(handle, null);
-		};
-	}, [handle]);
+	useAttachRoot(handle, value);
 
 	return <RootContext.Provider value={value}>{children}</RootContext.Provider>;
 };

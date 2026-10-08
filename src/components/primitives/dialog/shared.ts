@@ -106,24 +106,19 @@ export const createHandle = <Payload = void>(): Handle<Payload> => {
 	return new Handle<Payload>();
 };
 
+// only open and activeTriggerId affect detached triggers; handles use the stable setOpen callback.
+const isUnchanged = (prev: RootContextValue, next: RootContextValue): boolean => {
+	return prev.open === next.open && prev.activeTriggerId === next.activeTriggerId;
+};
+
 /**
- * connects a handle to a root's state.
+ * attaches a handle for this root's lifetime.
  *
- * @param handle handle passed to the root
- * @param root the root's state, or `null` once it unmounts
+ * @param handle handle passed to the root, if any
+ * @param root the root's state
  */
-export const attachRoot = (handle: Handle<unknown>, root: RootContextValue | null): void => {
-	const prev = handles.get(handle);
-	// only open and activeTriggerId affect detached triggers; handles use the stable setOpen callback.
-	if (
-		prev !== null &&
-		root !== null &&
-		prev.open === root.open &&
-		prev.activeTriggerId === root.activeTriggerId
-	) {
-		return;
-	}
-	handles.attach(handle, root);
+export const useAttachRoot = (handle: Handle<unknown> | undefined, root: RootContextValue): void => {
+	handles.useAttach(handle, root, isUnchanged);
 };
 
 export type TriggerRoot = {

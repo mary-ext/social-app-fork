@@ -96,11 +96,13 @@ export const createHandle = (): Handle => {
 };
 
 /**
- * @param handle handle passed to the root
- * @param root root state, or `null` to detach
+ * attaches a handle for this root's lifetime.
+ *
+ * @param handle handle passed to the root, if any
+ * @param root the root's state
  */
-export const attachRoot = (handle: Handle, root: RootContextValue | null): void => {
-	handles.attach(handle, root);
+export const useAttachRoot = (handle: Handle | undefined, root: RootContextValue): void => {
+	handles.useAttach(handle, root);
 };
 
 /**
@@ -109,16 +111,11 @@ export const attachRoot = (handle: Handle, root: RootContextValue | null): void 
  * @throws if neither a handle nor an enclosing `Root` is present
  */
 export const useTriggerRootContext = (handle: Handle | undefined): RootContextValue | null => {
-	const enclosing = useContext(RootContext);
-	const attached = handles.useRoot(handle);
-
-	if (handle) {
-		return attached;
-	}
-	if (enclosing === null) {
-		throw new Error(`<Menu.Trigger> requires <Menu.Root> or a handle`);
-	}
-	return enclosing;
+	return handles.useRootOrEnclosing(
+		handle,
+		useContext(RootContext),
+		`<Menu.Trigger> requires <Menu.Root> or a handle`,
+	);
 };
 
 // #endregion

@@ -1,6 +1,6 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useControlled } from '#/lib/hooks/use-controlled';
@@ -11,13 +11,13 @@ import { isWithinPopup } from '../anchored-popup';
 import { createChangeDetails } from '../change-details';
 import { usePresence } from '../presence';
 import {
-	attachRoot,
 	type Handle,
 	type OpenChangeDetails,
 	type OpenChangeRequest,
 	type OpenEntry,
 	RootContext,
 	type RootContextValue,
+	useAttachRoot,
 } from './shared';
 
 export type RootProps = {
@@ -161,19 +161,7 @@ export const Root = ({
 		],
 	);
 
-	useLayoutEffect(() => {
-		if (handle) {
-			attachRoot(handle, ctx);
-		}
-	}, [handle, ctx]);
-	useLayoutEffect(() => {
-		if (!handle) {
-			return;
-		}
-		return () => {
-			attachRoot(handle, null);
-		};
-	}, [handle]);
+	useAttachRoot(handle, ctx);
 
 	return <RootContext.Provider value={ctx}>{children}</RootContext.Provider>;
 };

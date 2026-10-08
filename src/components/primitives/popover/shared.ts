@@ -92,28 +92,26 @@ export const createHandle = (): Handle => {
 	return new Handle();
 };
 
+// every other field is stable for the lifetime of a root.
+const isUnchanged = (prev: RootContextValue, next: RootContextValue): boolean => {
+	return (
+		prev.open === next.open &&
+		prev.mounted === next.mounted &&
+		prev.modal === next.modal &&
+		prev.openReason === next.openReason &&
+		prev.openMethod === next.openMethod &&
+		prev.activeTrigger === next.activeTrigger
+	);
+};
+
 /**
- * connects a handle to a root's state.
+ * attaches a handle for this root's lifetime.
  *
- * @param handle handle passed to the root
- * @param root the root's state, or `null` once it unmounts
+ * @param handle handle passed to the root, if any
+ * @param root the root's state
  */
-export const attachRoot = (handle: Handle, root: RootContextValue | null): void => {
-	const prev = handles.get(handle);
-	// every other field is stable for the lifetime of a root.
-	if (
-		prev !== null &&
-		root !== null &&
-		prev.open === root.open &&
-		prev.mounted === root.mounted &&
-		prev.modal === root.modal &&
-		prev.openReason === root.openReason &&
-		prev.openMethod === root.openMethod &&
-		prev.activeTrigger === root.activeTrigger
-	) {
-		return;
-	}
-	handles.attach(handle, root);
+export const useAttachRoot = (handle: Handle | undefined, root: RootContextValue): void => {
+	handles.useAttach(handle, root, isUnchanged);
 };
 
 /**
@@ -122,14 +120,9 @@ export const attachRoot = (handle: Handle, root: RootContextValue | null): void 
  * @throws if neither a handle nor an enclosing `Root` is present
  */
 export const useTriggerRootContext = (handle: Handle | undefined): RootContextValue | null => {
-	const enclosing = useContext(RootContext);
-	const attached = handles.useRoot(handle);
-
-	if (handle) {
-		return attached;
-	}
-	if (enclosing === null) {
-		throw new Error(`<Popover.Trigger> requires <Popover.Root> or a handle`);
-	}
-	return enclosing;
+	return handles.useRootOrEnclosing(
+		handle,
+		useContext(RootContext),
+		`<Popover.Trigger> requires <Popover.Root> or a handle`,
+	);
 };

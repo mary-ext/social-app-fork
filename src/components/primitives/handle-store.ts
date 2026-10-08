@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useLayoutEffect, useSyncExternalStore } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
@@ -69,6 +69,55 @@ export class HandleStore<Root> {
 
 		const entry = this.#getEntry(handle);
 		return useSyncExternalStore(entry.subscribe, () => select(entry.root));
+	}
+
+	/**
+	 * @param handle detached handle, or `undefined` to use `enclosing`
+	 * @param enclosing enclosing root state, or `null` outside a root
+	 * @param error missing-root error message
+	 * @returns attached state (`null` if unattached), or `enclosing` when no handle is given
+	 * @throws if neither a handle nor an enclosing root is present
+	 */
+	useRootOrEnclosing(handle: object | undefined, enclosing: Root | null, error: string): Root | null {
+		const attached = this.useRoot(handle);
+		if (handle) {
+			return attached;
+		}
+		if (enclosing === null) {
+			throw new Error(error);
+		}
+		return enclosing;
+	}
+
+	/**
+	 * keeps a handle attached to root state until unmount.
+	 *
+	 * @param handle handle passed to the root, if any
+	 * @param root current root state
+	 * @param isUnchanged skips updates when true; defaults to `Object.is`
+	 */
+	useAttach(
+		handle: object | undefined,
+		root: Root,
+		isUnchanged: (prev: Root, next: Root) => boolean = Object.is,
+	): void {
+		useLayoutEffect(() => {
+			if (handle === undefined) {
+				return;
+			}
+			const prev = this.get(handle);
+			if (prev === null || !isUnchanged(prev, root)) {
+				this.attach(handle, root);
+			}
+		});
+		useLayoutEffect(() => {
+			if (handle === undefined) {
+				return;
+			}
+			return () => {
+				this.attach(handle, null);
+			};
+		}, [handle]);
 	}
 	/* oxlint-enable react/rules-of-hooks */
 
