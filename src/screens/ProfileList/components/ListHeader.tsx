@@ -6,8 +6,9 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { Trans } from '#/locale/Trans';
 
+import { preloadLightbox } from '#/features/lightbox';
+
 import { lightboxHandle } from '#/components/dialogs/handles';
-import { preloadLightbox } from '#/components/Lightbox';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';

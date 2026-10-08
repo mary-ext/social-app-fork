@@ -4,13 +4,13 @@ import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderati
 
 import { clsx } from 'clsx';
 
+import { preloadLightbox } from '#/features/lightbox';
 import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/live-now/components/LiveStatusDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { lightboxHandle } from '#/components/dialogs/handles';
-import { preloadLightbox } from '#/components/Lightbox';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { UserAvatar } from '#/components/UserAvatar';

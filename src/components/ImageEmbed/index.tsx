@@ -2,10 +2,11 @@ import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 
 import type { LightboxImage } from '@oomfware/lightbox';
 
+import { preloadLightbox } from '#/features/lightbox';
+
 import { AutoSizedImage } from '#/components/ImageEmbed/AutoSizedImage';
 import { EMPTY_ASPECT_RATIO } from '#/components/ImageEmbed/carousel/const';
 import { Gallery } from '#/components/ImageEmbed/Gallery';
-import { preloadLightbox } from '#/components/Lightbox';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
 
 import * as styles from './index.css';
