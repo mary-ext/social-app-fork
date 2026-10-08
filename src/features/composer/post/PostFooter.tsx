@@ -10,6 +10,7 @@ import { GifPickerDialog } from '#/features/gif-picker/GifPickerDialog';
 
 import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';
+import * as Toolbar from '#/components/primitives/toolbar';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 import EmojiIcon from '#/icons/central/EmojiSmile_round_outlined_radius1_stroke2.svg';
@@ -33,7 +34,6 @@ import { attachFiles, attachGif } from '../media/commands';
 import { isOverLimit } from '../model/post-info';
 import { findPostById } from '../model/schema';
 import { escapeToEditor, keepEditorFocus } from '../shared/editor-focus';
-import { useRovingFocus } from '../shared/roving-focus';
 import { CharCount } from './CharCount';
 import * as css from './PostFooter.css';
 
@@ -63,18 +63,6 @@ export function PostFooter({ postId }: { postId: string }) {
 	const canLabel = usePostState(postId, (state, post) => canLabelPost(state, post.node), false);
 	const hasLabels = usePostState(postId, (state, post) => hasPostLabels(state, post.node), false);
 
-	const roving = useRovingFocus(
-		[
-			'photo',
-			'gif',
-			...(gtPhone ? ['emoji'] : []),
-			...(canLabel ? ['labels'] : []),
-			...(canSplit ? ['split'] : []),
-			'language',
-		],
-		{ tabbable: isActive },
-	);
-
 	const openLabels = () => {
 		const { state } = wg;
 		const post = findPostById(state.doc, postId);
@@ -88,54 +76,57 @@ export function PostFooter({ postId }: { postId: string }) {
 
 	return (
 		<>
-			<div
+			<Toolbar.Root
 				className={css.root}
-				role="toolbar"
 				aria-label={m['features.composer.toolbar.a11y.label']()}
+				tabbable={isActive}
 				onMouseDown={keepEditorFocus}
-				onKeyDown={(event) => {
-					escapeToEditor(wg, event);
-					roving.onKeyDown(event);
-				}}
+				onKeyDown={(event) => escapeToEditor(wg, event)}
 			>
-				<div className={css.actions}>
-					<Button
-						{...roving.item('photo')}
-						label={m['common.compose.action.photo']()}
-						variant="ghost"
-						color="secondary"
-						shape="round"
-						onClick={(event) => {
-							const button = event.currentTarget;
-							void openMediaPicker().then(async (files) => {
-								if (files.length === 0) {
-									return;
-								}
+				<Toolbar.Group className={css.actions}>
+					<Toolbar.Button
+						render={
+							<Button
+								label={m['common.compose.action.photo']()}
+								variant="ghost"
+								color="secondary"
+								shape="round"
+								onClick={(event) => {
+									const button = event.currentTarget;
+									void openMediaPicker().then(async (files) => {
+										if (files.length === 0) {
+											return;
+										}
 
-								await attachFiles(wg, postId, files);
-								// leave focus alone if it moved elsewhere while the files loaded.
-								if (document.activeElement === button) {
-									wg.focus();
-								}
-							});
-						}}
-					>
-						<ButtonIcon icon={ImageIcon} size="lg" />
-					</Button>
+										await attachFiles(wg, postId, files);
+										// leave focus alone if it moved elsewhere while the files loaded.
+										if (document.activeElement === button) {
+											wg.focus();
+										}
+									});
+								}}
+							>
+								<ButtonIcon icon={ImageIcon} size="lg" />
+							</Button>
+						}
+					/>
 
 					<Dialog.Trigger
 						handle={gifPicker}
 						render={
-							<Button
-								{...roving.item('gif')}
-								label={m['features.composer.toolbar.a11y.gif']()}
-								aria-description={m['features.composer.toolbar.a11y.gifHint']()}
-								variant="ghost"
-								color="secondary"
-								shape="round"
-							>
-								<ButtonIcon icon={GifIcon} size="lg" />
-							</Button>
+							<Toolbar.Button
+								render={
+									<Button
+										label={m['features.composer.toolbar.a11y.gif']()}
+										aria-description={m['features.composer.toolbar.a11y.gifHint']()}
+										variant="ghost"
+										color="secondary"
+										shape="round"
+									>
+										<ButtonIcon icon={GifIcon} size="lg" />
+									</Button>
+								}
+							/>
 						}
 					/>
 
@@ -143,68 +134,80 @@ export function PostFooter({ postId }: { postId: string }) {
 						<EmojiPicker.Trigger
 							handle={emojiPicker}
 							render={
-								<Button
-									{...roving.item('emoji')}
-									label={m['common.a11y.openEmojiPicker']()}
-									variant="ghost"
-									color="secondary"
-									shape="round"
-								>
-									<ButtonIcon icon={EmojiIcon} size="lg" />
-								</Button>
+								<Toolbar.Button
+									render={
+										<Button
+											label={m['common.a11y.openEmojiPicker']()}
+											variant="ghost"
+											color="secondary"
+											shape="round"
+										>
+											<ButtonIcon icon={EmojiIcon} size="lg" />
+										</Button>
+									}
+								/>
 							}
 						/>
 					)}
 
 					{canLabel && (
-						<Button
-							{...roving.item('labels')}
-							label={m['features.composer.labels.title']()}
-							variant="ghost"
-							color={hasLabels ? 'primary' : 'secondary'}
-							shape="round"
-							onClick={openLabels}
-						>
-							<ButtonIcon icon={hasLabels ? FlagFilledIcon : FlagIcon} size="lg" />
-						</Button>
+						<Toolbar.Button
+							render={
+								<Button
+									label={m['features.composer.labels.title']()}
+									variant="ghost"
+									color={hasLabels ? 'primary' : 'secondary'}
+									shape="round"
+									onClick={openLabels}
+								>
+									<ButtonIcon icon={hasLabels ? FlagFilledIcon : FlagIcon} size="lg" />
+								</Button>
+							}
+						/>
 					)}
-				</div>
+				</Toolbar.Group>
 
-				<div className={css.status}>
+				<Toolbar.Group className={css.status}>
 					{canSplit && (
-						<Button
-							{...roving.item('split')}
-							label={m['features.composer.toolbar.a11y.autoSplit']()}
-							size="tiny"
-							color="secondary"
-							onClick={() => {
-								autoSplitPost(wg, postId);
-								// splitting removes the focused button.
-								wg.focus();
-							}}
-						>
-							<ButtonText>{m['features.composer.toolbar.autoSplit']()}</ButtonText>
-						</Button>
+						<Toolbar.Button
+							render={
+								<Button
+									label={m['features.composer.toolbar.a11y.autoSplit']()}
+									size="tiny"
+									color="secondary"
+									onClick={() => {
+										autoSplitPost(wg, postId);
+										// splitting removes the focused button.
+										wg.focus();
+									}}
+								>
+									<ButtonText>{m['features.composer.toolbar.autoSplit']()}</ButtonText>
+								</Button>
+							}
+						/>
 					)}
 
 					<Menu.Trigger
 						handle={languagePicker.menu}
 						render={
-							<Button
-								{...roving.item('language')}
-								ref={languageTrigger}
-								className={css.language}
-								label={m['features.composer.language.selectPost']()}
-								variant="ghost"
-								color="secondary"
-							>
-								<ButtonText size="sm">{toPostLanguages(languagePicker.language).join(', ')}</ButtonText>
-							</Button>
+							<Toolbar.Button
+								render={
+									<Button
+										ref={languageTrigger}
+										className={css.language}
+										label={m['features.composer.language.selectPost']()}
+										variant="ghost"
+										color="secondary"
+									>
+										<ButtonText size="sm">{toPostLanguages(languagePicker.language).join(', ')}</ButtonText>
+									</Button>
+								}
+							/>
 						}
 					/>
 					<CharCount postId={postId} />
-				</div>
-			</div>
+				</Toolbar.Group>
+			</Toolbar.Root>
 
 			{/* keep dialog events out of the toolbar's focus and key handlers. */}
 			{gtPhone && (
