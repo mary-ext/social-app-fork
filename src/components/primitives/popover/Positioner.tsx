@@ -6,9 +6,9 @@ import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
 import { type Align, type CollisionPadding, getAnchoredStyle, type Side } from '../anchored-popup';
-import * as styles from '../anchored-popup.css';
 import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
 import { getDialogProps, showInTopLayer, showModalInTopLayer } from '../top-layer';
+import * as styles from './popover.css';
 import { useRootContext } from './shared';
 
 export type PositionerState = {
@@ -69,7 +69,7 @@ const MountedPositioner = ({
 		props: mergeProps<'dialog'>(
 			{
 				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
-				className: styles.positioner,
+				className: modal ? styles.modalPositioner : styles.positioner,
 				style: getAnchoredStyle({ anchorName, side, align, sideOffset, collisionPadding }),
 			},
 			elementProps,
