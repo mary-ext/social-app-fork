@@ -8,8 +8,6 @@ export {
 	type ToastManager,
 	type ToastManagerOptions,
 	type ToastObject,
-	type ToastPromiseOptions,
-	type ToastUpdateOptions,
 } from './manager';
 export { Provider, type ProviderProps } from './Provider';
 export { Root, type RootProps } from './Root';

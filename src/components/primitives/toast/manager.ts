@@ -8,7 +8,7 @@ export type ToastObject<Data extends object = object> = {
 	id: string;
 	title?: ReactNode;
 	description?: ReactNode;
-	/** styling hint; `'loading'` toasts don't auto-dismiss. */
+	/** exposed as `data-type` for styling. */
 	type?: string;
 	/** auto-dismiss time in ms; `0` disables it. defaults to the manager's timeout. */
 	timeout?: number;
@@ -20,10 +20,6 @@ export type ToastObject<Data extends object = object> = {
 	limited: boolean;
 	/** natural height in px, measured once rendered. */
 	height?: number;
-	/** called once when the toast starts closing. */
-	onClose?: () => void;
-	/** called on removal; rendered toasts wait for exit transitions. */
-	onRemove?: () => void;
 	/** props for `Toast.Action`. */
 	actionProps?: ComponentPropsWithoutRef<'button'>;
 	data?: Data;
@@ -35,19 +31,6 @@ export type ToastAddOptions<Data extends object = object> = Omit<
 > & {
 	/** updates an open toast or reopens a closing one with this id, restarting its timer. */
 	id?: string;
-};
-
-export type ToastUpdateOptions<Data extends object = object> = Partial<Omit<ToastAddOptions<Data>, 'id'>>;
-
-type PromiseStageOptions<Data extends object, Arg> =
-	| string
-	| ToastUpdateOptions<Data>
-	| ((value: Arg) => string | ToastUpdateOptions<Data>);
-
-export type ToastPromiseOptions<Value, Data extends object = object> = {
-	loading: string | ToastUpdateOptions<Data>;
-	success: PromiseStageOptions<Data, Value>;
-	error: PromiseStageOptions<Data, unknown>;
 };
 
 export type ToastManagerOptions = {
@@ -64,14 +47,6 @@ type Timer = {
 	/** time left, excluding paused time. */
 	remaining: number;
 	start: number;
-};
-
-const resolveStage = <Data extends object, Arg>(
-	stage: PromiseStageOptions<Data, Arg>,
-	value: Arg,
-): ToastUpdateOptions<Data> => {
-	const resolved = typeof stage === 'function' ? stage(value) : stage;
-	return typeof resolved === 'string' ? { title: resolved } : resolved;
 };
 
 const markLimited = <Data extends object>(
@@ -133,32 +108,16 @@ export class ToastManager<Data extends object = object> {
 		const id = options.id ?? `toast-${++nextId}`;
 		const existing = this.#find(id);
 		if (existing?.transitionStatus === 'ending') {
-			this.#remove(id, false);
+			this.#remove(id);
 		} else if (existing) {
-			this.#patch(id, options, true);
+			this.#patch(id, options);
 			return id;
 		}
 
 		const toast: ToastObject<Data> = { ...options, id, updateKey: 0, limited: false };
 		this.#set(markLimited([toast, ...this.#toasts], this.#limit));
-		this.#syncTimer(toast, true);
+		this.#startTimer(toast);
 		return id;
-	};
-
-	/**
-	 * updates an open toast; ignores missing or closing toasts. passing `type` or `timeout` restarts its timer.
-	 *
-	 * @param id toast id
-	 * @param updates fields to change, or a function of the current toast returning them
-	 */
-	update = (
-		id: string,
-		updates: ToastUpdateOptions<Data> | ((prev: ToastObject<Data>) => ToastUpdateOptions<Data>),
-	): void => {
-		const prev = this.#find(id);
-		if (prev && prev.transitionStatus !== 'ending') {
-			this.#patch(id, typeof updates === 'function' ? updates(prev) : updates, false);
-		}
 	};
 
 	/**
@@ -180,50 +139,21 @@ export class ToastManager<Data extends object = object> {
 		}
 
 		const ids = new Set(closing.map((toast) => toast.id));
-		// unrendered toasts have no exit transition to wait for.
-		const unrendered = closing.filter((toast) => !this.#elements.has(toast.id));
 		const next = this.#toasts.flatMap((toast) => {
 			if (!ids.has(toast.id)) {
 				return [toast];
 			}
-			return unrendered.includes(toast) ? [] : [{ ...toast, transitionStatus: 'ending' as const, height: 0 }];
+			// unrendered toasts have no exit transition to wait for.
+			if (!this.#elements.has(toast.id)) {
+				return [];
+			}
+			return [{ ...toast, transitionStatus: 'ending' as const, height: 0 }];
 		});
 		this.#set(markLimited(next, this.#limit));
-
-		for (const toast of closing) {
-			toast.onClose?.();
-		}
-		for (const toast of unrendered) {
-			toast.onRemove?.();
-		}
 
 		if (focusedId !== undefined && ids.has(focusedId)) {
 			this.#moveFocusFrom(focusedId);
 		}
-	};
-
-	/**
-	 * shows a loading toast, then updates it on fulfillment or rejection.
-	 *
-	 * @param promise promise to track
-	 * @param options toast options for each stage; strings set the title
-	 * @returns a promise preserving the result or rejection, after updating the toast
-	 */
-	promise = <Value>(promise: Promise<Value>, options: ToastPromiseOptions<Value, Data>): Promise<Value> => {
-		const id = this.add({
-			...(typeof options.loading === 'string' ? { title: options.loading } : options.loading),
-			type: 'loading',
-		});
-		return promise.then(
-			(value) => {
-				this.update(id, { type: 'success', ...resolveStage(options.success, value) });
-				return value;
-			},
-			(error: unknown) => {
-				this.update(id, { type: 'error', ...resolveStage(options.error, error) });
-				throw error;
-			},
-		);
 	};
 
 	// #endregion
@@ -279,13 +209,13 @@ export class ToastManager<Data extends object = object> {
 	}
 
 	/**
-	 * removes a closing toast and calls `onRemove`; ignores open or missing toasts.
+	 * removes a closing toast; ignores open or missing toasts.
 	 *
 	 * @param id toast id
 	 */
 	remove(id: string): void {
 		if (this.#find(id)?.transitionStatus === 'ending') {
-			this.#remove(id, true);
+			this.#remove(id);
 		}
 	}
 
@@ -317,7 +247,7 @@ export class ToastManager<Data extends object = object> {
 		this.#emitter.emit();
 	}
 
-	#patch(id: string, updates: ToastUpdateOptions<Data>, restartTimer: boolean): void {
+	#patch(id: string, updates: ToastAddOptions<Data>): void {
 		let next: ToastObject<Data> | undefined;
 		this.#set(
 			this.#toasts.map((toast) => {
@@ -329,11 +259,11 @@ export class ToastManager<Data extends object = object> {
 			}),
 		);
 		if (next) {
-			this.#syncTimer(next, restartTimer || 'timeout' in updates || 'type' in updates);
+			this.#startTimer(next);
 		}
 	}
 
-	#remove(id: string, notify: boolean): void {
+	#remove(id: string): void {
 		const toast = this.#find(id);
 		if (!toast) {
 			return;
@@ -341,21 +271,14 @@ export class ToastManager<Data extends object = object> {
 		this.#clearTimer(id);
 		this.#elements.delete(id);
 		this.#set(this.#toasts.filter((item) => item !== toast));
-		if (notify) {
-			toast.onRemove?.();
-		}
 	}
 
-	#syncTimer(toast: ToastObject<Data>, restart: boolean): void {
-		const duration = toast.timeout ?? this.#timeout;
-		if (toast.type === 'loading' || duration <= 0) {
-			this.#clearTimer(toast.id);
-			return;
-		}
-		if (!restart && this.#timers.has(toast.id)) {
-			return;
-		}
+	#startTimer(toast: ToastObject<Data>): void {
 		this.#clearTimer(toast.id);
+		const duration = toast.timeout ?? this.#timeout;
+		if (duration <= 0) {
+			return;
+		}
 		const timer: Timer = { handle: undefined, remaining: duration, start: 0 };
 		this.#timers.set(toast.id, timer);
 		if (!this.#paused) {

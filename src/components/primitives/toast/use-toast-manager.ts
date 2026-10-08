@@ -3,7 +3,7 @@ import { useProviderContext } from './shared';
 
 export type UseToastManagerReturnValue<Data extends object = object> = Pick<
 	ToastManager<Data>,
-	'add' | 'close' | 'promise' | 'update'
+	'add' | 'close'
 > & {
 	/** current toasts, newest first. */
 	toasts: readonly ToastObject<Data>[];
@@ -22,7 +22,5 @@ export const useToastManager = <Data extends object = object>(): UseToastManager
 		toasts: toasts as readonly ToastObject<Data>[],
 		add: typed.add,
 		close: typed.close,
-		promise: typed.promise,
-		update: typed.update,
 	};
 };
