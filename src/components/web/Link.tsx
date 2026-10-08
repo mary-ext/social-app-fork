@@ -13,7 +13,7 @@ import { groupChatJoinHandle, linkWarningDialogHandle } from '#/components/dialo
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import type { TextProps } from '#/components/Text';
 import * as textStyles from '#/components/Text.css';
-import { Button, type ButtonProps } from '#/components/web/Button';
+import { ButtonAnchor, type ButtonAnchorProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
 
 import { type RouteTarget, useRouter } from '#/router';
@@ -328,22 +328,17 @@ const InlineAnchor = ({
 	);
 };
 
-type ButtonAnchorProps = Omit<ButtonProps, 'nativeButton' | 'onClick' | 'render'>;
+type BoundButtonAnchorProps = Omit<ButtonAnchorProps, 'href' | 'onClick' | 'rel' | 'target'>;
 
-// a {@link Button} that renders an `<a>`, so it keeps real anchor semantics (middle/cmd-click, copy link
-// address) while looking and laying out like a button.
-const ButtonAnchor = ({ bindings, children, ...rest }: { bindings: LinkBindings } & ButtonAnchorProps) => {
-	return (
-		<Button
-			{...rest}
-			nativeButton={false}
-			onClick={bindings.onClick}
-			render={<a href={bindings.href} rel={bindings.rel} target={bindings.target} />}
-		>
-			{children}
-		</Button>
-	);
-};
+const BoundButtonAnchor = ({ bindings, ...rest }: { bindings: LinkBindings } & BoundButtonAnchorProps) => (
+	<ButtonAnchor
+		{...rest}
+		href={bindings.href}
+		onClick={bindings.onClick}
+		rel={bindings.rel}
+		target={bindings.target}
+	/>
+);
 
 // #endregion
 
@@ -359,7 +354,7 @@ type InternalNavProps = {
 
 export type LinkProps = InternalNavProps & BlockAnchorProps;
 export type InlineLinkTextProps = InternalNavProps & InlineAnchorProps;
-export type LinkButtonProps = InternalNavProps & ButtonAnchorProps;
+export type LinkButtonProps = InternalNavProps & BoundButtonAnchorProps;
 
 /**
  * a block link to an in-app route that navigates using the router on click, falling back to browser-native
@@ -378,10 +373,15 @@ export const InlineLinkText = ({ action, onPress, to, ...rest }: InlineLinkTextP
 	return <InlineAnchor bindings={bindings} {...rest} />;
 };
 
-/** A web-native in-app-route link styled as a {@link Button}; renders an `<a>` so it keeps anchor semantics. */
+/**
+ * an in-app link styled as a {@link ButtonAnchor}.
+ *
+ * @param props navigation and button props
+ * @returns the anchor element
+ */
 export const LinkButton = ({ action, onPress, to, ...rest }: LinkButtonProps) => {
 	const bindings = useInternalLink({ action, onPress, to });
-	return <ButtonAnchor bindings={bindings} {...rest} />;
+	return <BoundButtonAnchor bindings={bindings} {...rest} />;
 };
 
 // #endregion
@@ -398,7 +398,7 @@ type ExternalNavProps = {
 
 export type ExternalLinkProps = ExternalNavProps & BlockAnchorProps;
 export type ExternalInlineLinkTextProps = ExternalNavProps & InlineAnchorProps;
-export type ExternalLinkButtonProps = ExternalNavProps & ButtonAnchorProps;
+export type ExternalLinkButtonProps = ExternalNavProps & BoundButtonAnchorProps;
 
 /** opens a raw URL in a new tab, or navigates internally if it resolves to an in-app route. */
 export const ExternalLink = ({ action, href, onPress, ...rest }: ExternalLinkProps) => {
@@ -412,10 +412,15 @@ export const ExternalInlineLinkText = ({ action, href, onPress, ...rest }: Exter
 	return <InlineAnchor bindings={bindings} {...rest} />;
 };
 
-/** A web-native raw-URL link styled as a {@link Button}; renders an `<a>` so it keeps anchor semantics. */
+/**
+ * a button-styled {@link ExternalLink}.
+ *
+ * @param props navigation and button props
+ * @returns the anchor element
+ */
 export const ExternalLinkButton = ({ action, href, onPress, ...rest }: ExternalLinkButtonProps) => {
 	const bindings = useExternalLink({ action, href, onPress });
-	return <ButtonAnchor bindings={bindings} {...rest} />;
+	return <BoundButtonAnchor bindings={bindings} {...rest} />;
 };
 
 // #endregion

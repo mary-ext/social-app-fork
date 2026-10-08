@@ -8,7 +8,6 @@ import {
 	useContext,
 } from 'react';
 
-import { Button as BaseButton } from '@base-ui/react/button';
 import { clsx } from 'clsx';
 
 import { Spinner } from '#/components/Spinner';
@@ -19,20 +18,27 @@ import type { iconSize } from '#/styles/tokens.css';
 
 type ButtonVariants = RecipeVariants<typeof styles.button>;
 
-export type ButtonProps = Omit<ComponentPropsWithoutRef<typeof BaseButton>, 'className' | 'color'> & {
-	/** Accessible name; becomes the `aria-label`. */
+type ButtonStyleProps = {
+	/** accessible name (`aria-label`). */
 	label: string;
 	variant?: ButtonVariants['variant'];
 	color?: ButtonVariants['color'];
 	size?: ButtonVariants['size'];
 	shape?: ButtonVariants['shape'];
 	className?: string;
-	/** Forwarded to the underlying `<button>` so the Button can back a `Dialog.Trigger`. */
-	ref?: Ref<HTMLButtonElement>;
 };
 
-// resolved (defaulted) geometry the Button shares with its ButtonIcon children. mirrors the recipe's
-// defaultVariants so ButtonIcon can size its box and negative margin without re-reading the recipe.
+export type ButtonProps = ButtonStyleProps &
+	Omit<ComponentPropsWithoutRef<'button'>, 'className' | 'color'> & {
+		ref?: Ref<HTMLButtonElement>;
+	};
+
+export type ButtonAnchorProps = ButtonStyleProps &
+	Omit<ComponentPropsWithoutRef<'a'>, 'className' | 'color'> & {
+		ref?: Ref<HTMLAnchorElement>;
+	};
+
+// share resolved geometry with icons; defaults must match the button recipe.
 type ButtonContextValue = {
 	shape: NonNullable<ButtonVariants['shape']>;
 	size: NonNullable<ButtonVariants['size']>;
@@ -41,25 +47,50 @@ type ButtonContextValue = {
 const ButtonContext = createContext<ButtonContextValue | null>(null);
 ButtonContext.displayName = 'ButtonContext';
 
-/** The web-native button primitive, built on Base UI's headless `<button>`. */
-export function Button({
+const splitStyleProps = <P extends ButtonStyleProps>({
 	label,
 	variant,
 	color,
 	size = 'small',
 	shape = 'default',
 	className,
-	children,
 	...rest
-}: ButtonProps) {
+}: P) => ({
+	styled: {
+		'aria-label': label,
+		className: clsx(styles.button({ color, shape, size, variant }), className),
+	},
+	context: { shape, size },
+	rest,
+});
+
+/**
+ * a styled `<button>`; defaults to `type="button"`.
+ *
+ * @param props styling and button props
+ * @returns the button element
+ */
+export function Button({ children, ...props }: ButtonProps) {
+	const { styled, context, rest } = splitStyleProps(props);
 	return (
-		<BaseButton
-			aria-label={label}
-			className={clsx(styles.button({ color, shape, size, variant }), className)}
-			{...rest}
-		>
-			<ButtonContext.Provider value={{ shape, size }}>{children}</ButtonContext.Provider>
-		</BaseButton>
+		<button type="button" {...styled} {...rest}>
+			<ButtonContext.Provider value={context}>{children}</ButtonContext.Provider>
+		</button>
+	);
+}
+
+/**
+ * an anchor styled as a {@link Button}.
+ *
+ * @param props styling and anchor props
+ * @returns the anchor element
+ */
+export function ButtonAnchor({ children, ...props }: ButtonAnchorProps) {
+	const { styled, context, rest } = splitStyleProps(props);
+	return (
+		<a {...styled} {...rest}>
+			<ButtonContext.Provider value={context}>{children}</ButtonContext.Provider>
+		</a>
 	);
 }
 
