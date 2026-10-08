@@ -65,32 +65,38 @@ export const useTransitionsSettled = (
 
 		let stale = false;
 		let timeout: ReturnType<typeof setTimeout> | undefined;
+
+		// recheck after cancellation to catch replacement transitions, such as a mid-exit media query change.
+		const waitForAnimations = (): void => {
+			if (stale) {
+				return;
+			}
+			// ignore infinite and scroll-driven animations. finished animations with fill remain in the list;
+			// waiting on them again would loop.
+			const pending = el
+				.getAnimations({ subtree: true })
+				.filter(
+					(animation) =>
+						animation.timeline === document.timeline &&
+						animation.playState !== 'finished' &&
+						animation.effect?.getComputedTiming().endTime !== Infinity,
+				)
+				.map((animation) => animation.finished);
+			if (pending.length === 0) {
+				onSettled(open);
+				return;
+			}
+			Promise.all(pending).then(waitForAnimations, waitForAnimations);
+		};
+
 		const frame = requestAnimationFrame(() => {
-			const pending: Promise<unknown>[] = [];
-			if (untrackedPseudoElement !== undefined) {
-				// `getAnimations()` may omit pseudo-element transitions, notably `::details-content`.
-				const delay = getTransitionTime(getComputedStyle(el, untrackedPseudoElement));
-				pending.push(new Promise((resolve) => (timeout = setTimeout(resolve, delay))));
+			if (untrackedPseudoElement === undefined) {
+				waitForAnimations();
+				return;
 			}
-			// looping animations must not block unmounting.
-			for (const animation of el.getAnimations({ subtree: true })) {
-				if (animation.effect?.getComputedTiming().endTime !== Infinity) {
-					pending.push(animation.finished);
-				}
-			}
-			Promise.all(pending).then(
-				() => {
-					if (!stale) {
-						onSettled(open);
-					}
-				},
-				() => {
-					// native dismissal cancels exit animations without replacement transitions to wait for.
-					if (!stale && !open && !el.matches(':popover-open')) {
-						onSettled(open);
-					}
-				},
-			);
+			// `getAnimations()` may omit pseudo-element transitions, notably `::details-content`.
+			const delay = getTransitionTime(getComputedStyle(el, untrackedPseudoElement));
+			timeout = setTimeout(waitForAnimations, delay);
 		});
 
 		return () => {
