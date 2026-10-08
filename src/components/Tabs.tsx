@@ -13,9 +13,9 @@ import {
 	useRef,
 } from 'react';
 
-import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { clsx } from 'clsx';
 
+import * as TabsPrimitive from '#/components/primitives/tabs';
 import * as styles from '#/components/Tabs.css';
 import { Text } from '#/components/Text';
 
@@ -78,7 +78,7 @@ const useDragScroll = (ref: RefObject<HTMLElement | null>) => {
 	}, [ref]);
 };
 
-export type RootProps = Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> & {
+export type RootProps = Omit<ComponentPropsWithoutRef<'div'>, 'defaultValue' | 'onChange'> & {
 	onValueChange: (value: string) => void;
 	ref?: Ref<HTMLDivElement>;
 	value: string;
@@ -96,16 +96,15 @@ export const Root = ({
 }: RootProps) => {
 	return (
 		<TabsContext value={{ value, variant }}>
-			<BaseTabs.Root
+			<TabsPrimitive.Root
 				ref={ref}
 				value={value}
-				// Base UI types a tab value as `any`; this wrapper only ever keys its tabs by string
-				onValueChange={(next: string) => onValueChange(next)}
+				onValueChange={(next) => onValueChange(String(next))}
 				className={clsx(styles.root, className)}
 				{...rest}
 			>
 				{children}
-			</BaseTabs.Root>
+			</TabsPrimitive.Root>
 		</TabsContext>
 	);
 };
@@ -137,9 +136,9 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 	useDragScroll(listRef);
 
 	return (
-		<BaseTabs.List ref={listRef} className={clsx(styles.list, className)} {...rest}>
+		<TabsPrimitive.List ref={listRef} className={clsx(styles.list, className)} {...rest}>
 			{children}
-		</BaseTabs.List>
+		</TabsPrimitive.List>
 	);
 };
 
@@ -156,7 +155,7 @@ export const Tab = ({ value, className, icon: Icon, label, ...rest }: TabProps) 
 	const { variant } = use(TabsContext)!;
 
 	return (
-		<BaseTabs.Tab
+		<TabsPrimitive.Tab
 			value={value}
 			className={clsx(styles.tab, styles.tabVariant[variant], className)}
 			render={(props, state) => (
@@ -178,9 +177,9 @@ export type PanelProps = Omit<ComponentPropsWithoutRef<'div'>, 'value'> & {
 
 export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 	return (
-		<BaseTabs.Panel value={value} className={clsx(styles.panel, className)} {...rest}>
+		<TabsPrimitive.Panel value={value} className={clsx(styles.panel, className)} {...rest}>
 			{children}
-		</BaseTabs.Panel>
+		</TabsPrimitive.Panel>
 	);
 };
 
@@ -273,7 +272,7 @@ export const Tabs = <Id extends string>({
 								label={section.label}
 								value={section.id}
 								onClick={() => {
-									// Base UI's onValueChange doesn't fire when the active tab is re-tapped
+									// reselection doesn't fire onValueChange.
 									if (active !== section.id) {
 										return;
 									}
