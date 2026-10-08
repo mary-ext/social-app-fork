@@ -3,28 +3,18 @@ import { style } from '@vanilla-extract/css';
 import { layered } from '#/styles/layers';
 import { reset } from '#/styles/layers.css';
 
-export const modalViewport = style(
+import { topLayerReset } from './top-layer.css';
+
+export const modalViewport = style([
+	topLayerReset,
 	layered(reset, {
 		display: 'block',
 		position: 'fixed',
 		inset: 0,
 		// unlike hidden, clip prevents focus from scrolling the entering popup and disrupting its transition.
 		overflow: 'clip',
-		margin: 0,
 		outline: 0,
-		border: 0,
-		background: 'none',
-		padding: 0,
 		width: 'auto',
-		maxWidth: 'none',
 		height: 'auto',
-		maxHeight: 'none',
-		color: 'inherit',
-		cursor: 'auto',
-		// pointer-events still inherits from the DOM host in the top layer.
-		pointerEvents: 'auto',
-		'::backdrop': {
-			background: 'none',
-		},
 	}),
-);
+]);

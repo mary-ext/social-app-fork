@@ -1,26 +1,18 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
+import { topLayerReset } from './top-layer.css';
+
 // popup styles use @starting-style for entry and [data-closed] for exit; presence waits for transitions.
 
-// reset native popover and dialog styles; the popup owns its appearance.
-export const positioner = style({
-	containerType: 'anchored',
-	positionVisibility: 'anchors-visible',
-	overflow: 'visible',
-	inset: 'auto',
-	margin: 0,
-	border: 0,
-	background: 'none',
-	padding: 0,
-	maxWidth: 'none',
-	maxHeight: 'none',
-	color: 'inherit',
-	cursor: 'auto',
-	pointerEvents: 'auto',
-	'::backdrop': {
-		background: 'none',
+export const positioner = style([
+	topLayerReset,
+	{
+		containerType: 'anchored',
+		positionVisibility: 'anchors-visible',
+		overflow: 'visible',
+		inset: 'auto',
 	},
-});
+]);
 
 export const shrinkingPositioner = style({
 	display: 'flex',
