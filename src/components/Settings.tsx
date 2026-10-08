@@ -2,13 +2,13 @@
 
 import type { ComponentProps, ComponentType, ReactNode, SVGProps } from 'react';
 
-import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
 import { CheckboxIndicator, RadioIndicator } from '#/components/forms/Indicator';
 import * as Checkbox from '#/components/primitives/checkbox';
 import * as Collapsible from '#/components/primitives/collapsible';
 import * as Radio from '#/components/primitives/radio';
+import * as Switch from '#/components/primitives/switch';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/Settings.css';
 import { Spinner } from '#/components/Spinner';
@@ -370,7 +370,7 @@ export function SwitchRow({
 			<Trailing>
 				{loading && <Spinner color="default" label={label} size="sm" />}
 				<span className={styles.switchTrack}>
-					<span className={styles.switchThumb} />
+					<Switch.Thumb className={styles.switchThumb} />
 				</span>
 			</Trailing>
 		</Switch.Root>

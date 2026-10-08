@@ -246,9 +246,8 @@ globalStyle(`:where(${panelRows} > ${item}:first-child)::before`, divider);
 {
 	const led = `${item}:has(> ${leading}, > :first-child > ${leading})`;
 
-	// switches and checkboxes leave a hidden input between them and the next row
 	globalStyle(
-		`:is(${led} + ${item}, ${led} + input + ${item}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${item}:first-child)::before`,
+		`:is(${led} + ${item}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${item}:first-child)::before`,
 		{ left: ROW_LABEL_INSET },
 	);
 }
@@ -336,7 +335,7 @@ export const switchThumb = style({
 	height: 20,
 	boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
 	selectors: {
-		'[data-checked] &': { transform: 'translateX(18px)' },
+		'&[data-checked]': { transform: 'translateX(18px)' },
 	},
 });
 
