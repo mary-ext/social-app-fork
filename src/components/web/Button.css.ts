@@ -11,6 +11,9 @@ const HOVER = hover(':not(:disabled)');
 
 export const SCRIM_BACKGROUND = 'rgba(0, 0, 0, 0.5)';
 
+/** round button dimensions in pixels, by size. */
+export const ROUND_SIZE = { large: 44, small: 33, tiny: 25 };
+
 const fontSizeVar = createVar();
 const fontSizeScale = fallbackVar(fontSizeVar, fontSize.md_sub);
 
@@ -242,9 +245,21 @@ export const button = recipe(
 					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_50 } },
 				},
 			},
-			{ shape: 'round', size: 'large', style: { padding: 0, width: 44, height: 44 } },
-			{ shape: 'round', size: 'small', style: { padding: 0, width: 33, height: 33 } },
-			{ shape: 'round', size: 'tiny', style: { padding: 0, width: 25, height: 25 } },
+			{
+				shape: 'round',
+				size: 'large',
+				style: { padding: 0, width: ROUND_SIZE.large, height: ROUND_SIZE.large },
+			},
+			{
+				shape: 'round',
+				size: 'small',
+				style: { padding: 0, width: ROUND_SIZE.small, height: ROUND_SIZE.small },
+			},
+			{
+				shape: 'round',
+				size: 'tiny',
+				style: { padding: 0, width: ROUND_SIZE.tiny, height: ROUND_SIZE.tiny },
+			},
 			{
 				shape: 'rectangular',
 				size: 'large',
