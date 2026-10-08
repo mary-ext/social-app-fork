@@ -20,7 +20,12 @@ import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
-import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
+import {
+	type ConvoWithDetails,
+	getConvoReportSubject,
+	type GroupConvoMember,
+	parseConvoView,
+} from '#/components/dms/util';
 import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
@@ -267,7 +272,9 @@ function SettingsHeader({
 	const { joinLink } = convo.details;
 	const isJoinLinkEnabled = isOwner || joinLink?.enabledStatus === 'enabled';
 
-	const reportSubjectDid = convo.primaryMember?.did;
+	const { currentAccount } = useSession();
+	const reportSubject = getConvoReportSubject(convo, currentAccount?.did);
+	const reportSubjectDid = reportSubject && 'did' in reportSubject ? reportSubject.did : undefined;
 
 	const { mutate: editGroupName, isPending: isEditingName } = useEditGroupChatName(convo.view.id, {
 		onSuccess: () => {
@@ -455,7 +462,7 @@ function SettingsHeader({
 							onClick={lockStatus === 'locked' ? handleUnlock : () => lockChatPrompt.open(null)}
 						/>
 					) : null}
-					{!isOwner && reportSubjectDid ? (
+					{reportSubjectDid ? (
 						<SettingsButton
 							icon={FlagIcon}
 							label={m['screens.messages.report.group']()}
