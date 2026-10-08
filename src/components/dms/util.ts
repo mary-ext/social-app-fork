@@ -265,6 +265,17 @@ export function parseConvoView(
 	}
 }
 
+/**
+ * whether an account owns a group conversation.
+ *
+ * @param convo parsed conversation
+ * @param did the account to check
+ * @returns true if `did` owns the group; false for direct chats, missing DIDs, or unknown owners
+ */
+export function isGroupOwner(convo: ConvoWithDetails, did: Did | undefined): boolean {
+	return convo.kind === 'group' && did !== undefined && convo.primaryMember?.did === did;
+}
+
 export type ReportSubject =
 	| { convoId: string; did: Did }
 	| { convoId: string; message: ChatBskyConvoDefs.MessageView; view: 'convo' };
@@ -282,7 +293,7 @@ export function getConvoReportSubject(
 	ownDid: Did | undefined,
 ): ReportSubject | null {
 	if (convo.kind === 'group') {
-		if (!convo.primaryMember || convo.primaryMember.did === ownDid) {
+		if (!convo.primaryMember || isGroupOwner(convo, ownDid)) {
 			return null;
 		}
 		return { convoId: convo.view.id, did: convo.primaryMember.did };

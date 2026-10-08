@@ -8,7 +8,7 @@ import { useSession } from '#/state/session';
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
-import type { ConvoWithDetails } from '#/components/dms/util';
+import { type ConvoWithDetails, isGroupOwner } from '#/components/dms/util';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
@@ -42,7 +42,7 @@ export function MessagesListGroupInfoPanel({
 		},
 	});
 
-	const isOwner = convo.primaryMember?.did === currentAccount?.did;
+	const isOwner = isGroupOwner(convo, currentAccount?.did);
 
 	const isJoinLinkEnabled = isOwner || convo.details.joinLink?.enabledStatus === 'enabled';
 

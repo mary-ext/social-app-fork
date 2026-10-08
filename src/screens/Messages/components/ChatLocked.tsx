@@ -4,7 +4,7 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useSession } from '#/state/session';
 
-import type { ConvoWithDetails } from '#/components/dms/util';
+import { type ConvoWithDetails, isGroupOwner } from '#/components/dms/util';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -23,8 +23,7 @@ export function ChatLocked({ convo }: { convo: Extract<ConvoWithDetails, { kind:
 	const router = useRouter();
 	const { currentAccount } = useSession();
 
-	const primaryMember = convo?.primaryMember;
-	const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did;
+	const isOwner = isGroupOwner(convo, currentAccount?.did);
 	// the lock is forced by a moderation action, so the owner cannot undo it.
 	const isModerationLock = convo.details.lockStatusModerationOverride;
 

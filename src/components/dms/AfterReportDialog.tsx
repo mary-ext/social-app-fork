@@ -10,7 +10,7 @@ import { useSession } from '#/state/session';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
-import type { ConvoWithDetails } from '#/components/dms/util';
+import { type ConvoWithDetails, isGroupOwner } from '#/components/dms/util';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -136,10 +136,9 @@ function DoneStep({
 	});
 
 	const isGroup = convo.kind === 'group';
-	const ownerDid = isGroup ? convo.primaryMember?.did : undefined;
 	const handleText = `@${profile.handle}`;
 	// owners leave through group settings, where they can lock the group first
-	const canLeave = ownerDid !== currentAccount?.did;
+	const canLeave = !isGroupOwner(convo, currentAccount?.did);
 	const canBlockAlone = subject === 'message';
 
 	const run = ({ block, leave }: { block: boolean; leave: boolean }) => {
@@ -178,7 +177,7 @@ function DoneStep({
 	return (
 		<Stack gap="_2xl">
 			<Heading>
-				{profile.did === ownerDid && (
+				{isGroupOwner(convo, profile.did) && (
 					<Text color="textContrastMedium" size="md">
 						{m['components.dms.afterReport.ownerNote']({ handle: handleText })}
 					</Text>

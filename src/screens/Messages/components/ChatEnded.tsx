@@ -1,7 +1,7 @@
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useSession } from '#/state/session';
 
-import type { ConvoWithDetails } from '#/components/dms/util';
+import { type ConvoWithDetails, isGroupOwner } from '#/components/dms/util';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -20,8 +20,7 @@ export function ChatEnded({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	const router = useRouter();
 	const { currentAccount } = useSession();
 
-	const primaryMember = convo?.primaryMember;
-	const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did;
+	const isOwner = isGroupOwner(convo, currentAccount?.did);
 
 	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onSuccess: () => {

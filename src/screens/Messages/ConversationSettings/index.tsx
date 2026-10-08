@@ -24,6 +24,7 @@ import {
 	type ConvoWithDetails,
 	getConvoReportSubject,
 	type GroupConvoMember,
+	isGroupOwner,
 	parseConvoView,
 } from '#/components/dms/util';
 import { ErrorState } from '#/components/ErrorState';
@@ -142,8 +143,7 @@ function GroupSettings({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'gr
 	const { isWithinSplitView } = useIsWithinSplitView();
 	const { currentAccount } = useSession();
 
-	const primaryMember = convo.primaryMember;
-	const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did;
+	const isOwner = isGroupOwner(convo, currentAccount?.did);
 
 	const { data: memberListData = [] } = useListConvoMembersQuery({
 		convoId: convo.view.id,
@@ -158,8 +158,8 @@ function GroupSettings({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'gr
 
 	// oxlint-disable-next-line unicorn/no-array-sort -- sorting the array `filter` just returned
 	const groupMembers = memberListData.filter(isGroupMember).sort((memberA, memberB) => {
-		const aIsOwner = memberA.did === primaryMember?.did;
-		const bIsOwner = memberB.did === primaryMember?.did;
+		const aIsOwner = isGroupOwner(convo, memberA.did);
+		const bIsOwner = isGroupOwner(convo, memberB.did);
 		const aIsSelf = memberA.did === currentAccount?.did;
 		const bIsSelf = memberB.did === currentAccount?.did;
 		if (aIsOwner !== bIsOwner) {
@@ -193,7 +193,7 @@ function GroupSettings({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'gr
 			type: 'chatMember',
 			key: profile.did,
 			profile,
-			status: primaryMember?.did === profile.did ? 'owner' : 'standard',
+			status: isGroupOwner(convo, profile.did) ? 'owner' : 'standard',
 		})),
 	);
 	const placeholderCount = Math.max(0, convo.details.memberCount - groupMembers.length);

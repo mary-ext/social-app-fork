@@ -5,7 +5,7 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useSession } from '#/state/session';
 
-import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
+import { type ConvoWithDetails, type GroupConvoMember, isGroupOwner } from '#/components/dms/util';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -50,7 +50,7 @@ export function Member({
 
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount ? m['common.account.deleted']() : profile.handle;
-	const isProfileOwner = profile.did === convo.primaryMember?.did;
+	const isProfileOwner = isGroupOwner(convo, profile.did);
 	const isSelf = currentAccount?.did === profile.did;
 
 	const joinedReason = profile.kind?.addedBy
