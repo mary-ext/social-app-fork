@@ -2,9 +2,10 @@ import { useEffect, useLayoutEffect } from 'react';
 
 import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 
+import type { RootContextValue } from '../dialog/shared';
 import { getDisplacement, resist, SWIPE_IGNORE_ATTRIBUTE, type SwipeDirection } from '../swipe';
 import { swipeMovementX, swipeMovementY, swipeProgress, swipeStrength } from './css-vars';
-import { CONTENT_ATTRIBUTE, type RootContextValue } from './shared';
+import { CONTENT_ATTRIBUTE } from './shared';
 
 // #region tuning
 
@@ -180,10 +181,11 @@ const getStrength = (remaining: number, velocity: number): number => {
 /**
  * handles drag-to-dismiss. touch yields to scrolling unless the scroller is at its dismissal edge.
  *
- * @param ctx the drawer's state; the viewport must be mounted
+ * @param ctx the drawer's dialog state; the viewport must be mounted
+ * @param swipeDirection direction the popup travels when dismissed
  */
-export const useSwipeDismiss = (ctx: RootContextValue): void => {
-	const { open, swipeDirection, viewportRef, popupRef, backdropRef, setOpen } = ctx;
+export const useSwipeDismiss = (ctx: RootContextValue, swipeDirection: SwipeDirection): void => {
+	const { open, viewportRef, popupRef, backdropRef, setOpen } = ctx;
 
 	// clear the previous swipe even when reopening mid-exit.
 	useLayoutEffect(() => {
