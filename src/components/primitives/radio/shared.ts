@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 
 import type { ChangeDetails } from '../change-details';
+import type { CheckedState, NativeInputState } from '../native-input';
 
 export type ValueChangeDetails = ChangeDetails<'none'>;
 
@@ -35,12 +36,7 @@ export const useGroupContext = (): GroupContextValue => {
 	return ctx;
 };
 
-export type RadioState = {
-	checked: boolean;
-	disabled: boolean;
-	readOnly: boolean;
-	required: boolean;
-};
+export type RadioState = CheckedState & NativeInputState;
 
 export const RadioContext = createContext<RadioState | null>(null);
 RadioContext.displayName = 'RadioContext';
@@ -55,9 +51,4 @@ export const useRadioContext = (): RadioState => {
 		throw new Error(`radio parts require <Radio.Root>`);
 	}
 	return ctx;
-};
-
-export const radioStateAttributes = {
-	checked: (checked: boolean): Record<string, string> =>
-		checked ? { 'data-checked': '' } : { 'data-unchecked': '' },
 };

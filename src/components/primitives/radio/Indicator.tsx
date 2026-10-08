@@ -2,7 +2,8 @@
 
 import { useRender } from '@base-ui/react/use-render';
 
-import { type RadioState, radioStateAttributes, useRadioContext } from './shared';
+import { checkedStateAttributes } from '../native-input';
+import { type RadioState, useRadioContext } from './shared';
 
 export type IndicatorState = RadioState;
 
@@ -26,7 +27,7 @@ export const Indicator = ({ render, ref, keepMounted = false, ...elementProps }:
 		defaultTagName: 'span',
 		ref,
 		state,
-		stateAttributesMapping: radioStateAttributes,
+		stateAttributesMapping: checkedStateAttributes,
 		props: elementProps,
 	});
 
