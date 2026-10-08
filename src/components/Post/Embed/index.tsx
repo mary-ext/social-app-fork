@@ -56,7 +56,7 @@ const ModeratedListEmbed = lazy(() =>
 	import('./ListEmbed').then((mod) => ({ default: mod.ModeratedListEmbed })),
 );
 const StarterPackCard = lazy(() =>
-	import('#/components/StarterPack/StarterPackCard').then((mod) => ({ default: mod.Embed })),
+	import('#/features/starter-packs/StarterPackCard').then((mod) => ({ default: mod.Embed })),
 );
 
 export function Embed({ embed: rawEmbed, ...rest }: EmbedProps) {

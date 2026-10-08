@@ -4,16 +4,16 @@ import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
-import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
+import { useActorStarterPacksQuery } from '#/features/starter-packs/queries/actor-starter-packs';
+import {
+	Default as StarterPackCard,
+	LoadingPlaceholder as StarterPackLoadingPlaceholder,
+} from '#/features/starter-packs/StarterPackCard';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
-import {
-	Default as StarterPackCard,
-	LoadingPlaceholder as StarterPackLoadingPlaceholder,
-} from '#/components/StarterPack/StarterPackCard';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';
 

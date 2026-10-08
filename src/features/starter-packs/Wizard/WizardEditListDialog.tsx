@@ -1,10 +1,11 @@
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
+import { WizardFeedCard, WizardProfileCard } from '#/features/starter-packs/Wizard/WizardListCard';
+
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
 import * as Dialog from '#/components/Dialog';
-import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 
 import { m } from '#/paraglide/messages';
 

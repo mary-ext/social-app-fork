@@ -9,10 +9,12 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
-import { useStarterPackSearch } from '#/state/queries/starter-pack-search';
 import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
+
+import { useStarterPackSearch } from '#/features/starter-packs/queries/search';
+import * as StarterPackCard from '#/features/starter-packs/StarterPackCard';
 
 import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
@@ -22,7 +24,6 @@ import * as FeedCard from '#/components/FeedCard';
 import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
-import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';

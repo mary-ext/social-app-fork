@@ -6,12 +6,13 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
 
+import { WizardProfileCard } from '#/features/starter-packs/Wizard/WizardListCard';
+
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';

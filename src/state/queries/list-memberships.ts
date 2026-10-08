@@ -27,7 +27,7 @@ import {
 } from '#/state/queries/list-members';
 import { getClients, useSession } from '#/state/session';
 
-import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
+import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from '#/features/starter-packs/queries/actor-starter-packs';
 
 export type ListWithMembership = AppBskyGraphGetListsWithMembership.ListWithMembership;
 

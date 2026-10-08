@@ -10,7 +10,8 @@ import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-f
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
 import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
-import { useSuggestedStarterPacksQuery } from '#/state/queries/useSuggestedStarterPacksQuery';
+
+import { useSuggestedStarterPacksQuery } from '#/features/starter-packs/queries/suggested-starter-packs';
 
 import type { SearchTabId } from '#/screens/Search/SearchResults';
 

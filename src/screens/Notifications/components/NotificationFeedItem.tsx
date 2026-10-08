@@ -38,6 +38,11 @@ import { getClients, useSession } from '#/state/session';
 import { niceDate } from '#/locale/intl/datetime';
 import { Trans } from '#/locale/Trans';
 
+import {
+	Notification as StarterPackCard,
+	useStarterPackLink,
+} from '#/features/starter-packs/StarterPackCard';
+
 import { BlockLink } from '#/components/BlockLink';
 import * as FeedCard from '#/components/FeedCard';
 import * as MediaPreview from '#/components/MediaPreview';
@@ -46,10 +51,6 @@ import { useNavigablePost } from '#/components/Post/use-navigable-post';
 import { PreviewableUserAvatar } from '#/components/PreviewableUserAvatar';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import {
-	Notification as StarterPackCard,
-	useStarterPackLink,
-} from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 import * as Toast from '#/components/Toast';

@@ -9,12 +9,13 @@ import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
+import { ProfileStarterPacks } from '#/features/starter-packs/ProfileStarterPacks';
+
 import { ProfileFeedgens } from '#/screens/Profile/components/ProfileFeedgens';
 import { ProfileLists } from '#/screens/Profile/components/ProfileLists';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { ErrorState } from '#/components/ErrorState';
-import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
 import * as Layout from '#/components/web/Layout';
 
 import { m } from '#/paraglide/messages';

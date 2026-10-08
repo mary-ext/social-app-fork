@@ -4,7 +4,6 @@ import { isDid, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useParams, useRoute } from '@oomfware/stacker';
 
-import { STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
 import { sanitizeDisplayName } from '#/lib/display-names';
 import { isNotFoundResponse } from '#/lib/errors';
 import { prefetchImage } from '#/lib/media/prefetch';
@@ -15,15 +14,19 @@ import { enforceLen, trimText } from '#/lib/utils/text';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useProfileQuery } from '#/state/queries/profile';
-import {
-	useCreateStarterPackMutation,
-	useEditStarterPackMutation,
-	useStarterPackQuery,
-} from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
+
+import { STARTER_PACK_MAX_SIZE } from '#/features/starter-packs/const';
+import {
+	useCreateStarterPackMutation,
+	useEditStarterPackMutation,
+	useStarterPackQuery,
+} from '#/features/starter-packs/queries/starter-pack';
+import { markStarterPackCreated } from '#/features/starter-packs/starter-pack-dialog-reopen';
+import { WizardEditListDialog } from '#/features/starter-packs/Wizard/WizardEditListDialog';
 
 import { useWizardState, type WizardStep } from '#/screens/StarterPack/Wizard/State';
 import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
@@ -31,12 +34,10 @@ import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
 
 import * as Dialog from '#/components/Dialog';
-import { markStarterPackCreated } from '#/components/dialogs/starter-pack-dialog-reopen';
 import { ErrorState } from '#/components/ErrorState';
 import { GoHome } from '#/components/GoHome';
 import { ListLoading } from '#/components/List/ListLoading';
 import { NotFoundState } from '#/components/NotFoundState';
-import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';

@@ -2,17 +2,20 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
 
-import { useDeleteStarterPackMutation, useStarterPackOptOutMutation } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
 import { ReportDialog } from '#/features/reporting/ReportDialog';
+import { CreateListFromStarterPackDialog } from '#/features/starter-packs/CreateListFromStarterPackDialog';
+import { OptOutMenuItem, OptOutPrompt } from '#/features/starter-packs/OptOut';
+import {
+	useDeleteStarterPackMutation,
+	useStarterPackOptOutMutation,
+} from '#/features/starter-packs/queries/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
-import { CreateListFromStarterPackDialog } from '#/components/dialogs/lists/CreateListFromStarterPackDialog';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { Spinner } from '#/components/Spinner';
-import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

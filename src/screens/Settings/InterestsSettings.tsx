@@ -14,9 +14,10 @@ import { createGetSuggestedFeedsQueryKey } from '#/state/queries/trending/useGet
 import { createGetSuggestedUsersForDiscoverQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
-import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
 import { getClients } from '#/state/session';
 import { useTitle } from '#/state/use-title';
+
+import { createSuggestedStarterPacksQueryKey } from '#/features/starter-packs/queries/suggested-starter-packs';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';

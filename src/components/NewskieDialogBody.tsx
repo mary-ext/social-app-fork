@@ -4,9 +4,10 @@ import { useSession } from '#/state/session';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 
+import * as StarterPackCard from '#/features/starter-packs/StarterPackCard';
+
 import * as styles from '#/components/NewskieDialog.css';
 import { Stack } from '#/components/Stack';
-import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 
 import Newskie from '#/icons/central-custom/Newskie_round_filled_radius1_stroke2.svg';

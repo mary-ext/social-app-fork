@@ -8,8 +8,9 @@ import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 
+import { useStarterPackLink } from '#/features/starter-packs/StarterPackCard';
+
 import { BlockLink } from '#/components/BlockLink';
-import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonText } from '#/components/web/Button';

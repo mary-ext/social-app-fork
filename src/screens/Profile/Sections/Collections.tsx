@@ -4,22 +4,23 @@ import type { Did } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/errors';
 
-import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
 import { useProfileListsQuery } from '#/state/queries/profile-lists';
 
 import { formatCount } from '#/locale/intl/number';
 
+import { useActorStarterPacksQuery } from '#/features/starter-packs/queries/actor-starter-packs';
+import {
+	Default as StarterPackCard,
+	LoadingPlaceholder as StarterPackLoadingPlaceholder,
+} from '#/features/starter-packs/StarterPackCard';
+
 import { BlankState } from '#/components/BlankState';
 import type { ContentStateIcon } from '#/components/ContentState';
 import * as FeedCard from '#/components/FeedCard';
 import * as ListCard from '#/components/ListCard';
 import { Notice } from '#/components/Notice';
-import {
-	Default as StarterPackCard,
-	LoadingPlaceholder as StarterPackLoadingPlaceholder,
-} from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { LinkButton } from '#/components/web/Link';

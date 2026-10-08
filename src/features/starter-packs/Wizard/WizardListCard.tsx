@@ -9,10 +9,11 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
-import { STARTER_PACK_MAX_SIZE } from '#/lib/constants/starter-pack';
 import { sanitizeDisplayName } from '#/lib/display-names';
 
 import { useSession } from '#/state/session';
+
+import { STARTER_PACK_MAX_SIZE } from '#/features/starter-packs/const';
 
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 

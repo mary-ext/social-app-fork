@@ -4,7 +4,6 @@ import type { Did } from '@atcute/lexicons';
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';
 import {
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
@@ -12,14 +11,16 @@ import {
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { AvatarStack } from '#/components/AvatarStack';
-import { CenteredSpinner } from '#/components/CenteredSpinner';
-import * as Dialog from '#/components/Dialog';
+import { useActorStarterPacksWithMembershipsQuery } from '#/features/starter-packs/queries/actor-starter-packs';
 import {
 	markStarterPackWizardLaunched,
 	useStarterPackDialogReopen,
-} from '#/components/dialogs/starter-pack-dialog-reopen';
-import * as css from '#/components/dialogs/StarterPackDialog.css';
+} from '#/features/starter-packs/starter-pack-dialog-reopen';
+import * as css from '#/features/starter-packs/StarterPackDialog.css';
+
+import { AvatarStack } from '#/components/AvatarStack';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';

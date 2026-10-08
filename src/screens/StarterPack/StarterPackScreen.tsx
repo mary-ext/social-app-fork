@@ -22,9 +22,17 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { getAllListMembers } from '#/state/queries/list-members';
 import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-link';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
-import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { getClients, useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
+
+import { FeedsList } from '#/features/starter-packs/Main/FeedsList';
+import { PostsList } from '#/features/starter-packs/Main/PostsList';
+import { ProfilesList } from '#/features/starter-packs/Main/ProfilesList';
+import {
+	useDeleteStarterPackMutation,
+	useStarterPackQuery,
+} from '#/features/starter-packs/queries/starter-pack';
+import { ShareDialog } from '#/features/starter-packs/ShareDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { signinDialogHandle } from '#/components/dialogs/handles';
@@ -32,10 +40,6 @@ import { ErrorState } from '#/components/ErrorState';
 import { GoHome } from '#/components/GoHome';
 import { ListLoading } from '#/components/List/ListLoading';
 import { NotFoundState } from '#/components/NotFoundState';
-import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
-import { PostsList } from '#/components/StarterPack/Main/PostsList';
-import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
-import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import { type Section, Tabs } from '#/components/Tabs';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';

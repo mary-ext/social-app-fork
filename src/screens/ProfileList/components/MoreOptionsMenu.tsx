@@ -14,13 +14,13 @@ import {
 import { useSession } from '#/state/session';
 
 import { ReportDialog } from '#/features/reporting/ReportDialog';
+import { OptOutMenuItem, OptOutPrompt } from '#/features/starter-packs/OptOut';
 
 import * as Dialog from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { shareUrl } from '#/components/sharing';
-import { OptOutMenuItem, OptOutPrompt } from '#/components/StarterPack/OptOut';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon } from '#/components/web/Button';
 

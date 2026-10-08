@@ -23,10 +23,10 @@ import { GoLiveDialog } from '#/features/live-now/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/live-now/components/GoLiveDisabledDialog';
 import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
 import { ReportDialog } from '#/features/reporting/ReportDialog';
+import { StarterPackDialog } from '#/features/starter-packs/StarterPackDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
-import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import * as Menu from '#/components/Menu';
 import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
 import {

@@ -9,6 +9,7 @@ import { listTarget } from '#/lib/routes/targets';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
+import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -17,8 +18,6 @@ import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
-
-import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 
 export function CreateListFromStarterPackDialog({
 	handle,

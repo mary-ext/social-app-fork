@@ -13,6 +13,7 @@ import { usePostQuery } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
 
+import { Embed as StarterPackEmbed } from '#/features/starter-packs/StarterPackCard';
 import { parseTangledStringUrl, type TangledStringTarget } from '#/features/tangled-strings/detect';
 import { TangledStringPlaceholder } from '#/features/tangled-strings/Placeholder';
 
@@ -25,7 +26,6 @@ import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
 import { Spinner } from '#/components/Spinner';
-import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Text';
 import { Button } from '#/components/web/Button';
 import * as Skeleton from '#/components/web/Skeleton';

@@ -10,12 +10,13 @@ import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
 
+import { WizardFeedCard } from '#/features/starter-packs/Wizard/WizardListCard';
+
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { SearchInput } from '#/components/forms/SearchInput';
 import { List, type ListRenderItemInfo } from '#/components/List/List';
-import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Text';
 
 import { m } from '#/paraglide/messages';

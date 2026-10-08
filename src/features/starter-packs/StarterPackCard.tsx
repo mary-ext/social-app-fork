@@ -13,8 +13,9 @@ import { starterPackTarget } from '#/lib/routes/targets';
 import { getStarterPackOgCard } from '#/lib/starter-pack';
 
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
-import { precacheStarterPack } from '#/state/queries/starter-pack-cache';
 import { useSession } from '#/state/session';
+
+import { precacheStarterPack } from '#/features/starter-packs/queries/cache';
 
 import { EmbedThumb } from '#/components/EmbedThumb';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';

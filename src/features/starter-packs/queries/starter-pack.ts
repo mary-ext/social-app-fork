@@ -17,16 +17,17 @@ import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { makeRecordUri } from '#/lib/at-uri';
-import { createStarterPackList } from '#/lib/generate-starterpack';
 import { httpStarterPackUriToAtUri, parseStarterPackUri } from '#/lib/starter-pack';
 import { until } from '#/lib/utils/until';
 
-import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';
 import { useReferenceListOptOutMutation } from '#/state/queries/list';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
-import { RQKEY } from '#/state/queries/starter-pack-cache';
 import { getClients, useSession } from '#/state/session';
+
+import { createStarterPackList } from '#/features/starter-packs/generate';
+import { invalidateActorStarterPacksQuery } from '#/features/starter-packs/queries/actor-starter-packs';
+import { RQKEY } from '#/features/starter-packs/queries/cache';
 
 async function resolveDescription(
 	appview: Client,
