@@ -15,6 +15,7 @@ import { usePresence } from '../presence';
 import {
 	type OpenChangeReason,
 	type OpenChangeRequest,
+	type OpenEntry,
 	RootContext,
 	type RootContextValue,
 	isEmptyValue,
@@ -50,7 +51,7 @@ export const Root = <Value,>({
 	const [open, setOpenState] = useState(false);
 
 	const [openMethod, setOpenMethod] = useState<InteractionType>('');
-	const [openEntry, setOpenEntry] = useState<'first' | 'last'>();
+	const [openEntry, setOpenEntry] = useState<OpenEntry>();
 	const closeReasonRef = useRef<OpenChangeReason | null>(null);
 
 	const onSettled = useNonReactiveCallback((settledOpen: boolean) => {

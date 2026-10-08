@@ -12,11 +12,13 @@ export type OpenChangeReason =
 	| 'outside-press'
 	| 'trigger-press';
 
+export type OpenEntry = 'first' | 'last';
+
 export type OpenChangeRequest = {
 	reason: OpenChangeReason;
 	method: InteractionType;
 	/** item to focus when opening without a selection. */
-	entry?: 'first' | 'last';
+	entry?: OpenEntry;
 };
 
 export type SelectItem<Value> = {
@@ -33,7 +35,7 @@ export type RootContextValue = {
 	selectedItem: SelectItem<unknown> | undefined;
 	placeholder: boolean;
 	openMethod: InteractionType;
-	openEntry: 'first' | 'last' | undefined;
+	openEntry: OpenEntry | undefined;
 	anchorName: string;
 	triggerId: string;
 	popupId: string;

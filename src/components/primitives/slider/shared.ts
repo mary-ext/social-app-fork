@@ -3,9 +3,10 @@ import { createContext, type RefObject, useContext } from 'react';
 import { clamp } from '#/lib/utils/numbers';
 
 import type { ChangeDetails } from '../change-details';
+import type { Orientation } from '../composite';
 import { type DataAttributes, dataAttributes } from '../data-attributes';
 
-export type Orientation = 'horizontal' | 'vertical';
+export type { Orientation };
 
 export type ValueChangeReason = 'drag' | 'input-change' | 'keyboard' | 'track-press';
 
