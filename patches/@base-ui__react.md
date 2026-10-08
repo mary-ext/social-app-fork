@@ -9,11 +9,10 @@ openers and many post-image `Dialog.Trigger`s.
 `useImplicitActiveTrigger` still claims a trigger when exactly one is registered. an imperative open
 on a multi-trigger handle remains unowned rather than associating it with an unrelated trigger.
 
-## `dialog/root/useRenderDialogRoot.mjs` + `drawer/root/DrawerRoot.mjs`: `CloseWatcher` for the Android back gesture
+## `dialog/root/useRenderDialogRoot.mjs`: `CloseWatcher` for the Android back gesture
 
-moves the drawer's `CloseWatcher` into the shared dialog root so Android back gestures also dismiss
-dialogs and alert dialogs. only dialogs without an open nested dialog register; desktop dismissal
-uses `useDismiss`.
+adds a `CloseWatcher` to the dialog root so Android back gestures dismiss dialogs and alert dialogs.
+only dialogs without an open nested dialog register; desktop dismissal uses `useDismiss`.
 
 canceled close requests recreate the one-shot watcher, allowing repeated back gestures to navigate
 within a dialog.
