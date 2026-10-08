@@ -140,12 +140,7 @@ export function MenuButton() {
 				variant="ghost"
 				color="secondary"
 				shape="round"
-				onClick={() => {
-					if (document.activeElement instanceof HTMLElement) {
-						document.activeElement.blur();
-					}
-					setDrawerOpen(true);
-				}}
+				onClick={() => setDrawerOpen(true)}
 			>
 				<MenuButtonGlyph />
 			</Button>
