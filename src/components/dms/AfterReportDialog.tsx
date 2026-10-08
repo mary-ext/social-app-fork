@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
@@ -6,10 +6,11 @@ import type { Did } from '@atcute/lexicons';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
-import * as Toggle from '#/components/forms/Toggle';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { Stack } from '#/components/Stack';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -18,32 +19,31 @@ import { Button, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
-type ReportDialogParams = {
-	convoId: string;
+type AfterReportDialogProps = {
+	convo: ConvoWithDetails;
+	currentScreen: 'conversation' | 'list';
 	did: Did;
+	handle: Dialog.DialogHandle;
+	onClose?: () => void;
+	subject: 'conversation' | 'message';
 };
 
-/** The follow-up actions offered after a report; each maps to a checkbox in {@link DoneStep}. */
-type ReportAction = 'block' | 'leave';
-
-// Toggle.Group hands back the raw checkbox names, so narrow them before they reach `actions`.
-const isReportAction = (value: string): value is ReportAction => value === 'block' || value === 'leave';
-
 /**
- * Dialog shown after a report is submitted, allowing the user to block the reporter and/or leave the
- * conversation.
+ * follow-up actions after a chat report.
+ *
+ * @param props conversation and dialog controls
+ * @param props.did account to block
+ * @param props.subject only message reports offer blocking without leaving
+ * @returns a dialog with block and leave/delete actions
  */
 export function AfterReportDialog({
-	handle,
-	params,
+	convo,
 	currentScreen,
+	did,
+	handle,
 	onClose,
-}: {
-	handle: Dialog.DialogHandle;
-	params: ReportDialogParams;
-	currentScreen: 'list' | 'conversation';
-	onClose?: () => void;
-}): ReactNode {
+	subject,
+}: AfterReportDialogProps): ReactNode {
 	return (
 		<Dialog.Root
 			handle={handle}
@@ -53,23 +53,21 @@ export function AfterReportDialog({
 				}
 			}}
 		>
-			<Dialog.Popup label={m['components.dms.block.orDelete.prompt']()} size="narrow">
-				<DialogInner handle={handle} params={params} currentScreen={currentScreen} />
+			<Dialog.Popup label={m['components.dms.report.submitted']()} size="narrow">
+				<DialogInner
+					convo={convo}
+					currentScreen={currentScreen}
+					did={did}
+					handle={handle}
+					subject={subject}
+				/>
 			</Dialog.Popup>
 		</Dialog.Root>
 	);
 }
 
-function DialogInner({
-	handle,
-	params,
-	currentScreen,
-}: {
-	handle: Dialog.DialogHandle;
-	params: ReportDialogParams;
-	currentScreen: 'list' | 'conversation';
-}) {
-	const { data: profile, isPending, isError } = useProfileQuery({ did: params.did });
+function DialogInner({ did, handle, ...props }: Omit<AfterReportDialogProps, 'onClose'>) {
+	const { data: profile, isPending, isError } = useProfileQuery({ did });
 
 	if (isPending) {
 		return <CenteredSpinner label={m['common.status.loading']()} size="xl" />;
@@ -78,16 +76,7 @@ function DialogInner({
 	if (isError || !profile) {
 		return (
 			<Stack gap="lg">
-				<Stack gap="xs">
-					<Dialog.TitleRow>
-						<Dialog.Title>{m['components.dms.report.submitted']()}</Dialog.Title>
-						<Dialog.Close />
-					</Dialog.TitleRow>
-					<Text color="textContrastMedium" size="md">
-						{m['components.dms.report.received']()}
-					</Text>
-				</Stack>
-
+				<Heading />
 				<Dialog.Actions>
 					<Button
 						color="secondary"
@@ -103,28 +92,37 @@ function DialogInner({
 		);
 	}
 
+	return <DoneStep {...props} handle={handle} profile={profile} />;
+}
+
+function Heading({ children }: { children?: ReactNode }) {
 	return (
-		<DoneStep convoId={params.convoId} currentScreen={currentScreen} handle={handle} profile={profile} />
+		<Stack gap="xs">
+			<Dialog.TitleRow>
+				<Dialog.Title>{m['components.dms.report.submitted']()}</Dialog.Title>
+				<Dialog.Close />
+			</Dialog.TitleRow>
+			<Text color="textContrastMedium" size="md">
+				{m['components.dms.report.received']()}
+			</Text>
+			{children}
+		</Stack>
 	);
 }
 
 function DoneStep({
-	convoId,
+	convo,
 	currentScreen,
 	handle,
 	profile,
-}: {
-	convoId: string;
-	currentScreen: 'list' | 'conversation';
-	handle: Dialog.DialogHandle;
-	profile: AppBskyActorDefs.ProfileViewDetailed;
-}) {
+	subject,
+}: Omit<AfterReportDialogProps, 'did' | 'onClose'> & { profile: AppBskyActorDefs.ProfileViewDetailed }) {
 	const router = useRouter();
-	const [actions, setActions] = useState<ReportAction[]>(['block', 'leave']);
+	const { currentAccount } = useSession();
 	const shadow = useProfileShadow(profile);
 	const [queueBlock] = useProfileBlockMutationQueue(shadow);
 
-	const { mutate: leaveConvo } = useLeaveConvo(convoId, {
+	const { mutate: leaveConvo } = useLeaveConvo(convo.view.id, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
 				router.navigate({ replace: true, to: { name: 'Messages' } });
@@ -137,70 +135,90 @@ function DoneStep({
 		},
 	});
 
-	let btnText = m['common.action.done']();
-	let toastMsg: string | undefined;
-	if (actions.includes('leave') && actions.includes('block')) {
-		btnText = m['components.dms.block.orDelete.confirm']();
-		toastMsg = m['components.dms.delete.conversationDeleted']();
-	} else if (actions.includes('leave')) {
-		btnText = m['common.chat.action.deleteConversation']();
-		toastMsg = m['components.dms.delete.conversationDeleted']();
-	} else if (actions.includes('block')) {
-		btnText = m['components.dms.block.title']();
-		toastMsg = m['components.dms.block.userBlocked']();
-	}
+	const isGroup = convo.kind === 'group';
+	const ownerDid = isGroup ? convo.primaryMember?.did : undefined;
+	const handleText = `@${profile.handle}`;
+	// owners leave through group settings, where they can lock the group first
+	const canLeave = ownerDid !== currentAccount?.did;
+	const canBlockAlone = subject === 'message';
 
-	const onPressPrimaryAction = () => {
+	const run = ({ block, leave }: { block: boolean; leave: boolean }) => {
 		// close first: leaving the convo navigates away from the screen hosting this dialog
 		handle.close();
 
-		if (actions.includes('block')) {
+		if (block) {
 			void queueBlock();
 		}
-		if (actions.includes('leave')) {
+		if (leave) {
 			leaveConvo();
-		}
-		if (toastMsg) {
-			Toast.show(toastMsg, {
-				type: 'success',
-			});
+			Toast.show(
+				isGroup
+					? m['components.dms.leave.conversationLeft']()
+					: m['components.dms.delete.conversationDeleted'](),
+				{ type: 'success' },
+			);
+		} else {
+			Toast.show(m['components.dms.block.userBlocked'](), { type: 'success' });
 		}
 	};
 
+	let blockAndLeaveText: string;
+	let leaveText: string;
+	let blockText: string;
+	if (isGroup) {
+		blockAndLeaveText = m['components.dms.afterReport.blockAndLeave']({ handle: handleText });
+		leaveText = m['screens.messages.leave.action']();
+		blockText = m['screens.messages.block.block']({ name: handleText });
+	} else {
+		blockAndLeaveText = m['components.dms.afterReport.blockAndDelete']();
+		leaveText = m['common.chat.action.deleteConversation']();
+		blockText = m['components.dms.block.action.block']();
+	}
+
 	return (
 		<Stack gap="_2xl">
-			<Stack gap="xs">
-				<Dialog.TitleRow>
-					<Dialog.Title>{m['components.dms.report.submitted']()}</Dialog.Title>
-					<Dialog.Close />
-				</Dialog.TitleRow>
-				<Text color="textContrastMedium" size="md">
-					{m['components.dms.report.received']()}
-				</Text>
-			</Stack>
+			<Heading>
+				{profile.did === ownerDid && (
+					<Text color="textContrastMedium" size="md">
+						{m['components.dms.afterReport.ownerNote']({ handle: handleText })}
+					</Text>
+				)}
+			</Heading>
 
-			<Toggle.Group
-				label={m['components.dms.block.orDelete.label']()}
-				onChange={(values) => setActions(values.filter(isReportAction))}
-				values={actions}
-			>
-				<Toggle.PanelGroup>
-					<Toggle.Item label={m['components.dms.block.action.block']()} name="block">
-						<Toggle.Panel adjacent="trailing">
-							<Toggle.CheckboxIndicator />
-							<Toggle.PanelText>{m['components.dms.block.action.block']()}</Toggle.PanelText>
-						</Toggle.Panel>
-					</Toggle.Item>
-					<Toggle.Item label={m['common.chat.action.deleteConversation']()} name="leave">
-						<Toggle.Panel adjacent="leading">
-							<Toggle.CheckboxIndicator />
-							<Toggle.PanelText>{m['common.chat.action.deleteConversation']()}</Toggle.PanelText>
-						</Toggle.Panel>
-					</Toggle.Item>
-				</Toggle.PanelGroup>
-			</Toggle.Group>
-
-			<Dialog.Actions direction="column" reverse>
+			<Dialog.Actions direction="column">
+				{canLeave && (
+					<>
+						<Button
+							color="negative"
+							label={blockAndLeaveText}
+							onClick={() => run({ block: true, leave: true })}
+							size="large"
+							variant="solid"
+						>
+							<ButtonText>{blockAndLeaveText}</ButtonText>
+						</Button>
+						<Button
+							color="negative_subtle"
+							label={leaveText}
+							onClick={() => run({ block: false, leave: true })}
+							size="large"
+							variant="solid"
+						>
+							<ButtonText>{leaveText}</ButtonText>
+						</Button>
+					</>
+				)}
+				{canBlockAlone && (
+					<Button
+						color={canLeave ? 'negative_subtle' : 'negative'}
+						label={blockText}
+						onClick={() => run({ block: true, leave: false })}
+						size="large"
+						variant="solid"
+					>
+						<ButtonText>{blockText}</ButtonText>
+					</Button>
+				)}
 				<Button
 					color="secondary"
 					label={m['common.action.close']()}
@@ -209,15 +227,6 @@ function DoneStep({
 					variant="solid"
 				>
 					<ButtonText>{m['common.action.close']()}</ButtonText>
-				</Button>
-				<Button
-					color={actions.length > 0 ? 'negative' : 'primary'}
-					label={btnText}
-					onClick={onPressPrimaryAction}
-					size="large"
-					variant="solid"
-				>
-					<ButtonText>{btnText}</ButtonText>
 				</Button>
 			</Dialog.Actions>
 		</Stack>

@@ -118,13 +118,12 @@ export function MessageOverlays({ children }: { children: ReactNode }) {
 			/>
 			{afterReportTarget && (
 				<AfterReportDialog
-					handle={afterReportHandle}
+					convo={convo.convo}
 					currentScreen="conversation"
-					params={{
-						convoId: convo.convo.view.id,
-						did: afterReportTarget.sender.did,
-					}}
+					did={afterReportTarget.sender.did}
+					handle={afterReportHandle}
 					onClose={() => setAfterReportTarget(null)}
+					subject="message"
 				/>
 			)}
 			<ReactionsDialog handle={reactionsHandle} />

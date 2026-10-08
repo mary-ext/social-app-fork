@@ -18,7 +18,7 @@ import { useTitle } from '#/state/use-title';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
-import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
+import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
 import { ErrorState } from '#/components/ErrorState';
@@ -502,10 +502,12 @@ function SettingsHeader({
 						did={reportSubjectDid}
 						onAfterSubmit={() => deleteHandle.open(null)}
 					/>
-					<AfterReportConversationDialog
-						handle={deleteHandle}
+					<AfterReportDialog
+						convo={convo}
 						currentScreen="conversation"
-						params={{ convoId: convo.view.id, did: reportSubjectDid }}
+						did={reportSubjectDid}
+						handle={deleteHandle}
+						subject="conversation"
 					/>
 				</>
 			) : null}

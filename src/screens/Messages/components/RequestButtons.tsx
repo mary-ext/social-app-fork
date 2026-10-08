@@ -12,7 +12,6 @@ import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { ReportConversationDialog } from '#/components/dms/ReportConversationDialog';
 import { getConvoReportSubject, type ConvoWithDetails } from '#/components/dms/util';
@@ -153,12 +152,11 @@ export function RejectMenu({
 						}}
 					/>
 					<AfterReportDialog
-						handle={blockOrDeleteHandle}
+						convo={convo}
 						currentScreen={currentScreen}
-						params={{
-							convoId: convo.view.id,
-							did: reportMessage.sender.did,
-						}}
+						did={reportMessage.sender.did}
+						handle={blockOrDeleteHandle}
+						subject="message"
 					/>
 				</>
 			) : reportDid ? (
@@ -169,13 +167,12 @@ export function RejectMenu({
 						did={reportDid}
 						onAfterSubmit={() => blockOrDeleteHandle.open(null)}
 					/>
-					<AfterReportConversationDialog
-						handle={blockOrDeleteHandle}
+					<AfterReportDialog
+						convo={convo}
 						currentScreen={currentScreen}
-						params={{
-							convoId: convo.view.id,
-							did: reportDid,
-						}}
+						did={reportDid}
+						handle={blockOrDeleteHandle}
+						subject="conversation"
 					/>
 				</>
 			) : null}

@@ -12,7 +12,6 @@ import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { AfterReportConversationDialog } from '#/components/dms/AfterReportConversationDialog';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
@@ -218,12 +217,11 @@ export function ConvoMenuItems({
 						}}
 					/>
 					<AfterReportDialog
+						convo={convo}
 						currentScreen={currentScreen}
+						did={reportMessage.sender.did}
 						handle={blockOrDeleteHandle}
-						params={{
-							convoId,
-							did: reportMessage.sender.did,
-						}}
+						subject="message"
 					/>
 				</>
 			) : reportDid ? (
@@ -234,13 +232,12 @@ export function ConvoMenuItems({
 						handle={reportHandle}
 						onAfterSubmit={() => deleteHandle.open(null)}
 					/>
-					<AfterReportConversationDialog
+					<AfterReportDialog
+						convo={convo}
 						currentScreen={currentScreen}
+						did={reportDid}
 						handle={deleteHandle}
-						params={{
-							convoId,
-							did: reportDid,
-						}}
+						subject="conversation"
 					/>
 				</>
 			) : null}
