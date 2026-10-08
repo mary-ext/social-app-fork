@@ -18,7 +18,7 @@ import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
 import { getClients } from '#/state/session';
 
-import { emojiDatasetQuery, emojiSearchQuery } from '#/components/EmojiPicker/data';
+import { emojiDatasetQuery, emojiSearchQuery } from '#/features/emoji-picker/data';
 
 // #region types
 

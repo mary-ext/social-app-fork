@@ -5,10 +5,10 @@ import { openMediaPicker } from '#/lib/media/picker';
 
 import { toPostLanguages } from '#/state/preferences/languages';
 
+import * as EmojiPicker from '#/features/emoji-picker/EmojiPicker';
 import { GifPickerDialog } from '#/features/gif-picker/GifPickerDialog';
 
 import * as Dialog from '#/components/Dialog';
-import * as EmojiPicker from '#/components/EmojiPicker';
 import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 

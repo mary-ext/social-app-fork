@@ -10,8 +10,9 @@ import { detectLinks, type LinkFacetMatch, suggestLinkCardUri } from '#/lib/link
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 
+import * as EmojiPicker from '#/features/emoji-picker/EmojiPicker';
+
 import { useMessageReplies } from '#/components/dms/MessageReplies';
-import * as EmojiPicker from '#/components/EmojiPicker';
 import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
 

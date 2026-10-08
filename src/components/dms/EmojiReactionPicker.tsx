@@ -7,8 +7,8 @@ import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
-import { EmojiPanel } from '#/components/EmojiPicker/EmojiPanel';
-import { useEmojiPreload } from '#/components/EmojiPicker/preload';
+import { EmojiPanel } from '#/features/emoji-picker/EmojiPanel';
+import { useEmojiPreload } from '#/features/emoji-picker/preload';
 
 import PlusIcon from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';

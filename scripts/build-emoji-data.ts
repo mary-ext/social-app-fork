@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 
-import { isSequence, RECORD, titleCase } from '../src/components/EmojiPicker/dataset-codec.ts';
-import { VERSION_PROBES } from '../src/components/EmojiPicker/probes.ts';
-import { applySkinTone, SKIN_TONE_MODIFIERS } from '../src/components/EmojiPicker/skin-tone.ts';
+import { isSequence, RECORD, titleCase } from '../src/features/emoji-picker/dataset-codec.ts';
+import { VERSION_PROBES } from '../src/features/emoji-picker/probes.ts';
+import { applySkinTone, SKIN_TONE_MODIFIERS } from '../src/features/emoji-picker/skin-tone.ts';
 
 const require = createRequire(import.meta.url);
 
@@ -23,7 +23,7 @@ const SECTION_FOR_GROUP = new Map([
 /** payload order; must match `CATEGORIES`. */
 const SECTIONS = ['people', 'nature', 'foods', 'activity', 'places', 'objects', 'symbols', 'flags'];
 
-const OUT_DIR = './src/components/EmojiPicker/dataset';
+const OUT_DIR = './src/features/emoji-picker/dataset';
 
 type Skin = { emoji: string; tone: number | number[] };
 type Source = {

@@ -13,7 +13,7 @@
 		"*.html",
 		"*.lock",
 		"patches/**",
-		"src/components/EmojiPicker/dataset/**",
+		"src/features/emoji-picker/dataset/**",
 		"src/lib/sw-template.js",
 		"src/paraglide/**"
 	],

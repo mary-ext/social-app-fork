@@ -4,9 +4,9 @@ import { Popover } from '@base-ui/react/popover';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import { emojiInserted } from '#/components/EmojiPicker/emoji-inserted';
-import { useEmojiPreload } from '#/components/EmojiPicker/preload';
-import type { Emoji } from '#/components/EmojiPicker/types';
+import { emojiInserted } from '#/features/emoji-picker/emoji-inserted';
+import { useEmojiPreload } from '#/features/emoji-picker/preload';
+import type { Emoji } from '#/features/emoji-picker/types';
 
 import { m } from '#/paraglide/messages';
 
@@ -15,7 +15,7 @@ import * as styles from './EmojiPicker.css';
 
 const EmojiPanel = lazy(() => import('./EmojiPanel').then((mod) => ({ default: mod.EmojiPanel })));
 
-export type { Emoji } from '#/components/EmojiPicker/types';
+export type { Emoji } from '#/features/emoji-picker/types';
 
 type FocusableElement = { focus: () => void };
 type NextFocusRef = RefObject<FocusableElement | null> | (() => FocusableElement | null | undefined);
