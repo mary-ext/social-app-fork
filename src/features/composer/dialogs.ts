@@ -1,5 +1,6 @@
+import type { EditImageTarget } from '#/features/image-editing/EditImageDialog';
+
 import * as Dialog from '#/components/Dialog';
-import type { EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 
 import type { LabelsTarget } from './labels/LabelsDialog';
 import type { ExternalGifAltTextTarget } from './media/external-gifs/ExternalGifAltTextDialog';

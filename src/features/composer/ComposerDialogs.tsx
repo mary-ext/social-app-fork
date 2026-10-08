@@ -1,4 +1,4 @@
-import { EditImageDialog } from '#/components/EditImageDialog/EditImageDialog';
+import { EditImageDialog } from '#/features/image-editing/EditImageDialog';
 
 import { useComposer } from './context';
 import { setAttachmentLabels } from './labels/attachment-labels';

@@ -3,9 +3,10 @@ import { compressProfileImage, type ImageMeta } from '#/lib/media/edit-image';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { openImagePicker } from '#/lib/media/picker';
 
+import { EditImageDialog, type EditImageTarget } from '#/features/image-editing/EditImageDialog';
+
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/EditableBanner.css';
-import { EditImageDialog, type EditImageTarget } from '#/components/EditImageDialog/EditImageDialog';
 import * as Menu from '#/components/Menu';
 
 import CameraFilledIcon from '#/icons/central/Camera1_round_filled_radius1_stroke2.svg';
