@@ -25,6 +25,5 @@ minimumReleaseAgeExclude:
   - vite@8.3.3
 
 patchedDependencies:
-  '@base-ui/react': patches/@base-ui__react.patch
   '@vanilla-extract/css': patches/@vanilla-extract__css.patch
   wordgard: patches/wordgard.patch
