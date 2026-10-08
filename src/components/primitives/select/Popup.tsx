@@ -7,8 +7,9 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { leaveModal, openStateAttributes } from '../anchored-popup';
 import { getListItems, getListNavigationProps } from '../list-navigation';
+import { openStateAttributes } from '../presence';
+import { leaveModal } from '../top-layer';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 
 export type PopupState = {

@@ -7,8 +7,9 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 
-import { addAnchorName, triggerStateAttributes } from '../anchored-popup';
+import { addAnchorName } from '../anchored-popup';
 import { isTypeaheadKey } from '../list-navigation';
+import { triggerStateAttributes } from '../presence';
 import { listenForRelease } from '../press-release';
 import { useRootContext } from './shared';
 

@@ -10,7 +10,8 @@ import { useScrollLock } from '@base-ui/utils/useScrollLock';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { isWithinPopup, usePresence } from '../anchored-popup';
+import { isWithinPopup } from '../anchored-popup';
+import { usePresence } from '../presence';
 import {
 	attachRoot,
 	type Handle,

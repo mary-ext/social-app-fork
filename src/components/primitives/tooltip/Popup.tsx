@@ -7,7 +7,8 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { HOVERABLE_GRACE, openStateAttributes } from '../anchored-popup';
+import { HOVERABLE_GRACE } from '../anchored-popup';
+import { openStateAttributes } from '../presence';
 import { useRootContext } from './shared';
 
 export type PopupState = {

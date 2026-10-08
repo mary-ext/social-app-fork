@@ -5,7 +5,7 @@ import type { HTMLAttributes } from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { openStateAttributes } from '../anchored-popup';
+import { openStateAttributes } from '../presence';
 import { useRootContext } from './shared';
 
 export type PopupState = {

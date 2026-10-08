@@ -7,7 +7,8 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { addAnchorName, triggerStateAttributes } from '../anchored-popup';
+import { addAnchorName } from '../anchored-popup';
+import { triggerStateAttributes } from '../presence';
 import { type OpenChangeReason, useRootContext } from './shared';
 
 const OPEN_DELAY = 600;

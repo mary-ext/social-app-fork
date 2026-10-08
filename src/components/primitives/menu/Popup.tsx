@@ -8,9 +8,10 @@ import { useRender } from '@base-ui/react/use-render';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { leaveModal, openStateAttributes } from '../anchored-popup';
 import { getNextTabbable } from '../focus';
 import { createTypeahead, getListItems, getListNavigationProps } from '../list-navigation';
+import { openStateAttributes } from '../presence';
+import { leaveModal } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PopupState = {

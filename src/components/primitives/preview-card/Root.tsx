@@ -9,7 +9,8 @@ import { useTimeout } from '@base-ui/utils/useTimeout';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { HOVERABLE_GRACE, usePresence } from '../anchored-popup';
+import { HOVERABLE_GRACE } from '../anchored-popup';
+import { usePresence } from '../presence';
 import { type OpenChangeDetails, type OpenChangeReason, RootContext, type RootContextValue } from './shared';
 
 export type RootProps = {

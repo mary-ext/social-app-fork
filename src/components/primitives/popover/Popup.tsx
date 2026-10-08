@@ -8,8 +8,9 @@ import { useRender } from '@base-ui/react/use-render';
 import { isMouseLike } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { leaveModal, openStateAttributes } from '../anchored-popup';
 import { type FocusTarget, getFirstTabbable, resolveFocusTarget } from '../focus';
+import { openStateAttributes } from '../presence';
+import { leaveModal } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PopupState = {

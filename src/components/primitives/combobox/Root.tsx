@@ -15,7 +15,7 @@ import {
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { usePresence } from '../anchored-popup';
+import { usePresence } from '../presence';
 import {
 	createHighlightStore,
 	type HighlightDetails,

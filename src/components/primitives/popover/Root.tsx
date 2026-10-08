@@ -11,7 +11,8 @@ import { useTimeout } from '@base-ui/utils/useTimeout';
 import { type InteractionType, toInteractionType } from '#/lib/browser/input-modality';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { HOVERABLE_GRACE, isWithinPopup, usePresence } from '../anchored-popup';
+import { HOVERABLE_GRACE, isWithinPopup } from '../anchored-popup';
+import { usePresence } from '../presence';
 import {
 	attachRoot,
 	type Handle,

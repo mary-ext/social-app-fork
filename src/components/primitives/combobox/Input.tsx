@@ -6,7 +6,7 @@ import type { BaseUIEvent } from '@base-ui/react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import { triggerStateAttributes } from '../anchored-popup';
+import { triggerStateAttributes } from '../presence';
 import { ITEM_SELECTOR, type RootContextValue, useActiveIndex, useRootContext } from './shared';
 
 export type InputState = {

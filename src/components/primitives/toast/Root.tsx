@@ -8,7 +8,7 @@ import { useRender } from '@base-ui/react/use-render';
 import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { useTransitionsSettled } from '../anchored-popup';
+import { useTransitionsSettled } from '../presence';
 import type { ToastObject } from './manager';
 import { expandedStateAttributes, RootContext, type RootContextValue, useProviderContext } from './shared';
 

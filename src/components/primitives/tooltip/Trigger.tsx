@@ -14,7 +14,8 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { addAnchorName, HOVERABLE_GRACE, triggerStateAttributes } from '../anchored-popup';
+import { addAnchorName, HOVERABLE_GRACE } from '../anchored-popup';
+import { triggerStateAttributes } from '../presence';
 import { useRootContext } from './shared';
 
 const OPEN_DELAY = 600;

@@ -9,8 +9,9 @@ import type { InteractionType } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { isWithinPopup, usePresence } from '../anchored-popup';
+import { isWithinPopup } from '../anchored-popup';
 import { createTypeahead } from '../list-navigation';
+import { usePresence } from '../presence';
 import {
 	type OpenChangeReason,
 	type OpenChangeRequest,

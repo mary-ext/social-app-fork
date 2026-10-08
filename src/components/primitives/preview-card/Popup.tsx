@@ -7,7 +7,7 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { isMouseLike } from '#/lib/browser/input-modality';
 
-import { openStateAttributes } from '../anchored-popup';
+import { openStateAttributes } from '../presence';
 import { useRootContext } from './shared';
 
 export type PopupState = {

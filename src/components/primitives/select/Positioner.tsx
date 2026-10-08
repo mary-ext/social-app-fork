@@ -5,16 +5,10 @@ import { type CSSProperties, type Ref, useLayoutEffect, useState } from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 
-import {
-	type Align,
-	getDialogProps,
-	getShrinkingAnchoredStyle,
-	openStateAttributes,
-	showModalInTopLayer,
-	useInertWhileClosed,
-	useTransitionsSettled,
-} from '../anchored-popup';
+import { type Align, getShrinkingAnchoredStyle } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
+import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { getDialogProps, showModalInTopLayer } from '../top-layer';
 import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 
 export type PositionerState = {

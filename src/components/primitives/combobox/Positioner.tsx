@@ -10,12 +10,10 @@ import {
 	type Align,
 	type CollisionPadding,
 	getShrinkingAnchoredStyle,
-	openStateAttributes,
-	showInTopLayer,
-	useInertWhileClosed,
-	useTransitionsSettled,
 } from '../anchored-popup';
 import * as styles from '../anchored-popup.css';
+import { openStateAttributes, useInertWhileClosed, useTransitionsSettled } from '../presence';
+import { showInTopLayer } from '../top-layer';
 import { useRootContext } from './shared';
 
 export type PositionerState = {
