@@ -29,18 +29,42 @@ globalStyle(`${shrinkingPositioner} > *`, {
 {
 	// [side, origin, origin once flipped, fallback]
 	const sides = [
-		['top', 'center bottom', 'center top', 'flip-block'],
-		['bottom', 'center top', 'center bottom', 'flip-block'],
-		['left', 'right center', 'left center', 'flip-inline'],
-		['right', 'left center', 'right center', 'flip-inline'],
+		['top', 'bottom', 'top', 'flip-block'],
+		['bottom', 'top', 'bottom', 'flip-block'],
+		['left', 'right', 'left', 'flip-inline'],
+		['right', 'left', 'right', 'flip-inline'],
+	] as const;
+
+	// x-axis start/end spans reverse in RTL.
+	const aligns = [
+		['center', 'center', 'center', 'center'],
+		['start', 'left', 'right', 'top'],
+		['end', 'right', 'left', 'bottom'],
 	] as const;
 
 	for (const [side, origin, flippedOrigin, fallback] of sides) {
-		globalStyle(`${positioner}[data-side='${side}'] > *`, {
-			vars: { '--transform-origin': origin },
-			'@container': {
-				[`anchored(fallback: ${fallback})`]: { vars: { '--transform-origin': flippedOrigin } },
-			},
-		});
+		const vertical = side === 'top' || side === 'bottom';
+		const setOrigin = (selector: string, cross: string): void => {
+			const toOrigin = (edge: string): string => {
+				return vertical ? `${cross} ${edge}` : `${edge} ${cross}`;
+			};
+
+			globalStyle(selector, {
+				vars: { '--transform-origin': toOrigin(origin) },
+				'@container': {
+					[`anchored(fallback: ${fallback})`]: {
+						vars: { '--transform-origin': toOrigin(flippedOrigin) },
+					},
+				},
+			});
+		};
+
+		for (const [align, ltrCross, rtlCross, horizontalCross] of aligns) {
+			const selector = `${positioner}[data-side='${side}'][data-align='${align}'] > *`;
+			setOrigin(selector, vertical ? ltrCross : horizontalCross);
+			if (vertical && ltrCross !== rtlCross) {
+				setOrigin(`${selector}:dir(rtl)`, rtlCross);
+			}
+		}
 	}
 }
