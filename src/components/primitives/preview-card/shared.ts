@@ -1,6 +1,7 @@
 import { createContext, type RefObject, useContext } from 'react';
 
-import type { Timeout } from '#/lib/hooks/use-timeout';
+import type { ChangeDetails } from '../change-details';
+import type { HoverPopupState } from '../hover-popup';
 
 export type OpenChangeReason =
 	| 'escape-key'
@@ -10,29 +11,14 @@ export type OpenChangeReason =
 	| 'trigger-focus'
 	| 'trigger-hover';
 
-export type OpenChangeDetails = {
-	reason: OpenChangeReason;
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-};
+export type OpenChangeDetails = ChangeDetails<OpenChangeReason>;
 
-export type RootContextValue = {
-	open: boolean;
-	mounted: boolean;
+export type RootContextValue = HoverPopupState<OpenChangeReason> & {
 	anchorName: string;
-	/** blocks focus reopening until the pointer or focus leaves the trigger. */
-	blockedRef: RefObject<boolean>;
 	/** hovered trigger's `closeDelay`. */
 	closeDelayRef: RefObject<number>;
-	triggerRef: RefObject<HTMLElement | null>;
-	positionerRef: RefObject<HTMLDivElement | null>;
-	setOpen: (open: boolean, reason: OpenChangeReason, event: Event) => void;
 	/** schedules a close only for hover-opened cards. */
 	startHoverClose: (event: Event) => void;
-	/** shared timer; opening and closing cancel each other's pending work. */
-	timeout: Timeout;
-	onTransitionSettled: (open: boolean) => void;
 };
 
 export const RootContext = createContext<RootContextValue | null>(null);

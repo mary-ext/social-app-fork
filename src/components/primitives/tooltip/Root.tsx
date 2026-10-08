@@ -1,12 +1,8 @@
 'use no memo'; // composition props usually invalidate the generated wrapper caches
 
-import { type ReactNode, useEffect, useId, useRef } from 'react';
+import { type ReactNode, useId } from 'react';
 
-import { useControlled } from '#/lib/hooks/use-controlled';
-import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
-import { useTimeout } from '#/lib/hooks/use-timeout';
-
-import { usePresence } from '../presence';
+import { useHoverPopupRoot } from '../hover-popup';
 import { type OpenChangeDetails, type OpenChangeReason, RootContext, type RootContextValue } from './shared';
 
 export type RootProps = {
@@ -33,88 +29,26 @@ export type RootProps = {
  */
 export const Root = ({
 	children,
-	open: openProp,
+	open,
 	defaultOpen = false,
 	onOpenChange,
 	onOpenChangeComplete,
 	disabled = false,
 	disableHoverablePopup = false,
 }: RootProps) => {
-	const [openState, setOpenState] = useControlled({
-		controlled: openProp,
-		default: defaultOpen,
+	const popup = useHoverPopupRoot<OpenChangeReason>({
+		open,
+		defaultOpen,
+		disabled,
+		onOpenChange,
+		onOpenChangeComplete,
 	});
-	const open = !disabled && openState;
-
-	const { mounted, onTransitionSettled } = usePresence(open, onOpenChangeComplete);
-
-	const anchorName = `--tooltip-${CSS.escape(useId())}`;
-	const blockedRef = useRef(false);
-	const triggerRef = useRef<HTMLElement | null>(null);
-	const positionerRef = useRef<HTMLDivElement | null>(null);
-	const timeout = useTimeout();
-
-	const setOpen = useNonReactiveCallback((next: boolean, reason: OpenChangeReason, event: Event) => {
-		timeout.clear();
-		if (next === open) {
-			return;
-		}
-
-		let canceled = false;
-		onOpenChange?.(next, {
-			reason,
-			event,
-			cancel() {
-				canceled = true;
-			},
-		});
-
-		if (!canceled) {
-			setOpenState(next);
-		}
-	});
-
-	useEffect(() => {
-		if (!open) {
-			return;
-		}
-
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') {
-				blockedRef.current = true;
-				setOpen(false, 'escape-key', event);
-			}
-		};
-		const onPointerDown = (event: Event) => {
-			const target = event.target;
-			if (
-				target instanceof Node &&
-				!triggerRef.current?.contains(target) &&
-				!positionerRef.current?.contains(target)
-			) {
-				setOpen(false, 'outside-press', event);
-			}
-		};
-
-		const controller = new AbortController();
-		const { signal } = controller;
-		document.addEventListener('keydown', onKeyDown, { signal });
-		document.addEventListener('pointerdown', onPointerDown, { capture: true, signal });
-		return () => controller.abort();
-	}, [open, setOpen]);
 
 	const value: RootContextValue = {
-		open,
-		mounted,
+		...popup,
 		disabled,
 		disableHoverablePopup,
-		anchorName,
-		blockedRef,
-		triggerRef,
-		positionerRef,
-		setOpen,
-		timeout,
-		onTransitionSettled,
+		anchorName: `--tooltip-${CSS.escape(useId())}`,
 	};
 
 	return <RootContext.Provider value={value}>{children}</RootContext.Provider>;

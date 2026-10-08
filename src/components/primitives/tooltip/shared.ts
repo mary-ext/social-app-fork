@@ -1,36 +1,23 @@
-import { createContext, type RefObject, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
-import type { Timeout } from '#/lib/hooks/use-timeout';
+import type { ChangeDetails } from '../change-details';
+import type { HoverPopupState } from '../hover-popup';
 
 export type OpenChangeReason =
 	| 'escape-key'
+	| 'focus-out'
 	| 'light-dismiss'
 	| 'outside-press'
 	| 'trigger-focus'
 	| 'trigger-hover'
 	| 'trigger-press';
 
-export type OpenChangeDetails = {
-	reason: OpenChangeReason;
-	event: Event;
-	/** cancels this open/close request. */
-	cancel(): void;
-};
+export type OpenChangeDetails = ChangeDetails<OpenChangeReason>;
 
-export type RootContextValue = {
-	open: boolean;
-	mounted: boolean;
+export type RootContextValue = HoverPopupState<OpenChangeReason> & {
 	disabled: boolean;
 	disableHoverablePopup: boolean;
 	anchorName: string;
-	/** blocks reopening after activation or Escape until the pointer or focus leaves the trigger. */
-	blockedRef: RefObject<boolean>;
-	triggerRef: RefObject<HTMLElement | null>;
-	positionerRef: RefObject<HTMLDivElement | null>;
-	setOpen: (open: boolean, reason: OpenChangeReason, event: Event) => void;
-	/** shared timer; opening and closing cancel each other's pending work. */
-	timeout: Timeout;
-	onTransitionSettled: (open: boolean) => void;
 };
 
 export const RootContext = createContext<RootContextValue | null>(null);

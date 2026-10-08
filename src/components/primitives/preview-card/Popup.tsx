@@ -20,7 +20,7 @@ export type PopupProps = RenderProps<'div'>;
 export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 	const { open, blockedRef, triggerRef, positionerRef, startHoverClose, timeout } = useRootContext();
 
-	// restore focus before the positioner becomes inert; suppress the resulting focus-open request.
+	// restore focus from the closing card; suppress the resulting focus-open request.
 	useLayoutEffect(() => {
 		if (open || !positionerRef.current?.contains(document.activeElement)) {
 			return;

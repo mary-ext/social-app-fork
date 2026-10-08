@@ -5,6 +5,7 @@ import { type HTMLAttributes, type MouseEvent, type PointerEvent, type Ref, useR
 import { isMouseLike } from '#/lib/browser/input-modality';
 
 import { HOVERABLE_GRACE, useAnchorName } from '../anchored-popup';
+import { isFocusLeaving } from '../hover-popup';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -122,18 +123,9 @@ export const Trigger = ({
 			},
 			onBlur(event) {
 				blockedRef.current = false;
-
-				const next = event.relatedTarget;
-				const trigger = event.currentTarget;
-
-				// preserve the tooltip while the window is unfocused.
-				if (next === null && document.activeElement === trigger) {
-					return;
+				if (isFocusLeaving(event, positionerRef.current)) {
+					setOpen(false, 'trigger-focus', event.nativeEvent);
 				}
-				if (next !== null && (trigger.contains(next) || positionerRef.current?.contains(next))) {
-					return;
-				}
-				setOpen(false, 'trigger-focus', event.nativeEvent);
 			},
 		};
 	}

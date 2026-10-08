@@ -5,6 +5,7 @@ import type { HTMLAttributes, Ref } from 'react';
 import { isMouseLike } from '#/lib/browser/input-modality';
 
 import { useAnchorName } from '../anchored-popup';
+import { isFocusLeaving } from '../hover-popup';
 import { mergeProps } from '../merge-props';
 import { getTriggerAttributes } from '../presence';
 import { type RenderProps, useRender } from '../render';
@@ -84,20 +85,12 @@ export const Trigger = ({
 		},
 		onBlur(event) {
 			blockedRef.current = false;
-
-			const next = event.relatedTarget;
-			const trigger = event.currentTarget;
-
-			// window blur leaves the trigger focused; keep the card open.
-			if (next === null && document.activeElement === trigger) {
-				return;
-			}
-			if (next !== null && (trigger.contains(next) || positionerRef.current?.contains(next))) {
+			if (!isFocusLeaving(event, positionerRef.current)) {
 				return;
 			}
 			if (open) {
 				setOpen(false, 'trigger-focus', event.nativeEvent);
-			} else if (!trigger.matches(':hover')) {
+			} else if (!event.currentTarget.matches(':hover')) {
 				// cancel a pending focus open, but not a hover open.
 				timeout.clear();
 			}
