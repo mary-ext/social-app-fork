@@ -51,7 +51,7 @@ export const input = style(
 		selectors: {
 			'&::placeholder': { color: vars.palette.contrast_500 },
 			'&:disabled': { opacity: 0.5, cursor: 'default' },
-			[hover()]: { borderColor: vars.palette.contrast_100 },
+			[hover(':not(:focus)')]: { borderColor: vars.palette.contrast_100 },
 			'&:focus': { borderColor: vars.palette.primary_500, backgroundColor: vars.palette.primary_25 },
 		},
 	}),
@@ -62,7 +62,7 @@ export const invalid = style(
 		borderColor: vars.palette.negative_300,
 		backgroundColor: vars.palette.negative_25,
 		selectors: {
-			[hover()]: { borderColor: vars.palette.negative_500 },
+			[hover(':not(:focus)')]: { borderColor: vars.palette.negative_500 },
 			'&:focus': { borderColor: vars.palette.negative_500, backgroundColor: vars.palette.negative_25 },
 		},
 	}),
