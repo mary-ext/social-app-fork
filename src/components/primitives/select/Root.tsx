@@ -7,7 +7,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 
-import { isWithinPopup } from '../anchored-popup';
+import { isWithinPopup, listenForOutsideClick } from '../anchored-popup';
 import { createTypeahead } from '../list-navigation';
 import { usePresence } from '../presence';
 import {
@@ -103,18 +103,15 @@ export const Root = <Value,>({
 			return;
 		}
 
-		const onPointerDown = (event: PointerEvent) => {
-			const target = event.target;
-			const inside =
-				(target instanceof Node && !!triggerRef.current?.contains(target)) ||
-				isWithinPopup(positionerRef.current, target);
-			if (!inside) {
-				setOpen(false, { reason: 'outside-press', method: '' });
-			}
-		};
-
 		const controller = new AbortController();
-		document.addEventListener('pointerdown', onPointerDown, { signal: controller.signal });
+		listenForOutsideClick({
+			signal: controller.signal,
+			isInside: ({ target }) =>
+				(target instanceof Node && !!triggerRef.current?.contains(target)) ||
+				isWithinPopup(positionerRef.current, target),
+			onOutside: () => setOpen(false, { reason: 'outside-press', method: '' }),
+			dismissTouchOnContact: false,
+		});
 		return () => controller.abort();
 	}, [open, setOpen]);
 
