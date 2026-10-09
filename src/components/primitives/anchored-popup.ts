@@ -1,9 +1,6 @@
-// load @position-try rules here because .css.ts modules can't import plain CSS.
-import './position-try.css';
-
 import { type CSSProperties, type RefCallback, type RefObject, useCallback, useLayoutEffect } from 'react';
 
-import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { assignInlineVars, setElementVars } from '@vanilla-extract/dynamic';
 
 import * as styles from './anchored-popup.css';
 import { type DataAttributes, dataAttributes } from './data-attributes';
@@ -29,8 +26,12 @@ export type PlacementProps = {
 	collisionPadding?: CollisionPadding;
 };
 
+const getCollisionPadding = (padding: CollisionPadding, edge: Side): number | undefined => {
+	return typeof padding === 'number' ? padding : padding[edge];
+};
+
 const getCollisionPaddingLength = (padding: CollisionPadding, edge: Side): string | undefined => {
-	const value = typeof padding === 'number' ? padding : padding[edge];
+	const value = getCollisionPadding(padding, edge);
 	return value === undefined ? undefined : `${value}px`;
 };
 
@@ -95,6 +96,99 @@ export const useAnchoredPositioner = (
 ): void => {
 	useTransitionsSettled(ref, open, onTransitionSettled);
 	useDevicePixelSnap(ref, open);
+};
+
+/**
+ * sets `availableSizeVars` to fit the roomier of `side` and its opposite. use with `shrinkingPositioner`;
+ * variables are cleared while closed or without an anchor.
+ *
+ * @param ref popup positioning element
+ * @param anchorOrRef anchor element or ref; ref targets must stay stable while open; `null` disables sizing
+ * @param open current open state
+ * @param placement preferred side, gap, and viewport clearance
+ */
+export const useAvailableSize = (
+	ref: RefObject<HTMLElement | null>,
+	anchorOrRef: Element | RefObject<Element | null> | null,
+	open: boolean,
+	{ side, sideOffset, collisionPadding }: Required<Omit<PlacementProps, 'align'>>,
+): void => {
+	// depend on edge values, not padding object identity.
+	const padTop = getCollisionPadding(collisionPadding, 'top') ?? 0;
+	const padRight = getCollisionPadding(collisionPadding, 'right') ?? 0;
+	const padBottom = getCollisionPadding(collisionPadding, 'bottom') ?? 0;
+	const padLeft = getCollisionPadding(collisionPadding, 'left') ?? 0;
+
+	useLayoutEffect(() => {
+		const el = ref.current;
+		const anchor = anchorOrRef === null || anchorOrRef instanceof Element ? anchorOrRef : anchorOrRef.current;
+		if (!open || !el || !anchor) {
+			return;
+		}
+
+		// round down to avoid subpixel overflow rejecting a placement.
+		const toLength = (value: number): string => `${Math.max(0, Math.floor(value))}px`;
+
+		let lastHeight = '';
+		let lastWidth = '';
+		const update = (): void => {
+			// exclude scrollbars to match the fixed-position containing block.
+			const { clientWidth, clientHeight } = document.documentElement;
+			const rect = anchor.getBoundingClientRect();
+
+			let width = clientWidth - padLeft - padRight;
+			let height = clientHeight - padTop - padBottom;
+			switch (side) {
+				case 'bottom':
+				case 'top': {
+					height = Math.max(rect.top - padTop, clientHeight - rect.bottom - padBottom) - sideOffset;
+					break;
+				}
+				case 'left':
+				case 'right': {
+					width = Math.max(rect.left - padLeft, clientWidth - rect.right - padRight) - sideOffset;
+					break;
+				}
+			}
+
+			// avoid invalidating inherited styles on every scroll.
+			const nextHeight = toLength(height);
+			const nextWidth = toLength(width);
+			if (nextHeight !== lastHeight || nextWidth !== lastWidth) {
+				lastHeight = nextHeight;
+				lastWidth = nextWidth;
+				setElementVars(el, {
+					[styles.availableSizeVars.height]: nextHeight,
+					[styles.availableSizeVars.width]: nextWidth,
+				});
+			}
+		};
+
+		const controller = new AbortController();
+		const { signal } = controller;
+		// measure after layout effects, before paint, so callers can read uncapped dimensions first.
+		const observer = new ResizeObserver(update);
+		observer.observe(anchor);
+		window.addEventListener('resize', update, { signal });
+		// ignore popup scrolling; it does not move the anchor.
+		document.addEventListener(
+			'scroll',
+			(event) => {
+				if (!(event.target instanceof Node && el.contains(event.target))) {
+					update();
+				}
+			},
+			{ capture: true, passive: true, signal },
+		);
+		return () => {
+			controller.abort();
+			observer.disconnect();
+			setElementVars(el, {
+				[styles.availableSizeVars.height]: null,
+				[styles.availableSizeVars.width]: null,
+			});
+		};
+	}, [ref, anchorOrRef, open, side, sideOffset, padTop, padRight, padBottom, padLeft]);
 };
 
 const useDevicePixelSnap = (ref: RefObject<HTMLElement | null>, open: boolean): void => {

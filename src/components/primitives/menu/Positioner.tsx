@@ -7,6 +7,7 @@ import {
 	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
+	useAvailableSize,
 } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
@@ -41,9 +42,10 @@ const MountedPositioner = ({
 	collisionPadding = COLLISION_PADDING,
 	...elementProps
 }: PositionerProps) => {
-	const { open, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
+	const { open, anchorName, activeTrigger, positionerRef, setOpen, onTransitionSettled } = useRootContext();
 
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
+	useAvailableSize(positionerRef, activeTrigger, open, { side, sideOffset, collisionPadding });
 
 	return useRender({
 		tag: 'dialog',

@@ -7,6 +7,7 @@ import {
 	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
+	useAvailableSize,
 } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
@@ -17,7 +18,7 @@ import { useRootContext } from './shared';
 export type PositionerProps = Omit<RenderProps<'dialog'>, 'ref'> &
 	PlacementProps & {
 		ref?: Ref<HTMLDialogElement>;
-		/** shrinks to the available height on `top` or `bottom`. requires scrollable popup content. */
+		/** caps popup size to the available space. requires scrollable content. */
 		shrink?: boolean;
 	};
 
@@ -48,6 +49,11 @@ const MountedPositioner = ({
 	const shown = useShownForContent();
 
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
+	useAvailableSize(positionerRef, shrink ? activeTrigger : null, open, {
+		side,
+		sideOffset,
+		collisionPadding,
+	});
 
 	let className = modal ? styles.modalPositioner : styles.positioner;
 	if (shrink) {

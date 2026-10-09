@@ -8,6 +8,7 @@ import {
 	getPositionerProps,
 	type PlacementProps,
 	useAnchoredPositioner,
+	useAvailableSize,
 } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
@@ -64,8 +65,10 @@ const MountedPositioner = ({
 
 	// anchors may be refs, so resolve them after every commit.
 	const anchoredRef = useRef<{ el: Element; remove: () => void } | null>(null);
+	const anchorElRef = useRef<Element | null>(null);
 	useLayoutEffect(() => {
 		const el = resolveAnchor(anchor, inputRef.current);
+		anchorElRef.current = el;
 		const current = anchoredRef.current;
 		if (current?.el === el) {
 			return;
@@ -81,6 +84,11 @@ const MountedPositioner = ({
 	}, []);
 
 	useAnchoredPositioner(positionerRef, open, ctx.onTransitionSettled);
+	useAvailableSize(positionerRef, anchorElRef, open, {
+		side,
+		sideOffset,
+		collisionPadding,
+	});
 
 	const internalProps: HTMLAttributes<HTMLDivElement> = {
 		popover: 'manual',

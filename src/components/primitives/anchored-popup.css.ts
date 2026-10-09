@@ -1,4 +1,4 @@
-import { createVar, globalStyle, type GlobalStyleRule, style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, globalStyle, type GlobalStyleRule, style } from '@vanilla-extract/css';
 
 import { layered } from '#/styles/layers';
 import { reset } from '#/styles/layers.css';
@@ -24,6 +24,8 @@ export const collisionPaddingVars = {
 	top: createLengthVar('collisionPaddingTop'),
 } satisfies Record<Side, string>;
 
+const viewportMaxWidth = `calc(100vw - ${collisionPaddingVars.left} - ${collisionPaddingVars.right})`;
+
 /**
  * top-layer positioner for caller-supplied insets. `data-side` and `data-align` set the popup's transform
  * origin.
@@ -34,7 +36,7 @@ export const manualPositioner = style([
 	// the reset layer lets consumers override sizing.
 	layered(reset, {
 		width: 'max-content',
-		maxWidth: `calc(100vw - ${collisionPaddingVars.left} - ${collisionPaddingVars.right})`,
+		maxWidth: viewportMaxWidth,
 	}),
 	{
 		containerType: 'anchored',
@@ -47,11 +49,23 @@ export const manualPositioner = style([
 /** anchors by `data-side` and `data-align`, flipping or shifting to fit the viewport. */
 export const positioner = style([manualPositioner]);
 
-/** allows scrollable popup content to shrink. with `positioner`, adds height fallbacks for `top` and `bottom`. */
-export const shrinkingPositioner = style({
-	display: 'flex',
-	flexDirection: 'column',
-});
+/** popup size limits supplied by `useAvailableSize`. */
+export const availableSizeVars = {
+	height: createVar('availableHeight'),
+	width: createVar('availableWidth'),
+};
+
+/** applies `availableSizeVars` and lets scrollable content shrink. */
+export const shrinkingPositioner = style([
+	layered(reset, {
+		maxWidth: fallbackVar(availableSizeVars.width, viewportMaxWidth),
+		maxHeight: fallbackVar(availableSizeVars.height, 'none'),
+	}),
+	{
+		display: 'flex',
+		flexDirection: 'column',
+	},
+]);
 
 // flex items otherwise retain their content's minimum height.
 globalStyle(`${shrinkingPositioner} > *`, {
@@ -73,7 +87,7 @@ const MARGIN = {
 	top: 'marginTop',
 } as const;
 
-const isVertical = (side: Side): side is 'bottom' | 'top' => {
+const isVertical = (side: Side): boolean => {
 	return side === 'top' || side === 'bottom';
 };
 
@@ -93,6 +107,7 @@ const getPositionArea = (side: Side, align: Align): string => {
 };
 
 // prefer aligned placements before allowing cross-axis shifting.
+// Chrome for Android only tries the first five fallbacks.
 const getFallbacks = (side: Side, align: Align): string[] => {
 	const [sideFlip, alignFlip] = isVertical(side)
 		? ['flip-block', 'flip-inline']
@@ -101,25 +116,6 @@ const getFallbacks = (side: Side, align: Align): string[] => {
 		return [sideFlip];
 	}
 	return [sideFlip, alignFlip, `${sideFlip} ${alignFlip}`, side, OPPOSITE[side]];
-};
-
-const getShrinkFallbacks = (side: 'bottom' | 'top', align: Align): string[] => {
-	if (align === 'center') {
-		return ['--anchored-shrink-floored', '--anchored-shrink-floored flip-block', '--anchored-shrink'];
-	}
-	const toSide = side === 'top' ? ' flip-block' : '';
-	const toOpposite = side === 'top' ? '' : ' flip-block';
-	return [
-		'--anchored-shrink-floored',
-		'--anchored-shrink-floored flip-inline',
-		'--anchored-shrink-floored flip-block',
-		'--anchored-shrink-floored flip-block flip-inline',
-		`--anchored-shrink-floored-span${toSide}`,
-		`--anchored-shrink-floored-span${toOpposite}`,
-		'--anchored-shrink',
-		'--anchored-shrink flip-inline',
-		`--anchored-shrink-span${toSide}`,
-	];
 };
 
 // fallback queries only style descendants, so --transform-origin is set on the popup, toward the anchor.
@@ -169,15 +165,6 @@ const setTransformOrigin = (selector: string, side: Side, cross: string): void =
 			}
 
 			globalStyle(`${positioner}${attributes}`, rule);
-
-			if (isVertical(side)) {
-				globalStyle(`${positioner}${shrinkingPositioner}${attributes}`, {
-					positionTryFallbacks: [...getFallbacks(side, align), ...getShrinkFallbacks(side, align)].join(', '),
-					vars: {
-						'--anchored-block-margins': `calc(${sideOffsetVar} + ${collisionPaddingVars[side]})`,
-					},
-				});
-			}
 
 			const originSelector = `${manualPositioner}${attributes} > *`;
 			if (align === 'center') {

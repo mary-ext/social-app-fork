@@ -8,6 +8,7 @@ import {
 	getPositionerAttributes,
 	getPositionerProps,
 	useAnchoredPositioner,
+	useAvailableSize,
 } from '../anchored-popup';
 import type { DataAttributes } from '../data-attributes';
 import { mergeProps } from '../merge-props';
@@ -98,10 +99,18 @@ const MountedPositioner = ({
 	alignItemWithTrigger = true,
 	...elementProps
 }: PositionerProps) => {
-	const { open, openMethod, anchorName, positionerRef, setOpen, onTransitionSettled } = useRootContext();
+	const { open, openMethod, anchorName, triggerRef, positionerRef, setOpen, onTransitionSettled } =
+		useRootContext();
 	const [itemOffset, setItemOffset] = useState<ItemOffset | null>(null);
 
+	const pad = COLLISION_PADDING;
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
+	// item alignment supplies its own height cap.
+	useAvailableSize(positionerRef, itemOffset ? null : triggerRef, open, {
+		side: 'bottom',
+		sideOffset,
+		collisionPadding: pad,
+	});
 
 	// measure after entering the top layer; retain the offset through the exit transition.
 	useLayoutEffect(() => {
@@ -117,7 +126,6 @@ const MountedPositioner = ({
 		setItemOffset(measureItemOffset(positioner, item, align));
 	}, [open, openMethod, alignItemWithTrigger, align, positionerRef]);
 
-	const pad = COLLISION_PADDING;
 	let positionerProps: HTMLAttributes<HTMLDialogElement> & DataAttributes;
 	if (itemOffset) {
 		const { x, y, width, height } = itemOffset;
