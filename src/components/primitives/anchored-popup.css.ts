@@ -26,11 +26,8 @@ export const collisionPaddingVars = {
 
 const viewportMaxWidth = `calc(100vw - ${collisionPaddingVars.left} - ${collisionPaddingVars.right})`;
 
-/**
- * top-layer positioner for caller-supplied insets. `data-side` and `data-align` set the popup's transform
- * origin.
- */
-export const manualPositioner = style([
+// `data-side` and `data-align` set the popup's transform origin.
+const basePositioner = style([
 	topLayerReset,
 	// keep intrinsic width so a narrow position-area triggers fallbacks instead of wrapping.
 	// the reset layer lets consumers override sizing.
@@ -46,8 +43,14 @@ export const manualPositioner = style([
 	},
 ]);
 
+/**
+ * top-layer positioner for caller-supplied insets. `data-side` and `data-align` set the popup's transform
+ * origin.
+ */
+export const manualPositioner = style([basePositioner]);
+
 /** anchors by `data-side` and `data-align`, flipping or shifting to fit the viewport. */
-export const positioner = style([manualPositioner]);
+export const autoPositioner = style([basePositioner]);
 
 /** popup size limits supplied by `useAvailableSize`. */
 export const availableSizeVars = {
@@ -164,9 +167,9 @@ const setTransformOrigin = (selector: string, side: Side, cross: string): void =
 				rule[MARGIN[edge]] = collisionPaddingVars[edge];
 			}
 
-			globalStyle(`${positioner}${attributes}`, rule);
+			globalStyle(`${autoPositioner}${attributes}`, rule);
 
-			const originSelector = `${manualPositioner}${attributes} > *`;
+			const originSelector = `${basePositioner}${attributes} > *`;
 			if (align === 'center') {
 				setTransformOrigin(originSelector, side, 'center');
 			} else {

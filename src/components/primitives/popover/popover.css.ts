@@ -2,8 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 import * as anchored from '../anchored-popup.css';
 
-export const positioner = style([anchored.positioner]);
+export const positioner = style([anchored.autoPositioner]);
 
-export const modalPositioner = style([anchored.positioner, { display: 'block' }]);
+export const modalPositioner = style([anchored.autoPositioner, { display: 'block' }]);
 
-export const shrinkingPositioner = style([anchored.positioner, anchored.shrinkingPositioner]);
+export const shrinkingPositioner = style([anchored.autoPositioner, anchored.shrinkingPositioner]);

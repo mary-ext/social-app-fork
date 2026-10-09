@@ -48,7 +48,7 @@ export const getPositionerAttributes = (open: boolean, side: Side, align: Align)
 };
 
 /**
- * supplies placement props for the `positioner` class.
+ * supplies placement props for the `autoPositioner` class.
  *
  * @param open whether the popup is open
  * @param placement anchor name and placement
