@@ -242,12 +242,11 @@ export const panelRows = style({
 // low specificity lets the label inset below override the divider's left edge
 globalStyle(`:where(${panelRows} > ${item}:first-child)::before`, divider);
 
-// align dividers with the preceding label. use disclosure triggers, since panel rows are nested.
 {
 	const led = `${item}:has(> ${leading}, > :first-child > ${leading})`;
 
 	globalStyle(
-		`:is(${led} + ${item}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${item}:first-child)::before`,
+		`:is(${led} + ${led}, ${collapsibleTrigger}:has(> ${leading}) + ${panelRows} > ${led}:first-child)::before`,
 		{ left: ROW_LABEL_INSET },
 	);
 }
