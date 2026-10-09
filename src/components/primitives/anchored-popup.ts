@@ -99,11 +99,11 @@ export const useAnchoredPositioner = (
 };
 
 /**
- * sets `availableSizeVars` to fit the roomier of `side` and its opposite. use with `shrinkingPositioner`;
- * variables are cleared while closed or without an anchor.
+ * sets `availableSizeVars` during layout to fit the roomier of `side` and its opposite. use with
+ * `shrinkingPositioner`; variables are cleared while closed or without an anchor.
  *
  * @param ref popup positioning element
- * @param anchorOrRef anchor element or ref; ref targets must stay stable while open; `null` disables sizing
+ * @param anchorOrRef anchor element or ref; keep ref targets stable while open; `null` disables sizing
  * @param open current open state
  * @param placement preferred side, gap, and viewport clearance
  */
@@ -164,9 +164,11 @@ export const useAvailableSize = (
 			}
 		};
 
+		// apply the cap before focus effects scroll an item into view.
+		update();
+
 		const controller = new AbortController();
 		const { signal } = controller;
-		// measure after layout effects, before paint, so callers can read uncapped dimensions first.
 		const observer = new ResizeObserver(update);
 		observer.observe(anchor);
 		window.addEventListener('resize', update, { signal });

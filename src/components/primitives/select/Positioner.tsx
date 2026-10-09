@@ -101,12 +101,13 @@ const MountedPositioner = ({
 }: PositionerProps) => {
 	const { open, openMethod, anchorName, triggerRef, positionerRef, setOpen, onTransitionSettled } =
 		useRootContext();
-	const [itemOffset, setItemOffset] = useState<ItemOffset | null>(null);
+	// `undefined` defers fallback sizing until measured; `null` uses fallback positioning.
+	const [itemOffset, setItemOffset] = useState<ItemOffset | null>();
+	const canAlign = alignItemWithTrigger && openMethod !== 'touch';
 
 	const pad = COLLISION_PADDING;
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
-	// item alignment supplies its own height cap.
-	useAvailableSize(positionerRef, itemOffset ? null : triggerRef, open, {
+	useAvailableSize(positionerRef, canAlign && itemOffset !== null ? null : triggerRef, open, {
 		side: 'bottom',
 		sideOffset,
 		collisionPadding: pad,
@@ -119,12 +120,12 @@ const MountedPositioner = ({
 			return;
 		}
 		const item = positioner.querySelector<HTMLElement>(SELECTED_ITEM_SELECTOR);
-		if (!alignItemWithTrigger || openMethod === 'touch' || !item) {
+		if (!canAlign || !item) {
 			setItemOffset(null);
 			return;
 		}
 		setItemOffset(measureItemOffset(positioner, item, align));
-	}, [open, openMethod, alignItemWithTrigger, align, positionerRef]);
+	}, [open, canAlign, align, positionerRef]);
 
 	let positionerProps: HTMLAttributes<HTMLDialogElement> & DataAttributes;
 	if (itemOffset) {

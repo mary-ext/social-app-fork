@@ -12,8 +12,8 @@ import { SELECTED_ITEM_SELECTOR, useRootContext } from './shared';
 export type PopupProps = RenderProps<'div'>;
 
 /**
- * renders the listbox. opening focuses the selected item, or the first/last item for keyboard opens without a
- * selection. touch opens focus the listbox without highlighting an item.
+ * renders the listbox. opens focus the selected item, or the first/last item for keyboard opens without a
+ * selection. touch opens focus the listbox. scrolls the focused or selected item into view.
  *
  * @param props element props
  * @returns the listbox element; a `<div>` by default
@@ -28,22 +28,17 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 			if (!popup) {
 				return;
 			}
-			const selected = popup.querySelector<HTMLElement>(SELECTED_ITEM_SELECTOR);
+			const selected = popup.querySelector<HTMLElement>(SELECTED_ITEM_SELECTOR) ?? undefined;
 
-			if (selected && ctx.openMethod !== 'touch') {
-				selected.focus();
-				return;
-			}
-			if (!selected && ctx.openMethod === 'keyboard') {
+			let target: HTMLElement | undefined;
+			if (ctx.openMethod === 'keyboard' && !selected) {
 				const items = getListItems(popup);
-				const entry = ctx.openEntry === 'last' ? items.at(-1) : items[0];
-				if (entry) {
-					entry.focus();
-					return;
-				}
+				target = ctx.openEntry === 'last' ? items.at(-1) : items[0];
+			} else if (ctx.openMethod !== 'touch') {
+				target = selected;
 			}
-			popup.focus({ preventScroll: true });
-			selected?.scrollIntoView({ block: 'nearest' });
+			(target ?? popup).focus({ preventScroll: true });
+			(target ?? selected)?.scrollIntoView({ block: 'nearest' });
 		},
 		final() {
 			triggerRef.current?.focus({ preventScroll: true });
