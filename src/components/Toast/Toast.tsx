@@ -46,7 +46,7 @@ function ToastList() {
 			<Toast.Root
 				key={toast.id}
 				toast={toast}
-				swipeDirection={['down', 'left']}
+				swipeDirection={['down', 'left', 'right']}
 				className={clsx(css.root, css.rootColor[type])}
 			>
 				<Toast.Content className={css.content}>

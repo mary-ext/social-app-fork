@@ -93,6 +93,9 @@ export const root = style({
 		'&[data-closed][data-swipe-direction="left"]': {
 			translate: `calc(${swipeX} - 150%) 0`,
 		},
+		'&[data-closed][data-swipe-direction="right"]': {
+			translate: `calc(${swipeX} + 150%) 0`,
+		},
 	},
 	'@starting-style': {
 		translate: '0 110%',
