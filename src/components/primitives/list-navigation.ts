@@ -1,6 +1,7 @@
-import { type KeyboardEvent, type PointerEvent, useState } from 'react';
+import { type HTMLAttributes, type KeyboardEvent, type PointerEvent, useState } from 'react';
 
-import { isMouseLike } from '#/lib/browser/input-modality';
+import { getInputModality, isMouseLike } from '#/lib/browser/input-modality';
+import { pressable } from '#/lib/browser/interactive';
 
 // distinct from `data-list-item` so feed navigation excludes nested menu items.
 const ITEM_ATTR = 'data-nav-item';
@@ -21,20 +22,32 @@ export const listItemProps = (label?: string) => ({
 	tabIndex: -1,
 });
 
-/** @returns focus-based highlight state and handlers to attach to the item */
+/**
+ * highlights keyboard focus and mouse or pen hover; clears on blur. adds press feedback.
+ *
+ * @returns highlight state and item props
+ */
 export const useItemHighlight = (): {
 	highlighted: boolean;
-	highlightProps: { onFocus: () => void; onBlur: () => void };
+	highlightProps: typeof pressable &
+		Pick<HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onPointerMove'>;
 } => {
 	const [highlighted, setHighlighted] = useState(false);
 	return {
 		highlighted,
 		highlightProps: {
+			...pressable,
 			onFocus() {
-				setHighlighted(true);
+				// preserve hover highlight when the container moves focus here.
+				setHighlighted((prev) => prev || getInputModality() === 'keyboard');
 			},
 			onBlur() {
 				setHighlighted(false);
+			},
+			onPointerMove(event) {
+				if (!highlighted && isHoverMove(event) && !isDisabled(event.currentTarget)) {
+					setHighlighted(true);
+				}
 			},
 		},
 	};

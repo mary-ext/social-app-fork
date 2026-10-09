@@ -3,7 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { FIELD_HEIGHT } from '#/components/forms/SearchField.css';
 
 import { vars } from '#/styles/contract.css';
-import { hover } from '#/styles/interaction';
+import { hover, PRESSING } from '#/styles/interaction';
 import { emojiFontFamily } from '#/styles/tokens.css';
 
 const INSET = 4;
@@ -62,7 +62,7 @@ export const item = style({
 	cursor: 'pointer',
 	userSelect: 'none',
 	selectors: {
-		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
+		[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.contrast_50 },
 		'&[data-selected]': { backgroundColor: vars.palette.contrast_100 },
 	},
 });

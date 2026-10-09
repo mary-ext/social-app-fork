@@ -3,6 +3,7 @@ import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 import * as indicator from '#/components/forms/Indicator.css';
 
 import { vars } from '#/styles/contract.css';
+import { PRESSING } from '#/styles/interaction';
 import { fontSize, iconSize } from '#/styles/tokens.css';
 
 export const iconColor = createVar();
@@ -56,7 +57,7 @@ export const item = style({
 	cursor: 'pointer',
 	userSelect: 'none',
 	selectors: {
-		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
+		[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.contrast_50 },
 		'&[data-disabled]': {
 			vars: { [iconColor]: vars.palette.contrast_400 },
 			color: vars.palette.contrast_400,

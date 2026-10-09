@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { PRESSING } from '#/styles/interaction';
 import { layered } from '#/styles/layers';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
@@ -118,7 +119,7 @@ export const item = style(
 		cursor: 'pointer',
 		userSelect: 'none',
 		selectors: {
-			'&[data-highlighted]': { backgroundColor: vars.palette.primary_50 },
+			[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.primary_50 },
 			'&[data-selected]': { fontWeight: 600 },
 		},
 	}),
