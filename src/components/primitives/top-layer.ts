@@ -5,6 +5,7 @@ import {
 	useEffect,
 	useLayoutEffect,
 	useRef,
+	useState,
 } from 'react';
 
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
@@ -64,6 +65,23 @@ const showModal = (el: HTMLDialogElement | null): void => {
 		el.hidePopover();
 	}
 	el.showModal();
+	nativeFocus.set(el, document.activeElement);
+};
+
+const nativeFocus = new WeakMap<HTMLDialogElement, Element | null>();
+
+/**
+ * defers popup content until top-layer entry. pair with a show ref callback.
+ *
+ * @returns whether to render popup content
+ */
+export const useShownForContent = (): boolean => {
+	const [shown, setShown] = useState(false);
+	useLayoutEffect(() => {
+		// oxlint-disable-next-line react/set-state-in-effect -- hidden content loses `autoFocus`; mount it after top-layer entry, before paint
+		setShown(true);
+	}, []);
+	return shown;
 };
 
 /**
@@ -93,7 +111,7 @@ const leaveModal = (el: HTMLDialogElement | null): boolean => {
  *
  * @param open current open state
  * @param modalRef popup dialog element
- * @param focus.initial focuses the initial target after top-layer entry
+ * @param focus.initial focuses the initial target unless content moved focus after top-layer entry
  * @param focus.final restores focus only if it was in the popup or on the body
  */
 export const useModalFocus = (
@@ -109,10 +127,16 @@ export const useModalFocus = (
 	});
 
 	useEffect(() => {
-		if (open) {
-			focusInitial();
+		if (!open) {
+			return;
 		}
-	}, [open, focusInitial]);
+		const modal = modalRef.current;
+		const active = document.activeElement;
+		if (modal?.contains(active) && active !== modal && active !== nativeFocus.get(modal)) {
+			return;
+		}
+		focusInitial();
+	}, [open, modalRef, focusInitial]);
 
 	useLayoutEffect(() => {
 		if (!open) {

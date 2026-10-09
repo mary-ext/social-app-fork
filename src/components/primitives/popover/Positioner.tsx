@@ -10,7 +10,7 @@ import {
 } from '../anchored-popup';
 import { mergeProps } from '../merge-props';
 import { type RenderProps, useRender } from '../render';
-import { getDialogProps, showInTopLayer, showModalInTopLayer } from '../top-layer';
+import { getDialogProps, showInTopLayer, showModalInTopLayer, useShownForContent } from '../top-layer';
 import * as styles from './popover.css';
 import { useRootContext } from './shared';
 
@@ -40,10 +40,12 @@ const MountedPositioner = ({
 	sideOffset = 0,
 	collisionPadding = COLLISION_PADDING,
 	shrink = false,
+	children,
 	...elementProps
 }: PositionerProps) => {
 	const { open, modal, anchorName, activeTrigger, positionerRef, setOpen, onTransitionSettled } =
 		useRootContext();
+	const shown = useShownForContent();
 
 	useAnchoredPositioner(positionerRef, open, onTransitionSettled);
 
@@ -62,6 +64,7 @@ const MountedPositioner = ({
 				...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 				inert: !open,
 				className,
+				children: shown ? children : null,
 			},
 			elementProps,
 		),

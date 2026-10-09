@@ -6,7 +6,7 @@ import { getReturnFocusChain } from '../focus';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes, useTransitionsSettled } from '../presence';
 import { type RenderProps, useRender } from '../render';
-import { getDialogProps, showModalInTopLayer, useModalSurface } from '../top-layer';
+import { getDialogProps, showModalInTopLayer, useModalSurface, useShownForContent } from '../top-layer';
 import * as styles from './dialog.css';
 import { useRootContext } from './shared';
 
@@ -27,7 +27,7 @@ export const Viewport = (props: ViewportProps) => {
 	return mounted ? <MountedViewport {...props} /> : null;
 };
 
-const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
+const MountedViewport = ({ render, ref, children, ...elementProps }: ViewportProps) => {
 	const {
 		open,
 		activeTrigger,
@@ -39,6 +39,7 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 		onTransitionSettled,
 	} = useRootContext();
 	const pressedOutsideRef = useRef(false);
+	const shown = useShownForContent();
 
 	// capture the opener before `showModal()` moves focus.
 	const captureReturnFocus = useCallback(
@@ -54,7 +55,8 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 	);
 
 	useTransitionsSettled(viewportRef, open, onTransitionSettled);
-	useModalSurface(viewportRef, open);
+	// append hosted toasts after the deferred content.
+	useModalSurface(viewportRef, open && shown);
 
 	// toasts are outside the popup too, but must not dismiss the dialog.
 	const isOutside = (target: EventTarget | null): boolean => {
@@ -67,6 +69,7 @@ const MountedViewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 		...getDialogProps(open, (event) => setOpen(false, { reason: 'escape-key', event })),
 		inert: !open,
 		className: styles.viewport,
+		children: shown ? children : null,
 	};
 	if (!disablePointerDismissal) {
 		// wait for a complete outside press so drags that leave the popup don't dismiss.
