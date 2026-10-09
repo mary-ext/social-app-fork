@@ -119,7 +119,7 @@ export const item = style(
 		cursor: 'pointer',
 		userSelect: 'none',
 		selectors: {
-			[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.primary_50 },
+			[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.contrast_50 },
 			'&[data-selected]': { fontWeight: 600 },
 		},
 	}),

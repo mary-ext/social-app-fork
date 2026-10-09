@@ -57,7 +57,7 @@ export const item = style({
 	cursor: 'pointer',
 	userSelect: 'none',
 	selectors: {
-		[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.contrast_50 },
+		[`&[data-highlighted], ${PRESSING}`]: { backgroundColor: vars.palette.contrast_100 },
 		'&[data-disabled]': {
 			vars: { [iconColor]: vars.palette.contrast_400 },
 			color: vars.palette.contrast_400,
