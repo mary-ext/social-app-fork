@@ -171,12 +171,12 @@ export const Root = ({
 	const swipeProps: HTMLAttributes<HTMLDivElement> = {
 		onPointerDown(event) {
 			const el = event.currentTarget;
-			if (
-				event.button !== 0 ||
-				closed ||
-				!(event.target instanceof Element) ||
-				event.target.closest(SWIPE_IGNORE_SELECTOR)
-			) {
+			if (event.button !== 0 || closed || !(event.target instanceof Element)) {
+				return;
+			}
+			// the popover viewport matches too; limit swipe blockers to this toast.
+			const ignored = event.target.closest(SWIPE_IGNORE_SELECTOR);
+			if (ignored && el.contains(ignored)) {
 				return;
 			}
 			el.setPointerCapture(event.pointerId);
