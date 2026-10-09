@@ -21,7 +21,7 @@ import { registerFileDrop, registerThreadDrop } from './dnd/thread-drop';
 import { postClass, postPlaceholder, threadDecorations } from './editor/decorations';
 import { restoreSelectionOnFocus } from './editor/focus';
 import { createPostOverlays } from './editor/post-overlays';
-import { createPostScrolling } from './editor/scrolling';
+import { createPostScrolling, revealActivePost } from './editor/scrolling';
 import { embedSessionWith, getEmbedSession } from './embeds/embed-session';
 import { threadQuote } from './embeds/thread-quote';
 import { getAttachmentKeys, labelTaint } from './labels/attachment-labels';
@@ -297,7 +297,11 @@ export const createComposer = ({
 			const detachOverlays = postOverlays.mount(container);
 			container.append(endHost);
 			// focus after React fills the overlays; nearby DOM changes can displace the initial caret.
-			const focusing = requestAnimationFrame(() => wg.focus());
+			const focusing = requestAnimationFrame(() => {
+				wg.focus();
+				// focus doesn't scroll past a tall reply parent.
+				wg.dispatch({ effects: revealActivePost(wg.state) });
+			});
 
 			const stopDropping = registerThreadDrop(wg, dnd, container);
 			const stopFileDrops = registerFileDrop(wg, container);

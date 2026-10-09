@@ -6,7 +6,7 @@ import { clamp } from '#/lib/utils/numbers';
 
 import { hasAttachments } from '../model/post-info';
 import { endOfLastLine, findPost, findPostById, getPostParam } from '../model/schema';
-import { findActivePost } from '../model/selection';
+import { findActivePost, getActivePostId } from '../model/selection';
 import { findScrollParent } from '../shared/scroll-parent';
 import type { PostOverlays } from './post-overlays';
 
@@ -83,6 +83,22 @@ export const revealPostEnd = (postId: string): Transaction.Effect<Reveal> => {
 	return revealPost.of({ align: 'end', postId });
 };
 
+const getActiveReveal = (state: GardState): Reveal | null => {
+	const postId = getActivePostId(state);
+	return postId ? { align: 'fit', postId } : null;
+};
+
+/**
+ * requests {@link revealWholePost} for the post containing the selection head.
+ *
+ * @param state the editor state
+ * @returns the effects, empty if the selection head is outside any post
+ */
+export const revealActivePost = (state: GardState): Transaction.Effect<Reveal>[] => {
+	const request = getActiveReveal(state);
+	return request ? [revealPost.of(request)] : [];
+};
+
 // pointer selections must not trigger whole-post scrolling.
 const revealEnteredPost = Transaction.extender.of((tr) => {
 	if (!tr.scrollIntoView) {
@@ -137,20 +153,46 @@ export const createPostScrolling = (onLayout: PostOverlays['onLayout']): GardSta
 				return true;
 			};
 
-			const applyPending = () => {
-				const container = getScroller();
-				if (!pending || !container) {
-					return;
-				}
-				if (!reveal(pending, container)) {
+			const revealOrCaret = (request: Reveal | null, container: HTMLElement) => {
+				if (!request || !reveal(request, container)) {
 					scrollCaretIntoView(wg, container);
 				}
 			};
+
+			const applyPending = () => {
+				const container = getScroller();
+				if (pending && container) {
+					revealOrCaret(pending, container);
+				}
+			};
+
+			// keep the post visible when the keyboard opens. observe the scroller because visual viewport
+			// events can precede its layout.
+			let lastHeight = 0;
+			const resizes = new ResizeObserver(([entry]) => {
+				const container = getScroller();
+				if (!entry || !container) {
+					return;
+				}
+
+				const height = entry.contentRect.height;
+				const shrunk = height < lastHeight;
+				lastHeight = height;
+				if (shrunk && wg.hasFocus) {
+					revealOrCaret(pending ?? getActiveReveal(wg.state), container);
+				}
+			});
 
 			return {
 				connect() {
 					scroller = undefined;
 					unsubscribe = onLayout(applyPending);
+
+					lastHeight = 0;
+					const container = getScroller();
+					if (container) {
+						resizes.observe(container);
+					}
 				},
 				update(update: Wordgard.Update) {
 					let request: Reveal | null = null;
@@ -184,6 +226,7 @@ export const createPostScrolling = (onLayout: PostOverlays['onLayout']): GardSta
 					clearTimeout(expiry);
 					pending = null;
 					unsubscribe?.();
+					resizes.disconnect();
 				},
 				scroll(target: { from: number; to: number }): boolean {
 					const container = getScroller();
@@ -192,11 +235,7 @@ export const createPostScrolling = (onLayout: PostOverlays['onLayout']): GardSta
 						return false;
 					}
 
-					if (pending) {
-						applyPending();
-					} else {
-						scrollCaretIntoView(wg, container);
-					}
+					revealOrCaret(pending, container);
 					return true;
 				},
 			};
