@@ -1,9 +1,10 @@
 import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AnyProfileView, AppBskyRichtextFacet } from '@atcute/bluesky';
-import { type Client, ok } from '@atcute/client';
+import type { Client } from '@atcute/client';
 import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
 
 import { createRecord } from '#/lib/api/records';
+import { applyWrites } from '#/lib/bulk-write-follows';
 
 export const createStarterPackList = async ({
 	name,
@@ -39,13 +40,10 @@ export const createStarterPackList = async ({
 	if (!list) {
 		throw new Error('List creation failed');
 	}
-	await ok(
-		pds.post('com.atproto.repo.applyWrites', {
-			input: {
-				repo: did,
-				writes: profiles.map((p) => createListItem({ did: p.did, listUri: list.uri })),
-			},
-		}),
+	await applyWrites(
+		pds,
+		did,
+		profiles.map((p) => createListItem({ did: p.did, listUri: list.uri })),
 	);
 
 	return list;

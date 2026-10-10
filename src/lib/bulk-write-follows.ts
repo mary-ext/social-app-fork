@@ -13,7 +13,19 @@ import { until } from '#/lib/utils/until';
 /** keep batches below applyWrites' 200-write limit. */
 const APPLY_WRITES_BATCH_SIZE = 50;
 
-const applyWrites = async (pds: Client, did: Did, writes: ComAtprotoRepoApplyWrites.$input['writes']) => {
+/**
+ * applies repo writes in sequential batches.
+ *
+ * @param pds the client for the repo's PDS
+ * @param did the repo to write to
+ * @param writes the writes to apply
+ * @throws if a batch fails; earlier batches remain applied
+ */
+export const applyWrites = async (
+	pds: Client,
+	did: Did,
+	writes: ComAtprotoRepoApplyWrites.$input['writes'],
+) => {
 	for (const batch of chunked(writes, APPLY_WRITES_BATCH_SIZE)) {
 		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: batch } }));
 	}

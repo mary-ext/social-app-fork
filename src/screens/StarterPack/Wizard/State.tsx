@@ -82,7 +82,7 @@ function reducer(state: State, action: Action): State {
 			break;
 		}
 		case 'addProfile': {
-			if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
+			if (state.profiles.length >= STARTER_PACK_MAX_SIZE) {
 				Toast.show(m['screens.starterPack.people.max']({ max: STARTER_PACK_MAX_SIZE }), {
 					type: 'info',
 				});

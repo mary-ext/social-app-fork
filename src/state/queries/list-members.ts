@@ -15,6 +15,11 @@ import { STALE } from '#/state/queries';
 import { getClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
+// supports larger starter packs than this client's creation limit.
+const ALL_MEMBERS_LIMIT = 500;
+const ALL_MEMBERS_PAGE_SIZE = 100;
+// bounds requests even if the server keeps returning a cursor.
+const ALL_MEMBERS_MAX_REQUESTS = 10;
 type RQPageParam = string | undefined;
 
 const RQKEY_ROOT = 'list-members';
@@ -60,24 +65,33 @@ export function useAllListMembersQuery(uri?: ResourceUri) {
 	});
 }
 
+/**
+ * fetches list members across pages.
+ *
+ * @param client the appview client
+ * @param uri the list to read
+ * @param signal aborts the fetch
+ * @returns up to {@link ALL_MEMBERS_LIMIT} members, stopping after {@link ALL_MEMBERS_MAX_REQUESTS} requests
+ */
 export async function getAllListMembers(client: Client, uri: ResourceUri, signal?: AbortSignal) {
-	let hasMore = true;
 	let cursor: string | undefined;
 	const listItems: AppBskyGraphDefs.ListItemView[] = [];
-	// cap pagination to prevent an unexpected API loop.
-	let i = 0;
-	while (hasMore && i < 6) {
+
+	for (let i = 0; i < ALL_MEMBERS_MAX_REQUESTS && listItems.length < ALL_MEMBERS_LIMIT; i++) {
+		const remaining = ALL_MEMBERS_LIMIT - listItems.length;
 		const data = await ok(
 			client.get('app.bsky.graph.getList', {
 				signal,
-				params: { cursor, limit: 50, list: uri },
+				params: { cursor, limit: Math.min(ALL_MEMBERS_PAGE_SIZE, remaining), list: uri },
 			}),
 		);
-		listItems.push(...data.items);
-		hasMore = !!data.cursor;
+		listItems.push(...data.items.slice(0, remaining));
 		cursor = data.cursor;
-		i++;
+		if (!cursor) {
+			break;
+		}
 	}
+
 	return listItems;
 }
 
