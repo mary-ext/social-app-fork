@@ -1,16 +1,12 @@
 import { type ReactNode, useRef, useState } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
-import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { BlankState } from '#/components/BlankState';
 import type { ContentStateIcon } from '#/components/ContentState';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
-import { PostFeed } from '#/components/PostFeed/PostFeed';
+import { PostFeed, type PostFeedRef } from '#/components/PostFeed/PostFeed';
 
 import { m } from '#/paraglide/messages';
 
@@ -29,8 +25,8 @@ export function ProfileFeedSection({
 	emptyStateActions,
 	emptyStateIcon,
 }: FeedSectionProps) {
-	const queryClient = useQueryClient();
 	const scrollElRef = useRef<ListMethods | null>(null);
+	const feedRef = useRef<PostFeedRef>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 
@@ -39,7 +35,7 @@ export function ProfileFeedSection({
 			animated: false,
 			offset: 0,
 		});
-		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+		feedRef.current?.refresh();
 		setHasNew(false);
 	};
 
@@ -56,6 +52,7 @@ export function ProfileFeedSection({
 	return (
 		<div>
 			<PostFeed
+				ref={feedRef}
 				feed={feed}
 				scrollElRef={scrollElRef}
 				onHasNew={setHasNew}

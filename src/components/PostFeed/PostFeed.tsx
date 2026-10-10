@@ -1,4 +1,12 @@
-import { type ReactElement, type ReactNode, useEffect, useRef, useState } from 'react';
+import {
+	type ReactElement,
+	type ReactNode,
+	type Ref,
+	useEffect,
+	useImperativeHandle,
+	useRef,
+	useState,
+} from 'react';
 
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 
@@ -21,7 +29,9 @@ import {
 	RQKEY,
 	usePostFeedFetcher,
 	usePostFeedQuery,
+	usePostFeedRefresh,
 } from '#/state/queries/post-feed';
+import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/features/trending/TrendingInterstitial';
@@ -54,6 +64,11 @@ export type FeedRow =
 	| {
 			type: 'error';
 			key: string;
+	  }
+	| {
+			type: 'refreshError';
+			key: string;
+			error: Error;
 	  }
 	| {
 			type: 'feedShutdownMsg';
@@ -107,6 +122,11 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 	}
 }
 
+export type PostFeedRef = {
+	/** refreshes the feed; see {@link usePostFeedRefresh}. */
+	refresh: () => void;
+};
+
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 
 const FEED_ITEM_HEIGHT_ESTIMATE = 300;
@@ -122,7 +142,9 @@ export function PostFeed({
 	onHasNew,
 	renderEmptyState,
 	savedFeedConfig,
+	ref,
 }: {
+	ref?: Ref<PostFeedRef>;
 	feed: FeedDescriptor;
 	/** shown as the first row, above the posts. for feeds whose description is part of the surface. */
 	description?: Richtext | string;
@@ -164,6 +186,7 @@ export function PostFeed({
 	const opts = { enabled: isFocused, ignoreFilterFor };
 	const {
 		data,
+		dataUpdatedAt,
 		error,
 		fetchNextPage,
 		hasNextPage,
@@ -171,9 +194,10 @@ export function PostFeed({
 		isFetched,
 		isFetching,
 		isFetchingNextPage,
-		refetch,
 	} = usePostFeedQuery(feed, opts);
 	const { pollLatest } = usePostFeedFetcher(feed);
+	const { refresh, error: refreshError, isRefreshing } = usePostFeedRefresh(feed, dataUpdatedAt);
+	useImperativeHandle(ref, () => ({ refresh }));
 	const lastFetchedAt = data?.pages[0]?.fetchedAt;
 	const isEmpty = !isFetching && !data?.pages?.some((page) => page.slices.length);
 
@@ -184,7 +208,7 @@ export function PostFeed({
 	}, [lastFetchedAt]);
 
 	const checkForNew = useNonReactiveCallback(async () => {
-		if (!data?.pages[0] || isFetching || !onHasNew || !isFocused || disablePoll) {
+		if (!data?.pages[0] || isFetching || isRefreshing || !onHasNew || !isFocused || disablePoll) {
 			return;
 		}
 
@@ -196,7 +220,7 @@ export function PostFeed({
 		try {
 			if (await pollLatest(data.pages[0])) {
 				if (isEmpty) {
-					void refetch();
+					refresh();
 				} else {
 					onHasNew(true);
 				}
@@ -217,17 +241,24 @@ export function PostFeed({
 
 	const myDid = currentAccount?.did || '';
 	const showsOwnPosts = feed.type === 'following' || (feed.type === 'author' && feed.did === myDid);
+	const onPostCreated = useNonReactiveCallback(() => {
+		if (isScrolledDownRef.current) {
+			return;
+		}
+		if (isFocused) {
+			refresh();
+		} else {
+			// truncate so returning to this feed refetches only its first page.
+			void truncateAndInvalidate(queryClient, RQKEY(feed));
+		}
+	});
 	useEffect(() => {
 		if (!showsOwnPosts) {
 			return;
 		}
 
-		return postCreated.subscribe(() => {
-			if (!isScrolledDownRef.current) {
-				void queryClient.invalidateQueries({ queryKey: RQKEY(feed) });
-			}
-		});
-	}, [feed, queryClient, showsOwnPosts]);
+		return postCreated.subscribe(onPostCreated);
+	}, [onPostCreated, showsOwnPosts]);
 
 	useFocusEffect(() => {
 		if (!disablePoll) {
@@ -264,6 +295,9 @@ export function PostFeed({
 		feed.type === 'author' ? undefined : data?.pages,
 	);
 
+	// the refresh mutation does not clear the query error while pending.
+	const isRetryingError = isRefreshing && isError && isEmpty;
+
 	const feedItems: FeedRow[] = ((): FeedRow[] => {
 		// wraps a slice item, and replaces it with a showLessFollowup item
 		// if the user has pressed show less on it
@@ -294,7 +328,7 @@ export function PostFeed({
 				feedUri: feedgenUri,
 			});
 		}
-		if (isFetched) {
+		if (isFetched && !isRetryingError) {
 			if (isError && isEmpty) {
 				arr.push({
 					type: 'error',
@@ -405,6 +439,15 @@ export function PostFeed({
 			}
 		}
 
+		// empty errored feeds already have an error row.
+		if (refreshError && !(isError && isEmpty)) {
+			arr.unshift({
+				type: 'refreshError',
+				key: 'refreshError',
+				error: refreshError,
+			});
+		}
+
 		if (description) {
 			arr.unshift({
 				type: 'description',
@@ -417,7 +460,7 @@ export function PostFeed({
 	})();
 
 	const onPressTryAgain = () => {
-		void refetch();
+		refresh();
 		onHasNew?.(false);
 	};
 
@@ -430,12 +473,15 @@ export function PostFeed({
 				return (
 					<PostFeedErrorMessage
 						feedDesc={feed}
-						error={error ?? undefined}
+						error={refreshError ?? error ?? undefined}
 						onPressTryAgain={onPressTryAgain}
 						savedFeedConfig={savedFeedConfig}
 						topBorder={rowIndex !== 0}
 					/>
 				);
+			}
+			case 'refreshError': {
+				return <ListTail.Error message={cleanError(row.error)} onRetry={onPressTryAgain} />;
 			}
 			case 'loading': {
 				return <PostFeedLoadingPlaceholder topBorder={rowIndex !== 0} />;

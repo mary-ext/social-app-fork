@@ -1,16 +1,12 @@
 import { useRef, useState } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { makeRecordUri } from '#/lib/at-uri';
 import { TRENDING_DID } from '#/lib/constants/feeds';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
-import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
@@ -23,7 +19,7 @@ import { ErrorState } from '#/components/ErrorState';
 import { FAB } from '#/components/FAB';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
-import { PostFeed } from '#/components/PostFeed/PostFeed';
+import { PostFeed, type PostFeedRef } from '#/components/PostFeed/PostFeed';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
 import * as Layout from '#/components/web/Layout';
 
@@ -77,16 +73,16 @@ function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
-	const queryClient = useQueryClient();
 	const feedFeedback = useFeedFeedback(toFeedFeedbackTarget(feedInfo), hasSession);
 	const scrollElRef = useRef<ListMethods | null>(null);
+	const feedRef = useRef<PostFeedRef>(null);
 
 	const onScrollToTop = () => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
 			offset: 0, // -headerHeight,
 		});
-		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+		feedRef.current?.refresh();
 		setHasNew(false);
 	};
 
@@ -99,6 +95,7 @@ function CustomFeedScreenInner({ feedInfo }: { feedInfo: FeedSourceFeedInfo }) {
 			<CustomFeedHeader info={feedInfo} isTrending={isTrending} />
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
+					ref={feedRef}
 					description={isTrending ? feedInfo.description : undefined}
 					feed={feed}
 					pollInterval={60e3}

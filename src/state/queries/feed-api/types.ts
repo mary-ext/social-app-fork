@@ -9,7 +9,7 @@ export interface FeedAPIResponse {
 export interface FeedFetchOptions {
 	cursor: string | undefined;
 	limit: number;
-	signal: AbortSignal;
+	signal?: AbortSignal;
 }
 
 /** stateless pagination: any instance can fetch any cursor for the same feed. */

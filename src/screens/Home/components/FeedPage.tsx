@@ -2,14 +2,10 @@ import { type JSX, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
 import type { FeedSourceInfo } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
-import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
@@ -17,7 +13,7 @@ import { useOpenComposer } from '#/features/composer/open-composer';
 import { FAB } from '#/components/FAB';
 import type { ListMethods } from '#/components/List/List';
 import { LoadLatestBtn } from '#/components/LoadLatestBtn';
-import { PostFeed } from '#/components/PostFeed/PostFeed';
+import { PostFeed, type PostFeedRef } from '#/components/PostFeed/PostFeed';
 
 import EditBigIcon from '#/icons/central/EditBig_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -37,11 +33,11 @@ export function FeedPage({
 	feedInfo: FeedSourceInfo;
 }) {
 	const { hasSession } = useSession();
-	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const feedFeedback = useFeedFeedback(toFeedFeedbackTarget(feedInfo), hasSession);
 	const scrollElRef = useRef<ListMethods>(null);
+	const feedRef = useRef<PostFeedRef>(null);
 	const [hasNew, setHasNew] = useState(false);
 
 	const onPressCompose = () => {
@@ -53,7 +49,7 @@ export function FeedPage({
 			animated: false,
 			offset: 0,
 		});
-		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+		feedRef.current?.refresh();
 		setHasNew(false);
 	};
 
@@ -63,6 +59,7 @@ export function FeedPage({
 		<>
 			<FeedFeedbackProvider value={feedFeedback}>
 				<PostFeed
+					ref={feedRef}
 					feed={feed}
 					pollInterval={POLL_FREQ}
 					disablePoll={hasNew}
