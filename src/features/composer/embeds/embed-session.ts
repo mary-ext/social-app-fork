@@ -9,7 +9,7 @@ type Span = { from: number; to: number };
 
 type EmbedSessionState = {
 	session: EmbedSession;
-	/** unsettled link at the caret; leaving this range settles its URL. */
+	/** unsettled link at the caret; leaving this range or pasting into it settles its URL. */
 	editing: Span | null;
 };
 
@@ -75,7 +75,8 @@ const embedSession = GardState.Field.define<EmbedSessionState>({
 		const leftLink = value.editing !== null && !isWithin(tr.newSelection.head, value.editing);
 
 		if (tr.docChanged || leftLink) {
-			return settle(tr.newDoc, tr.newSelection.head, session);
+			const head = tr.isUserEvent('input.paste') ? -1 : tr.newSelection.head;
+			return settle(tr.newDoc, head, session);
 		}
 
 		return session === value.session ? value : { ...value, session };
