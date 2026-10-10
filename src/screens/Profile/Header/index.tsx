@@ -60,11 +60,13 @@ function ProfileHeaderBody() {
 
 					{profile.associated?.germ && <GermButton germ={profile.associated.germ} profile={profile} />}
 
-					{!isMe && shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
-						<div className={css.knownRow}>
-							<KnownFollowers moderationOpts={moderationOpts} profile={profile} />
-						</div>
-					)}
+					{!isMe &&
+						!profile.viewer?.following &&
+						shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+							<div className={css.knownRow}>
+								<KnownFollowers moderationOpts={moderationOpts} profile={profile} />
+							</div>
+						)}
 				</div>
 			)}
 		</div>
