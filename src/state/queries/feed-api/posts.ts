@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs, AppBskyFeedGetPosts } from '@atcute/bluesky';
+import type { AppBskyFeedGetPosts } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
 import type { FeedAPI, FeedAPIResponse, FeedFetchOptions } from './types';
@@ -6,7 +6,6 @@ import type { FeedAPI, FeedAPIResponse, FeedFetchOptions } from './types';
 export class PostListFeedAPI implements FeedAPI {
 	appview: Client;
 	params: AppBskyFeedGetPosts.$params;
-	peek: AppBskyFeedDefs.FeedViewPost | null = null;
 
 	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetPosts.$params }) {
 		this.appview = appview;
@@ -15,8 +14,8 @@ export class PostListFeedAPI implements FeedAPI {
 		};
 	}
 
-	peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-		return this.peek ? Promise.resolve(this.peek) : Promise.reject(new Error('Has not fetched yet'));
+	peekLatest(): Promise<undefined> {
+		return Promise.resolve(undefined);
 	}
 
 	async fetch({ signal }: FeedFetchOptions): Promise<FeedAPIResponse> {
@@ -26,7 +25,6 @@ export class PostListFeedAPI implements FeedAPI {
 				params: { ...this.params },
 			}),
 		);
-		this.peek = { post: data.posts[0]! };
 		return {
 			feed: data.posts.map((post) => ({ post })),
 		};

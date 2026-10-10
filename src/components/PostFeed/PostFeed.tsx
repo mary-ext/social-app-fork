@@ -18,8 +18,8 @@ import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import {
 	type FeedPostSlice,
 	type FeedPostSliceItem,
-	pollLatest,
 	RQKEY,
+	usePostFeedFetcher,
 	usePostFeedQuery,
 } from '#/state/queries/post-feed';
 import { useSession } from '#/state/session';
@@ -173,6 +173,7 @@ export function PostFeed({
 		isFetchingNextPage,
 		refetch,
 	} = usePostFeedQuery(feed, opts);
+	const { pollLatest } = usePostFeedFetcher(feed);
 	const lastFetchedAt = data?.pages[0]?.fetchedAt;
 	const isEmpty = !isFetching && !data?.pages?.some((page) => page.slices.length);
 

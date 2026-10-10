@@ -12,13 +12,13 @@ export class AuthorFeedAPI implements FeedAPI {
 		this.params = feedParams;
 	}
 
-	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost | undefined> {
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getAuthorFeed', {
 				params: { ...this.params, limit: 1 },
 			}),
 		);
-		return data.feed[0]!;
+		return data.feed[0];
 	}
 
 	async fetch({ cursor, limit, signal }: FeedFetchOptions): Promise<FeedAPIResponse> {

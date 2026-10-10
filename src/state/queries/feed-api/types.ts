@@ -12,7 +12,9 @@ export interface FeedFetchOptions {
 	signal: AbortSignal;
 }
 
+/** stateless pagination: any instance can fetch any cursor for the same feed. */
 export interface FeedAPI {
-	peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost>;
+	/** @returns the newest post, or undefined for empty feeds and fixed post lists */
+	peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost | undefined>;
 	fetch(options: FeedFetchOptions): Promise<FeedAPIResponse>;
 }

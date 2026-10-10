@@ -25,7 +25,7 @@ export class CustomFeedAPI implements FeedAPI {
 		this.userInterests = userInterests;
 	}
 
-	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost | undefined> {
 		const contentLangs = getContentLanguages().join(',');
 		const data = await ok(
 			this.appview.get('app.bsky.feed.getFeed', {
@@ -33,7 +33,7 @@ export class CustomFeedAPI implements FeedAPI {
 				params: { ...this.params, limit: 1 },
 			}),
 		);
-		return data.feed[0]!;
+		return data.feed[0];
 	}
 
 	async fetch({ cursor, limit, signal }: FeedFetchOptions): Promise<FeedAPIResponse> {

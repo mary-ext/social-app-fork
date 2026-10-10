@@ -41,7 +41,7 @@ import { usePreferencesQuery } from './preferences';
 import { useAutoPagination } from './use-auto-pagination';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
-type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
+type RQPageParam = string | undefined;
 
 export const RQKEY_ROOT = 'post-feed';
 export function RQKEY(feedDesc: FeedDescriptor) {
@@ -82,14 +82,12 @@ export interface FeedPostSlice {
 }
 
 export interface FeedPageUnselected {
-	api: FeedAPI;
 	cursor: string | undefined;
 	feed: AppBskyFeedDefs.FeedViewPost[];
 	fetchedAt: number;
 }
 
 export interface FeedPage {
-	api: FeedAPI;
 	tuner: FeedTuner;
 	cursor: string | undefined;
 	slices: FeedPostSlice[];
@@ -107,16 +105,12 @@ export function usePostFeedQuery(
 	const moderationOpts = useModerationOpts();
 	const { data: preferences } = usePreferencesQuery();
 	const enabled = opts?.enabled !== false && !!moderationOpts && !!preferences;
-	const userInterests = serializeUserInterests(preferences);
-	const { appview } = getClients();
-	const { hasSession } = useSession();
+	const { fetchPage } = usePostFeedFetcher(feedDesc);
 	const lastRun = useRef<{
 		data: InfiniteData<FeedPageUnselected>;
 		args: typeof selectArgs;
 		result: InfiniteData<FeedPage>;
 	} | null>(null);
-
-	const fetchLimit = MIN_POSTS;
 
 	// keep the selector stable unless one of its inputs changes.
 	const selectArgs = {
@@ -129,42 +123,14 @@ export function usePostFeedQuery(
 		queryKey: RQKEY(feedDesc),
 		enabled,
 		staleTime: STALE.INFINITY,
-		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
-			const { api, cursor } = pageParam
-				? pageParam
-				: {
-						api: createApi({
-							request: toFeedRequest(feedDesc),
-							appview,
-							// these values do not change, so they are not query-key inputs.
-							userInterests,
-						}),
-						cursor: undefined,
-					};
-
-			const res = await api.fetch({ cursor, limit: fetchLimit, signal });
-
-			// public feeds must contain at least one post allowed by moderation.
-			if (!hasSession) {
-				assertSomePostsPassModeration(
-					res.feed,
-					preferences?.moderationPrefs || DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-				);
-			}
-
-			return {
-				api,
-				cursor: res.cursor,
-				feed: res.feed,
-				fetchedAt: Date.now(),
-			};
-		},
+		queryFn: ({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) =>
+			fetchPage(pageParam, signal),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage, _allPages, _lastPageParam, allPageParams) => {
-			if (!lastPage.cursor || allPageParams.some((param) => param?.cursor === lastPage.cursor)) {
+			if (!lastPage.cursor || allPageParams.includes(lastPage.cursor)) {
 				return undefined;
 			}
-			return { api: lastPage.api, cursor: lastPage.cursor };
+			return lastPage.cursor;
 		},
 		select: (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
 			// oxlint-disable-next-line no-shadow -- shadowing is the point: it stops the callback from reading a stale closure copy instead of `selectArgs`
@@ -201,7 +167,6 @@ export function usePostFeedQuery(
 				pages: [
 					...reusedPages,
 					...data.pages.slice(reusedPages.length).map((page) => ({
-						api: page.api,
 						tuner,
 						cursor: page.cursor,
 						fetchedAt: page.fetchedAt,
@@ -272,25 +237,54 @@ export function usePostFeedQuery(
 	return query;
 }
 
-export async function pollLatest(page: FeedPage | undefined) {
-	if (!page) {
-		return false;
-	}
-	if (!isDocumentVisible()) {
-		return false;
-	}
+/**
+ * provides page fetching and new-post polling for a feed.
+ *
+ * @param feedDesc the feed to fetch
+ * @returns `fetchPage` by cursor and `pollLatest` for unseen posts that pass feed filters; polling is skipped
+ *   while the document is hidden
+ */
+export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
+	const { data: preferences } = usePreferencesQuery();
+	const userInterests = serializeUserInterests(preferences);
+	const { appview } = getClients();
+	const { hasSession } = useSession();
 
-	const post = await page.api.peekLatest();
-	if (post) {
-		const slices = page.tuner.tune([post], {
-			dryRun: true,
+	const createFeedApi = (): FeedAPI =>
+		createApi({
+			request: toFeedRequest(feedDesc),
+			appview,
+			userInterests,
 		});
-		if (slices[0]) {
-			return true;
-		}
-	}
 
-	return false;
+	const fetchPage = async (cursor: RQPageParam, signal: AbortSignal): Promise<FeedPageUnselected> => {
+		const res = await createFeedApi().fetch({ cursor, limit: MIN_POSTS, signal });
+
+		// public feeds must contain at least one post allowed by moderation.
+		if (!hasSession) {
+			assertSomePostsPassModeration(
+				res.feed,
+				preferences?.moderationPrefs || DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+			);
+		}
+
+		return {
+			cursor: res.cursor,
+			feed: res.feed,
+			fetchedAt: Date.now(),
+		};
+	};
+
+	const pollLatest = async (page: FeedPage): Promise<boolean> => {
+		if (!isDocumentVisible()) {
+			return false;
+		}
+
+		const post = await createFeedApi().peekLatest();
+		return post !== undefined && page.tuner.tune([post], { dryRun: true }).length > 0;
+	};
+
+	return { fetchPage, pollLatest };
 }
 
 function createApi({
