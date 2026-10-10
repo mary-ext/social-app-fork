@@ -64,11 +64,17 @@ export function MessageComposer({
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
+	// block duplicate submits until React commits the cleared input state.
+	const isSubmittingRef = useRef(false);
+
 	const onSubmit = (message: string, replyToMessage: ChatBskyConvoDefs.MessageView | null) => {
 		if (loading) {
 			return;
 		}
 		if (!hasEmbed && message.trim() === '') {
+			return;
+		}
+		if (isSubmittingRef.current) {
 			return;
 		}
 		const graphemeCount = getGraphemeLength(message);
@@ -82,6 +88,7 @@ export function MessageComposer({
 			return;
 		}
 
+		isSubmittingRef.current = true;
 		clearDraft();
 		setEmbed(undefined);
 		clearReply();
@@ -90,6 +97,7 @@ export function MessageComposer({
 		inputApiRef.current?.input?.focus();
 
 		requestAnimationFrame(() => {
+			isSubmittingRef.current = false;
 			onSendMessage(
 				message,
 				replyToMessage ? { $type: 'chat.bsky.convo.defs#messageView', ...replyToMessage } : undefined,
