@@ -74,6 +74,7 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 	}, [setNumUnread]);
 
 	const isFetchingRef = useRef(false);
+	const lastMarkedReadAt = useRef(0);
 
 	// create API
 	const api: ApiContext = {
@@ -85,6 +86,10 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 					input: { seenAt: cacheRef.current.syncedAt.toISOString() },
 				}),
 			);
+			lastMarkedReadAt.current = Date.now();
+
+			// resume normal polling and discard the stale feed page.
+			cacheRef.current = { ...cacheRef.current, usableInFeed: false, unreadCount: 0 };
 
 			// update & broadcast
 			setNumUnread('');
@@ -112,14 +117,17 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 				return;
 			}
 
-			// single-flight guard: taken here past every early return, released on both the success and error
-			// paths below so a re-fire can't clear another request's in-flight lock.
 			isFetchingRef.current = true;
 			try {
+				const requestedAt = Date.now();
 				// skip grouping and subject fetches unless the feed cache needs them.
 				const { page, lastIndexed, unreadCount } = invalidate
 					? await fetchGroupedUnread({ appview, queryClient, moderationOpts })
 					: await fetchRawUnread({ appview, moderationOpts });
+				// discard counts fetched before markAllRead. feed loads still proceed and mark their results read.
+				if (!invalidate && requestedAt < lastMarkedReadAt.current) {
+					return;
+				}
 				const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
 
 				// track last sync
@@ -140,11 +148,9 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 				}
 				// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
 				broadcast.postMessage({ event: unreadCountStr });
-			} catch (err) {
+			} finally {
 				isFetchingRef.current = false;
-				throw err;
 			}
-			isFetchingRef.current = false;
 		},
 
 		getCachedUnreadPage() {
