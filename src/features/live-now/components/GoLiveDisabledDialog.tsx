@@ -5,8 +5,6 @@ import { ok } from '@atcute/client';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { OzoneReason } from '#/lib/moderation/report-reasons';
-
 import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -56,11 +54,9 @@ function DialogInner({
 
 			// dev builds stop short of the write: appeals reach real moderators
 			if (!import.meta.env.DEV) {
-				// appeals to the default Bluesky labeler funnel through the atproto-proxy header
 				await ok(
-					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {
+					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
 						input: {
-							reasonType: OzoneReason.REASONAPPEAL,
 							subject: {
 								$type: 'com.atproto.repo.strongRef',
 								uri: status.uri,

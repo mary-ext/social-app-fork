@@ -70,8 +70,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(@typescript/typescript6@6.0.2)
       '@atcute/ozone':
-        specifier: ^4.0.10
-        version: 4.0.10(@atcute/lexicons@2.1.1)
+        specifier: ^4.0.12
+        version: 4.0.12(@atcute/lexicons@2.1.1)
       '@atcute/tangled':
         specifier: ^2.0.20
         version: 2.0.20(@atcute/lexicons@2.1.1)
@@ -315,8 +315,8 @@ packages:
   '@atcute/oauth-types@1.0.1':
     resolution: {integrity: sha512-9uFP/nK0PgPDsaNbLArzrCHvTZO1k04cSEX5jZ75W2Jh7Jxbh/CSTenSrad3CZXuX6y6hDquEtl6H/IqLtTmHw==}
 
-  '@atcute/ozone@4.0.10':
-    resolution: {integrity: sha512-nfVnn+PBuI5yE3chKyxXKYcS9AYXlXVDCJLodFhQrnPVphT+ejJfVRAe09rd+vq7ViHgZoATgeiKSqZT2PYHUw==}
+  '@atcute/ozone@4.0.12':
+    resolution: {integrity: sha512-355Pfb0mcV1UY4a2oxTLKH7+hWqS0Yk0UVM29D35siJWDsl4lVz0MQFhdI7zaUg9FrfOO4N0jbcrre8mzArThQ==}
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
@@ -2552,7 +2552,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@atcute/ozone@4.0.10(@atcute/lexicons@2.1.1)':
+  '@atcute/ozone@4.0.12(@atcute/lexicons@2.1.1)':
     dependencies:
       '@atcute/atproto': 4.0.4(@atcute/lexicons@2.1.1)
       '@atcute/bluesky': 4.0.24(@atcute/lexicons@2.1.1)

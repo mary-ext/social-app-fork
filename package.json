@@ -37,7 +37,7 @@
 		"@atcute/multibase": "^1.2.5",
 		"@atcute/oauth-browser-client": "^5.1.0",
 		"@atcute/oauth-cab": "^0.1.1",
-		"@atcute/ozone": "^4.0.10",
+		"@atcute/ozone": "^4.0.12",
 		"@atcute/tangled": "^2.0.20",
 		"@atcute/tid": "^1.1.4",
 		"@atcute/uint8array": "^1.2.0",

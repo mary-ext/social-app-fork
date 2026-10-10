@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import type { ComAtprotoLabelDefs, ComAtprotoModerationCreateReport } from '@atcute/atproto';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
+import type { ToolsOzoneInboxAppealActionedSubject } from '@atcute/ozone';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useLabelInfo } from '#/state/moderation/use-label-info';
@@ -57,11 +57,11 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 					? { $type: 'com.atproto.admin.defs#repoRef', ...subject }
 					: { $type: 'com.atproto.repo.strongRef', ...subject };
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
-			const ref = subjectRef as ComAtprotoModerationCreateReport.$input['subject'];
+			const ref = subjectRef as ToolsOzoneInboxAppealActionedSubject.$input['subject'];
 			await ok(
-				reportClient.post('com.atproto.moderation.createReport', {
+				reportClient.post('tools.ozone.inbox.appealActionedSubject', {
 					input: {
-						reasonType: OzoneReason.REASONAPPEAL,
+						action: { $type: 'tools.ozone.inbox.appealActionedSubject#labelRef', val: label.val },
 						subject: ref,
 						reason: details,
 					},

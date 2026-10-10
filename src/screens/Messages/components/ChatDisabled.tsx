@@ -5,8 +5,6 @@ import { ok } from '@atcute/client';
 import { useMutation } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { OzoneReason } from '#/lib/moderation/report-reasons';
-
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -85,11 +83,9 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 			if (!pds) {
 				throw new Error('Not logged in');
 			}
-			// appeals to the default Bluesky labeler funnel through the atproto-proxy header
 			await ok(
-				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {
+				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
 					input: {
-						reasonType: OzoneReason.REASONAPPEAL,
 						subject: {
 							$type: 'com.atproto.admin.defs#repoRef',
 							did: currentAccount.did,
