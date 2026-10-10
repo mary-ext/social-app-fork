@@ -19,12 +19,12 @@ import type { $type } from '@atcute/lexicons';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
+import { readPostNumbering } from '#/lib/api/post-numbering';
 import { getPostRecord } from '#/lib/api/record-casts';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { readPostNumbering } from '#/state/queries/feed-tuner';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 

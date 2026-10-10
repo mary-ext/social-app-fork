@@ -3,10 +3,9 @@ import type { CSSProperties, ReactNode } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
+import type { PostNumbering } from '#/lib/api/post-numbering';
 import type { AppModerationCause } from '#/lib/moderation/causes';
 import type { Richtext } from '#/lib/rich-text';
-
-import type { PostNumbering } from '#/state/queries/feed-tuner';
 
 import { ClampedPostText } from '#/components/ClampedPostText';
 import { ContentHider } from '#/components/moderation/ContentHider';

@@ -12,6 +12,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import type { PostNumbering } from '#/lib/api/post-numbering';
 import { getPostRecord } from '#/lib/api/record-casts';
 import type { AppModerationCause } from '#/lib/moderation/causes';
 import type { Richtext } from '#/lib/rich-text';
@@ -20,7 +21,6 @@ import { postUriToTarget } from '#/lib/routes/targets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { postSourceState } from '#/state/post-source';
-import type { PostNumbering } from '#/state/queries/feed-tuner';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';

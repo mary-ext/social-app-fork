@@ -23,6 +23,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
+import type { PostNumbering } from '#/lib/api/post-numbering';
 import { isDocumentVisible } from '#/lib/browser/visibility';
 import { isNetworkError } from '#/lib/errors';
 import { toModerationPreferences } from '#/lib/moderation/preferences';
@@ -39,7 +40,7 @@ import { PostListFeedAPI } from '#/state/queries/feed-api/posts';
 import type { FeedAPI } from '#/state/queries/feed-api/types';
 import { serializeUserInterests } from '#/state/queries/feed-api/utils';
 import { type FeedDescriptor, type FeedRequest, toFeedRequest } from '#/state/queries/feed-descriptor';
-import { FeedTuner, type PostNumbering } from '#/state/queries/feed-tuner';
+import { FeedTuner } from '#/state/queries/feed-tuner';
 import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { getClients, useSession } from '#/state/session';

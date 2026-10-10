@@ -1,4 +1,4 @@
-import type { PostNumbering } from '#/state/queries/feed-tuner';
+import type { PostNumbering } from '#/lib/api/post-numbering';
 
 import { Text } from '#/components/Text';
 

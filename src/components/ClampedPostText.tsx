@@ -2,11 +2,10 @@ import { useState } from 'react';
 
 import type { Handle } from '@atcute/lexicons';
 
+import type { PostNumbering } from '#/lib/api/post-numbering';
 import { MAX_POST_LINES } from '#/lib/constants/post';
 import type { Richtext } from '#/lib/rich-text';
 import { countLines } from '#/lib/utils/text';
-
-import type { PostNumbering } from '#/state/queries/feed-tuner';
 
 import { PostNumber } from '#/components/PostNumber';
 import { RichText } from '#/components/RichText';
