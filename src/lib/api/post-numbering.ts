@@ -7,19 +7,15 @@ export type PostNumbering = {
 };
 
 /**
- * reads a post's position in its author's thread from the view carrying it.
+ * reads thread numbering from a post view.
  *
  * @param value a feed post or embedded record view
- * @returns the position, or undefined when absent or inconsistent
+ * @returns the numbering, or undefined if either field is absent
  */
 export const readPostNumbering = (
 	value: Pick<AppBskyFeedDefs.FeedViewPost, 'opThreadPostCount' | 'opThreadPostIndex'>,
 ): PostNumbering | undefined => {
 	const { opThreadPostCount: count, opThreadPostIndex: index } = value;
 
-	if (count === undefined || index === undefined || index < 1 || count < 1 || index > count) {
-		return undefined;
-	}
-
-	return { index, count };
+	return count !== undefined && index !== undefined ? { index, count } : undefined;
 };
