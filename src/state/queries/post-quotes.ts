@@ -13,24 +13,35 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { getClients } from '#/state/session';
 
+import { useAutoPagination } from './use-auto-pagination';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
 
-const RQKEY_ROOT = 'post-quotes';
-export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
+/** latest: newest first; top: most liked. */
+export type QuotesSort = 'latest' | 'top';
 
-export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
+const RQKEY_ROOT = 'post-quotes';
+const RQKEY = (resolvedUri: string, sort: QuotesSort) => [RQKEY_ROOT, resolvedUri, sort];
+
+/**
+ * paginates a post's quotes.
+ *
+ * @param resolvedUri the quoted post's DID-based URI; undefined disables the query
+ * @param sort ordering of the results
+ * @returns an infinite query excluding detached and duplicate quotes
+ */
+export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined, sort: QuotesSort) {
 	const { appview } = getClients();
-	return useInfiniteQuery<
+	const query = useInfiniteQuery<
 		AppBskyFeedGetQuotes.$output,
 		Error,
 		InfiniteData<AppBskyFeedGetQuotes.$output>,
 		QueryKey,
 		RQPageParam
 	>({
-		queryKey: RQKEY(resolvedUri || ''),
+		queryKey: RQKEY(resolvedUri || '', sort),
 		enabled: !!resolvedUri,
 		queryFn: ({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) =>
 			ok(
@@ -40,30 +51,49 @@ export function usePostQuotesQuery(resolvedUri: ResourceUri | undefined) {
 						uri: resolvedUri!,
 						limit: PAGE_SIZE,
 						cursor: pageParam,
+						sort,
 					},
 				}),
 			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
-		select: (data) => {
+		select: selectPostQuotes,
+	});
+
+	// filtering can leave too few items to trigger scroll-based pagination.
+	let itemCount = 0;
+	for (const page of query.data?.pages ?? []) {
+		itemCount += page.posts.length;
+	}
+	useAutoPagination({ query, itemCount, pageSize: PAGE_SIZE });
+
+	return query;
+}
+
+// a stable selector lets React Query reuse results between renders.
+const selectPostQuotes = (
+	data: InfiniteData<AppBskyFeedGetQuotes.$output>,
+): InfiniteData<AppBskyFeedGetQuotes.$output> => {
+	// ranking changes can repeat quotes across pages.
+	const seen = new Set<string>();
+	return {
+		...data,
+		pages: data.pages.map((page) => {
 			return {
-				...data,
-				pages: data.pages.map((page) => {
-					return {
-						...page,
-						posts: page.posts.filter((post) => {
-							const record = unwrapRecordEmbed(post.embed);
-							if (record?.$type === 'app.bsky.embed.record#viewDetached') {
-								return false;
-							}
-							return true;
-						}),
-					};
+				...page,
+				posts: page.posts.filter((post) => {
+					if (seen.has(post.uri)) {
+						return false;
+					}
+					seen.add(post.uri);
+
+					const record = unwrapRecordEmbed(post.embed);
+					return record?.$type !== 'app.bsky.embed.record#viewDetached';
 				}),
 			};
-		},
-	});
-}
+		}),
+	};
+};
 
 export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,

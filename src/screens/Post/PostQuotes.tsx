@@ -7,7 +7,7 @@ import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
-import { usePostQuotesQuery } from '#/state/queries/post-quotes';
+import { type QuotesSort, usePostQuotesQuery } from '#/state/queries/post-quotes';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { useTitle } from '#/state/use-title';
 
@@ -17,6 +17,7 @@ import { List } from '#/components/List/List';
 import * as ListTail from '#/components/List/ListTail';
 import { Post } from '#/components/Post/Post';
 import { PostFeedLoadingPlaceholder } from '#/components/PostFeed/PostFeedLoadingPlaceholder';
+import { type Section, Tabs } from '#/components/Tabs';
 import * as Layout from '#/components/web/Layout';
 
 import CloseQuoteIcon from '#/icons/central/CloseQuote2_round_outlined_radius1_stroke2.svg';
@@ -24,7 +25,7 @@ import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
 export const PostQuotesScreen = () => {
-	const [{ actor, rkey }] = useParams('PostQuotes');
+	const [{ actor, rkey, tab }, replaceParams] = useParams('PostQuotes');
 	const uri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
@@ -32,27 +33,39 @@ export const PostQuotesScreen = () => {
 		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
 	);
 
-	let quoteCount;
-	if (post) {
-		quoteCount = post.quoteCount;
-	}
+	const sections: Section<QuotesSort>[] = [
+		{
+			id: 'top',
+			label: m['common.search.top'](),
+			children: <PostQuotes uri={uri} sort="top" />,
+		},
+		{
+			id: 'latest',
+			label: m['common.search.latest'](),
+			children: <PostQuotes uri={uri} sort="latest" />,
+		},
+	];
 
 	return (
 		<Layout.Screen>
-			<Layout.Header.Outer>
-				<Layout.Header.BackButton />
-				<Layout.Header.Content>
-					{post && (
-						<>
+			<Tabs
+				sections={sections}
+				value={tab ?? 'top'}
+				onValueChange={(next) => replaceParams({ tab: next })}
+				header={
+					<Layout.Header.Outer noBottomBorder sticky={false}>
+						<Layout.Header.BackButton />
+						<Layout.Header.Content>
 							<Layout.Header.TitleText>{m['common.quote.label']()}</Layout.Header.TitleText>
-							<Layout.Header.SubtitleText>
-								{m['screens.post.quote.count']({ count: quoteCount ?? 0 })}
-							</Layout.Header.SubtitleText>
-						</>
-					)}
-				</Layout.Header.Content>
-			</Layout.Header.Outer>
-			<PostQuotes uri={uri} />
+							{post && (
+								<Layout.Header.SubtitleText>
+									{m['screens.post.quote.count']({ count: post.quoteCount ?? 0 })}
+								</Layout.Header.SubtitleText>
+							)}
+						</Layout.Header.Content>
+					</Layout.Header.Outer>
+				}
+			/>
 		</Layout.Screen>
 	);
 };
@@ -67,10 +80,10 @@ function keyExtractor(item: { post: AppBskyFeedDefs.PostView }) {
 	return item.post.uri;
 }
 
-function PostQuotes({ uri }: { uri: string }) {
+function PostQuotes({ uri, sort }: { uri: string; sort: QuotesSort }) {
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(uri);
 	const { data, isPending, isFetchingNextPage, hasNextPage, fetchNextPage, error, refetch } =
-		usePostQuotesQuery(resolvedUri?.uri);
+		usePostQuotesQuery(resolvedUri?.uri, sort);
 
 	const moderationOpts = useModerationOpts();
 

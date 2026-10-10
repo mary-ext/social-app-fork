@@ -484,6 +484,7 @@ export const routes = defineRoutes({
 				component: PostQuotesScreen,
 				params: { actor: actorIdentifier(), rkey: recordKey() },
 				path: '/:actor/:rkey/quotes',
+				query: { tab: optional(enumOf(['latest', 'top'])) },
 			}),
 			PostRepostedBy: route({
 				component: PostRepostedByScreen,
