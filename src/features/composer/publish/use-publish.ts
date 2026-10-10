@@ -9,7 +9,7 @@ import { postUriToTarget } from '#/lib/routes/targets';
 import { retry } from '#/lib/utils/retry';
 
 import { postCreated } from '#/state/events';
-import { savePublishedPostLanguages, usePostLanguage } from '#/state/preferences/languages';
+import { savePublishedPostLanguages, usePrimaryLanguage } from '#/state/preferences/languages';
 import { getClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
@@ -66,7 +66,7 @@ export const usePublish = (): {
 } => {
 	const composer = useComposer();
 	const interaction = useThreadInteraction();
-	const postLanguage = usePostLanguage();
+	const primaryLanguage = usePrimaryLanguage();
 	const queryClient = useQueryClient();
 	const router = useRouter();
 	const { currentAccount } = useSession();
@@ -82,7 +82,7 @@ export const usePublish = (): {
 		}
 
 		const { appview, pds } = getClients();
-		const posts = snapshotThread(wg.state, postLanguage);
+		const posts = snapshotThread(wg.state, primaryLanguage);
 		const controller = new AbortController();
 		const { signal } = controller;
 		publishing.set({ videos: getPlannedVideos(posts), cancel: () => controller.abort() });

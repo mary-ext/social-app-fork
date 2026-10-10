@@ -4,7 +4,7 @@ import { unique } from '@mary-ext/array-fns';
 
 import { MAX_POST_LANGUAGES } from '#/lib/constants/composer';
 
-import { toPostLanguages, usePostLanguage, usePostLanguageHistory } from '#/state/preferences/languages';
+import { toPostLanguages, usePostLanguageHistory, usePrimaryLanguage } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
@@ -37,7 +37,7 @@ export type LanguagePicker = {
  * @returns the post's language picker
  */
 export const useLanguagePicker = (postId: string): LanguagePicker => {
-	const fallback = usePostLanguage();
+	const fallback = usePrimaryLanguage();
 	const language = useEditorState((state) => getPostLanguage(state, postId)) ?? fallback;
 	const menu = Menu.useMenuHandle();
 	const dialog = Dialog.useDialogHandle();

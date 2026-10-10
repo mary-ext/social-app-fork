@@ -23,15 +23,6 @@ export function useContentLanguages() {
 }
 
 /**
- * returns the language(s) the user is posting in.
- *
- * @returns comma-separated BCP-47 language codes
- */
-export function usePostLanguage() {
-	return useStorageValue(device, ['postLanguage']) ?? defaultLanguage;
-}
-
-/**
  * returns previously used post languages, most recent first.
  *
  * @returns array of comma-separated BCP-47 language codes
@@ -41,7 +32,7 @@ export function usePostLanguageHistory() {
 }
 
 /**
- * returns the language posts are translated into.
+ * returns the default language for new posts and translations.
  *
  * @returns BCP-47 language code
  */
@@ -50,8 +41,7 @@ export function usePrimaryLanguage() {
 }
 
 /**
- * prepends nonempty published language selections to history, in thread order. uses the first post's
- * selection as the default unless empty.
+ * prepends nonempty published language selections to history.
  *
  * @param postLanguages each published post's BCP-47 language codes, in thread order
  */
@@ -65,11 +55,6 @@ export function savePublishedPostLanguages(postLanguages: readonly (readonly str
 
 	const history = device.get(['postLanguageHistory']) ?? defaultPostLanguageHistory;
 	device.set(['postLanguageHistory'], used.concat(difference(history, used)).slice(0, HISTORY_LIMIT));
-
-	const [first] = postLanguages;
-	if (first !== undefined && first.length !== 0) {
-		device.set(['postLanguage'], joinPostLanguages(first));
-	}
 }
 
 /**

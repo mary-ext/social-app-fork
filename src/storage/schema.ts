@@ -43,9 +43,7 @@ export type Device = {
 	/** @deprecated migrated to {@link Device.aiTranslationModel}. */
 	openrouterTranslationModel?: string;
 	pdsAddressHistory?: string[];
-	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */
-	postLanguage?: string;
-	/** Previously used {@link Device.postLanguage} values, used to pre-populate the composer selector. */
+	/** post language history; entries are comma-separated BCP-47 language codes. */
 	postLanguageHistory?: string[];
 	/** BCP-47 2-letter language code to translate posts into. */
 	primaryLanguage?: string;
