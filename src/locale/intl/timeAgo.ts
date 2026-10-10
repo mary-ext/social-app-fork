@@ -17,6 +17,8 @@ export type RelativeRecency = 'other' | 'this_week' | 'this_year';
 
 /** Inputs a recency-variant message expects; see {@link relativeMessageParts}. */
 export type RelativeMessageParts = {
+	/** whether to use "now" instead of a relative duration. */
+	isNow: boolean;
 	recency: RelativeRecency;
 	/** ISO timestamp the message's `datetime` locals format. */
 	ts: string;
@@ -125,7 +127,7 @@ export function formatTimeAgo(earlier: number | string | Date, later: number | s
  *
  * @param date the timestamp being described
  * @param now the reference point ("now") the distance is measured from
- * @returns the `recency` selector plus the `ts`/`unit`/`value` formatting inputs
+ * @returns selectors and formatting inputs described by {@link RelativeMessageParts}
  */
 export function relativeMessageParts(
 	date: number | string | Date,
@@ -144,6 +146,7 @@ export function relativeMessageParts(
 		recency = 'other';
 	}
 	return {
+		isNow: diff.unit === 'now',
 		recency,
 		ts: target.toISOString(),
 		// relativetime needs a concrete unit; dateDiff's 'now' collapses to 0 seconds ("now").

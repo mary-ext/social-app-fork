@@ -36,7 +36,9 @@ export function NewskieDialogBody({
 	const profileName = profile.handle;
 
 	const getJoinMessage = () => {
-		const parts = relativeMessageParts(createdAt, now);
+		const { isNow, unit, value } = relativeMessageParts(createdAt, now);
+		const when: 'now' | 'past' = isNow ? 'now' : 'past';
+		const parts = { unit, value, when };
 
 		if (isMe) {
 			if (profile.joinedViaStarterPack) {

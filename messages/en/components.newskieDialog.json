@@ -8,11 +8,13 @@
 				"input name",
 				"input unit",
 				"input value",
+				"input when",
 				"local relative = value: relativetime unit=$unit numeric=auto"
 			],
-			"selectors": [],
+			"selectors": ["when"],
 			"match": {
-				"": "{name} joined Bluesky {relative}"
+				"when=now": "{name} joined Bluesky just now",
+				"when=past": "{name} joined Bluesky {relative}"
 			}
 		}
 	],
@@ -21,11 +23,13 @@
 			"declarations": [
 				"input unit",
 				"input value",
+				"input when",
 				"local relative = value: relativetime unit=$unit numeric=auto"
 			],
-			"selectors": [],
+			"selectors": ["when"],
 			"match": {
-				"": "You joined Bluesky {relative}"
+				"when=now": "You joined Bluesky just now",
+				"when=past": "You joined Bluesky {relative}"
 			}
 		}
 	],
@@ -35,11 +39,13 @@
 				"input name",
 				"input unit",
 				"input value",
+				"input when",
 				"local relative = value: relativetime unit=$unit numeric=auto"
 			],
-			"selectors": [],
+			"selectors": ["when"],
 			"match": {
-				"": "{name} joined Bluesky using a starter pack {relative}"
+				"when=now": "{name} joined Bluesky using a starter pack just now",
+				"when=past": "{name} joined Bluesky using a starter pack {relative}"
 			}
 		}
 	],
@@ -48,11 +54,13 @@
 			"declarations": [
 				"input unit",
 				"input value",
+				"input when",
 				"local relative = value: relativetime unit=$unit numeric=auto"
 			],
-			"selectors": [],
+			"selectors": ["when"],
 			"match": {
-				"": "You joined Bluesky using a starter pack {relative}"
+				"when=now": "You joined Bluesky using a starter pack just now",
+				"when=past": "You joined Bluesky using a starter pack {relative}"
 			}
 		}
 	],
