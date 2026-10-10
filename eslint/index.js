@@ -1,5 +1,4 @@
 import avoidUnwrappedText from './avoid-unwrapped-text.js';
-import consistentTypeImports from './consistent-type-imports.js';
 import recipeDebugId from './recipe-debug-id.js';
 import usePrefixedImports from './use-prefixed-imports.js';
 
@@ -10,7 +9,6 @@ const plugin = {
 	},
 	rules: {
 		'avoid-unwrapped-text': avoidUnwrappedText,
-		'consistent-type-imports': consistentTypeImports,
 		'recipe-debug-id': recipeDebugId,
 		'use-prefixed-imports': usePrefixedImports,
 	},

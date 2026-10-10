@@ -70,6 +70,7 @@
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "2.25.4",
+		"@mary-ext/oxlint-rules": "^0.1.1",
 		"@oomfware/vite-plugin-svg-sprites": "^0.1.2",
 		"@oomfware/vite-plugin-vanilla-extract": "^0.1.0",
 		"@types/hast": "^3.0.5",

@@ -17,7 +17,7 @@
 		"src/lib/sw-template.js",
 		"src/paraglide/**"
 	],
-	"jsPlugins": ["eslint-plugin-bsky-internal"],
+	"jsPlugins": ["@mary-ext/oxlint-rules", "eslint-plugin-bsky-internal"],
 	"options": {
 		"typeAware": true,
 		"typeCheck": true
@@ -64,7 +64,6 @@
 				}
 			}
 		],
-		"bsky-internal/consistent-type-imports": "error",
 		"bsky-internal/recipe-debug-id": "error",
 		"bsky-internal/use-prefixed-imports": "error",
 		"import/namespace": [
@@ -83,6 +82,7 @@
 				"allow": ["**/*.css"]
 			}
 		],
+		"mary-ext/consistent-imports": "error",
 		"react/display-name": "error",
 		"react/hook-use-state": "warn",
 		// React Compiler already hoists context values into its memo cache, keyed on their dependencies; a
