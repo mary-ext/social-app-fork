@@ -6,7 +6,7 @@ import type { Did, GenericUri, Handle } from '@atcute/lexicons';
 import { isHandle } from '@atcute/lexicons/syntax';
 import { getGraphemeLength } from '@atcute/util-text';
 
-import { mapDefined, unique } from '@mary/array-fns';
+import { mapDefined, unique } from '@mary-ext/array-fns';
 
 import { isMisleadingLink } from '#/lib/links/trust';
 import { toShortUrl } from '#/lib/utils/url';

@@ -1,6 +1,6 @@
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { clsx } from 'clsx';
 

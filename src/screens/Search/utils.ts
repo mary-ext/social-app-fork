@@ -1,4 +1,4 @@
-import { definite, mapDefined } from '@mary/array-fns';
+import { definite, mapDefined } from '@mary-ext/array-fns';
 
 export type Params = Record<string, string>;
 

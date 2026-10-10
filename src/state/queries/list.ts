@@ -4,7 +4,7 @@ import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { chunked, mapDefined } from '@mary/array-fns';
+import { chunked, mapDefined } from '@mary-ext/array-fns';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

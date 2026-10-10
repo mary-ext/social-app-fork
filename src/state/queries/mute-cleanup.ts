@@ -4,7 +4,7 @@ import type { AppBskyGraphGetMutes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

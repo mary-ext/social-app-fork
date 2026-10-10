@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type KeywordFilter, KeywordFilterFlags } from '@atcute/bluesky-moderation';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 /**
  * checks whether text (with optional facets/tags and an author) matches any keyword filter.

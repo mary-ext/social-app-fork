@@ -2,7 +2,7 @@ import type { AppBskyActorDefs, AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 
-import { definite, mapDefined, uniqueBy } from '@mary/array-fns';
+import { definite, mapDefined, uniqueBy } from '@mary-ext/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 

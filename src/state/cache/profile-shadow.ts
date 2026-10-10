@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
 
-import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
+import { KeyedEventEmitter, SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import type { QueryClient } from '@tanstack/react-query';
-
-import { KeyedEventEmitter } from '#/lib/utils/keyed-event-emitter';
 
 import type { FeedPage } from '#/state/queries/post-feed';
 
@@ -29,7 +27,7 @@ type ShadowUpdateEventPayload = { did: string; shadow: Partial<ProfileShadow> };
 
 const shadows: WeakMap<AnyProfileView, Partial<ProfileShadow>> = new WeakMap();
 // per-did shadow updates, keyed by did
-const emitter = new KeyedEventEmitter<[Partial<ProfileShadow>]>();
+const emitter = new KeyedEventEmitter<Record<string, [Partial<ProfileShadow>]>>();
 // every shadow update, regardless of did
 const globalEmitter = new SimpleEventEmitter<[ShadowUpdateEventPayload]>();
 

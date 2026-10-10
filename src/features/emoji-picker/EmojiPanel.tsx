@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 

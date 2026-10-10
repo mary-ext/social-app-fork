@@ -1,6 +1,6 @@
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 
-import { unique, uniqueBy } from '@mary/array-fns';
+import { unique, uniqueBy } from '@mary-ext/array-fns';
 
 /**
  * merges two {@link AppBskyFeedThreadgate.Main} objects, combining and deduplicating their `allow` and

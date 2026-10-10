@@ -1,7 +1,7 @@
 import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 

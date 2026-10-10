@@ -64,7 +64,7 @@ export default defineConfig(({ command, mode }) => {
 			// #region lazy tier
 			{ name: 'messages', test: /[\\/]src[\\/]paraglide[\\/]/, minShareCount: 4, priority: 20 },
 			{ name: 'icons', test: /[\\/]src[\\/]icons[\\/]/, minShareCount: 1, priority: 20 },
-			{ name: 'atproto', test: /node_modules[\\/](?:@atcute|@jsr[\\/]mary__)/, priority: 15 },
+			{ name: 'atproto', test: /node_modules[\\/]@atcute[\\/]/, priority: 15 },
 			{
 				// keep form controls off feed pages.
 				name: 'forms',

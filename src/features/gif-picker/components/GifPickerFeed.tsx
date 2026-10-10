@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';

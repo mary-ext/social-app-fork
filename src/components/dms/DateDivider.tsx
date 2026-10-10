@@ -1,6 +1,6 @@
 import { memo, type ReactNode } from 'react';
 
-import { addDays } from '@mary/date-fns';
+import { addDays } from '@mary-ext/date-fns';
 
 import { useTick } from '#/state/tick';
 

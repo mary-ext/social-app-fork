@@ -8,7 +8,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { definite } from '@mary/array-fns';
+import { definite } from '@mary-ext/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 

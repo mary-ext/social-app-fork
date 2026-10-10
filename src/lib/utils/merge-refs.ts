@@ -1,6 +1,6 @@
 import type { Ref, RefCallback } from 'react';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 /**
  * merges multiple React refs into a single ref callback

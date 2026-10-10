@@ -3,7 +3,7 @@ import { type Ref, useEffect, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { definite, mapDefined } from '@mary/array-fns';
+import { definite, mapDefined } from '@mary-ext/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 

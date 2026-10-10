@@ -2,7 +2,7 @@ import type { Token } from '@atcute/bluesky-search-parser';
 import type { Did, Handle } from '@atcute/lexicons';
 import { isDid, isHandle } from '@atcute/lexicons/syntax';
 
-import { min } from '@mary/date-fns';
+import { min } from '@mary-ext/date-fns';
 
 // #region filters
 

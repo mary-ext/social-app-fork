@@ -1,4 +1,4 @@
-import { definite, difference, unique } from '@mary/array-fns';
+import { definite, difference, unique } from '@mary-ext/array-fns';
 
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 

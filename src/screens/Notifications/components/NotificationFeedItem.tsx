@@ -19,7 +19,7 @@ import { ok } from '@atcute/client';
 import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 

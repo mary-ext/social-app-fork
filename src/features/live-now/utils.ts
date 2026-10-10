@@ -1,6 +1,6 @@
 import type { AppBskyActorStatus } from '@atcute/bluesky';
 
-import { unique } from '@mary/array-fns';
+import { unique } from '@mary-ext/array-fns';
 
 import { LOCALE } from '#/locale/intl/locale';
 

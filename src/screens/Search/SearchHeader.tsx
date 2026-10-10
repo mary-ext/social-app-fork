@@ -2,7 +2,7 @@ import type { ReactNode, Ref } from 'react';
 
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { definite, mapDefined } from '@mary/array-fns';
+import { definite, mapDefined } from '@mary-ext/array-fns';
 
 import { profileTarget } from '#/lib/routes/targets';
 

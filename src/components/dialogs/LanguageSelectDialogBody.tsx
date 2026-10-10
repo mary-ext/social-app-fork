@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { mapDefined, unique } from '@mary/array-fns';
+import { mapDefined, unique } from '@mary-ext/array-fns';
 
 import { usePostLanguageHistory } from '#/state/preferences/languages';
 

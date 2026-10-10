@@ -3,7 +3,7 @@ import { type ComponentType, type SVGProps, useRef, useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 
-import { partition } from '@mary/array-fns';
+import { partition } from '@mary-ext/array-fns';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants/feeds';
 import { cleanError } from '#/lib/errors';

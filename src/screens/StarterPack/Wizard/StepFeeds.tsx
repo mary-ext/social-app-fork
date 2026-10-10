@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';

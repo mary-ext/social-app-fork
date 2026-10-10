@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/preferences';
 import type {

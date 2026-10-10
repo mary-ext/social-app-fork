@@ -9,7 +9,7 @@ import { type Client, ok } from '@atcute/client';
 import type { Cid, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { chunked } from '@mary/array-fns';
+import { chunked } from '@mary-ext/array-fns';
 
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

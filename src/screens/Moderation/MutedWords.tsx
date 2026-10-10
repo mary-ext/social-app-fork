@@ -1,6 +1,6 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { definite } from '@mary/array-fns';
+import { definite } from '@mary-ext/array-fns';
 
 import {
 	usePreferencesQuery,

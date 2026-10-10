@@ -1,6 +1,6 @@
 import { ok } from '@atcute/client';
 
-import { unique } from '@mary/array-fns';
+import { unique } from '@mary-ext/array-fns';
 
 import { useQuery } from '@tanstack/react-query';
 

@@ -1,7 +1,3 @@
-registries:
-  'https://npm.jsr.io/':
-    scopes: ['@jsr']
-
 trustPolicy: 'no-downgrade'
 trustPolicyIgnoreAfter: 10080
 
@@ -21,7 +17,6 @@ minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
   - '@mary-ext/*'
-  - '@jsr/mary__*'
   - vite@8.3.3
 
 patchedDependencies:

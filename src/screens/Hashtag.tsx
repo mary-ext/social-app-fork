@@ -1,6 +1,6 @@
 import type { ActorIdentifier } from '@atcute/lexicons';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';

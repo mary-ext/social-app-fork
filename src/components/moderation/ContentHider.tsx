@@ -6,7 +6,7 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 
-import { unique } from '@mary/array-fns';
+import { unique } from '@mary-ext/array-fns';
 
 import { clsx } from 'clsx';
 

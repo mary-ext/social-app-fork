@@ -8,8 +8,8 @@ import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { mapDefined } from '@mary/array-fns';
-import { createBatchedFetch } from '@mary/batch-fetch';
+import { mapDefined } from '@mary-ext/array-fns';
+import { createBatchedFetch } from '@mary-ext/batch-fetch';
 
 import {
 	type InfiniteData,

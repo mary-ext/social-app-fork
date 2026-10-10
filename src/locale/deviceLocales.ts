@@ -1,4 +1,4 @@
-import { mapDefined, unique } from '@mary/array-fns';
+import { mapDefined, unique } from '@mary-ext/array-fns';
 
 export type Locale = {
 	languageCode: string;

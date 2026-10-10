@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 
-import { unique } from '@mary/array-fns';
+import { unique } from '@mary-ext/array-fns';
 
 import { MAX_POST_LANGUAGES } from '#/lib/constants/composer';
 

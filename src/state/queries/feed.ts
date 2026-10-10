@@ -15,8 +15,8 @@ import {
 	parseCanonicalResourceUri,
 } from '@atcute/lexicons/syntax';
 
-import { mapDefined } from '@mary/array-fns';
-import { createBatchedFetch, ResourceMissingError } from '@mary/batch-fetch';
+import { mapDefined } from '@mary-ext/array-fns';
+import { createBatchedFetch, ResourceMissingError } from '@mary-ext/batch-fetch';
 
 import {
 	type InfiniteData,

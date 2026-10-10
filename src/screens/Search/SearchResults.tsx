@@ -1,6 +1,6 @@
 import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { definite, uniqueBy } from '@mary/array-fns';
+import { definite, uniqueBy } from '@mary-ext/array-fns';
 
 import { isNetworkError, shouldRetryError } from '#/lib/errors';
 import { normalizeSearchQuery } from '#/lib/search-query';

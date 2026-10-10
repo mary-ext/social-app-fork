@@ -1,4 +1,4 @@
-import { definite, range, unique } from '@mary/array-fns';
+import { definite, range, unique } from '@mary-ext/array-fns';
 
 /**
  * builds search haystacks for visible emoji.

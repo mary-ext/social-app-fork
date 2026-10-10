@@ -1,6 +1,6 @@
 import { decodeUtf8From } from '@atcute/uint8array';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import type { Rendition } from '../shared/protocol';
 import type { Resource } from './network';

@@ -48,7 +48,7 @@
 			},
 			{
 				"groupName": "oomfware",
-				"elementNamePattern": ["@mary/**", "@mary-ext/**", "@oomfware/**"]
+				"elementNamePattern": ["@mary-ext/**", "@oomfware/**"]
 			},
 			{
 				"groupName": "lib",

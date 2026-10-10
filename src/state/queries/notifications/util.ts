@@ -9,7 +9,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { chunked } from '@mary/array-fns';
+import { chunked } from '@mary-ext/array-fns';
 
 import type { QueryClient } from '@tanstack/react-query';
 

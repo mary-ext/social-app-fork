@@ -6,7 +6,7 @@ import {
 	type ModerationDecision,
 } from '@atcute/bluesky-moderation';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { getPostRecord } from '#/lib/api/record-casts';
 import { type AppModerationCause, getModerationCauseKey } from '#/lib/moderation/causes';

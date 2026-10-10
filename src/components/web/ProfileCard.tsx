@@ -8,7 +8,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import { weightedIndex } from '@mary/array-fns';
+import { weightedIndex } from '@mary-ext/array-fns';
 
 import { clsx } from 'clsx';
 

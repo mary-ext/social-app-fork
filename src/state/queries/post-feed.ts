@@ -11,7 +11,7 @@ import {
 import type { Client } from '@atcute/client';
 import { type Did, parseResourceUri } from '@atcute/lexicons/syntax';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 

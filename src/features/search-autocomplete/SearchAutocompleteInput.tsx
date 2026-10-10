@@ -14,7 +14,7 @@ import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 import { ok } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 import {
 	addDays,
 	addMonths,
@@ -26,7 +26,7 @@ import {
 	startOfDay,
 	startOfMonth,
 	startOfWeek,
-} from '@mary/date-fns';
+} from '@mary-ext/date-fns';
 
 import type { TextHighlight } from '#/lib/browser/text-highlights';
 import { isInvalidHandle } from '#/lib/display-names';

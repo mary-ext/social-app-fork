@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 
-import { differenceInMinutes } from '@mary/date-fns';
+import { differenceInMinutes } from '@mary-ext/date-fns';
 
 import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';

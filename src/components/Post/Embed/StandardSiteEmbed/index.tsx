@@ -11,7 +11,7 @@ import {
 	getAPCATextColor,
 	toHsla,
 	toRgbHex,
-} from '@mary/color-fns';
+} from '@mary-ext/color-fns';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';

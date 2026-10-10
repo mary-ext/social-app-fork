@@ -10,8 +10,8 @@ import {
 	useSyncExternalStore,
 } from 'react';
 
+import { definite, type FalsyValue } from '@mary-ext/array-fns';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
-import { definite, type FalsyValue } from '@mary/array-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 import { clamp } from '#/lib/utils/numbers';

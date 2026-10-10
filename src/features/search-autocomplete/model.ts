@@ -11,7 +11,7 @@ import {
 	startOfMonth,
 	startOfWeek,
 	toISODateString,
-} from '@mary/date-fns';
+} from '@mary-ext/date-fns';
 
 import { resolveUrl } from '#/lib/routes/app-links';
 import { profileTarget, recordUriToTarget } from '#/lib/routes/targets';

@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { uniqueBy } from '@mary/array-fns';
+import { uniqueBy } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 

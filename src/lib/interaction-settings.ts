@@ -6,7 +6,7 @@ import type {
 } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { unique } from '@mary/array-fns';
+import { unique } from '@mary-ext/array-fns';
 
 export type ReplyGroups = {
 	followers: boolean;

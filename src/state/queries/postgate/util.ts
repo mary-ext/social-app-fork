@@ -9,7 +9,7 @@ import {
 import type { $type, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { unique, uniqueBy } from '@mary/array-fns';
+import { unique, uniqueBy } from '@mary-ext/array-fns';
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';
 

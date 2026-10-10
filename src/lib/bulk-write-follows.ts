@@ -4,7 +4,7 @@ import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
-import { chunked } from '@mary/array-fns';
+import { chunked } from '@mary-ext/array-fns';
 
 import { isAbortError } from '#/lib/errors';
 import type { RateLimitBudget } from '#/lib/rate-limit-budget';

@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
-import { differenceInSeconds } from '@mary/date-fns';
+import { differenceInSeconds } from '@mary-ext/date-fns';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 

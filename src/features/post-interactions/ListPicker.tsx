@@ -2,7 +2,7 @@ import { type ReactNode, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { difference } from '@mary/array-fns';
+import { difference } from '@mary-ext/array-fns';
 
 import { NO_REPLY_GROUPS, type ReplyAudience, restrictReplies } from '#/lib/interaction-settings';
 

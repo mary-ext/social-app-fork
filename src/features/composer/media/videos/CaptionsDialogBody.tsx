@@ -1,6 +1,6 @@
 import { type DragEvent, type ReactNode, useId, useState } from 'react';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { openCaptionPicker } from '#/lib/media/picker';
 

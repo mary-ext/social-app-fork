@@ -1,6 +1,6 @@
 import type { Did } from '@atcute/lexicons';
 
-import { difference } from '@mary/array-fns';
+import { difference } from '@mary-ext/array-fns';
 
 import { APP_LABELERS, BSKY_LABELER_DID } from '#/lib/moderation/labelers';
 

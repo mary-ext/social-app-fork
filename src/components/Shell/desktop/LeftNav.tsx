@@ -3,7 +3,7 @@ import { type ComponentType, type MouseEvent, type SVGProps, useState } from 're
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
-import { mapDefined } from '@mary/array-fns';
+import { mapDefined } from '@mary-ext/array-fns';
 
 import { clsx } from 'clsx';
 

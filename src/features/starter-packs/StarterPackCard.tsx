@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { weightedIndex } from '@mary/array-fns';
+import { weightedIndex } from '@mary-ext/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import type { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { QueryClient } from '@tanstack/react-query';
+import { KeyedEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { KeyedEventEmitter } from '#/lib/utils/keyed-event-emitter';
+import type { QueryClient } from '@tanstack/react-query';
 
 import { getPostFinders } from './registry';
 import { castAsShadow, type Shadow } from './types';
@@ -25,7 +25,7 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone');
 
-const emitter = new KeyedEventEmitter<[]>();
+const emitter = new KeyedEventEmitter<Record<string, []>>();
 const shadows: WeakMap<AppBskyFeedDefs.PostView, Partial<PostShadow>> = new WeakMap();
 
 /** Use with caution! This function returns the raw shadow data for a post. Prefer using `usePostShadow`. */

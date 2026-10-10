@@ -2,7 +2,7 @@ import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
 
-import { chunked, groupByDefined } from '@mary/array-fns';
+import { chunked, groupByDefined } from '@mary-ext/array-fns';
 
 import type { ListRecordsOutput } from '#/lib/api/records';
 import { isAbortError } from '#/lib/errors';
