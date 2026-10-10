@@ -12,6 +12,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { readPostNumbering } from '#/state/queries/feed-tuner';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
@@ -25,6 +26,7 @@ import { GalleryBleed } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostMeta } from '#/components/PostMeta';
+import { PostNumber, PostNumberBlock } from '#/components/PostNumber';
 import { RichText } from '#/components/RichText';
 
 import { m } from '#/paraglide/messages';
@@ -282,6 +284,22 @@ export function QuoteEmbed({
 
 	const { text, facets } = getPostRecord(quote);
 	const richText = text.trim() ? { text, facets } : undefined;
+	const postNumbering = readPostNumbering(embed);
+
+	let quoteText: ReactNode;
+	if (richText) {
+		quoteText = (
+			<RichText
+				disableLinks
+				numberOfLines={20}
+				size="md"
+				suffix={postNumbering && <PostNumber value={postNumbering} />}
+				value={richText}
+			/>
+		);
+	} else if (postNumbering) {
+		quoteText = <PostNumberBlock value={postNumbering} />;
+	}
 
 	const onBeforePress = () => {
 		unstableCacheProfileView(queryClient, quote.author);
@@ -305,7 +323,7 @@ export function QuoteEmbed({
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 				/>
 			) : null}
-			{richText ? <RichText disableLinks numberOfLines={20} size="md" value={richText} /> : null}
+			{quoteText}
 			{quote.embed && (
 				<Embed
 					embed={quote.embed}
