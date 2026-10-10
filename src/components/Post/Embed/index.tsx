@@ -1,7 +1,19 @@
 import { lazy, type ReactNode, Suspense } from 'react';
 
-import { type AppBskyEmbedRecord, type AppBskyFeedDefs, unwrapEmbed } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import {
+	type AppBskyEmbedExternal,
+	type AppBskyEmbedRecord,
+	type AppBskyFeedDefs,
+	unwrapEmbed,
+} from '@atcute/bluesky';
+import {
+	DisplayContext,
+	type DisplayRestrictions,
+	getDisplayRestrictions,
+	mergeDisplayRestrictions,
+	moderateExternalView,
+	moderatePost,
+} from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -107,17 +119,7 @@ function MediaEmbed({
 		}
 		case 'app.bsky.embed.external#view': {
 			if (isStandardSiteEmbed(media.external)) {
-				return (
-					<ContentHider modui={modui} activeClassName={css.activeMargin}>
-						<Suspense
-							fallback={
-								<ExternalEmbed link={media.external} onOpen={rest.onOpen} className={css.externalCardGap} />
-							}
-						>
-							<StandardSiteEmbed view={media.external} onOpen={rest.onOpen} className={css.standardSiteGap} />
-						</Suspense>
-					</ContentHider>
-				);
+				return <StandardSiteCardEmbed external={media.external} modui={modui} onOpen={rest.onOpen} />;
 			}
 
 			const target = parseTangledStringUrl(media.external.uri);
@@ -227,6 +229,37 @@ function RecordEmbed({
 			return null;
 		}
 	}
+}
+
+function StandardSiteCardEmbed({
+	external,
+	modui: postModui,
+	onOpen,
+}: {
+	external: AppBskyEmbedExternal.ViewExternal;
+	modui: DisplayRestrictions | undefined;
+	onOpen: CommonProps['onOpen'];
+}) {
+	const moderationOpts = useModerationOpts();
+
+	let modui = postModui;
+	if (moderationOpts && external.labels?.length) {
+		// post moderation excludes external-view labels; the card needs both content and media restrictions.
+		const decision = moderateExternalView(external, moderationOpts);
+		modui = mergeDisplayRestrictions(
+			postModui,
+			getDisplayRestrictions(decision, DisplayContext.ContentView),
+			getDisplayRestrictions(decision, DisplayContext.ContentMedia),
+		);
+	}
+
+	return (
+		<ContentHider modui={modui} activeClassName={css.activeMargin}>
+			<Suspense fallback={<ExternalEmbed link={external} onOpen={onOpen} className={css.externalCardGap} />}>
+				<StandardSiteEmbed view={external} onOpen={onOpen} className={css.standardSiteGap} />
+			</Suspense>
+		</ContentHider>
+	);
 }
 
 export function PostDetachedEmbed({ embed }: { embed: AppBskyEmbedRecord.ViewDetached }) {

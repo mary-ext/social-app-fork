@@ -22,8 +22,8 @@ importers:
         specifier: ^4.0.24
         version: 4.0.24(@atcute/lexicons@2.1.1)
       '@atcute/bluesky-moderation':
-        specifier: ^4.2.2
-        version: 4.2.2(@atcute/atproto@4.0.4(@atcute/lexicons@2.1.1))(@atcute/bluesky@4.0.24(@atcute/lexicons@2.1.1))(@atcute/lexicons@2.1.1)
+        specifier: ^4.3.0
+        version: 4.3.0(@atcute/atproto@4.0.4(@atcute/lexicons@2.1.1))(@atcute/bluesky@4.0.24(@atcute/lexicons@2.1.1))(@atcute/lexicons@2.1.1)
       '@atcute/bluesky-richtext-builder':
         specifier: ^4.0.1
         version: 4.0.1(@atcute/lexicons@2.1.1)
@@ -228,8 +228,8 @@ packages:
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
-  '@atcute/bluesky-moderation@4.2.2':
-    resolution: {integrity: sha512-rNJeIDZkkSDK6Zs00RFw1iQ+OSvewaU/3VddfdSHuB14kztTNrVKfx7xCqTqtO1FdA7UCJGVTDwJKJQnyfXkfA==}
+  '@atcute/bluesky-moderation@4.3.0':
+    resolution: {integrity: sha512-Laye80r5pAR5o1IaMGQNJpG8BsCGXxb1YA39ZjavbSkkKr0tAfWVPITcygCHox2gWnU1S74uwRh6Nu//m2/6pQ==}
     peerDependencies:
       '@atcute/atproto': ^4.0.0
       '@atcute/bluesky': ^4.0.0
@@ -2424,7 +2424,7 @@ snapshots:
     dependencies:
       '@atcute/lexicons': 2.1.1
 
-  '@atcute/bluesky-moderation@4.2.2(@atcute/atproto@4.0.4(@atcute/lexicons@2.1.1))(@atcute/bluesky@4.0.24(@atcute/lexicons@2.1.1))(@atcute/lexicons@2.1.1)':
+  '@atcute/bluesky-moderation@4.3.0(@atcute/atproto@4.0.4(@atcute/lexicons@2.1.1))(@atcute/bluesky@4.0.24(@atcute/lexicons@2.1.1))(@atcute/lexicons@2.1.1)':
     dependencies:
       '@atcute/atproto': 4.0.4(@atcute/lexicons@2.1.1)
       '@atcute/bluesky': 4.0.24(@atcute/lexicons@2.1.1)
