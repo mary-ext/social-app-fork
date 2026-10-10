@@ -302,7 +302,7 @@ function DialogInner({
 					<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
 						<TextField.LabelText>{m['components.dialogs.list.nameLabel']()}</TextField.LabelText>
 						<TextField.Input
-							defaultValue={displayName}
+							value={displayName}
 							onChangeText={onChangeDisplayName}
 							label={m['components.dialogs.list.name']()}
 							placeholder={displayNamePlaceholder}
@@ -319,7 +319,7 @@ function DialogInner({
 					<TextField.Root isInvalid={descriptionTooLong}>
 						<TextField.LabelText>{m['components.dialogs.list.descriptionLabel']()}</TextField.LabelText>
 						<TextField.Input
-							defaultValue={descriptionText}
+							value={descriptionText}
 							onChangeText={setDescriptionText}
 							multiline
 							label={m['common.status.description']()}

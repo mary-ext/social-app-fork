@@ -12,14 +12,11 @@ import * as styles from './prompts.css';
 export function EditNamePrompt({
 	handle,
 	value,
-	inputKey,
 	onChangeText,
 	onConfirm,
 }: {
 	handle: Prompt.PromptHandle;
 	value: string;
-	/** key to remount the uncontrolled input and reseed it from `value` when the prompt is opened */
-	inputKey: number;
 	onChangeText: (value: string) => void;
 	onConfirm: () => void;
 }) {
@@ -34,10 +31,9 @@ export function EditNamePrompt({
 				<Prompt.TitleText>{m['screens.messages.groupName.edit.action']()}</Prompt.TitleText>
 				<TextField.Root isInvalid={nameTooLong} className={styles.field}>
 					<TextField.Input
-						key={inputKey}
 						label={m['screens.messages.groupName.edit.action']()}
 						placeholder={m['common.chat.groupName']()}
-						defaultValue={value}
+						value={value}
 						onChangeText={onChangeText}
 						autoCapitalize="none"
 						autoComplete="off"

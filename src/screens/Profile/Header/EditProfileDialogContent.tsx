@@ -162,7 +162,7 @@ export const EditProfileDialogContent = ({
 					<TextField.Root isInvalid={displayNameTooLong}>
 						<TextField.LabelText>{m['screens.profile.editProfile.displayName.label']()}</TextField.LabelText>
 						<TextField.Input
-							defaultValue={displayName}
+							value={displayName}
 							onChangeText={setDisplayName}
 							label={m['screens.profile.editProfile.displayName.label']()}
 							placeholder={m['screens.profile.editProfile.displayName.placeholder']()}
@@ -185,7 +185,7 @@ export const EditProfileDialogContent = ({
 					<TextField.Root isInvalid={descriptionTooLong}>
 						<TextField.LabelText>{m['common.status.description']()}</TextField.LabelText>
 						<TextField.Input
-							defaultValue={description}
+							value={description}
 							onChangeText={setDescription}
 							multiline
 							label={m['common.status.description']()}
