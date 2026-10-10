@@ -4,7 +4,6 @@ import {
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
-	type AppBskyUnspeccedDefs,
 } from '@atcute/bluesky';
 
 import { getPostRecord } from '#/lib/api/record-casts';
@@ -17,10 +16,6 @@ export type PostNumbering = {
 	count: number;
 };
 
-// not sure why these aren't in #feedViewPost at the moment.
-type RawPostNumbering = Pick<AppBskyUnspeccedDefs.ThreadItemPost, 'opThreadPostCount' | 'opThreadPostIndex'>;
-type FeedViewPost = AppBskyFeedDefs.FeedViewPost & RawPostNumbering;
-
 type FeedTunerFn = (tuner: FeedTuner, slices: FeedViewPostsSlice[], dryRun: boolean) => FeedViewPostsSlice[];
 
 type FeedSliceItem = {
@@ -32,7 +27,7 @@ type FeedSliceItem = {
 	isParentNotFound: boolean;
 };
 
-const readPostNumbering = (value: RawPostNumbering): PostNumbering | undefined => {
+const readPostNumbering = (value: AppBskyFeedDefs.FeedViewPost): PostNumbering | undefined => {
 	const { opThreadPostCount: count, opThreadPostIndex: index } = value;
 
 	if (count === undefined || index === undefined || index < 1 || count < 1 || index > count) {
@@ -60,7 +55,7 @@ type AuthorContext = {
 
 class FeedViewPostsSlice {
 	_reactKey: string;
-	_feedPost: FeedViewPost;
+	_feedPost: AppBskyFeedDefs.FeedViewPost;
 	items: FeedSliceItem[];
 	isIncompleteThread: boolean;
 	isOrphan: boolean;
@@ -69,7 +64,7 @@ class FeedViewPostsSlice {
 	feedPostUri: string;
 
 	constructor(
-		feedPost: FeedViewPost,
+		feedPost: AppBskyFeedDefs.FeedViewPost,
 		numbering: PostNumbering | undefined,
 		postNumberingByUri: Map<string, PostNumbering>,
 	) {
@@ -221,7 +216,7 @@ export class FeedTuner {
 	constructor(public tunerFns: FeedTunerFn[]) {}
 
 	tune(
-		feed: FeedViewPost[],
+		feed: AppBskyFeedDefs.FeedViewPost[],
 		{ dryRun }: { dryRun: boolean } = {
 			dryRun: false,
 		},
