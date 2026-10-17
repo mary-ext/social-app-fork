@@ -171,7 +171,6 @@ const remainingFollowRows = (profiles: AnyProfileView[], covered: ReadonlySet<st
 		}
 	});
 
-	// oxlint-disable-next-line unicorn/no-array-sort -- rows is local
 	rows.sort((a, b) => byMessageDeclaration(a.profile, b.profile));
 	return rows;
 };

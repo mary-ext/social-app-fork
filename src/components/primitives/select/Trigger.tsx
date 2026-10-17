@@ -89,7 +89,6 @@ export const Trigger = ({ render, ref, ...elementProps }: TriggerProps) => {
 			dataAttributes({ disabled, placeholder: ctx.placeholder }),
 			{ type: 'button', disabled },
 			ariaProps,
-			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 			interactionProps,
 			elementProps,
 		),

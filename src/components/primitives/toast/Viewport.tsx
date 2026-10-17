@@ -156,7 +156,6 @@ export const Viewport = ({ render, ref, ...elementProps }: ViewportProps) => {
 		tag: 'div',
 		render,
 		refs: [ref, viewportRef],
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 		props: mergeProps<'div'>(dataAttributes({ expanded }), internalProps, elementProps),
 	});
 

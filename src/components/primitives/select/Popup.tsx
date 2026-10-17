@@ -80,7 +80,6 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 		tag: 'div',
 		render,
 		refs: [ref, popupRef],
-		// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 		props: mergeProps<'div'>(getOpenAttributes(open), internalProps, elementProps),
 	});
 };

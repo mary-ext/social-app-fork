@@ -133,7 +133,6 @@ export const useCompositeRoot = ({
 
 		const nextKey = next?.getAttribute(KEY_ATTR) ?? null;
 		if (nextKey !== tabStop) {
-			// oxlint-disable-next-line react/set-state-in-effect -- derived from the committed DOM
 			setTabStop(nextKey);
 		}
 	});

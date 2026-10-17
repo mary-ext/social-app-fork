@@ -96,7 +96,6 @@ export function useGetTrendsQuery({ enabled = true, limit, refetchOnWindowFocus 
 			const trends = mapDefined(
 				uniqueBy(data.trends, (trend) => trend.link),
 				(trend) => {
-					// oxlint-disable-next-line unicorn/no-array-sort
 					trend.actors.sort((a, b) => hiddenRank(a) - hiddenRank(b));
 
 					return resolveTopic(trend);

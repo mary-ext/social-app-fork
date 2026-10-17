@@ -218,7 +218,6 @@ export function parseConvoView(
 		return null;
 	}
 	// narrowing `rawConvoView.id` doesn't re-type the view around it, and respreading it would allocate for nothing
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the guard above pins `id`
 	const convoView = rawConvoView as IdentifiedConvoView;
 
 	if (convoView.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {

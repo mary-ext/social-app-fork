@@ -148,7 +148,6 @@ export function BlockLink({
 				...(label ? { 'aria-label': label, onKeyDown, role: 'link', tabIndex: 0 } : null),
 			};
 
-	// oxlint-disable-next-line react/refs -- forwards the prop ref
 	return cloneElement(node, {
 		...pressProps,
 		className: clsx(node.props.className, className),

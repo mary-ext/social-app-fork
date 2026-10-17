@@ -12,6 +12,7 @@ export type RowProps<ItemT> = {
 };
 
 /** a list row that renders its content unconditionally. */
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 export const Row = memo(function Row<ItemT>({ index, item, renderItem }: RowProps<ItemT>) {
 	const seen = use(ItemSeenContext);
 
@@ -29,5 +30,4 @@ export const Row = memo(function Row<ItemT>({ index, item, renderItem }: RowProp
 			{renderItem({ index, item })}
 		</div>
 	);
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `memo` erases the type parameter
 }) as <ItemT>(props: RowProps<ItemT>) => ReactNode;

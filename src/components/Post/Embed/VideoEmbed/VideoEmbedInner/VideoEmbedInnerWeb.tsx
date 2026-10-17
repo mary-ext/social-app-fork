@@ -173,7 +173,6 @@ function useHlsPlayer({
 		});
 
 		return () => {
-			// oxlint-disable-next-line react/immutability -- mutable output ref
 			lastKnownTime.current = video.currentTime;
 			playerRef.current = undefined;
 			player.destroy();

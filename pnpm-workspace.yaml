@@ -17,7 +17,6 @@ minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
   - '@mary-ext/*'
-  - vite@8.3.3
 
 patchedDependencies:
   '@vanilla-extract/css': patches/@vanilla-extract__css.patch

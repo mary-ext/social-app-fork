@@ -106,7 +106,6 @@ export const Trigger = ({
 			dataAttributes({ disabled }),
 			{ id },
 			ariaProps,
-			// oxlint-disable-next-line react/refs -- the handlers only read refs when events fire
 			interactionProps,
 			elementProps,
 		),

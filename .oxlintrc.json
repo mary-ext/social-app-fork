@@ -19,6 +19,7 @@
 	],
 	"jsPlugins": ["@mary-ext/oxlint-rules", "eslint-plugin-bsky-internal"],
 	"options": {
+		"reportUnusedDisableDirectives": "error",
 		"typeAware": true,
 		"typeCheck": true
 	},
