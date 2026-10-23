@@ -14,7 +14,7 @@ import { m } from '#/paraglide/messages';
 
 import * as css from './SidebarTrendingTopics.css';
 
-const TRENDING_LIMIT = 5;
+const TRENDING_LIMIT = 10;
 
 export function SidebarTrendingTopics() {
 	const trendingEnabled = useIsTrendingEnabled();

@@ -22,7 +22,7 @@ import * as Skeleton from '#/components/web/Skeleton';
 
 import { m } from '#/paraglide/messages';
 
-const TOPIC_COUNT = 5;
+const TOPIC_COUNT = 10;
 
 export function ExploreTrendingTopics() {
 	const trendingEnabled = useIsTrendingEnabled();
