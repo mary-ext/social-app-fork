@@ -29,7 +29,7 @@ export const linkLabel = (link: ProfileLink): string => {
 	return provider ? m['features.profileLinks.supportOn']({ provider: provider.name }) : getLinkHost(link.url);
 };
 
-function PillContent({ link, trailing }: { link: ProfileLink; trailing?: ReactNode }) {
+function PillContent({ link, trailing }: { link: ProfileLink; trailing: ReactNode }) {
 	const provider = getSupportProvider(link.url);
 	const faviconUrl = provider ? undefined : linkFaviconUrl(link);
 
@@ -90,34 +90,32 @@ export function ProfileLinkAnchor({ link }: { link: ProfileLink }) {
 }
 
 /**
- * link pill button for editing.
+ * draggable link pill button for editing.
  *
- * @param props link, accessible label, event handlers, and drag-grip visibility
+ * @param props link, accessible label, and event handlers
  */
 export function ProfileLinkButton({
-	grip,
 	label,
 	link,
 	onClick,
 	onKeyDown,
 }: {
-	grip: boolean;
 	label: string;
 	link: ProfileLink;
-	onClick?: () => void;
-	onKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void;
+	onClick: () => void;
+	onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void;
 }) {
 	const support = !!getSupportProvider(link.url);
 	return (
 		<Button
-			className={css.pill({ end: grip ? 'grip' : 'text', support })}
+			className={css.pill({ end: 'grip', support })}
 			color="secondary"
 			label={label}
 			onClick={onClick}
 			onKeyDown={onKeyDown}
 			size="small"
 		>
-			<PillContent link={link} trailing={grip ? <GripIcon className={css.grip({ support })} /> : undefined} />
+			<PillContent link={link} trailing={<GripIcon className={css.grip({ support })} />} />
 		</Button>
 	);
 }

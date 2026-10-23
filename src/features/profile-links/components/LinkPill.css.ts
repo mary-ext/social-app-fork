@@ -20,7 +20,6 @@ export const pill = recipe(
 			end: {
 				arrow: { paddingRight: 10 },
 				grip: { paddingRight: 8 },
-				text: { paddingRight: 12 },
 			},
 			support: {
 				false: {},
@@ -33,7 +32,7 @@ export const pill = recipe(
 				},
 			},
 		},
-		defaultVariants: { end: 'text', support: false },
+		defaultVariants: { support: false },
 	},
 	{ debugId: 'pill' },
 );

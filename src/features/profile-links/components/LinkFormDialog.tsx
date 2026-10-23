@@ -50,10 +50,6 @@ export function LinkFormDialog({
 									handle.close();
 									onChange(next);
 								}}
-								onRemove={() => {
-									handle.close();
-									onChange(links.filter((_, i) => i !== payload.index));
-								}}
 							/>
 						</Stack>
 					</Dialog.Popup>

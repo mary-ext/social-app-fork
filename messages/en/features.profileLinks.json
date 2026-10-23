@@ -17,13 +17,10 @@
 	"features.profileLinks.form.titleLabel": "Title (optional)",
 	"features.profileLinks.form.titlePlaceholder": "e.g. Portfolio",
 	"features.profileLinks.open": "Open {name}",
-	"features.profileLinks.removePrompt.description": "This removes the link from your profile.",
-	"features.profileLinks.removePrompt.title": "Remove {name}?",
 	"features.profileLinks.report.action": "Report a link",
 	"features.profileLinks.report.description": "Which link do you want to report?",
 	"features.profileLinks.report.item": "Report {name}",
 	"features.profileLinks.report.title": "Report a link",
-	"features.profileLinks.saveError": "Couldn’t save your links. Try again.",
 	"features.profileLinks.showMore": [
 		{
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],

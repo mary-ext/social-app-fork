@@ -65,7 +65,6 @@ export function ProfileLinksEditor({
 			label,
 			node: (
 				<ProfileLinkButton
-					grip
 					label={m['features.profileLinks.editor.edit']({ name: label })}
 					link={link}
 					onClick={() => formHandle.openWithPayload({ index })}

@@ -4,16 +4,15 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useProfileViewLinks } from '#/features/profile-links/link-data';
 
-import * as Dialog from '#/components/Dialog';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
 import { linksFromProfileView } from '../record';
 import { wrapLines } from '../row-layout';
+import type { SavedProfileLink } from '../types';
 import { useItemSizes } from '../use-item-sizes';
-import { linkLabel, ProfileLinkAnchor, ProfileLinkButton } from './LinkPill';
-import { OwnLinkFormDialog, type OwnLinkFormPayload } from './OwnLinkFormDialog';
+import { ProfileLinkAnchor } from './LinkPill';
 import * as css from './ProfileLinks.css';
 
 const MAX_LINES = 2;
@@ -23,7 +22,7 @@ const MORE_PILL_GUESS = 48;
 type RowItem = { key: string; node: ReactNode };
 
 /**
- * profile links and the optional Germ button. owners can edit links; visitors can open them.
+ * profile links and the optional Germ button.
  *
  * @param props the profile, whether it's the viewer's own, whether moderation hides its bio, and the Germ DM
  *   button
@@ -43,7 +42,9 @@ export function ProfileHeaderLinks({
 		return <LinkRow germButton={germButton} items={[]} />;
 	}
 	if (isOwnProfile) {
-		return <OwnLinks germButton={germButton} profile={profile} />;
+		// owners see their own links regardless of moderation.
+		const links = linksFromProfileView(profile.links);
+		return <LinkRow key={profile.did} germButton={germButton} items={anchorItems(links)} />;
 	}
 	return <VisitorLinks germButton={germButton} profile={profile} />;
 }
@@ -56,43 +57,14 @@ function VisitorLinks({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const links = useProfileViewLinks(profile);
-	const items: RowItem[] = links.map((link) => {
+	return <LinkRow key={profile.did} germButton={germButton} items={anchorItems(links)} />;
+}
+
+const anchorItems = (links: SavedProfileLink[]): RowItem[] => {
+	return links.map((link) => {
 		return { key: link.url, node: <ProfileLinkAnchor link={link} /> };
 	});
-	return <LinkRow key={profile.did} germButton={germButton} items={items} />;
-}
-
-function OwnLinks({
-	germButton,
-	profile,
-}: {
-	germButton: ReactNode;
-	profile: AppBskyActorDefs.ProfileViewDetailed;
-}) {
-	const formHandle = Dialog.useDialogHandle<OwnLinkFormPayload>();
-	const links = linksFromProfileView(profile.links);
-
-	const items: RowItem[] = links.map((link) => {
-		return {
-			key: link.url,
-			node: (
-				<ProfileLinkButton
-					grip={false}
-					label={m['features.profileLinks.editor.edit']({ name: linkLabel(link) })}
-					link={link}
-					onClick={() => formHandle.openWithPayload({ uri: link.record.uri })}
-				/>
-			),
-		};
-	});
-
-	return (
-		<>
-			<LinkRow key={profile.did} germButton={germButton} items={items} />
-			<OwnLinkFormDialog handle={formHandle} links={links} profile={profile} />
-		</>
-	);
-}
+};
 
 function LinkRow({ germButton, items }: { germButton: ReactNode; items: RowItem[] }) {
 	if (items.length === 0) {

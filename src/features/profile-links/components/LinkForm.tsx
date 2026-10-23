@@ -33,20 +33,18 @@ const suggestTitle = (pageTitle: string | undefined): string => {
 };
 
 /**
- * adds or edits a link within a dialog.
+ * adds, edits, or removes a link within a dialog.
  *
- * @param props current links, edit index (null to add), and save/remove callbacks
+ * @param props current links, edit index (null to add), and a callback receiving the next links
  */
 export function LinkForm({
 	index,
 	links,
 	onDone,
-	onRemove,
 }: {
 	index: number | null;
 	links: ProfileLink[];
 	onDone: (links: ProfileLink[]) => void;
-	onRemove: () => void;
 }) {
 	const link = index === null ? null : links[index]!;
 	const existingUrls = new Set(
@@ -245,7 +243,12 @@ export function LinkForm({
 
 			<Dialog.Actions align="between">
 				{link ? (
-					<Button color="negative_subtle" label={m['common.action.remove']()} onClick={onRemove} size="small">
+					<Button
+						color="negative_subtle"
+						label={m['common.action.remove']()}
+						onClick={() => onDone(links.filter((_, i) => i !== index))}
+						size="small"
+					>
 						<ButtonText>{m['common.action.remove']()}</ButtonText>
 					</Button>
 				) : (
