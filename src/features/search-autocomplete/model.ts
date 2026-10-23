@@ -77,6 +77,7 @@ export type InteractiveItem =
 export type ChromeRow =
 	| { kind: 'divider'; key: string }
 	| { kind: 'hero'; key: string }
+	| { kind: 'recentLabel'; key: string; clearable: boolean }
 	| { kind: 'recentProfilePending'; did: Did; key: string }
 	| { kind: 'sectionLabel'; key: string; label: string };
 
@@ -135,6 +136,7 @@ const buildRecentRows = (
 const isInteractive = (row: ListRow): row is Exclude<InteractiveItem, { kind: 'date' }> =>
 	row.kind !== 'divider' &&
 	row.kind !== 'hero' &&
+	row.kind !== 'recentLabel' &&
 	row.kind !== 'recentProfilePending' &&
 	row.kind !== 'sectionLabel';
 
@@ -293,10 +295,8 @@ export const buildResult = ({
 				// an empty field shows recent history.
 				const recent = buildRecentRows(history, recentProfiles, recentProfilesPending);
 				if (recent.length > 0) {
-					rows.push(
-						{ kind: 'sectionLabel', key: 'recent-label', label: m['components.web.search.recent.label']() },
-						...recent,
-					);
+					// a lone entry already has its own remove button.
+					rows.push({ kind: 'recentLabel', key: 'recent-label', clearable: history.length > 1 }, ...recent);
 				}
 			}
 			// the hero is specific to global search.

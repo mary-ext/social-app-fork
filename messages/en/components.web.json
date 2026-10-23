@@ -15,6 +15,8 @@
 	"components.web.search.operator.repliesOnly": "Only replies",
 	"components.web.search.operator.video": "Posts with video",
 	"components.web.search.placeholder": "Search for posts and users on Bluesky",
+	"components.web.search.recent.clearAll": "Clear all",
+	"components.web.search.recent.clearAllA11y": "Clear all recent searches",
 	"components.web.search.recent.label": "Recent",
 	"components.web.search.recent.remove": "Remove from recent searches",
 	"components.web.search.recent.removeA11y": "Remove {query} from recent searches",

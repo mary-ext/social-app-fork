@@ -36,6 +36,7 @@ import { useInputHighlights } from '#/lib/hooks/use-input-highlights';
 import { focusSearch } from '#/state/events';
 import {
 	addSearchHistoryEntry,
+	clearSearchHistory,
 	removeSearchHistoryEntry,
 	useSearchHistory,
 } from '#/state/preferences/search-history';
@@ -596,7 +597,12 @@ export function SearchAutocompleteInput({
 							<CalendarBody days={result.days} onGoToMonth={goToMonth} visibleMonth={result.visibleMonth} />
 						) : (
 							result.rows.map((row) => (
-								<Row key={row.key} onRemoveRecent={removeSearchHistoryEntry} row={row} />
+								<Row
+									key={row.key}
+									onClearRecent={clearSearchHistory}
+									onRemoveRecent={removeSearchHistoryEntry}
+									row={row}
+								/>
 							))
 						)}
 					</Autocomplete.List>

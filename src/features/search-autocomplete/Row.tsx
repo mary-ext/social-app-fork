@@ -8,6 +8,7 @@ import type { ListRow } from './model';
 import { OperatorRow } from './OperatorRow';
 import { OperatorValueRow } from './OperatorValueRow';
 import { ProfileRow } from './ProfileRow';
+import { RecentLabelRow } from './RecentLabelRow';
 import { RecentProfilePendingRow } from './RecentProfilePendingRow';
 import { RecentProfileRow } from './RecentProfileRow';
 import { RecentQueryRow } from './RecentQueryRow';
@@ -18,14 +19,17 @@ import { SectionLabelRow } from './SectionLabelRow';
  * renders one suggestion-list row, dispatching on its kind to the matching per-kind component. the calendar
  * grid is rendered separately.
  *
+ * @param onClearRecent clears search history
  * @param onRemoveRecent drops a recent-history entry from the stored history (a recent row's own remove
  *   button)
  * @param row the row to render
  */
 export function Row({
+	onClearRecent,
 	onRemoveRecent,
 	row,
 }: {
+	onClearRecent: () => void;
 	onRemoveRecent: (entry: SearchHistoryEntry) => void;
 	row: ListRow;
 }) {
@@ -50,6 +54,9 @@ export function Row({
 		}
 		case 'profile': {
 			return <ProfileRow row={row} />;
+		}
+		case 'recentLabel': {
+			return <RecentLabelRow onClearRecent={onClearRecent} row={row} />;
 		}
 		case 'recentProfile': {
 			return <RecentProfileRow onRemoveRecent={onRemoveRecent} row={row} />;

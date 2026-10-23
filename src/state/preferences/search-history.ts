@@ -38,6 +38,16 @@ export function addSearchHistoryEntry(entry: SearchHistoryEntry) {
 	);
 }
 
+/** removes every entry from the signed-in user's search history. */
+export function clearSearchHistory() {
+	const did = getCurrentDid();
+	if (!did) {
+		return;
+	}
+
+	account.set([did, 'searchHistory'], []);
+}
+
 /**
  * removes a search entry from history.
  *
