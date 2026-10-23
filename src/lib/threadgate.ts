@@ -12,13 +12,6 @@ export class MaxHiddenRepliesError extends Error {
 	}
 }
 
-export class InvalidInteractionSettingsError extends Error {
-	constructor(message?: string) {
-		super(message || 'Invalid interaction settings');
-		this.name = 'InvalidInteractionSettingsError';
-	}
-}
-
 export function validateThreadgateRecordOrThrow(record: AppBskyFeedThreadgate.Main) {
 	if ((record.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {
 		throw new MaxHiddenRepliesError();

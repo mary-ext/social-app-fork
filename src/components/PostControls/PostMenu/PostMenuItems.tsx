@@ -11,7 +11,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { getMaybeDetachedQuoteEmbed } from '#/lib/embed-views';
 import { isAbortError } from '#/lib/errors';
 import { type Richtext, richTextToCopyableText } from '#/lib/rich-text';
-import { InvalidInteractionSettingsError, MAX_HIDDEN_REPLIES, MaxHiddenRepliesError } from '#/lib/threadgate';
+import { MAX_HIDDEN_REPLIES, MaxHiddenRepliesError } from '#/lib/threadgate';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -268,8 +268,6 @@ function PostMenuItems({
 		} catch (err) {
 			if (err instanceof MaxHiddenRepliesError) {
 				Toast.show(m['components.postControls.replyVisibility.maxHidden']({ limit: MAX_HIDDEN_REPLIES }));
-			} else if (err instanceof InvalidInteractionSettingsError) {
-				Toast.show(m['components.postControls.interaction.error']());
 			} else {
 				console.error(`Failed to ${action} reply`, err);
 				Toast.show(m['components.postControls.replyVisibility.updateError']());

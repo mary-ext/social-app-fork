@@ -12,7 +12,6 @@
 	"components.postControls.feedback.showLess": "Show less like this",
 	"components.postControls.feedback.showMore": "Show more like this",
 	"components.postControls.interaction.edit": "Edit interaction settings",
-	"components.postControls.interaction.error": "Invalid interaction settings.",
 	"components.postControls.like.a11y.like": [
 		{
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
