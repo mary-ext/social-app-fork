@@ -2,7 +2,6 @@ import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 import { pointerOutsideOfPreview, setCustomNativeDragPreview } from '@oomfware/tug/preview';
 
-import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
 import * as css from './DragPreview.css';
@@ -22,8 +21,7 @@ export const setDragPreview = (
 		getOffset: pointerOutsideOfPreview({ x: '4px', y: '4px' }),
 		render({ container }) {
 			const root = createRoot(container);
-			// the browser snapshots the preview as soon as the drag start handler returns.
-			flushSync(() => root.render(<div className={css.frame}>{preview}</div>));
+			root.render(<div className={css.frame}>{preview}</div>);
 			return () => root.unmount();
 		},
 	});
