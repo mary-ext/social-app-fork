@@ -6,6 +6,8 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import { mapDefined } from '@mary-ext/array-fns';
+
 import { FeedTuner } from '#/state/queries/feed/lib/feed-tuner';
 import type { FeedPostSliceItem, FeedPreviewItem } from '#/state/queries/feed/types';
 
@@ -57,12 +59,12 @@ export const buildFeedPreviewItems = (
 
 	let rowIndex = 0;
 	for (const item of tuner.tune(page.posts)) {
-		const moderations = item.items.map((child) => moderatePost(child.post, moderationOpts!));
-
-		// apply moderation filters
-		item.items = item.items.filter((_, i) => {
-			const modui = moderations[i] && getDisplayRestrictions(moderations[i], DisplayContext.ContentList);
-			return !modui || modui.filters.length === 0;
+		const moderated = mapDefined(item.items, (subItem) => {
+			const moderation = moderatePost(subItem.post, moderationOpts!);
+			if (getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length > 0) {
+				return undefined;
+			}
+			return { subItem, moderation };
 		});
 
 		const slice = {
@@ -73,25 +75,23 @@ export const buildFeedPreviewItems = (
 			reqId: item.reqId,
 			reason: item.reason,
 			feedPostUri: item.feedPostUri,
-			items: item.items
-				.slice(0, 6)
-				.filter((subItem) => {
-					return !PINNED_POST_URIS[subItem.post.uri];
-				})
-				.map((subItem, i) => {
-					const feedPostSliceItem: FeedPostSliceItem = {
-						_reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
-						uri: subItem.post.uri,
-						post: subItem.post,
-						record: subItem.record,
-						postNumbering: subItem.postNumbering,
-						moderation: moderations[i]!,
-						parentAuthor: subItem.parentAuthor,
-						isParentBlocked: subItem.isParentBlocked,
-						isParentNotFound: subItem.isParentNotFound,
-					};
-					return feedPostSliceItem;
-				}),
+			items: mapDefined(moderated.slice(0, 6), ({ subItem, moderation }, i) => {
+				if (PINNED_POST_URIS[subItem.post.uri]) {
+					return undefined;
+				}
+				const feedPostSliceItem: FeedPostSliceItem = {
+					_reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
+					uri: subItem.post.uri,
+					post: subItem.post,
+					record: subItem.record,
+					postNumbering: subItem.postNumbering,
+					moderation,
+					parentAuthor: subItem.parentAuthor,
+					isParentBlocked: subItem.isParentBlocked,
+					isParentNotFound: subItem.isParentNotFound,
+				};
+				return feedPostSliceItem;
+			}),
 		};
 		if (slice.isIncompleteThread && slice.items.length >= 3) {
 			const beforeLast = slice.items.length - 2;
