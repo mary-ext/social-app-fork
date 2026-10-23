@@ -1,0 +1,15 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"features.profileLinks.open": "Open {name}",
+	"features.profileLinks.showMore": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "Show {n} more link",
+				"cp=other": "Show {n} more links"
+			}
+		}
+	],
+	"features.profileLinks.supportOn": "Support on {provider}"
+}

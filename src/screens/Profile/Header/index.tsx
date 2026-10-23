@@ -5,10 +5,14 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
+import { useSession } from '#/state/session';
+
+import { ProfileHeaderLinks } from '#/features/profile-links/components/ProfileLinks';
+
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/KnownFollowers';
 
-import { GermButton } from '../components/GermButton';
+import { GermButton, resolveGermTarget } from '../components/GermButton';
 import { LabelerButton } from '../components/LabelerButton';
 import { ProfileHeaderActions } from './Actions';
 import { ProfileHeaderBio } from './Bio';
@@ -29,8 +33,10 @@ interface Props {
 function ProfileHeaderBody() {
 	const {
 		meta: { isMe, isPlaceholderProfile, live, moderationOpts, relationship },
-		state: { profile },
+		state: { isContentBlurred, profile },
 	} = useProfileHeader();
+	const { currentAccount } = useSession();
+	const germTarget = resolveGermTarget(profile, currentAccount?.did);
 
 	const isBlockedUser =
 		relationship === 'blocked-by' || relationship === 'blocking' || relationship === 'blocking-by-list';
@@ -58,7 +64,11 @@ function ProfileHeaderBody() {
 
 					{profile.associated?.labeler && <LabelerButton did={profile.did} />}
 
-					{profile.associated?.germ && <GermButton germ={profile.associated.germ} profile={profile} />}
+					<ProfileHeaderLinks
+						germButton={germTarget ? <GermButton target={germTarget} /> : undefined}
+						hidden={isContentBlurred}
+						profile={profile}
+					/>
 
 					{!isMe && shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
 						<div className={css.knownRow}>

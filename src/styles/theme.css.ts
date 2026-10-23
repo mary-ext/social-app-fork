@@ -33,15 +33,24 @@ interface ThemeOptions {
 	linkStep: 'primary_500' | 'primary_600';
 	palette: Palette;
 	shadowOpacity: number;
+	/** support-button backgrounds; kept dark across themes for white text. */
+	support: { base: string; hover: string };
 	/** unread background; dark themes need more contrast than primary_25 provides. */
 	unreadTint: string;
 }
 
-const themeValues = ({ hoverOpacity, linkStep, palette, shadowOpacity, unreadTint }: ThemeOptions) => ({
+const themeValues = ({
+	hoverOpacity,
+	linkStep,
+	palette,
+	shadowOpacity,
+	support,
+	unreadTint,
+}: ThemeOptions) => ({
 	opacity: { hover: hoverOpacity },
 	palette,
 	shadow: shadows(shadowOpacity),
-	surface: { unread: unreadTint },
+	surface: { support: support.base, supportHover: support.hover, unread: unreadTint },
 	text: { link: palette[linkStep] },
 });
 
@@ -53,6 +62,7 @@ globalStyle('.theme--light', {
 			linkStep: 'primary_500',
 			palette: LIGHT_PALETTE,
 			shadowOpacity: 0.1,
+			support: { base: '#04904A', hover: '#036D38' },
 			unreadTint: LIGHT_PALETTE.primary_25,
 		}),
 	),
@@ -65,6 +75,7 @@ globalStyle('.theme--dark', {
 			linkStep: 'primary_600',
 			palette: DARK_PALETTE,
 			shadowOpacity: 0.4,
+			support: { base: '#04904A', hover: '#036D38' },
 			unreadTint: '#202F43',
 		}),
 	),
@@ -77,6 +88,7 @@ globalStyle('.theme--dim', {
 			linkStep: 'primary_600',
 			palette: DIM_PALETTE,
 			shadowOpacity: 0.4,
+			support: { base: '#049F52', hover: '#038142' },
 			unreadTint: '#071F40',
 		}),
 	),

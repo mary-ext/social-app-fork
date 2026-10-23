@@ -39,6 +39,7 @@
 			"./messages/{locale}/features.composer.media.json",
 			"./messages/{locale}/features.gifPicker.json",
 			"./messages/{locale}/features.liveNow.json",
+			"./messages/{locale}/features.profileLinks.json",
 			"./messages/{locale}/lib.json",
 			"./messages/{locale}/navigation.json",
 			"./messages/{locale}/screens.bookmarks.json",

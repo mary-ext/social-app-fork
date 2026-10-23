@@ -1,7 +1,13 @@
 import { createContext, type ReactNode, use } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { moderateProfile, type ModerationDecision, type ModerationOptions } from '@atcute/bluesky-moderation';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationDecision,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 
 import { isAbortError } from '#/lib/errors';
 
@@ -24,6 +30,8 @@ import { m } from '#/paraglide/messages';
 export type ProfileRelationship = 'blocked-by' | 'blocking' | 'blocking-by-list' | 'default' | 'self';
 
 interface ProfileHeaderState {
+	/** hides the bio and links when profile-view moderation requires a blur. */
+	isContentBlurred: boolean;
 	moderation: ModerationDecision;
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 }
@@ -89,6 +97,7 @@ export function ProfileHeaderProvider({
 	const requireAuth = useRequireAuth();
 	const profile = useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed);
 	const moderation = moderateProfile(profile, moderationOpts);
+	const isContentBlurred = getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length > 0;
 	const live = useActorStatus(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile);
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -163,7 +172,7 @@ export function ProfileHeaderProvider({
 			moderationOpts,
 			relationship,
 		},
-		state: { moderation, profile },
+		state: { isContentBlurred, moderation, profile },
 	};
 
 	return <ProfileHeaderContext value={value}>{children}</ProfileHeaderContext>;

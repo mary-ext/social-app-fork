@@ -1,37 +1,30 @@
 import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
-
-export const pill = style({
-	appearance: 'none',
-	display: 'inline-flex',
-	flexDirection: 'row',
-	alignItems: 'center',
-	alignSelf: 'flex-start',
-	border: 'none',
-	borderRadius: borderRadius.full,
-	backgroundColor: colors.contrast_50,
-	padding: 6,
-	textDecoration: 'none',
-	color: colors.text,
-	font: 'inherit',
-	cursor: 'pointer',
-});
+import { borderRadius } from '#/styles/tokens.css';
 
 export const logo = style({
 	display: 'block',
+	flexShrink: 0,
 	borderRadius: borderRadius.full,
 	objectFit: 'cover',
 });
 
-export const label = style({
-	marginLeft: space.xs,
+// match LinkPill sizing.
+const pill = style({
+	maxWidth: '100%',
+	paddingBlock: 6,
+	paddingLeft: 10,
+	color: colors.text,
 });
 
+export const linkPill = style([pill, { paddingRight: 10 }]);
+
+export const selfPill = style([pill, { paddingRight: 12 }]);
+
 export const arrow = style({
-	width: 14,
-	height: 14,
-	color: colors.text,
-	marginInline: space._2xs,
+	flexShrink: 0,
+	marginLeft: -4,
+	width: 12,
+	height: 12,
 });

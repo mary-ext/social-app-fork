@@ -3,13 +3,11 @@ import type { Did } from '@atcute/lexicons';
 
 import { safeUrlParse } from '#/lib/utils/url';
 
-import { useSession } from '#/state/session';
-
 import * as Dialog from '#/components/Dialog';
 import type { LinkWarningPayload } from '#/components/dialogs/handles';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarningDialog';
-import { Text as WebText } from '#/components/Text';
-import { ExternalLink } from '#/components/web/Link';
+import { Button } from '#/components/web/Button';
+import { ExternalLinkButton } from '#/components/web/Link';
 
 import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
@@ -18,35 +16,44 @@ import germLogoUrl from '../../../../assets/images/germ_logo.webp';
 import * as css from './GermButton.css';
 import { GermSelfDialog } from './GermSelfDialog';
 
-export function GermButton({
-	germ,
-	profile,
-}: {
-	germ: AppBskyActorDefs.ProfileAssociatedGerm;
-	profile: AnyProfileView;
-}) {
-	const { currentAccount } = useSession();
+/** opens a chat for visitors or the Germ explanation for the owner. */
+export type GermTarget = { kind: 'link'; url: string } | { kind: 'self'; did: Did };
 
+/**
+ * @param profile the profile
+ * @param viewerDid the signed-in account
+ * @returns the Germ button action, or null when unavailable to this viewer
+ */
+export const resolveGermTarget = (profile: AnyProfileView, viewerDid: Did | undefined): GermTarget | null => {
+	const germ = profile.associated?.germ;
 	// exclude `none` and all unknown values
-	if (!(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')) {
+	if (!germ || !(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')) {
 		return null;
 	}
-
-	if (currentAccount?.did === profile.did) {
-		return <GermSelfButton did={currentAccount.did} />;
+	if (viewerDid === profile.did) {
+		return { kind: 'self', did: viewerDid };
 	}
-
 	if (germ.showButtonTo === 'usersIFollow' && !profile.viewer?.followedBy) {
 		return null;
 	}
+	const url = constructGermUrl(germ, profile, viewerDid);
+	return url ? { kind: 'link', url } : null;
+};
 
-	const url = constructGermUrl(germ, profile, currentAccount?.did);
-
-	if (!url) {
-		return null;
+/**
+ * the Germ DM pill.
+ *
+ * @param props the action from {@link resolveGermTarget}
+ */
+export function GermButton({ target }: { target: GermTarget }) {
+	switch (target.kind) {
+		case 'link': {
+			return <GermLink url={target.url} />;
+		}
+		case 'self': {
+			return <GermSelfButton did={target.did} />;
+		}
 	}
-
-	return <GermLink url={url} />;
 }
 
 function GermLink({ url }: { url: string }) {
@@ -54,8 +61,9 @@ function GermLink({ url }: { url: string }) {
 
 	return (
 		<>
-			<ExternalLink
-				className={css.pill}
+			<ExternalLinkButton
+				className={css.linkPill}
+				color="secondary"
 				href={url}
 				label={m['screens.profile.germDm.action.open']()}
 				onPress={() => {
@@ -65,13 +73,12 @@ function GermLink({ url }: { url: string }) {
 						return false;
 					}
 				}}
+				size="small"
 			>
 				<GermLogo size="small" />
-				<WebText className={css.label} size="sm" weight="medium">
-					{m['screens.profile.germDm.label']()}
-				</WebText>
+				<span>{m['screens.profile.germDm.label']()}</span>
 				<ArrowTopRightIcon className={css.arrow} />
-			</ExternalLink>
+			</ExternalLinkButton>
 			<CustomLinkWarningDialog handle={linkWarningHandle} />
 		</>
 	);
@@ -90,12 +97,15 @@ function GermSelfButton({ did }: { did: Did }) {
 			<Dialog.Trigger
 				handle={selfExplanationHandle}
 				render={
-					<button aria-label={m['screens.profile.germDm.learnMore']()} className={css.pill}>
+					<Button
+						className={css.selfPill}
+						color="secondary"
+						label={m['screens.profile.germDm.learnMore']()}
+						size="small"
+					>
 						<GermLogo size="small" />
-						<WebText className={css.label} size="sm" weight="medium">
-							{m['screens.profile.germDm.label']()}
-						</WebText>
-					</button>
+						<span>{m['screens.profile.germDm.label']()}</span>
+					</Button>
 				}
 			/>
 			<GermSelfDialog did={did} handle={selfExplanationHandle} />
