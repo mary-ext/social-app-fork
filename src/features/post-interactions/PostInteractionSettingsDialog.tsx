@@ -4,8 +4,6 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { STALE } from '#/lib/query/const';
-
 import { useGetPost } from '#/state/queries/post/post';
 import { postgateQueryOptions } from '#/state/queries/postgate/postgate';
 import { threadgateViewQueryOptions } from '#/state/queries/threadgate/view';
@@ -56,10 +54,7 @@ export function usePrefetchPostInteractionSettings({
 			await Promise.all([
 				importSettingsBody(),
 				queryClient.prefetchQuery(postgateQueryOptions({ appview, pds: pds!, postUri })),
-				queryClient.prefetchQuery({
-					...threadgateViewQueryOptions({ getPost, postUri: rootPostUri }),
-					staleTime: STALE.SECONDS.THIRTY,
-				}),
+				queryClient.prefetchQuery(threadgateViewQueryOptions({ getPost, postUri: rootPostUri })),
 			]);
 		} catch (e) {
 			console.error('Failed to prefetch post interaction settings', e);
