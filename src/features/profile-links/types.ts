@@ -8,6 +8,8 @@ export type ProfileLink = {
 	icon?: AtpBlob;
 	/** favicon URL from the AppView. */
 	iconUrl?: string;
+	/** local preview; the CDN requires a record referencing the uploaded blob. */
+	iconPreview?: Blob;
 	/** saved `app.bsky.actor.link` record URI. */
 	uri?: ResourceUri;
 	cid?: Cid;

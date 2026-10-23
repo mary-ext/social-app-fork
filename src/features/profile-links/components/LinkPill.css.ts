@@ -63,6 +63,24 @@ export const preview = style([
 	},
 ]);
 
+export const grip = recipe(
+	{
+		base: {
+			flexShrink: 0,
+			marginLeft: -2,
+			width: 14,
+			height: 14,
+		},
+		variants: {
+			support: {
+				false: { color: colors.textContrastLow },
+				true: { opacity: 0.7, color: vars.palette.white },
+			},
+		},
+	},
+	{ debugId: 'grip' },
+);
+
 export const arrow = style({
 	flexShrink: 0,
 	marginLeft: -4,

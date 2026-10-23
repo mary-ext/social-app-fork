@@ -67,6 +67,7 @@ function ProfileHeaderBody() {
 					<ProfileHeaderLinks
 						germButton={germTarget ? <GermButton target={germTarget} /> : undefined}
 						hidden={isContentBlurred}
+						isOwnProfile={isMe}
 						profile={profile}
 					/>
 

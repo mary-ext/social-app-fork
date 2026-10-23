@@ -7,8 +7,12 @@ import { cleanError } from '#/lib/errors';
 import type { ImageMeta } from '#/lib/media/edit-image';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
-import { useProfileUpdateMutation } from '#/state/queries/profile';
+import { type ProfileRecordWrite, useProfileUpdateMutation } from '#/state/queries/profile';
 
+import { ProfileLinksEditor } from '#/features/profile-links/components/ProfileLinksEditor';
+import { useOwnProfileLinksQuery, useSaveWithProfileLinks } from '#/features/profile-links/queries';
+import { sameProfileLinks } from '#/features/profile-links/record';
+import type { ProfileLink } from '#/features/profile-links/types';
 import { useSimpleVerificationState } from '#/features/verification/verification-state';
 
 import * as Dialog from '#/components/Dialog';
@@ -59,11 +63,19 @@ export const EditProfileDialogContent = ({
 	const [newUserBanner, setNewUserBanner] = useState<ImageMeta | undefined | null>();
 	const [newUserAvatar, setNewUserAvatar] = useState<ImageMeta | undefined | null>();
 
+	const { data: storedLinks } = useOwnProfileLinksQuery(profile.did);
+	const saveWithProfileLinks = useSaveWithProfileLinks();
+	// undefined preserves stored links when saving before the query loads.
+	const [editedLinks, setEditedLinks] = useState<ProfileLink[]>();
+	const links = editedLinks ?? storedLinks;
+	const linksDirty = !!editedLinks && !!storedLinks && !sameProfileLinks(editedLinks, storedLinks);
+
 	const dirty =
 		displayName !== initialDisplayName ||
 		description !== initialDescription ||
 		userAvatar !== profile.avatar ||
-		userBanner !== profile.banner;
+		userBanner !== profile.banner ||
+		linksDirty;
 
 	useEffect(() => {
 		setDirty(dirty);
@@ -110,18 +122,28 @@ export const EditProfileDialogContent = ({
 	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
 	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
 
+	const updateProfile = (updates: ProfileRecordWrite | Promise<ProfileRecordWrite>) => {
+		return updateProfileMutation({ profile, updates, newUserAvatar, newUserBanner });
+	};
+
 	const onPressSave = async () => {
 		setImageError('');
+		const fields = { displayName: displayName.trim(), description: trimText(description) };
 		try {
-			await updateProfileMutation({
-				profile,
-				updates: {
-					displayName: displayName.trim(),
-					description: trimText(description),
-				},
-				newUserAvatar,
-				newUserBanner,
-			});
+			if (linksDirty && editedLinks) {
+				await saveWithProfileLinks(
+					{ did: profile.did, existing: storedLinks ?? [], links: editedLinks },
+					(pendingRefs) => {
+						return updateProfile(
+							pendingRefs.then((refs) => {
+								return { ...fields, links: refs };
+							}),
+						);
+					},
+				);
+			} else {
+				await updateProfile(fields);
+			}
 			handle.close();
 		} catch (e) {
 			console.error('Failed to update user profile', e);
@@ -197,6 +219,8 @@ export const EditProfileDialogContent = ({
 							</Text>
 						)}
 					</TextField.Root>
+
+					{links && <ProfileLinksEditor did={profile.did} links={links} onChange={setEditedLinks} />}
 				</div>
 			</Dialog.Body>
 		</>

@@ -2,6 +2,8 @@ import { type ReactNode, useState } from 'react';
 
 import type { Did } from '@atcute/lexicons';
 
+import { getBlobUrl } from '#/lib/utils/blob-url';
+
 import type { ProfileLink } from '../types';
 import * as css from './LinkFavicon.css';
 
@@ -13,6 +15,9 @@ import * as css from './LinkFavicon.css';
  * @returns the icon's URL, if the link has one
  */
 export const linkFaviconUrl = (link: ProfileLink, did: Did | undefined): string | undefined => {
+	if (link.iconPreview) {
+		return getBlobUrl(link.iconPreview);
+	}
 	if (link.iconUrl) {
 		return link.iconUrl;
 	}

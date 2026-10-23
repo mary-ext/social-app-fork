@@ -1,3 +1,4 @@
+import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -153,9 +154,24 @@ export type ProfileRecordWrite = {
 	-readonly [K in keyof Omit<AppBskyActorProfile.Main, '$type'>]: Omit<AppBskyActorProfile.Main, '$type'>[K];
 };
 
+/**
+ * @param views the links in a fresh profile view
+ * @param refs the link refs just saved to the profile record
+ * @returns whether link CIDs match in order
+ */
+export const sameLinkCids = (
+	views: AppBskyActorDefs.ProfileLinkView[] | undefined,
+	refs: ComAtprotoRepoStrongRef.Main[],
+): boolean => {
+	return (views ?? []).map((view) => view.cid).join() === refs.map((ref) => ref.cid).join();
+};
+
 interface ProfileUpdateParams {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	updates: ProfileRecordWrite | ((existing: ProfileRecordWrite) => ProfileRecordWrite);
+	updates:
+		| ProfileRecordWrite
+		| Promise<ProfileRecordWrite>
+		| ((existing: ProfileRecordWrite) => ProfileRecordWrite);
 	newUserAvatar?: ImageMeta | undefined | null;
 	newUserBanner?: ImageMeta | undefined | null;
 	checkCommitted?: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean;
@@ -165,7 +181,13 @@ export function useProfileUpdateMutation() {
 	const { appview, pds } = getClients();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 	return useMutation<void, Error, ProfileUpdateParams>({
-		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
+		mutationFn: async ({
+			profile,
+			updates: pendingUpdates,
+			newUserAvatar,
+			newUserBanner,
+			checkCommitted,
+		}) => {
 			let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
 			if (newUserAvatar) {
 				newUserAvatarPromise = uploadBlob(pds!, newUserAvatar.blob, newUserAvatar.blob.type);
@@ -174,6 +196,8 @@ export function useProfileUpdateMutation() {
 			if (newUserBanner) {
 				newUserBannerPromise = uploadBlob(pds!, newUserBanner.blob, newUserBanner.blob.type);
 			}
+			// overlap image uploads with pending link-record writes.
+			const updates = typeof pendingUpdates === 'function' ? pendingUpdates : await pendingUpdates;
 			await upsertProfile(pds!, profile.did, async (existing) => {
 				let next: ProfileRecordWrite = existing || {};
 				if (typeof updates === 'function') {
@@ -183,6 +207,9 @@ export function useProfileUpdateMutation() {
 					next.description = updates.description || undefined;
 					if ('pinnedPost' in updates) {
 						next.pinnedPost = updates.pinnedPost;
+					}
+					if ('links' in updates) {
+						next.links = updates.links;
 					}
 				}
 				if (newUserAvatarPromise) {
@@ -222,6 +249,9 @@ export function useProfileUpdateMutation() {
 						}
 						if (typeof updates === 'function') {
 							return true;
+						}
+						if ('links' in updates && !sameLinkCids(res.links, updates.links ?? [])) {
+							return false;
 						}
 						return res.displayName === updates.displayName && res.description === updates.description;
 					}),

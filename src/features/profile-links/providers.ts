@@ -1,3 +1,6 @@
+import type { GenericUri } from '@atcute/lexicons';
+import { isGenericUri } from '@atcute/lexicons/syntax';
+
 import { parseLooseUrl, safeUrlParse } from '#/lib/utils/url';
 
 /** logo asset name; resolved by ProviderLogo to keep this module free of asset imports. */
@@ -95,7 +98,10 @@ const isAccountUrl = (url: URL, provider: SupportProvider): boolean => {
  * @param input user-entered URL
  * @returns the URL, or null if it isn't a usable web link
  */
-export const normalizeProfileLinkUrl = (input: string): string | null => parseLooseUrl(input);
+export const normalizeProfileLinkUrl = (input: string): GenericUri | null => {
+	const url = parseLooseUrl(input);
+	return isGenericUri(url) ? url : null;
+};
 
 /**
  * finds the support platform a link points to. a bare provider homepage never counts.
@@ -133,7 +139,7 @@ export const getLinkHost = (url: string): string => {
 
 export type LinkInputValidation = {
 	/** the full URL, or null if the input isn't a usable link. */
-	url: string | null;
+	url: GenericUri | null;
 	provider: SupportProvider | undefined;
 	isEmpty: boolean;
 };

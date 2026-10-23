@@ -1,13 +1,14 @@
-import type { MouseEvent, ReactNode } from 'react';
+import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 import type { Did } from '@atcute/lexicons';
 
 import { linkWarningDialogHandle } from '#/components/dialogs/handles';
 import * as BaseTooltip from '#/components/primitives/tooltip';
-import { ButtonAnchor, ButtonIcon } from '#/components/web/Button';
+import { Button, ButtonAnchor, ButtonIcon } from '#/components/web/Button';
 import { isModifiedClick } from '#/components/web/Link';
 
 import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
+import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
 import GlobeIcon from '#/icons/central/Globe_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -87,5 +88,44 @@ export function ProfileLinkAnchor({ did, link }: { did: Did; link: ProfileLink }
 				</BaseTooltip.Popup>
 			</BaseTooltip.Positioner>
 		</BaseTooltip.Root>
+	);
+}
+
+/**
+ * link pill button for editing.
+ *
+ * @param props the link, its owner, the accessible label and handlers, and whether to end in the drag grip
+ */
+export function ProfileLinkButton({
+	did,
+	grip,
+	label,
+	link,
+	onClick,
+	onKeyDown,
+}: {
+	did: Did;
+	grip: boolean;
+	label: string;
+	link: ProfileLink;
+	onClick?: () => void;
+	onKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void;
+}) {
+	const support = !!getSupportProvider(link.url);
+	return (
+		<Button
+			className={css.pill({ end: grip ? 'grip' : 'text', support })}
+			color="secondary"
+			label={label}
+			onClick={onClick}
+			onKeyDown={onKeyDown}
+			size="small"
+		>
+			<PillContent
+				did={did}
+				link={link}
+				trailing={grip ? <GripIcon className={css.grip({ support })} /> : undefined}
+			/>
+		</Button>
 	);
 }
