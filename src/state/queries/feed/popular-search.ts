@@ -33,14 +33,14 @@ export function useSearchPopularFeedsMutation() {
 
 const createPopularFeedsSearchQueryKey = (query: string) => ['popularFeedsSearch', query];
 
-export function usePopularFeedsSearch({ query, enabled }: { query: string; enabled?: boolean }) {
+export function usePopularFeedsSearch({ query }: { query: string }) {
 	const { appview } = getClients();
 	const moderationOpts = useModerationOpts();
-	const enabledInner = enabled ?? !!moderationOpts;
 
 	return useInfiniteQuery({
 		queryKey: createPopularFeedsSearchQueryKey(query),
-		enabled: enabledInner,
+		// select requires moderation options
+		enabled: !!moderationOpts,
 		queryFn: async ({ pageParam, signal }) => {
 			return await ok(
 				appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
