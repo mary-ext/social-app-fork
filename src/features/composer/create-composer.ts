@@ -41,7 +41,7 @@ import {
 	type PostMedia,
 	threadSchema,
 } from './model/schema';
-import { caretInLines } from './model/selection';
+import { activePostId, caretInLines } from './model/selection';
 import type { TaintMap } from './model/taints';
 import { createStore } from './shared/store';
 import {
@@ -156,6 +156,7 @@ export const createComposer = ({
 		lock.of([]),
 		threadSchema,
 		caretInLines,
+		activePostId.extension,
 		history(),
 		threadCommands,
 		embedSessionWith(seed.dismissedLinks),

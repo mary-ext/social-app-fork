@@ -83,6 +83,9 @@ const embedSession = GardState.Field.define<EmbedSessionState>({
 	},
 });
 
+// editing-range changes must not invalidate session consumers.
+const embedSessionValue = GardState.Field.Derived.define((state) => state.field(embedSession).session);
+
 /**
  * tracks settled and dismissed link URLs shared across all posts.
  *
@@ -90,7 +93,7 @@ const embedSession = GardState.Field.define<EmbedSessionState>({
  * @returns the embed session extension
  */
 export const embedSessionWith = (dismissed: ReadonlySet<string>): GardState.Extension => {
-	return embedSession.init((state) => startSession(state.doc, dismissed));
+	return [embedSession.init((state) => startSession(state.doc, dismissed)), embedSessionValue.extension];
 };
 
 /**
@@ -100,5 +103,5 @@ export const embedSessionWith = (dismissed: ReadonlySet<string>): GardState.Exte
  * @returns the session; its identity changes only when a URL settles or is dismissed
  */
 export const getEmbedSession = (state: GardState): EmbedSession => {
-	return state.field(embedSession).session;
+	return state.field(embedSessionValue);
 };

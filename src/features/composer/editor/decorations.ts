@@ -1,7 +1,6 @@
 import { Decoration } from 'wordgard/editor';
 import { GardState } from 'wordgard/state';
 
-import { getEmbedSession } from '../embeds/embed-session';
 import { getPostInfo } from '../model/post-info';
 import { getPosts, isEmptyPost, Post } from '../model/schema';
 import { createOffsetMapper, measureCached } from '../model/text-measurement';
@@ -21,17 +20,14 @@ const facetDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.f
 const overflowDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.overflow } });
 
 type ThreadDecorations = {
-	facets: Decoration.Range.Set;
-	// separate from facets because range sets can't hold overlapping ranges.
-	overflow: Decoration.Range.Set;
+	ranges: Decoration.Range.Set;
 	points: Decoration.Point.Set;
 };
 
 const build = (state: GardState): ThreadDecorations => {
 	const getPlaceholder = state.facet(postPlaceholder);
 
-	const facets: [Decoration.Range, number, number][] = [];
-	const overflow: [Decoration.Range, number, number][] = [];
+	const ranges: [Decoration.Range, number, number][] = [];
 	const points: [Decoration.Point, number][] = [];
 
 	for (const { node, pos, index } of getPosts(state.doc)) {
@@ -42,11 +38,11 @@ const build = (state: GardState): ThreadDecorations => {
 			const toPos = createOffsetMapper(node, pos + 1);
 
 			for (const [from, to] of measurement.facets) {
-				facets.push([facetDeco, toPos(from), toPos(to)]);
+				ranges.push([facetDeco, toPos(from), toPos(to)]);
 			}
 
 			if (overflowAt !== null) {
-				overflow.push([overflowDeco, toPos(overflowAt), toPos(text.length)]);
+				ranges.push([overflowDeco, toPos(overflowAt), toPos(text.length)]);
 			}
 		}
 
@@ -56,31 +52,23 @@ const build = (state: GardState): ThreadDecorations => {
 		}
 	}
 
+	// overflow may precede facets; the set builder requires start order.
+	ranges.sort((a, b) => a[1] - b[1]);
+
 	return {
-		facets: Decoration.Range.set(facets),
-		overflow: Decoration.Range.set(overflow),
+		ranges: Decoration.Range.set(ranges),
 		points: Decoration.Point.set(points),
 	};
 };
+
+const threadDecorationSets = GardState.Field.Derived.define(build);
 
 /** applies post layout and placeholder styles to editor elements. */
 export const postClass: GardState.Extension = Decoration.Tag.attribute(Post, 'class', post.post);
 
 /** link highlights, overflow highlights, and placeholders. */
-export const threadDecorations = GardState.Field.define<ThreadDecorations>({
-	create: build,
-	update(value, tr) {
-		// overflow depends on the embed session, which decides whether a trailing link counts.
-		if (tr.docChanged || getEmbedSession(tr.state) !== getEmbedSession(tr.startState)) {
-			return build(tr.state);
-		}
-		return value;
-	},
-	provide(field) {
-		return [
-			Decoration.Range.source.of((state) => state.field(field).facets),
-			Decoration.Range.source.of((state) => state.field(field).overflow),
-			Decoration.Point.source.of((state) => state.field(field).points),
-		];
-	},
-});
+export const threadDecorations: GardState.Extension = [
+	threadDecorationSets.extension,
+	Decoration.Range.source.of((state) => state.field(threadDecorationSets).ranges),
+	Decoration.Point.source.of((state) => state.field(threadDecorationSets).points),
+];

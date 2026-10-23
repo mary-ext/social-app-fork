@@ -1,6 +1,6 @@
 import type { Command } from 'wordgard/command';
 import type { Pos } from 'wordgard/doc';
-import { GardSelection, type GardState, Transaction } from 'wordgard/state';
+import { GardSelection, GardState, Transaction } from 'wordgard/state';
 
 import { endOfLastLine, findPost, getPostParam, type ThreadPost } from './schema';
 
@@ -101,24 +101,21 @@ export const findActivePost = (state: GardState): Pos.Plot | null => {
 	return findPost(state.sel.head);
 };
 
-// share the lookup across all posts' controls.
-const activePostIds = new WeakMap<GardState, string | null>();
+/** id of the post containing the selection head, or null outside a post. */
+export const activePostId = GardState.Field.Derived.define((state): string | null => {
+	// a cached `state.sel` skips dependency tracking; read doc and selection directly.
+	const found = findPost(state.doc.resolve(state.selection.head));
+	return found && getPostParam(found.node).id;
+});
 
 /**
  * finds the id of the post containing the selection head.
  *
- * @param state the editor state
+ * @param state the editor state, configured with {@link activePostId}
  * @returns the post id, or null when the selection head is outside any post
  */
 export const getActivePostId = (state: GardState): string | null => {
-	let id = activePostIds.get(state);
-	if (id === undefined) {
-		const found = findActivePost(state);
-		id = found && getPostParam(found.node).id;
-		activePostIds.set(state, id);
-	}
-
-	return id;
+	return state.field(activePostId);
 };
 
 /**

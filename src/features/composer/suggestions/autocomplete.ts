@@ -79,30 +79,15 @@ const createHost = (wg: Wordgard): Tooltip.View => {
 	};
 };
 
-type SuggestionField = SuggestionState & { tooltip: Tooltip | null };
-
-const CLOSED: SuggestionField = { anchor: null, activeOption: null, tooltip: null };
-
-const withTooltip = (prev: SuggestionField, next: SuggestionState): SuggestionField => {
-	// changing the active row doesn't need a tooltip update.
-	if (next.anchor === prev.anchor) {
-		return next.activeOption === prev.activeOption ? prev : { ...next, tooltip: prev.tooltip };
-	}
-	if (next.anchor === null) {
-		return CLOSED;
-	}
-
-	// views are matched by `create`, so a moved anchor repositions the same popup.
-	return { ...next, tooltip: { pos: next.anchor, create: createHost } };
-};
+const CLOSED: SuggestionState = { anchor: null, activeOption: null };
 
 /** suggestion state, tooltip placement, and editor ARIA attributes. */
-export const suggestionState = GardState.Field.define<SuggestionField>({
+export const suggestionState = GardState.Field.define<SuggestionState>({
 	create() {
 		return CLOSED;
 	},
 	update(value, tr) {
-		let next: SuggestionState = value;
+		let next = value;
 		if (tr.docChanged && next.anchor !== null) {
 			next = { ...next, anchor: tr.changes.mapPos(next.anchor) };
 		}
@@ -114,20 +99,28 @@ export const suggestionState = GardState.Field.define<SuggestionField>({
 			}
 		}
 
-		return withTooltip(value, next);
+		return next.anchor === value.anchor && next.activeOption === value.activeOption ? value : next;
 	},
 	provide(field) {
+		const tooltip = GardState.Field.Derived.define(
+			(state): Tooltip | null => {
+				const { anchor } = state.field(field);
+				return anchor === null ? null : { pos: anchor, create: createHost };
+			},
+			// changing the active row doesn't need a tooltip update.
+			{ compare: (a, b) => a?.pos === b?.pos },
+		);
+
 		return [
-			Tooltip.show.derive((state) => state.field(field).tooltip),
+			tooltip.extension,
+			// views are matched by `create`, so a moved anchor repositions the same popup.
+			Tooltip.show.from(tooltip),
 			// null removes ARIA attributes when the popup closes.
-			Wordgard.contentAttributes.derive((state) => {
-				const { anchor, activeOption } = state.field(field);
-				return {
-					'aria-expanded': anchor === null ? null : 'true',
-					'aria-controls': anchor === null ? null : SUGGESTION_LISTBOX_ID,
-					'aria-activedescendant': activeOption,
-				};
-			}),
+			Wordgard.contentAttributes.from(field, ({ anchor, activeOption }) => ({
+				'aria-expanded': anchor === null ? null : 'true',
+				'aria-controls': anchor === null ? null : SUGGESTION_LISTBOX_ID,
+				'aria-activedescendant': activeOption,
+			})),
 		];
 	},
 });
