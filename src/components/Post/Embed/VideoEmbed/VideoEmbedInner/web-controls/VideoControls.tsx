@@ -220,7 +220,8 @@ export function Controls({
 		if (!videoRef.current) {
 			return;
 		}
-		if (videoRef.current.fastSeek) {
+		// Firefox's fastSeek can desync audio by snapping only video to a keyframe.
+		if (videoRef.current.fastSeek && !IS_FIREFOX) {
 			videoRef.current.fastSeek(time);
 		} else {
 			videoRef.current.currentTime = time;
