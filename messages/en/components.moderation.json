@@ -27,6 +27,17 @@
 	"components.moderation.chat.memberRemovedToast": "Member removed from group chat.",
 	"components.moderation.chat.mutualGroups": "Mutual group chats",
 	"components.moderation.chat.removeMember": "Remove member",
+	"components.moderation.chat.seeMore": "See more",
+	"components.moderation.chat.seeMoreCount": [
+		{
+			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "See {n} more",
+				"cp=other": "See {n} more"
+			}
+		}
+	],
 	"components.moderation.chat.theyOwn": "They own this chat",
 	"components.moderation.chat.youOwn": "You own this chat",
 	"components.moderation.label.accountSuffix": "{name} (account)",

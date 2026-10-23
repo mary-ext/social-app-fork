@@ -5,6 +5,7 @@ import { ClientResponseError } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { isNetworkError } from '#/lib/errors';
 
@@ -31,6 +32,8 @@ import * as css from './BlockDialog.css';
 
 const GROUP_ITEM_HEIGHT_ESTIMATE = 56;
 
+const MAX_PREVIEW_GROUP_CHATS = 3;
+
 type Item = ChatBskyConvoDefs.ConvoView;
 
 type BlockDialogProps = {
@@ -40,10 +43,17 @@ type BlockDialogProps = {
 	currentConvoId?: string;
 };
 
+type MutualGroupChatRowProps = {
+	currentConvoId?: string;
+	onOptimisticallyRemoveConvo: (convoId: string) => void;
+	onRestoreConvo: (convoId: string) => void;
+	profileDid: Did;
+};
+
 export function BlockDialog({ handle, profile, onBlock, currentConvoId }: BlockDialogProps) {
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup height="fixed" scroll="body" size="medium">
+			<Dialog.Popup scroll="body" size="medium">
 				<BlockDialogInner
 					currentConvoId={currentConvoId}
 					handle={handle}
@@ -66,22 +76,28 @@ function BlockDialogInner({
 	onBlock: () => Promise<void>;
 	profile: Shadow<AnyProfileView>;
 }) {
+	const allGroupsHandle = Dialog.useDialogHandle();
+
 	// Optimistically hide convos the viewer has left or removed the profile from, before the query
 	// refetches. We don't expect many items here, so a simple filter is fine.
 	const [removedConvoIds, setRemovedConvoIds] = useState<Set<string>>(() => new Set());
-	const onOptimisticallyRemoveConvo = (convoId: string) => {
-		setRemovedConvoIds((prev) => {
-			const next = new Set(prev);
-			next.add(convoId);
-			return next;
-		});
-	};
-	const onRestoreConvo = (convoId: string) => {
-		setRemovedConvoIds((prev) => {
-			const next = new Set(prev);
-			next.delete(convoId);
-			return next;
-		});
+	const rowProps: MutualGroupChatRowProps = {
+		currentConvoId,
+		onOptimisticallyRemoveConvo: (convoId) => {
+			setRemovedConvoIds((prev) => {
+				const next = new Set(prev);
+				next.add(convoId);
+				return next;
+			});
+		},
+		onRestoreConvo: (convoId) => {
+			setRemovedConvoIds((prev) => {
+				const next = new Set(prev);
+				next.delete(convoId);
+				return next;
+			});
+		},
+		profileDid: profile.did,
 	};
 
 	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useListMutualGroupsQuery({
@@ -91,7 +107,8 @@ function BlockDialogInner({
 	const items: Item[] = (data?.pages.flatMap((page) => page.convos) ?? []).filter(
 		(item) => !removedConvoIds.has(item.id),
 	);
-	const hasMutualGroupChats = items.length > 0;
+	const previewItems = items.slice(0, MAX_PREVIEW_GROUP_CHATS);
+	const hiddenCount = items.length - previewItems.length;
 
 	const onEndReached = () => {
 		if (isFetchingNextPage || !hasNextPage) {
@@ -114,47 +131,50 @@ function BlockDialogInner({
 				</Dialog.Header.Title>
 			</Dialog.Header.Root>
 
-			<div className={css.description}>
-				<Text color="textContrastMedium">
-					{isBlocking
-						? m['common.block.unblockHint']()
-						: profile.associated?.labeler
-							? m['components.moderation.block.descriptionLabels']()
-							: m['components.moderation.block.description']()}
-				</Text>
-			</div>
+			<Dialog.Body>
+				<div className={css.description}>
+					<Text color="textContrastMedium">
+						{isBlocking
+							? m['common.block.unblockHint']()
+							: profile.associated?.labeler
+								? m['components.moderation.block.descriptionLabels']()
+								: m['components.moderation.block.description']()}
+					</Text>
+				</div>
 
-			<Dialog.List
-				data={items}
-				estimateHeight={GROUP_ITEM_HEIGHT_ESTIMATE}
-				keyExtractor={(item) => item.id}
-				renderItem={({ item }) => (
-					<MutualGroupChat
-						currentConvoId={currentConvoId}
-						onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}
-						onRestoreConvo={onRestoreConvo}
-						profileDid={profile.did}
-						view={item}
-					/>
-				)}
-				onEndReached={onEndReached}
-				ListFooterComponent={
-					isFetchingNextPage ? <CenteredSpinner label={m['common.status.loading']()} size="xl" /> : null
-				}
-				ListHeaderComponent={
-					hasMutualGroupChats ? (
-						<Text className={css.groupsLabel} color="textContrastHigh" size="sm" weight="semiBold">
+				{isLoading ? (
+					<div className={css.loading}>
+						<CenteredSpinner label={m['common.status.loading']()} size="_2xl" />
+					</div>
+				) : previewItems.length > 0 ? (
+					<div className={css.groups}>
+						<Text color="textContrastHigh" size="sm" weight="semiBold">
 							{m['components.moderation.chat.mutualGroups']()}
 						</Text>
-					) : null
-				}
-				ListEmptyComponent={
-					isLoading ? (
-						<div className={css.loading}>
-							<CenteredSpinner label={m['common.status.loading']()} size="_2xl" />
+						<div className={css.groupsBox}>
+							{previewItems.map((item) => (
+								<MutualGroupChat key={item.id} className={css.previewRow} view={item} {...rowProps} />
+							))}
+							{hiddenCount > 0 || hasNextPage ? (
+								<button type="button" className={css.seeMore} onClick={() => allGroupsHandle.open()}>
+									<Text color="primary_500" weight="medium">
+										{hasNextPage
+											? m['components.moderation.chat.seeMore']()
+											: m['components.moderation.chat.seeMoreCount']({ count: hiddenCount })}
+									</Text>
+								</button>
+							) : null}
 						</div>
-					) : null
-				}
+					</div>
+				) : null}
+			</Dialog.Body>
+
+			<MutualGroupChatsDialog
+				handle={allGroupsHandle}
+				isFetchingNextPage={isFetchingNextPage}
+				items={items}
+				onEndReached={onEndReached}
+				rowProps={rowProps}
 			/>
 
 			<Dialog.Footer>
@@ -184,17 +204,51 @@ function BlockDialogInner({
 	);
 }
 
+function MutualGroupChatsDialog({
+	handle,
+	isFetchingNextPage,
+	items,
+	onEndReached,
+	rowProps,
+}: {
+	handle: Dialog.DialogHandle;
+	isFetchingNextPage: boolean;
+	items: Item[];
+	onEndReached: () => void;
+	rowProps: MutualGroupChatRowProps;
+}) {
+	return (
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup height="fixed" scroll="body" size="medium">
+				<Dialog.Header.Root border="scrolling">
+					<Dialog.Header.Close />
+					<Dialog.Header.Title>{m['components.moderation.chat.mutualGroups']()}</Dialog.Header.Title>
+				</Dialog.Header.Root>
+
+				<Dialog.List
+					data={items}
+					estimateHeight={GROUP_ITEM_HEIGHT_ESTIMATE}
+					keyExtractor={(item) => item.id}
+					renderItem={({ item }) => <MutualGroupChat className={css.listRow} view={item} {...rowProps} />}
+					onEndReached={onEndReached}
+					ListFooterComponent={
+						isFetchingNextPage ? <CenteredSpinner label={m['common.status.loading']()} size="xl" /> : null
+					}
+				/>
+			</Dialog.Popup>
+		</Dialog.Root>
+	);
+}
+
 function MutualGroupChat({
+	className,
 	currentConvoId,
 	onOptimisticallyRemoveConvo,
 	onRestoreConvo,
 	profileDid,
 	view,
-}: {
-	currentConvoId?: string;
-	onOptimisticallyRemoveConvo: (convoId: string) => void;
-	onRestoreConvo: (convoId: string) => void;
-	profileDid: Did;
+}: MutualGroupChatRowProps & {
+	className: string;
 	view: ChatBskyConvoDefs.ConvoView;
 }) {
 	const { currentAccount } = useSession();
@@ -256,7 +310,7 @@ function MutualGroupChat({
 	const isCurrentConvo = view.id === currentConvoId;
 
 	return (
-		<div className={css.row}>
+		<div className={clsx(css.row, className)}>
 			<div className={css.rowMain}>
 				<AvatarBubbles profiles={convo.members} size={40} />
 				<div className={css.rowText}>
