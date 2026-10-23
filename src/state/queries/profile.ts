@@ -166,16 +166,45 @@ export const sameLinkCids = (
 	return (views ?? []).map((view) => view.cid).join() === refs.map((ref) => ref.cid).join();
 };
 
+/** a pending change to a profile image. */
+export type ProfileImageEdit = null | { kind: 'remove' } | { kind: 'replace'; image: ImageMeta };
+
+/**
+ * @param edit the pending change to a profile image
+ * @param current the image URL on the profile being edited
+ * @param fresh the image URL on a freshly fetched profile view
+ * @returns whether the fresh view reflects the edit
+ */
+const imageEditCommitted = (
+	edit: ProfileImageEdit,
+	current: string | undefined,
+	fresh: string | undefined,
+): boolean => {
+	if (edit === null) {
+		return true;
+	}
+
+	switch (edit.kind) {
+		case 'remove': {
+			return !fresh;
+		}
+		case 'replace': {
+			return fresh !== current;
+		}
+	}
+};
+
 interface ProfileUpdateParams {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	updates:
 		| ProfileRecordWrite
 		| Promise<ProfileRecordWrite>
 		| ((existing: ProfileRecordWrite) => ProfileRecordWrite);
-	newUserAvatar?: ImageMeta | undefined | null;
-	newUserBanner?: ImageMeta | undefined | null;
+	avatarEdit?: ProfileImageEdit;
+	bannerEdit?: ProfileImageEdit;
 	checkCommitted?: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean;
 }
+
 export function useProfileUpdateMutation() {
 	const queryClient = useQueryClient();
 	const { appview, pds } = getClients();
@@ -184,17 +213,17 @@ export function useProfileUpdateMutation() {
 		mutationFn: async ({
 			profile,
 			updates: pendingUpdates,
-			newUserAvatar,
-			newUserBanner,
+			avatarEdit = null,
+			bannerEdit = null,
 			checkCommitted,
 		}) => {
-			let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
-			if (newUserAvatar) {
-				newUserAvatarPromise = uploadBlob(pds!, newUserAvatar.blob, newUserAvatar.blob.type);
+			let newAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
+			if (avatarEdit?.kind === 'replace') {
+				newAvatarPromise = uploadBlob(pds!, avatarEdit.image.blob, avatarEdit.image.blob.type);
 			}
-			let newUserBannerPromise: ReturnType<typeof uploadBlob> | undefined;
-			if (newUserBanner) {
-				newUserBannerPromise = uploadBlob(pds!, newUserBanner.blob, newUserBanner.blob.type);
+			let newBannerPromise: ReturnType<typeof uploadBlob> | undefined;
+			if (bannerEdit?.kind === 'replace') {
+				newBannerPromise = uploadBlob(pds!, bannerEdit.image.blob, bannerEdit.image.blob.type);
 			}
 			// overlap image uploads with pending link-record writes.
 			const updates = typeof pendingUpdates === 'function' ? pendingUpdates : await pendingUpdates;
@@ -212,14 +241,14 @@ export function useProfileUpdateMutation() {
 						next.links = updates.links;
 					}
 				}
-				if (newUserAvatarPromise) {
-					next.avatar = await newUserAvatarPromise;
-				} else if (newUserAvatar === null) {
+				if (newAvatarPromise) {
+					next.avatar = await newAvatarPromise;
+				} else if (avatarEdit?.kind === 'remove') {
 					next.avatar = undefined;
 				}
-				if (newUserBannerPromise) {
-					next.banner = await newUserBannerPromise;
-				} else if (newUserBanner === null) {
+				if (newBannerPromise) {
+					next.banner = await newBannerPromise;
+				} else if (bannerEdit?.kind === 'remove') {
 					next.banner = undefined;
 				}
 				return next;
@@ -229,23 +258,11 @@ export function useProfileUpdateMutation() {
 				profile.did,
 				checkCommitted ||
 					((res) => {
-						if (typeof newUserAvatar !== 'undefined') {
-							if (newUserAvatar === null && res.avatar) {
-								// url hasn't cleared yet
-								return false;
-							} else if (res.avatar === profile.avatar) {
-								// url hasn't changed yet
-								return false;
-							}
+						if (!imageEditCommitted(avatarEdit, profile.avatar, res.avatar)) {
+							return false;
 						}
-						if (typeof newUserBanner !== 'undefined') {
-							if (newUserBanner === null && res.banner) {
-								// url hasn't cleared yet
-								return false;
-							} else if (res.banner === profile.banner) {
-								// url hasn't changed yet
-								return false;
-							}
+						if (!imageEditCommitted(bannerEdit, profile.banner, res.banner)) {
+							return false;
 						}
 						if (typeof updates === 'function') {
 							return true;
