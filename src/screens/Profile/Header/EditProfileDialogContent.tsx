@@ -8,14 +8,9 @@ import type { ImageMeta } from '#/lib/media/edit-image';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
-import {
-	type ProfileImageEdit,
-	type ProfileRecordWrite,
-	useProfileUpdateMutation,
-} from '#/state/queries/profile';
+import { type ProfileImageEdit, useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { ProfileLinksEditor } from '#/features/profile-links/components/ProfileLinksEditor';
-import { saveWithProfileLinks } from '#/features/profile-links/queries';
 import { linksFromProfileView, sameProfileLinks } from '#/features/profile-links/record';
 import type { ProfileLink } from '#/features/profile-links/types';
 import { useSimpleVerificationState } from '#/features/verification/verification-state';
@@ -34,17 +29,14 @@ import { m } from '#/paraglide/messages';
 
 import * as styles from './EditProfileDialog.css';
 
-/**
- * @param edit the pending change to a profile image
- * @param current the profile's current image URL
- * @returns the URL to display for the edit
- */
-const resolveImageUrl = (edit: ProfileImageEdit, current: string | undefined): string | undefined => {
-	if (edit === null) {
-		return current;
-	}
-
-	switch (edit.kind) {
+const resolveImageUrl = (
+	edit: ProfileImageEdit | undefined,
+	current: string | undefined,
+): string | undefined => {
+	switch (edit?.kind) {
+		case undefined: {
+			return current;
+		}
 		case 'remove': {
 			return undefined;
 		}
@@ -85,7 +77,7 @@ export const EditProfileDialogContent = ({
 }) => {
 	const verification = useSimpleVerificationState({ profile });
 	const {
-		mutateAsync: updateProfileMutation,
+		mutateAsync: updateProfile,
 		error: updateProfileError,
 		isError: isUpdateProfileError,
 		isPending: isUpdatingProfile,
@@ -93,22 +85,22 @@ export const EditProfileDialogContent = ({
 	const initialDisplayName = profile.displayName || '';
 	const initialDescription = profile.description || '';
 
-	const [banner, setBanner] = useState<ProfileImageEdit>(null);
-	const [avatar, setAvatar] = useState<ProfileImageEdit>(null);
+	const [banner, setBanner] = useState<ProfileImageEdit>();
+	const [avatar, setAvatar] = useState<ProfileImageEdit>();
 	const [displayName, setDisplayName] = useState(initialDisplayName);
 	const [description, setDescription] = useState(initialDescription);
 
 	const storedLinks = linksFromProfileView(profile.links);
 	const [editedLinks, setEditedLinks] = useState<ProfileLink[]>();
 	const links = editedLinks ?? storedLinks;
-	const linksDirty = !!editedLinks && !sameProfileLinks(editedLinks, storedLinks);
+	const changedLinks = editedLinks && !sameProfileLinks(editedLinks, storedLinks) ? editedLinks : undefined;
 
 	const dirty =
-		banner !== null ||
-		avatar !== null ||
+		banner !== undefined ||
+		avatar !== undefined ||
 		displayName !== initialDisplayName ||
 		description !== initialDescription ||
-		linksDirty;
+		changedLinks !== undefined;
 
 	useEffect(() => {
 		setDirty(dirty);
@@ -133,27 +125,18 @@ export const EditProfileDialogContent = ({
 	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
 	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
 
-	const updateProfile = (updates: ProfileRecordWrite | Promise<ProfileRecordWrite>) => {
-		return updateProfileMutation({ profile, updates, avatarEdit: avatar, bannerEdit: banner });
-	};
-
 	const onPressSave = async () => {
-		const fields = { displayName: displayName.trim(), description: trimText(description) };
 		try {
-			if (linksDirty && editedLinks) {
-				await saveWithProfileLinks(
-					{ did: profile.did, existing: storedLinks, links: editedLinks },
-					(pendingRefs) => {
-						return updateProfile(
-							pendingRefs.then((refs) => {
-								return { ...fields, links: refs };
-							}),
-						);
-					},
-				);
-			} else {
-				await updateProfile(fields);
-			}
+			await updateProfile({
+				edits: {
+					avatar,
+					banner,
+					description: trimText(description),
+					displayName: displayName.trim(),
+					links: changedLinks && { existing: storedLinks, next: changedLinks },
+				},
+				profile,
+			});
 			handle.close();
 		} catch (e) {
 			console.error('Failed to update user profile', e);

@@ -7,13 +7,22 @@ import * as css from './LinkFavicon.css';
 
 /**
  * @param link the link
- * @returns the local preview URL, falling back to the AppView URL, or undefined if neither exists
+ * @returns the favicon's display URL, or undefined if absent
  */
 export const linkFaviconUrl = (link: ProfileLink): string | undefined => {
-	if (link.iconPreview) {
-		return getBlobUrl(link.iconPreview);
+	const icon = link.icon;
+	if (!icon) {
+		return undefined;
 	}
-	return link.iconUrl;
+
+	switch (icon.kind) {
+		case 'fetched': {
+			return getBlobUrl(icon.image);
+		}
+		case 'stored': {
+			return icon.url;
+		}
+	}
 };
 
 /**

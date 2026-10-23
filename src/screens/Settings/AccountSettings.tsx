@@ -211,30 +211,8 @@ function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: bool
 		if (!profile) {
 			return;
 		}
-		// capture the intended final state up front so a getRecord re-read on an InvalidSwap retry
-		// can't invert the user's action
-		const shouldAdd = !enabled;
 		updateProfile.mutate(
-			{
-				profile,
-				updates: (existing) => {
-					const values =
-						existing.labels?.$type === 'com.atproto.label.defs#selfLabels' ? [...existing.labels.values] : [];
-
-					const nextValues: { val: string }[] = shouldAdd
-						? values.some((l) => l.val === value)
-							? values
-							: [...values, { val: value }]
-						: values.filter((l) => l.val !== value);
-
-					existing.labels = nextValues.length
-						? { $type: 'com.atproto.label.defs#selfLabels', values: nextValues }
-						: undefined;
-
-					return existing;
-				},
-				checkCommitted: (res) => !!res.labels?.some((l) => l.val === value) === shouldAdd,
-			},
+			{ edits: { selfLabel: { enabled: !enabled, value } }, profile },
 			invalidateFeeds
 				? {
 						onSuccess() {

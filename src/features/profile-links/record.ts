@@ -1,3 +1,4 @@
+import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -7,7 +8,13 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { normalizeProfileLinkUrl } from './providers';
-import { MAX_PROFILE_LINKS, MAX_TITLE_LENGTH, type ProfileLink, type SavedProfileLink } from './types';
+import {
+	type LinkIcon,
+	MAX_PROFILE_LINKS,
+	MAX_TITLE_LENGTH,
+	type ProfileLink,
+	type SavedProfileLink,
+} from './types';
 
 const isShowable = (url: string, seen: Set<string>): boolean => {
 	const normalized = normalizeProfileLinkUrl(url);
@@ -95,21 +102,35 @@ export const linksFromProfileView = (
 		links.push({
 			url: view.url,
 			title: cleanTitle(view.title),
-			iconUrl: view.icon,
-			uri: view.uri,
-			cid: view.cid,
+			icon: view.icon ? { kind: 'stored', url: view.icon } : undefined,
+			record: { uri: view.uri, cid: view.cid },
 		});
 	}
 	return links;
 };
 
+const sameIcon = (a: LinkIcon | undefined, b: LinkIcon | undefined): boolean => {
+	if (!a || !b) {
+		return a === b;
+	}
+
+	switch (a.kind) {
+		case 'fetched': {
+			return b.kind === 'fetched' && a.image === b.image;
+		}
+		case 'stored': {
+			return b.kind === 'stored' && a.url === b.url;
+		}
+	}
+};
+
 /**
  * @param a a link
  * @param b another link
- * @returns whether both would be stored as the same record content
+ * @returns whether URL, title, and icon match; fetched icons compare by blob identity, not bytes
  */
 export const sameLinkContent = (a: ProfileLink, b: ProfileLink): boolean => {
-	return a.url === b.url && a.title === b.title && a.icon?.ref.$link === b.icon?.ref.$link;
+	return a.url === b.url && a.title === b.title && sameIcon(a.icon, b.icon);
 };
 
 /**
@@ -122,7 +143,19 @@ export const sameProfileLinks = (a: ProfileLink[], b: ProfileLink[]): boolean =>
 		a.length === b.length &&
 		a.every((link, i) => {
 			const other = b[i]!;
-			return link.uri === other.uri && sameLinkContent(link, other);
+			return link.record?.uri === other.record?.uri && sameLinkContent(link, other);
 		})
 	);
+};
+
+/**
+ * @param views the links in a fresh profile view
+ * @param refs the link refs just saved to the profile record
+ * @returns whether link CIDs match in order
+ */
+export const sameLinkCids = (
+	views: AppBskyActorDefs.ProfileLinkView[] | undefined,
+	refs: ComAtprotoRepoStrongRef.Main[],
+): boolean => {
+	return (views ?? []).map((view) => view.cid).join() === refs.map((ref) => ref.cid).join();
 };

@@ -1,6 +1,8 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
+import { useProfileUpdateMutation } from '#/state/queries/profile';
+
 import * as Dialog from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';
 import { Stack } from '#/components/Stack';
@@ -8,7 +10,6 @@ import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
-import { useSaveProfileLinksMutation } from '../queries';
 import type { ProfileLink, SavedProfileLink } from '../types';
 import { LinkForm } from './LinkForm';
 import { linkLabel } from './LinkPill';
@@ -32,7 +33,7 @@ export function OwnLinkFormDialog({
 	return (
 		<Dialog.Root handle={handle}>
 			{({ payload }: { payload: OwnLinkFormPayload | undefined }) => {
-				const index = payload ? links.findIndex((link) => link.uri === payload.uri) : -1;
+				const index = payload ? links.findIndex((link) => link.record.uri === payload.uri) : -1;
 				if (index === -1) {
 					return null;
 				}
@@ -58,12 +59,12 @@ function DialogInner({
 	stored: SavedProfileLink[];
 }) {
 	const removePromptHandle = Prompt.usePromptHandle();
-	const { mutate: save } = useSaveProfileLinksMutation();
+	const { mutate: updateProfile } = useProfileUpdateMutation();
 
 	const commit = (next: ProfileLink[]) => {
 		handle.close();
-		save(
-			{ existing: stored, links: next, profile },
+		updateProfile(
+			{ edits: { links: { existing: stored, next } }, profile },
 			{
 				onError: (e) => {
 					console.error('failed to save profile links', e);

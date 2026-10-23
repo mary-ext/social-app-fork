@@ -79,7 +79,7 @@ function OwnLinks({
 					grip={false}
 					label={m['features.profileLinks.editor.edit']({ name: linkLabel(link) })}
 					link={link}
-					onClick={() => formHandle.openWithPayload({ uri: link.uri })}
+					onClick={() => formHandle.openWithPayload({ uri: link.record.uri })}
 				/>
 			),
 		};

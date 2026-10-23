@@ -79,8 +79,8 @@ export function ReportLinkDialog({
 					handle={reportHandle}
 					subject={{
 						$type: 'app.bsky.actor.defs#profileLinkView',
-						cid: reported.cid,
-						uri: reported.uri,
+						cid: reported.record.cid,
+						uri: reported.record.uri,
 						url: reported.url,
 					}}
 				/>

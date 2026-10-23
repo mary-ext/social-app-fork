@@ -1,22 +1,26 @@
-import type { Blob as AtpBlob, Cid, GenericUri, ResourceUri } from '@atcute/lexicons';
+import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import type { GenericUri } from '@atcute/lexicons';
+
+export type LinkIcon =
+	/** fetched for this edit; uploaded when the profile is saved. */
+	| { kind: 'fetched'; image: Blob }
+	/** on the saved record; only its CDN URL is known. */
+	| { kind: 'stored'; url: string };
 
 /** a saved or draft profile link. */
 export type ProfileLink = {
 	url: GenericUri;
 	title?: string;
-	/** uploaded favicon blob for record writes; absent from AppView links. */
-	icon?: AtpBlob;
-	/** favicon URL from the AppView. */
-	iconUrl?: string;
-	/** local preview; the CDN requires a record referencing the uploaded blob. */
-	iconPreview?: Blob;
-	/** saved `app.bsky.actor.link` record URI. */
-	uri?: ResourceUri;
-	cid?: Cid;
+	icon?: LinkIcon;
+	/** source record; retain through edits. */
+	record?: ComAtprotoRepoStrongRef.Main;
 };
 
-/** a profile link with a record reference. */
-export type SavedProfileLink = ProfileLink & { uri: ResourceUri; cid: Cid };
+/** a profile link as read from a profile view. */
+export type SavedProfileLink = ProfileLink & {
+	icon?: Extract<LinkIcon, { kind: 'stored' }>;
+	record: ComAtprotoRepoStrongRef.Main;
+};
 
 export const MAX_PROFILE_LINKS = 10;
 

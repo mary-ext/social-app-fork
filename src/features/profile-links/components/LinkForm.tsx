@@ -10,7 +10,7 @@ import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 import { formatLinkUrl, getLinkHost, normalizeProfileLinkUrl, validateLinkInput } from '../providers';
-import { fetchLinkPage, uploadLinkIcon } from '../queries';
+import { fetchLinkIcon, fetchLinkPage } from '../queries';
 import { cleanTitle } from '../record';
 import { MAX_TITLE_LENGTH, type ProfileLink } from '../types';
 import * as css from './LinkForm.css';
@@ -118,23 +118,20 @@ export function LinkForm({
 		const needsCheck = isNewDestination && reachability === 'unchecked';
 		// refresh favicons on every save; support links use bundled logos.
 		const needsIcon = !provider;
-		let icon = isNewDestination ? undefined : link?.icon;
-		let iconPreview = isNewDestination ? undefined : link?.iconPreview;
-		const iconUrl = isNewDestination ? undefined : link?.iconUrl;
+		let icon = isNewDestination || provider ? undefined : link?.icon;
 		if (needsCheck || needsIcon) {
 			setReachability('checking');
-			const [page, uploaded] = await Promise.all([
+			const [page, fetchedIcon] = await Promise.all([
 				needsCheck ? fetchLinkPage(targetUrl) : undefined,
-				needsIcon ? uploadLinkIcon(targetUrl) : undefined,
+				needsIcon ? fetchLinkIcon(targetUrl) : undefined,
 			]);
 			if (page === null) {
 				setReachability('unreachable');
 				return;
 			}
 			setReachability('reachable');
-			if (uploaded) {
-				icon = uploaded.icon;
-				iconPreview = uploaded.preview;
+			if (fetchedIcon) {
+				icon = { kind: 'fetched', image: fetchedIcon };
 			}
 		}
 
@@ -142,9 +139,7 @@ export function LinkForm({
 			url: targetUrl,
 			title: nextTitle,
 			icon,
-			iconPreview,
-			iconUrl,
-			uri: link?.uri,
+			record: link?.record,
 		};
 		onDone(index === null ? [...links, saved] : links.map((other, i) => (i === index ? saved : other)));
 	};

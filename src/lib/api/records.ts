@@ -3,6 +3,8 @@ import { type Client, ok } from '@atcute/client';
 import type { Blob as AtpBlob, Cid, Did, InferInput, Nsid, ResourceUri } from '@atcute/lexicons';
 import type { Records } from '@atcute/lexicons/ambient';
 
+import { isRecordNotFoundError } from '#/lib/errors';
+
 /**
  * typed `com.atproto.repo.*` record helpers.
  *
@@ -123,6 +125,28 @@ export const getRecord = async <K extends RecordType>(
 
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the requested collection pins `value`, which the wire type leaves `unknown`
 	return data as GetRecordOutput<InferInput<Records[K]>>;
+};
+
+/**
+ * reads a repo record via {@link getRecord}.
+ *
+ * @param client client to issue the call on
+ * @param options record to read
+ * @returns record output, or undefined if missing
+ * @throws on errors other than RecordNotFound
+ */
+export const findRecord = async <K extends RecordType>(
+	client: Client,
+	options: GetRecordOptions<K>,
+): Promise<GetRecordOutput<InferInput<Records[K]>> | undefined> => {
+	try {
+		return await getRecord(client, options);
+	} catch (e) {
+		if (isRecordNotFoundError(e)) {
+			return undefined;
+		}
+		throw e;
+	}
 };
 
 interface ListRecordsOptions<K extends RecordType> {

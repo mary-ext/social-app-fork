@@ -49,12 +49,8 @@ export function usePinnedPostMutation() {
 				}
 
 				await profileUpdateMutate({
+					edits: { pinnedPost: pinCurrentPost ? { uri: postUri, cid: postCid } : null },
 					profile,
-					updates: (existing) => {
-						existing.pinnedPost = pinCurrentPost ? { uri: postUri, cid: postCid } : undefined;
-						return existing;
-					},
-					checkCommitted: (res) => (pinCurrentPost ? res.pinnedPost?.uri === postUri : !res.pinnedPost),
 				});
 
 				if (pinCurrentPost) {

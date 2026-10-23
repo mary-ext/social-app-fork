@@ -5,8 +5,8 @@ import type {
 	AppBskyActorProfile,
 	AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
-import { type Client, ClientResponseError, ok } from '@atcute/client';
-import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
+import { type Client, ok } from '@atcute/client';
+import type { ActorIdentifier, Blob as AtpBlob, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { mapDefined } from '@mary-ext/array-fns';
@@ -22,10 +22,8 @@ import {
 	type UseQueryResult,
 } from '@tanstack/react-query';
 
-import { createRecord, deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
-import { isRecordNotFoundError } from '#/lib/errors';
+import { createRecord, deleteRecord, findRecord, uploadBlob } from '#/lib/api/records';
 import type { ImageMeta } from '#/lib/media/edit-image';
-import { retry } from '#/lib/utils/retry';
 import { until } from '#/lib/utils/until';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -40,6 +38,9 @@ import { useToggleMutationQueue } from '#/state/queries/toggle-mutation-queue';
 import { useUnstableProfileViewCache } from '#/state/queries/unstable-profile-cache';
 import { getAccountProfileView, getClients, useSession } from '#/state/session';
 
+import { prepareLinkWrites } from '#/features/profile-links/link-writes';
+import { sameLinkCids } from '#/features/profile-links/record';
+import type { ProfileLink, SavedProfileLink } from '#/features/profile-links/types';
 import { useUpdateProfileVerificationCache } from '#/features/verification/use-update-verification-cache';
 
 import { LIST_CONVOS_RQKEY_ROOT } from './messages/list-conversations-key';
@@ -146,45 +147,60 @@ export function usePrefetchProfileQuery() {
 	return prefetchProfileQuery;
 }
 
-/**
- * A writable `app.bsky.actor.profile` record without its `$type` — the shape the profile mutators read,
- * mutate, and return. `$type` is reattached when the record is written.
- */
-export type ProfileRecordWrite = {
+type ProfileRecordWrite = {
 	-readonly [K in keyof Omit<AppBskyActorProfile.Main, '$type'>]: Omit<AppBskyActorProfile.Main, '$type'>[K];
 };
 
-/**
- * @param views the links in a fresh profile view
- * @param refs the link refs just saved to the profile record
- * @returns whether link CIDs match in order
- */
-export const sameLinkCids = (
-	views: AppBskyActorDefs.ProfileLinkView[] | undefined,
-	refs: ComAtprotoRepoStrongRef.Main[],
-): boolean => {
-	return (views ?? []).map((view) => view.cid).join() === refs.map((ref) => ref.cid).join();
+export type ProfileImageEdit = { kind: 'remove' } | { kind: 'replace'; image: ImageMeta };
+
+/** profile edits; omitted fields are unchanged, empty strings clear text fields. */
+export type ProfileEdits = {
+	avatar?: ProfileImageEdit;
+	banner?: ProfileImageEdit;
+	description?: string;
+	displayName?: string;
+	/** the links as loaded and as they should be saved. */
+	links?: { existing: SavedProfileLink[]; next: ProfileLink[] };
+	/** `null` unpins the current post. */
+	pinnedPost?: ComAtprotoRepoStrongRef.Main | null;
+	/** a self-label to add or remove, leaving other self-labels intact. */
+	selfLabel?: { enabled: boolean; value: string };
 };
 
-/** a pending change to a profile image. */
-export type ProfileImageEdit = null | { kind: 'remove' } | { kind: 'replace'; image: ImageMeta };
+const uploadImageEdit = async (pds: Client, edit: ProfileImageEdit): Promise<AtpBlob | undefined> => {
+	switch (edit.kind) {
+		case 'remove': {
+			return undefined;
+		}
+		case 'replace': {
+			return uploadBlob(pds, edit.image.blob, edit.image.blob.type);
+		}
+	}
+};
 
-/**
- * @param edit the pending change to a profile image
- * @param current the image URL on the profile being edited
- * @param fresh the image URL on a freshly fetched profile view
- * @returns whether the fresh view reflects the edit
- */
+const withSelfLabel = (
+	labels: ProfileRecordWrite['labels'],
+	{ enabled, value }: { enabled: boolean; value: string },
+): ProfileRecordWrite['labels'] => {
+	const values =
+		labels?.$type === 'com.atproto.label.defs#selfLabels'
+			? labels.values.filter((label) => label.val !== value)
+			: [];
+	if (enabled) {
+		values.push({ val: value });
+	}
+	return values.length > 0 ? { $type: 'com.atproto.label.defs#selfLabels', values } : undefined;
+};
+
 const imageEditCommitted = (
-	edit: ProfileImageEdit,
+	edit: ProfileImageEdit | undefined,
 	current: string | undefined,
 	fresh: string | undefined,
 ): boolean => {
-	if (edit === null) {
-		return true;
-	}
-
-	switch (edit.kind) {
+	switch (edit?.kind) {
+		case undefined: {
+			return true;
+		}
 		case 'remove': {
 			return !fresh;
 		}
@@ -194,85 +210,113 @@ const imageEditCommitted = (
 	}
 };
 
-interface ProfileUpdateParams {
+const editsCommitted = ({
+	edits,
+	fresh,
+	linkRefs,
+	profile,
+}: {
+	edits: ProfileEdits;
+	fresh: AppBskyActorDefs.ProfileViewDetailed;
+	linkRefs: ComAtprotoRepoStrongRef.Main[] | undefined;
+	/** the profile view the edits were made against. */
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	updates:
-		| ProfileRecordWrite
-		| Promise<ProfileRecordWrite>
-		| ((existing: ProfileRecordWrite) => ProfileRecordWrite);
-	avatarEdit?: ProfileImageEdit;
-	bannerEdit?: ProfileImageEdit;
-	checkCommitted?: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean;
-}
+}): boolean => {
+	if (!imageEditCommitted(edits.avatar, profile.avatar, fresh.avatar)) {
+		return false;
+	}
+	if (!imageEditCommitted(edits.banner, profile.banner, fresh.banner)) {
+		return false;
+	}
+	if (edits.description !== undefined && (fresh.description ?? '') !== edits.description) {
+		return false;
+	}
+	if (edits.displayName !== undefined && (fresh.displayName ?? '') !== edits.displayName) {
+		return false;
+	}
+	if (linkRefs && !sameLinkCids(fresh.links, linkRefs)) {
+		return false;
+	}
+	if (edits.pinnedPost !== undefined && fresh.pinnedPost?.uri !== edits.pinnedPost?.uri) {
+		return false;
+	}
+	if (edits.selfLabel) {
+		const { enabled, value } = edits.selfLabel;
+		const labeled = !!fresh.labels?.some((label) => label.val === value && label.src === profile.did);
+		if (labeled !== enabled) {
+			return false;
+		}
+	}
+	return true;
+};
 
+/**
+ * saves profile and link edits atomically, then polls the AppView until they appear or polling expires.
+ *
+ * @returns the mutation, taking the profile being edited and the edits to apply
+ */
 export function useProfileUpdateMutation() {
 	const queryClient = useQueryClient();
 	const { appview, pds } = getClients();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
-	return useMutation<void, Error, ProfileUpdateParams>({
-		mutationFn: async ({
-			profile,
-			updates: pendingUpdates,
-			avatarEdit = null,
-			bannerEdit = null,
-			checkCommitted,
-		}) => {
-			let newAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
-			if (avatarEdit?.kind === 'replace') {
-				newAvatarPromise = uploadBlob(pds!, avatarEdit.image.blob, avatarEdit.image.blob.type);
+	return useMutation<void, Error, { edits: ProfileEdits; profile: AppBskyActorDefs.ProfileViewDetailed }>({
+		mutationFn: async ({ edits, profile }) => {
+			if (!pds) {
+				throw new Error(`not signed in`);
 			}
-			let newBannerPromise: ReturnType<typeof uploadBlob> | undefined;
-			if (bannerEdit?.kind === 'replace') {
-				newBannerPromise = uploadBlob(pds!, bannerEdit.image.blob, bannerEdit.image.blob.type);
+
+			const [existing, avatar, banner, links] = await Promise.all([
+				findRecord(pds, { repo: profile.did, collection: 'app.bsky.actor.profile', rkey: 'self' }),
+				edits.avatar && uploadImageEdit(pds, edits.avatar),
+				edits.banner && uploadImageEdit(pds, edits.banner),
+				edits.links && prepareLinkWrites(pds, profile.did, edits.links),
+			]);
+
+			const next: ProfileRecordWrite = { ...existing?.value };
+			if (edits.avatar) {
+				next.avatar = avatar;
 			}
-			// overlap image uploads with pending link-record writes.
-			const updates = typeof pendingUpdates === 'function' ? pendingUpdates : await pendingUpdates;
-			await upsertProfile(pds!, profile.did, async (existing) => {
-				let next: ProfileRecordWrite = existing || {};
-				if (typeof updates === 'function') {
-					next = updates(next);
-				} else {
-					next.displayName = updates.displayName || undefined;
-					next.description = updates.description || undefined;
-					if ('pinnedPost' in updates) {
-						next.pinnedPost = updates.pinnedPost;
-					}
-					if ('links' in updates) {
-						next.links = updates.links;
-					}
-				}
-				if (newAvatarPromise) {
-					next.avatar = await newAvatarPromise;
-				} else if (avatarEdit?.kind === 'remove') {
-					next.avatar = undefined;
-				}
-				if (newBannerPromise) {
-					next.banner = await newBannerPromise;
-				} else if (bannerEdit?.kind === 'remove') {
-					next.banner = undefined;
-				}
-				return next;
-			});
-			await whenAppViewReady(
-				appview,
-				profile.did,
-				checkCommitted ||
-					((res) => {
-						if (!imageEditCommitted(avatarEdit, profile.avatar, res.avatar)) {
-							return false;
-						}
-						if (!imageEditCommitted(bannerEdit, profile.banner, res.banner)) {
-							return false;
-						}
-						if (typeof updates === 'function') {
-							return true;
-						}
-						if ('links' in updates && !sameLinkCids(res.links, updates.links ?? [])) {
-							return false;
-						}
-						return res.displayName === updates.displayName && res.description === updates.description;
-					}),
+			if (edits.banner) {
+				next.banner = banner;
+			}
+			if (edits.description !== undefined) {
+				next.description = edits.description || undefined;
+			}
+			if (edits.displayName !== undefined) {
+				next.displayName = edits.displayName || undefined;
+			}
+			if (links) {
+				next.links = links.refs.length > 0 ? links.refs : undefined;
+			}
+			if (edits.pinnedPost !== undefined) {
+				next.pinnedPost = edits.pinnedPost ?? undefined;
+			}
+			if (edits.selfLabel) {
+				next.labels = withSelfLabel(next.labels, edits.selfLabel);
+			}
+
+			await ok(
+				pds.post('com.atproto.repo.applyWrites', {
+					input: {
+						repo: profile.did,
+						writes: [
+							...(links?.writes ?? []),
+							{
+								$type: existing
+									? 'com.atproto.repo.applyWrites#update'
+									: 'com.atproto.repo.applyWrites#create',
+								collection: 'app.bsky.actor.profile',
+								rkey: 'self',
+								value: { $type: 'app.bsky.actor.profile', ...next } satisfies AppBskyActorProfile.Main,
+							},
+						],
+					},
+				}),
 			);
+
+			await whenAppViewReady(appview, profile.did, (fresh) => {
+				return editsCommitted({ edits, fresh, linkRefs: links?.refs, profile });
+			});
 		},
 		async onSuccess(_, variables) {
 			// invalidate cache
@@ -678,47 +722,6 @@ function useProfileUnblockMutation() {
 			resetProfilePostsQueries(queryClient, did, 1000);
 		},
 	});
-}
-
-/**
- * reads, merges, and writes the signed-in user's own `app.bsky.actor.profile` record, retrying on a swap
- * conflict.
- *
- * @param pds the PDS client.
- * @param did the user's repo DID.
- * @param updateFn maps the existing record (or undefined when none exists) to the record to write.
- */
-async function upsertProfile(
-	pds: Client,
-	did: Did,
-	updateFn: (existing: ProfileRecordWrite | undefined) => ProfileRecordWrite | Promise<ProfileRecordWrite>,
-): Promise<void> {
-	await retry(
-		5,
-		(e) => e instanceof ClientResponseError && e.error === 'InvalidSwap',
-		async () => {
-			const existing = await getRecord(pds, {
-				repo: did,
-				collection: 'app.bsky.actor.profile',
-				rkey: 'self',
-			}).catch((e) => {
-				// a missing record means a brand-new profile; anything else should propagate
-				if (isRecordNotFoundError(e)) {
-					return undefined;
-				}
-				throw e;
-			});
-
-			const updated = await updateFn(existing?.value);
-
-			await putRecord(pds, {
-				repo: did,
-				rkey: 'self',
-				record: { $type: 'app.bsky.actor.profile', ...updated },
-				swapRecord: existing?.cid ?? null,
-			});
-		},
-	);
 }
 
 async function whenAppViewReady(
