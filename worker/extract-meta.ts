@@ -4,7 +4,7 @@ import { isCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { decodeHtmlEntities } from './html-entities';
 
 export interface LinkMetaResult {
-	/** record URI, preferring standard.site document, then publication. */
+	/** record URI, preferring `at:canonical`, then standard.site document, then publication. */
 	canonicalUri?: CanonicalResourceUri;
 	description?: string;
 	image?: string;
@@ -41,6 +41,7 @@ const flatten = (value: string): string => value.replace(/\s+/g, ' ').trim().toL
  */
 export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> => {
 	const meta: Record<string, string> = {};
+	let atCanonicalUri: CanonicalResourceUri | undefined;
 	let documentUri: CanonicalResourceUri | undefined;
 	let publicationUri: CanonicalResourceUri | undefined;
 	let oembedUrl: string | undefined;
@@ -80,6 +81,19 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 				}
 				if (publicationUri === undefined && tokens.includes('site.standard.publication')) {
 					publicationUri = href;
+				}
+			},
+		})
+		// at-tags: https://tangled.org/chrisshank.com/at-tags
+		.on('head meta[name="at:canonical"]', {
+			element(element) {
+				if (atCanonicalUri !== undefined) {
+					return;
+				}
+				// at-tags also allows DIDs and collections; hydration requires a record URI.
+				const content = decodeHtmlEntities(element.getAttribute('content') ?? '').trim();
+				if (isCanonicalResourceUri(content)) {
+					atCanonicalUri = content;
 				}
 			},
 		})
@@ -131,7 +145,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 
 	return {
 		// the appview discovers a document's publication from the document itself.
-		canonicalUri: documentUri ?? publicationUri,
+		canonicalUri: atCanonicalUri ?? documentUri ?? publicationUri,
 		description,
 		image: pick(['og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src']),
 		oembedUrl,
