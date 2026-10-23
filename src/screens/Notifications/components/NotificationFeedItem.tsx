@@ -746,24 +746,31 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 	return (
 		<div className={css.followBtnWrap}>
-			{isFollowing ? (
-				<Button label={followingLabel} color="secondary" size="small" onClick={() => void onPressUnfollow()}>
-					<ButtonIcon icon={CheckIcon} />
-					<ButtonText>{m['common.follow.action.following']()}</ButtonText>
-				</Button>
-			) : (
-				<Button
-					label={isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
-					color="primary"
-					size="small"
-					onClick={() => void onPressFollow()}
-				>
-					<ButtonIcon icon={PlusIcon} />
-					<ButtonText>
-						{isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
-					</ButtonText>
-				</Button>
-			)}
+			<div className={css.followControl}>
+				{isFollowing ? (
+					<Button
+						label={followingLabel}
+						color="secondary"
+						size="small"
+						onClick={() => void onPressUnfollow()}
+					>
+						<ButtonIcon icon={CheckIcon} />
+						<ButtonText>{m['common.follow.action.following']()}</ButtonText>
+					</Button>
+				) : (
+					<Button
+						label={isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
+						color="primary"
+						size="small"
+						onClick={() => void onPressFollow()}
+					>
+						<ButtonIcon icon={PlusIcon} />
+						<ButtonText>
+							{isFollowedBy ? m['common.follow.action.followBack']() : m['common.follow.action.follow']()}
+						</ButtonText>
+					</Button>
+				)}
+			</div>
 		</div>
 	);
 }
@@ -829,7 +836,9 @@ function ExpandedAuthorProfileCard({
 				<ProfileCard.Header>
 					<ProfileCard.Avatar profile={author.profile} moderationOpts={moderationOpts} />
 					<ProfileCard.NameAndHandle profile={author.profile} moderationOpts={moderationOpts} />
-					<ProfileCard.FollowButton profile={author.profile} variant="subtle" />
+					<div className={css.followControl}>
+						<ProfileCard.FollowButton profile={author.profile} variant="subtle" />
+					</div>
 				</ProfileCard.Header>
 			</ProfileCard.Outer>
 		</ProfileCard.Link>

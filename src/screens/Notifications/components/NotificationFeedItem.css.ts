@@ -11,6 +11,13 @@ export const NOTIF_AVI_SIZE = 32;
 export const POST_AVI_SIZE = 36;
 export const ICON_SIZE = 24;
 
+/** excludes follow controls from the row hover highlight. */
+export const followControl = style({
+	display: 'contents',
+});
+
+const rowHover = hover(`:not(:has(${followControl}:hover))`);
+
 export const outer = recipe(
 	{
 		base: {
@@ -28,7 +35,7 @@ export const outer = recipe(
 			overflow: 'hidden',
 			cursor: 'pointer',
 			selectors: {
-				[hover()]: {
+				[rowHover]: {
 					backgroundColor: withAlpha(colors.contrast_50, vars.opacity.hover),
 				},
 			},
@@ -40,7 +47,7 @@ export const outer = recipe(
 					borderTopColor: colors.primary_100,
 					backgroundColor: colors.primary_25,
 					selectors: {
-						[hover()]: { backgroundColor: colors.primary_50 },
+						[rowHover]: { backgroundColor: colors.primary_50 },
 					},
 				},
 			},
