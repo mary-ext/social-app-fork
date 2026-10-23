@@ -6,13 +6,14 @@ import { openImagePicker } from '#/lib/media/picker';
 import { EditImageDialog, type EditImageTarget } from '#/features/image-editing/EditImageDialog';
 
 import * as Dialog from '#/components/Dialog';
-import * as styles from '#/components/EditableBanner.css';
 import * as Menu from '#/components/Menu';
 
 import CameraFilledIcon from '#/icons/central/Camera1_round_filled_radius1_stroke2.svg';
 import LibraryIcon from '#/icons/central/Streaming_round_outlined_radius1_stroke2.svg';
 import TrashIcon from '#/icons/central/TrashCan_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
+
+import * as styles from './EditableBanner.css';
 
 /** Web-native banner editor: a menu-triggering banner that crops uploads via {@link EditImageDialog}. */
 export function EditableBanner({

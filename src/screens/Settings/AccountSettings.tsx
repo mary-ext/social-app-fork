@@ -6,13 +6,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useContentVisibilityMutation, useContentVisibilityQuery } from '#/state/queries/content-visibility';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
-import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { ActivitySubscriptionDialog } from '#/features/activity-notifications/ActivitySubscriptionDialog';
 import { useNotificationDeclarationQuery } from '#/features/activity-notifications/queries';
+import { useProfileUpdateMutation } from '#/features/profile-editing/lib/use-profile-update';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/Settings';

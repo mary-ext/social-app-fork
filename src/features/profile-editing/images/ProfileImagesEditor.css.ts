@@ -1,11 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { space } from '#/styles/tokens.css';
 
-export const errorText = style({ marginTop: space.xs });
-
-export const bannerWrap = style({
+export const root = style({
 	position: 'relative',
 });
 
@@ -20,13 +17,4 @@ export const avatar = style({
 	borderColor: vars.palette.contrast_0,
 	width: 84,
 	height: 84,
-});
-
-export const fields = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 20,
-	marginTop: 32,
-	paddingBottom: 24,
-	paddingInline: 20,
 });

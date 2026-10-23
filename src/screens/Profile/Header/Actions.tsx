@@ -1,4 +1,5 @@
 import { SubscribeProfileButton } from '#/features/activity-notifications/SubscribeProfileButton';
+import { EditProfileDialog } from '#/features/profile-editing/EditProfileDialog';
 
 import * as Dialog from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
@@ -9,7 +10,6 @@ import Plus from '#/icons/central/PlusLarge_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
 import { useProfileHeader } from './Context';
-import { EditProfileDialog } from './EditProfileDialog';
 
 /** Follow / Unfollow / Follow back, driven by the lifted follow actions. */
 export function FollowButton() {

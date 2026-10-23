@@ -5,13 +5,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { RQKEY_AUTHOR as FEED_RQKEY_AUTHOR } from '#/state/queries/post-feed';
 
+import { useProfileUpdateMutation } from '#/features/profile-editing/lib/use-profile-update';
+
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 import { updatePostShadow } from '../cache/post-shadow';
 import { getClients, useSession } from '../session';
-import { useProfileUpdateMutation } from './profile';
 
 export function usePinnedPostMutation() {
 	const { currentAccount } = useSession();

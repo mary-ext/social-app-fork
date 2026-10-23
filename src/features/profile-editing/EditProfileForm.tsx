@@ -4,59 +4,25 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants/profile';
 import { cleanError } from '#/lib/errors';
-import type { ImageMeta } from '#/lib/media/edit-image';
-import { getBlobUrl } from '#/lib/utils/blob-url';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
-
-import { type ProfileImageEdit, useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { ProfileLinksEditor } from '#/features/profile-links/components/ProfileLinksEditor';
 import { linksFromProfileView, sameProfileLinks } from '#/features/profile-links/record';
 import type { ProfileLink } from '#/features/profile-links/types';
-import { useSimpleVerificationState } from '#/features/verification/verification-state';
 
 import * as Dialog from '#/components/Dialog';
-import { EditableBanner } from '#/components/EditableBanner';
-import { EditableUserAvatar } from '#/components/EditableUserAvatar';
 import { Notice } from '#/components/Notice';
 import type * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Text';
-import * as TextField from '#/components/TextField';
-import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-import * as styles from './EditProfileDialog.css';
-
-const resolveImageUrl = (
-	edit: ProfileImageEdit | undefined,
-	current: string | undefined,
-): string | undefined => {
-	switch (edit?.kind) {
-		case undefined: {
-			return current;
-		}
-		case 'remove': {
-			return undefined;
-		}
-		case 'replace': {
-			return getBlobUrl(edit.image.blob);
-		}
-	}
-};
-
-/**
- * @param img the image picked by the user, or `null` if they removed it
- * @returns the corresponding profile image edit
- */
-const toImageEdit = (img: ImageMeta | null): ProfileImageEdit => {
-	if (img === null) {
-		return { kind: 'remove' };
-	}
-
-	return { kind: 'replace', image: img };
-};
+import * as styles from './EditProfileForm.css';
+import { DescriptionField } from './fields/DescriptionField';
+import { DisplayNameField } from './fields/DisplayNameField';
+import { ProfileImagesEditor } from './images/ProfileImagesEditor';
+import type { ProfileImageEdit } from './lib/profile-edits';
+import { useProfileUpdateMutation } from './lib/use-profile-update';
 
 /**
  * renders the profile editor and reports unsaved changes to its dialog.
@@ -64,7 +30,7 @@ const toImageEdit = (img: ImageMeta | null): ProfileImageEdit => {
  * @param props profile, dialog handles, and dirty-state callback
  * @returns the profile editing form
  */
-export const EditProfileDialogContent = ({
+export const EditProfileForm = ({
 	profile,
 	handle,
 	cancelHandle,
@@ -75,7 +41,6 @@ export const EditProfileDialogContent = ({
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
 }) => {
-	const verification = useSimpleVerificationState({ profile });
 	const {
 		mutateAsync: updateProfile,
 		error: updateProfileError,
@@ -106,6 +71,9 @@ export const EditProfileDialogContent = ({
 		setDirty(dirty);
 	}, [dirty, setDirty]);
 
+	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
+	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
+
 	const onRequestClose = () => {
 		if (dirty) {
 			cancelHandle.open();
@@ -113,17 +81,6 @@ export const EditProfileDialogContent = ({
 			handle.close();
 		}
 	};
-
-	const onSelectNewAvatar = (img: ImageMeta | null) => {
-		setAvatar(toImageEdit(img));
-	};
-
-	const onSelectNewBanner = (img: ImageMeta | null) => {
-		setBanner(toImageEdit(img));
-	};
-
-	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
-	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
 
 	const onPressSave = async () => {
 		try {
@@ -163,62 +120,25 @@ export const EditProfileDialogContent = ({
 			</Dialog.Header.Root>
 
 			<Dialog.Body>
-				<div className={styles.bannerWrap}>
-					<EditableBanner
-						banner={resolveImageUrl(banner, profile.banner)}
-						onSelectNewBanner={onSelectNewBanner}
-					/>
-					<div className={styles.avatar}>
-						<EditableUserAvatar
-							size={80}
-							avatar={resolveImageUrl(avatar, profile.avatar)}
-							onSelectNewAvatar={onSelectNewAvatar}
-						/>
-					</div>
-				</div>
+				<ProfileImagesEditor
+					currentAvatar={profile.avatar}
+					currentBanner={profile.banner}
+					avatar={avatar}
+					banner={banner}
+					onAvatarChange={setAvatar}
+					onBannerChange={setBanner}
+				/>
 
 				<div className={styles.fields}>
 					{isUpdateProfileError && <Notice>{cleanError(updateProfileError)}</Notice>}
 
-					<TextField.Root isInvalid={displayNameTooLong}>
-						<TextField.LabelText>{m['screens.profile.editProfile.displayName.label']()}</TextField.LabelText>
-						<TextField.Input
-							value={displayName}
-							onChangeText={setDisplayName}
-							label={m['screens.profile.editProfile.displayName.label']()}
-							placeholder={m['screens.profile.editProfile.displayName.placeholder']()}
-						/>
-						{displayNameTooLong && (
-							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.editProfile.displayName.tooLong']({ max: MAX_DISPLAY_NAME })}
-							</Text>
-						)}
-					</TextField.Root>
-
-					{verification.isVerified &&
-						verification.role === 'default' &&
-						displayName !== initialDisplayName && (
-							<Admonition type="error">
-								{m['screens.profile.editProfile.displayName.verificationWarning']()}
-							</Admonition>
-						)}
-
-					<TextField.Root isInvalid={descriptionTooLong}>
-						<TextField.LabelText>{m['common.status.description']()}</TextField.LabelText>
-						<TextField.Input
-							value={description}
-							onChangeText={setDescription}
-							multiline
-							label={m['common.status.description']()}
-							placeholder={m['screens.profile.editProfile.bio.hint']()}
-						/>
-						{descriptionTooLong && (
-							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
-								{m['screens.profile.editProfile.bio.tooLong']({ max: MAX_DESCRIPTION })}
-							</Text>
-						)}
-					</TextField.Root>
-
+					<DisplayNameField
+						profile={profile}
+						value={displayName}
+						tooLong={displayNameTooLong}
+						onChange={setDisplayName}
+					/>
+					<DescriptionField value={description} tooLong={descriptionTooLong} onChange={setDescription} />
 					<ProfileLinksEditor links={links} onChange={setEditedLinks} />
 				</div>
 			</Dialog.Body>

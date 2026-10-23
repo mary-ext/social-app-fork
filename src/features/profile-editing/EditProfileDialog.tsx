@@ -7,8 +7,8 @@ import * as Prompt from '#/components/Prompt';
 
 import { m } from '#/paraglide/messages';
 
-const EditProfileDialogContent = lazy(() =>
-	import('./EditProfileDialogContent').then((mod) => ({ default: mod.EditProfileDialogContent })),
+const EditProfileForm = lazy(() =>
+	import('./EditProfileForm').then((mod) => ({ default: mod.EditProfileForm })),
 );
 
 export function EditProfileDialog({
@@ -42,7 +42,7 @@ export function EditProfileDialog({
 							</Dialog.Body>
 						}
 					>
-						<EditProfileDialogContent
+						<EditProfileForm
 							profile={profile}
 							handle={handle}
 							cancelHandle={cancelHandle}
