@@ -88,7 +88,6 @@ export default defineConfig(({ command, mode }) => {
 				target: 'react19-jsx',
 				splitting: 'chunk',
 				spriteName: 'sprites',
-				loading: 'inject',
 			}),
 			isProduction && serviceWorkerPrecache(path.resolve(root, 'src/lib/sw-template.js')),
 			cloudflare(),
