@@ -1,19 +1,13 @@
-import type {
-	AppBskyActorDefs,
-	AppBskyActorGetSuggestions,
-	AppBskyGraphGetSuggestedFollowsByActor,
-} from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyGraphGetSuggestedFollowsByActor } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 
-import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/lib/query/const';
 
 import { registerShadowFinders } from '#/state/cache/registry';
 import { getClients } from '#/state/session';
-
-const suggestedFollowsQueryKeyRoot = 'suggested-follows';
 
 const suggestedFollowsByActorQueryKeyRoot = 'suggested-follows-by-actor';
 const suggestedFollowsByActorQueryKey = (did: string) => [suggestedFollowsByActorQueryKeyRoot, did];
@@ -87,29 +81,6 @@ function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did);
-	yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did);
-}
-
-function* findAllProfilesInSuggestedFollowsQueryData(queryClient: QueryClient, did: string) {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyActorGetSuggestions.$output>>({
-		queryKey: [suggestedFollowsQueryKeyRoot],
-	});
-	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData?.pages) {
-			continue;
-		}
-		for (const page of queryData.pages) {
-			for (const actor of page.actors) {
-				if (actor.did === did) {
-					yield actor;
-				}
-			}
-		}
-	}
-}
-
-function* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient: QueryClient, did: string) {
 	const queryDatas = queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.$output>({
 		queryKey: [suggestedFollowsByActorQueryKeyRoot],
 	});
@@ -125,6 +96,6 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient: QueryCl
 	}
 }
 
-registerShadowFinders(suggestedFollowsQueryKeyRoot, {
+registerShadowFinders(suggestedFollowsByActorQueryKeyRoot, {
 	findProfiles: findAllProfilesInQueryData,
 });
