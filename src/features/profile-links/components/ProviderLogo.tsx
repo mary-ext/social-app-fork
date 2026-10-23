@@ -1,4 +1,4 @@
-import type { ComponentType, SVGProps } from 'react';
+import { type ComponentType, createElement, type SVGProps } from 'react';
 
 import BigCartel from '#/icons/brands/BigCartel.svg';
 import Boosty from '#/icons/brands/Boosty.svg';
@@ -74,3 +74,19 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, IconComponent> = {
 export const linkIcon = (provider: SupportProvider | undefined): IconComponent => {
 	return provider ? SUPPORT_PROVIDER_LOGOS[provider.logo] : GlobeIcon;
 };
+
+/**
+ * renders {@link linkIcon} for a link.
+ *
+ * @param props the link's support provider, if any, and the icon's class
+ */
+export function ProviderLogo({
+	className,
+	provider,
+}: {
+	className?: string;
+	provider: SupportProvider | undefined;
+}) {
+	// avoid React Compiler treating the lookup as a component defined during render.
+	return createElement(linkIcon(provider), { className });
+}

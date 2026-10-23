@@ -34,6 +34,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
 				subtitle: m['components.moderation.report.reviewPrompt.feed'](),
 			};
 		}
+		case 'profileLink': {
+			return {
+				title: m['components.moderation.report.link'](),
+				subtitle: m['components.moderation.report.reviewPrompt.link'](),
+			};
+		}
 		case 'starterPack': {
 			return {
 				title: m['components.moderation.report.starterPack'](),

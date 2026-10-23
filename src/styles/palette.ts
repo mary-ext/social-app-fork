@@ -33,7 +33,10 @@ export type Palette = {
 	primary_700: string;
 	primary_900: string;
 
+	positive_25: string;
+	positive_100: string;
 	positive_500: string;
+	positive_700: string;
 
 	negative_25: string;
 	negative_50: string;
@@ -83,7 +86,10 @@ export const LIGHT_PALETTE: Palette = {
 	primary_700: '#0048AD',
 	primary_900: '#002861',
 
+	positive_25: '#ECFEF5',
+	positive_100: '#A3FACF',
 	positive_500: '#09B35E',
+	positive_700: '#036D38',
 
 	negative_25: '#FFF5F7',
 	negative_50: '#FEE7EC',
@@ -128,7 +134,10 @@ export const DARK_PALETTE: Palette = {
 	primary_700: '#75AFFF',
 	primary_900: '#CCE1FF',
 
+	positive_25: '#021D0F',
+	positive_100: '#033F21',
 	positive_500: '#09B35E',
+	positive_700: '#2CF28F',
 
 	negative_25: '#30030D',
 	negative_50: '#430413',
@@ -173,7 +182,10 @@ export const DIM_PALETTE: Palette = {
 	primary_700: '#80B5FF',
 	primary_900: '#D6E7FF',
 
+	positive_25: '#052917',
+	positive_100: '#04522B',
 	positive_500: '#0AC266',
+	positive_700: '#31F291',
 
 	negative_25: '#3E0915',
 	negative_50: '#500B1C',

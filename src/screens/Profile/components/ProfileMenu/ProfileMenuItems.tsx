@@ -22,6 +22,8 @@ import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/live-now/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/live-now/components/GoLiveDisabledDialog';
 import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
+import { ReportLinkDialog } from '#/features/profile-links/components/ReportLinkDialog';
+import { useProfileViewLinks } from '#/features/profile-links/queries';
 import { ReportDialog } from '#/features/reporting/ReportDialog';
 import { StarterPackDialog } from '#/features/starter-packs/StarterPackDialog';
 
@@ -41,6 +43,7 @@ import * as Toast from '#/components/Toast';
 
 import Repost from '#/icons/central/ArrowsRepeatRightLeft_round_outlined_radius1_stroke2.svg';
 import RepostOff from '#/icons/central/ArrowsRepeatRightLeftOff_round_outlined_radius1_stroke2.svg';
+import BrokenChainLinkIcon from '#/icons/central/BrokenChainLink3_round_outlined_radius1_stroke2.svg';
 import ChainLinkIcon from '#/icons/central/ChainLink3_round_outlined_radius1_stroke2.svg';
 import ClipboardIcon from '#/icons/central/Clipboard_round_outlined_radius1_stroke2.svg';
 import Timer from '#/icons/central/Clock_round_outlined_radius1_stroke2.svg';
@@ -58,6 +61,8 @@ import { m } from '#/paraglide/messages';
 function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }): ReactNode {
 	const { currentAccount, hasSession } = useSession();
 	const reportDialogHandle = Dialog.useDialogHandle();
+	const reportLinkDialogHandle = Dialog.useDialogHandle();
+	const reportableLinks = useProfileViewLinks(profile);
 	const addToListsDialogHandle = Dialog.useDialogHandle();
 	const queryClient = useQueryClient();
 	const isSelf = currentAccount?.did === profile.did;
@@ -320,6 +325,15 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 										<Menu.ItemText>{m['view.profile.action.report']()}</Menu.ItemText>
 										<Menu.ItemIcon icon={Flag} />
 									</Menu.Item>
+									{reportableLinks.length > 0 && (
+										<Menu.Item
+											label={m['features.profileLinks.report.action']()}
+											onClick={() => reportLinkDialogHandle.open()}
+										>
+											<Menu.ItemText>{m['features.profileLinks.report.action']()}</Menu.ItemText>
+											<Menu.ItemIcon icon={BrokenChainLinkIcon} />
+										</Menu.Item>
+									)}
 								</>
 							)}
 						</Menu.Group>
@@ -347,6 +361,9 @@ function ProfileMenuItems({ profile }: { profile: Shadow<AppBskyActorDefs.Profil
 				profile={profile}
 				onChange={invalidateProfileQuery}
 			/>
+			{reportableLinks.length > 0 && (
+				<ReportLinkDialog handle={reportLinkDialogHandle} links={reportableLinks} />
+			)}
 			<ReportDialog
 				handle={reportDialogHandle}
 				subject={{

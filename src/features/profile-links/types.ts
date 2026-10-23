@@ -1,8 +1,8 @@
-import type { Blob as AtpBlob, Cid, ResourceUri } from '@atcute/lexicons';
+import type { Blob as AtpBlob, Cid, GenericUri, ResourceUri } from '@atcute/lexicons';
 
 /** a saved or draft profile link. */
 export type ProfileLink = {
-	url: string;
+	url: GenericUri;
 	title?: string;
 	/** favicon blob in the owner's repo. */
 	icon?: AtpBlob;

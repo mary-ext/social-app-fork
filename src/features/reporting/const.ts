@@ -77,5 +77,6 @@ export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<ToolsOzoneReportDefs.ReasonTy
 export const BSKY_LABELER_ONLY_SUBJECT_TYPES: Set<ParsedReportSubject['type']> = new Set([
 	'convo',
 	'convoMessage',
+	'profileLink',
 	'status',
 ]);

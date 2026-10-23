@@ -64,6 +64,13 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 			cid: subject.cid,
 			nsid: 'app.bsky.graph.starterPack',
 		};
+	} else if (subject?.$type === 'app.bsky.actor.defs#profileLinkView') {
+		return {
+			type: 'profileLink',
+			uri: subject.uri,
+			cid: subject.cid,
+			nsid: 'app.bsky.actor.link',
+		};
 	} else if (subject?.$type === 'app.bsky.feed.defs#postView') {
 		const record = getPostRecord(subject);
 		const { media, record: embedRecord } = unwrapEmbed(subject.embed);

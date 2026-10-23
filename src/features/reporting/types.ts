@@ -21,6 +21,7 @@ export type ReportSubject =
 	| $type.enforce<AppBskyFeedDefs.GeneratorView>
 	| $type.enforce<AppBskyGraphDefs.StarterPackView>
 	| $type.enforce<AppBskyFeedDefs.PostView>
+	| $type.enforce<AppBskyActorDefs.ProfileLinkView>
 	| ReportSubjectConvoMessage
 	| ReportSubjectConvo;
 
@@ -58,6 +59,12 @@ export type ParsedReportSubject =
 	  }
 	| {
 			type: 'starterPack';
+			uri: ResourceUri;
+			cid: string;
+			nsid: Nsid;
+	  }
+	| {
+			type: 'profileLink';
 			uri: ResourceUri;
 			cid: string;
 			nsid: Nsid;
