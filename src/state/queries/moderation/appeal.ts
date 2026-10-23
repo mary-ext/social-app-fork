@@ -1,6 +1,6 @@
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
+import { type Client, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import type { ToolsOzoneInboxAppealActionedSubject } from '@atcute/ozone';
 
@@ -13,6 +13,14 @@ import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 type AppealCallbacks = {
 	onSuccess: () => void;
 	onError: (err: Error) => void;
+};
+
+const submitAppeal = async (client: Client, input: ToolsOzoneInboxAppealActionedSubject.$input) => {
+	// avoid sending test appeals to real moderators
+	if (import.meta.env.DEV) {
+		return;
+	}
+	await ok(client.post('tools.ozone.inbox.appealActionedSubject', { input }));
 };
 
 /**
@@ -47,15 +55,12 @@ export function useLabelAppealMutation({
 					: { $type: 'com.atproto.repo.strongRef', ...subject };
 			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
 			const ref = subjectRef as ToolsOzoneInboxAppealActionedSubject.$input['subject'];
-			await ok(
-				reportClient.post('tools.ozone.inbox.appealActionedSubject', {
-					input: {
-						action: { $type: 'tools.ozone.inbox.appealActionedSubject#labelRef', val: label.val },
-						subject: ref,
-						reason,
-					},
-				}),
-			);
+
+			await submitAppeal(reportClient, {
+				action: { $type: 'tools.ozone.inbox.appealActionedSubject#labelRef', val: label.val },
+				subject: ref,
+				reason,
+			});
 		},
 		onSuccess,
 		onError,
@@ -86,21 +91,14 @@ export function useLiveStatusAppealMutation({
 				throw new Error('Status is missing uri or cid');
 			}
 
-			// dev builds stop short of the write: appeals reach real moderators
-			if (!import.meta.env.DEV) {
-				await ok(
-					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
-						input: {
-							subject: {
-								$type: 'com.atproto.repo.strongRef',
-								uri: status.uri,
-								cid: status.cid,
-							},
-							reason,
-						},
-					}),
-				);
-			}
+			await submitAppeal(pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }), {
+				subject: {
+					$type: 'com.atproto.repo.strongRef',
+					uri: status.uri,
+					cid: status.cid,
+				},
+				reason,
+			});
 		},
 		onSuccess,
 		onError,
@@ -126,17 +124,14 @@ export function useChatAppealMutation({ onSuccess, onError }: AppealCallbacks) {
 			if (!pds) {
 				throw new Error('Not logged in');
 			}
-			await ok(
-				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
-					input: {
-						subject: {
-							$type: 'com.atproto.admin.defs#repoRef',
-							did: currentAccount.did,
-						},
-						reason,
-					},
-				}),
-			);
+
+			await submitAppeal(pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }), {
+				subject: {
+					$type: 'com.atproto.admin.defs#repoRef',
+					did: currentAccount.did,
+				},
+				reason,
+			});
 		},
 		onSuccess,
 		onError,
