@@ -4,7 +4,7 @@ import type { Blob as AtpBlob, Cid, GenericUri, ResourceUri } from '@atcute/lexi
 export type ProfileLink = {
 	url: GenericUri;
 	title?: string;
-	/** favicon blob in the owner's repo. */
+	/** uploaded favicon blob for record writes; absent from AppView links. */
 	icon?: AtpBlob;
 	/** favicon URL from the AppView. */
 	iconUrl?: string;

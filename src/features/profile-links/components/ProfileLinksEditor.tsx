@@ -1,7 +1,5 @@
 import type { KeyboardEvent } from 'react';
 
-import type { Did } from '@atcute/lexicons';
-
 import { reorder } from '@oomfware/tug/reorder';
 
 import * as Dialog from '#/components/Dialog';
@@ -20,14 +18,12 @@ import { type SortableItem, SortablePills } from './SortablePills';
 /**
  * edits and reorders links locally until the profile is saved.
  *
- * @param props the owner, their links, and what to do with the edited links
+ * @param props links and change callback
  */
 export function ProfileLinksEditor({
-	did,
 	links,
 	onChange,
 }: {
-	did: Did;
 	links: ProfileLink[];
 	onChange: (links: ProfileLink[]) => void;
 }) {
@@ -69,7 +65,6 @@ export function ProfileLinksEditor({
 			label,
 			node: (
 				<ProfileLinkButton
-					did={did}
 					grip
 					label={m['features.profileLinks.editor.edit']({ name: label })}
 					link={link}

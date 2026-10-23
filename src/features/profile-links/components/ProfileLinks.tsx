@@ -56,7 +56,7 @@ function VisitorLinks({
 }) {
 	const links = useProfileViewLinks(profile);
 	const items: RowItem[] = links.map((link) => {
-		return { key: link.url, node: <ProfileLinkAnchor did={profile.did} link={link} /> };
+		return { key: link.url, node: <ProfileLinkAnchor link={link} /> };
 	});
 	return <LinkRow key={profile.did} germButton={germButton} items={items} />;
 }
@@ -69,14 +69,13 @@ function OwnLinks({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const formHandle = Dialog.useDialogHandle<OwnLinkFormPayload>();
-	const links = linksFromProfileView(profile.links ?? []);
+	const links = linksFromProfileView(profile.links);
 
 	const items: RowItem[] = links.map((link) => {
 		return {
 			key: link.url,
 			node: (
 				<ProfileLinkButton
-					did={profile.did}
 					grip={false}
 					label={m['features.profileLinks.editor.edit']({ name: linkLabel(link) })}
 					link={link}
@@ -89,7 +88,7 @@ function OwnLinks({
 	return (
 		<>
 			<LinkRow key={profile.did} germButton={germButton} items={items} />
-			<OwnLinkFormDialog handle={formHandle} profile={profile} />
+			<OwnLinkFormDialog handle={formHandle} links={links} profile={profile} />
 		</>
 	);
 }

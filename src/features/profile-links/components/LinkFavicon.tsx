@@ -1,31 +1,19 @@
 import { type ReactNode, useState } from 'react';
 
-import type { Did } from '@atcute/lexicons';
-
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
 import type { ProfileLink } from '../types';
 import * as css from './LinkFavicon.css';
 
 /**
- * resolves a favicon URL, preferring the local preview, then the AppView URL, then the stored blob.
- *
  * @param link the link
- * @param did the owner, whose repo holds the stored icon
- * @returns the icon's URL, if the link has one
+ * @returns the local preview URL, falling back to the AppView URL, or undefined if neither exists
  */
-export const linkFaviconUrl = (link: ProfileLink, did: Did | undefined): string | undefined => {
+export const linkFaviconUrl = (link: ProfileLink): string | undefined => {
 	if (link.iconPreview) {
 		return getBlobUrl(link.iconPreview);
 	}
-	if (link.iconUrl) {
-		return link.iconUrl;
-	}
-	if (!link.icon || !did) {
-		return undefined;
-	}
-	// PNG preserves favicon transparency.
-	return `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${link.icon.ref.$link}@png`;
+	return link.iconUrl;
 };
 
 /**

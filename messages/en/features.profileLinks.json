@@ -16,7 +16,6 @@
 	"features.profileLinks.form.saveAnyway": "Save anyway",
 	"features.profileLinks.form.titleLabel": "Title (optional)",
 	"features.profileLinks.form.titlePlaceholder": "e.g. Portfolio",
-	"features.profileLinks.loadError": "Couldn’t load your links.",
 	"features.profileLinks.open": "Open {name}",
 	"features.profileLinks.removePrompt.description": "This removes the link from your profile.",
 	"features.profileLinks.removePrompt.title": "Remove {name}?",

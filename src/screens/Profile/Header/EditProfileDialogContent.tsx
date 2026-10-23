@@ -10,8 +10,8 @@ import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 import { type ProfileRecordWrite, useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { ProfileLinksEditor } from '#/features/profile-links/components/ProfileLinksEditor';
-import { useOwnProfileLinksQuery, useSaveWithProfileLinks } from '#/features/profile-links/queries';
-import { sameProfileLinks } from '#/features/profile-links/record';
+import { saveWithProfileLinks } from '#/features/profile-links/queries';
+import { linksFromProfileView, sameProfileLinks } from '#/features/profile-links/record';
 import type { ProfileLink } from '#/features/profile-links/types';
 import { useSimpleVerificationState } from '#/features/verification/verification-state';
 
@@ -63,12 +63,10 @@ export const EditProfileDialogContent = ({
 	const [newUserBanner, setNewUserBanner] = useState<ImageMeta | undefined | null>();
 	const [newUserAvatar, setNewUserAvatar] = useState<ImageMeta | undefined | null>();
 
-	const { data: storedLinks } = useOwnProfileLinksQuery(profile.did);
-	const saveWithProfileLinks = useSaveWithProfileLinks();
-	// undefined preserves stored links when saving before the query loads.
+	const storedLinks = linksFromProfileView(profile.links);
 	const [editedLinks, setEditedLinks] = useState<ProfileLink[]>();
 	const links = editedLinks ?? storedLinks;
-	const linksDirty = !!editedLinks && !!storedLinks && !sameProfileLinks(editedLinks, storedLinks);
+	const linksDirty = !!editedLinks && !sameProfileLinks(editedLinks, storedLinks);
 
 	const dirty =
 		displayName !== initialDisplayName ||
@@ -132,7 +130,7 @@ export const EditProfileDialogContent = ({
 		try {
 			if (linksDirty && editedLinks) {
 				await saveWithProfileLinks(
-					{ did: profile.did, existing: storedLinks ?? [], links: editedLinks },
+					{ did: profile.did, existing: storedLinks, links: editedLinks },
 					(pendingRefs) => {
 						return updateProfile(
 							pendingRefs.then((refs) => {
@@ -220,7 +218,7 @@ export const EditProfileDialogContent = ({
 						)}
 					</TextField.Root>
 
-					{links && <ProfileLinksEditor did={profile.did} links={links} onChange={setEditedLinks} />}
+					<ProfileLinksEditor links={links} onChange={setEditedLinks} />
 				</div>
 			</Dialog.Body>
 		</>

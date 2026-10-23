@@ -4,18 +4,16 @@ import { ok } from '@atcute/client';
 import type { Blob as AtpBlob, Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { internalClient } from '#/lib/api/internal-client';
-import { getRecord, listRecords, uploadBlob } from '#/lib/api/records';
-import { isRecordNotFoundError } from '#/lib/errors';
+import { uploadBlob } from '#/lib/api/records';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { STALE } from '#/state/queries';
 import { sameLinkCids, useProfileUpdateMutation } from '#/state/queries/profile';
 import { getClients } from '#/state/session';
 
-import { filterModeratedLinkViews, linksFromProfileView, linksFromRecords, sameLinkContent } from './record';
+import { filterModeratedLinkViews, linksFromProfileView, sameLinkContent } from './record';
 import type { ProfileLink, SavedProfileLink } from './types';
 
 /**
@@ -38,66 +36,6 @@ const getPds = () => {
 		throw new Error(`not signed in`);
 	}
 	return pds;
-};
-
-const ownProfileLinksQueryKey = (did: Did) => {
-	return ['ownProfileLinks', did] as const;
-};
-
-/**
- * reads editable links from the owner's repo, including stored icon blobs.
- *
- * @param did the signed-in account
- * @returns the query
- */
-export const useOwnProfileLinksQuery = (did: Did) => {
-	return useQuery({
-		queryKey: ownProfileLinksQueryKey(did),
-		staleTime: STALE.MINUTES.ONE,
-		queryFn: async ({ signal }): Promise<SavedProfileLink[]> => {
-			const pds = getPds();
-
-			const [refs, firstPage] = await Promise.all([
-				getRecord(pds, { repo: did, collection: 'app.bsky.actor.profile', rkey: 'self', signal }).then(
-					(profile) => profile.value.links ?? [],
-					(e: unknown) => {
-						if (isRecordNotFoundError(e)) {
-							return [];
-						}
-						throw e;
-					},
-				),
-				listRecords(pds, { repo: did, collection: 'app.bsky.actor.link', limit: 100, signal }),
-			]);
-			if (refs.length === 0) {
-				return [];
-			}
-
-			// unreferenced records can push the profile's links onto later pages
-			const records = [...firstPage.records];
-			const wanted = new Set<string>(refs.map((ref) => ref.uri));
-			for (const record of records) {
-				wanted.delete(record.uri);
-			}
-			let cursor = firstPage.cursor;
-			while (cursor && wanted.size > 0) {
-				const page = await listRecords(pds, {
-					repo: did,
-					collection: 'app.bsky.actor.link',
-					cursor,
-					limit: 100,
-					signal,
-				});
-				for (const record of page.records) {
-					wanted.delete(record.uri);
-				}
-				records.push(...page.records);
-				cursor = page.cursor;
-			}
-
-			return linksFromRecords(refs, records);
-		},
-	});
 };
 
 const LINK_COLLECTION = 'app.bsky.actor.link';
@@ -192,31 +130,22 @@ const writeProfileLinks = async (
 /**
  * saves link records, updates the profile's references, then deletes removed records.
  *
- * @returns a save function whose updateProfile callback must await the supplied refs before writing the
- *   profile. it may start other work, such as image uploads, while the refs are pending.
+ * @param input owner DID, loaded links, and edited links
+ * @param updateProfile must await the supplied refs before writing the profile, then resolve once saved
+ * @returns resolves after saving and attempting cleanup; cleanup failures are logged
  */
-export const useSaveWithProfileLinks = () => {
-	const queryClient = useQueryClient();
-	return async (
-		{ did, existing, links }: { did: Did; existing: SavedProfileLink[]; links: ProfileLink[] },
-		updateProfile: (refs: Promise<LinkRefs | undefined>) => Promise<void>,
-	): Promise<void> => {
-		const written = writeProfileLinks(did, links, existing);
-		await updateProfile(
-			written.then(({ refs }) => {
-				return refs.length > 0 ? refs : undefined;
-			}),
-		);
-		const { deleteRemoved, refs } = await written;
-		// let subsequent edits use the saved records without a refetch.
-		queryClient.setQueryData<SavedProfileLink[]>(
-			ownProfileLinksQueryKey(did),
-			links.map((link, i) => {
-				return { ...link, uri: refs[i]!.uri, cid: refs[i]!.cid };
-			}),
-		);
-		await deleteRemoved();
-	};
+export const saveWithProfileLinks = async (
+	{ did, existing, links }: { did: Did; existing: SavedProfileLink[]; links: ProfileLink[] },
+	updateProfile: (refs: Promise<LinkRefs | undefined>) => Promise<void>,
+): Promise<void> => {
+	const written = writeProfileLinks(did, links, existing);
+	await updateProfile(
+		written.then(({ refs }) => {
+			return refs.length > 0 ? refs : undefined;
+		}),
+	);
+	const { deleteRemoved } = await written;
+	await deleteRemoved();
 };
 
 /**
@@ -226,7 +155,6 @@ export const useSaveWithProfileLinks = () => {
  */
 export const useSaveProfileLinksMutation = () => {
 	const { mutateAsync: updateProfile } = useProfileUpdateMutation();
-	const saveWithProfileLinks = useSaveWithProfileLinks();
 
 	return useMutation({
 		mutationFn: ({

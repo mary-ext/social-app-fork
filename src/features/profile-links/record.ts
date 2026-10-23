@@ -1,12 +1,10 @@
-import type { AppBskyActorDefs, AppBskyActorLink } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
 	moderateExternalView,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import type { Cid, ResourceUri } from '@atcute/lexicons';
-import { isBlob } from '@atcute/lexicons/interfaces';
 
 import { normalizeProfileLinkUrl } from './providers';
 import { MAX_PROFILE_LINKS, MAX_TITLE_LENGTH, type ProfileLink, type SavedProfileLink } from './types';
@@ -82,10 +80,12 @@ export const filterModeratedLinkViews = (
  * @param views link views from a profile
  * @returns the links to show
  */
-export const linksFromProfileView = (views: AppBskyActorDefs.ProfileLinkView[]): SavedProfileLink[] => {
+export const linksFromProfileView = (
+	views: AppBskyActorDefs.ProfileLinkView[] | undefined,
+): SavedProfileLink[] => {
 	const links: SavedProfileLink[] = [];
 	const seen = new Set<string>();
-	for (const view of views) {
+	for (const view of views ?? []) {
 		if (links.length >= MAX_PROFILE_LINKS) {
 			break;
 		}
@@ -98,39 +98,6 @@ export const linksFromProfileView = (views: AppBskyActorDefs.ProfileLinkView[]):
 			iconUrl: view.icon,
 			uri: view.uri,
 			cid: view.cid,
-		});
-	}
-	return links;
-};
-
-/**
- * reads up to {@link MAX_PROFILE_LINKS} unique web links in profile-reference order.
- *
- * @param refs the profile record's `links` refs
- * @param records the link records those refs point at
- * @returns the links, with their stored icons
- */
-export const linksFromRecords = (
-	refs: { uri: ResourceUri }[] | undefined,
-	records: { cid: Cid; uri: ResourceUri; value: AppBskyActorLink.Main }[],
-): SavedProfileLink[] => {
-	const byUri = new Map(records.map((record) => [record.uri, record]));
-	const links: SavedProfileLink[] = [];
-	const seen = new Set<string>();
-	for (const ref of refs ?? []) {
-		if (links.length >= MAX_PROFILE_LINKS) {
-			break;
-		}
-		const record = byUri.get(ref.uri);
-		if (!record || !isShowable(record.value.url, seen)) {
-			continue;
-		}
-		links.push({
-			url: record.value.url,
-			title: cleanTitle(record.value.title),
-			icon: isBlob(record.value.icon) ? record.value.icon : undefined,
-			uri: record.uri,
-			cid: record.cid,
 		});
 	}
 	return links;

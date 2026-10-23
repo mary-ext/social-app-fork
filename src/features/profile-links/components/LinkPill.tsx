@@ -1,7 +1,5 @@
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
-import type { Did } from '@atcute/lexicons';
-
 import { linkWarningDialogHandle } from '#/components/dialogs/handles';
 import * as BaseTooltip from '#/components/primitives/tooltip';
 import { Button, ButtonAnchor, ButtonIcon } from '#/components/web/Button';
@@ -31,9 +29,9 @@ export const linkLabel = (link: ProfileLink): string => {
 	return provider ? m['features.profileLinks.supportOn']({ provider: provider.name }) : getLinkHost(link.url);
 };
 
-function PillContent({ did, link, trailing }: { did: Did; link: ProfileLink; trailing?: ReactNode }) {
+function PillContent({ link, trailing }: { link: ProfileLink; trailing?: ReactNode }) {
 	const provider = getSupportProvider(link.url);
-	const faviconUrl = provider ? undefined : linkFaviconUrl(link, did);
+	const faviconUrl = provider ? undefined : linkFaviconUrl(link);
 
 	return (
 		<>
@@ -53,9 +51,9 @@ function PillContent({ did, link, trailing }: { did: Did; link: ProfileLink; tra
 /**
  * link pill with a destination tooltip and external-link warning. modified clicks use browser behavior.
  *
- * @param props the link and its owner, whose repo holds the link's stored icon
+ * @param props the link
  */
-export function ProfileLinkAnchor({ did, link }: { did: Did; link: ProfileLink }) {
+export function ProfileLinkAnchor({ link }: { link: ProfileLink }) {
 	const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
 		if (isModifiedClick(e)) {
 			return;
@@ -78,7 +76,7 @@ export function ProfileLinkAnchor({ did, link }: { did: Did; link: ProfileLink }
 						size="small"
 						target="_blank"
 					>
-						<PillContent did={did} link={link} trailing={<ArrowTopRightIcon className={css.arrow} />} />
+						<PillContent link={link} trailing={<ArrowTopRightIcon className={css.arrow} />} />
 					</ButtonAnchor>
 				}
 			/>
@@ -94,17 +92,15 @@ export function ProfileLinkAnchor({ did, link }: { did: Did; link: ProfileLink }
 /**
  * link pill button for editing.
  *
- * @param props the link, its owner, the accessible label and handlers, and whether to end in the drag grip
+ * @param props link, accessible label, event handlers, and drag-grip visibility
  */
 export function ProfileLinkButton({
-	did,
 	grip,
 	label,
 	link,
 	onClick,
 	onKeyDown,
 }: {
-	did: Did;
 	grip: boolean;
 	label: string;
 	link: ProfileLink;
@@ -121,11 +117,7 @@ export function ProfileLinkButton({
 			onKeyDown={onKeyDown}
 			size="small"
 		>
-			<PillContent
-				did={did}
-				link={link}
-				trailing={grip ? <GripIcon className={css.grip({ support })} /> : undefined}
-			/>
+			<PillContent link={link} trailing={grip ? <GripIcon className={css.grip({ support })} /> : undefined} />
 		</Button>
 	);
 }

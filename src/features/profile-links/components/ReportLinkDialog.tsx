@@ -100,7 +100,7 @@ function LinkRowIcon({ link }: { link: ProfileLink }) {
 	}
 
 	const globe = <GlobeIcon className={css.globe} />;
-	const faviconUrl = linkFaviconUrl(link, undefined);
+	const faviconUrl = linkFaviconUrl(link);
 	return (
 		<span className={css.iconSlot}>
 			{faviconUrl ? <LinkFavicon fallback={globe} size={24} url={faviconUrl} /> : globe}
