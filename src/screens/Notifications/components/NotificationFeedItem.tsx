@@ -210,7 +210,7 @@ let NotificationFeedItem = ({
 				style={
 					isHighlighted
 						? {
-								backgroundColor: colors.primary_25,
+								backgroundColor: colors.bgUnread,
 								borderColor: colors.primary_100,
 							}
 						: undefined

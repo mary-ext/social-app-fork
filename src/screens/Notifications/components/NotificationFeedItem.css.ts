@@ -45,9 +45,11 @@ export const outer = recipe(
 			unread: {
 				true: {
 					borderTopColor: colors.primary_100,
-					backgroundColor: colors.primary_25,
+					backgroundColor: colors.bgUnread,
 					selectors: {
-						[rowHover]: { backgroundColor: colors.primary_50 },
+						[rowHover]: {
+							backgroundColor: `color-mix(in srgb, ${colors.contrast_50} ${vars.opacity.hover}, ${colors.bgUnread})`,
+						},
 					},
 				},
 			},

@@ -8,6 +8,7 @@ import { vars } from '#/styles/contract.css';
 export const colors = {
 	...vars.palette,
 	bg: vars.palette.contrast_0,
+	bgUnread: vars.surface.unread,
 	borderContrastHigh: vars.palette.contrast_300,
 	borderContrastLow: vars.palette.contrast_100,
 	borderContrastMedium: vars.palette.contrast_200,

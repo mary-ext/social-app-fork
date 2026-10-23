@@ -33,12 +33,15 @@ interface ThemeOptions {
 	linkStep: 'primary_500' | 'primary_600';
 	palette: Palette;
 	shadowOpacity: number;
+	/** unread background; dark themes need more contrast than primary_25 provides. */
+	unreadTint: string;
 }
 
-const themeValues = ({ hoverOpacity, linkStep, palette, shadowOpacity }: ThemeOptions) => ({
+const themeValues = ({ hoverOpacity, linkStep, palette, shadowOpacity, unreadTint }: ThemeOptions) => ({
 	opacity: { hover: hoverOpacity },
 	palette,
 	shadow: shadows(shadowOpacity),
+	surface: { unread: unreadTint },
 	text: { link: palette[linkStep] },
 });
 
@@ -50,6 +53,7 @@ globalStyle('.theme--light', {
 			linkStep: 'primary_500',
 			palette: LIGHT_PALETTE,
 			shadowOpacity: 0.1,
+			unreadTint: LIGHT_PALETTE.primary_25,
 		}),
 	),
 });
@@ -61,6 +65,7 @@ globalStyle('.theme--dark', {
 			linkStep: 'primary_600',
 			palette: DARK_PALETTE,
 			shadowOpacity: 0.4,
+			unreadTint: '#202F43',
 		}),
 	),
 });
@@ -72,6 +77,7 @@ globalStyle('.theme--dim', {
 			linkStep: 'primary_600',
 			palette: DIM_PALETTE,
 			shadowOpacity: 0.4,
+			unreadTint: '#071F40',
 		}),
 	),
 });
