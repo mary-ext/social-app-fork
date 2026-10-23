@@ -7,13 +7,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useContentVisibilityMutation, useContentVisibilityQuery } from '#/state/queries/content-visibility';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';
+import { hasSelfLabel, useSelfLabelMutation } from '#/state/queries/self-label';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { ActivitySubscriptionDialog } from '#/features/activity-notifications/ActivitySubscriptionDialog';
 import { useNotificationDeclarationQuery } from '#/features/activity-notifications/queries';
-import { useProfileUpdateMutation } from '#/features/profile-editing/lib/use-profile-update';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/Settings';
@@ -202,18 +202,15 @@ function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: bool
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const { data: profile, isError, isPlaceholderData } = useProfileQuery({ did: currentAccount?.did });
-	const updateProfile = useProfileUpdateMutation();
+	const updateSelfLabel = useSelfLabelMutation();
 
-	const enabled = profile?.labels?.some((l) => l.val === value && l.src === profile.did) ?? false;
-	const loading = updateProfile.isPending;
+	const enabled = !!profile && hasSelfLabel(profile, value);
+	const loading = updateSelfLabel.isPending;
 	const canToggle = !!profile && !isPlaceholderData && !loading;
 
 	const toggle = () => {
-		if (!profile) {
-			return;
-		}
-		updateProfile.mutate(
-			{ edits: { selfLabel: { enabled: !enabled, value } }, profile },
+		updateSelfLabel.mutate(
+			{ enabled: !enabled, value },
 			invalidateFeeds
 				? {
 						onSuccess() {

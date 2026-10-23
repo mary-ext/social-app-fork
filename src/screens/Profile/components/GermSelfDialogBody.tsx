@@ -1,14 +1,12 @@
-import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { type Client, ok } from '@atcute/client';
-import type { ActorIdentifier, Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { errorMessage } from '#/lib/errors';
-import { until } from '#/lib/utils/until';
 
 import { RQKEY } from '#/state/queries/profile';
+import { whenProfileViewReady } from '#/state/queries/when-profile-view-ready';
 import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -48,7 +46,7 @@ export function GermSelfDialogBody({ did, handle }: { did: Did; handle: Dialog.D
 				rkey: 'self',
 			});
 
-			await whenAppViewReady(appview, did, (res) => !res.associated?.germ);
+			await whenProfileViewReady(appview, did, (res) => !res.associated?.germ);
 
 			return previousRecord;
 		},
@@ -63,7 +61,7 @@ export function GermSelfDialogBody({ did, handle }: { did: Did; handle: Dialog.D
 						rkey: 'self',
 						record: previousRecord,
 					});
-					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
+					await whenProfileViewReady(appview, did, (res) => !!res.associated?.germ);
 					await queryClient.refetchQueries({ queryKey: RQKEY(did) });
 
 					Toast.show(m['screens.profile.germDm.reconnectedToast']());
@@ -115,18 +113,5 @@ export function GermSelfDialogBody({ did, handle }: { did: Did; handle: Dialog.D
 				</Button>
 			</Dialog.Actions>
 		</Stack>
-	);
-}
-
-async function whenAppViewReady(
-	appview: Client,
-	actor: ActorIdentifier,
-	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
-) {
-	await until(
-		5, // 5 tries
-		1e3, // 1s delay between tries
-		(res) => res !== undefined && fn(res),
-		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor } })),
 	);
 }

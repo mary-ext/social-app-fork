@@ -58,15 +58,5 @@ export const editsCommitted = ({
 	if (linkRefs && !sameLinkCids(fresh.links, linkRefs)) {
 		return false;
 	}
-	if (edits.pinnedPost !== undefined && fresh.pinnedPost?.uri !== edits.pinnedPost?.uri) {
-		return false;
-	}
-	if (edits.selfLabel) {
-		const { enabled, value } = edits.selfLabel;
-		const labeled = !!fresh.labels?.some((label) => label.val === value && label.src === profile.did);
-		if (labeled !== enabled) {
-			return false;
-		}
-	}
 	return true;
 };

@@ -177,6 +177,16 @@ export function isRecordNotFoundError(e: unknown) {
 }
 
 /**
+ * checks whether a write was rejected because its swap target changed.
+ *
+ * @param e thrown value
+ * @returns whether the swap was invalid
+ */
+export function isInvalidSwapError(e: unknown) {
+	return e instanceof ClientResponseError && e.error === 'InvalidSwap';
+}
+
+/**
  * checks whether a response reports a missing subject.
  *
  * @param e the thrown value to check

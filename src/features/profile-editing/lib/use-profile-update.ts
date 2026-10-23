@@ -1,13 +1,13 @@
 import type { AppBskyActorDefs, AppBskyActorProfile } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { ActorIdentifier, Blob as AtpBlob } from '@atcute/lexicons';
+import type { Blob as AtpBlob } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { findRecord, uploadBlob } from '#/lib/api/records';
-import { until } from '#/lib/utils/until';
 
 import { profileQueryKey } from '#/state/queries/profile-key';
+import { whenProfileViewReady } from '#/state/queries/when-profile-view-ready';
 import { getClients } from '#/state/session';
 
 import { prepareLinkWrites } from '#/features/profile-links/link-writes';
@@ -29,33 +29,6 @@ const uploadImageEdit = async (pds: Client, edit: ProfileImageEdit): Promise<Atp
 			return uploadBlob(pds, edit.image.blob, edit.image.blob.type);
 		}
 	}
-};
-
-const withSelfLabel = (
-	labels: ProfileRecordWrite['labels'],
-	{ enabled, value }: { enabled: boolean; value: string },
-): ProfileRecordWrite['labels'] => {
-	const values =
-		labels?.$type === 'com.atproto.label.defs#selfLabels'
-			? labels.values.filter((label) => label.val !== value)
-			: [];
-	if (enabled) {
-		values.push({ val: value });
-	}
-	return values.length > 0 ? { $type: 'com.atproto.label.defs#selfLabels', values } : undefined;
-};
-
-const whenAppViewReady = async (
-	appview: Client,
-	actor: ActorIdentifier,
-	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
-) => {
-	await until(
-		5, // 5 tries
-		1e3, // 1s delay between tries
-		(res) => res !== undefined && fn(res),
-		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor } })),
-	);
 };
 
 /**
@@ -96,12 +69,6 @@ export function useProfileUpdateMutation() {
 			if (links) {
 				next.links = links.refs.length > 0 ? links.refs : undefined;
 			}
-			if (edits.pinnedPost !== undefined) {
-				next.pinnedPost = edits.pinnedPost ?? undefined;
-			}
-			if (edits.selfLabel) {
-				next.labels = withSelfLabel(next.labels, edits.selfLabel);
-			}
 
 			await ok(
 				pds.post('com.atproto.repo.applyWrites', {
@@ -122,7 +89,7 @@ export function useProfileUpdateMutation() {
 				}),
 			);
 
-			await whenAppViewReady(appview, profile.did, (fresh) => {
+			await whenProfileViewReady(appview, profile.did, (fresh) => {
 				return editsCommitted({ edits, fresh, linkRefs: links?.refs, profile });
 			});
 		},

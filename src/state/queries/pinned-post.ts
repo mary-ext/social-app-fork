@@ -1,11 +1,8 @@
-import { ok } from '@atcute/client';
 import type { ResourceUri } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { RQKEY_AUTHOR as FEED_RQKEY_AUTHOR } from '#/state/queries/post-feed';
-
-import { useProfileUpdateMutation } from '#/features/profile-editing/lib/use-profile-update';
 
 import * as Toast from '#/components/Toast';
 
@@ -13,12 +10,14 @@ import { m } from '#/paraglide/messages';
 
 import { updatePostShadow } from '../cache/post-shadow';
 import { getClients, useSession } from '../session';
+import { updateOwnProfileRecord } from './own-profile-record';
+import { profileQueryKey } from './profile-key';
+import { whenProfileViewReady } from './when-profile-view-ready';
 
 export function usePinnedPostMutation() {
 	const { currentAccount } = useSession();
-	const { appview } = getClients();
+	const { appview, pds } = getClients();
 	const queryClient = useQueryClient();
-	const { mutateAsync: profileUpdateMutate } = useProfileUpdateMutation();
 
 	return useMutation({
 		mutationFn: async ({
@@ -31,27 +30,31 @@ export function usePinnedPostMutation() {
 			action: 'pin' | 'unpin';
 		}) => {
 			const pinCurrentPost = action === 'pin';
-			let prevPinnedPost: string | undefined;
 			try {
 				updatePostShadow(queryClient, postUri, { pinned: pinCurrentPost });
 
-				// get the currently pinned post so we can optimistically remove the pin from it
-				if (!currentAccount) {
+				if (!currentAccount || !pds) {
 					throw new Error('Not signed in');
 				}
-				const profile = await ok(
-					appview.get('app.bsky.actor.getProfile', {
-						params: { actor: currentAccount.did },
-					}),
-				);
-				prevPinnedPost = profile.pinnedPost?.uri;
-				if (prevPinnedPost && prevPinnedPost !== postUri) {
+
+				const previous = await updateOwnProfileRecord(pds, currentAccount.did, (existing) => {
+					if (pinCurrentPost) {
+						return { ...existing, pinnedPost: { uri: postUri, cid: postCid } };
+					}
+					// leave a pin made elsewhere in the meantime alone.
+					if (existing?.pinnedPost?.uri !== postUri) {
+						return undefined;
+					}
+					return { ...existing, pinnedPost: undefined };
+				});
+
+				const prevPinnedPost = previous?.pinnedPost?.uri;
+				if (pinCurrentPost && prevPinnedPost && prevPinnedPost !== postUri) {
 					updatePostShadow(queryClient, prevPinnedPost, { pinned: false });
 				}
 
-				await profileUpdateMutate({
-					edits: { pinnedPost: pinCurrentPost ? { uri: postUri, cid: postCid } : null },
-					profile,
+				await whenProfileViewReady(appview, currentAccount.did, (fresh) => {
+					return (fresh.pinnedPost?.uri === postUri) === pinCurrentPost;
 				});
 
 				if (pinCurrentPost) {
@@ -60,6 +63,9 @@ export function usePinnedPostMutation() {
 					Toast.show(m['state.pin.unpinned']());
 				}
 
+				void queryClient.invalidateQueries({
+					queryKey: profileQueryKey(currentAccount.did),
+				});
 				void queryClient.invalidateQueries({
 					queryKey: FEED_RQKEY_AUTHOR(currentAccount.did),
 				});
@@ -70,9 +76,6 @@ export function usePinnedPostMutation() {
 				updatePostShadow(queryClient, postUri, {
 					pinned: !pinCurrentPost,
 				});
-				if (prevPinnedPost && prevPinnedPost !== postUri) {
-					updatePostShadow(queryClient, prevPinnedPost, { pinned: true });
-				}
 			}
 		},
 	});

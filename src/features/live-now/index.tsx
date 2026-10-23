@@ -1,11 +1,11 @@
 import type { AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
-import { ClientResponseError } from '@atcute/client';
 import type { $type, GenericUri } from '@atcute/lexicons';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRecord, getRecord, putRecord, uploadBlob } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
+import { isInvalidSwapError } from '#/lib/errors';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta';
 import { retry } from '#/lib/utils/retry';
 
@@ -107,7 +107,7 @@ export function useUpsertLiveStatusMutation(
 				});
 			};
 
-			await retry(5, (e) => e instanceof ClientResponseError && e.error === 'InvalidSwap', upsert);
+			await retry(5, isInvalidSwapError, upsert);
 
 			return {
 				record,
