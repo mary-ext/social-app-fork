@@ -4,6 +4,7 @@ import path from 'node:path';
 import { svgSprites } from '@oomfware/vite-plugin-svg-sprites';
 import { vanillaExtractPlugin } from '@oomfware/vite-plugin-vanilla-extract';
 
+import { cloudflare } from '@cloudflare/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Rolldown } from 'vite';
 
@@ -89,6 +90,7 @@ export default defineConfig(({ command, mode }) => {
 				spriteName: 'sprites',
 			}),
 			isProduction && serviceWorkerPrecache(path.resolve(root, 'src/lib/sw-template.js')),
+			cloudflare(),
 		],
 		envPrefix: 'PUBLIC_',
 		define: {
@@ -117,35 +119,36 @@ export default defineConfig(({ command, mode }) => {
 			host: serverHost,
 			port: serverPort,
 			strictPort: true,
-			proxy: {
-				'/xrpc': 'http://127.0.0.1:8787',
-			},
 		},
 		build: {
-			outDir: 'web-build',
-			emptyOutDir: true,
-			// TODO: switch back to lightningcss once it parses anchored container queries.
-			// https://github.com/parcel-bundler/lightningcss/issues/1176
-			cssMinify: 'esbuild',
 			sourcemap: true,
-			// prevent content hashes from cascading through importers.
-			chunkImportMap: isBuild,
-			modulePreload: { polyfill: false },
-			rolldownOptions: {
-				onLog(level, log, handler) {
-					// ignore "use no memo" directive warnings
-					if (log.code === 'MODULE_LEVEL_DIRECTIVE' && log.message.includes('"use no memo"')) {
-						return;
-					}
+		},
+		environments: {
+			client: {
+				build: {
+					// TODO: switch back to lightningcss once it parses anchored container queries.
+					// https://github.com/parcel-bundler/lightningcss/issues/1176
+					cssMinify: 'esbuild',
+					// prevent content hashes from cascading through importers.
+					chunkImportMap: isBuild,
+					modulePreload: { polyfill: false },
+					rolldownOptions: {
+						onLog(level, log, handler) {
+							// ignore "use no memo" directive warnings
+							if (log.code === 'MODULE_LEVEL_DIRECTIVE' && log.message.includes('"use no memo"')) {
+								return;
+							}
 
-					handler(level, log);
-				},
-				output: {
-					chunkFileNames: 'assets/js/[hash:7].js',
-					assetFileNames: 'assets/[ext]/[hash:7][extname]',
-					codeSplitting: codeSplitting,
-					comments: { legal: false },
-					minify: minify,
+							handler(level, log);
+						},
+						output: {
+							chunkFileNames: 'assets/js/[hash:7].js',
+							assetFileNames: 'assets/[ext]/[hash:7][extname]',
+							codeSplitting: codeSplitting,
+							comments: { legal: false },
+							minify: minify,
+						},
+					},
 				},
 			},
 		},

@@ -1,7 +1,6 @@
 /.research/
 
 node_modules/
-/web-build/
 
 .npm-*.log
 .pnpm-*.log
@@ -17,7 +16,5 @@ yarn-*.log
 tsconfig.tsbuildinfo
 .oxlintcache
 
-.wrangler/
+.cloudflare/
 .dev.vars*
-
-worker-configuration.d.ts

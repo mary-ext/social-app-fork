@@ -6,17 +6,15 @@
 	"scripts": {
 		"postinstall": "pnpm paraglide:compile && pnpm cf-typegen",
 		"dev": "vite --experimentalBundle",
-		"dev:worker": "wrangler dev --var DEV:true",
-		"deploy": "wrangler deploy",
-		"cf-typegen": "wrangler types",
+		"deploy": "cf deploy",
+		"cf-typegen": "cf workers types",
 		"build": "pnpm paraglide:compile && pnpm lint && vite build",
 		"emoji:compile": "node scripts/build-emoji-data.ts",
 		"paraglide:compile": "node scripts/compile-i18n.ts",
 		"preview": "vite preview",
 		"lint": "oxlint",
 		"format": "oxfmt",
-		"format:check": "oxfmt --check",
-		"nuke": "rm -rf ./node_modules ./web-build"
+		"format:check": "oxfmt --check"
 	},
 	"dependencies": {
 		"@atcute/atproto": "^4.0.4",
@@ -69,6 +67,7 @@
 		"wordgard": "0.5.2"
 	},
 	"devDependencies": {
+		"@cloudflare/vite-plugin": "2.0.0-beta.v.1",
 		"@inlang/paraglide-js": "2.29.0",
 		"@mary-ext/oxlint-rules": "^0.1.1",
 		"@oomfware/vite-plugin-svg-sprites": "^0.1.2",
@@ -79,6 +78,7 @@
 		"@typescript/native": "npm:typescript@^7.0.2",
 		"@vanilla-extract/private": "^1.0.9",
 		"@vitejs/plugin-react": "^6.1.2",
+		"cf": "1.0.0-beta.18",
 		"emojibase-data": "^17.0.0",
 		"eslint-plugin-bsky-internal": "link:eslint",
 		"oxc-transform-react": "^0.154.0",
@@ -87,8 +87,7 @@
 		"oxlint-tsgolint": "^7.0.2004",
 		"type-fest": "^5.10.0",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"vite": "^8.3.4",
-		"wrangler": "^4.151.1"
+		"vite": "^8.3.4"
 	},
 	"browserslist": {
 		"production": [

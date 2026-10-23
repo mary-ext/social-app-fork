@@ -1,5 +1,3 @@
-import { env } from 'cloudflare:workers';
-
 import {
 	AtprotoWebDidDocumentResolver,
 	CompositeDidDocumentResolver,
@@ -12,8 +10,6 @@ import { ServiceJwtVerifier } from '@atcute/xrpc-server/auth';
 import baseMetadata from '../public/oauth-client-metadata.json';
 
 const CLIENT_ID = new URL(baseMetadata.client_id);
-
-const IS_DEV = env.DEV === 'true';
 
 const SERVICE_ID = 'internal_app';
 const SERVICE_DID: Did<'web'> = `did:web:${encodeURIComponent(CLIENT_ID.host)}`;
@@ -63,7 +59,7 @@ export const authorizeServiceCall = async (
 	request: Request,
 	{ limiter, lxm }: { limiter: RateLimit; lxm: Nsid },
 ): Promise<void> => {
-	if (IS_DEV) {
+	if (import.meta.env.DEV) {
 		return;
 	}
 

@@ -7,7 +7,8 @@
  *
  * ```sh
  * node scripts/generate-oauth-key.ts
- * wrangler secret put OAUTH_PRIVATE_KEY  # paste the PEM output, including the BEGIN/END lines
+ * # pass the PEM output, including the BEGIN/END lines
+ * cf workers secrets update OAUTH_PRIVATE_KEY --worker social-app-fork --type secret_text --text "$PEM"
  * ```
  */
 import { exportPkcs8PrivateKey, generateClientAssertionKey, Keyset } from '@atcute/oauth-cab';
@@ -18,7 +19,7 @@ const key = await generateClientAssertionKey(SIGNING_KEY_ID);
 const pem = await exportPkcs8PrivateKey(key);
 const keyset = new Keyset([key]);
 
-console.log('# OAUTH_PRIVATE_KEY (PKCS8 PEM) — set as a wrangler secret:\n');
+console.log('# OAUTH_PRIVATE_KEY (PKCS8 PEM) — set as a worker secret:\n');
 console.log(pem.trim());
 console.log('\n# public jwks (the worker advertises this at /oauth-client-metadata.json):\n');
 console.log(JSON.stringify(keyset.publicJwks, null, 2));

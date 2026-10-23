@@ -11,6 +11,9 @@ export const serviceWorkerPrecache = (templatePath: string): Plugin => {
 	return {
 		name: 'service-worker-precache',
 		apply: 'build',
+		applyToEnvironment(environment) {
+			return environment.name === 'client';
+		},
 		configResolved(config) {
 			assetsDir = config.build.assetsDir;
 		},
