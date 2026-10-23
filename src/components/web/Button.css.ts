@@ -289,14 +289,15 @@ export const iconBox = recipe(
 		base: {
 			display: 'inline-grid',
 			placeContent: 'center',
+			height: '1lh',
 		},
 		variants: {
 			narrow: { false: {}, true: {} },
 			pull: { false: {}, true: { marginInline: -2 } },
 			size: {
-				large: { width: 20, height: 20 },
-				small: { width: 17, height: 17 },
-				tiny: { width: 15, height: 15 },
+				large: { width: 20 },
+				small: { width: 17 },
+				tiny: { width: 15 },
 			},
 		},
 		compoundVariants: [
