@@ -14,7 +14,7 @@ import { retry } from '#/lib/utils/retry';
 
 import { useGetPost } from '#/state/queries/post/post';
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/thread/threadgate-cache';
-import { threadgateRecordQueryKeyRoot, threadgateViewQueryKeyRoot } from '#/state/queries/threadgate/keys';
+import { threadgateViewQueryKeyRoot } from '#/state/queries/threadgate/keys';
 import { upsertThreadgate } from '#/state/queries/threadgate/lib/record';
 import { getClients, useSession } from '#/state/session';
 
@@ -68,9 +68,6 @@ export function useSetThreadgateAllowMutation() {
 				updatePostThreadThreadgate(data);
 			}
 
-			void queryClient.invalidateQueries({
-				queryKey: [threadgateRecordQueryKeyRoot],
-			});
 			void queryClient.invalidateQueries({
 				queryKey: [threadgateViewQueryKeyRoot],
 			});

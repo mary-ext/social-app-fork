@@ -1,11 +1,10 @@
 import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { createThreadgateRecord, mergeThreadgateRecords } from '#/lib/threadgate';
 
-import { threadgateRecordQueryKeyRoot } from '#/state/queries/threadgate/keys';
 import { upsertThreadgate } from '#/state/queries/threadgate/lib/record';
 import { getClients, useSession } from '#/state/session';
 import { setReplyHidden } from '#/state/threadgate-hidden-replies';
@@ -13,7 +12,6 @@ import { setReplyHidden } from '#/state/threadgate-hidden-replies';
 export function useToggleReplyVisibilityMutation() {
 	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
-	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: async ({
@@ -51,11 +49,6 @@ export function useToggleReplyVisibilityMutation() {
 					}
 				},
 			);
-		},
-		onSuccess() {
-			void queryClient.invalidateQueries({
-				queryKey: [threadgateRecordQueryKeyRoot],
-			});
 		},
 		onError(_, { replyUri, action }) {
 			// roll the optimistic toggle back
