@@ -9,7 +9,7 @@ import { createMaybeDetachedQuoteEmbed } from '#/lib/embed-views';
 import { createPostgateRecord, mergePostgateRecords } from '#/lib/postgate';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
-import { useGetPosts } from '#/state/queries/post/post';
+import { useGetPost } from '#/state/queries/post/post';
 import { upsertPostgate } from '#/state/queries/postgate/lib/record';
 import { getClients, useSession } from '#/state/session';
 
@@ -17,7 +17,7 @@ export function useToggleQuoteDetachmentMutation() {
 	const { appview, pds } = getClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
-	const getPosts = useGetPosts();
+	const getPost = useGetPost();
 	const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined);
 
 	return useMutation({
@@ -69,11 +69,11 @@ export function useToggleQuoteDetachmentMutation() {
 		async onSuccess(_data, { post, quoteUri, action }) {
 			if (action === 'reattach') {
 				try {
-					const [quote] = await getPosts({ uris: [quoteUri] });
+					const quote = await getPost({ uri: quoteUri });
 					updatePostShadow(queryClient, post.uri, {
 						embed: createMaybeDetachedQuoteEmbed({
 							post,
-							quote: quote!,
+							quote,
 							quoteUri: undefined,
 							detached: false,
 						}),

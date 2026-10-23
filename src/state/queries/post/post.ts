@@ -90,22 +90,3 @@ export function useGetPost() {
 		});
 	};
 }
-
-export function useGetPosts() {
-	const queryClient = useQueryClient();
-	const { appview } = getClients();
-	return async ({ uris }: { uris: ResourceUri[] }) => {
-		return queryClient.fetchQuery({
-			queryKey: RQKEY(uris.join(',') || ''),
-			async queryFn({ signal }) {
-				const { posts } = await ok(
-					appview.get('app.bsky.feed.getPosts', {
-						signal,
-						params: { uris },
-					}),
-				);
-				return posts;
-			},
-		});
-	};
-}
