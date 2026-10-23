@@ -1,11 +1,11 @@
-import type { ResourceUri } from '@atcute/lexicons';
-import { isResourceUri } from '@atcute/lexicons/syntax';
+import type { CanonicalResourceUri } from '@atcute/lexicons';
+import { isCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { decodeHtmlEntities } from './html-entities';
 
 export interface LinkMetaResult {
-	/** standard.site record URIs advertised by the page. */
-	associatedUris?: ResourceUri[];
+	/** record URI, preferring standard.site document, then publication. */
+	canonicalUri?: CanonicalResourceUri;
 	description?: string;
 	image?: string;
 	/** oEmbed endpoint advertised by the page. */
@@ -27,9 +27,6 @@ const WANTED_META = new Set([
 	'twitter:title',
 ]);
 
-/** `<link rel>` values pointing at the standard.site records that back a page. */
-const STANDARD_SITE_RELS = new Set(['site.standard.document', 'site.standard.publication']);
-
 /** JSON oEmbed discovery type. */
 const OEMBED_LINK_TYPE = 'application/json+oembed';
 
@@ -37,15 +34,15 @@ const OEMBED_LINK_TYPE = 'application/json+oembed';
 const flatten = (value: string): string => value.replace(/\s+/g, ' ').trim().toLowerCase();
 
 /**
- * streams an HTML document through {@link HTMLRewriter} and pulls out the title, description, and a thumbnail
- * URL from its OpenGraph/Twitter meta tags and `<title>`.
+ * extracts link-card metadata, a canonical record URI, and an oEmbed endpoint from HTML.
  *
  * @param html the document bytes (typically truncated to the `<head>` region)
- * @returns the first matching value found for each field
+ * @returns metadata with OpenGraph preferred over Twitter tags and `<title>`
  */
 export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> => {
 	const meta: Record<string, string> = {};
-	const associatedUris: ResourceUri[] = [];
+	let documentUri: CanonicalResourceUri | undefined;
+	let publicationUri: CanonicalResourceUri | undefined;
 	let oembedUrl: string | undefined;
 	let titleText = '';
 
@@ -75,12 +72,14 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 					return;
 				}
 
-				// one malformed URI would invalidate the hydration request.
-				if (!isResourceUri(href) || associatedUris.includes(href)) {
+				if (!isCanonicalResourceUri(href)) {
 					return;
 				}
-				if (tokens.some((token) => STANDARD_SITE_RELS.has(token))) {
-					associatedUris.push(href);
+				if (documentUri === undefined && tokens.includes('site.standard.document')) {
+					documentUri = href;
+				}
+				if (publicationUri === undefined && tokens.includes('site.standard.publication')) {
+					publicationUri = href;
 				}
 			},
 		})
@@ -131,7 +130,8 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 	}
 
 	return {
-		associatedUris: associatedUris.length ? associatedUris : undefined,
+		// the appview discovers a document's publication from the document itself.
+		canonicalUri: documentUri ?? publicationUri,
 		description,
 		image: pick(['og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src']),
 		oembedUrl,

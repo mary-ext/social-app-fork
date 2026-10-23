@@ -7,9 +7,6 @@ import { resolveOEmbed } from './oembed';
 
 /** maximum HTML buffered for metadata extraction. */
 const HTML_MAX_BYTES = 768 * 1024;
-/** maximum standard.site records resolved per page. */
-const MAX_ASSOCIATED_URIS = 4;
-/** public appview used to hydrate standard.site embeds. */
 const appview = new Client({ handler: simpleFetchHandler({ service: 'https://public.api.bsky.app' }) });
 /** maximum cached thumbnail size. */
 const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
@@ -67,13 +64,13 @@ interface StrongRef {
 }
 
 export interface LinkMetaResponse {
-	/** resolved standard.site record refs. */
+	/** page record refs selected by the appview. */
 	associatedRefs?: StrongRef[];
 	description?: string;
 	image?: string;
 	title?: string;
 	url?: string;
-	/** appview-hydrated standard.site card view. */
+	/** card view returned by the appview. */
 	view?: unknown;
 }
 
@@ -140,14 +137,15 @@ const cacheThumbnail = async ({
 };
 
 /**
- * resolves the page's standard.site URIs through the appview. failures yield no enhanced card.
+ * resolves the page's canonical record through the appview.
  *
- * @param uris the AT-URIs discovered in the page's `<link rel>` tags
+ * @param canonicalUri the AT-URI of the record backing the page
  * @param url the resolved web URL the embed represents, used as the view's `uri`
- * @returns the appview's refs and view, or an empty object when nothing resolved
+ * @param signal cancels the request
+ * @returns the appview's refs and view, or an empty object on failure
  */
-const hydrateStandardSite = async (
-	uris: ResourceUri[],
+const hydrateCanonicalRecord = async (
+	canonicalUri: ResourceUri,
 	url: string,
 	signal: AbortSignal,
 ): Promise<{ associatedRefs?: StrongRef[]; view?: unknown }> => {
@@ -155,7 +153,7 @@ const hydrateStandardSite = async (
 		const data = await ok(
 			appview.get('app.bsky.embed.getEmbedExternalView', {
 				params: {
-					uris: uris.slice(0, MAX_ASSOCIATED_URIS),
+					canonicalUri,
 					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the URL has an HTTP(S) scheme
 					url: url as GenericUri,
 				},
@@ -204,6 +202,11 @@ export const resolveLinkMeta = async ({
 		await response.body?.cancel().catch(() => {});
 	}
 
+	// start hydration before awaiting oEmbed and thumbnail caching.
+	const hydration = meta?.canonicalUri
+		? hydrateCanonicalRecord(meta.canonicalUri, resolvedUrl.href, signal)
+		: undefined;
+
 	let title = clean(meta?.title, TITLE_MAX);
 	let description = clean(meta?.description, DESCRIPTION_MAX);
 	let imageSource = meta?.image;
@@ -238,16 +241,14 @@ export const resolveLinkMeta = async ({
 		}
 	}
 
-	const standardSite = meta?.associatedUris?.length
-		? await hydrateStandardSite(meta.associatedUris, resolvedUrl.href, signal)
-		: undefined;
+	const record = await hydration;
 
 	return {
-		associatedRefs: standardSite?.associatedRefs,
+		associatedRefs: record?.associatedRefs,
 		description,
 		image,
 		title,
 		url: (alias ? requested : pageUrl).href,
-		view: standardSite?.view,
+		view: record?.view,
 	};
 };
