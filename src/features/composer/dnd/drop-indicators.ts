@@ -1,6 +1,6 @@
 import './drop-indicators.css';
 
-import { Decoration, PointSet, type Wordgard } from 'wordgard/editor';
+import { Decoration, type Wordgard } from 'wordgard/editor';
 import { GardState, Transaction } from 'wordgard/state';
 
 import { findPostById, getPosts } from '../model/schema';
@@ -74,7 +74,7 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 		return Decoration.Point.source.of((state) => {
 			const indicator = state.field(field);
 			if (indicator === null) {
-				return PointSet.empty;
+				return Decoration.Point.none;
 			}
 
 			switch (indicator.kind) {
@@ -82,22 +82,24 @@ export const dropIndicator = GardState.Field.define<DropIndicator | null>({
 					// new post drops are drawn by the drop zone after the thread.
 					const { drop } = indicator;
 					const post = drop?.kind === 'post' && findPostById(state.doc, drop.postId);
-					return post ? PointSet.create([[post.pos, dropTargetDeco]]) : PointSet.empty;
+					return post ? Decoration.Point.set([[dropTargetDeco, post.pos]]) : Decoration.Point.none;
 				}
 				case 'post': {
 					const post = findPostById(state.doc, indicator.postId);
 					if (!post) {
-						return PointSet.empty;
+						return Decoration.Point.none;
 					}
 
-					const marks: [number, typeof draggingDeco][] = [[post.pos, draggingDeco]];
 					const marker = getPostDropMarker(state);
 					const first = getPosts(state.doc)[0];
-					if (marker?.edge === 'before' && first && marker.postId === first.id) {
-						marks.push([first.pos, dropGapDeco]);
-					}
 
-					return PointSet.create(marks);
+					// the set builder requires document order.
+					return Decoration.Point.set((add) => {
+						if (marker?.edge === 'before' && first && marker.postId === first.id) {
+							add(dropGapDeco, first.pos);
+						}
+						add(draggingDeco, post.pos);
+					});
 				}
 			}
 		});

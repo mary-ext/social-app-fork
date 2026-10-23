@@ -118,9 +118,9 @@ export const suggestionState = GardState.Field.define<SuggestionField>({
 	},
 	provide(field) {
 		return [
-			Tooltip.show.compute((state) => state.field(field).tooltip),
+			Tooltip.show.derive((state) => state.field(field).tooltip),
 			// null removes ARIA attributes when the popup closes.
-			Wordgard.contentAttributes.compute((state) => {
+			Wordgard.contentAttributes.derive((state) => {
 				const { anchor, activeOption } = state.field(field);
 				return {
 					'aria-expanded': anchor === null ? null : 'true',

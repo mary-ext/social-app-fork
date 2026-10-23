@@ -52,18 +52,18 @@ const parsePlainText = Wordgard.clipboardTextParser.of((text) => {
 
 // built-in paste prefers HTML; shift-paste bypasses the text parser.
 const pastePlainTextHandler = Wordgard.pasteHandler.of((wg, event) => {
-	const files = event.clipboardData?.files;
+	const files = event.dataTransfer?.files;
 	if (files?.length) {
 		const post = findPost(wg.state.sel.head);
 		if (post) {
-			// copy files before the clipboard event expires.
+			// copy files before the event's data transfer expires.
 			void attachFiles(wg, getPostParam(post.node).id, [...files]);
 		}
 
 		return true;
 	}
 
-	const text = event.clipboardData?.getData('text/plain');
+	const text = event.dataTransfer?.getData('text/plain');
 	if (!text) {
 		return false;
 	}

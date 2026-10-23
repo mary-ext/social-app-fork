@@ -1,4 +1,4 @@
-import { Decoration, PointSet, RangeSet } from 'wordgard/editor';
+import { Decoration } from 'wordgard/editor';
 import { GardState } from 'wordgard/state';
 
 import { getEmbedSession } from '../embeds/embed-session';
@@ -21,18 +21,18 @@ const facetDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.f
 const overflowDeco = Decoration.Range.wrapper('span', { attributes: { class: deco.overflow } });
 
 type ThreadDecorations = {
-	facets: RangeSet<Decoration.Range>;
-	// separate from facets because RangeSet can't hold overlapping ranges.
-	overflow: RangeSet<Decoration.Range>;
-	points: PointSet<Decoration.Point>;
+	facets: Decoration.Range.Set;
+	// separate from facets because range sets can't hold overlapping ranges.
+	overflow: Decoration.Range.Set;
+	points: Decoration.Point.Set;
 };
 
 const build = (state: GardState): ThreadDecorations => {
 	const getPlaceholder = state.facet(postPlaceholder);
 
-	const facets: [number, number, Decoration.Range][] = [];
-	const overflow: [number, number, Decoration.Range][] = [];
-	const points: [number, Decoration.Point][] = [];
+	const facets: [Decoration.Range, number, number][] = [];
+	const overflow: [Decoration.Range, number, number][] = [];
+	const points: [Decoration.Point, number][] = [];
 
 	for (const { node, pos, index } of getPosts(state.doc)) {
 		const { text, measurement } = measureCached(node);
@@ -42,24 +42,24 @@ const build = (state: GardState): ThreadDecorations => {
 			const toPos = createOffsetMapper(node, pos + 1);
 
 			for (const [from, to] of measurement.facets) {
-				facets.push([toPos(from), toPos(to), facetDeco]);
+				facets.push([facetDeco, toPos(from), toPos(to)]);
 			}
 
 			if (overflowAt !== null) {
-				overflow.push([toPos(overflowAt), toPos(text.length), overflowDeco]);
+				overflow.push([overflowDeco, toPos(overflowAt), toPos(text.length)]);
 			}
 		}
 
 		// use an attribute for empty-post placeholders; widgets interfere with click positioning.
 		if (getPlaceholder && isEmptyPost(node)) {
-			points.push([pos + 1, Decoration.Point.attributes({ [LINE_PLACEHOLDER_ATTR]: getPlaceholder(index) })]);
+			points.push([Decoration.Point.attributes({ [LINE_PLACEHOLDER_ATTR]: getPlaceholder(index) }), pos + 1]);
 		}
 	}
 
 	return {
-		facets: RangeSet.create(facets),
-		overflow: RangeSet.create(overflow),
-		points: PointSet.create(points),
+		facets: Decoration.Range.set(facets),
+		overflow: Decoration.Range.set(overflow),
+		points: Decoration.Point.set(points),
 	};
 };
 
