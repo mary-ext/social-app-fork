@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
 import { cleanError } from '#/lib/errors';
@@ -44,7 +45,7 @@ export function CreateOrEditListDialog({
 	handle: Dialog.DialogHandle;
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
-	onSave?: (uri: string) => void;
+	onSave?: (uri: ResourceUri) => void;
 	initialValues?: InitialListValues;
 }) {
 	const cancelHandle = Prompt.usePromptHandle();
@@ -111,7 +112,7 @@ function DialogInner({
 }: {
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
-	onSave?: (uri: string) => void;
+	onSave?: (uri: ResourceUri) => void;
 	handle: Dialog.DialogHandle;
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;

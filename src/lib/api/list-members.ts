@@ -1,6 +1,7 @@
+import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 
 // supports larger starter packs than this client's creation limit.
 const ALL_MEMBERS_LIMIT = 500;
@@ -37,3 +38,29 @@ export async function getAllListMembers(client: Client, uri: ResourceUri, signal
 
 	return listItems;
 }
+
+/**
+ * prepares a list membership for batch creation.
+ *
+ * @param options.did the account to add
+ * @param options.listUri the list to add it to
+ * @returns an `applyWrites` create operation with the current timestamp
+ */
+export const createListItemWrite = ({
+	did,
+	listUri,
+}: {
+	did: Did;
+	listUri: ResourceUri;
+}): ComAtprotoRepoApplyWrites.$input['writes'][number] => {
+	return {
+		$type: 'com.atproto.repo.applyWrites#create',
+		collection: 'app.bsky.graph.listitem',
+		value: {
+			$type: 'app.bsky.graph.listitem',
+			createdAt: new Date().toISOString(),
+			list: listUri,
+			subject: did,
+		},
+	};
+};

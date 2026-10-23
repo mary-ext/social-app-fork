@@ -1,8 +1,8 @@
-import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
 import type { AnyProfileView, AppBskyRichtextFacet } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
 
+import { createListItemWrite } from '#/lib/api/list-members';
 import { createRecord } from '#/lib/api/records';
 import { applyWrites } from '#/lib/bulk-write-follows';
 
@@ -43,27 +43,8 @@ export const createStarterPackList = async ({
 	await applyWrites(
 		pds,
 		did,
-		profiles.map((p) => createListItem({ did: p.did, listUri: list.uri })),
+		profiles.map((p) => createListItemWrite({ did: p.did, listUri: list.uri })),
 	);
 
 	return list;
 };
-
-function createListItem({
-	did,
-	listUri,
-}: {
-	did: string;
-	listUri: string;
-}): ComAtprotoRepoApplyWrites.$input['writes'][number] {
-	return {
-		$type: 'com.atproto.repo.applyWrites#create',
-		collection: 'app.bsky.graph.listitem',
-		value: {
-			$type: 'app.bsky.graph.listitem',
-			createdAt: new Date().toISOString(),
-			list: listUri,
-			subject: did,
-		},
-	};
-}

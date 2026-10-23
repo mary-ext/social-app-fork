@@ -1,12 +1,11 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-
-import { useQueryClient } from '@tanstack/react-query';
 
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { listTarget } from '#/lib/routes/targets';
 
-import { MEMBERS_RQKEY } from '#/state/queries/list/keys';
+import { useCopyListMembersMutation } from '#/state/queries/list/copy-members';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -29,7 +28,14 @@ export function CreateListFromStarterPackDialog({
 }) {
 	const { currentAccount } = useSession();
 	const router = useRouter();
-	const queryClient = useQueryClient();
+	const { mutate: copyMembers } = useCopyListMembersMutation({
+		onError(e) {
+			console.error('Failed to add members to list', e);
+			Toast.show(m['components.dialogs.list.error.createdPartial'](), {
+				type: 'error',
+			});
+		},
+	});
 	const createListHandle = Dialog.useDialogHandle();
 
 	const record = getStarterPackRecord(starterPack);
@@ -39,16 +45,9 @@ export function CreateListFromStarterPackDialog({
 		createListHandle.open();
 	};
 
-	const onListCreated = (listUri: string) => {
+	const onListCreated = (listUri: ResourceUri) => {
 		if (starterPack.list && currentAccount) {
-			try {
-				void queryClient.invalidateQueries({ queryKey: MEMBERS_RQKEY(listUri) });
-			} catch (e) {
-				console.error('Failed to add members to list', e);
-				Toast.show(m['components.dialogs.list.error.createdPartial'](), {
-					type: 'error',
-				});
-			}
+			copyMembers({ fromUri: starterPack.list.uri, toUri: listUri });
 		}
 
 		const urip = parseCanonicalResourceUri(listUri);
