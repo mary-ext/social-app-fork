@@ -10,8 +10,9 @@ import { clsx } from 'clsx';
 
 import { feedTarget } from '#/lib/routes/targets';
 
-import { precacheFeedFromGeneratorView, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { useToggleSavedFeed } from '#/state/queries/preferences';
+import { precacheFeedFromGeneratorView } from '#/state/queries/feed/precache';
+import { useFeedSourceInfoQuery } from '#/state/queries/feed/source-info';
+import { useToggleSavedFeed } from '#/state/queries/preferences/toggle-saved-feed';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';

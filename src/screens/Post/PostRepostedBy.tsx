@@ -4,9 +4,9 @@ import { makeRecordUri } from '#/lib/at-uri';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { usePostQuery } from '#/state/queries/post';
-import { usePostRepostedByQuery } from '#/state/queries/post-reposted-by';
-import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
+import { usePostQuery } from '#/state/queries/post/post';
+import { usePostRepostedByQuery } from '#/state/queries/post/reposted-by';
 import { useTitle } from '#/state/use-title';
 
 import { BlankState } from '#/components/BlankState';

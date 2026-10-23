@@ -11,10 +11,8 @@ import { ConvoProvider, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useJoinRequestMutation } from '#/state/queries/messages/join-requests';
-import {
-	createListJoinRequestsQueryKey,
-	useListJoinRequestsQuery,
-} from '#/state/queries/messages/list-join-requests';
+import { createListJoinRequestsQueryKey } from '#/state/queries/messages/keys';
+import { useListJoinRequestsQuery } from '#/state/queries/messages/list-join-requests';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

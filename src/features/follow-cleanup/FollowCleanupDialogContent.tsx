@@ -7,10 +7,10 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { createRateLimitBudget } from '#/lib/rate-limit-budget';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { useBulkUnfollowMutation, useFollowCleanupScanQuery } from '#/state/queries/profile/follow-cleanup';
 
 import { formatCount } from '#/locale/intl/number';
 
-import { useBulkUnfollowMutation, useFollowCleanupScanQuery } from '#/features/follow-cleanup/queries';
 import {
 	type FlaggedFollow,
 	type FollowIssue,

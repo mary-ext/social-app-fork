@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
+import type { ThreadPreferences } from '#/state/thread-preferences';
 
 import * as Menu from '#/components/Menu';
 import { Button, ButtonIcon } from '#/components/web/Button';

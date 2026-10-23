@@ -8,24 +8,21 @@ import type {
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { getMaybeDetachedQuoteEmbed } from '#/lib/embed-views';
 import { isAbortError } from '#/lib/errors';
 import { type Richtext, richTextToCopyableText } from '#/lib/rich-text';
+import { InvalidInteractionSettingsError, MAX_HIDDEN_REPLIES, MaxHiddenRepliesError } from '#/lib/threadgate';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePrimaryLanguage } from '#/state/preferences/languages';
-import { usePinnedPostMutation } from '#/state/queries/pinned-post';
-import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
-import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
-import { getMaybeDetachedQuoteEmbed } from '#/state/queries/postgate/util';
-import { useProfileBlockMutationQueue } from '#/state/queries/profile';
-import {
-	InvalidInteractionSettingsError,
-	MAX_HIDDEN_REPLIES,
-	MaxHiddenRepliesError,
-	useToggleReplyVisibilityMutation,
-} from '#/state/queries/threadgate';
+import { usePostDeleteMutation } from '#/state/queries/post/delete';
+import { useThreadMuteMutationQueue } from '#/state/queries/post/thread-mute';
+import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate/toggle-quote-detachment';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { usePinnedPostMutation } from '#/state/queries/profile/pinned-post';
+import { useToggleReplyVisibilityMutation } from '#/state/queries/threadgate/toggle-reply-visibility';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 

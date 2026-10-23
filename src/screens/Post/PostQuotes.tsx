@@ -6,9 +6,9 @@ import { makeRecordUri } from '#/lib/at-uri';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { usePostQuery } from '#/state/queries/post';
-import { type QuotesSort, usePostQuotesQuery } from '#/state/queries/post-quotes';
-import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
+import { usePostQuery } from '#/state/queries/post/post';
+import { type QuotesSort, usePostQuotesQuery } from '#/state/queries/post/quotes';
 import { useTitle } from '#/state/use-title';
 
 import { BlankState } from '#/components/BlankState';

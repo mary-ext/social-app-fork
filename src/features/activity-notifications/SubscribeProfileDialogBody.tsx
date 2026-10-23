@@ -1,21 +1,14 @@
 import { useState } from 'react';
 
-import type {
-	AnyProfileView,
-	AppBskyNotificationDefs,
-	AppBskyNotificationListActivitySubscriptions,
-} from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyNotificationDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { ok } from '@atcute/client';
-
-import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/errors';
 
-import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { getClients } from '#/state/session';
-
-import { RQKEY_getActivitySubscriptions } from '#/features/activity-notifications/queries';
+import {
+	type ActivitySubscriptionUpdate,
+	usePutActivitySubscriptionMutation,
+} from '#/state/queries/notifications/put-activity-subscription';
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';
@@ -58,33 +51,18 @@ export function SubscribeProfileDialogBody({
 	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
-	const { appview } = getClients();
-	const queryClient = useQueryClient();
 	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
 	const [state, setState] = useState(initialState);
 
 	const selected: SubscriptionChoice = state.post ? (state.reply ? 'all' : 'posts') : 'off';
 
 	const {
-		mutate: saveChanges,
+		mutate: putActivitySubscription,
 		isPending: isSaving,
 		error,
-	} = useMutation({
-		mutationFn: async (activitySubscription: Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'>) => {
-			await ok(
-				appview.post('app.bsky.notification.putActivitySubscription', {
-					input: {
-						subject: profile.did,
-						activitySubscription,
-					},
-				}),
-			);
-		},
-		onSuccess: (_data, activitySubscription) => {
+	} = usePutActivitySubscriptionMutation({
+		onSuccess: (activitySubscription) => {
 			handle.close();
-			updateProfileShadow(queryClient, profile.did, {
-				activitySubscription,
-			});
 
 			if (!activitySubscription.post && !activitySubscription.reply) {
 				Toast.show(
@@ -93,23 +71,6 @@ export function SubscribeProfileDialogBody({
 					}),
 					{
 						type: 'success',
-					},
-				);
-
-				// filter out the subscription
-				queryClient.setQueryData(
-					RQKEY_getActivitySubscriptions,
-					(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>) => {
-						if (!old) {
-							return old;
-						}
-						return {
-							...old,
-							pages: old.pages.map((page) => ({
-								...page,
-								subscriptions: page.subscriptions.filter((item) => item.did !== profile.did),
-							})),
-						};
 					},
 				);
 			} else {
@@ -129,10 +90,9 @@ export function SubscribeProfileDialogBody({
 				}
 			}
 		},
-		onError: (err) => {
-			console.error('Could not save activity subscription', err);
-		},
 	});
+	const saveChanges = (activitySubscription: ActivitySubscriptionUpdate) =>
+		putActivitySubscription({ subject: profile.did, activitySubscription });
 
 	const isDirty = state.post !== initialState.post || state.reply !== initialState.reply;
 	const hasAny = state.post || state.reply;
@@ -209,7 +169,7 @@ export function SubscribeProfileDialogBody({
 
 function parseActivitySubscription(
 	sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'> {
+): ActivitySubscriptionUpdate {
 	if (!sub) {
 		return { post: false, reply: false };
 	}

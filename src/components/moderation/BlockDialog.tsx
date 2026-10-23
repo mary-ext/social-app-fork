@@ -10,11 +10,9 @@ import { clsx } from 'clsx';
 import { isNetworkError } from '#/lib/errors';
 
 import type { Shadow } from '#/state/cache/types';
+import { createListMutualGroupsQueryKey } from '#/state/queries/messages/keys';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
-import {
-	createListMutualGroupsQueryKey,
-	useListMutualGroupsQuery,
-} from '#/state/queries/messages/list-mutual-groups';
+import { useListMutualGroupsQuery } from '#/state/queries/messages/list-mutual-groups';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useSession } from '#/state/session';
 

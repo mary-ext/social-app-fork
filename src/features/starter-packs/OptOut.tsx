@@ -1,6 +1,6 @@
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { ReferenceListOptOutVariables } from '#/state/queries/list';
+import type { ReferenceListOptOutVariables } from '#/state/queries/list/opt-out';
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';

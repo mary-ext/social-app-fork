@@ -1,11 +1,11 @@
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
+import type { TimedMute } from '#/lib/preferences/app-specific-prefs';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useMyMutedAccountsQuery } from '#/state/queries/my-muted-accounts';
-import type { TimedMute } from '#/state/queries/preferences/app-specific-prefs';
-import { useTimedMutes } from '#/state/queries/timed-mutes';
+import { useMyMutedAccountsQuery } from '#/state/queries/moderation/my-muted-accounts';
+import { useTimedMutes } from '#/state/queries/moderation/timed-mutes';
 import { useTick } from '#/state/tick';
 import { useTitle } from '#/state/use-title';
 

@@ -4,7 +4,7 @@ import { cleanError } from '#/lib/errors';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { enforceLen } from '#/lib/utils/text';
 
-import { useSearchPostsQuery } from '#/state/queries/search-posts';
+import { useSearchPostsQuery } from '#/state/queries/post/search';
 import { useTitle } from '#/state/use-title';
 
 import { BlankState } from '#/components/BlankState';

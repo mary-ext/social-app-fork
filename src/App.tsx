@@ -9,10 +9,10 @@ import { RouterView } from '@oomfware/stacker';
 import { MessagesEventBusProvider } from '#/state/messages/events';
 import { Provider as LabelDefsProvider } from '#/state/moderation/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/moderation/moderation-opts';
-import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
-import { useTimedMuteExpiry } from '#/state/queries/timed-mutes';
+import { Provider as UnreadNotifsProvider } from '#/state/notifications/unread';
 import { QueryProvider } from '#/state/query-client';
 import { Provider as SessionProvider, useSession } from '#/state/session';
+import { useTimedMuteExpiry } from '#/state/timed-mute-expiry';
 
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';

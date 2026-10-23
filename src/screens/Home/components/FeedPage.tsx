@@ -2,10 +2,11 @@ import { type JSX, useRef, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
+import type { FeedSourceInfo } from '#/lib/feeds/source-info';
+
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
-import type { FeedSourceInfo } from '#/state/queries/feed';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 import { useSession } from '#/state/session';
 
 import { useOpenComposer } from '#/features/composer/open-composer';

@@ -3,11 +3,12 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import {
+	convoQueryKey as CONVO_KEY,
+	LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+} from '#/state/queries/messages/keys';
+import type { ConvoListQueryData } from '#/state/queries/messages/list-conversations-cache';
 import { getClients } from '#/state/session';
-
-import { RQKEY as CONVO_KEY } from './conversation-cache';
-import type { ConvoListQueryData } from './list-conversations';
-import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './list-conversations-key';
 
 export function useMarkJoinRequestsRead(convoId: string | undefined) {
 	const queryClient = useQueryClient();

@@ -1,7 +1,7 @@
 import {
 	useNotificationDeclarationMutation,
 	useNotificationDeclarationQuery,
-} from '#/features/activity-notifications/queries';
+} from '#/state/queries/notifications/declaration';
 
 import * as Dialog from '#/components/Dialog';
 import * as ChoiceCard from '#/components/forms/ChoiceCard';

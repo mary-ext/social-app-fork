@@ -11,7 +11,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { usePostQuery } from '#/state/queries/post';
+import { usePostQuery } from '#/state/queries/post/post';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import * as MediaPreview from '#/components/MediaPreview';

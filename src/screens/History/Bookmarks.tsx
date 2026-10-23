@@ -5,8 +5,8 @@ import { mapDefined } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 
-import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
-import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
+import { useBookmarkMutation } from '#/state/queries/post/bookmark';
+import { useBookmarksQuery } from '#/state/queries/post/bookmarks';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';

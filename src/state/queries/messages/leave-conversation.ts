@@ -3,19 +3,20 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
-import { getClients } from '#/state/session';
-
+import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/messages/join-links-cache';
+import {
+	CONVO_REQUEST_LIST_RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
+	LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY,
+} from '#/state/queries/messages/keys';
 import {
 	type ConvoRequestListQueryData,
 	optimisticDelete as optimisticDeleteRequest,
-	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
-} from './list-conversation-requests';
-import type { ConvoListQueryData } from './list-conversations';
-import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations-key';
+} from '#/state/queries/messages/list-conversation-requests-cache';
+import type { ConvoListQueryData } from '#/state/queries/messages/list-conversations-cache';
+import { getClients } from '#/state/session';
 
 const RQKEY_ROOT = 'leave-convo';
-export function RQKEY(convoId: string | undefined) {
+function RQKEY(convoId: string | undefined) {
 	return [RQKEY_ROOT, convoId];
 }
 

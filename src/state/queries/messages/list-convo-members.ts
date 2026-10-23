@@ -3,12 +3,11 @@ import { ok } from '@atcute/client';
 
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
-import { registerShadowFinders } from '#/state/cache/registry';
-import { STALE } from '#/state/queries';
-import { getClients } from '#/state/session';
+import { STALE } from '#/lib/query/const';
 
-const RQKEY_ROOT = 'listConvoMembers';
-export const listConvoMembersQueryKey = (convoId: string) => [RQKEY_ROOT, { convoId }];
+import { registerShadowFinders } from '#/state/cache/registry';
+import { LIST_CONVO_MEMBERS_RQKEY_ROOT, listConvoMembersQueryKey } from '#/state/queries/messages/keys';
+import { getClients } from '#/state/session';
 
 // group chat size is at least 50, so should fetch the whole list in one go
 const LIMIT = 50;
@@ -49,12 +48,12 @@ export function useListConvoMembersQuery({
 	});
 }
 
-export function* findAllProfilesInQueryData(
+function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
 	const queryDatas = queryClient.getQueriesData<ChatBskyActorDefs.ProfileViewBasic[]>({
-		queryKey: [RQKEY_ROOT],
+		queryKey: [LIST_CONVO_MEMBERS_RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData) {
@@ -68,6 +67,6 @@ export function* findAllProfilesInQueryData(
 	}
 }
 
-registerShadowFinders(RQKEY_ROOT, {
+registerShadowFinders(LIST_CONVO_MEMBERS_RQKEY_ROOT, {
 	findProfiles: findAllProfilesInQueryData,
 });

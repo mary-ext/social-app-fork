@@ -4,10 +4,11 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { STALE } from '#/state/queries';
-import { useGetPost } from '#/state/queries/post';
-import { createPostgateQueryKey, getPostgateRecord } from '#/state/queries/postgate';
-import { createThreadgateViewQueryKey } from '#/state/queries/threadgate';
+import { STALE } from '#/lib/query/const';
+
+import { useGetPost } from '#/state/queries/post/post';
+import { postgateQueryOptions } from '#/state/queries/postgate/postgate';
+import { threadgateViewQueryOptions } from '#/state/queries/threadgate/view';
 import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -54,18 +55,9 @@ export function usePrefetchPostInteractionSettings({
 		try {
 			await Promise.all([
 				importSettingsBody(),
+				queryClient.prefetchQuery(postgateQueryOptions({ appview, pds: pds!, postUri })),
 				queryClient.prefetchQuery({
-					queryKey: createPostgateQueryKey(postUri),
-					queryFn: ({ signal }) =>
-						getPostgateRecord({ appview, pds: pds!, postUri, signal }).then((res) => res ?? null),
-					staleTime: STALE.SECONDS.THIRTY,
-				}),
-				queryClient.prefetchQuery({
-					queryKey: createThreadgateViewQueryKey(rootPostUri),
-					queryFn: async () => {
-						const post = await getPost({ uri: rootPostUri });
-						return post.threadgate ?? null;
-					},
+					...threadgateViewQueryOptions({ getPost, postUri: rootPostUri }),
 					staleTime: STALE.SECONDS.THIRTY,
 				}),
 			]);

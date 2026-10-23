@@ -13,7 +13,8 @@ import { isAbortError } from '#/lib/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { Shadow } from '#/state/cache/types';
-import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile/follow';
 import { useSession } from '#/state/session';
 
 import { useActorStatus } from '#/features/live-now/use-actor-status';

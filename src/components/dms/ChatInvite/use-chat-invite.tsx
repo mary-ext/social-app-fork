@@ -5,7 +5,7 @@ import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { conversationTarget } from '#/lib/routes/targets';
 
-import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
+import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/messages/join-links';
 import { useSession } from '#/state/session';
 
 import { groupChatJoinHandle } from '#/components/dialogs/handles';

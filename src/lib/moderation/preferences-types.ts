@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 
-import type { AppSpecificPrefs } from '#/state/queries/preferences/app-specific-prefs';
+import type { AppSpecificPrefs } from '#/lib/preferences/app-specific-prefs';
 
 /**
  * the fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation

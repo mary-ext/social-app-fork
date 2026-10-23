@@ -19,22 +19,23 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
+import type { FeedPage } from '#/lib/notifications/types';
+import { STALE } from '#/lib/query/const';
+import { useAutoPagination } from '#/lib/query/use-auto-pagination';
 import { typedKeys } from '#/lib/utils/objects';
 
+import {
+	didOrHandleUriMatches,
+	embedViewRecordToPostView,
+	getEmbeddedPost,
+} from '#/state/cache/finder-utils';
 import { registerShadowFinders } from '#/state/cache/registry';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { STALE } from '#/state/queries';
+import { useUnreadNotificationsApi } from '#/state/notifications/unread';
+import { NOTIFICATION_FEED_RQKEY_ROOT, notificationFeedQueryKey } from '#/state/queries/notifications/keys';
+import { fetchPage } from '#/state/queries/notifications/lib/fetch-page';
 import { getClients } from '#/state/session';
 import { useHiddenReplyUris } from '#/state/threadgate-hidden-replies';
-
-import { useAutoPagination } from '../use-auto-pagination';
-import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
-import { NOTIFICATION_FEED_RQKEY_ROOT, notificationFeedQueryKey } from './notification-feed-key';
-import type { FeedPage } from './types';
-import { useUnreadNotificationsApi } from './unread';
-import { fetchPage } from './util';
-
-export type { FeedNotification, FeedPage, NotificationType } from './types';
 
 const PAGE_SIZE = 30;
 
@@ -186,7 +187,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 	return query;
 }
 
-export function* findAllPostsInQueryData(
+function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
@@ -219,10 +220,7 @@ export function* findAllPostsInQueryData(
 	}
 }
 
-export function* findAllProfilesInQueryData(
-	queryClient: QueryClient,
-	did: string,
-): Generator<AnyProfileView, void> {
+function* findAllProfilesInQueryData(queryClient: QueryClient, did: string): Generator<AnyProfileView, void> {
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
 		queryKey: [NOTIFICATION_FEED_RQKEY_ROOT],
 	});

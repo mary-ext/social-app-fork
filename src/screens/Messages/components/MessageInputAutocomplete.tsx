@@ -1,7 +1,8 @@
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
+import type { AutocompleteEmoji, AutocompleteItem, AutocompleteProfile } from '#/lib/autocomplete';
+
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import type { AutocompleteEmoji, AutocompleteItem, AutocompleteProfile } from '#/state/queries/autocomplete';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Autocomplete from '#/components/primitives/autocomplete';

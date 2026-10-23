@@ -10,6 +10,7 @@ import { retry } from '#/lib/utils/retry';
 
 import { postCreated } from '#/state/events';
 import { savePublishedPostLanguages, usePrimaryLanguage } from '#/state/preferences/languages';
+import { deletePublishedDraft } from '#/state/queries/drafts/delete';
 import { getClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
@@ -18,7 +19,6 @@ import { m } from '#/paraglide/messages';
 import { useRouter } from '#/router';
 
 import { type PublishTask, useComposer, useEditorState, useThreadInteraction } from '../context';
-import { deletePublishedDraft } from '../drafts/queries';
 import { useFailedUploads } from '../media/uploads/upload-status';
 import { closeComposer } from '../open-composer';
 import { useStore } from '../shared/store';

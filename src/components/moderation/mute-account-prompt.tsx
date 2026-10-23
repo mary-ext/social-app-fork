@@ -3,9 +3,10 @@ import { useState } from 'react';
 import type { Did } from '@atcute/lexicons';
 
 import { useConstant } from '#/lib/hooks/use-constant';
+import { isTimedMuteExpired, type MuteDuration } from '#/lib/moderation/mute-duration';
+import type { TimedMute } from '#/lib/preferences/app-specific-prefs';
 
-import type { TimedMute } from '#/state/queries/preferences/app-specific-prefs';
-import { isTimedMuteExpired, type MuteDuration, useTimedMute } from '#/state/queries/timed-mutes';
+import { useTimedMute } from '#/state/queries/moderation/timed-mutes';
 
 import { relativeMessageParts } from '#/locale/intl/timeAgo';
 

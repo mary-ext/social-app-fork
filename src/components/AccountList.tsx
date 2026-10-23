@@ -3,7 +3,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { clsx } from 'clsx';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfilesQuery } from '#/state/queries/profile';
+import { useProfilesQuery } from '#/state/queries/profile/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { accountProfileView } from '#/state/session/account-profile';
 

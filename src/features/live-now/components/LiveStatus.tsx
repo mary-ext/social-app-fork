@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import { toNiceDomain } from '#/lib/links/nice-domain';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { LiveIndicator } from '#/features/live-now/components/LiveIndicator';
 import * as css from '#/features/live-now/components/LiveStatus.css';

@@ -6,7 +6,8 @@ import { profileDisplayName } from '#/lib/display-names';
 import { BSKY_LABELER_DID } from '#/lib/moderation/labelers';
 import { trimText } from '#/lib/utils/text';
 
-import { useMyLabelersQuery } from '#/state/queries/preferences/moderation';
+import { useSubmitReportMutation } from '#/state/queries/moderation/report';
+import { useMyLabelersQuery } from '#/state/queries/preferences/labelers';
 
 import { Trans } from '#/locale/Trans';
 
@@ -24,7 +25,6 @@ import CheckIcon from '#/icons/central/Checkmark2_round_outlined_radius1_stroke2
 import PaperPlaneIcon from '#/icons/central/PaperPlane_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
-import { useSubmitReportMutation } from './action';
 import {
 	BSKY_LABELER_ONLY_REPORT_REASONS,
 	BSKY_LABELER_ONLY_SUBJECT_TYPES,

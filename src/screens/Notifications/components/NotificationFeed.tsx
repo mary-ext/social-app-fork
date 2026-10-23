@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 
 import { cleanError } from '#/lib/errors';
+import type { FeedNotification } from '#/lib/notifications/types';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
+import { useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';

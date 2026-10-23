@@ -9,10 +9,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { createListJoinRequestsQueryKey, listConvoMembersQueryKey } from '#/state/queries/messages/keys';
 import { getClients } from '#/state/session';
-
-import { listConvoMembersQueryKey } from './list-convo-members';
-import { createListJoinRequestsQueryKey } from './list-join-requests';
 
 type JoinRequestAction = 'approve' | 'reject';
 

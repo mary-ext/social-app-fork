@@ -5,7 +5,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
-import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';

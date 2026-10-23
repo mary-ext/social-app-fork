@@ -9,7 +9,7 @@ import { clsx } from 'clsx';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { unstableCacheProfileView } from '#/state/queries/profile';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { niceDate } from '#/locale/intl/datetime';
 

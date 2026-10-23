@@ -8,15 +8,13 @@ import { partition } from '@mary-ext/array-fns';
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants/feeds';
 import { cleanError } from '#/lib/errors';
 import { getLocalizedFeedName } from '#/lib/feed-names';
+import type { SavedFeedItem } from '#/lib/feeds/source-info';
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 
-import {
-	type SavedFeedItem,
-	useGetPopularFeedsQuery,
-	useSavedFeeds,
-	useSearchPopularFeedsMutation,
-} from '#/state/queries/feed';
-import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
+import { useGetPopularFeedsQuery } from '#/state/queries/feed/popular';
+import { useSearchPopularFeedsMutation } from '#/state/queries/feed/popular-search';
+import { useSavedFeeds } from '#/state/queries/feed/saved';
+import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences/saved-feeds';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

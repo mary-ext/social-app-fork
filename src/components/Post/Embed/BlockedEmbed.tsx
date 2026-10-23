@@ -3,7 +3,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { postUriToTarget } from '#/lib/routes/targets';
 
-import { useRelationshipQuery } from '#/state/queries/relationship';
+import { useRelationshipQuery } from '#/state/queries/profile/relationship';
 
 import { InlineLinkText } from '#/components/web/Link';
 

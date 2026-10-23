@@ -3,8 +3,8 @@ import { lazy, type ReactElement, Suspense, useRef } from 'react';
 import type { ActorIdentifier } from '@atcute/lexicons';
 import { isDid } from '@atcute/lexicons/syntax';
 
-import { usePrefetchProfileQuery } from '#/state/queries/profile';
-import { usePrefetchResolveDidQuery } from '#/state/queries/resolve-uri';
+import { usePrefetchResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { usePrefetchProfileQuery } from '#/state/queries/profile/profile';
 
 import * as PreviewCard from '#/components/primitives/preview-card';
 import { Spinner } from '#/components/Spinner';

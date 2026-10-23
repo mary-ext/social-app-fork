@@ -6,14 +6,14 @@ import { isNetworkError, shouldRetryError } from '#/lib/errors';
 import { normalizeSearchQuery } from '#/lib/search-query';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorSearch } from '#/state/queries/actor-search';
-import { usePopularFeedsSearch } from '#/state/queries/feed';
-import { useSearchPostsQuery } from '#/state/queries/search-posts';
+import { usePopularFeedsSearch } from '#/state/queries/feed/popular-search';
+import { useSearchPostsQuery } from '#/state/queries/post/search';
+import { useActorSearch } from '#/state/queries/search/actor-search';
+import { useStarterPackSearch } from '#/state/queries/starter-pack/search';
 import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';
 
-import { useStarterPackSearch } from '#/features/starter-packs/queries/search';
 import * as StarterPackCard from '#/features/starter-packs/StarterPackCard';
 
 import { BlankState } from '#/components/BlankState';

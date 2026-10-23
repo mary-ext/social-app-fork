@@ -9,7 +9,7 @@ import { useConstant } from '#/lib/hooks/use-constant';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
-import { RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL } from '#/state/queries/messages/get-unread-counts';
+import { UNREAD_COUNTS_RQKEY_PARTIAL } from '#/state/queries/messages/keys';
 import { getClients, useSession } from '#/state/session';
 
 const MessagesEventBusContext = createContext<MessagesEventBus | null>(null);

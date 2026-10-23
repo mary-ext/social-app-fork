@@ -6,13 +6,14 @@ import {
 	MAX_DRAFT_IMAGES,
 } from '#/lib/constants/composer';
 
+import { useSaveDraftMutation } from '#/state/queries/drafts/save';
+
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import { m } from '#/paraglide/messages';
 
 import { type Composer, useComposer, useThreadInteraction } from '../context';
-import { useSaveDraftMutation } from '../drafts/queries';
 import { type DraftSaveBlocker, getDraftSaveBlocker } from '../drafts/save-blocker';
 
 /** unsaved-changes guard and its prompt props. */

@@ -5,11 +5,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { isNetworkError } from '#/lib/errors';
 import { profileTarget } from '#/lib/routes/targets';
 
+import { useJoinLinkPreviewsQuery } from '#/state/queries/messages/join-links';
 import {
 	invalidateJoinLinkPreviewsForCode,
 	setJoinLinkPreviewRequestedForCode,
-	useJoinLinkPreviewsQuery,
-} from '#/state/queries/join-links';
+} from '#/state/queries/messages/join-links-cache';
 import { useRequestJoinGroupChat } from '#/state/queries/messages/request-join-group-chat';
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 import { useSession } from '#/state/session';

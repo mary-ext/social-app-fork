@@ -1,0 +1,21 @@
+import { useQuery } from '@tanstack/react-query';
+
+import { resolveShortLink } from '#/lib/links/short-link';
+import { STALE } from '#/lib/query/const';
+import { parseStarterPackUri } from '#/lib/starter-pack';
+
+const RQKEY_ROOT = 'resolved-short-link';
+const RQKEY = (code: string) => [RQKEY_ROOT, code];
+
+export function useResolvedStarterPackShortLink({ code }: { code: string }) {
+	return useQuery({
+		queryKey: RQKEY(code),
+		enabled: !!code,
+		staleTime: STALE.HOURS.ONE,
+		retry: 1,
+		queryFn: async ({ signal }) => {
+			const res = await resolveShortLink(code, signal);
+			return parseStarterPackUri(res);
+		},
+	});
+}

@@ -1,4 +1,4 @@
-import { useCurrentAccountProfile } from '#/state/queries/profile';
+import { useCurrentAccountProfile } from '#/state/queries/profile/profile';
 
 import { Text } from '#/components/Text';
 

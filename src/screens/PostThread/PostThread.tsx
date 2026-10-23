@@ -9,9 +9,11 @@ import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
 import { useFeedFeedback } from '#/state/feed-feedback';
 import { usePostSource } from '#/state/post-source';
-import type { ThreadViewOption } from '#/state/queries/preferences/useThreadPreferences';
-import { PostThreadContextProvider, type ThreadItem, usePostThread } from '#/state/queries/usePostThread';
+import { PostThreadContextProvider } from '#/state/queries/thread/context';
+import { usePostThread } from '#/state/queries/thread/thread';
+import type { ThreadItem } from '#/state/queries/thread/types';
 import { useSession } from '#/state/session';
+import type { ThreadViewOption } from '#/state/thread-preferences';
 
 import { useOpenComposer, type OnPostSuccessData } from '#/features/composer/open-composer';
 

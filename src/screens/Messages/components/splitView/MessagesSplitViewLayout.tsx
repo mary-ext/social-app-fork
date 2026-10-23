@@ -5,8 +5,8 @@ import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
 import { conversationTarget } from '#/lib/routes/targets';
 
 import { CurrentConvoIdProvider } from '#/state/messages/current-convo-id';
+import { ListConvosProvider } from '#/state/messages/list-convos-provider';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
-import { ListConvosProvider } from '#/state/queries/messages/list-conversations';
 
 import * as Dialog from '#/components/Dialog';
 import { NewChatDialog } from '#/components/dms/dialogs/NewChatDialog';

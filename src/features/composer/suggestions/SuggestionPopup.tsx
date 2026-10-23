@@ -4,12 +4,10 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 
 import { createPortal } from 'react-dom';
 
+import { type AutocompleteItem, parseAutocompleteItemType } from '#/lib/autocomplete';
+
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import {
-	type AutocompleteItem,
-	parseAutocompleteItemType,
-	useAutocomplete,
-} from '#/state/queries/autocomplete';
+import { useAutocomplete } from '#/state/queries/search/autocomplete';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { Text } from '#/components/Text';

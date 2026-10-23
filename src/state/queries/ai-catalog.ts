@@ -6,8 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { internalClient } from '#/lib/api/internal-client';
 import type { AiModality, AiModelOffer, AiProvider } from '#/lib/lexicons';
-
-import { STALE } from '#/state/queries/index';
+import { STALE } from '#/lib/query/const';
 
 const PROVIDERS_RQKEY_ROOT = 'ai-providers';
 const MODELS_RQKEY_ROOT = 'ai-models';

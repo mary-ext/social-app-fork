@@ -3,9 +3,9 @@ import { type KeyboardEvent, useState } from 'react';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { errorMessage } from '#/lib/errors';
+import { sanitizeMutedWordValue } from '#/lib/preferences/muted-words';
 
-import { useUpsertMutedWordsMutation } from '#/state/queries/preferences';
-import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
+import { useUpsertMutedWordsMutation } from '#/state/queries/preferences/muted-words';
 
 import * as Dialog from '#/components/Dialog';
 import * as styles from '#/components/dialogs/MutedWords.css';

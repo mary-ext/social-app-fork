@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
+
 import { softReset } from '#/state/events';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
 
 import { BlankState } from '#/components/BlankState';
 import type { ListMethods } from '#/components/List/List';

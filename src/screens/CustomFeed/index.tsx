@@ -2,11 +2,12 @@ import { useRef, useState } from 'react';
 
 import { makeRecordUri } from '#/lib/at-uri';
 import { TRENDING_DID } from '#/lib/constants/feeds';
+import { type FeedSourceFeedInfo, isFeedSourceFeedInfo } from '#/lib/feeds/source-info';
 
 import { softReset } from '#/state/events';
 import { FeedFeedbackProvider, toFeedFeedbackTarget, useFeedFeedback } from '#/state/feed-feedback';
-import { type FeedSourceFeedInfo, isFeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+import { useFeedSourceInfoQuery } from '#/state/queries/feed/source-info';
+import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

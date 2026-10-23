@@ -6,11 +6,11 @@ import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError, errorToString } from '#/lib/errors';
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
+import { PostFeedErrorCode } from '#/lib/feeds/post-feed-error';
 import { profileTarget } from '#/lib/routes/targets';
 
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
-import { PostFeedErrorCode } from '#/state/queries/post-feed-error';
-import { useRemoveFeedMutation } from '#/state/queries/preferences';
+import { useRemoveFeedMutation } from '#/state/queries/preferences/saved-feeds';
 
 import { BlankState } from '#/components/BlankState';
 import { Notice } from '#/components/Notice';

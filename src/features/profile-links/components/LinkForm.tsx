@@ -2,6 +2,8 @@ import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
 
+import { fetchLinkIcon, fetchLinkPage } from '#/features/profile-links/link-data';
+
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Text';
 import * as TextField from '#/components/TextField';
@@ -10,7 +12,6 @@ import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { m } from '#/paraglide/messages';
 
 import { formatLinkUrl, getLinkHost, normalizeProfileLinkUrl, validateLinkInput } from '../providers';
-import { fetchLinkIcon, fetchLinkPage } from '../queries';
 import { cleanTitle } from '../record';
 import { MAX_TITLE_LENGTH, type ProfileLink } from '../types';
 import * as css from './LinkForm.css';

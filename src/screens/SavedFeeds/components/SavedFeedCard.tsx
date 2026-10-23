@@ -1,4 +1,4 @@
-import { useFeedSourceInfoQuery } from '#/state/queries/feed';
+import { useFeedSourceInfoQuery } from '#/state/queries/feed/source-info';
 
 import * as FeedCard from '#/components/FeedCard';
 import * as ListCard from '#/components/ListCard';

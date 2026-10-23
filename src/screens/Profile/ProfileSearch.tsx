@@ -1,5 +1,5 @@
-import { useProfileQuery } from '#/state/queries/profile';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

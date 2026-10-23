@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { usePrefetchProfileQuery } from '#/state/queries/profile';
+import { usePrefetchProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';

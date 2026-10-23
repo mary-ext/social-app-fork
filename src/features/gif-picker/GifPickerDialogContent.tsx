@@ -4,12 +4,12 @@ import { useThrottledValue } from '#/lib/hooks/use-debounce';
 import type { Gif } from '#/lib/media/external-gif/types';
 
 import { addRecentGif } from '#/state/preferences/recent-gifs';
+import { useRetainFeaturedGifs } from '#/state/queries/gifs/featured';
 
 import { type GifCategoryId, getGifCategory } from '#/features/gif-picker/categories';
 import { GifPickerFeed, RecentGifsFeed } from '#/features/gif-picker/components/GifPickerFeed';
 import { GifPickerHome } from '#/features/gif-picker/components/GifPickerHome';
 import * as styles from '#/features/gif-picker/GifPickerDialog.css';
-import { useRetainFeaturedGifs } from '#/features/gif-picker/queries';
 
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';

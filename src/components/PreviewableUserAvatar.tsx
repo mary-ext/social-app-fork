@@ -7,7 +7,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { IS_TOUCH_DEVICE } from '#/lib/browser/platform';
 import { profileTarget } from '#/lib/routes/targets';
 
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { LiveStatusDialog } from '#/features/live-now/components/LiveStatusDialog';
 import { useActorStatus } from '#/features/live-now/use-actor-status';

@@ -6,7 +6,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
-import { useListMembershipRemoveMutation } from '#/state/queries/list-memberships';
+import { useListMembershipRemoveMutation } from '#/state/queries/list/membership-mutations';
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';

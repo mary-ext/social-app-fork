@@ -1,16 +1,12 @@
 import { useState } from 'react';
 
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
-import { ClientResponseError, ok } from '@atcute/client';
-import type { AtprotoAudience } from '@atcute/lexicons/syntax';
-import type { ToolsOzoneInboxAppealActionedSubject } from '@atcute/ozone';
-
-import { useMutation } from '@tanstack/react-query';
+import { ClientResponseError } from '@atcute/client';
 
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useLabelInfo } from '#/state/moderation/use-label-info';
-import { getClients } from '#/state/session';
+import { useLabelAppealMutation } from '#/state/queries/moderation/appeal';
 
 import { Trans } from '#/locale/Trans';
 
@@ -37,37 +33,11 @@ export interface AppealFormProps {
 export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 	const { labeler, strings } = useLabelInfo(label);
 	const [details, setDetails] = useState('');
-	// a label on a record carries a cid and appeals as a strong ref; one on an account has none and
-	// appeals as a repo ref.
-	const subject = label.cid ? { uri: label.uri, cid: label.cid } : { did: label.uri };
-	const { pds } = getClients();
 	const sourceName = labeler ? `@${labeler.creator.handle}` : label.src;
 	const [error, setError] = useState<string | null>(null);
 
-	const { mutate, isPending } = useMutation({
-		mutationFn: async () => {
-			if (!pds) {
-				throw new Error('Not logged in');
-			}
-			// the appeal is funnelled to the labeler that applied the label
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- `AtprotoAudience` pins the DID method; the lexicon doesn't
-			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });
-			const subjectRef =
-				'did' in subject
-					? { $type: 'com.atproto.admin.defs#repoRef', ...subject }
-					: { $type: 'com.atproto.repo.strongRef', ...subject };
-			// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- already split into a repo ref or a strong ref above
-			const ref = subjectRef as ToolsOzoneInboxAppealActionedSubject.$input['subject'];
-			await ok(
-				reportClient.post('tools.ozone.inbox.appealActionedSubject', {
-					input: {
-						action: { $type: 'tools.ozone.inbox.appealActionedSubject#labelRef', val: label.val },
-						subject: ref,
-						reason: details,
-					},
-				}),
-			);
-		},
+	const { mutate, isPending } = useLabelAppealMutation({
+		label,
 		onSuccess: () => {
 			handle.close();
 			Toast.show(m['common.appeal.submittedToast']());
@@ -82,7 +52,7 @@ export function AppealForm({ handle, label, onPressBack }: AppealFormProps) {
 		},
 	});
 
-	const onSubmit = () => mutate();
+	const onSubmit = () => mutate({ reason: details });
 
 	return (
 		<Stack gap="xl">

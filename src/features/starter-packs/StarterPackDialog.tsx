@@ -7,11 +7,11 @@ import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import {
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
-} from '#/state/queries/list-memberships';
-import { useProfileQuery } from '#/state/queries/profile';
+} from '#/state/queries/list/membership-mutations';
+import { useProfileQuery } from '#/state/queries/profile/profile';
+import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/starter-pack/actor-starter-packs';
 import { useSession } from '#/state/session';
 
-import { useActorStarterPacksWithMembershipsQuery } from '#/features/starter-packs/queries/actor-starter-packs';
 import {
 	markStarterPackWizardLaunched,
 	useStarterPackDialogReopen,

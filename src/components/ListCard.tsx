@@ -17,7 +17,7 @@ import { clsx } from 'clsx';
 import { listTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { precacheList } from '#/state/queries/feed';
+import { precacheList } from '#/state/queries/feed/precache';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';

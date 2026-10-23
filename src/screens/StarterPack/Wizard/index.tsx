@@ -12,19 +12,17 @@ import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/starter-pack';
 import { enforceLen, trimText } from '#/lib/utils/text';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useAllListMembersQuery } from '#/state/queries/list-members';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useAllListMembersQuery } from '#/state/queries/list/members';
+import { useProfileQuery } from '#/state/queries/profile/profile';
+import { useCreateStarterPackMutation } from '#/state/queries/starter-pack/create';
+import { useEditStarterPackMutation } from '#/state/queries/starter-pack/edit';
+import { useStarterPackQuery } from '#/state/queries/starter-pack/starter-pack';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
 import { STARTER_PACK_MAX_SIZE } from '#/features/starter-packs/const';
-import {
-	useCreateStarterPackMutation,
-	useEditStarterPackMutation,
-	useStarterPackQuery,
-} from '#/features/starter-packs/queries/starter-pack';
 import { markStarterPackCreated } from '#/features/starter-packs/starter-pack-dialog-reopen';
 import { WizardEditListDialog } from '#/features/starter-packs/Wizard/WizardEditListDialog';
 

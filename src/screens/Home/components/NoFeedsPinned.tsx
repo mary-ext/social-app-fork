@@ -1,11 +1,9 @@
 import * as TID from '@atcute/tid';
 
 import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants/feeds';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
 
-import {
-	type UsePreferencesQueryResponse,
-	useOverwriteSavedFeedsMutation,
-} from '#/state/queries/preferences';
+import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences/saved-feeds';
 
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';

@@ -13,10 +13,13 @@ import { Convo } from '#/state/messages/convo/agent';
 import type { ConvoParams, ConvoState } from '#/state/messages/convo/types';
 import { isConvoActive } from '#/state/messages/convo/util';
 import { useMessagesEventBus } from '#/state/messages/events';
-import { useMarkAsReadMutation } from '#/state/queries/messages/conversation';
-import { precacheConvoQuery, RQKEY as getConvoKey } from '#/state/queries/messages/conversation-cache';
-import { LIST_CONVOS_RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations-key';
-import { profileQueryKey as createProfileQueryKey } from '#/state/queries/profile-key';
+import { precacheConvoQuery } from '#/state/queries/messages/conversation-cache';
+import {
+	convoQueryKey as getConvoKey,
+	LIST_CONVOS_RQKEY_ROOT as ListConvosQueryKeyRoot,
+} from '#/state/queries/messages/keys';
+import { useMarkAsReadMutation } from '#/state/queries/messages/mark-as-read';
+import { profileQueryKey as createProfileQueryKey } from '#/state/queries/profile/keys';
 import { getClients, useSession } from '#/state/session';
 
 import { useFocusEffect } from '#/router';

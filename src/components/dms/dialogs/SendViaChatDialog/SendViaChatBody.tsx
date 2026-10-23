@@ -7,9 +7,9 @@ import type { Did } from '@atcute/lexicons';
 import { mapDefined } from '@mary-ext/array-fns';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
-import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
+import { useProfileFollowsQuery } from '#/state/queries/profile/follows';
+import { useActorAutocompleteQuery } from '#/state/queries/search/actor-autocomplete';
 import { useSession } from '#/state/session';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';

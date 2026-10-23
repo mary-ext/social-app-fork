@@ -20,7 +20,7 @@ import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-s
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { PostSource } from '#/state/post-source';
-import type { ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/thread/types';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 

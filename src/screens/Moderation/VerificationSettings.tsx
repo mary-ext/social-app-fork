@@ -1,8 +1,7 @@
-import {
-	type UsePreferencesQueryResponse,
-	usePreferencesQuery,
-	useSetVerificationPrefsMutation,
-} from '#/state/queries/preferences';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
+
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { useSetVerificationPrefsMutation } from '#/state/queries/preferences/verification';
 import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/Settings';

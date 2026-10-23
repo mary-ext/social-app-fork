@@ -3,9 +3,9 @@ import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfileQuery } from '#/state/queries/profile';
-import { useProfileFollowersQuery } from '#/state/queries/profile-followers';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useProfileFollowersQuery } from '#/state/queries/profile/followers';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

@@ -4,7 +4,7 @@ import { uniqueBy } from '@mary-ext/array-fns';
 
 import { cleanError } from '#/lib/errors';
 
-import { useMyLikesQuery } from '#/state/queries/my-likes';
+import { useMyLikesQuery } from '#/state/queries/post/my-likes';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';

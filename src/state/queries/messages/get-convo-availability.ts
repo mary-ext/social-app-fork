@@ -3,9 +3,9 @@ import type { Did } from '@atcute/lexicons';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { getClients } from '#/state/session';
+import { STALE } from '#/lib/query/const';
 
-import { STALE } from '..';
+import { getClients } from '#/state/session';
 
 const RQKEY_ROOT = 'convo-availability';
 export const RQKEY = (did: string) => [RQKEY_ROOT, did];

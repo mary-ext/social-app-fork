@@ -3,11 +3,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { createListMutualGroupsQueryKey } from '#/state/queries/messages/keys';
 import { getClients } from '#/state/session';
-
-const RQKEY_ROOT = 'list-mutual-groups';
-
-export const createListMutualGroupsQueryKey = (args: { subject: string }) => [RQKEY_ROOT, args];
 
 export function useListMutualGroupsQuery({
 	subject,

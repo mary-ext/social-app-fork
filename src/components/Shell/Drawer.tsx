@@ -8,7 +8,7 @@ import { sanitizeDisplayName } from '#/lib/display-names';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
+import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 import { setDrawerOpen, useIsDrawerOpen } from '#/state/shell/drawer-open';

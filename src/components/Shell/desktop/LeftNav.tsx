@@ -13,10 +13,10 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { softReset } from '#/state/events';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useFetchHandle } from '#/state/queries/handle';
+import { useUnreadNotifications } from '#/state/notifications/unread';
+import { useFetchHandle } from '#/state/queries/identity/handle';
 import { useUnreadMessageCount } from '#/state/queries/messages/get-unread-counts';
-import { useUnreadNotifications } from '#/state/queries/notifications/unread';
-import { useProfilesQuery } from '#/state/queries/profile';
+import { useProfilesQuery } from '#/state/queries/profile/profile';
 import { logoutEveryAccount, type SessionAccount, useSession } from '#/state/session';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';
 

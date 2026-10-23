@@ -5,12 +5,10 @@ import { useGoBack } from '#/lib/hooks/use-go-back';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { listTarget } from '#/lib/routes/targets';
 
-import {
-	useListBlockMutation,
-	useListDeleteMutation,
-	useListMuteMutation,
-	useListOptOutMutation,
-} from '#/state/queries/list';
+import { useListBlockMutation } from '#/state/queries/list/block';
+import { useListDeleteMutation } from '#/state/queries/list/delete';
+import { useListMuteMutation } from '#/state/queries/list/mute';
+import { useListOptOutMutation } from '#/state/queries/list/opt-out';
 import { useSession } from '#/state/session';
 
 import { ReportDialog } from '#/features/reporting/ReportDialog';

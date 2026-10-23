@@ -3,16 +3,12 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { isAbortError } from '#/lib/errors';
+import { type MuteDuration, muteDurationToExpiry } from '#/lib/moderation/mute-duration';
 
 import type { Shadow } from '#/state/cache/types';
-import { useProfileMuteMutationQueue } from '#/state/queries/profile';
-import {
-	cancelScheduledUnmutes,
-	type MuteDuration,
-	muteDurationToExpiry,
-	scheduleUnmute,
-	useTimedMute,
-} from '#/state/queries/timed-mutes';
+import { cancelScheduledUnmutes, scheduleUnmute } from '#/state/queries/moderation/schedule-unmute';
+import { useTimedMute } from '#/state/queries/moderation/timed-mutes';
+import { useProfileMuteMutationQueue } from '#/state/queries/profile/mute';
 
 import * as Toast from '#/components/Toast';
 

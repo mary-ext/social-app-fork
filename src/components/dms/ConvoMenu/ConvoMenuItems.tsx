@@ -6,9 +6,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { profileTarget } from '#/lib/routes/targets';
 
 import type { Shadow } from '#/state/cache/types';
-import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import { useConvoQuery } from '#/state/queries/messages/conversation';
+import { useMarkAsReadMutation } from '#/state/queries/messages/mark-as-read';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
-import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { useSession } from '#/state/session';
 
 import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';

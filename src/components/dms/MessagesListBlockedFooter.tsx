@@ -6,7 +6,7 @@ import {
 } from '@atcute/bluesky-moderation';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
 
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';

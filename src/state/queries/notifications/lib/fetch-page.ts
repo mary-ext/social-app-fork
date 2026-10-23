@@ -1,0 +1,255 @@
+import type {
+	AppBskyFeedDefs,
+	AppBskyFeedLike,
+	AppBskyFeedRepost,
+	AppBskyGraphDefs,
+	AppBskyNotificationListNotifications,
+} from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { type Client, ok } from '@atcute/client';
+import type { ResourceUri } from '@atcute/lexicons';
+
+import { chunked } from '@mary-ext/array-fns';
+
+import type { QueryClient } from '@tanstack/react-query';
+
+import { shouldFilterNotification } from '#/lib/notifications/filter';
+import type { FeedNotification, FeedPage, NotificationType } from '#/lib/notifications/types';
+
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
+
+const GROUPABLE_REASONS = new Set([
+	'follow',
+	'like',
+	'like-via-repost',
+	'repost',
+	'repost-via-repost',
+	'subscribed-post',
+]);
+const MS_1HR = 1e3 * 60 * 60;
+const MS_2DAY = MS_1HR * 48;
+
+// exported api
+// =
+
+export async function fetchPage({
+	appview,
+	cursor,
+	limit,
+	signal,
+	queryClient,
+	moderationOpts,
+	fetchAdditionalData,
+	reasons,
+}: {
+	appview: Client;
+	cursor: string | undefined;
+	limit: number;
+	signal?: AbortSignal;
+	queryClient: QueryClient;
+	moderationOpts: ModerationOptions | undefined;
+	fetchAdditionalData: boolean;
+	reasons: string[];
+}): Promise<{
+	page: FeedPage;
+	indexedAt: string | undefined;
+}> {
+	const data = await ok(
+		appview.get('app.bsky.notification.listNotifications', {
+			signal,
+			params: {
+				limit,
+				cursor,
+				reasons,
+			},
+		}),
+	);
+
+	const indexedAt = data.notifications[0]?.indexedAt;
+
+	// filter out notifs by mod rules
+	const notifs = data.notifications.filter((notif) => !shouldFilterNotification(notif, moderationOpts));
+
+	// group notifications which are essentially similar (follows, likes on a post)
+	const notifsGrouped = groupNotifications(notifs);
+
+	// we fetch subjects of notifications (usually posts) now instead of lazily
+	// in the UI to avoid relayouts
+	if (fetchAdditionalData) {
+		const subjects = await fetchSubjects(appview, notifsGrouped, signal);
+		for (const notif of notifsGrouped) {
+			if (notif.subjectUri) {
+				if (notif.type === 'starterpack-joined' && notif.notification.reasonSubject) {
+					notif.subject = subjects.starterPacks.get(notif.notification.reasonSubject);
+				} else {
+					notif.subject = subjects.posts.get(notif.subjectUri);
+					if (notif.subject) {
+						unstableCacheProfileView(queryClient, notif.subject.author);
+					}
+				}
+			}
+		}
+	}
+
+	let seenAt = data.seenAt ? new Date(data.seenAt) : new Date();
+	if (Number.isNaN(seenAt.getTime())) {
+		seenAt = new Date();
+	}
+
+	return {
+		page: {
+			cursor: data.cursor,
+			seenAt,
+			items: notifsGrouped,
+		},
+		indexedAt,
+	};
+}
+
+// internal methods
+// =
+
+function groupNotifications(notifs: AppBskyNotificationListNotifications.Notification[]): FeedNotification[] {
+	const groupedNotifs: FeedNotification[] = [];
+	for (const notif of notifs) {
+		const ts = +new Date(notif.indexedAt);
+		let grouped = false;
+		if (GROUPABLE_REASONS.has(notif.reason)) {
+			for (const groupedNotif of groupedNotifs) {
+				const ts2 = +new Date(groupedNotif.notification.indexedAt);
+				if (
+					Math.abs(ts2 - ts) < MS_2DAY &&
+					notif.reason === groupedNotif.notification.reason &&
+					notif.reasonSubject === groupedNotif.notification.reasonSubject &&
+					// a follow's starter pack is shown on the group, so mixing sources would mislabel the others
+					(notif.reason !== 'follow' ||
+						notif.starterPack?.uri === groupedNotif.notification.starterPack?.uri) &&
+					(notif.author.did !== groupedNotif.notification.author.did || notif.reason === 'subscribed-post')
+				) {
+					const nextIsFollowBack = notif.reason === 'follow' && notif.author.viewer?.following;
+					const prevIsFollowBack =
+						groupedNotif.notification.reason === 'follow' &&
+						groupedNotif.notification.author.viewer?.following;
+					const shouldUngroup = nextIsFollowBack || prevIsFollowBack;
+					if (!shouldUngroup) {
+						groupedNotif.additional = groupedNotif.additional || [];
+						groupedNotif.additional.push(notif);
+						grouped = true;
+						break;
+					}
+				}
+			}
+		}
+		if (!grouped) {
+			const type = toKnownType(notif);
+			if (type !== 'starterpack-joined') {
+				groupedNotifs.push({
+					_reactKey: `notif-${notif.uri}-${notif.reason}`,
+					type,
+					notification: notif,
+					subjectUri: getSubjectUri(type, notif),
+				});
+			} else {
+				groupedNotifs.push({
+					_reactKey: `notif-${notif.uri}-${notif.reason}`,
+					type: 'starterpack-joined',
+					notification: notif,
+					subjectUri: notif.uri,
+				});
+			}
+		}
+	}
+	return groupedNotifs;
+}
+
+async function fetchSubjects(
+	appview: Client,
+	groupedNotifs: FeedNotification[],
+	signal?: AbortSignal,
+): Promise<{
+	posts: Map<string, AppBskyFeedDefs.PostView>;
+	starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>;
+}> {
+	const postUris = new Set<ResourceUri>();
+	const packUris = new Set<ResourceUri>();
+	for (const notif of groupedNotifs) {
+		if (notif.subjectUri?.includes('app.bsky.feed.post')) {
+			postUris.add(notif.subjectUri);
+		} else if (notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')) {
+			packUris.add(notif.notification.reasonSubject);
+		}
+	}
+	const postUriChunks = chunked(Array.from(postUris), 25);
+	const packUriChunks = chunked(Array.from(packUris), 25);
+	const postsChunks = await Promise.all(
+		postUriChunks.map((uris) =>
+			ok(appview.get('app.bsky.feed.getPosts', { signal, params: { uris } })).then((data) => data.posts),
+		),
+	);
+	const packsChunks = await Promise.all(
+		packUriChunks.map((uris) =>
+			ok(appview.get('app.bsky.graph.getStarterPacks', { signal, params: { uris } })).then(
+				(data) => data.starterPacks,
+			),
+		),
+	);
+	const postsMap = new Map<string, AppBskyFeedDefs.PostView>();
+	const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>();
+	for (const post of postsChunks.flat()) {
+		postsMap.set(post.uri, post);
+	}
+	for (const pack of packsChunks.flat()) {
+		packsMap.set(pack.uri, pack);
+	}
+	return {
+		posts: postsMap,
+		starterPacks: packsMap,
+	};
+}
+
+function toKnownType(notif: AppBskyNotificationListNotifications.Notification): NotificationType {
+	if (notif.reason === 'like') {
+		if (notif.reasonSubject?.includes('feed.generator')) {
+			return 'feedgen-like';
+		}
+		return 'post-like';
+	}
+	if (
+		notif.reason === 'repost' ||
+		notif.reason === 'mention' ||
+		notif.reason === 'reply' ||
+		notif.reason === 'quote' ||
+		notif.reason === 'follow' ||
+		notif.reason === 'starterpack-joined' ||
+		notif.reason === 'verified' ||
+		notif.reason === 'unverified' ||
+		notif.reason === 'like-via-repost' ||
+		notif.reason === 'repost-via-repost' ||
+		notif.reason === 'subscribed-post' ||
+		notif.reason === 'contact-match'
+	) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- open string union; every literal the chain above matches is a `NotificationType`
+		return notif.reason as NotificationType;
+	}
+	return 'unknown';
+}
+
+function getSubjectUri(
+	type: NotificationType,
+	notif: AppBskyNotificationListNotifications.Notification,
+): ResourceUri | undefined {
+	if (type === 'reply' || type === 'quote' || type === 'mention' || type === 'subscribed-post') {
+		return notif.uri;
+	} else if (
+		type === 'post-like' ||
+		type === 'repost' ||
+		type === 'like-via-repost' ||
+		type === 'repost-via-repost'
+	) {
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the like/repost reasons fix the collection
+		const record = notif.record as AppBskyFeedLike.Main | AppBskyFeedRepost.Main;
+		return typeof record.subject?.uri === 'string' ? record.subject.uri : undefined;
+	} else if (type === 'feedgen-like') {
+		return notif.reasonSubject;
+	}
+}

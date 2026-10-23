@@ -1,8 +1,7 @@
 import { interactionSettingsFromPreferences, isInteractionSettingsEqual } from '#/lib/interaction-settings';
 
-import { usePreferencesQuery } from '#/state/queries/preferences';
-
-import { usePostInteractionSettingsMutation } from '#/features/post-interactions/queries';
+import { usePostInteractionSettingsMutation } from '#/state/queries/preferences/post-interaction-settings';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 import type { DraftInteractionSettingsDialogProps } from './DraftSettingsDialog';
 import { SettingsFlow } from './SettingsFlow';

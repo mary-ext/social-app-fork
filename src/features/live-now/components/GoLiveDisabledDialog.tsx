@@ -1,11 +1,8 @@
 import { useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
 
-import { useMutation } from '@tanstack/react-query';
-
-import { getClients } from '#/state/session';
+import { useLiveStatusAppealMutation } from '#/state/queries/moderation/appeal';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
@@ -14,7 +11,6 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
-import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import { m } from '#/paraglide/messages';
 
 export function GoLiveDisabledDialog({
@@ -40,34 +36,10 @@ function DialogInner({
 	handle: Dialog.DialogHandle;
 	status: AppBskyActorDefs.StatusView;
 }) {
-	const { pds } = getClients();
 	const [details, setDetails] = useState('');
 
-	const { mutate, isPending } = useMutation({
-		mutationFn: async () => {
-			if (!pds) {
-				throw new Error('Not logged in');
-			}
-			if (!status.uri || !status.cid) {
-				throw new Error('Status is missing uri or cid');
-			}
-
-			// dev builds stop short of the write: appeals reach real moderators
-			if (!import.meta.env.DEV) {
-				await ok(
-					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
-						input: {
-							subject: {
-								$type: 'com.atproto.repo.strongRef',
-								uri: status.uri,
-								cid: status.cid,
-							},
-							reason: details,
-						},
-					}),
-				);
-			}
-		},
+	const { mutate, isPending } = useLiveStatusAppealMutation({
+		status,
 		onSuccess: () => {
 			handle.close();
 			Toast.show(m['common.appeal.submittedToast'](), {
@@ -81,7 +53,7 @@ function DialogInner({
 		},
 	});
 
-	const onSubmit = () => mutate();
+	const onSubmit = () => mutate({ reason: details });
 
 	return (
 		<Stack gap="lg">

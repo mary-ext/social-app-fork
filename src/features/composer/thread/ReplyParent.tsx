@@ -5,7 +5,7 @@ import type { ResourceUri } from '@atcute/lexicons';
 import { getPostRecord } from '#/lib/api/record-casts';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { usePostQuery } from '#/state/queries/post';
+import { usePostQuery } from '#/state/queries/post/post';
 
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';

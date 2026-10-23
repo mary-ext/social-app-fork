@@ -4,9 +4,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { precacheConvoQuery } from '#/state/queries/messages/conversation-cache';
 import { getClients } from '#/state/session';
-
-import { precacheConvoQuery } from './conversation-cache';
 
 export function useGetConvoForMembers({
 	onSuccess,

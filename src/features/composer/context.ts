@@ -7,7 +7,7 @@ import type { GardState } from 'wordgard/state';
 
 import { type InteractionSettings, interactionSettingsFromPreferences } from '#/lib/interaction-settings';
 
-import { usePreferencesQuery } from '#/state/queries/preferences';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 import type { ComposerDialogHandles } from './dialogs';
 import type { ThreadDnd } from './dnd/channel';

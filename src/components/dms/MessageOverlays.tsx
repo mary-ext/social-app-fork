@@ -5,7 +5,7 @@ import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useConvoActive } from '#/state/messages/convo';
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';
 import { ReportDialog } from '#/features/reporting/ReportDialog';

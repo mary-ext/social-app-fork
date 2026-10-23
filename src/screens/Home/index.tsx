@@ -4,8 +4,8 @@ import { getLocalizedFeedName } from '#/lib/feed-names';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
-import { usePinnedFeedsInfos } from '#/state/queries/feed';
-import { usePreferencesQuery } from '#/state/queries/preferences';
+import { usePinnedFeedsInfos } from '#/state/queries/feed/pinned';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

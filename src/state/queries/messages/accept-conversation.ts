@@ -3,22 +3,23 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getClients } from '#/state/session';
-
+import {
+	CONVO_REQUEST_LIST_RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
+	LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+	listConvosQueryKeyPartial as CONVO_LIST_PARTIAL_KEY,
+} from '#/state/queries/messages/keys';
 import {
 	type ConvoRequestListQueryData,
 	optimisticDelete as optimisticDeleteRequest,
-	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
-} from './list-conversation-requests';
+} from '#/state/queries/messages/list-conversation-requests-cache';
 import {
 	type ConvoListItem,
 	type ConvoListQueryData,
 	convoListQueryPredicate,
 	getConvoFromQueryData,
 	optimisticDelete,
-	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
-	RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
-} from './list-conversations';
+} from '#/state/queries/messages/list-conversations-cache';
+import { getClients } from '#/state/session';
 
 export function useAcceptConversation(
 	convoId: string,

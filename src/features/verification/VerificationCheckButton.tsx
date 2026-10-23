@@ -1,7 +1,7 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
 import type { Shadow } from '#/state/cache/types';
-import { useCurrentAccountProfile } from '#/state/queries/profile';
+import { useCurrentAccountProfile } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { useSimpleVerificationState } from '#/features/verification/verification-state';

@@ -1,6 +1,7 @@
-import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
+import type { TrendingTopic } from '#/lib/trending';
 
-import { type TrendingTopic, useGetTrendsQuery } from '#/features/trending/queries';
+import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
+import { useGetTrendsQuery } from '#/state/queries/trending/trends';
 
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Text';

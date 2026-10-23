@@ -5,9 +5,12 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoBack } from '#/lib/hooks/use-go-back';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
 
-import { RQKEY_ROOT as listQueryRoot, useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
-import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state/queries/preferences';
+import { useListBlockMutation } from '#/state/queries/list/block';
+import { RQKEY_ROOT as listQueryRoot } from '#/state/queries/list/keys';
+import { useListMuteMutation } from '#/state/queries/list/mute';
+import { useRemoveFeedMutation } from '#/state/queries/preferences/saved-feeds';
 import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';

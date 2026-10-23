@@ -4,17 +4,17 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { clsx } from 'clsx';
 
+import type { FeedSourceFeedInfo } from '#/lib/feeds/source-info';
 import { targetToShareUrl } from '#/lib/routes/app-links';
 import { profileTarget } from '#/lib/routes/targets';
 
-import type { FeedSourceFeedInfo } from '#/state/queries/feed';
-import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
+import { useLikeMutation, useUnlikeMutation } from '#/state/queries/feed/like';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import {
 	useAddSavedFeedsMutation,
-	usePreferencesQuery,
 	useRemoveFeedMutation,
 	useUpdateSavedFeedsMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/saved-feeds';
 import { useSession } from '#/state/session';
 
 import { formatCount } from '#/locale/intl/number';

@@ -2,12 +2,13 @@ import { type ReactNode, useState } from 'react';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 
+import { useProfileViewLinks } from '#/features/profile-links/link-data';
+
 import * as Dialog from '#/components/Dialog';
 import { Button, ButtonText } from '#/components/web/Button';
 
 import { m } from '#/paraglide/messages';
 
-import { useProfileViewLinks } from '../queries';
 import { linksFromProfileView } from '../record';
 import { wrapLines } from '../row-layout';
 import { useItemSizes } from '../use-item-sizes';

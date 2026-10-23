@@ -1,7 +1,7 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 
-import { useProfileUpdateMutation } from '#/features/profile-editing/lib/use-profile-update';
+import { useProfileUpdateMutation } from '#/state/queries/profile/update';
 
 import * as Dialog from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';

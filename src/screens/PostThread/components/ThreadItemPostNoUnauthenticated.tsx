@@ -1,4 +1,4 @@
-import type { ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/thread/types';
 
 import { LINEAR_AVI_WIDTH } from '#/screens/PostThread/const';
 

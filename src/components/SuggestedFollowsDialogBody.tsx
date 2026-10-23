@@ -5,9 +5,9 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { boostInterests, interestDisplayNames, popularInterests } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorSearch } from '#/state/queries/actor-search';
-import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { useActorSearch } from '#/state/queries/search/actor-search';
+import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/suggested-users-for-see-more';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';

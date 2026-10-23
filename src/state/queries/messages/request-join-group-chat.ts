@@ -3,9 +3,8 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { CONVO_REQUEST_LIST_RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from '#/state/queries/messages/keys';
 import { getClients } from '#/state/session';
-
-import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 
 export function useRequestJoinGroupChat({
 	onSuccess,

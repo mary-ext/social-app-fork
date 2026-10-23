@@ -1,8 +1,8 @@
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useLikedByQuery } from '#/state/queries/post-liked-by';
-import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
+import { useLikedByQuery } from '#/state/queries/post/liked-by';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';

@@ -1,6 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 
-import { usePreferencesQuery } from '#/state/queries/preferences';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 export type SimpleVerificationState = {
 	role: 'default' | 'verifier';

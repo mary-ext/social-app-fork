@@ -4,7 +4,8 @@ import { clsx } from 'clsx';
 
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
-import { useCurrentAccountProfile } from '#/state/queries/profile';
+import { useDraftMediaQuery } from '#/state/queries/drafts/media';
+import { useCurrentAccountProfile } from '#/state/queries/profile/profile';
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
@@ -30,7 +31,6 @@ import {
 	parseDraftGif,
 } from './draft-format';
 import * as css from './DraftRow.css';
-import { useDraftMediaQuery } from './queries';
 
 /**
  * a saved draft in the drafts list.

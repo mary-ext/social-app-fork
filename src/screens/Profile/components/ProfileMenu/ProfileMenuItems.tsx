@@ -10,12 +10,10 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import type { Shadow } from '#/state/cache/types';
 import { useDevMode } from '#/state/preferences/dev-mode';
-import {
-	RQKEY as profileQueryKey,
-	useProfileBlockMutationQueue,
-	useProfileFollowMutationQueue,
-	useProfileMuteRepostsMutationQueue,
-} from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile/follow';
+import { profileQueryKey } from '#/state/queries/profile/keys';
+import { useProfileMuteRepostsMutationQueue } from '#/state/queries/profile/mute';
 import { useSession } from '#/state/session';
 
 import { EditLiveDialog } from '#/features/live-now/components/EditLiveDialog';
@@ -23,7 +21,7 @@ import { GoLiveDialog } from '#/features/live-now/components/GoLiveDialog';
 import { GoLiveDisabledDialog } from '#/features/live-now/components/GoLiveDisabledDialog';
 import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
 import { ReportLinkDialog } from '#/features/profile-links/components/ReportLinkDialog';
-import { useProfileViewLinks } from '#/features/profile-links/queries';
+import { useProfileViewLinks } from '#/features/profile-links/link-data';
 import { ReportDialog } from '#/features/reporting/ReportDialog';
 import { StarterPackDialog } from '#/features/starter-packs/StarterPackDialog';
 

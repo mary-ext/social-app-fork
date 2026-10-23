@@ -1,11 +1,7 @@
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import type { Did } from '@atcute/lexicons';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { getClaimedHandle } from '#/lib/api/did-document';
-
-import { GCTIME, STALE } from '#/state/queries';
+import { useClaimedHandleQuery } from '#/state/queries/identity/claimed-handle';
 
 import { dateMedium } from '#/locale/intl/datetime';
 
@@ -45,15 +41,7 @@ export const FollowRow = ({
 	selected: boolean;
 }) => {
 	const { did, issues, profile } = follow;
-	const { data: claimedHandle } = useQuery({
-		enabled: !profile,
-		gcTime: GCTIME.MINUTES.FIVE,
-		queryKey: ['claimed-handle', did],
-		// cache missing handles too; query functions cannot return undefined.
-		queryFn: async ({ signal }) => (await getClaimedHandle(did, signal)) ?? null,
-		retry: false,
-		staleTime: STALE.MINUTES.FIVE,
-	});
+	const { data: claimedHandle } = useClaimedHandleQuery({ did, enabled: !profile });
 	const followedAt = follow.followedAt && formatFollowedAt(follow.followedAt);
 
 	return (

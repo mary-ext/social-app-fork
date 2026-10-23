@@ -8,7 +8,9 @@ import { mapDefined } from '@mary-ext/array-fns';
 import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
 import { useThrottledValue } from '#/lib/hooks/use-debounce';
 
-import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
+import { useGetPopularFeedsQuery } from '#/state/queries/feed/popular';
+import { usePopularFeedsSearch } from '#/state/queries/feed/popular-search';
+import { useSavedFeeds } from '#/state/queries/feed/saved';
 
 import { WizardFeedCard } from '#/features/starter-packs/Wizard/WizardListCard';
 

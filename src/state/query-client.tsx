@@ -16,7 +16,7 @@ import { isDocumentVisible } from '#/lib/browser/visibility';
 import { useConstant } from '#/lib/hooks/use-constant';
 
 import { networkConfirmed, networkLost } from '#/state/events';
-import { PROFILE_RQKEY_ROOT } from '#/state/queries/profile-key';
+import { PROFILE_RQKEY_ROOT } from '#/state/queries/profile/keys';
 import { updateAccountProfile } from '#/state/session';
 
 declare global {

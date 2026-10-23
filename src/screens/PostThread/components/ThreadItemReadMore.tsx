@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import type { PostThreadParams, ThreadItem } from '#/state/queries/usePostThread';
+import type { PostThreadParams, ThreadItem } from '#/state/queries/thread/types';
 
 import { Text } from '#/components/Text';
 import { Link } from '#/components/web/Link';

@@ -8,17 +8,17 @@ import {
 import { profileDisplayName } from '#/lib/display-names';
 import { isAppLabeler } from '#/lib/moderation/labelers';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
 import { labelsTarget } from '#/lib/routes/targets';
 
 import { getGlobalLabelStrings } from '#/state/moderation/global-label-strings';
-import { useRemoveLabelersMutation } from '#/state/queries/labeler';
+import { useRemoveLabelersMutation } from '#/state/queries/moderation/labeler-subscription';
 import {
-	useMyLabelersQuery,
-	usePreferencesQuery,
-	type UsePreferencesQueryResponse,
 	usePreferencesSetAdultContentMutation,
 	usePreferencesSetContentLabelMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/content-labels';
+import { useMyLabelersQuery } from '#/state/queries/preferences/labelers';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/Settings';

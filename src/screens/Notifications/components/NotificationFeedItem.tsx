@@ -26,12 +26,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
 import { MAX_POST_LINES } from '#/lib/constants/post';
 import { isAbortError } from '#/lib/errors';
+import type { FeedNotification } from '#/lib/notifications/types';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import type { FeedNotification } from '#/state/queries/notifications/feed';
-import { useProfileFollowMutationQueue } from '#/state/queries/profile';
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile/follow';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { getClients, useSession } from '#/state/session';
 
 import { niceDate } from '#/locale/intl/datetime';
@@ -298,7 +298,7 @@ let NotificationFeedItem = ({
 		if (isFollowBack && !hasMultipleAuthors) {
 			/*
 			 * Follow-backs are ungrouped, grouped follow-backs not supported atm,
-			 * see `src/state/queries/notifications/util.ts`
+			 * see `src/state/queries/notifications/lib/fetch-page.ts`
 			 */
 			a11yLabel = m['view.notifications.follow.back.singleName']({ name: firstAuthorName });
 			notificationContent = (

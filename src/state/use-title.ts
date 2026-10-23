@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@oomfware/stacker';
 
-import { useUnreadNotifications } from '#/state/queries/notifications/unread';
+import { useUnreadNotifications } from '#/state/notifications/unread';
 
 function documentTitle(page: string, unreadCountLabel?: string) {
 	const unreadPrefix = unreadCountLabel ? `(${unreadCountLabel}) ` : '';

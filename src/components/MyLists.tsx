@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
+import { type MyListsFilter, useMyListsQuery } from '#/state/queries/list/my-lists';
 
 import { BlankState } from '#/components/BlankState';
 import { ErrorState } from '#/components/ErrorState';

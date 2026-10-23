@@ -25,7 +25,7 @@ import { resolveUrlToLink } from '#/lib/links/app-url';
 import { postUriToTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { unstableCacheProfileView } from '#/state/queries/profile';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { useSession } from '#/state/session';
 
 import { parseTangledStringUrl } from '#/features/tangled-strings/detect';

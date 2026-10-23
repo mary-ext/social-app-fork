@@ -10,10 +10,12 @@ import {
 	quotesToEmbeddingRules,
 	repliesFromThreadgateView,
 } from '#/lib/interaction-settings';
+import { createPostgateRecord } from '#/lib/postgate';
 
-import { usePostgateQuery, useWritePostgateMutation } from '#/state/queries/postgate';
-import { createPostgateRecord } from '#/state/queries/postgate/util';
-import { useSetThreadgateAllowMutation, useThreadgateViewQuery } from '#/state/queries/threadgate';
+import { usePostgateQuery } from '#/state/queries/postgate/postgate';
+import { useWritePostgateMutation } from '#/state/queries/postgate/write';
+import { useSetThreadgateAllowMutation } from '#/state/queries/threadgate/set-allow';
+import { useThreadgateViewQuery } from '#/state/queries/threadgate/view';
 import { useSession } from '#/state/session';
 
 import type * as Dialog from '#/components/Dialog';

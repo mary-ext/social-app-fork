@@ -1,6 +1,6 @@
 import type { ResourceUri } from '@atcute/lexicons';
 
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
 
 import { BlankState } from '#/components/BlankState';
 import { PostFeed } from '#/components/PostFeed/PostFeed';

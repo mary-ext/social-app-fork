@@ -10,7 +10,7 @@ import { INTERACTIVE_SELECTOR } from '#/lib/browser/interactive';
 import { mergeRefs } from '#/lib/utils/merge-refs';
 
 import { useModerationCauseDescription } from '#/state/moderation/use-moderation-cause-description';
-import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { BlockLink } from '#/components/BlockLink';
 import * as Dialog from '#/components/Dialog';

@@ -7,7 +7,7 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
+import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile/profile';
 import { removeAccount, type SessionAccount, useSession } from '#/state/session';
 import { accountProfileView } from '#/state/session/account-profile';
 import { useAccountSwitcher } from '#/state/session/use-account-switcher';

@@ -6,10 +6,10 @@ import type { Did, ResourceUri } from '@atcute/lexicons';
 
 import { onVisibilityChange } from '#/lib/browser/visibility';
 import { FIRST_PARTY_FEED_URIS, TRENDING_DID } from '#/lib/constants/feeds';
+import { type FeedSourceInfo, isFeedSourceFeedInfo } from '#/lib/feeds/source-info';
 import { useThrottledCallback } from '#/lib/hooks/use-debounce';
 
-import { type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
-import type { FeedPostSliceItem } from '#/state/queries/post-feed';
+import type { FeedPostSliceItem } from '#/state/queries/feed/types';
 
 import * as PostFeed from '#/components/PostFeed/PostFeed';
 

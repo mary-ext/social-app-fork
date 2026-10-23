@@ -6,6 +6,8 @@ import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from '#/lib/constants/profile';
 import { cleanError } from '#/lib/errors';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
+import { useProfileUpdateMutation } from '#/state/queries/profile/update';
+
 import { ProfileLinksEditor } from '#/features/profile-links/components/ProfileLinksEditor';
 import { linksFromProfileView, sameProfileLinks } from '#/features/profile-links/record';
 import type { ProfileLink } from '#/features/profile-links/types';
@@ -22,7 +24,6 @@ import { DescriptionField } from './fields/DescriptionField';
 import { DisplayNameField } from './fields/DisplayNameField';
 import { ProfileImagesEditor } from './images/ProfileImagesEditor';
 import type { ProfileImageEdit } from './lib/profile-edits';
-import { useProfileUpdateMutation } from './lib/use-profile-update';
 
 /**
  * renders the profile editor and reports unsaved changes to its dialog.

@@ -6,7 +6,7 @@ import { difference } from '@mary-ext/array-fns';
 
 import { NO_REPLY_GROUPS, type ReplyAudience, restrictReplies } from '#/lib/interaction-settings';
 
-import { useMyListsQuery } from '#/state/queries/my-lists';
+import { useMyListsQuery } from '#/state/queries/list/my-lists';
 
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as ListCard from '#/components/ListCard';

@@ -4,7 +4,8 @@ import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
-import { useActorStarterPacksQuery } from '#/features/starter-packs/queries/actor-starter-packs';
+import { useActorStarterPacksQuery } from '#/state/queries/starter-pack/actor-starter-packs';
+
 import {
 	Default as StarterPackCard,
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,

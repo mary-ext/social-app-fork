@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { setDrawerOpen } from '#/state/shell/drawer-open';
 

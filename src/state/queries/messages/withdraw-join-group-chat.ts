@@ -3,13 +3,12 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getClients } from '#/state/session';
-
+import { CONVO_REQUEST_LIST_RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from '#/state/queries/messages/keys';
 import {
 	type ConvoRequestListQueryData,
 	optimisticDeleteJoinRequest,
-	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
-} from './list-conversation-requests';
+} from '#/state/queries/messages/list-conversation-requests-cache';
+import { getClients } from '#/state/session';
 
 export function useWithdrawJoinGroupChatRequest({
 	onSuccess,

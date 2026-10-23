@@ -11,10 +11,11 @@ import { combinedDisplayName, profileDisplayName } from '#/lib/display-names';
 import { isAppLabeler, lookupLabelValueDefinition } from '#/lib/moderation/labelers';
 import { profileTarget } from '#/lib/routes/targets';
 
-import { useLabelerInfoQuery, useLabelerSubscriptionMutation } from '#/state/queries/labeler';
-import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
-import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useLikeMutation, useUnlikeMutation } from '#/state/queries/feed/like';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useLabelerInfoQuery } from '#/state/queries/moderation/labeler';
+import { useLabelerSubscriptionMutation } from '#/state/queries/moderation/labeler-subscription';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useTitle } from '#/state/use-title';
 
 import { dateTimeLong } from '#/locale/intl/datetime';

@@ -4,9 +4,9 @@ import type { Did } from '@atcute/lexicons';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfileQuery } from '#/state/queries/profile';
-import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useProfileFollowsQuery } from '#/state/queries/profile/follows';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

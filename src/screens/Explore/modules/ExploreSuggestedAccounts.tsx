@@ -3,7 +3,7 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { boostInterests, interestDisplayNames, popularInterests } from '#/lib/interests';
 
-import { usePreferencesQuery } from '#/state/queries/preferences';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 import { InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/web/ProfileCard';

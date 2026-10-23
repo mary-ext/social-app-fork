@@ -1,0 +1,142 @@
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
+
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation/causes';
+import { toModerationPreferences } from '#/lib/moderation/preferences';
+import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/lib/preferences/const';
+import { STALE } from '#/lib/query/const';
+
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { getClients } from '#/state/session';
+
+const DEFAULT_MOD_OPTS = {
+	viewerDid: undefined,
+	prefs: toModerationPreferences(DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs),
+};
+
+const RQKEY_ROOT = 'actor-autocomplete';
+const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix];
+
+export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean, limit?: number) {
+	const moderationOpts = useModerationOpts();
+	const { appview } = getClients();
+
+	let normalizedPrefix = prefix.toLowerCase().trim();
+	if (normalizedPrefix.endsWith('.')) {
+		// preserve matches while the user types a trailing dot.
+		normalizedPrefix = normalizedPrefix.slice(0, -1);
+	}
+
+	return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
+		queryKey: RQKEY(normalizedPrefix || ''),
+		staleTime: STALE.MINUTES.ONE,
+		async queryFn({ signal }) {
+			if (!normalizedPrefix) {
+				return [];
+			}
+			const data = await ok(
+				appview.get('app.bsky.actor.searchActorsTypeahead', {
+					signal,
+					params: { limit: limit || 8, q: normalizedPrefix },
+				}),
+			);
+			return data.actors;
+		},
+		placeholderData: maintainData ? keepPreviousData : undefined,
+		select: (data: AppBskyActorDefs.ProfileViewBasic[]) => {
+			return computeSuggestions({
+				q: normalizedPrefix,
+				searched: data,
+				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+			});
+		},
+	});
+}
+
+/**
+ * query actor suggestions for search bar autocomplete. returns the current user when the query is empty.
+ *
+ * @param limit max suggestions to request
+ * @param query search query or handle fragment
+ * @param self profile to return when the query is empty
+ * @returns moderated suggestion list query
+ */
+export function useSearchActorAutocompleteQuery({
+	limit,
+	query,
+	self,
+}: {
+	limit: number;
+	query: string;
+	self: AnyProfileView | undefined;
+}) {
+	const moderationOpts = useModerationOpts();
+	const { appview } = getClients();
+
+	let normalizedPrefix = query.toLowerCase().trim();
+	if (normalizedPrefix.endsWith('.')) {
+		// preserve matches while the user types a trailing dot.
+		normalizedPrefix = normalizedPrefix.slice(0, -1);
+	}
+
+	return useQuery<AnyProfileView[]>({
+		queryKey: [RQKEY_ROOT, 'search', self?.did ?? null, normalizedPrefix],
+		staleTime: STALE.MINUTES.ONE,
+		async queryFn({ signal }) {
+			if (!normalizedPrefix) {
+				return self ? [self] : [];
+			}
+			const data = await ok(
+				appview.get('app.bsky.actor.searchActorsTypeahead', {
+					signal,
+					params: { limit, q: normalizedPrefix },
+				}),
+			);
+			return data.actors;
+		},
+		placeholderData: keepPreviousData,
+		select: (data: AnyProfileView[]) =>
+			computeSuggestions({
+				q: normalizedPrefix,
+				searched: data,
+				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+			}),
+	});
+}
+
+function computeSuggestions<T extends AnyProfileView>({
+	q,
+	searched = [],
+	moderationOpts,
+}: {
+	q?: string;
+	searched?: T[];
+	moderationOpts: ModerationOptions;
+}): T[] {
+	const items: T[] = [];
+	for (const item of searched) {
+		if (!items.find((item2) => item2.handle === item.handle)) {
+			items.push(item);
+		}
+	}
+	return items.filter((profile) => {
+		const modui = getDisplayRestrictions(
+			moderateProfile(profile, moderationOpts),
+			DisplayContext.ProfileList,
+		);
+		const isExactMatch = profile.handle.toLowerCase() === q;
+		return (
+			(isExactMatch && !moduiContainsHideableOffense(modui)) ||
+			modui.filters.length === 0 ||
+			isJustAMute(modui)
+		);
+	});
+}

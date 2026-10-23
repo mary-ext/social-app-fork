@@ -1,8 +1,9 @@
-import {
-	type NotificationSettingsPreference,
-	type NotificationSettingsPreferenceName,
-	useNotificationSettingsUpdateMutation,
-} from '#/state/queries/notifications/settings';
+import type {
+	NotificationSettingsPreference,
+	NotificationSettingsPreferenceName,
+} from '#/lib/notifications/settings';
+
+import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings-update';
 
 import * as Radio from '#/components/primitives/radio';
 import * as Settings from '#/components/Settings';

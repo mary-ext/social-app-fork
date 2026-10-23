@@ -6,8 +6,8 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { cleanError } from '#/lib/errors';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 
-import { useAllListMembersQuery } from '#/state/queries/list-members';
-import { useListMembershipRemoveMutation } from '#/state/queries/list-memberships';
+import { useAllListMembersQuery } from '#/state/queries/list/members';
+import { useListMembershipRemoveMutation } from '#/state/queries/list/membership-mutations';
 import { useSession } from '#/state/session';
 
 import { ErrorState } from '#/components/ErrorState';

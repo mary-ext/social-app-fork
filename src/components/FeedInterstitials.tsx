@@ -6,12 +6,12 @@ import type { Did } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
 import { profileTarget } from '#/lib/routes/targets';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
-import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
-import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
+import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/profile/suggested-follows';
+import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/suggested-users-for-discover';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';

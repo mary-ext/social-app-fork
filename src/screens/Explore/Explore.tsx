@@ -6,12 +6,13 @@ import { cleanError } from '#/lib/errors';
 import { interestDisplayNames } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { type FeedPreviewItem, useFeedPreviews } from '#/state/queries/explore-feed-previews';
-import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useGetSuggestedFeedsQuery } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
-import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
+import { useFeedPreviews } from '#/state/queries/feed/explore-previews';
+import { useGetSuggestedFeedsQuery } from '#/state/queries/feed/suggested-feeds';
+import type { FeedPreviewItem } from '#/state/queries/feed/types';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { useSuggestedStarterPacksQuery } from '#/state/queries/starter-pack/suggested';
+import { useGetSuggestedUsersForExploreQuery } from '#/state/queries/trending/suggested-users-for-explore';
 
-import { useSuggestedStarterPacksQuery } from '#/features/starter-packs/queries/suggested-starter-packs';
 import { ExploreTrendingTopics } from '#/features/trending/ExploreTrendingTopics';
 
 import type { SearchTabId } from '#/screens/Search/SearchResults';

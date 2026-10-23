@@ -2,15 +2,13 @@ import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
 
+import { useDeleteStarterPackMutation } from '#/state/queries/starter-pack/delete';
+import { useStarterPackOptOutMutation } from '#/state/queries/starter-pack/opt-out';
 import { useSession } from '#/state/session';
 
 import { ReportDialog } from '#/features/reporting/ReportDialog';
 import { CreateListFromStarterPackDialog } from '#/features/starter-packs/CreateListFromStarterPackDialog';
 import { OptOutMenuItem, OptOutPrompt } from '#/features/starter-packs/OptOut';
-import {
-	useDeleteStarterPackMutation,
-	useStarterPackOptOutMutation,
-} from '#/features/starter-packs/queries/starter-pack';
 
 import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';

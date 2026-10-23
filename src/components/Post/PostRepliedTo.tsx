@@ -3,10 +3,10 @@ import type { Did } from '@atcute/lexicons';
 
 import { clsx } from 'clsx';
 
+import { STALE } from '#/lib/query/const';
 import { profileTarget } from '#/lib/routes/targets';
 
-import { STALE } from '#/state/queries';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { Trans } from '#/locale/Trans';

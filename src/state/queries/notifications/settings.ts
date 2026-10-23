@@ -1,57 +1,24 @@
 import type { AppBskyNotificationDefs, ChatBskyNotificationDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
-import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
+import type {
+	AppNotificationSettingsPreferences,
+	ChatNotificationSettingsPreferences,
+} from '#/lib/notifications/settings';
+
+import {
+	NOTIFICATION_SETTINGS_APP_RQKEY,
+	NOTIFICATION_SETTINGS_CHAT_RQKEY,
+} from '#/state/queries/notifications/keys';
 import { getClients } from '#/state/session';
-
-import * as Toast from '#/components/Toast';
-
-import { m } from '#/paraglide/messages';
-
-const RQKEY_ROOT = 'notification-settings';
-const RQKEY_APP = [RQKEY_ROOT, 'app'];
-const RQKEY_CHAT = [RQKEY_ROOT, 'chat'];
-
-// app and chat preferences use separate services, so they are fetched and cached independently.
-export type NotificationSettingsPreferences = Omit<AppBskyNotificationDefs.Preferences, 'chat'> &
-	Partial<Pick<ChatBskyNotificationDefs.Preferences, 'chat' | 'chatRequest'>>;
-
-export type AppNotificationSettingsPreferences = Omit<AppBskyNotificationDefs.Preferences, 'chat'>;
-
-export type ChatNotificationSettingsPreferences = Pick<
-	ChatBskyNotificationDefs.Preferences,
-	'chat' | 'chatRequest'
->;
-
-export type NotificationSettingsPreferenceName = Exclude<keyof NotificationSettingsPreferences, '$type'>;
-
-export type NotificationSettingsPreference =
-	| AppBskyNotificationDefs.FilterablePreference
-	| AppBskyNotificationDefs.Preference
-	| ChatBskyNotificationDefs.ChatPreference;
-
-/**
- * whether a preference name is served by the chat service rather than the appview.
- *
- * @param name the preference name
- * @returns true for `chat`/`chatRequest`
- */
-export function isChatPreferenceName(
-	name: NotificationSettingsPreferenceName,
-): name is 'chat' | 'chatRequest' {
-	return name === 'chat' || name === 'chatRequest';
-}
-
-type NotificationSettingsUpdate = Partial<NotificationSettingsPreferences>;
-type AppNotificationSettingsUpdate = Partial<Omit<AppBskyNotificationDefs.Preferences, '$type' | 'chat'>>;
-type ChatNotificationSettingsUpdate = Partial<ChatNotificationSettingsPreferences>;
 
 export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } = {}) {
 	const { appview } = getClients();
 
 	return useQuery({
-		queryKey: RQKEY_APP,
+		queryKey: NOTIFICATION_SETTINGS_APP_RQKEY,
 		enabled,
 		queryFn: async ({ signal }): Promise<AppNotificationSettingsPreferences> => {
 			const data = await ok(appview.get('app.bsky.notification.getPreferences', { signal, params: {} }));
@@ -64,7 +31,7 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 	const { chat } = getClients();
 
 	return useQuery({
-		queryKey: RQKEY_CHAT,
+		queryKey: NOTIFICATION_SETTINGS_CHAT_RQKEY,
 		enabled,
 		queryFn: async ({ signal }): Promise<ChatNotificationSettingsPreferences> => {
 			if (!chat) {
@@ -74,58 +41,6 @@ export function useChatNotificationSettingsQuery({ enabled }: { enabled?: boolea
 			return chatPreferencesForSettings(data.preferences);
 		},
 	});
-}
-
-export function useNotificationSettingsUpdateMutation() {
-	const { appview, chat } = getClients();
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: async (update: NotificationSettingsUpdate) => {
-			const { appUpdate, chatUpdate } = splitNotificationSettingsUpdate(update);
-			await Promise.all([
-				hasUpdates(appUpdate)
-					? ok(appview.post('app.bsky.notification.putPreferencesV2', { input: appUpdate }))
-					: undefined,
-				hasUpdates(chatUpdate) && chat
-					? ok(chat.post('chat.bsky.notification.putPreferences', { input: chatUpdate }))
-					: undefined,
-			]);
-		},
-		onMutate: (update) => {
-			optimisticUpdateNotificationSettings(queryClient, update);
-		},
-		onError: (e) => {
-			console.error('Could not update notification settings', e);
-			void queryClient.invalidateQueries({ queryKey: RQKEY_APP });
-			void queryClient.invalidateQueries({ queryKey: RQKEY_CHAT });
-			Toast.show(m['state.notifications.error.settingsUpdate'](), {
-				type: 'error',
-			});
-		},
-	});
-}
-
-function optimisticUpdateNotificationSettings(queryClient: QueryClient, update: NotificationSettingsUpdate) {
-	const { appUpdate, chatUpdate } = splitNotificationSettingsUpdate(update);
-
-	if (hasUpdates(appUpdate)) {
-		queryClient.setQueryData(RQKEY_APP, (old?: AppNotificationSettingsPreferences) => {
-			if (!old) {
-				return old;
-			}
-			return { ...old, ...appUpdate };
-		});
-	}
-
-	if (hasUpdates(chatUpdate)) {
-		queryClient.setQueryData(RQKEY_CHAT, (old?: ChatNotificationSettingsPreferences) => {
-			if (!old) {
-				return old;
-			}
-			return { ...old, ...chatUpdate };
-		});
-	}
 }
 
 function appPreferencesWithoutChat(
@@ -142,23 +57,4 @@ function chatPreferencesForSettings(
 		chat: preferences.chat,
 		chatRequest: preferences.chatRequest,
 	};
-}
-
-function splitNotificationSettingsUpdate(update: NotificationSettingsUpdate): {
-	appUpdate: AppNotificationSettingsUpdate;
-	chatUpdate: ChatNotificationSettingsUpdate;
-} {
-	const { chat, chatRequest, $type: _type, ...appUpdate } = update;
-
-	return {
-		appUpdate,
-		chatUpdate: {
-			...(chat !== undefined ? { chat } : {}),
-			...(chatRequest !== undefined ? { chatRequest } : {}),
-		},
-	};
-}
-
-function hasUpdates(update: object) {
-	return Object.keys(update).length > 0;
 }

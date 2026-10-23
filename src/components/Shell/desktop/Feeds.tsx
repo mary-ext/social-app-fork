@@ -1,8 +1,9 @@
 import { getLocalizedFeedName } from '#/lib/feed-names';
+import type { SavedFeedSourceInfo } from '#/lib/feeds/source-info';
 
 import { softReset } from '#/state/events';
 import { setSelectedFeed, useSelectedFeed } from '#/state/preferences/selected-feed';
-import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
+import { usePinnedFeedsInfos } from '#/state/queries/feed/pinned';
 
 import * as Toggle from '#/components/primitives/toggle';
 import { Text } from '#/components/Text';

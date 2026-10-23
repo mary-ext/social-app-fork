@@ -4,12 +4,11 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { getPostRecord } from '#/lib/api/record-casts';
 
+import { usePostTranslation } from '#/state/queries/post/translation';
 import { useSession } from '#/state/session';
 
 import { codeToLanguageName, isPostInLanguage } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';
-
-import { usePostTranslation } from '#/features/translations/queries';
 
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';

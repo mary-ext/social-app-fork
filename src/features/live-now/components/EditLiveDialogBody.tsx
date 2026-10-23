@@ -8,16 +8,15 @@ import { cleanError } from '#/lib/errors';
 import { useDebouncedValue } from '#/lib/hooks/use-debounce';
 import { parseLooseUrl } from '#/lib/utils/url';
 
-import { useTick } from '#/state/tick';
-
+import { useLiveLinkMetaQuery } from '#/state/queries/profile/live-link-meta';
 import {
-	displayDuration,
-	getValidLiveStatusRecord,
-	useLiveLinkMetaQuery,
 	useRemoveLiveStatusMutation,
 	useUpsertLiveStatusMutation,
-} from '#/features/live-now';
+} from '#/state/queries/profile/live-status';
+import { useTick } from '#/state/tick';
+
 import { LinkPreview } from '#/features/live-now/components/LinkPreview';
+import { displayDuration, getValidLiveStatusRecord } from '#/features/live-now/utils';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';

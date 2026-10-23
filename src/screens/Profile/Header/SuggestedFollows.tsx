@@ -1,6 +1,6 @@
 import type { Did } from '@atcute/lexicons';
 
-import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
+import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/profile/suggested-follows';
 
 import { ProfileGrid } from '#/components/FeedInterstitials';
 import * as Collapsible from '#/components/primitives/collapsible';

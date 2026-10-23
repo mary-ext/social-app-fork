@@ -4,11 +4,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { putRecord } from '#/lib/api/records';
 
+import { profileQueryKey as PROFILE_RKEY } from '#/state/queries/profile/keys';
 import { getClients, useSession } from '#/state/session';
 
 import { resolveAllowGroupInvites } from '#/components/dms/util';
-
-import { RQKEY as PROFILE_RKEY } from '../profile';
 
 export function useUpdateActorDeclaration({
 	onSuccess,

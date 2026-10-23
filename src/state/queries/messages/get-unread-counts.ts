@@ -2,13 +2,12 @@ import { ok } from '@atcute/client';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { STALE } from '#/lib/query/const';
+
+import { UNREAD_COUNTS_RQKEY_ROOT } from '#/state/queries/messages/keys';
 import { getClients, useSession } from '#/state/session';
 
-import { STALE } from '..';
-
-const RQKEY_ROOT = 'convo-unread-counts';
-export const RQKEY = (includeGroupChats: boolean) => [RQKEY_ROOT, includeGroupChats] as const;
-export const RQKEY_PARTIAL = [RQKEY_ROOT] as const;
+const RQKEY = (includeGroupChats: boolean) => [UNREAD_COUNTS_RQKEY_ROOT, includeGroupChats] as const;
 
 // the server sentinel-caps the badge counts: unreadAcceptedConvos and
 // unreadRequestConvos max out at 100 (meaning "more than 99"). at the cap the

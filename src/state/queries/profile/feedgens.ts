@@ -1,0 +1,72 @@
+import type { AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateFeedGenerator,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
+
+import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+
+import { STALE } from '#/lib/query/const';
+
+import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { getClients } from '#/state/session';
+
+const PAGE_SIZE = 50;
+type RQPageParam = string | undefined;
+
+// TODO refactor invalidate on mutate?
+const RQKEY_ROOT = 'profile-feedgens';
+const RQKEY = (did: string) => [RQKEY_ROOT, did];
+
+export function useProfileFeedgensQuery(did: Did) {
+	const moderationOpts = useModerationOpts();
+	const enabled = !!moderationOpts;
+	const { appview } = getClients();
+	return useInfiniteQuery<
+		AppBskyFeedGetActorFeeds.$output,
+		Error,
+		InfiniteData<AppBskyFeedGetActorFeeds.$output>,
+		QueryKey,
+		RQPageParam
+	>({
+		queryKey: RQKEY(did),
+		enabled,
+		staleTime: STALE.MINUTES.ONE,
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
+			const data = await ok(
+				appview.get('app.bsky.feed.getActorFeeds', {
+					signal,
+					params: { actor: did, cursor: pageParam, limit: PAGE_SIZE },
+				}),
+			);
+			data.feeds.sort((a, b) => {
+				return (b.likeCount || 0) - (a.likeCount || 0);
+			});
+			return data;
+		},
+		initialPageParam: undefined,
+		getNextPageParam: (lastPage) => lastPage.cursor,
+		select(data) {
+			return {
+				...data,
+				pages: data.pages.map((page) => {
+					return {
+						...page,
+						feeds: page.feeds
+							// filter by labels
+							.filter((list) => {
+								const decision = moderateFeedGenerator(list, moderationOpts!);
+								return !getDisplayRestrictions(decision, DisplayContext.ContentList).filters.some(
+									(cause) => cause.type !== ModerationCauseType.MutedPermanent,
+								);
+							}),
+					};
+				}),
+			};
+		},
+	});
+}

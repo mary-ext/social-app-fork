@@ -3,10 +3,9 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { invalidateJoinLinkPreviewsForCode } from '#/state/queries/join-links';
+import { rollbackConvoOptimistic, updateConvoOptimistic } from '#/state/queries/messages/conversation-cache';
+import { invalidateJoinLinkPreviewsForCode } from '#/state/queries/messages/join-links-cache';
 import { getClients } from '#/state/session';
-
-import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useDisableJoinLink(
 	convoId: string | undefined,

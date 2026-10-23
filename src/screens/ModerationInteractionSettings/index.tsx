@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
 import { interactionSettingsFromPreferences, isInteractionSettingsEqual } from '#/lib/interaction-settings';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
 
-import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
+import { usePostInteractionSettingsMutation } from '#/state/queries/preferences/post-interaction-settings';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useTitle } from '#/state/use-title';
 
 import { ListPicker } from '#/features/post-interactions/ListPicker';
-import { usePostInteractionSettingsMutation } from '#/features/post-interactions/queries';
 import { PostInteractionSettingsForm } from '#/features/post-interactions/SettingsForm';
 
 import * as Dialog from '#/components/Dialog';

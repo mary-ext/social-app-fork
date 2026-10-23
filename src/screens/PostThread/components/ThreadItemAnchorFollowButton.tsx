@@ -9,7 +9,8 @@ import { isAbortError } from '#/lib/errors';
 import { useBreakpoints } from '#/lib/hooks/use-breakpoints';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
+import { useProfileFollowMutationQueue } from '#/state/queries/profile/follow';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 
 import { useRequireAuth } from '#/components/hooks/use-require-auth';
 import * as Toast from '#/components/Toast';

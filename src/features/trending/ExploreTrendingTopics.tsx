@@ -6,13 +6,15 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
+import type { TrendingTopic } from '#/lib/trending';
+
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useIsTrendingEnabled } from '#/state/preferences/trending';
+import { useGetTrendsQuery } from '#/state/queries/trending/trends';
 
 import { formatCount } from '#/locale/intl/number';
 
 import * as css from '#/features/trending/ExploreTrendingTopics.css';
-import { type TrendingTopic, useGetTrendsQuery } from '#/features/trending/queries';
 
 import { AvatarStack } from '#/components/AvatarStack';
 import { RichText } from '#/components/RichText';

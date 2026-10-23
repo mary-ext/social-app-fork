@@ -9,7 +9,7 @@ import type { Shadow } from '#/state/cache/types';
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
-import { useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
 
 import * as Dialog from '#/components/Dialog';
 import { canBeMessaged, type ConvoWithDetails } from '#/components/dms/util';

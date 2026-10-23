@@ -1,7 +1,7 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { dateLong } from '#/locale/intl/datetime';

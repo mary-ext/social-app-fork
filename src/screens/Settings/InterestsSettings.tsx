@@ -4,18 +4,20 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useDebouncedCallback } from '#/lib/hooks/use-debounce';
 import { interestDisplayNames, interests as allInterests } from '#/lib/interests';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
 
-import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
-import { setInterestsPref } from '#/state/queries/preferences/agent';
-import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
-import { createGetSuggestedFeedsQueryKey } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
-import { createGetSuggestedUsersForDiscoverQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
-import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
-import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
+import { createGetSuggestedFeedsQueryKey } from '#/state/queries/feed/keys';
+import { preferencesQueryKey } from '#/state/queries/preferences/keys';
+import { setInterestsPref } from '#/state/queries/preferences/lib/account';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { createSuggestedStarterPacksQueryKey } from '#/state/queries/starter-pack/keys';
+import {
+	createGetSuggestedUsersForDiscoverQueryKey,
+	createGetSuggestedUsersForExploreQueryKey,
+	createGetSuggestedUsersForSeeMoreQueryKey,
+} from '#/state/queries/trending/keys';
 import { getClients } from '#/state/session';
 import { useTitle } from '#/state/use-title';
-
-import { createSuggestedStarterPacksQueryKey } from '#/features/starter-packs/queries/suggested-starter-packs';
 
 import * as Checkbox from '#/components/primitives/checkbox';
 import { Spinner } from '#/components/Spinner';

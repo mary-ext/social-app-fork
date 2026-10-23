@@ -2,12 +2,14 @@ import type { Ref } from 'react';
 
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
+
+import { useListBlockMutation } from '#/state/queries/list/block';
+import { useListMuteMutation } from '#/state/queries/list/mute';
 import {
 	useAddSavedFeedsMutation,
-	type UsePreferencesQueryResponse,
 	useUpdateSavedFeedsMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/saved-feeds';
 import { useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';

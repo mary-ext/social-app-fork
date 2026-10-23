@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
-import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
+import { useProfileFeedgensQuery } from '#/state/queries/profile/feedgens';
 import { useSession } from '#/state/session';
 
 import { BlankState } from '#/components/BlankState';

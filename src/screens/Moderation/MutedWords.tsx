@@ -3,10 +3,10 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { definite } from '@mary-ext/array-fns';
 
 import {
-	usePreferencesQuery,
 	useRemoveMutedWordMutation,
 	useUpdateMutedWordMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/muted-words';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useTick } from '#/state/tick';
 import { useTitle } from '#/state/use-title';
 

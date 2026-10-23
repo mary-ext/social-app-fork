@@ -5,11 +5,11 @@ import { clsx } from 'clsx';
 import { makeRecordUri } from '#/lib/at-uri';
 import { profileTarget } from '#/lib/routes/targets';
 
-import { useProfileQuery } from '#/state/queries/profile';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useProfileQuery } from '#/state/queries/profile/profile';
+import { useTangledStringQuery } from '#/state/queries/tangled/string';
 
 import { countLines } from '#/features/tangled-strings/code/lines';
-import { useTangledStringQuery } from '#/features/tangled-strings/queries';
 
 import * as Dialog from '#/components/Dialog';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';

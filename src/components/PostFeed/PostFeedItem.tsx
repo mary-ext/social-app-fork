@@ -21,7 +21,7 @@ import { postUriToTarget } from '#/lib/routes/targets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { postSourceState } from '#/state/post-source';
-import { unstableCacheProfileView } from '#/state/queries/profile';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 

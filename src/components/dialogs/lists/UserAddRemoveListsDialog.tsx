@@ -6,11 +6,10 @@ import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import {
-	type ListWithMembership,
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
-	useListsWithMembershipQuery,
-} from '#/state/queries/list-memberships';
+} from '#/state/queries/list/membership-mutations';
+import { type ListWithMembership, useListsWithMembershipQuery } from '#/state/queries/list/memberships';
 
 import * as Dialog from '#/components/Dialog';
 import * as css from '#/components/dialogs/lists/UserAddRemoveListsDialog.css';

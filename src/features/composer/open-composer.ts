@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 
-import { RQKEY as RQKEY_POST } from '#/state/queries/post';
+import { RQKEY as RQKEY_POST } from '#/state/queries/post/keys';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';

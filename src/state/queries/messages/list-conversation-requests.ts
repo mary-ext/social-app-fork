@@ -1,15 +1,15 @@
-import type { ChatBskyConvoListConvoRequests } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 
-import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import { type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { registerShadowFinders } from '#/state/cache/registry';
+import { CONVO_REQUEST_LIST_RQKEY_ROOT } from '#/state/queries/messages/keys';
+import type { ConvoRequestListQueryData } from '#/state/queries/messages/list-conversation-requests-cache';
 import { getClients } from '#/state/session';
 
 const DEFAULT_LIMIT = 10;
 
-export const RQKEY_ROOT = 'convo-request-list';
-export const RQKEY = (limit: number = DEFAULT_LIMIT) => [RQKEY_ROOT, limit];
+const RQKEY = (limit: number = DEFAULT_LIMIT) => [CONVO_REQUEST_LIST_RQKEY_ROOT, limit];
 
 export function useListConvoRequests({
 	enabled = true,
@@ -37,69 +37,13 @@ export function useListConvoRequests({
 	});
 }
 
-export type ConvoRequestListQueryData = InfiniteData<ChatBskyConvoListConvoRequests.$output>;
-
-/**
- * Optimistically drops an incoming conversation request from the request-list cache, so accepting or
- * rejecting it removes the row before the query refetches.
- */
-export function optimisticDelete(convoId: string, old: ConvoRequestListQueryData | undefined) {
-	if (!old) {
-		return old;
-	}
-	return {
-		...old,
-		pages: old.pages.map((page) => ({
-			...page,
-			requests: page.requests.filter(
-				(item) => item.$type !== 'chat.bsky.convo.defs#convoView' || item.id !== convoId,
-			),
-		})),
-	};
-}
-
-/** optimistically zeroes the unread count on every incoming conversation request in the request-list cache */
-export function markAllRead(old: ConvoRequestListQueryData | undefined) {
-	if (!old) {
-		return old;
-	}
-	return {
-		...old,
-		pages: old.pages.map((page) => ({
-			...page,
-			requests: page.requests.map((item) =>
-				item.$type === 'chat.bsky.convo.defs#convoView' ? { ...item, unreadCount: 0 } : item,
-			),
-		})),
-	};
-}
-
-/**
- * Optimistically drops an outgoing group join-request from the request-list cache, so rescinding it removes
- * the row before the query refetches.
- */
-export function optimisticDeleteJoinRequest(convoId: string, old: ConvoRequestListQueryData | undefined) {
-	if (!old) {
-		return old;
-	}
-	return {
-		...old,
-		pages: old.pages.map((page) => ({
-			...page,
-			requests: page.requests.filter(
-				(item) => item.$type !== 'chat.bsky.group.defs#joinRequestConvoView' || item.convoId !== convoId,
-			),
-		})),
-	};
-}
-
 /**
  * yields every cached profile in the request-list (members of incoming conversation requests and the owner of
  * each outgoing group join-request) so profile-shadow updates reach the inbox rows.
  */
-export function* findAllProfilesInQueryData(queryClient: QueryClient, did: string) {
+function* findAllProfilesInQueryData(queryClient: QueryClient, did: string) {
 	const queryDatas = queryClient.getQueriesData<ConvoRequestListQueryData>({
-		queryKey: [RQKEY_ROOT],
+		queryKey: [CONVO_REQUEST_LIST_RQKEY_ROOT],
 	});
 	for (const [, queryData] of queryDatas) {
 		if (!queryData?.pages) {
@@ -123,6 +67,6 @@ export function* findAllProfilesInQueryData(queryClient: QueryClient, did: strin
 	}
 }
 
-registerShadowFinders(RQKEY_ROOT, {
+registerShadowFinders(CONVO_REQUEST_LIST_RQKEY_ROOT, {
 	findProfiles: findAllProfilesInQueryData,
 });

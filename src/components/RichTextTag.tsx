@@ -7,10 +7,10 @@ import { clsx } from 'clsx';
 import { isInvalidHandle } from '#/lib/display-names';
 
 import {
-	usePreferencesQuery,
 	useRemoveMutedWordsMutation,
 	useUpsertMutedWordsMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/muted-words';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';

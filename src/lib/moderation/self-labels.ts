@@ -1,4 +1,5 @@
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { $type } from '@atcute/lexicons';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
@@ -67,4 +68,13 @@ export const toSelfLabels = (
  */
 export const isSameSelfLabels = (a: readonly SelfLabel[], b: readonly SelfLabel[]): boolean => {
 	return a.length === b.length && a.every((label) => b.includes(label));
+};
+
+/**
+ * @param profile the profile view to check
+ * @param value the self-label value
+ * @returns whether the profile labels itself with `value`
+ */
+export const hasSelfLabel = (profile: AppBskyActorDefs.ProfileViewDetailed, value: string): boolean => {
+	return !!profile.labels?.some((label) => label.val === value && label.src === profile.did);
 };

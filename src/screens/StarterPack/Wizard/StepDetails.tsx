@@ -1,7 +1,8 @@
 import { useId } from 'react';
 
-import { STALE } from '#/state/queries';
-import { useProfileQuery } from '#/state/queries/profile';
+import { STALE } from '#/lib/query/const';
+
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';

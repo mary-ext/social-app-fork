@@ -20,7 +20,7 @@ import { downloadVideo } from '#/lib/media/download-video';
 import type { SubtitleTrack } from '#/lib/media/hls/client/subtitles';
 import type { Rendition } from '#/lib/media/hls/shared/protocol';
 
-import { useFetchPdsUrl } from '#/state/queries/resolve-pds';
+import { useFetchPdsUrl } from '#/state/queries/identity/pds';
 
 import { codeToLanguageName } from '#/locale/helpers';
 import { LOCALE } from '#/locale/intl/locale';

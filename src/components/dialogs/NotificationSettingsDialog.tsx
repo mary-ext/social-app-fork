@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
+import { isChatPreferenceName, type NotificationSettingsPreferenceName } from '#/lib/notifications/settings';
+
 import {
-	isChatPreferenceName,
-	type NotificationSettingsPreferenceName,
 	useChatNotificationSettingsQuery,
 	useNotificationSettingsQuery,
 } from '#/state/queries/notifications/settings';

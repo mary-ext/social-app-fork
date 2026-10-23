@@ -7,6 +7,7 @@ import { definite, mapDefined } from '@mary-ext/array-fns';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { getAllListMembers } from '#/lib/api/list-members';
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { isNotFoundResponse } from '#/lib/errors';
@@ -19,19 +20,16 @@ import { getStarterPackOgCard } from '#/lib/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { getAllListMembers } from '#/state/queries/list-members';
-import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-link';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useDeleteStarterPackMutation } from '#/state/queries/starter-pack/delete';
+import { useResolvedStarterPackShortLink } from '#/state/queries/starter-pack/short-link';
+import { useStarterPackQuery } from '#/state/queries/starter-pack/starter-pack';
 import { getClients, useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { FeedsList } from '#/features/starter-packs/Main/FeedsList';
 import { PostsList } from '#/features/starter-packs/Main/PostsList';
 import { ProfilesList } from '#/features/starter-packs/Main/ProfilesList';
-import {
-	useDeleteStarterPackMutation,
-	useStarterPackQuery,
-} from '#/features/starter-packs/queries/starter-pack';
 import { ShareDialog } from '#/features/starter-packs/ShareDialog';
 
 import * as Dialog from '#/components/Dialog';

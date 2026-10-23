@@ -1,8 +1,8 @@
 import type { ComponentType, MouseEvent, SVGProps } from 'react';
 
 import { softReset } from '#/state/events';
+import { useUnreadNotifications } from '#/state/notifications/unread';
 import { useUnreadMessageCount } from '#/state/queries/messages/get-unread-counts';
-import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useSession } from '#/state/session';
 
 import { signinDialogHandle } from '#/components/dialogs/handles';

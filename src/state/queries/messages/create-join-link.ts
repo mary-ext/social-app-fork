@@ -3,9 +3,8 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { rollbackConvoOptimistic, updateConvoOptimistic } from '#/state/queries/messages/conversation-cache';
 import { getClients } from '#/state/session';
-
-import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useCreateJoinLink(
 	convoId: string | undefined,

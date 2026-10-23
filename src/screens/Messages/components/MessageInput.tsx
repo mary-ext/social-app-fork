@@ -3,6 +3,7 @@ import { type Ref, useEffect, useEffectEvent, useImperativeHandle, useRef, useSt
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
+import { type AutocompleteItem, parseAutocompleteItemType } from '#/lib/autocomplete';
 import {
 	buildSpans,
 	type Completion,
@@ -11,11 +12,7 @@ import {
 	type TextSpan,
 } from '#/lib/rich-text-input';
 
-import {
-	type AutocompleteItem,
-	parseAutocompleteItemType,
-	useAutocomplete,
-} from '#/state/queries/autocomplete';
+import { useAutocomplete } from '#/state/queries/search/autocomplete';
 
 import * as Autocomplete from '#/components/primitives/autocomplete';
 

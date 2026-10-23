@@ -9,11 +9,12 @@ import type { Did } from '@atcute/lexicons';
 
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import {
+	convoQueryKey as CONVO_KEY,
+	LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY,
+	listConvoMembersQueryKey,
+} from '#/state/queries/messages/keys';
 import { getClients } from '#/state/session';
-
-import { RQKEY as CONVO_KEY } from './conversation-cache';
-import { LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations-key';
-import { listConvoMembersQueryKey } from './list-convo-members';
 
 export function useRemoveFromGroupChat(
 	convoId: string | undefined,

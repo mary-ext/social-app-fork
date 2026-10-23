@@ -15,23 +15,20 @@ import { useQueryClient } from '@tanstack/react-query';
 import { onVisibilityChange } from '#/lib/browser/visibility';
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants/feeds';
 import { cleanError, isNetworkError } from '#/lib/errors';
+import type { FeedDescriptor } from '#/lib/feeds/descriptor';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
+import { STALE } from '#/lib/query/const';
+import { truncateAndInvalidate } from '#/lib/query/truncate-and-invalidate';
 import type { Richtext } from '#/lib/rich-text';
 
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { postCreated } from '#/state/events';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { STALE } from '#/state/queries';
-import type { FeedDescriptor } from '#/state/queries/feed-descriptor';
-import {
-	type FeedPostSlice,
-	type FeedPostSliceItem,
-	RQKEY,
-	usePostFeedFetcher,
-	usePostFeedQuery,
-	usePostFeedRefresh,
-} from '#/state/queries/post-feed';
-import { truncateAndInvalidate } from '#/state/queries/util';
+import { RQKEY } from '#/state/queries/feed/keys';
+import { usePostFeedQuery } from '#/state/queries/feed/post-feed';
+import { usePostFeedFetcher } from '#/state/queries/feed/post-feed-fetcher';
+import { usePostFeedRefresh } from '#/state/queries/feed/post-feed-refresh';
+import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/feed/types';
 import { useSession } from '#/state/session';
 
 import { TrendingInterstitial, useShowTrendingInterstitial } from '#/features/trending/TrendingInterstitial';

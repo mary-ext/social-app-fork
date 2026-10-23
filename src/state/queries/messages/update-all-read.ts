@@ -3,19 +3,18 @@ import { ok } from '@atcute/client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getClients } from '#/state/session';
-
-import { RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY } from './get-unread-counts';
+import {
+	CONVO_REQUEST_LIST_RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
+	LIST_CONVOS_RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+	listConvosQueryKeyPartial as CONVO_LIST_PARTIAL_KEY,
+	UNREAD_COUNTS_RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
+} from '#/state/queries/messages/keys';
 import {
 	type ConvoRequestListQueryData,
 	markAllRead as markAllRequestsRead,
-	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
-} from './list-conversation-requests';
-import {
-	type ConvoListQueryData,
-	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
-	RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
-} from './list-conversations';
+} from '#/state/queries/messages/list-conversation-requests-cache';
+import type { ConvoListQueryData } from '#/state/queries/messages/list-conversations-cache';
+import { getClients } from '#/state/session';
 
 export function useUpdateAllRead(
 	status: 'accepted' | 'request',

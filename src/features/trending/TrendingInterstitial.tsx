@@ -1,8 +1,8 @@
 import { useLayoutBreakpoints } from '#/lib/hooks/use-breakpoints';
+import type { TrendingTopic } from '#/lib/trending';
 
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
-
-import { type TrendingTopic, useGetTrendsQuery } from '#/features/trending/queries';
+import { useGetTrendsQuery } from '#/state/queries/trending/trends';
 
 import * as Prompt from '#/components/Prompt';
 import { Button, ButtonIcon } from '#/components/web/Button';

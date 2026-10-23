@@ -23,7 +23,7 @@ import { normalizeSelfLabels, toSelfLabels } from '#/lib/moderation/self-labels'
 import { parseRichtext, resolveMentions, type Richtext } from '#/lib/rich-text';
 import { trimText } from '#/lib/utils/text';
 
-import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
+import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/embed/resolve-link';
 
 import { m } from '#/paraglide/messages';
 

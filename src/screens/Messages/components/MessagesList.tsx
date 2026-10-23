@@ -12,6 +12,7 @@ import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } fro
 import type { $type } from '@atcute/lexicons';
 
 import { prepareRichtextForPublish } from '#/lib/api/richtext';
+import { createEmbedViewRecordFromPost } from '#/lib/embed-views';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { parseRichtext } from '#/lib/rich-text';
@@ -19,9 +20,8 @@ import { trimText } from '#/lib/utils/text';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import type { ConvoState } from '#/state/messages/convo/types';
-import { useGetJoinLinkPreview } from '#/state/queries/join-links';
-import { useGetPost } from '#/state/queries/post';
-import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
+import { useGetJoinLinkPreview } from '#/state/queries/messages/join-links';
+import { useGetPost } from '#/state/queries/post/post';
 import { getClients, useSession } from '#/state/session';
 
 import { MessageComposer } from '#/screens/Messages/components/MessageComposer';

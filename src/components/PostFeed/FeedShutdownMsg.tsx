@@ -4,11 +4,11 @@ import { DISCOVER_FEED_URI } from '#/lib/constants/feeds';
 import { feedTarget } from '#/lib/routes/targets';
 
 import { setSelectedFeed } from '#/state/preferences/selected-feed';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import {
-	usePreferencesQuery,
 	useRemoveFeedMutation,
 	useReplaceForYouWithDiscoverFeedMutation,
-} from '#/state/queries/preferences';
+} from '#/state/queries/preferences/saved-feeds';
 
 import { Trans } from '#/locale/Trans';
 

@@ -6,7 +6,7 @@ import { cleanError } from '#/lib/errors';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { createRateLimitBudget } from '#/lib/rate-limit-budget';
 
-import { useBulkUnmuteMutation, useMutedAccountsScanQuery } from '#/state/queries/mute-cleanup';
+import { useBulkUnmuteMutation, useMutedAccountsScanQuery } from '#/state/queries/moderation/mute-cleanup';
 
 import { ProgressBar } from '#/components/ProgressBar';
 import * as Prompt from '#/components/Prompt';

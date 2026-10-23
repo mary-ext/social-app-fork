@@ -2,7 +2,8 @@ import { ok } from '@atcute/client';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { GCTIME, STALE } from '#/state/queries';
+import { GCTIME, STALE } from '#/lib/query/const';
+
 import { createQueryPersister } from '#/state/query-persister';
 import { getClients } from '#/state/session';
 

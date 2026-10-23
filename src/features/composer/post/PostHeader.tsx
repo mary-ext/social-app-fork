@@ -1,4 +1,4 @@
-import { useCurrentAccountProfile } from '#/state/queries/profile';
+import { useCurrentAccountProfile } from '#/state/queries/profile/profile';
 
 import { PostNumberBlock } from '#/components/PostNumber';
 import { ProfileBadges } from '#/components/ProfileBadges';

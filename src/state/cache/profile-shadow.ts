@@ -6,7 +6,7 @@ import { KeyedEventEmitter, SimpleEventEmitter } from '@mary-ext/simple-event-em
 
 import type { QueryClient } from '@tanstack/react-query';
 
-import type { FeedPage } from '#/state/queries/post-feed';
+import type { FeedPage } from '#/state/queries/feed/types';
 
 import { getProfileFinders } from './registry';
 import { castAsShadow, type Shadow } from './types';

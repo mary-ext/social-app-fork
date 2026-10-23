@@ -8,7 +8,8 @@ import type { Did } from '@atcute/lexicons';
 import { resolveGlobalLabelPreference } from '#/lib/moderation/preferences';
 
 import { getLabelStrings } from '#/state/moderation/use-label-info';
-import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
+import { usePreferencesSetContentLabelMutation } from '#/state/queries/preferences/content-labels';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 
 import { LOCALE } from '#/locale/intl/locale';
 

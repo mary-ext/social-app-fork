@@ -9,7 +9,8 @@ import type { ImageMeta } from '#/lib/media/edit-image';
 import { getShortenedLength, richTextToSourceText } from '#/lib/rich-text';
 import { isOverMaxGraphemeCount, trimText } from '#/lib/utils/text';
 
-import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
+import { useListCreateMutation } from '#/state/queries/list/create';
+import { useListMetadataMutation } from '#/state/queries/list/metadata';
 import { getClients } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';

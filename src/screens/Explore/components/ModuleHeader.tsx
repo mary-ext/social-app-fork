@@ -8,7 +8,7 @@ import { clsx } from 'clsx';
 
 import { feedTarget } from '#/lib/routes/targets';
 
-import { useToggleSavedFeed } from '#/state/queries/preferences';
+import { useToggleSavedFeed } from '#/state/queries/preferences/toggle-saved-feed';
 import { useSession } from '#/state/session';
 
 import * as Prompt from '#/components/Prompt';

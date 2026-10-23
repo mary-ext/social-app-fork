@@ -8,7 +8,8 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useAcceptConversation } from '#/state/queries/messages/accept-conversation';
 import { precacheConvoQuery } from '#/state/queries/messages/conversation-cache';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
-import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { useProfileBlockMutationQueue } from '#/state/queries/profile/block';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { useSession } from '#/state/session';
 
 import { AfterReportDialog } from '#/features/reporting/AfterReportDialog';

@@ -12,6 +12,9 @@ import {
 	useEmojiSkinTone,
 	getRecentEmojis,
 } from '#/state/preferences/emoji';
+import { emojiDatasetQuery, emojiSearchQuery } from '#/state/queries/emoji';
+
+import type { EmojiDataset, EmojiSearch } from '#/features/emoji-picker/data';
 
 import * as SearchField from '#/components/forms/SearchField';
 import * as Autocomplete from '#/components/primitives/autocomplete';
@@ -22,7 +25,6 @@ import { CategoryNav } from './components/CategoryNav';
 import { EmojiGrid, type EmojiGridHandle } from './components/EmojiGrid';
 import { PickerPlaceholder } from './components/PickerPlaceholder';
 import { SkinToneButton } from './components/SkinToneButton';
-import { type EmojiDataset, emojiDatasetQuery, type EmojiSearch, emojiSearchQuery } from './data';
 import * as styles from './EmojiPanel.css';
 import { buildEmojiLayout } from './layout';
 import type { Emoji } from './types';

@@ -20,9 +20,9 @@ import { profileTarget } from '#/lib/routes/targets';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { softReset } from '#/state/events';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { resetProfilePostsQueries } from '#/state/queries/post-feed';
-import { useProfileQuery } from '#/state/queries/profile';
-import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+import { resetProfilePostsQueries } from '#/state/queries/feed/post-feed-cache';
+import { useResolveDidQuery } from '#/state/queries/identity/resolve-uri';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

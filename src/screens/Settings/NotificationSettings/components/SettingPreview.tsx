@@ -1,4 +1,4 @@
-import type { NotificationSettingsPreference } from '#/state/queries/notifications/settings';
+import type { NotificationSettingsPreference } from '#/lib/notifications/settings';
 
 import { m } from '#/paraglide/messages';
 

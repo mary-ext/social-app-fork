@@ -1,11 +1,8 @@
 import { setAutoplayDisabled, useAutoplayDisabled } from '#/state/preferences/autoplay';
 import { setTrendingEnabled, useIsTrendingEnabled } from '#/state/preferences/trending';
-import { usePreferencesQuery, useSetFeedViewPreferencesMutation } from '#/state/queries/preferences';
-import {
-	normalizeSort,
-	normalizeView,
-	useThreadPreferences,
-} from '#/state/queries/preferences/useThreadPreferences';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { useSetFeedViewPreferencesMutation } from '#/state/queries/preferences/view';
+import { normalizeSort, normalizeView, useThreadPreferences } from '#/state/thread-preferences';
 import { useTitle } from '#/state/use-title';
 
 import * as Settings from '#/components/Settings';

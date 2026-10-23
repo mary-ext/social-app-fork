@@ -3,7 +3,7 @@ import { createContext, type PropsWithChildren, useContext } from 'react';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import type { InterpretedLabelMapping } from '@atcute/bluesky-moderation';
 
-import { useLabelDefinitionsQuery } from '../queries/preferences';
+import { useLabelDefinitionsQuery } from '#/state/queries/preferences/labelers';
 
 interface StateContext {
 	labelDefs: Record<string, InterpretedLabelMapping>;

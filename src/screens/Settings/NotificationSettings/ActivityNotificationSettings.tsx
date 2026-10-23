@@ -5,15 +5,13 @@ import { cleanError } from '#/lib/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import {
-	useNotificationSettingsQuery,
-	useNotificationSettingsUpdateMutation,
-} from '#/state/queries/notifications/settings';
+import { useActivitySubscriptionsQuery } from '#/state/queries/notifications/activity-subscriptions';
+import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
+import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings-update';
 import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';
 
-import { useActivitySubscriptionsQuery } from '#/features/activity-notifications/queries';
 import { SubscribeProfileDialog } from '#/features/activity-notifications/SubscribeProfileDialog';
 
 import * as Dialog from '#/components/Dialog';

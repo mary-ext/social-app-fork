@@ -9,7 +9,7 @@ import type { Richtext } from '#/lib/rich-text';
 import { postUriToTarget } from '#/lib/routes/targets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
-import type { ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/thread/types';
 import { useSession } from '#/state/session';
 import { useIsReplyHidden } from '#/state/threadgate-hidden-replies';
 

@@ -1,0 +1,67 @@
+import type { AppBskyActorDefs, AppBskyGraphGetKnownFollowers } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
+
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+
+import { registerShadowFinders } from '#/state/cache/registry';
+import { getClients } from '#/state/session';
+
+const PAGE_SIZE = 50;
+type RQPageParam = string | undefined;
+
+const RQKEY_ROOT = 'profile-known-followers';
+const RQKEY = (did: string) => [RQKEY_ROOT, did];
+
+export function useProfileKnownFollowersQuery(did: Did | undefined) {
+	const { appview } = getClients();
+	return useInfiniteQuery<
+		AppBskyGraphGetKnownFollowers.$output,
+		Error,
+		InfiniteData<AppBskyGraphGetKnownFollowers.$output>,
+		QueryKey,
+		RQPageParam
+	>({
+		queryKey: RQKEY(did || ''),
+		enabled: !!did,
+		async queryFn({ pageParam, signal }: { pageParam: RQPageParam; signal: AbortSignal }) {
+			return await ok(
+				appview.get('app.bsky.graph.getKnownFollowers', {
+					signal,
+					params: {
+						actor: did!,
+						cursor: pageParam,
+						limit: PAGE_SIZE,
+					},
+				}),
+			);
+		},
+		initialPageParam: undefined,
+		getNextPageParam: (lastPage) => lastPage.cursor,
+	});
+}
+
+function* findAllProfilesInQueryData(
+	queryClient: QueryClient,
+	did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetKnownFollowers.$output>>({
+		queryKey: [RQKEY_ROOT],
+	});
+	for (const [_queryKey, queryData] of queryDatas) {
+		if (!queryData?.pages) {
+			continue;
+		}
+		for (const page of queryData.pages) {
+			for (const follow of page.followers) {
+				if (follow.did === did) {
+					yield follow;
+				}
+			}
+		}
+	}
+}
+
+registerShadowFinders(RQKEY_ROOT, {
+	findProfiles: findAllProfilesInQueryData,
+});

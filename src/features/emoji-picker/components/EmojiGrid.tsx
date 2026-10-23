@@ -1,12 +1,13 @@
 import { type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
+import type { EmojiDataset } from '#/features/emoji-picker/data';
+
 import * as Autocomplete from '#/components/primitives/autocomplete';
 import { Text } from '#/components/Text';
 
 import type { SkinTone } from '#/storage/schema';
 
 import { CATEGORY_LABELS } from '../categories';
-import type { EmojiDataset } from '../data';
 import {
 	type EmojiLayout,
 	GRID_HEIGHT,

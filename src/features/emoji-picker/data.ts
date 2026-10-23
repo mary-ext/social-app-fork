@@ -1,7 +1,3 @@
-import { queryOptions } from '@tanstack/react-query';
-
-import { GCTIME, STALE } from '#/state/queries';
-
 import type { SkinTone } from '#/storage/schema';
 
 import { RECORD, titleCase } from './dataset-codec';
@@ -59,52 +55,44 @@ export type EmojiDataset = {
 export type EmojiSearch = (query: string, limit?: number) => number[];
 
 /**
- * returns query options for the emoji dataset.
+ * fetches and decodes the emoji dataset.
  *
- * @returns emoji dataset query options
+ * @param signal aborts the request
+ * @returns the decoded dataset
  */
-export function emojiDatasetQuery() {
-	return queryOptions({
-		gcTime: GCTIME.MINUTES.FIVE,
-		queryFn: async ({ signal }) => {
-			const columns = fetchColumns<RenderColumns>(RENDER_URL, signal);
-			// probe while the payload request is in flight.
-			const support = detectEmojiSupport();
-			return decodeDataset(await columns, support);
-		},
-		queryKey: ['emoji-dataset'],
-		staleTime: STALE.INFINITY,
-	});
-}
+export const loadEmojiDataset = async (signal: AbortSignal): Promise<EmojiDataset> => {
+	const columns = fetchColumns<RenderColumns>(RENDER_URL, signal);
+	// probe while the payload request is in flight.
+	const support = detectEmojiSupport();
+	return decodeDataset(await columns, support);
+};
 
 /**
- * returns query options for the emoji search index.
+ * fetches the search keywords and builds a search function over the dataset.
  *
- * @returns emoji search query options
+ * @param signal aborts the request
+ * @param getDataset resolves the dataset; called after the keywords request starts
+ * @returns the search function
  */
-export function emojiSearchQuery() {
-	return queryOptions({
-		gcTime: GCTIME.MINUTES.FIVE,
-		queryFn: async ({ client, signal }) => {
-			const columnsPromise = fetchColumns<SearchColumns>(KEYWORDS_URL, signal);
-			const { ids, indexById, names } = await client.ensureQueryData(emojiDatasetQuery());
-			const columns = await columnsPromise;
+export const loadEmojiSearch = async (
+	signal: AbortSignal,
+	getDataset: () => Promise<EmojiDataset>,
+): Promise<EmojiSearch> => {
+	const columnsPromise = fetchColumns<SearchColumns>(KEYWORDS_URL, signal);
+	const { ids, indexById, names } = await getDataset();
+	const columns = await columnsPromise;
 
-			const haystacks = buildHaystacks({
-				emoticons: columns.emoticons.split(RECORD),
-				ids,
-				keywords: columns.keywords.split(RECORD),
-				names,
-				shown: (index) => indexById.has(ids[index]!),
-			});
-
-			const search: EmojiSearch = (query, limit = 90) => searchHaystacks({ haystacks, ids, limit, query });
-			return search;
-		},
-		queryKey: ['emoji-search'],
-		staleTime: STALE.INFINITY,
+	const haystacks = buildHaystacks({
+		emoticons: columns.emoticons.split(RECORD),
+		ids,
+		keywords: columns.keywords.split(RECORD),
+		names,
+		shown: (index) => indexById.has(ids[index]!),
 	});
-}
+
+	const search: EmojiSearch = (query, limit = 90) => searchHaystacks({ haystacks, ids, limit, query });
+	return search;
+};
 
 async function fetchColumns<T>(url: URL, signal: AbortSignal): Promise<T> {
 	const response = await fetch(url, { signal });

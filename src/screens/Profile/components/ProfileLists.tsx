@@ -4,7 +4,7 @@ import type { Did } from '@atcute/lexicons';
 
 import { cleanError } from '#/lib/errors';
 
-import { useProfileListsQuery } from '#/state/queries/profile-lists';
+import { useProfileListsQuery } from '#/state/queries/profile/lists';
 import { useSession } from '#/state/session';
 
 import { BlankState } from '#/components/BlankState';

@@ -3,8 +3,8 @@ import { useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
-import { useActorSearch } from '#/state/queries/actor-search';
+import { useActorAutocompleteQuery } from '#/state/queries/search/actor-autocomplete';
+import { useActorSearch } from '#/state/queries/search/actor-search';
 
 import { WizardProfileCard } from '#/features/starter-packs/Wizard/WizardListCard';
 

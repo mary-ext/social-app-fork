@@ -12,8 +12,7 @@ import {
 	quotesToEmbeddingRules,
 	repliesToThreadgateAllow,
 } from '#/lib/interaction-settings';
-
-import { createThreadgateRecord } from '#/state/queries/threadgate/util';
+import { createThreadgateRecord } from '#/lib/threadgate';
 
 import { m } from '#/paraglide/messages';
 

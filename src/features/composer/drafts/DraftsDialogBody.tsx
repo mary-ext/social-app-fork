@@ -4,6 +4,10 @@ import type { AppBskyDraftDefs } from '@atcute/bluesky';
 
 import { cleanError } from '#/lib/errors';
 
+import { useDeleteDraftMutation } from '#/state/queries/drafts/delete';
+import { useDraftsQuery } from '#/state/queries/drafts/drafts';
+import { useStoredDraftMediaQuery } from '#/state/queries/drafts/media';
+
 import { BlankState } from '#/components/BlankState';
 import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as Dialog from '#/components/Dialog';
@@ -15,7 +19,6 @@ import PageIcon from '#/icons/central/PageText_round_outlined_radius1_stroke2.sv
 import { m } from '#/paraglide/messages';
 
 import { DraftRow } from './DraftRow';
-import { useDeleteDraftMutation, useDraftsQuery, useStoredDraftMediaQuery } from './queries';
 
 const NO_STORED_MEDIA: ReadonlySet<string> = new Set();
 

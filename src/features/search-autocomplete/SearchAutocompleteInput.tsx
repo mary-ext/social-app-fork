@@ -40,8 +40,8 @@ import {
 	removeSearchHistoryEntry,
 	useSearchHistory,
 } from '#/state/preferences/search-history';
-import { useSearchActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
-import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
+import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile/profile';
+import { useSearchActorAutocompleteQuery } from '#/state/queries/search/actor-autocomplete';
 import { getClients, useSession } from '#/state/session';
 
 import * as SearchField from '#/components/forms/SearchField';

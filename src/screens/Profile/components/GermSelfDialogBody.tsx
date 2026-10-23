@@ -1,13 +1,8 @@
 import type { Did } from '@atcute/lexicons';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { errorMessage } from '#/lib/errors';
 
-import { RQKEY } from '#/state/queries/profile';
-import { whenProfileViewReady } from '#/state/queries/when-profile-view-ready';
-import { getClients } from '#/state/session';
+import { useDeleteGermDeclarationMutation } from '#/state/queries/profile/germ-declaration';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
@@ -27,42 +22,15 @@ import * as css from './GermSelfDialog.css';
  * @returns the link details and disconnect action
  */
 export function GermSelfDialogBody({ did, handle }: { did: Did; handle: Dialog.DialogHandle }) {
-	const { appview, pds } = getClients();
-	const queryClient = useQueryClient();
-
-	const { mutate: deleteDeclaration, isPending } = useMutation({
-		mutationFn: async () => {
-			const previousRecord = await getRecord(pds!, {
-				repo: did,
-				collection: 'com.germnetwork.declaration',
-				rkey: 'self',
-			})
-				.then((res) => res.value)
-				.catch(() => null);
-
-			await deleteRecord(pds!, {
-				repo: did,
-				collection: 'com.germnetwork.declaration',
-				rkey: 'self',
-			});
-
-			await whenProfileViewReady(appview, did, (res) => !res.associated?.germ);
-
-			return previousRecord;
-		},
-		onSuccess: (previousRecord) => {
+	const { mutate: deleteDeclaration, isPending } = useDeleteGermDeclarationMutation({
+		did,
+		onSuccess: (restore) => {
 			async function undo() {
-				if (!previousRecord) {
+				if (!restore) {
 					return;
 				}
 				try {
-					await putRecord(pds!, {
-						repo: did,
-						rkey: 'self',
-						record: previousRecord,
-					});
-					await whenProfileViewReady(appview, did, (res) => !!res.associated?.germ);
-					await queryClient.refetchQueries({ queryKey: RQKEY(did) });
+					await restore();
 
 					Toast.show(m['screens.profile.germDm.reconnectedToast']());
 				} catch (e) {
@@ -74,9 +42,8 @@ export function GermSelfDialogBody({ did, handle }: { did: Did; handle: Dialog.D
 			}
 
 			handle.close();
-			void queryClient.refetchQueries({ queryKey: RQKEY(did) });
 			Toast.show(m['screens.profile.germDm.disconnectedToast'](), {
-				action: previousRecord ? { label: m['common.action.undo'](), onPress: () => void undo() } : undefined,
+				action: restore ? { label: m['common.action.undo'](), onPress: () => void undo() } : undefined,
 			});
 		},
 		onError: (error) => {

@@ -1,6 +1,6 @@
 import { makeRecordUri } from '#/lib/at-uri';
 
-import { usePostQuery } from '#/state/queries/post';
+import { usePostQuery } from '#/state/queries/post/post';
 import { useTitle } from '#/state/use-title';
 
 import { LikedByList } from '#/components/LikedByList';

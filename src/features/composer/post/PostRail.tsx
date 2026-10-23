@@ -6,7 +6,7 @@ import type { Wordgard } from 'wordgard/editor';
 
 import { toImageCdnUrl } from '#/lib/bsky-cdn';
 
-import { useCurrentAccountProfile } from '#/state/queries/profile';
+import { useCurrentAccountProfile } from '#/state/queries/profile/profile';
 
 import * as Menu from '#/components/Menu';
 

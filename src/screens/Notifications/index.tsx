@@ -2,11 +2,12 @@ import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { truncateAndInvalidate } from '#/lib/query/truncate-and-invalidate';
+
 import { softReset } from '#/state/events';
-import { notificationFeedQueryKey } from '#/state/queries/notifications/notification-feed-key';
+import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/notifications/unread';
+import { notificationFeedQueryKey } from '#/state/queries/notifications/keys';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
-import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
-import { truncateAndInvalidate } from '#/state/queries/util';
 import { useTitle } from '#/state/use-title';
 
 import { Trans } from '#/locale/Trans';

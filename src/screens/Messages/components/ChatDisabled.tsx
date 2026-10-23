@@ -1,11 +1,8 @@
 import { useState } from 'react';
 
-import { ok } from '@atcute/client';
-
-import { useMutation } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import { getClients, useSession } from '#/state/session';
+import { useChatAppealMutation } from '#/state/queries/moderation/appeal';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';
@@ -14,7 +11,6 @@ import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonSpinner, ButtonText } from '#/components/web/Button';
 
-import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 import WarningIcon from '#/icons/central/ExclamationTriangle_round_outlined_radius1_stroke2.svg';
 import { m } from '#/paraglide/messages';
 
@@ -72,29 +68,8 @@ function AppealDialog() {
 
 function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 	const [details, setDetails] = useState('');
-	const { pds } = getClients();
-	const { currentAccount } = useSession();
 
-	const { mutate, isPending } = useMutation({
-		mutationFn: async () => {
-			if (!currentAccount) {
-				throw new Error('No current account, should be unreachable');
-			}
-			if (!pds) {
-				throw new Error('Not logged in');
-			}
-			await ok(
-				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('tools.ozone.inbox.appealActionedSubject', {
-					input: {
-						subject: {
-							$type: 'com.atproto.admin.defs#repoRef',
-							did: currentAccount.did,
-						},
-						reason: details,
-					},
-				}),
-			);
-		},
+	const { mutate, isPending } = useChatAppealMutation({
 		onSuccess: () => {
 			handle.close();
 			Toast.show(m['common.appeal.submittedToast']());
@@ -107,7 +82,7 @@ function DialogInner({ handle }: { handle: Dialog.DialogHandle }) {
 		},
 	});
 
-	const onSubmit = () => mutate();
+	const onSubmit = () => mutate({ reason: details });
 	const onBack = () => handle.close();
 
 	return (

@@ -5,13 +5,13 @@ import type { ResourceUri } from '@atcute/lexicons';
 import { isGenericUri } from '@atcute/lexicons/syntax';
 
 import type { ResolvedLink } from '#/lib/api/resolve';
+import { createEmbedViewRecordFromPost } from '#/lib/embed-views';
 import { resolveUrlToLink } from '#/lib/links/app-url';
 import { toNiceDomain } from '#/lib/links/nice-domain';
 import { getBlobUrl } from '#/lib/utils/blob-url';
 
-import { usePostQuery } from '#/state/queries/post';
-import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
-import { useResolveLinkQuery } from '#/state/queries/resolve-link';
+import { useResolveLinkQuery } from '#/state/queries/embed/resolve-link';
+import { usePostQuery } from '#/state/queries/post/post';
 
 import { Embed as StarterPackEmbed } from '#/features/starter-packs/StarterPackCard';
 import { parseTangledStringUrl, type TangledStringTarget } from '#/features/tangled-strings/detect';

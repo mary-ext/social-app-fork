@@ -4,16 +4,21 @@ import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useContentVisibilityMutation, useContentVisibilityQuery } from '#/state/queries/content-visibility';
-import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
-import { useProfileQuery } from '#/state/queries/profile';
-import { hasSelfLabel, useSelfLabelMutation } from '#/state/queries/self-label';
-import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
+import { hasSelfLabel } from '#/lib/moderation/self-labels';
+
+import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/feed/keys';
+import {
+	useContentVisibilityMutation,
+	useContentVisibilityQuery,
+} from '#/state/queries/moderation/content-visibility';
+import { useNotificationDeclarationQuery } from '#/state/queries/notifications/declaration';
+import { useProfileQuery } from '#/state/queries/profile/profile';
+import { useSelfLabelMutation } from '#/state/queries/profile/self-label';
+import { postThreadQueryKeyRoot } from '#/state/queries/thread/keys';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 
 import { ActivitySubscriptionDialog } from '#/features/activity-notifications/ActivitySubscriptionDialog';
-import { useNotificationDeclarationQuery } from '#/features/activity-notifications/queries';
 
 import * as Dialog from '#/components/Dialog';
 import * as Settings from '#/components/Settings';

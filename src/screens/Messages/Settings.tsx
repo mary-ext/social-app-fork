@@ -1,5 +1,5 @@
 import { useUpdateActorDeclaration } from '#/state/queries/messages/actor-declaration';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

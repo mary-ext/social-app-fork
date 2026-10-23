@@ -7,18 +7,14 @@ import { useDebouncedValue } from '#/lib/hooks/use-debounce';
 import { parseLooseUrl } from '#/lib/utils/url';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
+import { useLiveLinkMetaQuery } from '#/state/queries/profile/live-link-meta';
+import { useUpsertLiveStatusMutation } from '#/state/queries/profile/live-status';
 import { useTick } from '#/state/tick';
 
 import { clockNumeric } from '#/locale/intl/datetime';
 
-import {
-	displayDuration,
-	getLiveLinkFromStatusRecord,
-	getLiveServiceNames,
-	useLiveLinkMetaQuery,
-	useUpsertLiveStatusMutation,
-} from '#/features/live-now';
 import { useActorStatus, useLiveNowConfig } from '#/features/live-now/use-actor-status';
+import { displayDuration, getLiveLinkFromStatusRecord, getLiveServiceNames } from '#/features/live-now/utils';
 
 import * as Dialog from '#/components/Dialog';
 import * as Select from '#/components/Select';

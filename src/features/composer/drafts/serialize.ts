@@ -15,8 +15,8 @@ import { toSelfLabels } from '#/lib/moderation/self-labels';
 
 import { getDeviceId } from '#/state/preferences/device-id';
 import { toPostLanguages } from '#/state/preferences/languages';
-import type { useGetPost } from '#/state/queries/post';
-import { fetchResolveLinkQuery } from '#/state/queries/resolve-link';
+import { fetchResolveLinkQuery } from '#/state/queries/embed/resolve-link';
+import type { useGetPost } from '#/state/queries/post/post';
 import { getClients } from '#/state/session';
 
 import { getMediaAlt } from '#/features/composer/media/alt-text';

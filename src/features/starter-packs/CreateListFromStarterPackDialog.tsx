@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getStarterPackRecord } from '#/lib/api/record-casts';
 import { listTarget } from '#/lib/routes/targets';
 
+import { MEMBERS_RQKEY } from '#/state/queries/list/keys';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
@@ -41,7 +42,7 @@ export function CreateListFromStarterPackDialog({
 	const onListCreated = (listUri: string) => {
 		if (starterPack.list && currentAccount) {
 			try {
-				void queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
+				void queryClient.invalidateQueries({ queryKey: MEMBERS_RQKEY(listUri) });
 			} catch (e) {
 				console.error('Failed to add members to list', e);
 				Toast.show(m['components.dialogs.list.error.createdPartial'](), {

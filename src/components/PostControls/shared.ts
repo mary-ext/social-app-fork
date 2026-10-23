@@ -11,8 +11,9 @@ import { profileTarget } from '#/lib/routes/targets';
 
 import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
-import { unstableCacheProfileView } from '#/state/queries/profile';
+import { usePostLikeMutationQueue } from '#/state/queries/post/like';
+import { usePostRepostMutationQueue } from '#/state/queries/post/repost';
+import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 
 import { useOpenComposer } from '#/features/composer/open-composer';
 

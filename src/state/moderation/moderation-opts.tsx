@@ -4,12 +4,11 @@ import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
 import { APP_LABELERS } from '#/lib/moderation/labelers';
 import { toModerationPreferences } from '#/lib/moderation/preferences';
+import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/lib/preferences/const';
 
 import { useLabelDefinitions } from '#/state/moderation/label-defs';
-import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useSession } from '#/state/session';
-
-import { usePreferencesQuery } from '../queries/preferences';
 
 export const moderationOptsContext = createContext<ModerationOptions | undefined>(undefined);
 moderationOptsContext.displayName = 'ModerationOptsContext';

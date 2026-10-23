@@ -4,13 +4,14 @@ import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bl
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useElementHeight } from '#/lib/hooks/use-element-height';
+import type { UsePreferencesQueryResponse } from '#/lib/preferences/types';
+import { truncateAndInvalidate } from '#/lib/query/truncate-and-invalidate';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useListQuery } from '#/state/queries/list';
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
-import { type UsePreferencesQueryResponse, usePreferencesQuery } from '#/state/queries/preferences';
-import { useResolveUriQuery } from '#/state/queries/resolve-uri';
-import { truncateAndInvalidate } from '#/state/queries/util';
+import { RQKEY as FEED_RQKEY } from '#/state/queries/feed/keys';
+import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
+import { useListQuery } from '#/state/queries/list/list';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
 import { useSession } from '#/state/session';
 import { useTitle } from '#/state/use-title';
 

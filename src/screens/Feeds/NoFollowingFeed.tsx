@@ -1,6 +1,6 @@
 import { TIMELINE_SAVED_FEED } from '#/lib/constants/feeds';
 
-import { useAddSavedFeedsMutation } from '#/state/queries/preferences';
+import { useAddSavedFeedsMutation } from '#/state/queries/preferences/saved-feeds';
 
 import { Trans } from '#/locale/Trans';
 

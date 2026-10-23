@@ -4,13 +4,13 @@ import type { Did } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/errors';
 
-import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
-import { useProfileListsQuery } from '#/state/queries/profile-lists';
+import { usePreferencesQuery } from '#/state/queries/preferences/preferences';
+import { useProfileFeedgensQuery } from '#/state/queries/profile/feedgens';
+import { useProfileListsQuery } from '#/state/queries/profile/lists';
+import { useActorStarterPacksQuery } from '#/state/queries/starter-pack/actor-starter-packs';
 
 import { formatCount } from '#/locale/intl/number';
 
-import { useActorStarterPacksQuery } from '#/features/starter-packs/queries/actor-starter-packs';
 import {
 	Default as StarterPackCard,
 	LoadingPlaceholder as StarterPackLoadingPlaceholder,

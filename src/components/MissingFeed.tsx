@@ -1,10 +1,10 @@
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { cleanError } from '#/lib/errors';
+import { getFeedTypeFromUri } from '#/lib/feeds/source-info';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { getFeedTypeFromUri } from '#/state/queries/feed';
-import { useProfileQuery } from '#/state/queries/profile';
+import { useProfileQuery } from '#/state/queries/profile/profile';
 
 import * as Dialog from '#/components/Dialog';
 import { Stack } from '#/components/Stack';

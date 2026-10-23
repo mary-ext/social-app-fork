@@ -1,4 +1,4 @@
-import type { ThreadItem } from '#/state/queries/usePostThread';
+import type { ThreadItem } from '#/state/queries/thread/types';
 
 import * as PostLayout from '#/components/PostLayout';
 import { Text } from '#/components/Text';

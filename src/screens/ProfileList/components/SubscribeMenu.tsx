@@ -1,6 +1,7 @@
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
+import { useListBlockMutation } from '#/state/queries/list/block';
+import { useListMuteMutation } from '#/state/queries/list/mute';
 
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';

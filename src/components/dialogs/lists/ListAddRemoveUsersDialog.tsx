@@ -9,13 +9,13 @@ import { useQueries } from '@tanstack/react-query';
 import { cleanError } from '#/lib/errors';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import {
-	listsWithMembershipQueryOptions,
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
-} from '#/state/queries/list-memberships';
-import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
+} from '#/state/queries/list/membership-mutations';
+import { listsWithMembershipQueryOptions } from '#/state/queries/list/memberships';
+import { useProfileFollowsQuery } from '#/state/queries/profile/follows';
+import { useActorAutocompleteQuery } from '#/state/queries/search/actor-autocomplete';
 import { getClients, useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
