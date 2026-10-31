@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { type InteractionType, resolveInteractionType } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useControlled } from '#/lib/hooks/use-controlled';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
@@ -63,6 +64,8 @@ export const Root = ({
 	const popupId = `${id}popup`;
 
 	const positionerRef = useRef<HTMLDialogElement | null>(null);
+	const openMethodRef = useRef<InteractionType>('');
+	const closeMethodRef = useRef<InteractionType>('');
 	// trigger registration need not rerender; anchors are read on open.
 	const triggers = useConstant(() => new Map<string, HTMLElement>());
 
@@ -81,11 +84,15 @@ export const Root = ({
 			return false;
 		}
 
+		const method = resolveInteractionType(request.event);
 		if (next) {
+			openMethodRef.current = method;
 			setOpenEntry(request.entry ?? null);
 			if (request.triggerId !== undefined) {
 				setRequestedTriggerId(request.triggerId);
 			}
+		} else {
+			closeMethodRef.current = method;
 		}
 		setOpenState(next);
 		return true;
@@ -135,6 +142,8 @@ export const Root = ({
 			activeTriggerId,
 			activeTrigger,
 			positionerRef,
+			openMethodRef,
+			closeMethodRef,
 			setOpen,
 			registerTrigger,
 			onTransitionSettled,

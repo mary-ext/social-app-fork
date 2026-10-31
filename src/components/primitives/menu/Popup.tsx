@@ -4,7 +4,7 @@ import { type HTMLAttributes, useRef } from 'react';
 
 import { useConstant } from '#/lib/hooks/use-constant';
 
-import { getNextTabbable } from '../focus';
+import { focusWithVisibility, getNextTabbable } from '../focus';
 import { createTypeahead, getListItems, getListNavigationProps } from '../list-navigation';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
@@ -43,7 +43,11 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 					return;
 				}
 			}
-			popup.focus({ preventScroll: true });
+			// `showModal()` may have already focused the popup with a focus ring.
+			focusWithVisibility(popup, {
+				preventScroll: true,
+				focusVisible: ctx.openMethodRef.current === 'keyboard',
+			});
 		},
 		final() {
 			const trigger = ctx.activeTrigger;
@@ -54,7 +58,10 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 			if (next) {
 				next.focus();
 			} else {
-				trigger.focus({ preventScroll: true });
+				focusWithVisibility(trigger, {
+					preventScroll: true,
+					focusVisible: ctx.closeMethodRef.current === 'keyboard',
+				});
 			}
 		},
 	});

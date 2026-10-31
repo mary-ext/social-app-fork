@@ -42,6 +42,8 @@ export type RootContextValue = {
 	triggerRef: RefObject<HTMLElement | null>;
 	positionerRef: RefObject<HTMLDialogElement | null>;
 	popupRef: RefObject<HTMLDivElement | null>;
+	/** input that last closed the select. */
+	closeMethodRef: RefObject<InteractionType>;
 	typeahead: Typeahead;
 	/**
 	 * @param open requested open state

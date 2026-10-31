@@ -1,5 +1,7 @@
 import { createContext, type RefObject, useContext } from 'react';
 
+import type { InteractionType } from '#/lib/browser/input-modality';
+
 import type { ChangeDetails } from '../change-details';
 import { HandleStore } from '../handle-store';
 
@@ -34,6 +36,10 @@ export type RootContextValue = {
 	activeTriggerId: string | null;
 	activeTrigger: HTMLElement | null;
 	positionerRef: RefObject<HTMLDialogElement | null>;
+	/** input that last opened the menu. */
+	openMethodRef: RefObject<InteractionType>;
+	/** input that last closed the menu. */
+	closeMethodRef: RefObject<InteractionType>;
 	/**
 	 * @param open requested open state
 	 * @param request reason and interaction details

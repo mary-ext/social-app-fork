@@ -224,7 +224,7 @@ export const getListNavigationProps = ({ loop, typeahead }: ListNavigationOption
 				event.currentTarget.contains(item) &&
 				!isDisabled(item)
 			) {
-				item.focus({ preventScroll: true });
+				item.focus({ preventScroll: true, focusVisible: false });
 			}
 		},
 		onPointerOut(event: PointerEvent<HTMLElement>) {
@@ -238,7 +238,7 @@ export const getListNavigationProps = ({ loop, typeahead }: ListNavigationOption
 			}
 			const active = document.activeElement;
 			if (active instanceof Element && active.matches(ITEM_SELECTOR) && container.contains(active)) {
-				container.focus({ preventScroll: true });
+				container.focus({ preventScroll: true, focusVisible: false });
 			}
 		},
 	};

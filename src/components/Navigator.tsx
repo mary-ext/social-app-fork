@@ -8,6 +8,7 @@ import {
 	useState,
 } from 'react';
 
+import { getInputModality } from '#/lib/browser/input-modality';
 import { POPUP_SELECTOR } from '#/lib/browser/interactive';
 
 import * as Dialog from '#/components/Dialog';
@@ -167,7 +168,7 @@ export function BackOrCloseButton() {
 		}
 		const active = document.activeElement;
 		if (active === null || active === document.body) {
-			ref.current?.focus();
+			ref.current?.focus({ focusVisible: getInputModality() === 'keyboard' });
 		}
 	}, [key]);
 

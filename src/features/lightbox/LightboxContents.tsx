@@ -60,11 +60,11 @@ export function LightboxContents({
 		const onFocusOut = (e: FocusEvent) => {
 			// do not steal focus when the window loses it
 			if (e.relatedTarget === null && document.hasFocus()) {
-				el.focus({ preventScroll: true });
+				el.focus({ preventScroll: true, focusVisible: false });
 			}
 		};
 
-		el.focus({ preventScroll: true });
+		el.focus({ preventScroll: true, focusVisible: false });
 		el.addEventListener('focusout', onFocusOut);
 
 		return () => el.removeEventListener('focusout', onFocusOut);

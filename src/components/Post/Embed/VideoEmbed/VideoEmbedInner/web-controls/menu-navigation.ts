@@ -63,22 +63,23 @@ export const menuInitialFocus = (panel: HTMLElement | null, openType: Interactio
 export function useMenuNavigation(ref: RefObject<HTMLElement | null>, { navigated }: { navigated: boolean }) {
 	const modality = useInputModality();
 	const panelEntry = useConstant(() => resolvePanelEntry(navigated, modality));
+	const entryModality = useConstant(() => modality);
 
 	useEffect(() => {
 		switch (panelEntry) {
 			case 'panel': {
-				ref.current?.focus({ preventScroll: true });
+				ref.current?.focus({ preventScroll: true, focusVisible: false });
 				break;
 			}
 			case 'popup': {
 				break;
 			}
 			case 'row': {
-				findEntryRow(ref.current)?.focus();
+				findEntryRow(ref.current)?.focus({ focusVisible: entryModality === 'keyboard' });
 				break;
 			}
 		}
-	}, [panelEntry, ref]);
+	}, [panelEntry, entryModality, ref]);
 
 	return getListNavigationProps({ loop: true });
 }

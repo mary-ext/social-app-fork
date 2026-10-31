@@ -2,6 +2,7 @@
 
 import type { HTMLAttributes } from 'react';
 
+import { focusWithVisibility } from '../focus';
 import { getListItems, getListNavigationProps } from '../list-navigation';
 import { mergeProps } from '../merge-props';
 import { getOpenAttributes } from '../presence';
@@ -37,11 +38,21 @@ export const Popup = ({ render, ref, ...elementProps }: PopupProps) => {
 			} else if (ctx.openMethod !== 'touch') {
 				target = selected;
 			}
-			(target ?? popup).focus({ preventScroll: true });
+			// `showModal()` may have already focused the target with a focus ring.
+			focusWithVisibility(target ?? popup, {
+				preventScroll: true,
+				focusVisible: ctx.openMethod === 'keyboard',
+			});
 			(target ?? selected)?.scrollIntoView({ block: 'nearest' });
 		},
 		final() {
-			triggerRef.current?.focus({ preventScroll: true });
+			const trigger = triggerRef.current;
+			if (trigger) {
+				focusWithVisibility(trigger, {
+					preventScroll: true,
+					focusVisible: ctx.closeMethodRef.current === 'keyboard',
+				});
+			}
 		},
 	});
 

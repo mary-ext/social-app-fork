@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react';
 
-import type { InteractionType } from '#/lib/browser/input-modality';
+import { getInputModality, type InteractionType } from '#/lib/browser/input-modality';
 import { useConstant } from '#/lib/hooks/use-constant';
 import { useNonReactiveCallback } from '#/lib/hooks/use-non-reactive-callback';
 import { useScrollLock } from '#/lib/hooks/use-scroll-lock';
@@ -51,6 +51,7 @@ export const Root = <Value,>({
 	const [openMethod, setOpenMethod] = useState<InteractionType>('');
 	const [openEntry, setOpenEntry] = useState<OpenEntry>();
 	const closeReasonRef = useRef<OpenChangeReason | null>(null);
+	const closeMethodRef = useRef<InteractionType>('');
 
 	const onSettled = useNonReactiveCallback((settledOpen: boolean) => {
 		// outside presses on non-focusable content leave focus on the body.
@@ -59,7 +60,7 @@ export const Root = <Value,>({
 			closeReasonRef.current === 'outside-press' &&
 			document.activeElement === document.body
 		) {
-			triggerRef.current?.focus({ preventScroll: true });
+			triggerRef.current?.focus({ preventScroll: true, focusVisible: false });
 		}
 	});
 	const { mounted, onTransitionSettled } = usePresence(open, onSettled);
@@ -77,11 +78,13 @@ export const Root = <Value,>({
 			return false;
 		}
 
+		const method = request.method || getInputModality();
 		if (next) {
-			setOpenMethod(request.method);
+			setOpenMethod(method);
 			setOpenEntry(request.entry);
 		} else {
 			closeReasonRef.current = request.reason;
+			closeMethodRef.current = method;
 		}
 		setOpenState(next);
 		return true;
@@ -140,6 +143,7 @@ export const Root = <Value,>({
 			triggerRef,
 			positionerRef,
 			popupRef,
+			closeMethodRef,
 			typeahead,
 			setOpen,
 			select,
