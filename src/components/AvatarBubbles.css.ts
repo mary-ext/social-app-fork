@@ -2,12 +2,28 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-export const svg = style({
-	display: 'block',
+export const rootSizeVar = createVar();
+
+export const root = style({
+	position: 'relative',
 	flexShrink: 0,
-	overflow: 'visible',
+	width: rootSizeVar,
+	height: rootSizeVar,
 });
 
+export const slotLeftVar = createVar();
+export const slotTopVar = createVar();
+export const slotSizeVar = createVar();
+
+export const slot = style({
+	position: 'absolute',
+	top: slotTopVar,
+	left: slotLeftVar,
+	width: slotSizeVar,
+	height: slotSizeVar,
+});
+
+export const bubbleBorderWidthVar = createVar();
 export const bubbleScaleVar = createVar();
 export const bubbleDelayVar = createVar();
 
@@ -23,7 +39,7 @@ export const bubble = style({
 });
 
 export const bubbleBorder = style({
-	borderWidth: 2,
+	borderWidth: bubbleBorderWidthVar,
 	borderStyle: 'solid',
 	borderRadius: '50%',
 	borderColor: vars.palette.contrast_0,

@@ -62,32 +62,36 @@ export function AvatarBubbles({
 	}, [animate]);
 
 	const layouts = getLayouts(bubbleCount);
+	const origin = getOrigin(layouts);
+	const scale = size / WINDOW_SIZE;
 
 	return (
-		<svg className={css.svg} width={size} height={size} viewBox={getViewBox(layouts)}>
+		<div className={css.root} style={assignInlineVars({ [css.rootSizeVar]: `${size}px` })}>
 			{layouts.map((layout) => {
 				const profile = profiles[layout.index];
-				const border = layout.border ? 2 : 0;
+				const border = layout.border ? BORDER_WIDTH : 0;
 
 				return (
-					<foreignObject
+					<div
 						key={profile?.did ?? layout.index}
-						x={layout.x}
-						y={layout.y}
-						width={layout.size + border * 2}
-						height={layout.size + border * 2}
+						className={css.slot}
+						style={assignInlineVars({
+							[css.slotLeftVar]: `${(layout.x - origin.x) * scale}px`,
+							[css.slotTopVar]: `${(layout.y - origin.y) * scale}px`,
+							[css.slotSizeVar]: `${(layout.size + border * 2) * scale}px`,
+						})}
 					>
 						<AvatarBubble
 							profile={profile}
 							scale={animate ? (animatedIn ? 1 : 0) : 1}
 							transitionDelay={animate ? 500 + layout.index * 100 : undefined}
-							size={layout.size}
-							includeProfileBorder={layout.border}
+							size={layout.size * scale}
+							borderWidth={border * scale}
 						/>
-					</foreignObject>
+					</div>
 				);
 			})}
-		</svg>
+		</div>
 	);
 }
 
@@ -96,13 +100,13 @@ function AvatarBubble({
 	scale,
 	transitionDelay,
 	size,
-	includeProfileBorder,
+	borderWidth,
 }: {
 	profile?: AnyProfileView;
 	scale: number;
 	transitionDelay?: number;
 	size: number;
-	includeProfileBorder?: boolean;
+	borderWidth: number;
 }) {
 	const profile = useMaybeProfileShadow(profileUnshadowed);
 	const moderationOpts = useModerationOpts();
@@ -111,10 +115,11 @@ function AvatarBubble({
 		<div
 			className={clsx(
 				css.bubble,
-				includeProfileBorder && css.bubbleBorder,
+				borderWidth > 0 && css.bubbleBorder,
 				transitionDelay != null && css.bubbleAnimated,
 			)}
 			style={assignInlineVars({
+				[css.bubbleBorderWidthVar]: `${borderWidth}px`,
 				[css.bubbleDelayVar]: transitionDelay != null ? `${transitionDelay}ms` : '0ms',
 				[css.bubbleScaleVar]: String(scale),
 			})}
@@ -146,23 +151,27 @@ function AvatarPlaceholder({ size }: { size: number }) {
 	);
 }
 
+const WINDOW_SIZE = 120;
+const BORDER_WIDTH = 2;
+
 // the layouts aren't symmetric about (60, 60), so center the cluster's bounding box in the 120-unit window.
-function getViewBox(layouts: Layout[]): string {
+function getOrigin(layouts: Layout[]): { x: number; y: number } {
 	let minX = Infinity;
 	let minY = Infinity;
 	let maxX = -Infinity;
 	let maxY = -Infinity;
 	for (const layout of layouts) {
-		// bordered slots draw a 2px ring on every side.
-		const outerSize = layout.size + (layout.border ? 4 : 0);
+		// bordered slots draw a ring on every side.
+		const outerSize = layout.size + (layout.border ? BORDER_WIDTH * 2 : 0);
 		minX = Math.min(minX, layout.x);
 		minY = Math.min(minY, layout.y);
 		maxX = Math.max(maxX, layout.x + outerSize);
 		maxY = Math.max(maxY, layout.y + outerSize);
 	}
-	const offsetX = (minX + maxX) / 2 - 60;
-	const offsetY = (minY + maxY) / 2 - 60;
-	return `${offsetX} ${offsetY} 120 120`;
+	return {
+		x: (minX + maxX) / 2 - WINDOW_SIZE / 2,
+		y: (minY + maxY) / 2 - WINDOW_SIZE / 2,
+	};
 }
 
 /** slots authored back-to-front so array order is the SVG paint order (later draws on top). */
