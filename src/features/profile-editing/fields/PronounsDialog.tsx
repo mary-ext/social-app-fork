@@ -58,6 +58,7 @@ function PronounsForm({ initial, onDone }: { initial: string; onDone: (pronouns:
 		m['screens.profile.editProfile.pronouns.suggestion.she'](),
 		m['screens.profile.editProfile.pronouns.suggestion.he'](),
 		m['screens.profile.editProfile.pronouns.suggestion.they'](),
+		m['screens.profile.editProfile.pronouns.suggestion.it'](),
 	];
 	const picked = parsePronouns(pronouns, suggestions) ?? [];
 
