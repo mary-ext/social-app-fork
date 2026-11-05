@@ -12,6 +12,7 @@ import { m } from '#/paraglide/messages';
 import { MAX_PROFILE_LINKS, type ProfileLink } from '../types';
 import { LinkFormDialog, type LinkFormPayload } from './LinkFormDialog';
 import { linkLabel, ProfileLinkButton } from './LinkPill';
+import * as pillCss from './LinkPill.css';
 import * as css from './ProfileLinksEditor.css';
 import { type SortableItem, SortablePills } from './SortablePills';
 
@@ -83,7 +84,7 @@ export function ProfileLinksEditor({
 				trailing={
 					links.length < MAX_PROFILE_LINKS ? (
 						<Button
-							className={css.addPill}
+							className={pillCss.dashedPill}
 							color="secondary"
 							label={m['features.profileLinks.editor.addA11y']()}
 							onClick={() => formHandle.openWithPayload({ index: null })}

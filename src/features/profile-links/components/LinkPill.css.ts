@@ -37,6 +37,18 @@ export const pill = recipe(
 	{ debugId: 'pill' },
 );
 
+const DASHED_BORDER = 1;
+
+/** dashed "add" pill for an outline Button; its padding gives up the border to match {@link pill}. */
+export const dashedPill = style({
+	borderStyle: 'dashed',
+	borderWidth: DASHED_BORDER,
+	borderColor: vars.palette.contrast_600,
+	paddingBlock: 6 - DASHED_BORDER,
+	paddingRight: 12 - DASHED_BORDER,
+	paddingLeft: 10 - DASHED_BORDER,
+});
+
 export const label = style({
 	minWidth: 0,
 	overflow: 'hidden',
