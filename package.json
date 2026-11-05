@@ -80,6 +80,7 @@
 		"@vitejs/plugin-react": "^6.1.2",
 		"cf": "1.0.0-beta.26",
 		"emojibase-data": "^18.0.0",
+		"esbuild": "^0.28.2",
 		"eslint-plugin-bsky-internal": "link:eslint",
 		"oxc-transform-react": "^0.156.0",
 		"oxfmt": "^0.75.0",
