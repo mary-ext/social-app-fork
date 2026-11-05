@@ -4,6 +4,7 @@ import { moderatePost } from '@atcute/bluesky-moderation';
 import { getPostRecord } from '#/lib/api/record-casts';
 import { makeRecordUri } from '#/lib/at-uri';
 import { cleanError } from '#/lib/errors';
+import { postPageTitle } from '#/lib/post-title';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
@@ -29,9 +30,7 @@ export const PostQuotesScreen = () => {
 	const uri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useTitle(
-		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
-	);
+	useTitle(postPageTitle(post));
 
 	const sections: Section<QuotesSort>[] = [
 		{

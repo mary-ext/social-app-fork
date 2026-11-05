@@ -1,4 +1,5 @@
 import { makeRecordUri } from '#/lib/at-uri';
+import { postPageTitle } from '#/lib/post-title';
 
 import { usePostQuery } from '#/state/queries/post/post';
 import { useTitle } from '#/state/use-title';
@@ -16,9 +17,7 @@ export const PostLikedByScreen = () => {
 
 	const likeCount = post?.likeCount;
 
-	useTitle(
-		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
-	);
+	useTitle(postPageTitle(post));
 
 	return (
 		<Layout.Screen>

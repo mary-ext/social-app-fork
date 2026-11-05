@@ -2,6 +2,7 @@ import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 
 import { makeRecordUri } from '#/lib/at-uri';
 import { cleanError } from '#/lib/errors';
+import { postPageTitle } from '#/lib/post-title';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useResolveUriQuery } from '#/state/queries/identity/resolve-uri';
@@ -27,9 +28,7 @@ export const PostRepostedByScreen = () => {
 
 	const quoteCount = post?.repostCount;
 
-	useTitle(
-		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
-	);
+	useTitle(postPageTitle(post));
 
 	return (
 		<Layout.Screen>

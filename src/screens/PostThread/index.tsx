@@ -1,4 +1,5 @@
 import { makeRecordUri } from '#/lib/at-uri';
+import { postPageTitle } from '#/lib/post-title';
 
 import { usePostQuery } from '#/state/queries/post/post';
 import { useTitle } from '#/state/use-title';
@@ -7,7 +8,6 @@ import { PostThread } from '#/screens/PostThread/PostThread';
 
 import * as Layout from '#/components/web/Layout';
 
-import { m } from '#/paraglide/messages';
 import { useParams } from '#/router';
 
 export function PostThreadScreen() {
@@ -15,9 +15,7 @@ export function PostThreadScreen() {
 	const uri = makeRecordUri(actor, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
 
-	useTitle(
-		post ? m['common.a11y.postByAuthor']({ handle: post.author.handle }) : m['navigation.post.title'](),
-	);
+	useTitle(postPageTitle(post));
 
 	return (
 		<Layout.Screen>
