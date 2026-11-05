@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
 import { hover } from '#/styles/interaction';
-import { space } from '#/styles/tokens.css';
+import { fontSize, space } from '#/styles/tokens.css';
 
 const rowBase = style({
 	display: 'flex',
@@ -39,7 +39,7 @@ export const main = style({
 
 export const rank = style({
 	flexShrink: 0,
-	width: 20,
+	width: `calc(${fontSize.md} * 2)`,
 	fontVariantNumeric: 'tabular-nums',
 });
 
