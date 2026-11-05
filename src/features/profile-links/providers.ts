@@ -5,8 +5,10 @@ import { parseLooseUrl, safeUrlParse } from '#/lib/utils/url';
 
 /** logo asset name; resolved by ProviderLogo to keep this module free of asset imports. */
 export type SupportProviderLogoName =
+	| 'BackerKit'
 	| 'BigCartel'
 	| 'Boosty'
+	| 'Booth'
 	| 'BuyMeACoffee'
 	| 'CashApp'
 	| 'Chuffed'
@@ -14,7 +16,9 @@ export type SupportProviderLogoName =
 	| 'Donorbox'
 	| 'Etsy'
 	| 'Fourthwall'
+	| 'Github'
 	| 'Givebutter'
+	| 'GiveSendGo'
 	| 'GoFundMe'
 	| 'Gumroad'
 	| 'Indiegogo'
@@ -27,7 +31,9 @@ export type SupportProviderLogoName =
 	| 'OpenCollective'
 	| 'Patreon'
 	| 'PayPal'
+	| 'PixivFanbox'
 	| 'Redbubble'
+	| 'Skeb'
 	| 'Stripe'
 	| 'Substack'
 	| 'Throne'
@@ -46,8 +52,10 @@ export type SupportProvider = {
 
 /** creator-support platforms whose links get the green support pill. */
 export const SUPPORT_PROVIDERS: SupportProvider[] = [
+	{ name: 'BackerKit', logo: 'BackerKit', domain: 'backerkit.com' },
 	{ name: 'Big Cartel', logo: 'BigCartel', domain: 'bigcartel.com' },
 	{ name: 'Boosty', logo: 'Boosty', domain: 'boosty.to' },
+	{ name: 'BOOTH', logo: 'Booth', domain: 'booth.pm' },
 	{ name: 'Buy Me a Coffee', logo: 'BuyMeACoffee', domain: 'buymeacoffee.com' },
 	{ name: 'Cash App', logo: 'CashApp', domain: 'cash.app' },
 	{ name: 'Chuffed', logo: 'Chuffed', domain: 'chuffed.org', pathPrefix: '/campaign/' },
@@ -56,7 +64,9 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
 	{ name: 'Donorbox', logo: 'Donorbox', domain: 'donorbox.org' },
 	{ name: 'Etsy', logo: 'Etsy', domain: 'etsy.com' },
 	{ name: 'Fourthwall', logo: 'Fourthwall', domain: 'fourthwall.com' },
+	{ name: 'GitHub Sponsors', logo: 'Github', domain: 'github.com', pathPrefix: '/sponsors/' },
 	{ name: 'Givebutter', logo: 'Givebutter', domain: 'givebutter.com' },
+	{ name: 'GiveSendGo', logo: 'GiveSendGo', domain: 'givesendgo.com' },
 	{ name: 'GoFundMe', logo: 'GoFundMe', domain: 'gofundme.com' },
 	{ name: 'Gumroad', logo: 'Gumroad', domain: 'gumroad.com' },
 	{ name: 'Indiegogo', logo: 'Indiegogo', domain: 'indiegogo.com' },
@@ -70,7 +80,9 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
 	{ name: 'Patreon', logo: 'Patreon', domain: 'patreon.com' },
 	{ name: 'PayPal', logo: 'PayPal', domain: 'paypal.com', pathPrefix: '/paypalme/' },
 	{ name: 'PayPal', logo: 'PayPal', domain: 'paypal.me' },
+	{ name: 'pixivFANBOX', logo: 'PixivFanbox', domain: 'fanbox.cc' },
 	{ name: 'Redbubble', logo: 'Redbubble', domain: 'redbubble.com' },
+	{ name: 'Skeb', logo: 'Skeb', domain: 'skeb.jp' },
 	{ name: 'Stripe', logo: 'Stripe', domain: 'buy.stripe.com' },
 	{ name: 'Stripe', logo: 'Stripe', domain: 'donate.stripe.com' },
 	{ name: 'Substack', logo: 'Substack', domain: 'substack.com' },

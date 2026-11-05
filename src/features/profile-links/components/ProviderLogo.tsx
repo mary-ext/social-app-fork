@@ -1,7 +1,9 @@
 import { type ComponentType, createElement, type SVGProps } from 'react';
 
+import BackerKit from '#/icons/brands/BackerKit.svg';
 import BigCartel from '#/icons/brands/BigCartel.svg';
 import Boosty from '#/icons/brands/Boosty.svg';
+import Booth from '#/icons/brands/Booth.svg';
 import BuyMeACoffee from '#/icons/brands/BuyMeACoffee.svg';
 import CashApp from '#/icons/brands/CashApp.svg';
 import Chuffed from '#/icons/brands/Chuffed.svg';
@@ -9,7 +11,9 @@ import Crowdfundr from '#/icons/brands/Crowdfundr.svg';
 import Donorbox from '#/icons/brands/Donorbox.svg';
 import Etsy from '#/icons/brands/Etsy.svg';
 import Fourthwall from '#/icons/brands/Fourthwall.svg';
+import Github from '#/icons/brands/Github.svg';
 import Givebutter from '#/icons/brands/Givebutter.svg';
+import GiveSendGo from '#/icons/brands/GiveSendGo.svg';
 import GoFundMe from '#/icons/brands/GoFundMe.svg';
 import Gumroad from '#/icons/brands/Gumroad.svg';
 import Indiegogo from '#/icons/brands/Indiegogo.svg';
@@ -22,7 +26,9 @@ import Liberapay from '#/icons/brands/Liberapay.svg';
 import OpenCollective from '#/icons/brands/OpenCollective.svg';
 import Patreon from '#/icons/brands/Patreon.svg';
 import PayPal from '#/icons/brands/PayPal.svg';
+import PixivFanbox from '#/icons/brands/PixivFanbox.svg';
 import Redbubble from '#/icons/brands/Redbubble.svg';
+import Skeb from '#/icons/brands/Skeb.svg';
 import Stripe from '#/icons/brands/Stripe.svg';
 import Substack from '#/icons/brands/Substack.svg';
 import Throne from '#/icons/brands/Throne.svg';
@@ -36,8 +42,10 @@ import type { SupportProvider, SupportProviderLogoName } from '../providers';
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, IconComponent> = {
+	BackerKit,
 	BigCartel,
 	Boosty,
+	Booth,
 	BuyMeACoffee,
 	CashApp,
 	Chuffed,
@@ -45,7 +53,9 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, IconComponent> = {
 	Donorbox,
 	Etsy,
 	Fourthwall,
+	Github,
 	Givebutter,
+	GiveSendGo,
 	GoFundMe,
 	Gumroad,
 	Indiegogo,
@@ -58,7 +68,9 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, IconComponent> = {
 	OpenCollective,
 	Patreon,
 	PayPal,
+	PixivFanbox,
 	Redbubble,
+	Skeb,
 	Stripe,
 	Substack,
 	Throne,
