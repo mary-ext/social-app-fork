@@ -27,6 +27,12 @@ export const header = style({
 
 export const badges = style([headerCss.badges]);
 
+export const pronouns = style({
+	flexShrink: 0,
+	paddingLeft: 10,
+	unicodeBidi: 'isolate',
+});
+
 export const alerts = style({
 	paddingBottom: space.xs,
 });

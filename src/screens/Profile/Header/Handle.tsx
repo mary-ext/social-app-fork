@@ -1,4 +1,5 @@
 import type { AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
 
@@ -13,12 +14,20 @@ import * as styles from './Handle.css';
 
 export function ProfileHeaderHandle({
 	profile,
+	moderation,
 	disableTaps,
 }: {
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
+	moderation: ModerationDecision;
 	disableTaps?: boolean;
 }) {
 	const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy;
+	const pronouns = profile.pronouns?.trim();
+	const showPronouns =
+		!!pronouns &&
+		!blockHide &&
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0;
+
 	return (
 		<div className={clsx(styles.row, disableTaps && styles.noTaps)}>
 			<NewskieDialog profile={profile} disabled={disableTaps} />
@@ -31,9 +40,23 @@ export function ProfileHeaderHandle({
 				</div>
 			) : undefined}
 
-			<Text numberOfLines={1} size="md" leading="snug" color="textContrastMedium" className={styles.handle}>
-				{profile.handle}
-			</Text>
+			<div className={styles.handleRow}>
+				<Text numberOfLines={1} size="md" leading="snug" color="textContrastMedium" className={styles.handle}>
+					{profile.handle}
+				</Text>
+				{showPronouns && (
+					// the handle truncates first so the pronouns stay whole
+					<Text
+						numberOfLines={1}
+						size="md"
+						leading="snug"
+						color="textContrastMedium"
+						className={styles.pronouns}
+					>
+						{pronouns}
+					</Text>
+				)}
+			</div>
 		</div>
 	);
 }

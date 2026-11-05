@@ -33,7 +33,7 @@ interface Props {
 function ProfileHeaderBody() {
 	const {
 		meta: { isMe, isPlaceholderProfile, live, moderationOpts, relationship },
-		state: { isContentBlurred, profile },
+		state: { isContentBlurred, moderation, profile },
 	} = useProfileHeader();
 	const { currentAccount } = useSession();
 	const germTarget = resolveGermTarget(profile, currentAccount?.did);
@@ -53,7 +53,7 @@ function ProfileHeaderBody() {
 					<ProfileHeaderDisplayName tight />
 					<ProfileBadges className={css.badges} interactive profile={profile} size="lg" />
 				</div>
-				<ProfileHeaderHandle profile={profile} />
+				<ProfileHeaderHandle moderation={moderation} profile={profile} />
 			</div>
 
 			{!isPlaceholderProfile && !isBlockedUser && (

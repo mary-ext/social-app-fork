@@ -165,7 +165,7 @@ function Inner({
 					size="lg"
 					weight="semiBold"
 				/>
-				<ProfileHeaderHandle disableTaps profile={profileShadow} />
+				<ProfileHeaderHandle disableTaps moderation={moderation} profile={profileShadow} />
 			</Link>
 
 			{isBlockedUser ? (

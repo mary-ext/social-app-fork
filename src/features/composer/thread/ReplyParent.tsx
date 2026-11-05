@@ -55,6 +55,10 @@ function ParentPost({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = moderationOpts ? moderatePost(post, moderationOpts) : undefined;
 	const bodyModui = moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : undefined;
+	const pronouns =
+		moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length > 0
+			? undefined
+			: author.pronouns?.trim();
 
 	return (
 		<article
@@ -76,6 +80,12 @@ function ParentPost({ post }: { post: AppBskyFeedDefs.PostView }) {
 					{author.handle}
 				</Text>
 				<ProfileBadges className={css.badges} profile={author} size="sm" />
+				{pronouns && (
+					// the handle truncates first so the pronouns stay whole
+					<Text className={css.pronouns} color="textContrastMedium" numberOfLines={1} size="md">
+						{pronouns}
+					</Text>
+				)}
 			</div>
 
 			<ContentHider modui={bodyModui}>

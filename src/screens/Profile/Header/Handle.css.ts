@@ -23,6 +23,20 @@ export const followsYou = style({
 	paddingInline: 8,
 });
 
+export const handleRow = style({
+	display: 'flex',
+	flexDirection: 'row',
+	gap: 10,
+	alignItems: 'center',
+	minWidth: 0,
+});
+
 export const handle = style({
+	minWidth: 0,
 	wordBreak: 'break-all',
+});
+
+export const pronouns = style({
+	flexShrink: 0,
+	unicodeBidi: 'isolate',
 });
