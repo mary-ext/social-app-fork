@@ -1,9 +1,11 @@
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
+import { resolveUrl } from '#/lib/routes/app-links';
+
 import { linkWarningDialogHandle } from '#/components/dialogs/handles';
 import * as BaseTooltip from '#/components/primitives/tooltip';
-import { Button, ButtonAnchor, ButtonIcon } from '#/components/web/Button';
-import { isModifiedClick } from '#/components/web/Link';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import { ExternalLinkButton, isModifiedClick } from '#/components/web/Link';
 
 import ArrowTopRightIcon from '#/icons/central/ArrowUpRight_round_outlined_radius1_stroke2.svg';
 import GripIcon from '#/icons/central/DotGrid2x3_round_outlined_radius1_stroke2.svg';
@@ -49,35 +51,34 @@ function PillContent({ link, trailing }: { link: ProfileLink; trailing: ReactNod
 }
 
 /**
- * link pill with a destination tooltip and external-link warning. modified clicks use browser behavior.
+ * link pill with a destination tooltip. links that resolve in-app navigate directly; the rest go through the
+ * external-link warning. modified clicks use browser behavior.
  *
  * @param props the link
  */
 export function ProfileLinkAnchor({ link }: { link: ProfileLink }) {
-	const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
-		if (isModifiedClick(e)) {
+	const onPress = (e: MouseEvent<HTMLElement>) => {
+		if (isModifiedClick(e) || resolveUrl(link.url)) {
 			return;
 		}
-		e.preventDefault();
 		linkWarningDialogHandle.openWithPayload({ displayText: '', href: link.url });
+		return false;
 	};
 
 	return (
 		<BaseTooltip.Root>
 			<BaseTooltip.Trigger
 				render={
-					<ButtonAnchor
+					<ExternalLinkButton
 						className={css.pill({ end: 'arrow', support: !!getSupportProvider(link.url) })}
 						color="secondary"
 						href={link.url}
 						label={m['features.profileLinks.open']({ name: linkLabel(link) })}
-						onClick={onClick}
-						rel="noopener noreferrer nofollow"
+						onPress={onPress}
 						size="small"
-						target="_blank"
 					>
 						<PillContent link={link} trailing={<ArrowTopRightIcon className={css.arrow} />} />
-					</ButtonAnchor>
+					</ExternalLinkButton>
 				}
 			/>
 			<BaseTooltip.Positioner side="top" sideOffset={6}>
