@@ -37,6 +37,27 @@
 	],
 	"screens.profile.editProfile.displayName.verificationWarning": "You are verified. You will lose your verification status if you change your display name.",
 	"screens.profile.editProfile.invalidHandle": "⚠Invalid handle",
+	"screens.profile.editProfile.pronouns.add": "Add pronouns",
+	"screens.profile.editProfile.pronouns.countLabel": "{length} out of {max} characters",
+	"screens.profile.editProfile.pronouns.done": "Done",
+	"screens.profile.editProfile.pronouns.edit": "Edit pronouns",
+	"screens.profile.editProfile.pronouns.editA11y": "Edit pronouns: {pronouns}",
+	"screens.profile.editProfile.pronouns.hint": "Your pronouns show next to your handle on your profile.",
+	"screens.profile.editProfile.pronouns.label": "Pronouns",
+	"screens.profile.editProfile.pronouns.placeholder": "e.g. they/them",
+	"screens.profile.editProfile.pronouns.remove": "Remove pronouns",
+	"screens.profile.editProfile.pronouns.suggestion.he": "he/him",
+	"screens.profile.editProfile.pronouns.suggestion.she": "she/her",
+	"screens.profile.editProfile.pronouns.suggestion.they": "they/them",
+	"screens.profile.editProfile.pronouns.tooLong": [
+		{
+			"declarations": ["input max", "local cp = max: plural", "local n = max: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=other": "Pronouns can be up to {n} characters."
+			}
+		}
+	],
 	"screens.profile.editProfile.title": "Edit profile",
 	"screens.profile.error.server": "There was an issue contacting the server, please check your internet connection and try again.",
 	"screens.profile.feed.a11y.menu": "Feed menu",

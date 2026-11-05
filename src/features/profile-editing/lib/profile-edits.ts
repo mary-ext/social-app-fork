@@ -10,6 +10,7 @@ export type ProfileEdits = {
 	banner?: ProfileImageEdit;
 	description?: string;
 	displayName?: string;
+	pronouns?: string;
 	/** the links as loaded and as they should be saved. */
 	links?: { existing: SavedProfileLink[]; next: ProfileLink[] };
 };

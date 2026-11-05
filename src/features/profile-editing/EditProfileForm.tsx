@@ -22,6 +22,7 @@ import { m } from '#/paraglide/messages';
 import * as styles from './EditProfileForm.css';
 import { DescriptionField } from './fields/DescriptionField';
 import { DisplayNameField } from './fields/DisplayNameField';
+import { PronounsField } from './fields/PronounsField';
 import { ProfileImagesEditor } from './images/ProfileImagesEditor';
 import type { ProfileImageEdit } from './lib/profile-edits';
 
@@ -50,11 +51,13 @@ export const EditProfileForm = ({
 	} = useProfileUpdateMutation();
 	const initialDisplayName = profile.displayName || '';
 	const initialDescription = profile.description || '';
+	const initialPronouns = profile.pronouns || '';
 
 	const [banner, setBanner] = useState<ProfileImageEdit>();
 	const [avatar, setAvatar] = useState<ProfileImageEdit>();
 	const [displayName, setDisplayName] = useState(initialDisplayName);
 	const [description, setDescription] = useState(initialDescription);
+	const [pronouns, setPronouns] = useState(initialPronouns);
 
 	const storedLinks = linksFromProfileView(profile.links);
 	const [editedLinks, setEditedLinks] = useState<ProfileLink[]>();
@@ -66,6 +69,7 @@ export const EditProfileForm = ({
 		avatar !== undefined ||
 		displayName !== initialDisplayName ||
 		description !== initialDescription ||
+		pronouns !== initialPronouns ||
 		changedLinks !== undefined;
 
 	useEffect(() => {
@@ -91,6 +95,7 @@ export const EditProfileForm = ({
 					banner,
 					description: trimText(description),
 					displayName: displayName.trim(),
+					pronouns: pronouns !== initialPronouns ? pronouns : undefined,
 					links: changedLinks && { existing: storedLinks, next: changedLinks },
 				},
 				profile,
@@ -139,6 +144,7 @@ export const EditProfileForm = ({
 						tooLong={displayNameTooLong}
 						onChange={setDisplayName}
 					/>
+					<PronounsField value={pronouns} onChange={setPronouns} />
 					<DescriptionField value={description} tooLong={descriptionTooLong} onChange={setDescription} />
 					<ProfileLinksEditor links={links} onChange={setEditedLinks} />
 				</div>

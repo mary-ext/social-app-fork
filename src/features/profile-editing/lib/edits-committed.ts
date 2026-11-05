@@ -55,6 +55,9 @@ export const editsCommitted = ({
 	if (edits.displayName !== undefined && (fresh.displayName ?? '') !== edits.displayName) {
 		return false;
 	}
+	if (edits.pronouns !== undefined && (fresh.pronouns ?? '') !== edits.pronouns) {
+		return false;
+	}
 	if (linkRefs && !sameLinkCids(fresh.links, linkRefs)) {
 		return false;
 	}

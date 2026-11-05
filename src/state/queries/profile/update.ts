@@ -65,6 +65,9 @@ export function useProfileUpdateMutation() {
 			if (edits.displayName !== undefined) {
 				next.displayName = edits.displayName || undefined;
 			}
+			if (edits.pronouns !== undefined) {
+				next.pronouns = edits.pronouns || undefined;
+			}
 			if (links) {
 				next.links = links.refs.length > 0 ? links.refs : undefined;
 			}
