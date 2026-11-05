@@ -1,6 +1,7 @@
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 
 import * as Dialog from '#/components/Dialog';
+import { addGroupMembersErrorMessage } from '#/components/dms/add-group-members-error';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import type { ConvoWithDetails } from '#/components/dms/util';
 import { Spinner } from '#/components/Spinner';
@@ -46,7 +47,7 @@ export function AddMembersLink({ convo }: { convo: Extract<ConvoWithDetails, { k
 		},
 		onError: (e) => {
 			console.error('Failed to add group chat members', e);
-			Toast.show(m['screens.messages.members.add.error'](), { type: 'error' });
+			Toast.show(addGroupMembersErrorMessage(e), { type: 'error' });
 		},
 	});
 

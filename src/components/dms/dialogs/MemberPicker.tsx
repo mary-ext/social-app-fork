@@ -37,6 +37,16 @@ const isProfileRow = (row: MemberListRow): row is ProfileRow => row.kind === 'pr
 const byGroupDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeAddedToGroup(b)) - Number(canBeAddedToGroup(a));
 
+const cannotAddMessage = (profile: AnyProfileView): string => {
+	if (profile.viewer?.blocking || profile.viewer?.blockingByList) {
+		return m['components.dms.recipient.error.youBlockedCannotAdd']();
+	}
+	if (profile.viewer?.blockedBy) {
+		return m['components.dms.recipient.error.blockedYouCannotAdd']();
+	}
+	return m['components.dms.recipient.error.cannotAdd']({ handle: `@${profile.handle}` });
+};
+
 /** sorts profiles that accept messages first, preserving their order. */
 export const byMessageDeclaration = (a: AnyProfileView, b: AnyProfileView): number =>
 	Number(canBeMessaged(b)) - Number(canBeMessaged(a));
@@ -197,7 +207,7 @@ function MemberRow({
 					value={profile}
 				>
 					<ProfileRowContent
-						disabledMessage={m['components.dms.recipient.error.cannotAdd']({ handle: `@${profile.handle}` })}
+						disabledMessage={cannotAddMessage(profile)}
 						enabled={enabled}
 						moderationOpts={moderationOpts}
 						profile={profile}

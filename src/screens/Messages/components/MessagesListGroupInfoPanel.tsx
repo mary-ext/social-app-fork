@@ -7,6 +7,7 @@ import { useSession } from '#/state/session';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import * as Dialog from '#/components/Dialog';
+import { addGroupMembersErrorMessage } from '#/components/dms/add-group-members-error';
 import { AddMembersDialog } from '#/components/dms/dialogs/AddMembersDialog';
 import { type ConvoWithDetails, isGroupOwner } from '#/components/dms/util';
 import { Text } from '#/components/Text';
@@ -38,7 +39,7 @@ export function MessagesListGroupInfoPanel({
 		},
 		onError: (e) => {
 			console.error('Failed to add group chat members', e);
-			Toast.show(m['screens.messages.members.add.error'](), { type: 'error' });
+			Toast.show(addGroupMembersErrorMessage(e), { type: 'error' });
 		},
 	});
 

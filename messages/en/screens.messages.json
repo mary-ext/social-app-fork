@@ -155,6 +155,8 @@
 	"screens.messages.members.add.a11y": "Click here to add people to this group chat",
 	"screens.messages.members.add.action": "Add members",
 	"screens.messages.members.add.error": "Failed to add members",
+	"screens.messages.members.add.errorBlockedBy": "Members could not be added because one of the selected accounts has blocked you.",
+	"screens.messages.members.add.errorBlocking": "Members could not be added because you have blocked one of the selected accounts.",
 	"screens.messages.members.add.limit": [
 		{
 			"declarations": ["input count", "local cp = count: plural", "local n = count: number"],
