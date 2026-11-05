@@ -3,6 +3,7 @@
 	"view.notifications.a11y.collapseUsers": "Collapse list of users",
 	"view.notifications.a11y.expandUsers": "Expand list of users",
 	"view.notifications.a11y.goToProfile": "Go to {name}'s profile",
+	"view.notifications.authors.showMore": "Show more",
 	"view.notifications.activity.empty": "No posts here",
 	"view.notifications.contact.singleLink": "Your contact {#authorLink}{name}{/authorLink} is on Bluesky",
 	"view.notifications.contact.singleName": "Your contact {name} is on Bluesky",
@@ -78,6 +79,26 @@
 	],
 	"view.notifications.like.post.singleLink": "{#authorLink}{name}{/authorLink} liked your post",
 	"view.notifications.like.post.singleName": "{name} liked your post",
+	"view.notifications.like.posts.singleLink": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{#authorLink}{name}{/authorLink} liked {n} of your posts",
+				"cp=other": "{#authorLink}{name}{/authorLink} liked {n} of your posts"
+			}
+		}
+	],
+	"view.notifications.like.posts.singleName": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{name} liked {n} of your posts",
+				"cp=other": "{name} liked {n} of your posts"
+			}
+		}
+	],
 	"view.notifications.like.repost.multiLink": [
 		{
 			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
@@ -100,6 +121,26 @@
 	],
 	"view.notifications.like.repost.singleLink": "{#authorLink}{name}{/authorLink} liked your repost",
 	"view.notifications.like.repost.singleName": "{name} liked your repost",
+	"view.notifications.like.reposts.singleLink": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{#authorLink}{name}{/authorLink} liked {n} of your reposts",
+				"cp=other": "{#authorLink}{name}{/authorLink} liked {n} of your reposts"
+			}
+		}
+	],
+	"view.notifications.like.reposts.singleName": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{name} liked {n} of your reposts",
+				"cp=other": "{name} liked {n} of your reposts"
+			}
+		}
+	],
 	"view.notifications.loadNew": "Load new notifications",
 	"view.notifications.newPosts.multiLink": [
 		{
@@ -163,6 +204,26 @@
 	],
 	"view.notifications.repost.post.singleLink": "{#authorLink}{name}{/authorLink} reposted your post",
 	"view.notifications.repost.post.singleName": "{name} reposted your post",
+	"view.notifications.repost.posts.singleLink": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{#authorLink}{name}{/authorLink} reposted {n} of your posts",
+				"cp=other": "{#authorLink}{name}{/authorLink} reposted {n} of your posts"
+			}
+		}
+	],
+	"view.notifications.repost.posts.singleName": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{name} reposted {n} of your posts",
+				"cp=other": "{name} reposted {n} of your posts"
+			}
+		}
+	],
 	"view.notifications.repost.repost.multiLink": [
 		{
 			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
@@ -185,30 +246,30 @@
 	],
 	"view.notifications.repost.repost.singleLink": "{#authorLink}{name}{/authorLink} reposted your repost",
 	"view.notifications.repost.repost.singleName": "{name} reposted your repost",
+	"view.notifications.repost.reposts.singleLink": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{#authorLink}{name}{/authorLink} reposted {n} of your reposts",
+				"cp=other": "{#authorLink}{name}{/authorLink} reposted {n} of your reposts"
+			}
+		}
+	],
+	"view.notifications.repost.reposts.singleName": [
+		{
+			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
+			"selectors": ["cp"],
+			"match": {
+				"cp=one": "{name} reposted {n} of your reposts",
+				"cp=other": "{name} reposted {n} of your reposts"
+			}
+		}
+	],
 	"view.notifications.settings.disabledHint": "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your {#t0}notification settings{/t0}.",
 	"view.notifications.settings.enableHint": "Enable notifications for an account by visiting their profile and pressing the {#t0}bell icon{/t0} {#t1/}.",
 	"view.notifications.settings.restrictHint": "If you want to restrict who can receive notifications for your account's activity, you can change this in {#t0}settings → account & privacy{/t0}.",
 	"view.notifications.settings.visit": "Visit your notification settings",
-	"view.notifications.starterPack.multiLink": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} signed up with your starter pack",
-				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} signed up with your starter pack"
-			}
-		}
-	],
-	"view.notifications.starterPack.multiName": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{name} and {n} other signed up with your starter pack",
-				"cp=other": "{name} and {n} others signed up with your starter pack"
-			}
-		}
-	],
 	"view.notifications.starterPack.singleLink": "{#authorLink}{name}{/authorLink} signed up with your starter pack",
 	"view.notifications.starterPack.singleName": "{name} signed up with your starter pack",
 	"view.notifications.unreadCount.a11y": [
@@ -231,48 +292,8 @@
 			}
 		}
 	],
-	"view.notifications.verification.removed.multiLink": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} removed their verifications from your account",
-				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} removed their verifications from your account"
-			}
-		}
-	],
-	"view.notifications.verification.removed.multiName": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{name} and {n} other removed their verifications from your account",
-				"cp=other": "{name} and {n} others removed their verifications from your account"
-			}
-		}
-	],
 	"view.notifications.verification.removed.singleLink": "{#authorLink}{name}{/authorLink} removed their verification from your account",
 	"view.notifications.verification.removed.singleName": "{name} removed their verification from your account",
-	"view.notifications.verification.verified.multiLink": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{#authorLink}{name}{/authorLink} and {#t0}{n} other{/t0} verified you",
-				"cp=other": "{#authorLink}{name}{/authorLink} and {#t0}{n} others{/t0} verified you"
-			}
-		}
-	],
-	"view.notifications.verification.verified.multiName": [
-		{
-			"declarations": ["input count", "input name", "local cp = count: plural", "local n = count: number"],
-			"selectors": ["cp"],
-			"match": {
-				"cp=one": "{name} and {n} other verified you",
-				"cp=other": "{name} and {n} others verified you"
-			}
-		}
-	],
 	"view.notifications.verification.verified.singleLink": "{#authorLink}{name}{/authorLink} verified you",
 	"view.notifications.verification.verified.singleName": "{name} verified you"
 }

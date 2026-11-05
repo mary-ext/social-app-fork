@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { cleanError } from '#/lib/errors';
-import type { FeedNotification } from '#/lib/notifications/types';
+import type { GroupedNotificationsFeed, NotificationView } from '#/lib/notifications/types';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
 import { useNotificationFeedQuery } from '#/state/queries/notifications/feed';
@@ -20,13 +20,13 @@ import { NotificationFeedLoadingPlaceholder } from './NotificationFeedLoadingPla
 const NOTIFICATION_ITEM_HEIGHT_ESTIMATE = 120;
 
 export function NotificationFeed({
-	filter,
+	feed,
 	enabled,
 	scrollElRef,
 	onScrolledDownChange,
 	ListHeaderComponent,
 }: {
-	filter: 'all' | 'mentions';
+	feed: GroupedNotificationsFeed;
 	enabled: boolean;
 	scrollElRef?: ListRef;
 	onScrolledDownChange: (isScrolledDown: boolean) => void;
@@ -34,18 +34,15 @@ export function NotificationFeed({
 }) {
 	const moderationOpts = useModerationOpts();
 	const { data, error, fetchNextPage, isError, isFetchingNextPage, isPending, refetch } =
-		useNotificationFeedQuery({
-			enabled: enabled && !!moderationOpts,
-			filter,
-		});
+		useNotificationFeedQuery({ feed, enabled });
 
-	// check all pages because mentions can leave the first page empty.
-	const notifications = data?.pages.flatMap((page) => page.items) ?? [];
+	// check all pages because moderation can leave the first page empty.
+	const notifications = data?.pages.flatMap((page) => page.notifications) ?? [];
 
-	const renderItem = ({ item, index }: ListRenderItemInfo<FeedNotification>) => {
+	const renderItem = ({ item, index }: ListRenderItemInfo<NotificationView>) => {
 		return (
 			<NotificationFeedItem
-				highlightUnread={filter === 'all'}
+				highlightUnread={feed === 'all'}
 				item={item}
 				moderationOpts={moderationOpts!}
 				hideTopBorder={index === 0}
@@ -59,7 +56,7 @@ export function NotificationFeed({
 			data={notifications}
 			estimateHeight={NOTIFICATION_ITEM_HEIGHT_ESTIMATE}
 			keyboardNavigation
-			keyExtractor={(item) => item._reactKey}
+			keyExtractor={(item) => item.id}
 			renderItem={renderItem}
 			ListEmptyComponent={
 				isError ? (

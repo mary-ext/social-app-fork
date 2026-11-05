@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import type { GroupedNotificationsFeed } from '#/lib/notifications/types';
 import { truncateAndInvalidate } from '#/lib/query/truncate-and-invalidate';
 
 import { softReset } from '#/state/events';
@@ -47,7 +48,7 @@ export function NotificationsScreen() {
 	const queryClient = useQueryClient();
 	const checkUnreadMentions = async ({ invalidate }: { invalidate: boolean }) => {
 		if (invalidate) {
-			return truncateAndInvalidate(queryClient, notificationFeedQueryKey('mentions'));
+			return truncateAndInvalidate(queryClient, notificationFeedQueryKey('conversations'));
 		}
 	};
 
@@ -57,7 +58,7 @@ export function NotificationsScreen() {
 			label: m['common.status.all'](),
 			children: (
 				<NotificationsTab
-					filter="all"
+					feed="all"
 					isLoading={isLoadingAll}
 					hasNew={hasNew}
 					setIsLoadingLatest={setIsLoadingAll}
@@ -70,7 +71,7 @@ export function NotificationsScreen() {
 			label: m['common.mention.label'](),
 			children: (
 				<NotificationsTab
-					filter="mentions"
+					feed="conversations"
 					isLoading={isLoadingMentions}
 					hasNew={false /* We don't know for sure */}
 					setIsLoadingLatest={setIsLoadingMentions}
@@ -120,13 +121,13 @@ export function NotificationsScreen() {
 }
 
 function NotificationsTab({
-	filter,
+	feed,
 	isLoading,
 	hasNew,
 	checkUnread,
 	setIsLoadingLatest,
 }: {
-	filter: 'all' | 'mentions';
+	feed: Extract<GroupedNotificationsFeed, 'all' | 'conversations'>;
 	isLoading: boolean;
 	hasNew: boolean;
 	checkUnread: ({ invalidate }: { invalidate: boolean }) => Promise<void>;
@@ -143,7 +144,7 @@ function NotificationsTab({
 		scrollElRef.current?.scrollToOffset({ animated: false, offset: 0 });
 		if (hasNew) {
 			// render what we have now
-			void truncateAndInvalidate(queryClient, notificationFeedQueryKey(filter));
+			void truncateAndInvalidate(queryClient, notificationFeedQueryKey(feed));
 		} else if (!isLoading) {
 			// check with the server
 			setIsLoadingLatest(true);
@@ -170,11 +171,11 @@ function NotificationsTab({
 		<>
 			<NotificationFeed
 				enabled={isScreenFocused}
-				filter={filter}
+				feed={feed}
 				onScrolledDownChange={setIsScrolledDown}
 				scrollElRef={scrollElRef}
 				ListHeaderComponent={
-					filter === 'mentions' ? <DisabledNotificationsWarning active={isScreenFocused} /> : null
+					feed === 'conversations' ? <DisabledNotificationsWarning active={isScreenFocused} /> : null
 				}
 			/>
 			{(isScrolledDown || hasNew) && (

@@ -1,20 +1,17 @@
-/** A kind of companion API to `#/state/queries/notifications/feed`. See that file for more info. */
+/** a kind of companion API to `#/state/queries/notifications/feed`. see that file for more info. */
 
 import { createContext, type PropsWithChildren, useContext, useEffect, useRef, useState } from 'react';
 
-import type { AppBskyNotificationListNotifications } from '@atcute/bluesky';
-import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { type Client, ok } from '@atcute/client';
+import { ok } from '@atcute/client';
 
-import { type QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { isDocumentVisible } from '#/lib/browser/visibility';
 import { shouldFilterNotification } from '#/lib/notifications/filter';
-import type { CachedFeedPage, FeedPage } from '#/lib/notifications/types';
 import { truncateAndInvalidate } from '#/lib/query/truncate-and-invalidate';
 
 import { useModerationOpts } from '#/state/moderation/moderation-opts';
-import { notificationFeedQueryKey } from '#/state/queries/notifications/keys';
+import { NOTIFICATION_FEED_RQKEY_ROOT } from '#/state/queries/notifications/keys';
 import { getClients, useSession } from '#/state/session';
 
 const UPDATE_INTERVAL = 30 * 1e3; // 30sec
@@ -24,9 +21,10 @@ const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL');
 type StateContext = string;
 
 interface ApiContext {
-	markAllRead: () => Promise<void>;
+	/** marks notifications indexed up to `seenAt` as seen on the server. */
+	markAllRead: (seenAt: Date) => Promise<void>;
+	/** counts unread notifications; with `invalidate`, also reloads the top of every notification feed. */
 	checkUnread: (opts?: { invalidate?: boolean; isPoll?: boolean }) => Promise<void>;
-	getCachedUnreadPage: () => FeedPage | undefined;
 }
 
 const stateContext = createContext<StateContext>('');
@@ -35,9 +33,28 @@ stateContext.displayName = 'NotificationsUnreadStateContext';
 const apiContext = createContext<ApiContext>({
 	async markAllRead() {},
 	async checkUnread() {},
-	getCachedUnreadPage: () => undefined,
 });
 apiContext.displayName = 'NotificationsUnreadApiContext';
+
+// the count travels as its badge text: '' for none, '30+' past the cap
+const MAX_UNREAD_COUNT = 30;
+
+const formatUnreadCount = (count: number): string => {
+	if (count >= MAX_UNREAD_COUNT) {
+		return `${MAX_UNREAD_COUNT}+`;
+	}
+	if (count === 0) {
+		return '';
+	}
+	return String(count);
+};
+
+const parseUnreadCount = (text: string): number => {
+	if (text === '') {
+		return 0;
+	}
+	return Math.min(parseInt(text, 10) || 1, MAX_UNREAD_COUNT);
+};
 
 export function Provider({ children }: PropsWithChildren<{}>) {
 	const { hasSession } = useSession();
@@ -46,25 +63,13 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 	const moderationOpts = useModerationOpts();
 
 	const [numUnread, setNumUnread] = useState('');
-
-	const cacheRef = useRef<CachedFeedPage>({
-		usableInFeed: false,
-		syncedAt: new Date(),
-		data: undefined,
-		unreadCount: 0,
-	});
+	const unreadCountRef = useRef(0);
 
 	// listen for broadcasts
 	useEffect(() => {
 		const listener = ({ data }: MessageEvent<{ event: string }>) => {
-			const { event } = data;
-			cacheRef.current = {
-				usableInFeed: false,
-				syncedAt: new Date(),
-				data: undefined,
-				unreadCount: event === '30+' ? 30 : event === '' ? 0 : parseInt(event, 10) || 1,
-			};
-			setNumUnread(event);
+			unreadCountRef.current = parseUnreadCount(data.event);
+			setNumUnread(data.event);
 		};
 		broadcast.addEventListener('message', listener);
 		return () => {
@@ -77,18 +82,16 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 
 	// create API
 	const api: ApiContext = {
-		async markAllRead() {
+		async markAllRead(seenAt) {
 			// update server
 			await ok(
 				appview.post('app.bsky.notification.updateSeen', {
 					as: null,
-					input: { seenAt: cacheRef.current.syncedAt.toISOString() },
+					input: { seenAt: seenAt.toISOString() },
 				}),
 			);
 			lastMarkedReadAt.current = Date.now();
-
-			// resume normal polling and discard the stale feed page.
-			cacheRef.current = { ...cacheRef.current, usableInFeed: false, unreadCount: 0 };
+			unreadCountRef.current = 0;
 
 			// update & broadcast
 			setNumUnread('');
@@ -105,11 +108,17 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 			}
 
 			// reduce polling if unread count is set
-			if (isPoll && cacheRef.current?.unreadCount !== 0) {
-				// if hit 30+ then don't poll, otherwise reduce polling by 50%
-				if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+			if (isPoll && unreadCountRef.current !== 0) {
+				// if hit the cap then don't poll, otherwise reduce polling by 50%
+				if (unreadCountRef.current >= MAX_UNREAD_COUNT || Math.random() >= 0.5) {
 					return;
 				}
+			}
+
+			if (invalidate) {
+				// counting would be wasted: the feed's own load marks what it shows as read, which clears the count
+				await truncateAndInvalidate(queryClient, [NOTIFICATION_FEED_RQKEY_ROOT]);
+				return;
 			}
 
 			if (isFetchingRef.current) {
@@ -119,43 +128,32 @@ export function Provider({ children }: PropsWithChildren<{}>) {
 			isFetchingRef.current = true;
 			try {
 				const requestedAt = Date.now();
-				// skip grouping and subject fetches unless the feed cache needs them.
-				const { page, lastIndexed, unreadCount } = invalidate
-					? await fetchGroupedUnread({ appview, queryClient, moderationOpts })
-					: await fetchRawUnread({ appview, moderationOpts });
-				// discard counts fetched before markAllRead. feed loads still proceed and mark their results read.
-				if (!invalidate && requestedAt < lastMarkedReadAt.current) {
+				const data = await ok(
+					appview.get('app.bsky.notification.listNotifications', { params: { limit: 40 } }),
+				);
+				// discard counts fetched before markAllRead
+				if (requestedAt < lastMarkedReadAt.current) {
 					return;
 				}
-				const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
 
-				// track last sync
-				const now = new Date();
-				const lastIndexedDate = lastIndexed ? new Date(lastIndexed) : undefined;
-				cacheRef.current = {
-					usableInFeed: !!invalidate, // will be used immediately
-					data: page,
-					syncedAt: !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
-					unreadCount,
-				};
+				let unreadCount = 0;
+				for (const notification of data.notifications) {
+					if (!notification.isRead && !shouldFilterNotification(notification, moderationOpts)) {
+						unreadCount++;
+					}
+				}
+				const unreadCountStr = formatUnreadCount(unreadCount);
+				if (unreadCountStr === formatUnreadCount(unreadCountRef.current)) {
+					return;
+				}
+				unreadCountRef.current = unreadCount;
 
 				// update & broadcast
 				setNumUnread(unreadCountStr);
-				if (invalidate) {
-					void truncateAndInvalidate(queryClient, notificationFeedQueryKey('all'));
-					void truncateAndInvalidate(queryClient, notificationFeedQueryKey('mentions'));
-				}
 				// oxlint-disable-next-line unicorn/require-post-message-target-origin -- BroadcastChannel, not a Window
 				broadcast.postMessage({ event: unreadCountStr });
 			} finally {
 				isFetchingRef.current = false;
-			}
-		},
-
-		getCachedUnreadPage() {
-			// return cached page if it's marked as fresh enough
-			if (cacheRef.current.usableInFeed) {
-				return cacheRef.current.data;
 			}
 		},
 	};
@@ -187,76 +185,3 @@ export function useUnreadNotifications() {
 export function useUnreadNotificationsApi() {
 	return useContext(apiContext);
 }
-
-function countUnread(page: FeedPage) {
-	let num = 0;
-	for (const item of page.items) {
-		if (!item.notification.isRead) {
-			num++;
-		}
-		if (item.additional) {
-			for (const item2 of item.additional) {
-				if (!item2.isRead) {
-					num++;
-				}
-			}
-		}
-	}
-	return num;
-}
-
-function countRawUnread(
-	notifications: AppBskyNotificationListNotifications.Notification[],
-	moderationOpts: ModerationOptions | undefined,
-) {
-	let count = 0;
-	for (const notification of notifications) {
-		if (!notification.isRead && !shouldFilterNotification(notification, moderationOpts)) {
-			count++;
-		}
-	}
-	return count;
-}
-
-type UnreadCheck = { page: FeedPage | undefined; lastIndexed: string | undefined; unreadCount: number };
-
-const unreadCheckParams = () => ({ limit: 40, reasons: [] as string[] });
-
-const fetchGroupedUnread = async ({
-	appview,
-	queryClient,
-	moderationOpts,
-}: {
-	appview: Client;
-	queryClient: QueryClient;
-	moderationOpts: ModerationOptions | undefined;
-}): Promise<UnreadCheck> => {
-	const { fetchPage } = await import('#/state/queries/notifications/lib/fetch-page');
-	const { page, indexedAt } = await fetchPage({
-		appview,
-		cursor: undefined,
-		queryClient,
-		moderationOpts,
-		fetchAdditionalData: true,
-		...unreadCheckParams(),
-	});
-	return { page, lastIndexed: indexedAt, unreadCount: countUnread(page) };
-};
-
-// grouping preserves every notification in `additional`, so raw and grouped counts match.
-const fetchRawUnread = async ({
-	appview,
-	moderationOpts,
-}: {
-	appview: Client;
-	moderationOpts: ModerationOptions | undefined;
-}): Promise<UnreadCheck> => {
-	const data = await ok(
-		appview.get('app.bsky.notification.listNotifications', { params: unreadCheckParams() }),
-	);
-	return {
-		page: undefined,
-		lastIndexed: data.notifications[0]?.indexedAt,
-		unreadCount: countRawUnread(data.notifications, moderationOpts),
-	};
-};

@@ -1,12 +1,6 @@
 import { memo, type ReactElement, type ReactNode, useState } from 'react';
 
-import type {
-	AnyProfileView,
-	AnyStarterPackView,
-	AppBskyActorDefs,
-	AppBskyFeedDefs,
-	AppBskyGraphFollow,
-} from '@atcute/bluesky';
+import type { AnyProfileView, AnyStarterPackView, AppBskyFeedDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -16,8 +10,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { parseCanonicalResourceUri, type ResourceUri } from '@atcute/lexicons/syntax';
-import * as TID from '@atcute/tid';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { uniqueBy } from '@mary-ext/array-fns';
 
@@ -26,10 +19,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getPostRecord, getStarterPackRecord } from '#/lib/api/record-casts';
 import { MAX_POST_LINES } from '#/lib/constants/post';
 import { isAbortError } from '#/lib/errors';
-import type { FeedNotification } from '#/lib/notifications/types';
+import {
+	type ActorGroupNotification,
+	isActorGroupNotification,
+	type NotificationView,
+} from '#/lib/notifications/types';
 import { feedTarget, postUriToTarget, profileTarget, starterPackTarget } from '#/lib/routes/targets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
+import { useGroupActorsQuery } from '#/state/queries/notifications/feed';
+import { getUnresolvedActorDids } from '#/state/queries/notifications/lib/group-actors';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile/follow';
 import { unstableCacheProfileView } from '#/state/queries/profile/unstable-cache';
 import { getClients, useSession } from '#/state/session';
@@ -55,7 +54,7 @@ import { Text } from '#/components/Text';
 import { TimeElapsed } from '#/components/TimeElapsed';
 import * as Toast from '#/components/Toast';
 import { Tooltip } from '#/components/Tooltip';
-import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
@@ -79,15 +78,13 @@ import * as css from './NotificationFeedItem.css';
 
 const MAX_AUTHORS = 5;
 
+/** every kind except the post-shaped ones, which render as a regular post. */
+type ActivityNotification = Exclude<NotificationView, { type: 'reply' | 'quote' | 'mention' }>;
+
 interface Author {
-	profile: AppBskyActorDefs.ProfileView;
-	target: RouteTarget;
+	profile: AnyProfileView;
 	moderation: ModerationDecision;
 }
-
-const othersCountMarkup = ({ children }: { children?: ReactNode }) => (
-	<Text weight="semiBold">{children}</Text>
-);
 
 let NotificationFeedItem = ({
 	item,
@@ -95,137 +92,60 @@ let NotificationFeedItem = ({
 	highlightUnread,
 	hideTopBorder,
 }: {
-	item: FeedNotification;
+	item: NotificationView;
 	moderationOpts: ModerationOptions;
 	highlightUnread: boolean;
 	hideTopBorder?: boolean;
 }): ReactNode => {
-	const queryClient = useQueryClient();
-	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
-	let itemTarget: RouteTarget | undefined;
 	switch (item.type) {
-		case 'post-like':
-		case 'repost':
-		case 'like-via-repost':
-		case 'repost-via-repost': {
-			if (item.subjectUri) {
-				itemTarget = postUriToTarget(item.subjectUri);
-			}
-			break;
-		}
-		case 'follow':
-		case 'contact-match':
-		case 'verified':
-		case 'unverified': {
-			itemTarget = profileTarget(item.notification.author.did);
-			break;
-		}
 		case 'reply':
-		case 'mention':
-		case 'quote': {
-			itemTarget = postUriToTarget(item.notification.uri);
-			break;
-		}
-		case 'feedgen-like': {
-			if (item.subjectUri) {
-				const urip = parseCanonicalResourceUri(item.subjectUri);
-				itemTarget = feedTarget(urip.repo, urip.rkey);
-			}
-			break;
-		}
-		case 'starterpack-joined': {
-			if (item.subjectUri) {
-				const urip = parseCanonicalResourceUri(item.subjectUri);
-				itemTarget = starterPackTarget(urip.repo, urip.rkey);
-			}
-			break;
-		}
-		case 'subscribed-post': {
-			const posts: ResourceUri[] = [];
-			for (const post of [item.notification, ...(item.additional ?? [])]) {
-				posts.push(post.uri);
-			}
-			// app.bsky.feed.getPosts accepts at most 25 URIs.
-			itemTarget = { name: 'NotificationsActivityList', posts: posts.slice(0, 25) };
-			break;
+		case 'quote':
+		case 'mention': {
+			const isHighlighted = highlightUnread && !item.isRead;
+			return (
+				<Post
+					post={item.post}
+					style={
+						isHighlighted ? { backgroundColor: colors.bgUnread, borderColor: colors.primary_100 } : undefined
+					}
+					hideTopBorder={hideTopBorder}
+				/>
+			);
 		}
 	}
 
-	const onBeforePress = () => {
-		unstableCacheProfileView(queryClient, item.notification.author);
-	};
+	return <ActivityRow item={item} moderationOpts={moderationOpts} hideTopBorder={hideTopBorder} />;
+};
+NotificationFeedItem = memo(NotificationFeedItem);
+export { NotificationFeedItem };
 
+// #region activity row
+
+function ActivityRow({
+	item,
+	moderationOpts,
+	hideTopBorder,
+}: {
+	item: ActivityNotification;
+	moderationOpts: ModerationOptions;
+	hideTopBorder: boolean | undefined;
+}) {
+	const queryClient = useQueryClient();
 	const { itemProps } = useNavigablePost();
 
-	const authors: Author[] = uniqueBy(
-		[
-			{
-				profile: item.notification.author,
-				target: profileTarget(item.notification.author.did),
-				moderation: moderateProfile(item.notification.author, moderationOpts),
-			},
-			...(item.additional?.map(({ author }) => ({
-				profile: author,
-				target: profileTarget(author.did),
-				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
-			})) || []),
-		],
-		(author) => author.profile.did,
-	);
-
-	const niceTimestamp = niceDate(item.notification.indexedAt);
+	const authors: Author[] = getAuthorProfiles(item).map((profile) => ({
+		profile,
+		moderation: moderateProfile(profile, moderationOpts),
+	}));
 	const firstAuthor = authors[0]!;
-	const firstAuthorName = firstAuthor.profile.handle;
+	// subscribed posts count posts rather than people, so there the resolved authors are everyone
+	const othersCount = isActorGroupNotification(item) ? item.count - 1 : authors.length - 1;
 
-	// Calculate if this is a follow-back notification
-	let isFollowBack = false;
-	if (item.type === 'follow' && item.notification.author.viewer?.following) {
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the `follow` item type fixes the collection
-		const record = item.notification.record as AppBskyGraphFollow.Main;
-		try {
-			const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
-			const followingTimestamp = TID.parse(rkey).timestamp;
-			if (followingTimestamp) {
-				const followedTimestamp = new Date(record.createdAt).getTime() * 1000;
-				isFollowBack = followedTimestamp > followingTimestamp;
-			}
-		} catch {
-			isFollowBack = false;
-		}
-	}
-
-	if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
-		// don't render anything if the target post was deleted or unfindable
-		return null;
-	}
-
-	if (item.type === 'reply' || item.type === 'mention' || item.type === 'quote') {
-		if (!item.subject) {
-			return null;
-		}
-		const isHighlighted = highlightUnread && !item.notification.isRead;
-		return (
-			<Post
-				post={item.subject}
-				style={
-					isHighlighted
-						? {
-								backgroundColor: colors.bgUnread,
-								borderColor: colors.primary_100,
-							}
-						: undefined
-				}
-				hideTopBorder={hideTopBorder}
-			/>
-		);
-	}
-
-	const authorLinkMarkup = ({ children }: { children?: ReactNode }) => (
+	const authorLink = ({ children }: { children?: ReactNode }) => (
 		<ProfileHoverCard actor={firstAuthor.profile.did}>
 			<InlineLinkText
-				key={firstAuthor.profile.did}
-				to={firstAuthor.target}
-				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthorName })}
+				to={profileTarget(firstAuthor.profile.did)}
+				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthor.profile.handle })}
 				color="text"
 				weight="semiBold"
 				size="md"
@@ -237,282 +157,36 @@ let NotificationFeedItem = ({
 			</InlineLinkText>
 		</ProfileHoverCard>
 	);
-	const additionalAuthorsCount = authors.length - 1;
-	const hasMultipleAuthors = additionalAuthorsCount > 0;
 
-	// grouping already splits follows by starter pack, so the `every` only guards against a stale group
-	const starterPack = item.notification.starterPack;
-	const starterPackName =
-		item.type === 'follow' &&
-		starterPack !== undefined &&
-		(item.additional ?? []).every((notif) => notif.starterPack?.uri === starterPack.uri)
-			? getStarterPackRecord(starterPack).name
-			: undefined;
+	const summary = getSummary(item, { name: firstAuthor.profile.handle, othersCount, authorLink });
+	const starterPack = getViaStarterPack(item);
+	const starterPackName = starterPack ? getStarterPackRecord(starterPack).name : undefined;
+	const niceTimestamp = niceDate(item.indexedAt);
 
-	let a11yLabel = '';
-	let notificationContent: ReactElement;
-	let icon = <HeartIconFilled className={css.likeIcon} />;
-
-	if (item.type === 'post-like') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.like.post.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.like.post.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.like.post.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.like.post.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-	} else if (item.type === 'repost') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.repost.post.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.repost.post.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.repost.post.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.repost.post.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <RepostIcon className={css.repostIcon} />;
-	} else if (item.type === 'follow') {
-		if (isFollowBack && !hasMultipleAuthors) {
-			/*
-			 * Follow-backs are ungrouped, grouped follow-backs not supported atm,
-			 * see `src/state/queries/notifications/lib/fetch-page.ts`
-			 */
-			a11yLabel = m['view.notifications.follow.back.singleName']({ name: firstAuthorName });
-			notificationContent = (
-				<Trans
-					message={m['view.notifications.follow.back.singleLink']}
-					inputs={{ name: firstAuthorName }}
-					markup={{ authorLink: authorLinkMarkup }}
-				/>
-			);
-		} else {
-			a11yLabel = hasMultipleAuthors
-				? m['view.notifications.follow.multiName']({
-						count: additionalAuthorsCount,
-						name: firstAuthorName,
-					})
-				: m['view.notifications.follow.singleName']({ name: firstAuthorName });
-			notificationContent = hasMultipleAuthors ? (
-				<Trans
-					message={m['view.notifications.follow.multiLink']}
-					inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-					markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-				/>
-			) : (
-				<Trans
-					message={m['view.notifications.follow.singleLink']}
-					inputs={{ name: firstAuthorName }}
-					markup={{ authorLink: authorLinkMarkup }}
-				/>
-			);
-		}
-		icon = <PersonPlusIcon className={css.avatarBadgeIcon} />;
-	} else if (item.type === 'contact-match') {
-		a11yLabel = m['view.notifications.contact.singleName']({ name: firstAuthorName });
-		notificationContent = (
-			<Trans
-				message={m['view.notifications.contact.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <ContactsIconFilled className={css.avatarBadgeIcon} />;
-	} else if (item.type === 'feedgen-like') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.like.feed.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.like.feed.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.like.feed.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.like.feed.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-	} else if (item.type === 'starterpack-joined') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.starterPack.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.starterPack.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.starterPack.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.starterPack.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <StarterPackSky className={css.starterPackIcon} />;
-	} else if (item.type === 'verified') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.verification.verified.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.verification.verified.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.verification.verified.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.verification.verified.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <VerifiedCheck className={css.verifiedIcon} />;
-	} else if (item.type === 'unverified') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.verification.removed.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.verification.removed.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.verification.removed.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.verification.removed.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <VerifiedCheck className={css.unverifiedIcon} />;
-	} else if (item.type === 'like-via-repost') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.like.repost.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.like.repost.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.like.repost.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.like.repost.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-	} else if (item.type === 'repost-via-repost') {
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.repost.repost.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.repost.repost.singleName']({ name: firstAuthorName });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.repost.repost.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.repost.repost.singleLink']}
-				inputs={{ name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <RepostIcon className={css.repostViaRepostIcon} />;
-	} else if (item.type === 'subscribed-post') {
-		const postsCount = 1 + (item.additional?.length || 0);
-		a11yLabel = hasMultipleAuthors
-			? m['view.notifications.newPosts.multiName']({
-					count: additionalAuthorsCount,
-					name: firstAuthorName,
-				})
-			: m['view.notifications.newPosts.singleName']({ name: firstAuthorName, count: postsCount });
-		notificationContent = hasMultipleAuthors ? (
-			<Trans
-				message={m['view.notifications.newPosts.multiLink']}
-				inputs={{ count: additionalAuthorsCount, name: firstAuthorName }}
-				markup={{ authorLink: authorLinkMarkup, t0: othersCountMarkup }}
-			/>
-		) : (
-			<Trans
-				message={m['view.notifications.newPosts.singleLink']}
-				inputs={{ name: firstAuthorName, count: postsCount }}
-				markup={{ authorLink: authorLinkMarkup }}
-			/>
-		);
-		icon = <BellRingingIcon className={css.bellRingingIcon} />;
-	} else {
-		return null;
-	}
+	let a11yLabel = summary.label;
 	if (starterPackName !== undefined) {
 		a11yLabel += ` ${m['view.notifications.follow.viaStarterPack.a11y']({ name: starterPackName })}`;
 	}
 	a11yLabel += ` · ${niceTimestamp}`;
 
 	const card = (
-		<div
-			className={css.outer({ topBorder: !hideTopBorder, unread: !item.notification.isRead })}
-			{...itemProps}
-		>
-			<div className={css.iconColumn}>{icon}</div>
+		<div className={css.outer({ topBorder: !hideTopBorder, unread: !item.isRead })} {...itemProps}>
+			<div className={css.iconColumn}>{getIcon(item)}</div>
 
 			<div className={css.content}>
 				<AuthorsList
 					authors={authors}
-					isExpanded={isAuthorsExpanded}
-					onOpenChange={setIsAuthorsExpanded}
+					totalCount={othersCount + 1}
+					loadableGroup={
+						isActorGroupNotification(item) && getUnresolvedActorDids(item).length > 0 ? item : undefined
+					}
 					moderationOpts={moderationOpts}
-					showDmButton={item.type === 'starterpack-joined'}
+					showDmButton={item.type === 'starterPackJoined'}
 				/>
 
 				<Text className={css.notifText}>
-					{notificationContent}
-					<TimeElapsed timestamp={item.notification.indexedAt}>
+					{summary.content}
+					<TimeElapsed timestamp={item.indexedAt}>
 						{({ timeElapsed }) => (
 							<>
 								<Text color="textContrastMedium"> &middot; </Text>
@@ -528,47 +202,628 @@ let NotificationFeedItem = ({
 					<FollowedViaStarterPack name={starterPackName} starterPack={starterPack} />
 				) : null}
 
-				{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
-				(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
-					<FollowBackButton profile={item.notification.author} />
+				{(item.type === 'follow' && othersCount === 0) ||
+				(item.type === 'contactMatch' && !item.actor.viewer?.following) ? (
+					<FollowBackButton profile={firstAuthor.profile} />
 				) : null}
 
-				{item.type === 'post-like' ||
-				item.type === 'repost' ||
-				item.type === 'like-via-repost' ||
-				item.type === 'repost-via-repost' ||
-				item.type === 'subscribed-post' ? (
-					<div className={css.additionalWrap}>
-						<AdditionalPostText post={item.subject} moderationOpts={moderationOpts} />
-					</div>
-				) : null}
-
-				{item.type === 'feedgen-like' && item.subjectUri ? (
-					<div className={css.feedCardWrap}>
-						<FeedCard.ByUri uri={item.subjectUri} />
-					</div>
-				) : null}
-				{item.type === 'starterpack-joined' ? (
-					<div className={css.starterPackBox}>
-						<StarterPackCard starterPack={item.subject} />
-					</div>
-				) : null}
+				<Preview item={item} moderationOpts={moderationOpts} />
 			</div>
 		</div>
 	);
 
-	if (!itemTarget) {
+	const target = getTarget(item);
+	if (!target) {
 		return card;
 	}
 
 	return (
-		<BlockLink to={itemTarget} label={a11yLabel} onBeforePress={onBeforePress}>
+		<BlockLink
+			to={target}
+			label={a11yLabel}
+			onBeforePress={() => unstableCacheProfileView(queryClient, firstAuthor.profile)}
+		>
 			{card}
 		</BlockLink>
 	);
+}
+
+/** the people shown in the avatar row, primary actor first. */
+const getAuthorProfiles = (item: ActivityNotification): AnyProfileView[] => {
+	if (isActorGroupNotification(item)) {
+		return item.actors;
+	}
+	if (item.type === 'subscribedPost') {
+		return uniqueBy(
+			item.items.map(({ actor }) => actor),
+			(actor) => actor.did,
+		);
+	}
+	return [item.actor];
 };
-NotificationFeedItem = memo(NotificationFeedItem);
-export { NotificationFeedItem };
+
+const getViaStarterPack = (item: ActivityNotification): AnyStarterPackView | undefined => {
+	switch (item.type) {
+		case 'follow':
+		case 'followBack': {
+			return item.starterPack;
+		}
+	}
+};
+
+const activityListTarget = (posts: AppBskyFeedDefs.PostView[]): RouteTarget => {
+	return {
+		name: 'NotificationsActivityList',
+		posts: posts.map((post) => post.uri),
+	};
+};
+
+const getTarget = (item: ActivityNotification): RouteTarget | undefined => {
+	switch (item.type) {
+		case 'like':
+		case 'repost':
+		case 'likeViaRepost':
+		case 'repostViaRepost': {
+			return postUriToTarget(item.post.uri);
+		}
+		case 'multiPostLike':
+		case 'multiPostRepost':
+		case 'multiPostLikeViaRepost':
+		case 'multiPostRepostViaRepost': {
+			return activityListTarget(item.posts);
+		}
+		case 'subscribedPost': {
+			return activityListTarget(item.items.map(({ post }) => post));
+		}
+		case 'follow': {
+			return profileTarget(item.actors[0].did);
+		}
+		case 'followBack':
+		case 'contactMatch':
+		case 'verified':
+		case 'unverified': {
+			return profileTarget(item.actor.did);
+		}
+		case 'generatorLike': {
+			const urip = parseCanonicalResourceUri(item.generator.uri);
+			return feedTarget(urip.repo, urip.rkey);
+		}
+		case 'starterPackJoined': {
+			const urip = parseCanonicalResourceUri(item.starterPack.uri);
+			return starterPackTarget(urip.repo, urip.rkey);
+		}
+	}
+};
+
+const getIcon = (item: ActivityNotification): ReactElement => {
+	switch (item.type) {
+		case 'like':
+		case 'likeViaRepost':
+		case 'multiPostLike':
+		case 'multiPostLikeViaRepost':
+		case 'generatorLike': {
+			return <HeartIconFilled className={css.likeIcon} />;
+		}
+		case 'repost':
+		case 'multiPostRepost': {
+			return <RepostIcon className={css.repostIcon} />;
+		}
+		case 'repostViaRepost':
+		case 'multiPostRepostViaRepost': {
+			return <RepostIcon className={css.repostViaRepostIcon} />;
+		}
+		case 'follow':
+		case 'followBack': {
+			return <PersonPlusIcon className={css.avatarBadgeIcon} />;
+		}
+		case 'contactMatch': {
+			return <ContactsIconFilled className={css.avatarBadgeIcon} />;
+		}
+		case 'starterPackJoined': {
+			return <StarterPackSky className={css.starterPackIcon} />;
+		}
+		case 'verified': {
+			return <VerifiedCheck className={css.verifiedIcon} />;
+		}
+		case 'unverified': {
+			return <VerifiedCheck className={css.unverifiedIcon} />;
+		}
+		case 'subscribedPost': {
+			return <BellRingingIcon className={css.bellRingingIcon} />;
+		}
+	}
+};
+
+const othersCountMarkup = ({ children }: { children?: ReactNode }) => (
+	<Text weight="semiBold">{children}</Text>
+);
+
+/** the row's sentence, as plain text for screen readers and as rich content. */
+const getSummary = (
+	item: ActivityNotification,
+	{
+		name,
+		othersCount,
+		authorLink,
+	}: {
+		name: string;
+		othersCount: number;
+		authorLink: (args: { children?: ReactNode }) => ReactNode;
+	},
+): { label: string; content: ReactElement } => {
+	const multi = { count: othersCount, name };
+	const multiMarkup = { authorLink, t0: othersCountMarkup };
+	const single = { name };
+	const singleMarkup = { authorLink };
+	// how many posts, for kinds from one person about several posts
+	const counted = { count: item.count, name };
+	const isMulti = othersCount > 0;
+
+	switch (item.type) {
+		case 'like': {
+			return isMulti
+				? {
+						label: m['view.notifications.like.post.multiName'](multi),
+						content: (
+							<Trans
+								message={m['view.notifications.like.post.multiLink']}
+								inputs={multi}
+								markup={multiMarkup}
+							/>
+						),
+					}
+				: {
+						label: m['view.notifications.like.post.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.like.post.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'repost': {
+			return isMulti
+				? {
+						label: m['view.notifications.repost.post.multiName'](multi),
+						content: (
+							<Trans
+								message={m['view.notifications.repost.post.multiLink']}
+								inputs={multi}
+								markup={multiMarkup}
+							/>
+						),
+					}
+				: {
+						label: m['view.notifications.repost.post.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.repost.post.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'likeViaRepost': {
+			return isMulti
+				? {
+						label: m['view.notifications.like.repost.multiName'](multi),
+						content: (
+							<Trans
+								message={m['view.notifications.like.repost.multiLink']}
+								inputs={multi}
+								markup={multiMarkup}
+							/>
+						),
+					}
+				: {
+						label: m['view.notifications.like.repost.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.like.repost.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'repostViaRepost': {
+			return isMulti
+				? {
+						label: m['view.notifications.repost.repost.multiName'](multi),
+						content: (
+							<Trans
+								message={m['view.notifications.repost.repost.multiLink']}
+								inputs={multi}
+								markup={multiMarkup}
+							/>
+						),
+					}
+				: {
+						label: m['view.notifications.repost.repost.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.repost.repost.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'multiPostLike': {
+			return {
+				label: m['view.notifications.like.posts.singleName'](counted),
+				content: (
+					<Trans
+						message={m['view.notifications.like.posts.singleLink']}
+						inputs={counted}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'multiPostRepost': {
+			return {
+				label: m['view.notifications.repost.posts.singleName'](counted),
+				content: (
+					<Trans
+						message={m['view.notifications.repost.posts.singleLink']}
+						inputs={counted}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'multiPostLikeViaRepost': {
+			return {
+				label: m['view.notifications.like.reposts.singleName'](counted),
+				content: (
+					<Trans
+						message={m['view.notifications.like.reposts.singleLink']}
+						inputs={counted}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'multiPostRepostViaRepost': {
+			return {
+				label: m['view.notifications.repost.reposts.singleName'](counted),
+				content: (
+					<Trans
+						message={m['view.notifications.repost.reposts.singleLink']}
+						inputs={counted}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'follow': {
+			return isMulti
+				? {
+						label: m['view.notifications.follow.multiName'](multi),
+						content: (
+							<Trans message={m['view.notifications.follow.multiLink']} inputs={multi} markup={multiMarkup} />
+						),
+					}
+				: {
+						label: m['view.notifications.follow.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.follow.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'followBack': {
+			return {
+				label: m['view.notifications.follow.back.singleName'](single),
+				content: (
+					<Trans
+						message={m['view.notifications.follow.back.singleLink']}
+						inputs={single}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'generatorLike': {
+			return isMulti
+				? {
+						label: m['view.notifications.like.feed.multiName'](multi),
+						content: (
+							<Trans
+								message={m['view.notifications.like.feed.multiLink']}
+								inputs={multi}
+								markup={multiMarkup}
+							/>
+						),
+					}
+				: {
+						label: m['view.notifications.like.feed.singleName'](single),
+						content: (
+							<Trans
+								message={m['view.notifications.like.feed.singleLink']}
+								inputs={single}
+								markup={singleMarkup}
+							/>
+						),
+					};
+		}
+		case 'subscribedPost': {
+			if (isMulti) {
+				return {
+					label: m['view.notifications.newPosts.multiName'](multi),
+					content: (
+						<Trans message={m['view.notifications.newPosts.multiLink']} inputs={multi} markup={multiMarkup} />
+					),
+				};
+			}
+			return {
+				label: m['view.notifications.newPosts.singleName'](counted),
+				content: (
+					<Trans
+						message={m['view.notifications.newPosts.singleLink']}
+						inputs={counted}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'contactMatch': {
+			return {
+				label: m['view.notifications.contact.singleName'](single),
+				content: (
+					<Trans message={m['view.notifications.contact.singleLink']} inputs={single} markup={singleMarkup} />
+				),
+			};
+		}
+		case 'starterPackJoined': {
+			return {
+				label: m['view.notifications.starterPack.singleName'](single),
+				content: (
+					<Trans
+						message={m['view.notifications.starterPack.singleLink']}
+						inputs={single}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'verified': {
+			return {
+				label: m['view.notifications.verification.verified.singleName'](single),
+				content: (
+					<Trans
+						message={m['view.notifications.verification.verified.singleLink']}
+						inputs={single}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+		case 'unverified': {
+			return {
+				label: m['view.notifications.verification.removed.singleName'](single),
+				content: (
+					<Trans
+						message={m['view.notifications.verification.removed.singleLink']}
+						inputs={single}
+						markup={singleMarkup}
+					/>
+				),
+			};
+		}
+	}
+};
+
+/** what the notification is about: a post excerpt, a feed, or a starter pack. */
+function Preview({
+	item,
+	moderationOpts,
+}: {
+	item: ActivityNotification;
+	moderationOpts: ModerationOptions;
+}) {
+	switch (item.type) {
+		case 'like':
+		case 'repost':
+		case 'likeViaRepost':
+		case 'repostViaRepost': {
+			return <AdditionalPost post={item.post} moderationOpts={moderationOpts} />;
+		}
+		case 'multiPostLike':
+		case 'multiPostRepost':
+		case 'multiPostLikeViaRepost':
+		case 'multiPostRepostViaRepost': {
+			return <AdditionalPost post={item.posts[0]} moderationOpts={moderationOpts} />;
+		}
+		case 'subscribedPost': {
+			return <AdditionalPost post={item.items[0].post} moderationOpts={moderationOpts} />;
+		}
+		case 'generatorLike': {
+			return (
+				<div className={css.feedCardWrap}>
+					<FeedCard.Embed view={item.generator} />
+				</div>
+			);
+		}
+		case 'starterPackJoined': {
+			return (
+				<div className={css.starterPackBox}>
+					<StarterPackCard starterPack={item.starterPack} />
+				</div>
+			);
+		}
+	}
+	return null;
+}
+
+// #endregion
+
+// #region authors
+
+function AuthorsList({
+	authors,
+	totalCount,
+	loadableGroup,
+	moderationOpts,
+	showDmButton,
+}: {
+	authors: Author[];
+	/** how many people the notification is from, including those without a resolved profile. */
+	totalCount: number;
+	/** set when the group has actors left to load on demand. */
+	loadableGroup: ActorGroupNotification | undefined;
+	moderationOpts: ModerationOptions;
+	showDmButton: boolean;
+}) {
+	const [isExpanded, setIsExpanded] = useState(false);
+
+	// a single author needs no toggle: just the avatar (and the say-hello affordance for starter packs)
+	if (totalCount < 2) {
+		const author = authors[0]!;
+		return (
+			<div className={css.avatarsRow}>
+				<PreviewableUserAvatar
+					size={css.NOTIF_AVI_SIZE}
+					profile={author.profile}
+					moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
+					type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+				/>
+				{showDmButton ? <SayHelloBtn profile={author.profile} /> : null}
+			</div>
+		);
+	}
+
+	const shownAuthors = authors.slice(0, MAX_AUTHORS);
+
+	return (
+		<Collapsible.Root className={css.authorsCollapsible} open={isExpanded} onOpenChange={setIsExpanded}>
+			<Collapsible.Trigger
+				className={css.authorsTrigger}
+				aria-label={
+					isExpanded
+						? m['view.notifications.a11y.collapseUsers']()
+						: m['view.notifications.a11y.expandUsers']()
+				}
+			>
+				{isExpanded ? (
+					<>
+						<div className={css.authorChevron}>
+							<ChevronUpIcon className={css.chevronUpIcon} />
+						</div>
+						<Text color="textContrastHigh" weight="semiBold">
+							{m['common.action.hide']()}
+						</Text>
+					</>
+				) : (
+					<>
+						{shownAuthors.map((author) => (
+							<PreviewableUserAvatar
+								key={author.profile.did}
+								size={css.NOTIF_AVI_SIZE}
+								profile={author.profile}
+								moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
+								type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+							/>
+						))}
+
+						{totalCount > shownAuthors.length ? (
+							<Text weight="semiBold" color="textContrastMedium" className={css.moreCount}>
+								+{totalCount - shownAuthors.length}
+							</Text>
+						) : null}
+
+						<div className={css.authorChevron}>
+							<ChevronDownIcon className={css.chevronDownIcon} />
+						</div>
+					</>
+				)}
+			</Collapsible.Trigger>
+			<Collapsible.Panel className={css.expandContent}>
+				{authors.map((author, i) => (
+					<ExpandedAuthorProfileCard
+						key={author.profile.did}
+						profile={author.profile}
+						moderationOpts={moderationOpts}
+						isLast={!loadableGroup && i === authors.length - 1}
+					/>
+				))}
+				{loadableGroup ? <LoadedAuthors group={loadableGroup} moderationOpts={moderationOpts} /> : null}
+			</Collapsible.Panel>
+		</Collapsible.Root>
+	);
+}
+
+/** the actors the notification didn't include a profile for, loaded on demand. */
+function LoadedAuthors({
+	group,
+	moderationOpts,
+}: {
+	group: ActorGroupNotification;
+	moderationOpts: ModerationOptions;
+}) {
+	const { actors, hasMore, isFetching, fetchNextPage } = useGroupActorsQuery(group);
+
+	return (
+		<>
+			{actors.map((profile, i) => (
+				<ExpandedAuthorProfileCard
+					key={profile.did}
+					profile={profile}
+					moderationOpts={moderationOpts}
+					isLast={!hasMore && i === actors.length - 1}
+				/>
+			))}
+			{hasMore ? (
+				<Button
+					label={m['view.notifications.authors.showMore']()}
+					variant="ghost"
+					color="secondary"
+					size="small"
+					disabled={isFetching}
+					onClick={() => void fetchNextPage()}
+				>
+					<ButtonText>{m['view.notifications.authors.showMore']()}</ButtonText>
+					{isFetching ? <ButtonSpinner color="default" label={m['common.status.loading']()} /> : null}
+				</Button>
+			) : null}
+		</>
+	);
+}
+
+function ExpandedAuthorProfileCard({
+	profile,
+	moderationOpts,
+	isLast,
+}: {
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
+	isLast: boolean;
+}) {
+	return (
+		<ProfileCard.Link profile={profile} className={isLast ? undefined : css.expandCardGap}>
+			<ProfileCard.Outer>
+				<ProfileCard.Header>
+					<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
+					<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+					<div className={css.followControl}>
+						<ProfileCard.FollowButton profile={profile} variant="subtle" />
+					</div>
+				</ProfileCard.Header>
+			</ProfileCard.Outer>
+		</ProfileCard.Link>
+	);
+}
+
+// #endregion
+
+// #region extras
 
 function FollowedViaStarterPack({ name, starterPack }: { name: string; starterPack: AnyStarterPackView }) {
 	const link = useStarterPackLink({ view: starterPack });
@@ -599,92 +854,7 @@ function FollowedViaStarterPack({ name, starterPack }: { name: string; starterPa
 	);
 }
 
-function AuthorsList({
-	authors,
-	isExpanded,
-	onOpenChange,
-	moderationOpts,
-	showDmButton,
-}: {
-	authors: Author[];
-	isExpanded: boolean;
-	onOpenChange: (open: boolean) => void;
-	moderationOpts: ModerationOptions;
-	showDmButton: boolean;
-}) {
-	// a single author needs no toggle: just the avatar (and the say-hello affordance for starter packs)
-	if (authors.length < 2) {
-		return (
-			<div className={css.avatarsRow}>
-				<PreviewableUserAvatar
-					size={css.NOTIF_AVI_SIZE}
-					profile={authors[0]!.profile}
-					moderation={getDisplayRestrictions(authors[0]!.moderation, DisplayContext.ProfileMedia)}
-					type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
-				/>
-				{showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
-			</div>
-		);
-	}
-
-	return (
-		<Collapsible.Root className={css.authorsCollapsible} open={isExpanded} onOpenChange={onOpenChange}>
-			<Collapsible.Trigger
-				className={css.authorsTrigger}
-				aria-label={
-					isExpanded
-						? m['view.notifications.a11y.collapseUsers']()
-						: m['view.notifications.a11y.expandUsers']()
-				}
-			>
-				{isExpanded ? (
-					<>
-						<div className={css.authorChevron}>
-							<ChevronUpIcon className={css.chevronUpIcon} />
-						</div>
-						<Text color="textContrastHigh" weight="semiBold">
-							{m['common.action.hide']()}
-						</Text>
-					</>
-				) : (
-					<>
-						{authors.slice(0, MAX_AUTHORS).map((author) => (
-							<PreviewableUserAvatar
-								key={author.profile.did}
-								size={css.NOTIF_AVI_SIZE}
-								profile={author.profile}
-								moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
-								type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-							/>
-						))}
-
-						{authors.length > MAX_AUTHORS ? (
-							<Text weight="semiBold" color="textContrastMedium" className={css.moreCount}>
-								+{authors.length - MAX_AUTHORS}
-							</Text>
-						) : null}
-
-						<div className={css.authorChevron}>
-							<ChevronDownIcon className={css.chevronDownIcon} />
-						</div>
-					</>
-				)}
-			</Collapsible.Trigger>
-			<Collapsible.Panel className={css.expandContent}>
-				{authors.map((author, i) => (
-					<ExpandedAuthorProfileCard
-						key={author.profile.did}
-						author={author}
-						moderationOpts={moderationOpts}
-						isLast={i === authors.length - 1}
-					/>
-				))}
-			</Collapsible.Panel>
-		</Collapsible.Root>
-	);
-}
-
-function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
+function FollowBackButton({ profile }: { profile: AnyProfileView }) {
 	const { currentAccount, hasSession } = useSession();
 	const profileShadow = useProfileShadow(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profileShadow);
@@ -697,16 +867,10 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	const onPressFollow = async () => {
 		try {
 			await queueFollow();
-			Toast.show(
-				m['common.follow.a11y.following']({
-					name: profile.handle,
-				}),
-			);
+			Toast.show(m['common.follow.a11y.following']({ name: profile.handle }));
 		} catch (err) {
 			if (!isAbortError(err)) {
-				Toast.show(m['common.error.generic'](), {
-					type: 'error',
-				});
+				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}
 	};
@@ -714,16 +878,10 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	const onPressUnfollow = async () => {
 		try {
 			await queueUnfollow();
-			Toast.show(
-				m['common.follow.noLongerFollowing']({
-					name: profile.handle,
-				}),
-			);
+			Toast.show(m['common.follow.noLongerFollowing']({ name: profile.handle }));
 		} catch (err) {
 			if (!isAbortError(err)) {
-				Toast.show(m['common.error.generic'](), {
-					type: 'error',
-				});
+				Toast.show(m['common.error.generic'](), { type: 'error' });
 			}
 		}
 	};
@@ -775,7 +933,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 	);
 }
 
-function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
+function SayHelloBtn({ profile }: { profile: AnyProfileView }) {
 	const { chat } = getClients();
 	const { currentAccount } = useSession();
 	const router = useRouter();
@@ -821,45 +979,18 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	);
 }
 
-function ExpandedAuthorProfileCard({
-	author,
-	moderationOpts,
-	isLast,
-}: {
-	author: Author;
-	moderationOpts: ModerationOptions;
-	isLast: boolean;
-}) {
-	return (
-		<ProfileCard.Link profile={author.profile} className={isLast ? undefined : css.expandCardGap}>
-			<ProfileCard.Outer>
-				<ProfileCard.Header>
-					<ProfileCard.Avatar profile={author.profile} moderationOpts={moderationOpts} />
-					<ProfileCard.NameAndHandle profile={author.profile} moderationOpts={moderationOpts} />
-					<div className={css.followControl}>
-						<ProfileCard.FollowButton profile={author.profile} variant="subtle" />
-					</div>
-				</ProfileCard.Header>
-			</ProfileCard.Outer>
-		</ProfileCard.Link>
-	);
-}
-
-function AdditionalPostText({
+function AdditionalPost({
 	post,
 	moderationOpts,
 }: {
-	post?: AppBskyFeedDefs.PostView;
+	post: AppBskyFeedDefs.PostView;
 	moderationOpts: ModerationOptions;
 }) {
-	if (!post) {
-		return null;
-	}
 	const record = getPostRecord(post);
 	const text = record.text;
 
 	return (
-		<>
+		<div className={css.additionalWrap}>
 			{text?.length > 0 && (
 				<Text size="md_sub" color="textContrastMedium" numberOfLines={MAX_POST_LINES}>
 					{text}
@@ -871,6 +1002,8 @@ function AdditionalPostText({
 				moderation={getDisplayRestrictions(moderatePost(post, moderationOpts), DisplayContext.ContentMedia)}
 				className={css.additionalPostEmbed}
 			/>
-		</>
+		</div>
 	);
 }
+
+// #endregion

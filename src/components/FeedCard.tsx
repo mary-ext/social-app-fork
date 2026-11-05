@@ -11,12 +11,10 @@ import { clsx } from 'clsx';
 import { feedTarget } from '#/lib/routes/targets';
 
 import { precacheFeedFromGeneratorView } from '#/state/queries/feed/precache';
-import { useFeedSourceInfoQuery } from '#/state/queries/feed/source-info';
 import { useToggleSavedFeed } from '#/state/queries/preferences/toggle-saved-feed';
 import { useSession } from '#/state/session';
 
 import { BlockLink } from '#/components/BlockLink';
-import { MissingFeed } from '#/components/MissingFeed';
 import { useNavigationDisabled } from '#/components/NavigationDisabled';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
@@ -61,22 +59,11 @@ export function Default({
 }
 
 /**
- * resolves a feed generator by its AT-URI and renders a compact, non-link card for embedding inside another
- * surface. shows a loading placeholder while resolving and a fallback if the feed cannot be loaded.
+ * renders a compact, non-link card for embedding inside another surface.
  *
- * @param uri feed generator AT-URI
+ * @param view feed generator view
  */
-export function ByUri({ uri }: { uri: string }) {
-	const { data: feed, error } = useFeedSourceInfoQuery({ uri });
-
-	if (!feed || feed.type !== 'feed' || !feed.view) {
-		if (error) {
-			return <MissingFeed uri={uri} error={error} hideTopBorder />;
-		}
-		return <EmbedPlaceholder />;
-	}
-
-	const { view } = feed;
+export function Embed({ view }: { view: AppBskyFeedDefs.GeneratorView }) {
 	return (
 		<Outer className={css.embedCard}>
 			<Header>
@@ -84,18 +71,6 @@ export function ByUri({ uri }: { uri: string }) {
 				<TitleAndByline creator={view.creator} title={view.displayName} />
 			</Header>
 			<Likes count={view.likeCount || 0} />
-		</Outer>
-	);
-}
-
-function EmbedPlaceholder() {
-	return (
-		<Outer className={css.embedCard}>
-			<Header>
-				<AvatarPlaceholder />
-				<TitleAndBylinePlaceholder creator />
-			</Header>
-			<Skeleton.Text size="sm" width="35%" />
 		</Outer>
 	);
 }
