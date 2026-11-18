@@ -8,7 +8,7 @@ import { m } from '#/paraglide/messages';
 import type { VideoPayload } from '../../video-asset';
 import { createVideoClient, mimeToExt } from './client';
 import { ServerError, serviceMessage } from './errors';
-import { assertCanUploadVideo, type GetToken, getServiceAuthToken } from './upload-auth';
+import { assertCanUploadVideo, type GetToken, getServiceAuthToken, type TokenRequest } from './upload-auth';
 import { planParts, resendMissingParts, uploadParts } from './upload-parts';
 import { retryDelayMs, withUploadRetry } from './upload-retry';
 
@@ -255,7 +255,7 @@ function createTokenProvider({ pds, dispatchUrl }: { pds: Client; dispatchUrl: s
 	let expiresAt = 0;
 	let pending: Promise<string> | undefined;
 
-	return ({ minRemainingMs = TOKEN_REFRESH_MARGIN_MS, replacing, signal } = {}) => {
+	return ({ minRemainingMs = TOKEN_REFRESH_MARGIN_MS, replacing, signal }: TokenRequest = {}) => {
 		if (token !== undefined && token !== replacing && Date.now() < expiresAt - minRemainingMs) {
 			return Promise.resolve(token);
 		}

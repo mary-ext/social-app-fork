@@ -1,5 +1,7 @@
 trustPolicy: 'no-downgrade'
 trustPolicyIgnoreAfter: 10080
+trustPolicyExclude:
+  - 'tsrs'
 
 overrides:
   '@types/estree': '1.0.6'
