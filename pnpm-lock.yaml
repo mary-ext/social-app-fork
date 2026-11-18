@@ -73,8 +73,8 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15(@atcute/lexicons@2.1.1)
       '@atcute/tangled':
-        specifier: ^2.0.21
-        version: 2.0.21(@atcute/lexicons@2.1.1)
+        specifier: ^3.0.0
+        version: 3.0.0(@atcute/lexicons@2.1.1)
       '@atcute/tid':
         specifier: ^1.1.4
         version: 1.1.4
@@ -323,8 +323,8 @@ packages:
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
-  '@atcute/tangled@2.0.21':
-    resolution: {integrity: sha512-KAxS6RXrxqeQrxGPjEmt6EkYkLtQ/zTsAYfzWdm1lmN7j6H4MTMib2d/AsYZmmmal/j/FqcNzRqq8nhte2Gm7Q==}
+  '@atcute/tangled@3.0.0':
+    resolution: {integrity: sha512-g0w83IzdypKG4m8fmLS5JuUpHgEfTbuydQodRgikvFSDV2hMAEY3Xnc8+w051p+p6ail29P8ZIA7vtazZ776Jw==}
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
@@ -2509,7 +2509,7 @@ snapshots:
       '@atcute/bluesky': 4.0.27(@atcute/lexicons@2.1.1)
       '@atcute/lexicons': 2.1.1
 
-  '@atcute/tangled@2.0.21(@atcute/lexicons@2.1.1)':
+  '@atcute/tangled@3.0.0(@atcute/lexicons@2.1.1)':
     dependencies:
       '@atcute/atproto': 4.0.5(@atcute/lexicons@2.1.1)
       '@atcute/lexicons': 2.1.1

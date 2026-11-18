@@ -36,7 +36,7 @@
 		"@atcute/oauth-browser-client": "^5.1.0",
 		"@atcute/oauth-cab": "^0.1.1",
 		"@atcute/ozone": "^4.0.15",
-		"@atcute/tangled": "^2.0.21",
+		"@atcute/tangled": "^3.0.0",
 		"@atcute/tid": "^1.1.4",
 		"@atcute/uint8array": "^1.2.1",
 		"@atcute/util-text": "^1.3.4",

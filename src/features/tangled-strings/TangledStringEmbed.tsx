@@ -48,8 +48,8 @@ export function TangledStringEmbed({ target, className, onOpen }: TangledStringE
 	const dialog = Dialog.useDialogHandle();
 	const navigationDisabled = useNavigationDisabled();
 
-	const uri = makeRecordUri(target.actor, 'sh.tangled.string', target.rkey);
-	const { data: record, error } = useTangledStringQuery({ uri });
+	const uri = makeRecordUri(target.actor, 'org.tangled.snippet.string', target.rkey);
+	const { data: record, error } = useTangledStringQuery({ actor: target.actor, uri });
 
 	const filename = record?.filename;
 	const openLabel =
