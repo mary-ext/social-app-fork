@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useConstant } from '#/lib/hooks/use-constant';
 import { AbortError } from '#/lib/utils/abort-error';
 
 type Task<TServerState> = {
@@ -24,12 +23,13 @@ export function useToggleMutationQueue<TServerState>({
 	onSuccess: (finalState: TServerState) => void;
 }) {
 	// keep the mutable queue outside render; it is consumed only by toggle handlers.
-	const queue = useConstant<TaskQueue<TServerState>>(() => ({
+	const queueRef = useRef<TaskQueue<TServerState>>({
 		activeTask: null,
 		queuedTask: null,
-	}));
+	});
 
 	async function processQueue() {
+		const queue = queueRef.current;
 		if (queue.activeTask) {
 			// another processor will handle newly queued tasks.
 			return;
@@ -64,6 +64,7 @@ export function useToggleMutationQueue<TServerState>({
 
 	function queueToggle(isOn: boolean): Promise<TServerState> {
 		return new Promise((resolve, reject) => {
+			const queue = queueRef.current;
 			// a newer toggle supersedes the queued value.
 			if (queue.queuedTask) {
 				queue.queuedTask.reject(new AbortError());
