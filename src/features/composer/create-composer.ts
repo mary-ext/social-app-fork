@@ -203,7 +203,7 @@ export const createComposer = ({
 		Wordgard.label(m['common.compose.action.write']()),
 		Wordgard.theme({
 			'&': { border: 'none' },
-			'&:has(> wg-scroller > wg-content:focus)': { outline: 'none' },
+			'&.wg-focused': { outline: 'none' },
 			// reset host styles; the suggestion popup supplies its own.
 			'.wg-tooltip': {
 				zIndex: zIndex.popover,

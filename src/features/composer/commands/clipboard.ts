@@ -52,6 +52,11 @@ const parsePlainText = Wordgard.clipboardTextParser.of((text) => {
 
 // built-in paste prefers HTML; shift-paste bypasses the text parser.
 const pastePlainTextHandler = Wordgard.pasteHandler.of((wg, event) => {
+	// programmatic pastes have no event; the default handling still runs the text parser.
+	if (!event) {
+		return false;
+	}
+
 	const files = event.dataTransfer?.files;
 	if (files?.length) {
 		const post = findPost(wg.state.sel.head);

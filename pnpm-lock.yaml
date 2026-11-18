@@ -9,7 +9,7 @@ overrides:
 
 patchedDependencies:
   '@vanilla-extract/css': db5f4b15486aaa4226da06516bfb01460b8d79a52973e5b8695b3a3bbc9a4a98
-  wordgard: 013e42606771bb31e354232cbd99f16ef2dee853fe390cf68cb125af5e380b19
+  wordgard: 389bf3199e21151e588ad67d53e0cf43360df944dd0eb698193b81bbf8442ad9
 
 importers:
 
@@ -157,8 +157,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(typescript@7.0.2)
       wordgard:
-        specifier: 0.6.2
-        version: 0.6.2(patch_hash=013e42606771bb31e354232cbd99f16ef2dee853fe390cf68cb125af5e380b19)
+        specifier: 0.7.0
+        version: 0.7.0(patch_hash=389bf3199e21151e588ad67d53e0cf43360df944dd0eb698193b81bbf8442ad9)
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 2.0.0-rc.0
@@ -2339,8 +2339,8 @@ packages:
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
-  wordgard@0.6.2:
-    resolution: {integrity: sha512-7vnI1mpIDzFX9SCTkcbPjwgcKVw+odUvsyRndj9EKRHMtuWCF0eog/Q9qH8ImJm8LPaEEHj5lIA5cBIbp7/1Cg==}
+  wordgard@0.7.0:
+    resolution: {integrity: sha512-hibVW6PD5STci3QpMGgbbse/xbiUNhCuMznFwl8FoJKW7qJs3+ZISwU815B6Xs6KaJsNuC6v04k3RrqX7TuBxg==}
     engines: {node: '>=22'}
 
   workerd@1.20261116.1:
@@ -4042,7 +4042,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  wordgard@0.6.2(patch_hash=013e42606771bb31e354232cbd99f16ef2dee853fe390cf68cb125af5e380b19):
+  wordgard@0.7.0(patch_hash=389bf3199e21151e588ad67d53e0cf43360df944dd0eb698193b81bbf8442ad9):
     dependencies:
       '@codemirror/legacy-modes': 6.5.5
       '@codemirror/streamparser': 6.0.0

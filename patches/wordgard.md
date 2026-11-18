@@ -8,6 +8,11 @@ footer spacers after blank-line post splits.
 
 walks cut positions in document order to match the advancing document cursor.
 
+## `dist/state.d.ts`: declare `Facet.tag`
+
+0.7.0 dropped the field from the declaration while `Facet.Reader` still requires it, so passing a
+facet to `GardState.facet` no longer typechecks. the runtime class still has the field.
+
 ## `dist/state.js`: drop the `@__PURE__` annotation on `initField`
 
 Terser's `collapse_vars` folds the preceding `GardState` namespace assignment into this call;

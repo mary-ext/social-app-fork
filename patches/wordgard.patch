@@ -1,8 +1,8 @@
 diff --git a/dist/editor.js b/dist/editor.js
-index e69b164..2ae7533 100644
+index 0bede04..d0999c0 100644
 --- a/dist/editor.js
 +++ b/dist/editor.js
-@@ -2145,15 +2145,16 @@ class ContentUpdate {
+@@ -2193,15 +2193,16 @@ class ContentUpdate {
                      index++;
                  }
              }
@@ -27,16 +27,28 @@ index e69b164..2ae7533 100644
              includeStart = false;
              len = end - to;
          }
+diff --git a/dist/state.d.ts b/dist/state.d.ts
+index bae834e..9c70087 100644
+--- a/dist/state.d.ts
++++ b/dist/state.d.ts
+@@ -1170,6 +1170,7 @@ declare namespace GardState {
+         */
+         from<T extends Input>(field: GardState.Field<T> | GardState.Field.Derived<T>): GardState.Extension;
+         from<T>(field: GardState.Field<T> | GardState.Field.Derived<T>, get: (value: T) => Input): GardState.Extension;
++        tag: Output;
+     }
+     namespace Facet {
+         /**
 diff --git a/dist/state.js b/dist/state.js
-index 29f09f4..6195c9c 100644
+index 8813a24..7acffbe 100644
 --- a/dist/state.js
 +++ b/dist/state.js
-@@ -1754,7 +1754,7 @@ class GardState {
+@@ -1802,7 +1802,7 @@ class GardState {
          }
      });
  ;return GardState})(GardState);
--const initField = /*@__PURE__*/GardState.Facet.define({ static: true });
-+const initField = GardState.Facet.define({ static: true });
- function addValue(set, value) {
-     if (set.indexOf(value) < 0)
-         set.push(value);
+-const initField = /*@__PURE__*/GardState.Facet.define({
++const initField = GardState.Facet.define({
+     name: "init",
+     static: true
+ });
