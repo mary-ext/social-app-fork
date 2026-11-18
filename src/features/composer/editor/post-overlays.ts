@@ -243,6 +243,8 @@ export const createPostOverlays = (): PostOverlays => {
 			render() {
 				const element = document.createElement('div');
 				element.className = css.spacer;
+				// wordgard 0.7.0 no longer marks non-editable div widgets as uneditable.
+				element.contentEditable = 'false';
 				return element;
 			},
 			connect(postId, dom) {
