@@ -193,7 +193,7 @@ const Byline = ({ actor }: { actor: ActorIdentifier }) => {
 	}
 
 	return (
-		<ProfileHoverCard actor={did}>
+		<ProfileHoverCard profile={author}>
 			<Link className={css.bylineInteractive} label={author.handle} to={profileTarget(author.did)}>
 				{content}
 			</Link>

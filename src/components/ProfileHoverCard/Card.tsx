@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -43,12 +43,16 @@ import { useRouter } from '#/router';
 
 import * as css from './ProfileHoverCard.css';
 
-export function Card({ actor }: { actor: ActorIdentifier }) {
+export function Card({ profile: actorOrPreview }: { profile: ActorIdentifier | AnyProfileView }) {
 	const router = useRouter();
+	const preview = typeof actorOrPreview === 'string' ? undefined : actorOrPreview;
+	const actor = typeof actorOrPreview === 'string' ? actorOrPreview : actorOrPreview.did;
 	const resolvedDid = useResolveDidQuery(actor);
 	const profile = useProfileQuery({ did: resolvedDid.data });
 	const moderationOpts = useModerationOpts();
-	const data = profile.data;
+	// placeholder data comes from cached profile views that lack the detailed fields.
+	const detailed = profile.isPlaceholderData ? undefined : profile.data;
+	const data: AnyProfileView | undefined = detailed ?? preview ?? profile.data;
 	const status = useActorStatus(data);
 
 	const onPressOpenProfile = () => {
@@ -72,7 +76,7 @@ export function Card({ actor }: { actor: ActorIdentifier }) {
 				</div>
 			);
 		}
-		return <Inner moderationOpts={moderationOpts} profile={data} />;
+		return <Inner detailed={detailed} moderationOpts={moderationOpts} profile={data} />;
 	}
 
 	if (resolvedDid.error || profile.error) {
@@ -96,11 +100,14 @@ export function Card({ actor }: { actor: ActorIdentifier }) {
 }
 
 function Inner({
+	detailed,
 	moderationOpts,
 	profile,
 }: {
+	/** detailed profile, once loaded; detail-only content is left out until then. */
+	detailed: AppBskyActorDefs.ProfileViewDetailed | undefined;
 	moderationOpts: ModerationOptions;
-	profile: AppBskyActorDefs.ProfileViewDetailed;
+	profile: AnyProfileView;
 }) {
 	const { currentAccount } = useSession();
 	const moderation = moderateProfile(profile, moderationOpts);
@@ -110,8 +117,7 @@ function Inner({
 	});
 	const isBlockedUser =
 		profile.viewer?.blocking || profile.viewer?.blockedBy || profile.viewer?.blockingByList;
-	const followsCount = profile.followsCount || 0;
-	const followersCount = profile.followersCount || 0;
+	const description = 'description' in profile ? profile.description?.trim() : undefined;
 	const target = profileTarget(profile.did);
 	const isMe = currentAccount?.did === profile.did;
 	const isLabeler = profile.associated?.labeler;
@@ -176,64 +182,74 @@ function Inner({
 				</div>
 			) : (
 				<>
-					<div className={css.statsRow}>
-						<InlineLinkText
-							color="text"
-							label={m['common.follow.followersCount']({
-								count: followersCount,
-								formatted: formatCount(followersCount),
-							})}
-							to={{ name: 'ProfileFollowers', actor: profile.did }}
-						>
-							<Text color="textContrastMedium" size="md">
-								<Trans
-									inputs={{ count: followersCount, formatted: formatCount(followersCount) }}
-									markup={{
-										t0: ({ children }) => (
-											<Text color="text" size="md" weight="semiBold">
-												{children}
-											</Text>
-										),
-									}}
-									message={m['view.profile.followers.followersCount']}
-								/>
-							</Text>
-						</InlineLinkText>
-						<InlineLinkText
-							color="text"
-							label={m['common.follow.followingCount']({ formatted: formatCount(followsCount) })}
-							to={{ name: 'ProfileFollows', actor: profile.did }}
-						>
-							<Text color="textContrastMedium" size="md">
-								<Trans
-									inputs={{ count: followsCount, formatted: formatCount(followsCount) }}
-									markup={{
-										t0: ({ children }) => (
-											<Text color="text" size="md" weight="semiBold">
-												{children}
-											</Text>
-										),
-									}}
-									message={m['view.profile.followers.followingCount']}
-								/>
-							</Text>
-						</InlineLinkText>
-					</div>
+					{detailed && <StatsRow profile={detailed} />}
 
-					{profile.description?.trim() &&
+					{description &&
 					getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 						<div className={css.description}>
-							<RichText disableHoverCards numberOfLines={8} value={profile.description} />
+							<RichText disableHoverCards numberOfLines={8} value={description} />
 						</div>
 					) : undefined}
 
-					{!isMe && shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+					{!isMe && detailed && shouldShowKnownFollowers(detailed.viewer?.knownFollowers) && (
 						<div className={css.knownFollowers}>
-							<KnownFollowers moderationOpts={moderationOpts} profile={profile} />
+							<KnownFollowers moderationOpts={moderationOpts} profile={detailed} />
 						</div>
 					)}
 				</>
 			)}
+		</div>
+	);
+}
+
+function StatsRow({ profile }: { profile: AppBskyActorDefs.ProfileViewDetailed }) {
+	const did = profile.did;
+	const followersCount = profile.followersCount ?? 0;
+	const followsCount = profile.followsCount ?? 0;
+
+	return (
+		<div className={css.statsRow}>
+			<InlineLinkText
+				color="text"
+				label={m['common.follow.followersCount']({
+					count: followersCount,
+					formatted: formatCount(followersCount),
+				})}
+				to={{ name: 'ProfileFollowers', actor: did }}
+			>
+				<Text color="textContrastMedium" size="md">
+					<Trans
+						inputs={{ count: followersCount, formatted: formatCount(followersCount) }}
+						markup={{
+							t0: ({ children }) => (
+								<Text color="text" size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followersCount']}
+					/>
+				</Text>
+			</InlineLinkText>
+			<InlineLinkText
+				color="text"
+				label={m['common.follow.followingCount']({ formatted: formatCount(followsCount) })}
+				to={{ name: 'ProfileFollows', actor: did }}
+			>
+				<Text color="textContrastMedium" size="md">
+					<Trans
+						inputs={{ count: followsCount, formatted: formatCount(followsCount) }}
+						markup={{
+							t0: ({ children }) => (
+								<Text color="text" size="md" weight="semiBold">
+									{children}
+								</Text>
+							),
+						}}
+						message={m['view.profile.followers.followingCount']}
+					/>
+				</Text>
+			</InlineLinkText>
 		</div>
 	);
 }

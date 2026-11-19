@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 
-import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 
 import { differenceInSeconds } from '@mary-ext/date-fns';
 
@@ -16,13 +16,7 @@ const NewskieDialogBody = lazy(() =>
 	import('#/components/NewskieDialogBody').then((mod) => ({ default: mod.NewskieDialogBody })),
 );
 
-export function NewskieDialog({
-	profile,
-	disabled,
-}: {
-	profile: AppBskyActorDefs.ProfileViewDetailed;
-	disabled?: boolean;
-}) {
+export function NewskieDialog({ profile, disabled }: { profile: AnyProfileView; disabled?: boolean }) {
 	const handle = Dialog.useDialogHandle();
 
 	const createdAt = profile.createdAt;

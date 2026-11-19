@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -8,11 +8,20 @@ const hidden = {
 	opacity: 0,
 };
 
+/** measured size of the popup's content. */
+export const contentSizeVars = {
+	blockSize: createVar('contentBlockSize'),
+	inlineSize: createVar('contentInlineSize'),
+};
+
 export const popup = style({
 	transformOrigin: 'var(--transform-origin)',
 	transitionDuration: '200ms',
-	transitionProperty: 'opacity, transform',
+	transitionProperty: 'opacity, transform, block-size, inline-size',
 	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	boxSizing: 'content-box',
+	blockSize: fallbackVar(contentSizeVars.blockSize, 'auto'),
+	inlineSize: fallbackVar(contentSizeVars.inlineSize, 'auto'),
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: borderRadius.md,
 	boxShadow: vars.shadow.lg,
@@ -22,6 +31,15 @@ export const popup = style({
 		'&[data-closed]': hidden,
 	},
 	'@starting-style': hidden,
+	'@media': {
+		'(prefers-reduced-motion: reduce)': {
+			transitionProperty: 'opacity, transform',
+		},
+	},
+});
+
+export const content = style({
+	inlineSize: 'max-content',
 });
 
 const baseCard = style({

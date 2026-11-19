@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { clsx } from 'clsx';
@@ -17,12 +17,13 @@ export function ProfileHeaderHandle({
 	moderation,
 	disableTaps,
 }: {
-	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
+	profile: Shadow<AnyProfileView>;
 	moderation: ModerationDecision;
 	disableTaps?: boolean;
 }) {
 	const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy;
-	const pronouns = profile.pronouns?.trim();
+	// chat profile views lack pronouns.
+	const pronouns = 'pronouns' in profile ? profile.pronouns?.trim() : undefined;
 	const showPronouns =
 		!!pronouns &&
 		!blockHide &&

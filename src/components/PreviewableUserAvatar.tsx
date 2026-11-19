@@ -93,7 +93,7 @@ export function PreviewableUserAvatar({
 
 	return (
 		<>
-			{disableHoverCard ? trigger : <ProfileHoverCard actor={profile.did}>{trigger}</ProfileHoverCard>}
+			{disableHoverCard ? trigger : <ProfileHoverCard profile={profile}>{trigger}</ProfileHoverCard>}
 			{!disableNavigation && isTouchLive && status.embed && (
 				<LiveStatusDialog embed={status.embed} handle={liveHandle} profile={profile} status={status} />
 			)}

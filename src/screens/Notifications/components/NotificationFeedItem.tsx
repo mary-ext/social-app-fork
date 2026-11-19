@@ -142,7 +142,7 @@ function ActivityRow({
 	const othersCount = isActorGroupNotification(item) ? item.count - 1 : authors.length - 1;
 
 	const authorLink = ({ children }: { children?: ReactNode }) => (
-		<ProfileHoverCard actor={firstAuthor.profile.did}>
+		<ProfileHoverCard profile={firstAuthor.profile}>
 			<InlineLinkText
 				to={profileTarget(firstAuthor.profile.did)}
 				label={m['view.notifications.a11y.goToProfile']({ name: firstAuthor.profile.handle })}

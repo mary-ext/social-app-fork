@@ -111,7 +111,7 @@ function PostMeta(opts: PostMetaOpts): ReactNode {
 				</div>
 			)}
 			<div className={css.author}>
-				<ProfileHoverCard actor={author.did}>
+				<ProfileHoverCard profile={author}>
 					<AuthorLink
 						className={css.handle}
 						color="textContrastHigh"

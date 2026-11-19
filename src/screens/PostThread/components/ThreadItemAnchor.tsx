@@ -243,7 +243,7 @@ function ThreadItemAnchorInner({
 							/>
 
 							<div className={css.identity}>
-								<ProfileHoverCard actor={post.author.did}>
+								<ProfileHoverCard profile={post.author}>
 									<InlineLinkText
 										className={css.handle}
 										color="textContrastHigh"

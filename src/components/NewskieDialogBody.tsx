@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 
 import { useSession } from '#/state/session';
 
@@ -25,7 +25,7 @@ export function NewskieDialogBody({
 	now,
 	onClose,
 }: {
-	profile: AppBskyActorDefs.ProfileViewDetailed;
+	profile: AnyProfileView;
 	createdAt: string;
 	now: Date;
 	onClose: () => void;
@@ -34,6 +34,8 @@ export function NewskieDialogBody({
 	const isMe = profile.did === currentAccount?.did;
 
 	const profileName = profile.handle;
+	// only detailed views carry the starter pack.
+	const joinedViaStarterPack = 'joinedViaStarterPack' in profile ? profile.joinedViaStarterPack : undefined;
 
 	const getJoinMessage = () => {
 		const { isNow, unit, value } = relativeMessageParts(createdAt, now);
@@ -41,12 +43,12 @@ export function NewskieDialogBody({
 		const parts = { unit, value, when };
 
 		if (isMe) {
-			if (profile.joinedViaStarterPack) {
+			if (joinedViaStarterPack) {
 				return m['components.newskieDialog.joinedViaStarterPackSelf'](parts);
 			}
 			return m['components.newskieDialog.joinedAgoSelf'](parts);
 		}
-		if (profile.joinedViaStarterPack) {
+		if (joinedViaStarterPack) {
 			return m['components.newskieDialog.joinedViaStarterPack']({ ...parts, name: profileName });
 		}
 		return m['components.newskieDialog.joinedAgo']({ ...parts, name: profileName });
@@ -65,10 +67,10 @@ export function NewskieDialogBody({
 			<Text size="md" align="center">
 				{getJoinMessage()}
 			</Text>
-			{profile.joinedViaStarterPack ? (
-				<StarterPackCard.Link starterPack={profile.joinedViaStarterPack} onPress={onClose}>
+			{joinedViaStarterPack ? (
+				<StarterPackCard.Link starterPack={joinedViaStarterPack} onPress={onClose}>
 					<div className={styles.starterPack}>
-						<StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
+						<StarterPackCard.Card starterPack={joinedViaStarterPack} />
 					</div>
 				</StarterPackCard.Link>
 			) : null}
