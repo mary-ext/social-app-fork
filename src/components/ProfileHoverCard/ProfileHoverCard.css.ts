@@ -101,6 +101,11 @@ export const nameLink = style({
 	paddingTop: space.md,
 	paddingBottom: space.sm,
 	textDecoration: 'none',
+	selectors: {
+		'&:last-child': {
+			paddingBottom: 0,
+		},
+	},
 });
 
 export const statsRow = style({
