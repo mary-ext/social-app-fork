@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -45,12 +45,21 @@ export function NotificationsScreen() {
 	const activeTab = tab ?? 'all';
 	const isLoading = activeTab === 'all' ? isLoadingAll : isLoadingMentions;
 
-	const queryClient = useQueryClient();
-	const checkUnreadMentions = async ({ invalidate }: { invalidate: boolean }) => {
-		if (invalidate) {
-			return truncateAndInvalidate(queryClient, notificationFeedQueryKey('conversations'));
+	// check for latest on focus, reloading only if the user isn't scrolled down. not done per tab: inactive
+	// panels unmount, and reloading on each switch would replace the `seenAt` that tints unread rows.
+	const isScreenFocused = useIsFocused();
+	const onScreenFocus = useEffectEvent(() => {
+		void checkUnreadAll({ invalidate: window.scrollY <= 200 });
+	});
+	useEffect(() => {
+		if (isScreenFocused) {
+			onScreenFocus();
 		}
-	};
+	}, [isScreenFocused]);
+
+	const queryClient = useQueryClient();
+	const reloadAll = () => checkUnreadAll({ invalidate: true });
+	const reloadMentions = () => truncateAndInvalidate(queryClient, notificationFeedQueryKey('conversations'));
 
 	const sections: Section<'all' | 'mentions'>[] = [
 		{
@@ -62,7 +71,7 @@ export function NotificationsScreen() {
 					isLoading={isLoadingAll}
 					hasNew={hasNew}
 					setIsLoadingLatest={setIsLoadingAll}
-					checkUnread={checkUnreadAll}
+					reload={reloadAll}
 				/>
 			),
 		},
@@ -75,7 +84,7 @@ export function NotificationsScreen() {
 					isLoading={isLoadingMentions}
 					hasNew={false /* We don't know for sure */}
 					setIsLoadingLatest={setIsLoadingMentions}
-					checkUnread={checkUnreadMentions}
+					reload={reloadMentions}
 				/>
 			),
 		},
@@ -124,13 +133,13 @@ function NotificationsTab({
 	feed,
 	isLoading,
 	hasNew,
-	checkUnread,
+	reload,
 	setIsLoadingLatest,
 }: {
 	feed: Extract<GroupedNotificationsFeed, 'all' | 'conversations'>;
 	isLoading: boolean;
 	hasNew: boolean;
-	checkUnread: ({ invalidate }: { invalidate: boolean }) => Promise<void>;
+	reload: () => Promise<void>;
 	setIsLoadingLatest: (v: boolean) => void;
 }) {
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
@@ -148,22 +157,11 @@ function NotificationsTab({
 		} else if (!isLoading) {
 			// check with the server
 			setIsLoadingLatest(true);
-			void checkUnread({ invalidate: true })
+			void reload()
 				.catch(() => undefined)
 				.then(() => setIsLoadingLatest(false));
 		}
 	};
-
-	// on-visible setup
-	// =
-	useFocusEffect(() => {
-		// on focus, check for latest, but only invalidate if the user
-		// isnt scrolled down to avoid moving content underneath them.
-		// On the web, this isn't always updated in time so
-		// we're just going to look it up synchronously.
-		const currentIsScrolledDown = window.scrollY > 200;
-		void checkUnread({ invalidate: !currentIsScrolledDown });
-	});
 
 	useFocusEffect(() => softReset.subscribe(onPressLoadLatest));
 
