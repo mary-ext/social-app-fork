@@ -51,7 +51,7 @@
 		"@oomfware/cropper": "^0.1.0",
 		"@oomfware/lightbox": "^0.1.9",
 		"@oomfware/scion": "^0.1.8",
-		"@oomfware/stacker": "^0.2.6",
+		"@oomfware/stacker": "^0.2.7",
 		"@oomfware/tug": "^0.2.1",
 		"@tanstack/react-query": "^5.108.2",
 		"@vanilla-extract/css": "^1.21.3",
@@ -84,7 +84,7 @@
 		"oxc-transform-react": "^0.158.0",
 		"oxfmt": "^0.79.0",
 		"oxlint": "^1.94.0",
-		"tsrs": "7.1.0-beta.tsrs3",
+		"tsrs": "7.1.0-beta.tsrs4",
 		"type-fest": "^6.0.3",
 		"vite": "^8.3.8"
 	},
